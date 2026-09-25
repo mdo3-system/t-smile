@@ -1,0 +1,2545 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>株式会社住ま居る | 「芳彩（かぐや）— 結露しない家」究極の住み心地を追求する完全自由設計住宅</title>
+  <meta name="description" content="埼玉県鶴ヶ島ICから車で片道1時間圏内限定。「芳彩（かぐや）— 結露しない家」。大工さん×建築士のタッグによるミリ単位自由設計。住ま居るの造る家は住み心地重視。外皮は超高断熱・高気密で外気をシャットアウト、中は自然の恩恵に包まれる優しい空気と芳香。パース無料無制限作図＆リアル展示場体感予約。" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Header & Navigation (Two-Tier Compact Layout) -->
+  <header style="padding: 0.6rem 1.2rem;">
+    <div class="nav-container-twotier">
+      <!-- Tier 1: Brand & AI Services / Bots -->
+      <div class="nav-tier-top">
+        <a href="#" class="logo" data-target="top">
+          <span>家づくりAIラボ</span>
+          <span class="logo-badge">by 住ま居る</span>
+        </a>
+
+        <!-- AI Tools & Interactive Bots (Top Row) -->
+        <div class="nav-ai-suite">
+          <span class="nav-group-label">🤖 AI自動設計＆相談ボット群:</span>
+          <ul class="nav-links-tier">
+            <li><a class="nav-link-btn highlight-sky" data-target="floorplan-studio">📐 AI間取り選別・作図</a></li>
+            <li><a class="nav-link-btn highlight-amber" data-target="ai-studio">🎨 AIパース工房</a></li>
+            <li><a class="nav-link-btn highlight-emerald" data-target="thermal-consultation">💬 24h温熱換気AI相談</a></li>
+            <li><a class="nav-link-btn highlight-purple" data-target="floorplan-studio" title="AIと対話して間取りプランを自由改変">🤖 間取り相談専用ボット</a></li>
+          </ul>
+        </div>
+
+        <!-- Mobile Hamburger Button -->
+        <button class="nav-toggle" id="nav-toggle" aria-label="メニュー切り替え">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <!-- Tier 2: Main Navigation & Showroom (Bottom Row) -->
+      <div class="nav-tier-bottom">
+        <ul class="nav-links-tier nav-main-links">
+          <li><a class="nav-link active" data-target="top">🏠 ホーム</a></li>
+          <li><a class="nav-link" data-target="credlayer" style="color: #34d399; font-weight: 800; border: 1px solid rgba(52, 211, 153, 0.4); padding: 3px 10px; border-radius: 20px; background: rgba(6, 78, 59, 0.4);">🛡️ CredLayer (信頼実証)</a></li>
+          <li><a class="nav-link" data-target="article-feature" style="color: #f59e0b; font-weight: 800;">📖 手づくり住宅解体新書（全10章）</a></li>
+          <li><a class="nav-link" data-target="our-philosophy">🏛️ 私たちの家づくり（芳彩・かぐや）</a></li>
+          <li><a class="nav-link" data-target="craftsmanship">🔨 お客様×大工さん×建築士（施工実例）</a></li>
+          <li><a class="nav-link" data-target="metaverse">🌐 バーチャル展示場</a></li>
+          <li><a class="nav-link" data-target="scent-experience">🌿 リアル展示場体感</a></li>
+          <li><a class="nav-link carte-btn" id="nav-auth-btn" data-target="dashboard">👤 マイカルテ</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Overlay & Menu -->
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+  <aside class="mobile-drawer" id="mobile-drawer" aria-label="モバイルナビゲーション">
+    <ul class="mobile-drawer-links">
+      <li><a class="mobile-nav-link active" data-target="top">🏠 ホーム（家づくりAIラボ）</a></li>
+      <li><a class="mobile-nav-link highlight" data-target="credlayer" style="background: linear-gradient(135deg, #064e3b, #059669); color: #fff; font-weight: 800;">🛡️ CredLayer (信頼実証レイヤー)</a></li>
+      <li><a class="mobile-nav-link highlight" data-target="floorplan-studio">📐 AI間取り選別＆相談スタジオ</a></li>
+      <li><a class="mobile-nav-link highlight" data-target="ai-studio" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a;">🎨 AIフォトリアルパース工房</a></li>
+      <li><a class="mobile-nav-link highlight" data-target="thermal-consultation" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff;">💬 24時間365日 AI温熱・気密相談</a></li>
+      <li><a class="mobile-nav-link" data-target="article-feature" style="color: #f59e0b; font-weight: 700;">📖 手づくり住宅解体新書（全10章）</a></li>
+      <li><a class="mobile-nav-link" data-target="our-philosophy">🏛️ 私たちの家づくり（芳彩・かぐや）</a></li>
+      <li><a class="mobile-nav-link" data-target="metaverse">🌐 バーチャル展示場</a></li>
+      <li><a class="mobile-nav-link" data-target="scent-experience">🌿 リアル展示場体感予約</a></li>
+      <li><a class="mobile-nav-link" id="nav-auth-btn-mobile" data-target="dashboard">👤 マイページ・設計カルテ</a></li>
+    </ul>
+  </aside>
+
+  <!-- Mobile Thumb-Friendly Fixed Bottom Navigation -->
+  <nav class="mobile-bottom-bar" aria-label="クイック操作バー">
+    <a class="bottom-tab-btn active" data-target="top">
+      <span class="tab-icon">🏠</span>
+      <span>ホーム</span>
+    </a>
+    <a class="bottom-tab-btn" data-target="floorplan-studio" style="color: #38bdf8; font-weight: 800;">
+      <span class="tab-icon">📐</span>
+      <span>間取り</span>
+    </a>
+    <a class="bottom-tab-btn" data-target="ai-studio" style="color: #f59e0b; font-weight: 800;">
+      <span class="tab-icon">🎨</span>
+      <span>パース</span>
+    </a>
+    <a class="bottom-tab-btn" data-target="thermal-consultation" style="color: #10b981; font-weight: 800;">
+      <span class="tab-icon">💬</span>
+      <span>温熱AI</span>
+    </a>
+    <a class="bottom-tab-btn" data-target="article-feature" style="color: #f59e0b; font-weight: 800;">
+      <span class="tab-icon">📖</span>
+      <span>解体新書</span>
+    </a>
+  </nav>
+
+  <!-- Main Content Container -->
+  <main class="main-content">
+
+    <!-- PAGE 1: TOP / HERO (USER-CENTRIC AI PLATFORM) -->
+    <section id="top" class="page-section active">
+      
+      <!-- HERO BANNER: ユーザーが建てたい家づくりを全力応援 -->
+      <div class="hero-brand-container" style="background: linear-gradient(135deg, #091e2f 0%, #0f172a 60%, #172554 100%);">
+        <div class="hero-brand-content">
+          <span class="hero-brand-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4);">
+            ✨ 完全無料・会員登録不要｜3大AI家づくりオープンラボ
+          </span>
+          <h1 class="hero-brand-title" style="font-size: 2.6rem; line-height: 1.35;">
+            あなたの建てたい家づくりを、<br>
+            <span style="color: #38bdf8; font-size: 2.3rem;">最新AIが全力応援。</span>
+          </h1>
+          <p class="hero-brand-subtitle" style="font-size: 1.05rem; line-height: 1.9; color: #e2e8f0;">
+            敷地や予算の制限で悩む前に、まずは「どんな暮らしがしたいか」を自由に描いてみませんか？<br>
+            登録された優良間取りからAIが最適案を選別し、チャットで<strong>「あーでもないこーでもない」と自由改変</strong>。<br>
+            間取りなしでも<strong>「いきなりフォトリアルパース」</strong>で理想を瞬時に可視化。<br>
+            そしてネット上に誤った解釈や偏った情報が蔓延し「何が正しい答えなのか」悩まれている迷えるユーザーへ向けて、<strong>30年来の実務者の知見、数々の失敗と経験を余すことなく全解放した「24時間温熱換気AI相談室」</strong>が、営業トークや忖度なしの客観的な本音を24時間365日お届けします。<br>
+            <span style="display: inline-block; margin-top: 0.75rem; color: #fde68a; font-size: 0.98rem; font-weight: 700; line-height: 1.6;">
+              ※ 最先端AIの無料開放は、私たちの揺るぎない先見性の証明です。10年以上前のモデルハウスがすでに30年以上先を見据えていたように、住ま居るは常に「向こう30年最先端の住まい」をご提案いたします。
+            </span>
+          </p>
+          <div class="hero-cta" style="gap: 1rem; flex-wrap: wrap;">
+            <button class="btn btn-primary" data-target="floorplan-studio" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-size: 1.05rem; padding: 0.9rem 1.6rem;">
+              📐 ① AI間取り選別・相談スタジオ →
+            </button>
+            <button class="btn btn-primary" data-target="ai-studio" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800; font-size: 1.05rem; padding: 0.9rem 1.6rem;">
+              🎨 ② AIフォトリアルパース工房 →
+            </button>
+            <button class="btn btn-primary" data-target="thermal-consultation" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-size: 1.05rem; padding: 0.9rem 1.6rem;">
+              💬 ③ 24h温熱・換気AI相談室 →
+            </button>
+          </div>
+        </div>
+        <div class="hero-brand-image-box">
+          <img src="/images/hero_kaguya_house.jpg" alt="理想の自由設計住宅イメージ" class="hero-brand-img" />
+          <div class="image-caption-badge">誰でも無料で理想の住まいを描けるオープンAIツール</div>
+        </div>
+      </div>
+
+      <!-- 3 PILLARS QUICK JUMP CARDS (3大AIツールの強調) -->
+      <div style="margin-top: 2rem;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <span style="background: #e0f2fe; color: #0284c7; font-weight: 800; padding: 4px 16px; border-radius: 20px; font-size: 0.88rem;">
+            🚀 会員登録不要・すべて無料で何度でも利用可能
+          </span>
+          <h2 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 1.9rem; margin-top: 0.6rem;">
+            家づくりを加速する「3つの無料AIツール」
+          </h2>
+          <p style="color: #64748b; font-size: 1rem;">
+            間取りからパースへの連携も、いきなりパース作成も自由自在。あなたのペースで理想を形にできます。
+          </p>
+        </div>
+
+        <div class="grid-3" style="gap: 1.5rem;">
+          <!-- Card 1: 間取り選別・相談 -->
+          <div class="card" style="background: #ffffff; border: 2px solid #38bdf8; border-radius: var(--radius-lg); padding: 1.6rem; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s ease;">
+            <div>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem;">
+                <span style="font-size: 2.2rem;">📐</span>
+                <span style="background: #e0f2fe; color: #0369a1; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 12px;">間取りラボ参考</span>
+              </div>
+              <h3 style="color: #0369a1; font-size: 1.3rem; margin-bottom: 0.6rem;">
+                AI間取り選別＆相談スタジオ
+              </h3>
+              <p style="color: #475569; font-size: 0.92rem; line-height: 1.75; margin-bottom: 1rem;">
+                階数や坪数を選ぶだけで、厳選30プランからAIが最適な候補を提示。選んだプランをチャットで<strong>「あーでもないこーでもない」と相談しながら微調整・リミックス</strong>できます。
+              </p>
+              <ul style="color: #64748b; font-size: 0.85rem; line-height: 1.8; padding-left: 1.2rem; margin-bottom: 1.2rem;">
+                <li>平屋・2階建て（延床150㎡未満）に完全対応</li>
+                <li>壁厚130mm・寸法線付きCAD図面を即時表示</li>
+                <li><strong>ワンタップでAIパース工房へ連動！</strong></li>
+              </ul>
+            </div>
+            <button class="btn btn-primary" data-target="floorplan-studio" style="width: 100%; justify-content: center; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff;">
+              間取りを選別・相談してみる →
+            </button>
+          </div>
+
+          <!-- Card 2: AIパース工房 -->
+          <div class="card" style="background: #ffffff; border: 2px solid #f59e0b; border-radius: var(--radius-lg); padding: 1.6rem; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s ease;">
+            <div>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem;">
+                <span style="font-size: 2.2rem;">🎨</span>
+                <span style="background: #fef3c7; color: #92400e; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 12px;">ArchiX / Renrery参考</span>
+              </div>
+              <h3 style="color: #b45309; font-size: 1.3rem; margin-bottom: 0.6rem;">
+                AIフォトリアルパース工房
+              </h3>
+              <p style="color: #475569; font-size: 0.92rem; line-height: 1.75; margin-bottom: 1rem;">
+                間取りがなくてもOK！<strong>「いきなりパース作成」</strong>で外観・吹き抜けLDK・キッチンなどの空間を選び、ジャパンディや北欧など好みのスタイルで4Kフォトリアルパースを瞬時に生成。
+              </p>
+              <ul style="color: #64748b; font-size: 0.85rem; line-height: 1.8; padding-left: 1.2rem; margin-bottom: 1.2rem;">
+                <li>外観、LDK、キッチン、寝室、テラスを選べる</li>
+                <li>朝の陽光、夕景、夜の間接照明などライティング指定</li>
+                <li>高解像度画像を即座に保存・ダウンロード</li>
+              </ul>
+            </div>
+            <button class="btn btn-primary" data-target="ai-studio" style="width: 100%; justify-content: center; background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800;">
+              フォトリアルパースを作る →
+            </button>
+          </div>
+
+          <!-- Card 3: 24h温熱・気密AI相談 -->
+          <div class="card" style="background: #ffffff; border: 2px solid #10b981; border-radius: var(--radius-lg); padding: 1.6rem; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s ease;">
+            <div>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem;">
+                <span style="font-size: 2.2rem;">💬</span>
+                <span style="background: #d1fae5; color: #065f46; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 12px;">24時間365日対応</span>
+              </div>
+              <h3 style="color: #047857; font-size: 1.3rem; margin-bottom: 0.6rem;">
+                24h 温熱換気AI相談室
+              </h3>
+              <p style="color: #475569; font-size: 0.92rem; line-height: 1.75; margin-bottom: 1rem;">
+                <strong>誤った情報に悩む、すべての迷えるユーザーへ。</strong><br>
+                SNSや住宅会社ごとに言うことが違い、どれが真実か悩んでいませんか？ 30年来の実務者が培ったリアルな知見、失敗と成功の経験を余すことなく全解放。忖度なしの本音で、あなたの疑問に24時間即時お答えします。
+              </p>
+              <ul style="color: #64748b; font-size: 0.85rem; line-height: 1.8; padding-left: 1.2rem; margin-bottom: 1.2rem;">
+                <li>C値・UA値・HEAT20 G2/G3のリアルなコスパ</li>
+                <li>窓サッシ（樹脂トリプル）の選び方</li>
+                <li>床暖房 vs エアコン全館空調の比較</li>
+              </ul>
+            </div>
+            <button class="btn btn-primary" data-target="thermal-consultation" style="width: 100%; justify-content: center; background: linear-gradient(135deg, #059669, #10b981); color: #fff;">
+              温熱AIに質問・相談してみる →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STORY FUNNEL: なぜ完全無料で提供しているのか？ ＆ 住ま居るが貫く家づくりの本質 -->
+      <div id="our-philosophy" class="card" style="margin-top: 3.5rem; background: #ffffff; border: 2px solid rgba(217, 119, 6, 0.45); border-radius: var(--radius-lg); padding: 2.8rem 2.2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.06);">
+        <div style="text-align: center; max-width: 900px; margin: 0 auto 2.5rem;">
+          <span style="background: #fef3c7; color: #92400e; font-weight: 800; padding: 6px 20px; border-radius: 20px; font-size: 0.92rem; display: inline-block; margin-bottom: 0.8rem; border: 1px solid #fde68a;">
+            🤝 このAIツールを私たちが無料提供する理由と、住ま居るの真の使命
+          </span>
+          <h2 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 2.1rem; margin-bottom: 1.2rem; line-height: 1.4;">
+            間取りやパースの「表面的な満足」だけで、<br>
+            <span style="color: #d97706;">家づくりを終わらせないでほしい。</span>
+          </h2>
+          <p style="color: #475569; font-size: 1.05rem; line-height: 2.0;">
+            家づくりにおいて、理想の間取りを考え、美しい3Dパースで心躍らせる時間はかけがえのない喜びです。だからこそ、私たちはそのためのAIツールを完全無料で誰にでも使えるように開放しました。<br>
+            <strong>しかし、住ま居るが本当に伝えたいのは、その「先」にある本質です。</strong><br>
+            どんなに華やかなデザインや間取りであっても、大地震で倒壊したり、真冬に壁内結露で柱が腐り、寒さで家族が体調を崩す家であっては絶対にいけません。
+          </p>
+        </div>
+
+        <!-- 4大核心思想グリッド -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 1.8rem; margin-bottom: 2.5rem;">
+          
+          <!-- 柱1: 築10年超でもいまだ最先端、向こう30年最先端 -->
+          <div style="background: #f8fafc; border-top: 5px solid #0284c7; border-radius: 12px; padding: 1.8rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.8rem;">
+              <span style="font-size: 1.8rem;">🏛️</span>
+              <span style="font-weight: 800; color: #0369a1; font-size: 0.88rem; background: #e0f2fe; padding: 3px 10px; border-radius: 12px;">時代を超える本物の性能</span>
+            </div>
+            <h3 style="color: #0f172a; font-size: 1.25rem; line-height: 1.5; margin-bottom: 0.8rem;">
+              築10年超でもいまだ最先端。<br>性能で見れば「向こう30年最先端」の住まい。
+            </h3>
+            <p style="color: #475569; font-size: 0.95rem; line-height: 1.85; margin: 0;">
+              住ま居るの　芳彩（かぐや）-結露しない家　モデルハウスは、建ててから10年以上が経過しています。しかし、現在の国の最新基準や世の多くの新築住宅と比べても、<strong>いまだに圧倒的な最先端高性能（超高気密・超高断熱・超省エネ・高耐震）</strong>を維持し続けています。<br>
+              10年以上前から30年以上先を見据えて建てられた家だからこそ、時代が移り変わっても価値が色褪せない。<strong>「性能という視線で見れば、向こう30年最先端」</strong>。これこそが、私たちが提案する本当に価値ある住まいの基準です。
+            </p>
+          </div>
+
+          <!-- 柱2: 表面的な満足より「見えなくなる骨組み・筋肉」を最重視 -->
+          <div style="background: #f8fafc; border-top: 5px solid #d97706; border-radius: 12px; padding: 1.8rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.8rem;">
+              <span style="font-size: 1.8rem;">🛡️</span>
+              <span style="font-weight: 800; color: #b45309; font-size: 0.88rem; background: #fef3c7; padding: 3px 10px; border-radius: 12px;">命を守る構造の真実</span>
+            </div>
+            <h3 style="color: #0f172a; font-size: 1.25rem; line-height: 1.5; margin-bottom: 0.8rem;">
+              災害時に命を守り抜く。<br>表面的な満足より「骨組み・筋肉」を最重視。
+            </h3>
+            <p style="color: #475569; font-size: 0.95rem; line-height: 1.85; margin: 0;">
+              自動間取り生成やパース生成で理想を視覚化し、表面的な満足を得ることも家づくりの大切な第一歩です。しかし、住ま居るは<strong>表面的な満足よりも、見えなくなる「骨組み・筋肉」を最重視した家づくり</strong>をご提案します。<br>
+              頻発する巨大地震や自然災害。その極限状態において、ご家族が安全・安心して暮らし続けられるか否かは、壁紙や間取りではなく「全棟許容応力度計算（耐震等級3）・直下率60%以上」という見えない骨格の強さだけで決まります。
+            </p>
+          </div>
+
+          <!-- 柱3: 大手プレハブの寒冷地撤退と、鉄骨の物理的矛盾 -->
+          <div style="background: #f8fafc; border-top: 5px solid #ef4444; border-radius: 12px; padding: 1.8rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.8rem;">
+              <span style="font-size: 1.8rem;">❄️</span>
+              <span style="font-weight: 800; color: #b91c1c; font-size: 0.88rem; background: #fee2e2; padding: 3px 10px; border-radius: 12px;">建築物理と科学の事実</span>
+            </div>
+            <h3 style="color: #0f172a; font-size: 1.25rem; line-height: 1.5; margin-bottom: 0.8rem;">
+              大手プレハブの東北・北海道撤退は必然。<br>四季のある日本で「鉄の骨組み」はあり得ない。
+            </h3>
+            <p style="color: #475569; font-size: 0.95rem; line-height: 1.85; margin: 0;">
+              大手鉄骨プレハブメーカーが東北・北海道などの寒冷地から撤退を表明しました。建築物理から見れば、これは当たり前の結果です。<br>
+              冬極寒になる欧州・欧米では、熱伝導率が木材の数百倍も高い「鉄」を住宅の構造骨組みに使うことなど常識的にあり得ません。関東だって同じです。四季があり、夏は猛暑・冬は底冷えする日本で、巨大な熱の逃げ道（熱橋）となる鉄骨を住宅の骨組みに据える矛盾。<strong>本物の温熱と耐久性を極めるなら、木造×超断熱・気密こそが唯一の正解</strong>です。
+            </p>
+          </div>
+
+          <!-- 柱4: 売買前提の家づくり vs 長く住み続けるための家づくり -->
+          <div style="background: #f8fafc; border-top: 5px solid #059669; border-radius: 12px; padding: 1.8rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.8rem;">
+              <span style="font-size: 1.8rem;">🏡</span>
+              <span style="font-weight: 800; color: #047857; font-size: 0.88rem; background: #d1fae5; padding: 3px 10px; border-radius: 12px;">家づくりの根本的な目線</span>
+            </div>
+            <h3 style="color: #0f172a; font-size: 1.25rem; line-height: 1.5; margin-bottom: 0.8rem;">
+              売買を前提とした住まいづくりではなく、<br>「長く住み続ける快適性」を最重視。
+            </h3>
+            <p style="color: #475569; font-size: 0.95rem; line-height: 1.85; margin: 0;">
+              不動産として「転売・売買するのを前提とした住宅」と、「家族が30年、50年と愛着を持って住み続ける住宅」とでは、求められる目線が根本から異なります。<br>
+              売買前提の家は、新築時のコストと見栄えが全て。しかし住み続ける家は、30年経っても壁内結露を起こさず柱が腐らないこと、無垢材が艶を増し熟成すること、そして日々の冷暖房費を極限まで抑える超省エネ性が命です。住ま居るは、<strong>何世代も住み続けられる真の快適性</strong>だけを追求します。
+            </p>
+          </div>
+
+        </div>
+
+        <!-- 芳彩（かぐや）への自然な誘い -->
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff; border-radius: var(--radius-md); padding: 2.2rem; border-left: 6px solid var(--accent-gold); margin-bottom: 2rem;">
+          <div style="font-size: 0.95rem; color: #fbbf24; font-weight: 800; margin-bottom: 0.5rem;">
+            🌕 私たちがたどり着いた究極の答え
+          </div>
+          <h3 style="color: #ffffff; font-size: 1.45rem; margin-bottom: 1rem; line-height: 1.45;">
+            見えなくなる骨組みを極め、自然の恩恵に包まれる家。<br>
+            それが旗艦邸宅「芳彩（かぐや）— 結露しない家」です。
+          </h3>
+          <p style="color: #cbd5e1; font-size: 1.02rem; line-height: 1.9; margin-bottom: 1.5rem;">
+            外皮は超高断熱・高気密（HEAT20 G2/G3 × 実測C値0.3以下）で外気をシャットアウトし、全棟許容応力度計算による耐震等級3の強靭な骨組みで家族を保護。室内は呼吸する珪藻土と吉野杉・ヒノキ無垢材の清らかな芳香に満たされる。専属の大工職人さんと構造建築士がミリ単位で手づくりする、向こう30年最先端の住まいです。
+          </p>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary" data-target="article-feature" style="font-size: 0.95rem; background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.3);">
+              📖 手づくり住宅解体新書（全10章）を読む →
+            </button>
+            <button class="btn btn-secondary" data-target="metaverse" style="font-size: 0.95rem; background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.3);">
+              🌐 バーチャル展示場を見てみる →
+            </button>
+            <button class="btn btn-primary" data-target="scent-experience" style="font-size: 1.0rem; background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800; border: none; padding: 0.8rem 1.6rem;">
+              🌿 リアル展示場で本物の木の香りと無風暖房を体感する →
+            </button>
+          </div>
+        </div>
+
+      <!-- KAGUYA BRAND MEANING SECTION (ゆるやかな解説) -->
+      <div class="card" style="margin-top: 2.5rem; background: #ffffff; border: 1.5px solid rgba(217, 119, 6, 0.3); border-radius: var(--radius-lg); padding: 2rem;">
+        <div style="text-align: center; max-width: 860px; margin: 0 auto;">
+          <span style="background: #fef3c7; color: #92400e; font-weight: 800; padding: 4px 16px; border-radius: 20px; font-size: 0.88rem; display: inline-block; margin-bottom: 0.8rem;">
+            🌸 住ま居るの旗艦邸宅ブランド
+          </span>
+          <h2 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 1.65rem; margin-bottom: 0.8rem;">
+            なぜ「芳彩（かぐや）」と名付けたのか？
+          </h2>
+          <p style="color: #475569; font-size: 1.02rem; line-height: 1.9; margin-bottom: 1.5rem;">
+            少し珍しい当て字の「芳彩（かぐや）」。この名前には、私たちが一棟一棟に込めている3つの想いがあります。
+          </p>
+          <div class="grid-2" style="margin-top: 1rem; text-align: left; gap: 1.2rem;">
+            <div style="background: #f8fafc; border-left: 4px solid var(--accent-gold); padding: 1.2rem; border-radius: 0 8px 8px 0;">
+              <h3 style="color: #b45309; font-size: 1.1rem; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 6px;">
+                <span>🌿</span> 「芳」— かぐわしい木の香りと清らかな空気
+              </h3>
+              <p style="color: #64748b; font-size: 0.92rem; line-height: 1.7; margin: 0;">
+                玄関を開けた瞬間に広がる吉野杉やヒノキの甘い芳香。そして呼吸する珪藻土が湿気や匂いを自律コントロールする澄み切った空気環境を表しています。
+              </p>
+            </div>
+            <div style="background: #f8fafc; border-left: 4px solid #10b981; padding: 1.2rem; border-radius: 0 8px 8px 0;">
+              <h3 style="color: #047857; font-size: 1.1rem; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 6px;">
+                <span>🎨</span> 「彩」— 四季の彩りと家族の豊かな笑顔
+              </h3>
+              <p style="color: #64748b; font-size: 0.92rem; line-height: 1.7; margin: 0;">
+                移ろう季節の光や風をそのまま住まいに取り込むパティオやインナーテラス。住まうほどに深まる無垢材の経年変化と、家族の豊かな彩りある日常を表現しています。
+              </p>
+            </div>
+          </div>
+          <div style="margin-top: 1.2rem; background: #fdfaf6; padding: 1rem 1.4rem; border-radius: 10px; border: 1px dashed #f59e0b; color: #78350f; font-size: 0.92rem; line-height: 1.75;">
+            🌕 <strong>「かぐや姫」のように、歳月を経ても色褪せず輝き続ける家</strong><br>
+            新建材で作られた家は新築時がピークですが、「芳彩（かぐや）」は10年、30年と時を重ねるごとに木肌が艶を増し、住み心地が熟成していく住まいです。
+          </div>
+        </div>
+      </div>
+
+      <!-- PHILOSOPHY BANNER: HOTEL VS DAILY LIFE -->
+      <div class="card" style="margin-top: 2.5rem; background: linear-gradient(135deg, #1b4332 0%, #0f172a 100%); color: #fff; border: 2px solid var(--accent-gold);">
+        <div style="text-align: center; max-width: 950px; margin: 0 auto; padding: 1rem 0;">
+          <span style="background: var(--accent-gold); color: #000; font-weight: 800; padding: 4px 16px; border-radius: 20px; font-size: 0.9rem;">住ま居るの思想的哲学</span>
+          <h2 style="font-family: var(--font-heading); font-size: 1.85rem; color: #f59e0b; margin: 1rem 0; line-height: 1.45;">
+            「化学的な心地よさは、最新のラグジュアリーホテルで楽しめばいい。<br>毎日の日常は、心が安らぐ心地よさを最優先に。」
+          </h2>
+          <p style="color: #cbd5e1; font-size: 1.05rem; line-height: 1.95;">
+            私たちは、見栄や記号としての「豪華絢爛な家」を造るつもりはありません。海外製の派手な化学クロスやギラギラした人工素材の快適さは、たまの旅先で訪れる最新ホテルで十分です。お施主様とご家族が365日暮らし、呼吸し、眠る「日常」に求められるのは、裸足で歩いた瞬間にじんわりと温かい吉野杉の触感であり、雨の日も湿気や匂いを静かに吸い込む<strong>ちゃんと呼吸する珪藻土</strong>と無垢材が醸し出す澄んだ空気の心地よさです。この価値観を共有する方を、私たちは全力で応援します。
+          </p>
+        </div>
+      </div>
+
+      <!-- CORE STATEMENT 1: NATURAL MATERIAL DECLARATION (SPLIT IMAGE & COPY) -->
+      <div class="statement-split-card" style="margin-top: 2.5rem;">
+        <div class="split-image-column">
+          <img src="/images/natural_interior_aroma.jpg" alt="自然素材の内装と心地よい香りのリビング" class="split-card-img" />
+          <div class="image-caption-badge">吉野杉無垢床 × 呼吸する珪藻土壁「芳彩（かぐや）」リビング</div>
+        </div>
+        <div class="split-text-column">
+          <span class="badge-number" style="background: #d97706;">住み心地へのこだわり</span>
+          <h2 class="split-title">住ま居るの造る家は住み心地重視。<br>外皮は超高断熱・高気密で外気をシャットアウト、中は自然の恩恵に包まれる優しい空気と芳香。</h2>
+          <p class="split-desc">
+            一般的なハウスメーカーの住宅に入った瞬間のあのツンとする「新築の匂い」は、ビニールクロスや合成接着剤から発生する化学物質の匂いです。
+          </p>
+          <p class="split-desc">
+            住ま居るが造る住まいは、ドアを開けた瞬間に**本物の吉野杉・ヒノキの清々しい芳香**と、**自律調湿する本物の呼吸する珪藻土の澄み切った空気**が体を包み込みます。
+          </p>
+          <div class="highlight-callout-box">
+            <strong>⚠️ Web広告やテキスト、写真では絶対に伝わらない本物の体験</strong><br>
+            この「心地よい香りと24時間フラットな空気感」だけは、言葉ではなく現地で体感していただく他ありません。だからこそ、本物のリアル展示場へ足をお運びください。
+          </div>
+          <div style="margin-top: 1.2rem; text-align: left;">
+            <button class="btn btn-primary open-auth-modal" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800; font-size: 1.05rem; padding: 0.95rem 2rem; box-shadow: 0 4px 15px rgba(217, 119, 6, 0.35);">
+              🌿 「芳彩（かぐや）」実物モデルハウスへの見学申し込み（無料）はこちら →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CORE STATEMENT 2: CARPENTER + ARCHITECT TAG TEAM (SPLIT COPY & IMAGE) -->
+      <div class="statement-split-card reverse" style="margin-top: 2.5rem;">
+        <div class="split-text-column">
+          <span class="badge-number" style="background: var(--primary-green);">ミリ単位の完全自由設計</span>
+          <h2 class="split-title">大工さんと建築士がセットになれば、ミリ単位の自由な設計が叶う。</h2>
+          <p class="split-desc">
+            大手ハウスメーカーのように「規格モジュール（尺・メーター）」や「提携メーカーのカタログ」で施主の自由を縛ることは一切ありません。
+          </p>
+          <p class="split-desc">
+            確かな技術を持つ**専属の大工職人さん**と、耐震等級3・HEAT20 G2/G3を自社計算する**構造建築士**がタッグを組むことで、変形地でも、変形間取りでも、ミリ単位でお施主様の理想をカタチにします。
+          </p>
+          <div style="margin-top: 1.5rem;">
+            <button class="btn btn-primary" data-target="craftsmanship">🔨 お客様×大工さん×建築士の手づくり設計詳細を見る →</button>
+          </div>
+        </div>
+        <div class="split-image-column">
+          <img src="/images/craftsman_architect_tag.jpg" alt="大工さんと建築士のタッグによるミリ単位自由設計" class="split-card-img" />
+          <div class="image-caption-badge">職人の手技 × 建築士の構造計算が融合する施工現場</div>
+        </div>
+      </div>
+
+      <!-- CORE STATEMENT 3: AI TECHNOLOGY INNOVATION (4 MAJOR SERVICES INTEGRATED) -->
+      <div class="wizard-box" style="margin-top: 3rem;">
+        <div style="text-align: center; max-width: 900px; margin: 0 auto 2.2rem;">
+          <span class="badge-number" style="background: var(--accent-gold); font-size: 0.95rem; padding: 6px 18px;">AIテクノロジー革新</span>
+          <h2 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 2.1rem; margin: 0.8rem 0 0.6rem; line-height: 1.4;">
+            「デザイナーはあなた」<br>
+            パース無料無制限作図・自動間取り作図・間取り相談・高気密高断熱住宅相談
+          </h2>
+          <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.8;">
+            営業マンの拙い手描きスケッチを何日も待つ時代は終わりました。住ま居るが開発した4つの最先端AIサービスが、あなたの自由な家づくりを24時間体制でフルサポート。すべてのツールを完全無料で心ゆくまでお使いいただけます。
+          </p>
+        </div>
+
+        <div class="grid-4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+          <!-- 1. パース無料無制限作図 -->
+          <div class="card" style="padding: 1.5rem; border-top: 4px solid #f59e0b; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎨</div>
+              <h3 class="card-title" style="font-size: 1.18rem; color: #b45309; margin-bottom: 0.6rem;">パース無料無制限作図</h3>
+              <p class="card-text" style="font-size: 0.92rem; line-height: 1.7; color: #475569;">
+                和モダン、ジャパンディ、十和田石風呂など、好みのスタイルと光環境を選ぶだけで、プロ仕様のフォトリアル3D空間を自社GPUで何度でも瞬時に生成します。
+              </p>
+            </div>
+            <button class="btn btn-secondary" data-target="ai-studio" style="margin-top: 1rem; width: 100%; justify-content: center; font-size: 0.9rem;">
+              パース作成を試す →
+            </button>
+          </div>
+
+          <!-- 2. 自動間取り作図 -->
+          <div class="card" style="padding: 1.5rem; border-top: 4px solid #0284c7; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">📐</div>
+              <h3 class="card-title" style="font-size: 1.18rem; color: #0369a1; margin-bottom: 0.6rem;">自動間取り作図</h3>
+              <p class="card-text" style="font-size: 0.92rem; line-height: 1.7; color: #475569;">
+                150㎡未満の実在優良プラン（平屋・2階建て）データベースから、家族構成・延床坪数・ライフスタイルに完全合致する理想の間取りプランをAIが瞬時に自動選別・作図します。
+              </p>
+            </div>
+            <button class="btn btn-secondary" data-target="floorplan-studio" style="margin-top: 1rem; width: 100%; justify-content: center; font-size: 0.9rem;">
+              間取りを選別する →
+            </button>
+          </div>
+
+          <!-- 3. 間取り相談 -->
+          <div class="card" style="padding: 1.5rem; border-top: 4px solid #8b5cf6; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">💡</div>
+              <h3 class="card-title" style="font-size: 1.18rem; color: #6d28d9; margin-bottom: 0.6rem;">AI間取り相談</h3>
+              <p class="card-text" style="font-size: 0.92rem; line-height: 1.7; color: #475569;">
+                「パントリーを広げたい」「洗面所から直接ファミクロに行きたい」など、選んだ間取りに対してチャットで「あーでもないこーでもない」と自由改変・相談が可能です。
+              </p>
+            </div>
+            <button class="btn btn-secondary" data-target="floorplan-studio" style="margin-top: 1rem; width: 100%; justify-content: center; font-size: 0.9rem;">
+              間取りを相談・改変 →
+            </button>
+          </div>
+
+          <!-- 4. 高気密高断熱住宅相談 -->
+          <div class="card" style="padding: 1.5rem; border-top: 4px solid #10b981; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">💬</div>
+              <h3 class="card-title" style="font-size: 1.18rem; color: #047857; margin-bottom: 0.6rem;">高気密高断熱住宅相談</h3>
+              <p class="card-text" style="font-size: 0.92rem; line-height: 1.7; color: #475569;">
+                間違った情報やセールストークに迷う方へ。30年来の現場実務者のリアルな知見・失敗と経験を全解放。C値0.3、換気、壁内結露の真実まで、忖度なしの本音を24時間365日お答えします。
+              </p>
+            </div>
+            <button class="btn btn-secondary" data-target="thermal-consultation" style="margin-top: 1rem; width: 100%; justify-content: center; font-size: 0.9rem;">
+              温熱・気密を相談する →
+            </button>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2.2rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+          <button class="btn btn-primary" data-target="floorplan-studio" style="padding: 0.9rem 2rem; font-size: 1.05rem; background: linear-gradient(135deg, #0284c7, #38bdf8);">
+            📐 間取り自動作図・相談スタジオ →
+          </button>
+          <button class="btn btn-primary" data-target="ai-studio" style="padding: 0.9rem 2rem; font-size: 1.05rem; background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a;">
+            🎨 パース無料無制限作図工房 →
+          </button>
+          <button class="btn btn-primary" data-target="thermal-consultation" style="padding: 0.9rem 2rem; font-size: 1.05rem; background: linear-gradient(135deg, #059669, #10b981);">
+            💬 24h温熱換気AI相談室 →
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- PAGE 2: AI STUDIO & INTERACTIVE PERSPECTIVE WORKSHOP (ArchiX / Renrery 参考) -->
+    <section id="ai-studio" class="page-section">
+      <div class="hero hero-soft-amber" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 40%, #ffffff 100%); border: 2px solid #fde68a; border-radius: 16px; padding: 2.5rem 2rem 2.2rem; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.08); text-align: center;">
+        <span class="hero-tag" style="background: #fef3c7; border: 1.5px solid #f59e0b; color: #b45309; font-weight: 800; font-size: 0.88rem; padding: 6px 18px; border-radius: 20px; display: inline-block; margin-bottom: 1rem;">
+          🎨 ArchiX / Renrery 参考 ｜ 会員登録不要・完全無料
+        </span>
+        <h1 class="hero-title" style="color: #0f172a; font-size: 2.2rem; font-weight: 900; line-height: 1.35; margin-bottom: 0.8rem;">
+          AIフォトリアルパース工房<br>
+          <span style="color: #d97706; font-size: 1.55rem; font-weight: 800; display: inline-block; margin-top: 0.3rem;">間取りがなくてもOK！空間・スタイルを選ぶだけで理想の邸宅を瞬時描画</span>
+        </h1>
+        <p class="hero-subtitle" style="color: #334155; font-size: 1.05rem; line-height: 1.85; max-width: 860px; margin: 0 auto; font-weight: 500;">
+          「間取りの前に、まずは自分の暮らしたいイメージを固めたい」「こんな空間に住みたいというワクワクを可視化したい」という方のために。<br>
+          空間の部位、デザインテイスト、光の表情を選ぶだけで、フォトリアルな4K建築パースを何枚でも無料で生成できます。
+        </p>
+      </div>
+
+      <!-- ArchiX Style Interactive Studio Card -->
+      <div class="card" style="max-width: 1080px; margin: 0 auto; background: #ffffff; border: 2px solid #f59e0b; border-radius: var(--radius-lg); padding: 2rem;">
+        
+        <!-- Tab Mode: いきなりパース作成 vs 間取り連動モード -->
+        <div style="display: flex; gap: 10px; margin-bottom: 1.8rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 1rem;">
+          <button type="button" id="archix-mode-preset" class="btn btn-primary" style="background: #f59e0b; color: #0f172a; font-weight: 800;">
+            ✨ ① いきなりパース作成（直感プリセット）
+          </button>
+          <button type="button" id="archix-mode-from-plan" class="btn btn-secondary" style="font-weight: 700;">
+            📐 ② 間取り図面からパースを生成する
+          </button>
+        </div>
+
+        <form id="archix-preset-form">
+          <!-- 1. 空間タイプの選択 -->
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label class="form-label" style="font-weight: 800; font-size: 1.05rem; display: flex; align-items: center; gap: 6px;">
+              <span>🏡</span> 1. 描きたい空間・部位を選択
+            </label>
+            <div class="fp-button-grid" id="archix-space-grid">
+              <button type="button" class="fp-choice-btn selected" data-space="facade">🏡 邸宅外観（ファサード）</button>
+              <button type="button" class="fp-choice-btn" data-space="ldk">🛋️ 吹き抜け大開口 LDK</button>
+              <button type="button" class="fp-choice-btn" data-space="kitchen">🍳 アイランド対面キッチン</button>
+              <button type="button" class="fp-choice-btn" data-space="bedroom">🛏️ ホテルライク主寝室</button>
+              <button type="button" class="fp-choice-btn" data-space="terrace">🌿 中庭・ウッドデッキテラス</button>
+              <button type="button" class="fp-choice-btn" data-space="bath">🛁 職人造作・リゾートバス</button>
+            </div>
+          </div>
+
+          <!-- 2. デザインスタイル -->
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label class="form-label" style="font-weight: 800; font-size: 1.05rem; display: flex; align-items: center; gap: 6px;">
+              <span>🎨</span> 2. インテリア＆建築スタイル（テイスト）
+            </label>
+            <div class="fp-button-grid" id="archix-style-grid">
+              <button type="button" class="fp-choice-btn selected" data-style="japandi">🌸 ジャパンディ（北欧×和の静謐）</button>
+              <button type="button" class="fp-choice-btn" data-style="scandi">🌲 北欧ナチュラル（明るい無垢木）</button>
+              <button type="button" class="fp-choice-btn" data-style="hotellike">🏛️ ホテルライク・グレージュモダン</button>
+              <button type="button" class="fp-choice-btn" data-style="japanese">🏯 数寄屋現代和モダン（杉・漆喰）</button>
+              <button type="button" class="fp-choice-btn" data-style="minimal">🍃 ミニマルリゾート（光と自然）</button>
+            </div>
+          </div>
+
+          <!-- 3. ライティング・時間帯 -->
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label class="form-label" style="font-weight: 800; font-size: 1.05rem; display: flex; align-items: center; gap: 6px;">
+              <span>☀️</span> 3. 光の演出・時間帯
+            </label>
+            <div class="fp-button-grid" id="archix-lighting-grid">
+              <button type="button" class="fp-choice-btn selected" data-lighting="daylight">☀️ 澄み渡る朝の自然光</button>
+              <button type="button" class="fp-choice-btn" data-lighting="soft">🌤️ 柔らかな午後の陽だまり</button>
+              <button type="button" class="fp-choice-btn" data-lighting="goldenhour">🌇 黄昏のトワイライト</button>
+              <button type="button" class="fp-choice-btn" data-lighting="night">🌙 温もりの間接照明・夜景</button>
+            </div>
+          </div>
+
+          <!-- 4. 自由プロンプト（任意） -->
+          <div class="form-group" style="margin-bottom: 1.8rem;">
+            <label class="form-label" style="font-weight: 700; font-size: 0.92rem; color: #475569;">
+              ✏️ こだわり条件の自由入力（任意）
+            </label>
+            <input type="text" id="archix-prompt-input" class="form-input" placeholder="例: 庭の緑が映えるピクチャーウインドウ、アイアンと古材のアクセント、勾配天井の化粧梁" />
+          </div>
+
+          <!-- Generate Action Button -->
+          <div style="text-align: center;">
+            <button type="submit" id="btn-generate-archix" class="btn btn-primary" style="padding: 1.1rem 3.5rem; font-size: 1.15rem; background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800; box-shadow: 0 6px 20px rgba(217, 119, 6, 0.4);">
+              ⚡ フォトリアルパースを瞬時に生成する（完全無料） ✨
+            </button>
+          </div>
+        </form>
+
+        <!-- Dynamic Live Perspective Preview Card -->
+        <div id="archix-result-container" style="margin-top: 2.5rem; display: none;">
+          <div style="background: #0f172a; border-radius: 12px; padding: 1.2rem; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; color: #f8fafc;">
+              <span id="archix-result-title" style="font-weight: 700; font-size: 1.1rem; color: #38bdf8;">
+                パース完成プレビュー
+              </span>
+              <span style="background: #0284c7; color: #fff; font-size: 0.75rem; font-weight: 800; padding: 3px 10px; border-radius: 8px;">
+                4K REAL SVG
+              </span>
+            </div>
+
+            <!-- Preview Image Frame -->
+            <div style="position: relative; max-width: 100%; border-radius: 8px; overflow: hidden; background: #000; border: 1px solid #334155;">
+              <img id="archix-preview-img" src="" alt="生成パース" style="width: 100%; height: auto; display: block;" />
+            </div>
+
+            <!-- Action Buttons for Generated Perspective -->
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1.2rem; flex-wrap: wrap;">
+              <a id="archix-download-btn" href="#" download="archix_perspective.svg" class="btn btn-secondary" style="font-size: 0.9rem;">
+                📥 パース画像を保存・ダウンロード
+              </a>
+              <button type="button" id="btn-archix-to-floorplan" class="btn btn-primary" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-size: 0.95rem;">
+                📐 この空間イメージを元に、間取りを選別・相談する →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE: AI FLOOR PLAN GENERATION STUDIO (FREE CUSTOM LAYOUT TOOL) -->
+    <section id="floorplan-studio" class="page-section">
+      <div class="hero hero-soft-sky" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 45%, #ffffff 100%); border: 2px solid #bae6fd; border-radius: 16px; padding: 2.5rem 2rem 2.2rem; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(2, 132, 199, 0.08); text-align: center;">
+        <span class="hero-tag" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: #0369a1; font-weight: 800; font-size: 0.88rem; padding: 6px 18px; border-radius: 20px; display: inline-block; margin-bottom: 1rem;">
+          敷地制限抜きで自由にアイデアを磨く ｜ 初期の理想プラン作成ツール
+        </span>
+        <h1 class="hero-title" style="color: #0f172a; font-size: 2.2rem; font-weight: 900; line-height: 1.35; margin-bottom: 1rem;">
+          自由設計 AI間取りシミュレーター<br>
+          <span style="color: #0284c7; font-size: 1.55rem; font-weight: 800; display: inline-block; margin-top: 0.3rem;">条件を選んで、チャットで要望を伝えるだけ。理想の間取りをAIが即時作図</span>
+        </h1>
+        
+        <!-- 敷地制限抜き・自由設計特化の明記ボックス -->
+        <div style="background: #ffffff; border: 1.5px solid #38bdf8; border-radius: 12px; padding: 1.3rem 1.6rem; margin-top: 1.2rem; text-align: left; max-width: 960px; margin-left: auto; margin-right: auto; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.06);">
+          <h3 style="color: #0369a1; font-size: 1.08rem; font-weight: 800; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+            <span>💡</span> 【敷地の制限にとらわれず、理想のプランを自由に磨くために】
+          </h3>
+          <p style="color: #334155; font-size: 0.95rem; line-height: 1.8; margin: 0;">
+            実際の建築では敷地形状や建ぺい率・斜線制限が重要ですが、家づくりの初期段階から個人のユーザーがそこまで配慮することは非常に困難です。本シミュレーターでは<strong>「敷地の制限を抜きにして、ご自身やご家族が本当に暮らしたい理想の広さ・生活動線・部屋のつながりを自由に磨いていただくこと」</strong>に特化しています。特定の建築仕様の押し付けは一切ありません。まずは心ゆくまで理想の間取りを試作してください。<br>
+            <span style="font-size: 0.85rem; color: #64748b; margin-top: 4px; display: inline-block;">※実際の土地への配置や建築基準法への適合は、後のステップでプロの建築士がしっかり調整・サポートいたします。</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Step Indicator (1: 条件選択 → 2: AI選別3選比較 → 3: チャット相談改変) -->
+      <div class="fp-step-indicator">
+        <div class="fp-step-pill active" id="pill-step-1">
+          <span>1️⃣</span> 基本条件の選択
+        </div>
+        <div style="color: #94a3b8; font-weight: 800;">➔</div>
+        <div class="fp-step-pill" id="pill-step-2">
+          <span>2️⃣</span> AIおすすめ3選の選別・比較
+        </div>
+        <div style="color: #94a3b8; font-weight: 800;">➔</div>
+        <div class="fp-step-pill" id="pill-step-3">
+          <span>3️⃣</span> AI相談改変 ＆ パース連動
+        </div>
+      </div>
+
+      <!-- STEP 1: INITIAL CONDITIONS SELECTION PANEL (まどりLABOスタイル) -->
+      <div id="fp-step1-container">
+        <div class="fp-wizard-card">
+          <div style="text-align: center; margin-bottom: 2rem;">
+            <h2 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 1.6rem; margin-bottom: 0.4rem;">
+              まずは理想の住まいの条件をお選びください（延床150㎡未満）
+            </h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+              厳選された30以上のプロ設計プランから、AIがあなたの希望に合致する上位3プランを即座に選別します。
+            </p>
+          </div>
+
+          <!-- 1. 階数 -->
+          <div class="fp-option-group">
+            <label class="fp-option-label"><span>🏢</span> 1. 建物の階数</label>
+            <div class="fp-button-grid" id="opt-floors">
+              <button type="button" class="fp-choice-btn selected" data-value="1">平屋 (1階建て)</button>
+              <button type="button" class="fp-choice-btn" data-value="2">2階建て</button>
+            </div>
+          </div>
+
+          <!-- 2. 広さ（坪数） -->
+          <div class="fp-option-group">
+            <label class="fp-option-label"><span>📐</span> 2. 希望の広さ・延床面積（150㎡未満）</label>
+            <div class="fp-button-grid" id="opt-size">
+              <button type="button" class="fp-choice-btn" data-min="20" data-max="25" data-label="20〜25坪 (コンパクト)">20〜25坪 (約70〜82㎡)</button>
+              <button type="button" class="fp-choice-btn selected" data-min="26" data-max="30" data-label="26〜30坪 (標準人気)">26〜30坪 (約85〜99㎡)</button>
+              <button type="button" class="fp-choice-btn" data-min="31" data-max="35" data-label="31〜35坪 (ゆとり)">31〜35坪 (約100〜115㎡)</button>
+              <button type="button" class="fp-choice-btn" data-min="36" data-max="45" data-label="36〜45坪 (大家族・二世帯)">36〜45坪 (約118〜148㎡)</button>
+            </div>
+          </div>
+
+          <!-- 3. 世帯・家族構成 -->
+          <div class="fp-option-group">
+            <label class="fp-option-label"><span>👨‍👩‍👧‍👦</span> 3. 家族構成・世帯人数</label>
+            <div class="fp-button-grid" id="opt-family">
+              <button type="button" class="fp-choice-btn" data-value="夫婦・単身">単身・ご夫婦2人</button>
+              <button type="button" class="fp-choice-btn selected" data-value="子育て3〜4人">子育て世帯（3〜4人）</button>
+              <button type="button" class="fp-choice-btn" data-value="二世帯・同居">二世帯住宅・親世代同居</button>
+            </div>
+          </div>
+
+          <!-- 4. こだわり・欲しい空間（複数選択可） -->
+          <div class="fp-option-group">
+            <label class="fp-option-label"><span>✨</span> 4. こだわり重視ポイント（複数選択可）</label>
+            <div class="fp-tag-grid" id="opt-features">
+              <button type="button" class="fp-tag-btn selected" data-value="中庭テラス">🌿 中庭テラス・光庭</button>
+              <button type="button" class="fp-tag-btn selected" data-value="パントリー">🥫 パントリー (食品庫)</button>
+              <button type="button" class="fp-tag-btn" data-value="回遊動線">🔄 家事ラク回遊動線</button>
+              <button type="button" class="fp-tag-btn" data-value="ファミリークローゼット">👔 ファミリークローゼット</button>
+              <button type="button" class="fp-tag-btn" data-value="小上がり畳">🍵 小上がり畳コーナー</button>
+              <button type="button" class="fp-tag-btn" data-value="独立書斎">💻 テレワーク・独立書斎</button>
+              <button type="button" class="fp-tag-btn" data-value="土間リビング">🚪 土間リビング・土間収納</button>
+              <button type="button" class="fp-tag-btn" data-value="アイランドキッチン">🍳 アイランドキッチン</button>
+              <button type="button" class="fp-tag-btn" data-value="ランドリールーム">🧺 室内干しランドリールーム</button>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-top: 2.5rem;">
+            <button type="button" id="btn-start-ai-chat" class="btn btn-primary" style="padding: 1.1rem 3rem; font-size: 1.15rem; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);">
+              🔍 この条件でAIに間取りを選別してもらう（無料） →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2: AI MATCHED RECOMMENDATION CARDS (3選比較パネル) -->
+      <div id="fp-step2-container" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; background: #ffffff; padding: 0.8rem 1.4rem; border-radius: 10px; border: 1px solid #cbd5e1;">
+          <button type="button" id="btn-back-to-step1" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.88rem;">
+            ← 条件を選び直す
+          </button>
+          <div style="font-size: 0.92rem; color: #1e293b; font-weight: 700;" id="fp-selected-summary-text">
+            選択条件: 平屋 ｜ 26〜30坪 ｜ 子育て世帯（3〜4人）
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 1.8rem;">
+          <span style="background: #e0f2fe; color: #0284c7; font-weight: 800; padding: 4px 14px; border-radius: 14px; font-size: 0.85rem;">
+            🎯 AI MATCHING RESULT
+          </span>
+          <h2 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 1.75rem; margin-top: 0.5rem;">
+            あなたの条件に合致する「おすすめ間取り3選」
+          </h2>
+          <p style="color: #64748b; font-size: 0.95rem;">
+            気になる間取りを1つ選んでください。そのプランをベースにAIチャットで「あーでもないこーでもない」と自由に改変できます。
+          </p>
+        </div>
+
+        <!-- 3 Matched Plan Cards Container -->
+        <div id="fp-matched-cards-grid" class="grid-3" style="gap: 1.5rem; margin-bottom: 2rem;">
+          <!-- Dynamically populated from API /api/floorplan/match -->
+        </div>
+      </div>
+
+      <!-- STEP 3: BASE PLAN DETAIL & "あーでもないこーでもない" AI REMIX CHAT -->
+      <div id="fp-step3-container" style="display: none;">
+        
+        <!-- Navigation bar to Step 2 -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; background: #ffffff; padding: 0.8rem 1.4rem; border-radius: 10px; border: 1px solid #cbd5e1;">
+          <button type="button" id="btn-back-to-step2" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.88rem;">
+            ← おすすめ一覧（3選）に戻る
+          </button>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span id="fp-current-plan-title-bar" style="font-weight: 800; color: #0284c7; font-size: 0.95rem;">
+              選択中: 陽だまりの中庭テラスを囲む平屋
+            </span>
+            <button type="button" id="btn-sync-to-perspective" class="btn btn-primary" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800; font-size: 0.85rem; padding: 0.4rem 1rem;">
+              🎨 この間取りでパースを作る →
+            </button>
+          </div>
+        </div>
+
+        <!-- Studio Grid: Left Chat Panel & Right Live Floor Plan Viewer -->
+        <div class="fp-studio-grid">
+        
+        <!-- Left: AI Architect Conversational Chat Panel -->
+        <div class="fp-chat-card">
+          <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 0.8rem; margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h3 style="font-size: 1.15rem; color: var(--primary-green-dark); font-family: var(--font-heading);">💬 間取りチャット相談</h3>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">チャットで部屋の追加・広さの変更を指示</div>
+            </div>
+            <span style="font-size: 0.75rem; background: #e0f2fe; border: 1px solid #38bdf8; color: #0369a1; font-weight: 700; padding: 2px 8px; border-radius: 12px;">
+              ⚡ 即時再作図
+            </span>
+          </div>
+
+          <!-- Chat History -->
+          <div id="fp-chat-history" class="fp-chat-history">
+            <!-- Dynamically populated -->
+          </div>
+
+          <!-- Quick Suggestion Chips -->
+          <div style="font-size: 0.8rem; color: #64748b; font-weight: 700; margin-top: 6px;">💡 ワンタップで間取りを変更してみる:</div>
+          <div id="fp-chat-chips" class="fp-chips-box">
+            <!-- Chips populated dynamically -->
+          </div>
+
+          <!-- Chat Input Form -->
+          <form id="fp-chat-form" style="display: flex; gap: 8px; margin-top: 6px;">
+            <input type="text" id="fp-chat-input" class="form-input" placeholder="例: LDKを広くして、和室とパントリーを追加したい" required style="font-size: 0.92rem; padding: 0.75rem;" />
+            <button type="submit" id="fp-chat-send-btn" class="btn btn-primary" style="white-space: nowrap; padding: 0.75rem 1.4rem; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff;">
+              送信 ✈️
+            </button>
+          </form>
+        </div>
+
+        <!-- Right: Live Vector Floor Plan Display & 3D BIM Actions -->
+        <div>
+          <!-- Plan Meta Header -->
+          <div style="background: #ffffff; border: 1px solid #cbd5e1; padding: 1.2rem 1.5rem; border-radius: var(--radius-lg); margin-bottom: 1.2rem; box-shadow: var(--shadow-card);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <span class="badge-number" id="res-plan-type" style="background: #0284c7;">自由設計プラン</span>
+                <h2 id="res-plan-title" style="font-family: var(--font-heading); color: #0f172a; font-size: 1.35rem; margin-top: 4px;">理想の間取りプラン</h2>
+                <div style="font-size: 0.9rem; color: var(--text-muted);" id="res-plan-specs">
+                  延床面積: 34.0坪 (112.4㎡) ｜ 4LDK
+                </div>
+              </div>
+              <!-- Floor Switching Tabs (B1F, 1F, 2F, 3F, PH) -->
+              <div id="fp-floor-tabs" style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <!-- Dynamically generated floor buttons -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 2D SVG Canvas Display -->
+          <div id="fp-svg-viewport" style="background: #ffffff; border: 2px solid #0284c7; border-radius: var(--radius-lg); padding: 1rem; box-shadow: var(--shadow-card); overflow: auto; text-align: center; min-height: 480px; display: flex; align-items: center; justify-content: center;">
+            <div style="color: #64748b; font-size: 1.05rem;">
+              ⏳ 間取り図面を準備しています...
+            </div>
+          </div>
+
+          <!-- Room Specifications List for Current Level -->
+          <div style="margin-top: 1.8rem;">
+            <h4 style="color: var(--primary-green-dark); font-family: var(--font-heading); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px;">
+              <span>📋</span> <span id="res-rooms-floor-label">選択中フロア</span> の寸法・仕上げ建材詳細一覧
+            </h4>
+            <div id="res-rooms-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
+              <!-- Dynamic Room Cards -->
+            </div>
+          </div>
+
+          <!-- Export & Integration Actions -->
+          <div style="margin-top: 2rem; background: #f0fdf4; border: 2px solid var(--accent-green); padding: 1.8rem; border-radius: var(--radius-lg); text-align: center;">
+            <h3 style="color: #065f46; font-family: var(--font-heading); font-size: 1.35rem; margin-bottom: 0.4rem;">
+              ✨ 間取りプランの確定 ＆ 3D BIM (IFC) 出力
+            </h3>
+            <p style="color: #047857; margin-bottom: 1.2rem; font-size: 0.95rem;">
+              地下1階から屋上PHまで、全フロアの壁・スラブ立体情報を内包した国際標準規格 ISO-10303-21 (IFC2X3) ファイルを出力できます。RevitやArchiCAD等で即座に3Dモデル化が可能です。
+            </p>
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+              <button id="btn-download-ifc" class="btn btn-primary" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-size: 1rem;">
+                📥 3D BIM (全階IFCファイル) をダウンロード (Revit/ArchiCAD互換)
+              </button>
+              <button id="btn-save-plan-mypage" class="btn btn-secondary" style="background: #1e293b; color: #fff; font-size: 0.95rem;">
+                💾 この間取りをマイページに保存・建築士に相談
+              </button>
+              <button class="btn btn-secondary" data-target="scent-experience" style="background: #d97706; color: #fff; border: none; font-size: 0.95rem;">
+                🌿 リアル展示場で本物の寸法と香りを体感 →
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+    </section>
+
+    <!-- PAGE: 24/365 AI BUILDING PHYSICS & THERMAL ENVIRONMENT CONSULTATION (新設) -->
+    <section id="thermal-consultation" class="page-section">
+      <div class="hero hero-soft-emerald" style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 45%, #ffffff 100%); border: 2px solid #a7f3d0; border-radius: 16px; padding: 2.5rem 2rem 2.2rem; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.08); text-align: center;">
+        <span class="hero-tag" style="background: #d1fae5; border: 1.5px solid #059669; color: #065f46; font-weight: 800; font-size: 0.88rem; padding: 6px 18px; border-radius: 20px; display: inline-block; margin-bottom: 1rem;">
+          💬 24時間365日 AI中立相談 ｜ 登録不要・完全無料
+        </span>
+        <h1 class="hero-title" style="color: #0f172a; font-size: 2.2rem; font-weight: 900; line-height: 1.35; margin-bottom: 0.8rem;">
+          24h 温熱換気AI相談室<br>
+          <span style="color: #059669; font-size: 1.45rem; font-weight: 800; display: inline-block; margin-top: 0.3rem;">誤った情報に悩むあなたへ。30年の実務知見・リアルな失敗と経験を忖度なしで全解放</span>
+        </h1>
+        <div class="hero-subtitle" style="color: #334155; font-size: 1rem; line-height: 1.85; max-width: 920px; margin: 0 auto; text-align: left; background: rgba(255,255,255,0.75); border: 1.5px solid #a7f3d0; border-radius: 12px; padding: 1.3rem 1.6rem;">
+          <p style="margin: 0 0 0.6rem; font-size: 1.05rem; font-weight: 700; color: #065f46;">
+            💡「住宅会社ごとに言うことが真逆で、どれが正しい答えなのか分からない…」とお悩みではありませんか？
+          </p>
+          <p style="margin: 0 0 0.9rem; color: #334155; line-height: 1.8; font-size: 0.95rem;">
+            インターネット上には誤った解釈や営業都合のセールストークが蔓延し、多くの施主様が判断に迷われています。<br>
+            当相談室は、<strong>30年来の現場実務者が積み重ねてきた知見、数々の失敗とリアルな経験</strong>を余すことなく注ぎ込んだ中立のAI相談窓口です。特定のハウスメーカーへの忖度は一切なく、客観的な本音をお答えします。
+          </p>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.8rem; margin-top: 0.6rem;">
+            <div style="background: #ffffff; border: 1px solid #86efac; border-radius: 8px; padding: 0.75rem 1rem; font-size: 0.88rem; color: #1e293b;">
+              <strong style="color: #059669; font-size: 0.92rem;">① 営業トーク・忖度一切なし</strong><br>
+              住宅会社の利害関係を排し、中立・客観的な本音のみをお伝えします。
+            </div>
+            <div style="background: #ffffff; border: 1px solid #86efac; border-radius: 8px; padding: 0.75rem 1rem; font-size: 0.88rem; color: #1e293b;">
+              <strong style="color: #059669; font-size: 0.92rem;">② 30年の現場実務と失敗の知見</strong><br>
+              カタログスペックだけでは見抜けない「住んでから後悔しない本質」を回答。
+            </div>
+            <div style="background: #ffffff; border: 1px solid #86efac; border-radius: 8px; padding: 0.75rem 1rem; font-size: 0.88rem; color: #1e293b;">
+              <strong style="color: #059669; font-size: 0.92rem;">③ 熱物理と客観データに基づく即答</strong><br>
+              木造と鉄骨の熱橋、C値・UA値、換気方式の真実を24時間365日即時解説。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Thermal Chat Container -->
+      <div class="card" style="max-width: 960px; margin: 0 auto; background: #ffffff; border: 2px solid #10b981; border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-card);">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 1rem; margin-bottom: 1.2rem;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 1.8rem;">🤖</span>
+            <div>
+              <h3 style="font-size: 1.2rem; color: #065f46; margin: 0; font-family: var(--font-heading);">建築環境工学 AIアドバイザー</h3>
+              <div style="font-size: 0.8rem; color: #10b981; font-weight: 700;">● 24時間オンライン対応中</div>
+            </div>
+          </div>
+          <span style="background: #d1fae5; color: #065f46; font-size: 0.8rem; font-weight: 800; padding: 4px 12px; border-radius: 12px;">
+            中立・客観回答
+          </span>
+        </div>
+
+        <!-- Quick Question Chips -->
+        <div style="margin-bottom: 1rem;">
+          <div style="font-size: 0.85rem; color: #475569; font-weight: 700; margin-bottom: 0.5rem;">
+            💡 よくある質問（タップで即座にAIが回答します）:
+          </div>
+          <div class="fp-chips-box" style="gap: 8px;">
+            <button type="button" class="fp-chip-btn thermal-quick-chip" data-q="大手プレハブメーカーが東北・北海道から撤退した理由と、木造と鉄骨の熱工学的な違いは？">
+              ❄️ 大手プレハブ寒冷地撤退の理由（鉄骨vs木造）
+            </button>
+            <button type="button" class="fp-chip-btn thermal-quick-chip" data-q="間取りやパースの表面的な満足より「見えなくなる骨組み・筋肉」が重要な理由は？">
+              🛡️ 表面的な満足より「骨組み・筋肉」
+            </button>
+            <button type="button" class="fp-chip-btn thermal-quick-chip" data-q="築10年超でもいまだ最先端、向こう30年先を見据えた本当に価値ある住まいとは？">
+              🏛️ 向こう30年最先端の住まいとは？
+            </button>
+            <button type="button" class="fp-chip-btn thermal-quick-chip" data-q="絶対に壁内結露を起こさないための必須3大原則は？">
+              💧 壁内結露を防ぐ3大原則
+            </button>
+            <button type="button" class="fp-chip-btn thermal-quick-chip" data-q="第1種換気と第3種換気、どちらを選ぶべき？">
+              🌀 第1種換気 vs 第3種換気
+            </button>
+            <button type="button" class="fp-chip-btn thermal-quick-chip" data-q="C値0.3とC値1.0では光熱費や体感温度はどう違う？">
+              📏 C値0.3と1.0の決定的な違い
+            </button>
+            <button type="button" class="fp-chip-btn thermal-quick-chip" data-q="HEAT20 G2とG3、費用対効果が高いのはどっち？">
+              🔥 HEAT20 G2 vs G3のコスパ
+            </button>
+            <button type="button" class="fp-chip-btn thermal-quick-chip" data-q="床暖房 vs エアコン暖房の賢い選び方は？">
+              ♨️ 床暖房 vs エアコン暖房
+            </button>
+            <button type="button" class="fp-chip-btn thermal-quick-chip" data-q="樹脂トリプルサッシとアルミ複合サッシの選び方の鉄則は？">
+              🪟 窓サッシ選びの鉄則
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat Transcript Area -->
+        <div id="thermal-chat-history" style="height: 380px; overflow-y: auto; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 1.2rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+          <div style="display: flex; gap: 10px; align-items: flex-start;">
+            <div style="background: #10b981; color: #fff; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;">
+              🤖
+            </div>
+            <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 0 12px 12px 12px; padding: 1rem 1.2rem; max-width: 85%; font-size: 0.95rem; line-height: 1.8; color: #1e293b; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
+              <strong>はじめまして！24h 温熱換気AI相談室へようこそ。</strong><br>
+              ネットやSNSには誤った情報や営業都合のセールストークが溢れ、「何が正しい答えなのか」迷われていませんか？<br>
+              当相談室では、30年以上の現場実務で培ったリアルな経験・失敗・成功の知見を余すことなく全解放。特定メーカーへの忖度なしに、建築物理と客観データに基づいた「正しい本音の答え」をお返しします。<br>
+              「本当に結露しない家にするには？」「鉄骨と木造の熱物理の差」「C値・UA値・換気方式のリアルな真実」など、気になる疑問を何でもご自由にお尋ねください！
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Input Form -->
+        <form id="thermal-chat-form" style="display: flex; gap: 8px;">
+          <input type="text" id="thermal-chat-input" class="form-input" placeholder="例: 樹脂窓にすると本当に結露しない？ 第1種換気のダクト汚れが心配です..." required style="padding: 0.85rem 1rem; font-size: 0.95rem;" />
+          <button type="submit" id="thermal-chat-send-btn" class="btn btn-primary" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; white-space: nowrap; padding: 0.85rem 1.8rem; font-weight: 800;">
+            相談する 💬
+          </button>
+        </form>
+
+        <!-- Bottom Guide to Philosophy -->
+        <div style="margin-top: 1.5rem; background: #f0fdf4; border-left: 4px solid #10b981; padding: 1rem 1.4rem; border-radius: 0 8px 8px 0; font-size: 0.9rem; color: #065f46; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <div>
+            🏡 <strong>「理論」だけでなく、本物の木の香りと無風の暖かさを体感したい方へ</strong><br>
+            <span style="color: #047857; font-size: 0.85rem;">埼玉・鶴ヶ島のリアル展示場では、実測C値0.3以下の無結露空間をいつでもご体感いただけます。</span>
+          </div>
+          <button type="button" class="btn btn-secondary" data-target="scent-experience" style="font-size: 0.85rem; padding: 0.4rem 1rem; background: #047857; color: #fff; border: none;">
+            リアル体感見学予約 →
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PAGE 3: CRAFTSMANSHIP (お客様×大工さん×建築士の施工実例写真集) -->
+    <section id="craftsmanship" class="page-section">
+      <div class="hero">
+        <span class="hero-tag">お客様の叶えたい想い　×　大工さんの熟練技量 × 建築士の構造計算</span>
+        <h1 class="hero-title">お客様×大工さん×建築士で紡ぐ、<br>世界に一つだけの完全手づくり邸宅。</h1>
+        <p class="hero-subtitle">
+          規格住宅のカタログからは決して生まれない、住まい手だけの物語。<br>
+          お施主様の叶えたい暮らしの想いを、全棟許容応力度計算（耐震等級3・直下率60%超・超高断熱）で数値証明する構造建築士と、木を見極めてミリ単位で手刻みする専属大工職人さんが一体となりカタチにしました。
+        </p>
+      </div>
+
+      <!-- Statement Split Card -->
+      <div class="statement-split-card" style="margin-bottom: 2.5rem;">
+        <div class="split-image-column">
+          <img src="/images/craftsman_architect_tag.jpg" alt="お客様・大工さん・建築士のタッグ施工現場" class="split-card-img" />
+          <div class="image-caption-badge">専属大工職人 × 構造建築士 × お施主様の三位一体家づくり</div>
+        </div>
+        <div class="split-text-column">
+          <span class="badge-number" style="background: #0284c7;">唯一無二のチーム</span>
+          <h3 class="card-title" style="font-size: 1.55rem; color: #0f172a; margin: 0.5rem 0 1rem;">
+            なぜ「お客様×大工さん×建築士」でなければならないのか？
+          </h3>
+          <p class="card-text" style="margin-bottom: 1rem; line-height: 1.85;">
+            ハウスメーカーの家づくりでは、営業担当が契約を取り、設計は下請け、大工も現場ごとに変わるのが通常です。これではお施主様の「本当に叶えたい想い」が現場に届くはずがありません。
+          </p>
+          <ul style="margin-left: 1.2rem; color: var(--text-muted); line-height: 2;">
+            <li><strong>お客様の想いを直接具現化</strong>: 規格モジュール（尺・メーター）に囚われないミリ単位の自由設計。</li>
+            <li><strong>大工さんの熟練技量</strong>: 木の癖を読み、見えない仕口を手刻みで組み上げる本物の大工魂。</li>
+            <li><strong>建築士の構造・温熱計算</strong>: 吹き抜けや大開口でも耐震等級3・C値0.3以下を科学的に保証。</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 6 CASE STUDIES INTERACTIVE PHOTO ALBUM (20+ Photos each) -->
+      <div style="margin-top: 3.5rem;">
+        <div style="text-align: center; max-width: 1040px; margin: 0 auto 1.6rem;">
+          <span class="badge-number" style="background: var(--accent-gold); font-size: 0.95rem; padding: 6px 18px;">施工実例写真集</span>
+          <h2 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 2rem; margin: 0.8rem 0 0.5rem; letter-spacing: -0.5px;">
+            お客様邸 施工実例写真集（全6邸・各20枚以上の写真ギャラリー）
+          </h2>
+          <p style="color: var(--text-muted); font-size: 1.02rem;">
+            気になるお住まいをタップして切り替えてご覧ください。各邸20枚以上の高精細写真とともに、お施主様の想い・大工職人の技・建築士の計算ポイントを詳細に掲載しています。
+          </p>
+        </div>
+
+        <!-- All 6 Cases Overview Grid (No more hidden cases) -->
+        <div class="case-overview-grid" id="case-overview-grid">
+          <!-- Case 1 -->
+          <div class="case-overview-card active" data-case="1" id="case-card-1">
+            <div class="case-card-thumb">
+              <img src="/images/cases/case1_living.jpg" alt="川越市・T様邸" loading="lazy" />
+              <span class="case-card-num">No. 01</span>
+              <span class="case-card-badge">全24枚</span>
+              <div class="case-card-status">現在閲覧中</div>
+            </div>
+            <div class="case-card-body">
+              <h3 class="case-card-title">川越市・T様邸</h3>
+              <p class="case-card-copy">吹抜け大空間と愛猫と暮らす吉野杉の家</p>
+              <div class="case-card-tags">
+                <span class="c-tag">延床34坪</span>
+                <span class="c-tag">耐震等級3</span>
+                <span class="c-tag">C値0.22</span>
+              </div>
+              <button class="case-card-btn">写真集を見る (24枚) ↓</button>
+            </div>
+          </div>
+
+          <!-- Case 2 -->
+          <div class="case-overview-card" data-case="2" id="case-card-2">
+            <div class="case-card-thumb">
+              <img src="/images/artisan_custom_bath.jpg" alt="鶴ヶ島市・M様邸" loading="lazy" />
+              <span class="case-card-num">No. 02</span>
+              <span class="case-card-badge">全22枚</span>
+              <div class="case-card-status">現在閲覧中</div>
+            </div>
+            <div class="case-card-body">
+              <h3 class="case-card-title">鶴ヶ島市・M様邸</h3>
+              <p class="case-card-copy">十和田石在来風呂と平屋風二世帯住宅</p>
+              <div class="case-card-tags">
+                <span class="c-tag">延床42坪</span>
+                <span class="c-tag">HEAT20 G3</span>
+                <span class="c-tag">薪ストーブ</span>
+              </div>
+              <button class="case-card-btn">写真集を見る (22枚) ↓</button>
+            </div>
+          </div>
+
+          <!-- Case 3 -->
+          <div class="case-overview-card" data-case="3" id="case-card-3">
+            <div class="case-card-thumb">
+              <img src="/images/kaitai/ch2_covered_porch.jpg" alt="坂戸市・K様邸" loading="lazy" />
+              <span class="case-card-num">No. 03</span>
+              <span class="case-card-badge">全20枚</span>
+              <div class="case-card-status">現在閲覧中</div>
+            </div>
+            <div class="case-card-body">
+              <h3 class="case-card-title">坂戸市・K様邸</h3>
+              <p class="case-card-copy">インナーガレージと中庭を囲むリゾート邸宅</p>
+              <div class="case-card-tags">
+                <span class="c-tag">延床38坪</span>
+                <span class="c-tag">C値0.18</span>
+                <span class="c-tag">中庭テラス</span>
+              </div>
+              <button class="case-card-btn">写真集を見る (20枚) ↓</button>
+            </div>
+          </div>
+
+          <!-- Case 4 -->
+          <div class="case-overview-card" data-case="4" id="case-card-4">
+            <div class="case-card-thumb">
+              <img src="/images/kaitai/ch8_denim_tatami.jpg" alt="日高市・S様邸" loading="lazy" />
+              <span class="case-card-num">No. 04</span>
+              <span class="case-card-badge">全21枚</span>
+              <div class="case-card-status">現在閲覧中</div>
+            </div>
+            <div class="case-card-body">
+              <h3 class="case-card-title">日高市・S様邸</h3>
+              <p class="case-card-copy">杉と土壁の茶室・隠れ家ロフトのある和モダン</p>
+              <div class="case-card-tags">
+                <span class="c-tag">延床31坪</span>
+                <span class="c-tag">手づくり茶室</span>
+                <span class="c-tag">珪藻土手塗り</span>
+              </div>
+              <button class="case-card-btn">写真集を見る (21枚) ↓</button>
+            </div>
+          </div>
+
+          <!-- Case 5 -->
+          <div class="case-overview-card" data-case="5" id="case-card-5">
+            <div class="case-card-thumb">
+              <img src="/images/kaitai/ch9_solar_house_exterior.jpg" alt="東松山市・H様邸" loading="lazy" />
+              <span class="case-card-num">No. 05</span>
+              <span class="case-card-badge">全23枚</span>
+              <div class="case-card-status">現在閲覧中</div>
+            </div>
+            <div class="case-card-body">
+              <h3 class="case-card-title">東松山市・H様邸</h3>
+              <p class="case-card-copy">太陽光10kW＋V2Hオフグリッド自然素材住宅</p>
+              <div class="case-card-tags">
+                <span class="c-tag">延床36坪</span>
+                <span class="c-tag">太陽光10kW</span>
+                <span class="c-tag">光熱費ゼロ</span>
+              </div>
+              <button class="case-card-btn">写真集を見る (23枚) ↓</button>
+            </div>
+          </div>
+
+          <!-- Case 6 -->
+          <div class="case-overview-card" data-case="6" id="case-card-6">
+            <div class="case-card-thumb">
+              <img src="/images/natural_interior_aroma.jpg" alt="所沢市・Y様邸" loading="lazy" />
+              <span class="case-card-num">No. 06</span>
+              <span class="case-card-badge">全20枚</span>
+              <div class="case-card-status">現在閲覧中</div>
+            </div>
+            <div class="case-card-body">
+              <h3 class="case-card-title">所沢市・Y様邸</h3>
+              <p class="case-card-copy">造作ライブラリーと回遊動線の子育て住宅</p>
+              <div class="case-card-tags">
+                <span class="c-tag">延床33坪</span>
+                <span class="c-tag">大工造作本棚</span>
+                <span class="c-tag">家事ラク回遊</span>
+              </div>
+              <button class="case-card-btn">写真集を見る (20枚) ↓</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Gallery Viewer Container -->
+        <div class="case-gallery-container" id="case-gallery-container">
+
+          <!-- Current Case Header & Switcher Bar -->
+          <div class="case-viewer-header">
+            <div class="case-header-left">
+              <span class="case-header-num" id="case-header-num">CASE 01</span>
+              <div>
+                <h3 class="case-header-title" id="case-header-title">①【川越市・T様邸】吹抜け大空間と愛猫と暮らす吉野杉の家</h3>
+                <p class="case-header-sub" id="case-header-sub">延床34坪 / 許容応力度計算耐震等級3 / C値0.22 / 全24枚</p>
+              </div>
+            </div>
+            <div class="case-header-nav">
+              <button class="btn-case-nav" id="case-nav-prev-house" title="前の邸宅へ切り替え">◀ 前の邸宅</button>
+              <button class="btn-case-nav" id="case-nav-next-house" title="次の邸宅へ切り替え">次の邸宅 ▶</button>
+            </div>
+          </div>
+          
+          <!-- Main Photo Viewer -->
+          <div class="case-main-viewer" id="case-main-viewer" title="クリックして全画面拡大表示">
+            <span class="case-expand-hint">🔍 クリックで全画面拡大</span>
+            <span class="case-badge-count" id="case-photo-counter">📸 写真 1 / 24枚</span>
+            <img src="/images/cases/case1_living.jpg" alt="施工例メイン写真" class="case-main-img" id="case-main-img" />
+            
+            <!-- Navigation Arrows -->
+            <button class="case-nav-arrow prev" id="case-prev-btn" aria-label="前の写真">◀</button>
+            <button class="case-nav-arrow next" id="case-next-btn" aria-label="次の写真">▶</button>
+            
+            <!-- Caption Overlay -->
+            <div class="case-caption-overlay" id="case-caption-text">
+              【LDK全景】吉野杉30mm赤身材と職人手塗り珪藻土が包み込む、柱のない大空間リビング
+            </div>
+          </div>
+
+          <!-- Thumbnail Controls & Filter Bar -->
+          <div class="case-thumb-controls">
+            <!-- Category Filter Tabs -->
+            <div class="case-category-filters" id="case-category-filters">
+              <button class="thumb-filter-btn active" data-filter="all">すべて (<span id="count-filter-all">24</span>)</button>
+              <button class="thumb-filter-btn" data-filter="interior">リビング・居室</button>
+              <button class="thumb-filter-btn" data-filter="craft">職人造作・お風呂</button>
+              <button class="thumb-filter-btn" data-filter="exterior">外観・アプローチ</button>
+              <button class="thumb-filter-btn" data-filter="structure">構造・性能・設備</button>
+            </div>
+
+            <!-- View Modes & Autoplay -->
+            <div class="case-thumb-actions">
+              <button class="thumb-action-btn" id="btn-toggle-grid" title="サムネイルを全一覧グリッドで展開">
+                <span class="icon">▦</span> <span id="text-toggle-grid">全写真一覧で表示</span>
+              </button>
+              <button class="thumb-action-btn" id="btn-autoplay" title="スライドショーを自動再生">
+                <span class="icon">▶</span> <span id="text-autoplay">自動再生</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Thumbnails Strip / Grid -->
+          <div class="case-thumbnails-strip" id="case-thumbnails-strip">
+            <!-- Dynamically populated by JavaScript for 20+ photos -->
+          </div>
+
+          <!-- The Triad Story: Client / Carpenter / Architect -->
+          <div class="case-story-triad" id="case-story-triad">
+            <div class="case-story-col" style="border-top-color: #f59e0b;">
+              <h4>💡 お客様の叶えたい想い</h4>
+              <p id="case-story-client">
+                「愛猫と一緒にストレスなく暮らしながら、冬でも素足で暖かく過ごせるリビングが一番の夢でした。既成のキャットウォークではなく、吉野杉の柱梁と一体になった職人手づくりの木製ステップを作っていただきました。」
+              </p>
+            </div>
+            <div class="case-story-col" style="border-top-color: #0284c7;">
+              <h4>🔨 大工さんの熟練手刻み</h4>
+              <p id="case-story-carpenter">
+                「22帖の柱なし大空間を強靭に支えるため、大黒柱と差し鴨居の仕口を現場で手刻み調整。猫ちゃんの手足に優しいよう、杉の角を一本一本手カンナで丸く面取りして仕上げました。」
+              </p>
+            </div>
+            <div class="case-story-col" style="border-top-color: #10b981;">
+              <h4>📐 建築士の構造・温熱計算</h4>
+              <p id="case-story-architect">
+                「吹抜けによる吹き下ろし冷気を防ぐため、全館気密実測C値0.22を達成。大開口サッシと吹抜けを両立させつつ、全棟許容応力度計算により耐震等級3・直下率68%を完璧に裏付けました。」
+              </p>
+            </div>
+          </div>
+
+          <!-- Real Model Booking Callout inside Cases -->
+          <div class="case-booking-callout" style="text-align: center; margin-top: 2.6rem; background: linear-gradient(135deg, #ffffff 0%, #fefcf9 100%); padding: 2.2rem 2rem; border-radius: 12px; border: 2px solid #f59e0b; box-shadow: 0 8px 28px rgba(217, 119, 6, 0.12);">
+            <div style="display: inline-block; background: #fef3c7; color: #92400e; font-size: 0.82rem; font-weight: 800; padding: 4px 14px; border-radius: 20px; margin-bottom: 0.8rem; border: 1px solid #fde68a;">
+              🌿 無料体感・見学受付中
+            </div>
+            <h4 style="color: #0f172a; font-size: 1.35rem; font-weight: 800; margin-bottom: 0.6rem; letter-spacing: -0.3px;">
+              実際のお住まいで使用している吉野杉・十和田石・珪藻土の香りと空気を体感しませんか？
+            </h4>
+            <p style="color: #475569; font-size: 1rem; margin-bottom: 1.5rem; line-height: 1.7;">
+              リアル展示場「<strong style="color: #0f172a;">芳彩（かぐや）</strong>」では、すべての施工実例のベースとなった本物の自然素材と職人技術をじっくり五感でご体感いただけます。
+            </p>
+            <button class="btn btn-primary open-auth-modal case-cta-button" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 1.12rem; font-weight: 800; padding: 1rem 2.6rem; color: #ffffff !important; background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%); border: 2px solid #f59e0b; border-radius: 50px; cursor: pointer; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); box-shadow: 0 6px 20px rgba(27, 67, 50, 0.35); transition: all 0.25s ease;">
+              <span>🌿 「芳彩（かぐや）」リアル展示場の見学予約（無料）はこちら</span>
+              <span style="font-size: 1.25rem; transition: transform 0.2s ease;">→</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- PAGE 4: METAVERSE EXHIBITION LINK & SPATIAL EXPERIENCE -->
+    <section id="metaverse" class="page-section">
+      <div class="hero" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 45%, #ffffff 100%); border: 2px solid #bae6fd; border-radius: 16px; padding: 2.5rem 2rem 2.2rem; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(2, 132, 199, 0.08); text-align: center;">
+        <span class="hero-tag" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: #0369a1; font-weight: 800; font-size: 0.88rem; padding: 6px 18px; border-radius: 20px; display: inline-block; margin-bottom: 1rem;">
+          🌐 3D WebGL / VR空間体感 ｜ 登録不要・完全無料
+        </span>
+        <h1 class="hero-title" style="color: #0f172a; font-size: 2.2rem; font-weight: 900; line-height: 1.35; margin-bottom: 0.8rem;">
+          バーチャル展示場・メタバース住宅展示場<br>
+          <span style="color: #0284c7; font-size: 1.55rem; font-weight: 800; display: inline-block; margin-top: 0.3rem;">「バーチャルモデルハウス」で立体空間を歩く。</span>
+        </h1>
+        <p class="hero-subtitle" style="color: #334155; font-size: 1.05rem; line-height: 1.85; max-width: 900px; margin: 0 auto; font-weight: 500;">
+          パースで描いた理想の住まいを、今度は3Dバーチャルモデルハウスの中で体験。<br>
+          部屋の広さ感、天井の高さ、日差しと影の移ろいをスマホやPCから自由にご体感いただけます。
+        </p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div style="background: #0f172a; border-radius: var(--radius-md); padding: 2rem; text-align: center; color: #fff; margin-bottom: 1.5rem; position: relative;">
+            <span style="background: var(--accent-gold); color: #000; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; position: absolute; top: 12px; right: 12px;">3D WebGL / VR</span>
+            <h3 style="font-size: 1.6rem; margin-top: 1rem; color: #38bdf8;">🌐 「芳彩-かぐや-」バーチャルモデルハウス</h3>
+            <p style="color: #94a3b8; margin: 1rem 0;">吹抜けLDK、十和田石造作風呂、インナーガレージを再現した3D空間</p>
+            <a href="https://zumenpers.com/vr/uploads/7_project/index.html" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-weight: 800; width: 100%; justify-content: center; padding: 0.9rem 1.5rem;">🌐 バーチャルモデルハウスへ入場する（別タブで開く） →</a>
+          </div>
+          <h3 class="card-title">バーチャルで確認できる3つのポイント</h3>
+          <ul style="margin-left: 1.2rem; color: var(--text-muted); line-height: 2;">
+            <li><strong>家具・動線スケール感</strong>: 図面では見えにくい生活動線と余白を立体的に確認。</li>
+            <li><strong>光と風の抜ける空間</strong>: 吹き抜けサッシからの自然光の届き方をシミュレート。</li>
+            <li><strong>造作デザインの全体調和</strong>: 手づくり風呂や無垢ルーバーの立体的な美しさを視認。</li>
+          </ul>
+        </div>
+
+        <div class="card" style="background: linear-gradient(135deg, #1b4332 0%, #0f172a 100%); color: #fff;">
+          <h3 class="card-title" style="color: #f59e0b; font-size: 1.5rem;">⚠️ バーチャルモデルハウスで「体験できない」こと</h3>
+          <p style="color: #cbd5e1; margin-bottom: 1.5rem; font-size: 1.05rem;">
+            バーチャル空間は形や配置を視覚的に体験する素晴らしいツールです。しかし、どれほど最先端の3D技術でも表現できない本物の価値があります。
+          </p>
+          <div style="background: rgba(255,255,255,0.1); padding: 1.2rem; border-radius: 10px; border-left: 4px solid #f59e0b; margin-bottom: 1.5rem;">
+            <h4 style="color: #fff; font-size: 1.1rem; margin-bottom: 6px;">💡 それは「自然素材の心地よい香り」です</h4>
+            <p style="color: #e2e8f0; font-size: 0.95rem;">
+              本物の吉野杉やヒノキの芳香、呼吸する珪藻土が維持する澄み切った空気感は、画面越しでは絶対に味わえません。
+            </p>
+          </div>
+          <button class="btn btn-primary" data-target="scent-experience" style="width: 100%; justify-content: center;">
+            🌿 「本物の香りと空気」を体感しにリアル展示場へ →
+          </button>
+        </div>
+      </div>
+
+      <!-- METAVERSE EXPANDED GUIDE: メタバース住宅展示場の全貌＆できること徹底解説（3倍詳解） -->
+      <div class="metaverse-deep-guide" style="margin-top: 4rem;">
+        
+        <!-- SECTION HEADER -->
+        <div style="text-align: center; max-width: 960px; margin: 0 auto 3rem;">
+          <span style="background: #e0f2fe; color: #0284c7; font-weight: 800; font-size: 0.9rem; padding: 6px 20px; border-radius: 20px; display: inline-block; margin-bottom: 0.8rem; border: 1px solid #bae6fd;">
+            🌐 次世代メタバース住宅展示場ができること・全貌解説
+          </span>
+          <h2 style="font-size: 2.2rem; font-weight: 900; color: #0f172a; line-height: 1.4; margin-bottom: 1rem;">
+            「ただ見るだけ」から「空間に入り、対話し、その場で変える」へ。<br>
+            <span style="color: #0284c7;">メタバース住宅展示場がもたらす家づくり革命</span>
+          </h2>
+          <p style="color: #475569; font-size: 1.05rem; line-height: 1.85;">
+            従来の住宅VRにあった「写真をつなぎ合わせただけの静止画パノラマ」とは次元が違います。<br>
+            ミリ単位のCAD図面から立ち上げた3次元仮想空間に、アバターとしてご家族や建築士と一緒に入場。<br>
+            遠隔地にいながらリアルタイムに会話を交わし、床や壁の素材を着せ替え、日射や動線を検証できる新次元の体験です。
+          </p>
+        </div>
+
+        <!-- CHAPTER 1: 従来のVRと何が違うのか？革新の3大ポイント -->
+        <div class="card" style="background: #ffffff; border: 1.5px solid #bae6fd; border-radius: var(--radius-lg); padding: 2.5rem 2rem; margin-bottom: 3.5rem; box-shadow: 0 10px 30px rgba(2, 132, 199, 0.06);">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem;">
+            <span style="background: #0284c7; color: #fff; font-weight: 900; font-size: 1.1rem; padding: 4px 14px; border-radius: 8px;">CHECK 1</span>
+            <h3 style="font-size: 1.5rem; color: #0f172a; margin: 0; font-weight: 800;">
+              従来の「VRパノラマ」と「対話型メタバース展示場」の決定的違い
+            </h3>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem;">
+              <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">📐</div>
+              <h4 style="color: #0f172a; font-size: 1.15rem; font-weight: 800; margin-bottom: 0.6rem;">① 写真貼り合わせではなく「CAD図面からミリ単位の立体化」</h4>
+              <p style="color: #475569; font-size: 0.92rem; line-height: 1.8; margin: 0;">
+                一般的なバーチャルツアーは完成写真をつなぎ合わせた球体パノラマに過ぎず、視点移動に歪みが生じます。当展示場は建築CAD図面・仕様書から直接生成した本物のポリゴン3D空間。ミリ単位の正確なスケール、視線の高さ、日照シミュレーションが忠実に再現されます。
+              </p>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem;">
+              <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">👥</div>
+              <h4 style="color: #0f172a; font-size: 1.15rem; font-weight: 800; margin-bottom: 0.6rem;">② 単独見学ではなく「アバター同士のリアルタイム対話＆接客」</h4>
+              <p style="color: #475569; font-size: 0.92rem; line-height: 1.8; margin: 0;">
+                一人で孤独に画面をクリックする時代は終わりました。お客様と設計者・営業担当者がそれぞれアバターとなって同一空間に同時アクセス。音声通話で「この吹き抜けは冬寒くないですか？」「このカウンターの高さは？」とその場で質疑応答しながら見学できます。
+              </p>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem;">
+              <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🕒</div>
+              <h4 style="color: #0f172a; font-size: 1.15rem; font-weight: 800; margin-bottom: 0.6rem;">③ 移動・拘束ゼロ！「24時間365日、全国どこからでも家族集合」</h4>
+              <p style="color: #475569; font-size: 0.92rem; line-height: 1.8; margin: 0;">
+                展示場まで片道何時間も車を走らせたり、休日の予定を丸一日潰す必要はありません。共働きのご夫婦や、遠方のご両親など、別々の場所にいる家族がスマートフォンやPCから同時にアクセスして、わいわい相談しながらモデルハウスを内覧できます。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHAPTER 2: メタバース住宅展示場が誇る【8大プレミアム機能】徹底解説 -->
+        <div style="margin-bottom: 4rem;">
+          <div style="text-align: center; margin-bottom: 2.2rem;">
+            <span style="background: #ecfdf5; color: #059669; font-weight: 800; font-size: 0.88rem; padding: 5px 18px; border-radius: 20px; display: inline-block; margin-bottom: 0.6rem; border: 1px solid #a7f3d0;">
+              ✨ ALL FEATURES
+            </span>
+            <h3 style="font-size: 2rem; font-weight: 900; color: #0f172a;">
+              メタバース住宅展示場で体験できる「8大プレミアム機能」
+            </h3>
+            <p style="color: #64748b; font-size: 1rem; max-width: 800px; margin: 0.5rem auto 0;">
+              営業活動・設計打ち合わせ・顧客体験を劇的に進化させる、仮想空間ならではの充実した対話型機能群。
+            </p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 1.4rem;">
+            
+            <!-- Feature 1 -->
+            <div class="card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: var(--radius-md); padding: 1.6rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                <span style="font-size: 2.2rem;">🚶‍♂️</span>
+                <span style="background: #e0f2fe; color: #0369a1; font-weight: 800; font-size: 0.78rem; padding: 4px 10px; border-radius: 10px;">機能 01</span>
+              </div>
+              <h4 style="font-size: 1.2rem; color: #0f172a; font-weight: 800; margin-bottom: 0.6rem;">アバターによる自由自在なウォークスルー</h4>
+              <p style="color: #475569; font-size: 0.9rem; line-height: 1.8; margin-bottom: 0.8rem;">
+                玄関から廊下、LDK、吹き抜け、主寝室、バルコニーまで、自分のアバターを動かして自由に歩き回れます。決められた定点ジャンプだけでなく、立ったり座ったり、様々な目線の高さから「実際の生活空間の余白や広がり」を直感的に体感できます。
+              </p>
+              <div style="background: #f0fdf4; border-left: 3px solid #10b981; padding: 0.5rem 0.8rem; font-size: 0.82rem; color: #065f46;">
+                💡 <strong>体感ポイント:</strong> 車椅子動線や家事動線のスムーズさを自分自身で歩いて検証可能。
+              </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: var(--radius-md); padding: 1.6rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                <span style="font-size: 2.2rem;">🎙️</span>
+                <span style="background: #e0f2fe; color: #0369a1; font-weight: 800; font-size: 0.78rem; padding: 4px 10px; border-radius: 10px;">機能 02</span>
+              </div>
+              <h4 style="font-size: 1.2rem; color: #0f172a; font-weight: 800; margin-bottom: 0.6rem;">リアルタイム音声会話＆リモート接客機能</h4>
+              <p style="color: #475569; font-size: 0.9rem; line-height: 1.8; margin-bottom: 0.8rem;">
+                空間内で営業担当者や設計士と直接クリアな音声通話が可能です。「このキッチンの後ろにパントリーは増やせますか？」「手づくり十和田石風呂の費用は？」など、目の前にある部材を指差しながら、その場で即座に質問と回答を交わせます。
+              </p>
+              <div style="background: #f0fdf4; border-left: 3px solid #10b981; padding: 0.5rem 0.8rem; font-size: 0.82rem; color: #065f46;">
+                💡 <strong>体感ポイント:</strong> 電話やメールでは伝わらない「空間のニュアンス」を指差し共有。
+              </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: var(--radius-md); padding: 1.6rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                <span style="font-size: 2.2rem;">📍</span>
+                <span style="background: #e0f2fe; color: #0369a1; font-weight: 800; font-size: 0.78rem; padding: 4px 10px; border-radius: 10px;">機能 03</span>
+              </div>
+              <h4 style="font-size: 1.2rem; color: #0f172a; font-weight: 800; margin-bottom: 0.6rem;">素材・工法の詳細ポップアップ表示（情報ピン）</h4>
+              <p style="color: #475569; font-size: 0.9rem; line-height: 1.8; margin-bottom: 0.8rem;">
+                フロアや壁、天井に配置されたインフォメーションアイコンをクリックすると、使用されている建築素材（吉野杉・檜・珪藻土・十和田石）、断熱工法（外張り断熱・トリプルガラスサッシ）、構造耐震金物などの詳細仕様書や写真がポップアップで瞬時に展開します。
+              </p>
+              <div style="background: #f0fdf4; border-left: 3px solid #10b981; padding: 0.5rem 0.8rem; font-size: 0.82rem; color: #065f46;">
+                💡 <strong>体感ポイント:</strong> 見えなくなる壁内構造や自然素材の産地・性能数値をその場で確認。
+              </div>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: var(--radius-md); padding: 1.6rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                <span style="font-size: 2.2rem;">📊</span>
+                <span style="background: #e0f2fe; color: #0369a1; font-weight: 800; font-size: 0.78rem; padding: 4px 10px; border-radius: 10px;">機能 04</span>
+              </div>
+              <h4 style="font-size: 1.2rem; color: #0f172a; font-weight: 800; margin-bottom: 0.6rem;">空間内プレゼンテーション（図面・カタログ投影）</h4>
+              <p style="color: #475569; font-size: 0.9rem; line-height: 1.8; margin-bottom: 0.8rem;">
+                モデルハウス内の壁面モニターやクリップボードに、事前に用意した図面、商品パンフレット、過去の施工写真、概算見積シートなどを投影。別ウィンドウを開いて画面共有する必要がなく、仮想モデルハウスの空間自体がプレゼンテーションルームになります。
+              </p>
+              <div style="background: #f0fdf4; border-left: 3px solid #10b981; padding: 0.5rem 0.8rem; font-size: 0.82rem; color: #065f46;">
+                💡 <strong>体感ポイント:</strong> 空間を見ながら同時に図面と仕様書を照らし合わせる極上の理解度。
+              </div>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: var(--radius-md); padding: 1.6rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                <span style="font-size: 2.2rem;">🎨</span>
+                <span style="background: #e0f2fe; color: #0369a1; font-weight: 800; font-size: 0.78rem; padding: 4px 10px; border-radius: 10px;">機能 05</span>
+              </div>
+              <h4 style="font-size: 1.2rem; color: #0f172a; font-weight: 800; margin-bottom: 0.6rem;">内装素材のリアルタイム着せ替えシミュレーション</h4>
+              <p style="color: #475569; font-size: 0.9rem; line-height: 1.8; margin-bottom: 0.8rem;">
+                実機画面にも搭載されている「床材変更」などのアイコンをタップするだけで、無垢杉フローリング ⇔ ウォールナット ⇔ 大理石調タイル、珪藻土塗り壁 ⇔ アクセントクロスなどを一瞬で切り替え。空間全体のトーン＆マナーをリアルタイムに比較できます。
+              </p>
+              <div style="background: #f0fdf4; border-left: 3px solid #10b981; padding: 0.5rem 0.8rem; font-size: 0.82rem; color: #065f46;">
+                💡 <strong>体感ポイント:</strong> 「濃い床と明るい床で部屋の広さの印象がどう変わるか」を秒速で検証。
+              </div>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: var(--radius-md); padding: 1.6rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                <span style="font-size: 2.2rem;">🏠</span>
+                <span style="background: #e0f2fe; color: #0369a1; font-weight: 800; font-size: 0.78rem; padding: 4px 10px; border-radius: 10px;">機能 06</span>
+              </div>
+              <h4 style="font-size: 1.2rem; color: #0f172a; font-weight: 800; margin-bottom: 0.6rem;">外観スタイル＆住宅設備の一括変更機能</h4>
+              <p style="color: #475569; font-size: 0.9rem; line-height: 1.8; margin-bottom: 0.8rem;">
+                「瓦葺の重厚な和風数寄屋スタイル」から「タイル張り・フラットルーフのモダン洋風住宅」まで、外観のデザインテイストを一括切り替え。さらにキッチンや洗面化粧台、ユニットバスの形状やグレードもワンタップでシミュレーション可能です。
+              </p>
+              <div style="background: #f0fdf4; border-left: 3px solid #10b981; padding: 0.5rem 0.8rem; font-size: 0.82rem; color: #065f46;">
+                💡 <strong>体感ポイント:</strong> 同じ骨組みでも外観や水回り仕様によって表情がどう変わるかを直感把握。
+              </div>
+            </div>
+
+            <!-- Feature 7 -->
+            <div class="card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: var(--radius-md); padding: 1.6rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                <span style="font-size: 2.2rem;">🔭</span>
+                <span style="background: #e0f2fe; color: #0369a1; font-weight: 800; font-size: 0.78rem; padding: 4px 10px; border-radius: 10px;">機能 07</span>
+              </div>
+              <h4 style="font-size: 1.2rem; color: #0f172a; font-weight: 800; margin-bottom: 0.6rem;">ドールハウス（鳥瞰立体平面図）＆階層切り替え</h4>
+              <p style="color: #475569; font-size: 0.9rem; line-height: 1.8; margin-bottom: 0.8rem;">
+                屋根をスライスして建物を真上・斜め上から見渡す「ドールハウスビュー」。平屋や2階建てのフロア全体、ガレージや庭との位置関係、玄関から洗面・LDKへの家事動線をミニチュアのように俯瞰し、家全体のつながりを一目瞭然に把握できます。
+              </p>
+              <div style="background: #f0fdf4; border-left: 3px solid #10b981; padding: 0.5rem 0.8rem; font-size: 0.82rem; color: #065f46;">
+                💡 <strong>体感ポイント:</strong> 2次元の図面ではわかりにくい「部屋同士の距離感と抜け感」が完全理解。
+              </div>
+            </div>
+
+            <!-- Feature 8 -->
+            <div class="card" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: var(--radius-md); padding: 1.6rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                <span style="font-size: 2.2rem;">🥽</span>
+                <span style="background: #e0f2fe; color: #0369a1; font-weight: 800; font-size: 0.78rem; padding: 4px 10px; border-radius: 10px;">機能 08</span>
+              </div>
+              <h4 style="font-size: 1.2rem; color: #0f172a; font-weight: 800; margin-bottom: 0.6rem;">VRゴーグル対応（完全没入）＆マルチ端末対応</h4>
+              <p style="color: #475569; font-size: 0.9rem; line-height: 1.8; margin-bottom: 0.8rem;">
+                PCやスマートフォンでの手軽なブラウザ閲覧はもちろん、Meta QuestなどのVRゴーグルを装着すれば、360度すべてが原寸大の住まい空間に。まるで本当に新築邸宅の中に立っているかのような圧倒的スケール感と臨場感に包まれます。
+              </p>
+              <div style="background: #f0fdf4; border-left: 3px solid #10b981; padding: 0.5rem 0.8rem; font-size: 0.82rem; color: #065f46;">
+                💡 <strong>体感ポイント:</strong> 天井の高さ、窓から見える外の景色、キッチンの作業幅を等身大で実測。
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- CHAPTER 3: 実機スクリーンショットで見る「操作イメージと体感ポイント」 -->
+        <div class="card" style="background: #ffffff; border: 1.5px solid #bae6fd; border-radius: var(--radius-lg); padding: 2.5rem 2rem; margin-bottom: 3.5rem; box-shadow: 0 10px 30px rgba(2, 132, 199, 0.06);">
+          <div style="text-align: center; max-width: 860px; margin: 0 auto 2.5rem;">
+            <span style="background: #fef3c7; color: #92400e; font-weight: 800; font-size: 0.88rem; padding: 5px 18px; border-radius: 20px; display: inline-block; margin-bottom: 0.6rem; border: 1px solid #fde68a;">
+              📸 ACTUAL SYSTEM SCREENS
+            </span>
+            <h3 style="font-size: 2rem; font-weight: 900; color: #0f172a;">
+              実機モデルハウスで見る「操作画面と体感ポイント」
+            </h3>
+            <p style="color: #64748b; font-size: 0.98rem; line-height: 1.8; margin-top: 0.5rem;">
+              現在テスト運用中の実機バーチャルモデルハウス（株式会社住ま居る仕様）の実際のキャプチャ画面です。<br>
+              外観から主要居室、鳥瞰平面図まで、直感的なUIで自由自在に探索できます。
+            </p>
+          </div>
+
+          <!-- Screenshot Gallery Grid -->
+          <div style="display: flex; flex-direction: column; gap: 2.5rem;">
+            
+            <!-- Shot 1: 外観 ＆ インナーガレージ -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.8rem; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem;">
+              <div>
+                <img src="/images/vr/vr_exterior_overview.png" alt="バーチャルモデルハウス 外観とガレージ" style="width: 100%; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.1); border: 1px solid #cbd5e1;" />
+              </div>
+              <div>
+                <span style="background: #0284c7; color: #fff; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 6px;">SCENE 01</span>
+                <h4 style="font-size: 1.35rem; color: #0f172a; font-weight: 800; margin: 0.5rem 0 0.8rem;">外観・屋根勾配・インナーガレージの全景</h4>
+                <p style="color: #475569; font-size: 0.92rem; line-height: 1.85;">
+                  片流れ屋根のソーラーパネル配置、ウッドデッキ、インナーガレージに駐車した愛車のサイズ感まで完全再現。画面右側の「外観1/外観2/ポーチ/玄関」リストから瞬時に希望のカメラポジションへ移動できます。
+                </p>
+                <div style="color: #0284c7; font-weight: 700; font-size: 0.88rem; margin-top: 0.8rem;">
+                  🔍 チェック: 敷地に対する建物の迫力や日当たりの角度を360度回転して確認。
+                </div>
+              </div>
+            </div>
+
+            <!-- Shot 2: 開放的吹き抜けLDK ＆ 床材変更 -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.8rem; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem;">
+              <div style="order: 2;">
+                <img src="/images/vr/vr_living_room_change.png" alt="開放的吹き抜けLDKと床材変更機能" style="width: 100%; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.1); border: 1px solid #cbd5e1;" />
+              </div>
+              <div style="order: 1;">
+                <span style="background: #d97706; color: #fff; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 6px;">SCENE 02</span>
+                <h4 style="font-size: 1.35rem; color: #0f172a; font-weight: 800; margin: 0.5rem 0 0.8rem;">開放的吹き抜けLDK ＆ インタラクティブ機能</h4>
+                <p style="color: #475569; font-size: 0.92rem; line-height: 1.85;">
+                  吉野杉の大黒柱や現し梁、勾配天井のダイナミックな高さを再現。画面中央の「🔄床材変更」アイコンで床材を着せ替えられるほか、プロジェクタースクリーンの昇降や引き戸の開閉ギミックも実際に動作します。
+                </p>
+                <div style="color: #d97706; font-weight: 700; font-size: 0.88rem; margin-top: 0.8rem;">
+                  🔍 チェック: ソファに座った目線でテレビや庭の眺望がどう見えるかをシミュレート。
+                </div>
+              </div>
+            </div>
+
+            <!-- Shot 3: キッチン・ダイニング -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.8rem; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem;">
+              <div>
+                <img src="/images/vr/vr_kitchen_dining.png" alt="造作キッチンとダイニングの連続性" style="width: 100%; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.1); border: 1px solid #cbd5e1;" />
+              </div>
+              <div>
+                <span style="background: #059669; color: #fff; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 6px;">SCENE 03</span>
+                <h4 style="font-size: 1.35rem; color: #0f172a; font-weight: 800; margin: 0.5rem 0 0.8rem;">木天井と手づくり造作のキッチン・ダイニング</h4>
+                <p style="color: #475569; font-size: 0.92rem; line-height: 1.85;">
+                  対面キッチンに立った際の視線の広がりや、ダイニングテーブルとの距離感を検証。奥の和室・インナーテラスへの抜け感や、照明のON/OFF切り替えポイントも配置されています。
+                </p>
+                <div style="color: #059669; font-weight: 700; font-size: 0.88rem; margin-top: 0.8rem;">
+                  🔍 チェック: 配膳や片付けの動線、カップボードの収納奥行き感を体感。
+                </div>
+              </div>
+            </div>
+
+            <!-- Shot 4: 主寝室・格子戸・珪藻土塗り壁 -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.8rem; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem;">
+              <div style="order: 2;">
+                <img src="/images/vr/vr_bedroom_detail.png" alt="主寝室と格子引き戸のディテール" style="width: 100%; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.1); border: 1px solid #cbd5e1;" />
+              </div>
+              <div style="order: 1;">
+                <span style="background: #7c3aed; color: #fff; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 6px;">SCENE 04</span>
+                <h4 style="font-size: 1.35rem; color: #0f172a; font-weight: 800; margin: 0.5rem 0 0.8rem;">格子引き戸と珪藻土ウェーブパターンの主寝室</h4>
+                <p style="color: #475569; font-size: 0.92rem; line-height: 1.85;">
+                  職人の手仕事による格子戸を開けると、大容量ウォークインクローゼットへ。壁面には珪藻土の左官塗りテクスチャが精緻に表現され、大きなピクチャーウィンドウから注ぐ自然光の陰影が美しく再現されています。
+                </p>
+                <div style="color: #7c3aed; font-weight: 700; font-size: 0.88rem; margin-top: 0.8rem;">
+                  🔍 チェック: 朝目覚めた時のベッドからの視界や、収納扉の開閉クリアランスを確認。
+                </div>
+              </div>
+            </div>
+
+            <!-- Shot 5: ドールハウス・鳥瞰平面図 -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.8rem; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem;">
+              <div>
+                <img src="/images/vr/vr_topview_dollhouse.png" alt="ドールハウス鳥瞰立体平面図" style="width: 100%; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.1); border: 1px solid #cbd5e1;" />
+              </div>
+              <div>
+                <span style="background: #0f172a; color: #fff; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 6px;">SCENE 05</span>
+                <h4 style="font-size: 1.35rem; color: #0f172a; font-weight: 800; margin: 0.5rem 0 0.8rem;">ドールハウス（真上からの鳥瞰立体平面図）ビュー</h4>
+                <p style="color: #475569; font-size: 0.92rem; line-height: 1.85;">
+                  「1F平面図」「2F平面図」ボタンを押すと、家全体が立体ジオラマのように出現！玄関、洗面脱衣、LDK、寝室、中庭、ガレージがどのように接続しているかが一目瞭然で、図面が苦手な方でも直感的に間取りが理解できます。
+                </p>
+                <div style="color: #0f172a; font-weight: 700; font-size: 0.88rem; margin-top: 0.8rem;">
+                  🔍 チェック: 家族のプライバシー動線とパブリック動線の交差を上空からチェック。
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- CHAPTER 4: 実機バーチャルモデルハウス体験CTA＆操作ガイド -->
+        <div class="card" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 2px solid #38bdf8; border-radius: var(--radius-lg); padding: 2.8rem 2rem; color: #fff; text-align: center; box-shadow: 0 15px 35px rgba(15, 23, 42, 0.3);">
+          <span style="background: #38bdf8; color: #0f172a; font-weight: 900; font-size: 0.85rem; padding: 5px 16px; border-radius: 20px; display: inline-block; margin-bottom: 1rem;">
+            🚀 FREE 3D VR EXPERIENCE
+          </span>
+          <h3 style="font-size: 2.2rem; font-weight: 900; color: #ffffff; line-height: 1.35; margin-bottom: 1rem;">
+            いま動かせる！バーチャルモデルハウスを体験してみる
+          </h3>
+          <p style="color: #cbd5e1; font-size: 1.05rem; line-height: 1.8; max-width: 820px; margin: 0 auto 2rem;">
+            百聞は一見に如かず。現在仮運用している「実機のバーチャルモデルハウス」をご自身のスマホやPCで今すぐ操作いただけます。<br>
+            登録不要・完全無料。新しいタブで3Dビューアが開き、自由に室内を歩き回ることができます。
+          </p>
+
+          <!-- Operation Tips -->
+          <div style="display: flex; justify-content: center; gap: 1.2rem; flex-wrap: wrap; margin-bottom: 2.5rem;">
+            <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 0.8rem 1.4rem; font-size: 0.9rem; color: #e2e8f0;">
+              🖱️ <strong>PC操作:</strong> マウスドラッグで360度視点回転 ｜ ホイールでズーム ｜ クリックで移動
+            </div>
+            <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 0.8rem 1.4rem; font-size: 0.9rem; color: #e2e8f0;">
+              📱 <strong>スマホ操作:</strong> 画面スワイプで周囲を見渡す ｜ ピンチで拡大縮小 ｜ タップで移動
+            </div>
+            <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 0.8rem 1.4rem; font-size: 0.9rem; color: #e2e8f0;">
+              📑 <strong>右側メニュー:</strong> 外観・各部屋・1F/2F平面図へワンタップでワープ
+            </div>
+          </div>
+
+          <a href="https://zumenpers.com/vr/uploads/7_project/index.html" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-size: 1.25rem; font-weight: 800; padding: 1.2rem 3rem; border-radius: 50px; box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4); display: inline-flex; align-items: center; gap: 10px; transition: transform 0.2s;">
+            <span>🌐 実機バーチャルモデルハウスを起動する（全画面）</span>
+            <span style="font-size: 1.4rem;">→</span>
+          </a>
+          <div style="margin-top: 1rem; color: #94a3b8; font-size: 0.82rem;">
+            ※ 別タブで3D WebGLビューアが開きます。通信環境の良い場所（Wi-Fi推奨）でご覧ください。
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PAGE 5: SCENT & AIR COMFORT EXPERIENCE & REAL MODELHOUSE BOOKING -->
+    <section id="scent-experience" class="page-section">
+      <div class="hero">
+        <span class="hero-tag">一般的な新築住宅（新築臭） vs 本物の自然素材（森林浴アロマ）</span>
+        <h1 class="hero-title">「香りと心地よさ」は、体感してもらわないとわからない。<br><span style="font-size: 1.5rem; color: #f59e0b;">住ま居るの造る家は住み心地重視。外皮は超高断熱・高気密、中は自然の恩恵に包まれる優しい空気と芳香。</span></h1>
+        <p class="hero-subtitle">一般的な新築住宅のビニールクロスや接着剤による化学物質臭（新築臭）に対し、住ま居るの手づくり住宅はドアを開けた瞬間に無垢材と呼吸する珪藻土が放つ心安らぐ本物の香りに包まれます。埼玉県鶴ヶ島ICから車で片道1時間圏内・限定生産の「芳彩（かぐや）」をご体感ください。</p>
+      </div>
+
+      <div class="statement-split-card">
+        <div class="split-image-column">
+          <img src="/images/natural_interior_aroma.jpg" alt="自然素材の内装と空気感" class="split-card-img" />
+        </div>
+        <div class="split-text-column">
+          <span class="badge-number" style="background: var(--accent-gold);">芳彩（かぐや） — 結露しない家</span>
+          <h2 class="split-title">究極の住み心地追求の住まい、限られた方のみへお届けします。</h2>
+          <p class="split-desc">
+            私たちは数を追う大手ハウスメーカーではありません。全棟に許容応力度計算を行い、専属の大工職人さんが手づくりで自然素材を一つひとつ収めるため、年間でお引渡しできる棟数には自ずと限界があります。
+          </p>
+          <p class="split-desc">
+            妥協のない「本物の住み心地」「本物の木の香り」「結露ゼロの耐久性」をお求めになる限られたお施主様へ、一棟一棟心を込めてお届けしています。
+          </p>
+        </div>
+      </div>
+
+      <!-- Real Model House Booking Form -->
+      <div class="wizard-box" style="margin-top: 2.5rem; border-color: var(--accent-gold);">
+        <h2 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 1.8rem; text-align: center; margin-bottom: 0.5rem;">
+          🏡 「芳彩-かぐや-」リアル展示場 見学予約フォーム
+        </h2>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">
+          鶴ヶ島ICから車で5分。本物の無垢材の香りと床暖房の心地よさを、完全予約制でじっくりご体験いただけます。
+        </p>
+
+        <form id="real-booking-form">
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">お名前 (氏名)</label>
+              <input type="text" id="book-name" class="form-input" placeholder="例: 鶴ヶ島 太郎" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">携帯電話番号</label>
+              <input type="tel" id="book-phone" class="form-input" placeholder="例: 090-1234-5678" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">メールアドレス</label>
+              <input type="email" id="book-email" class="form-input" placeholder="example@sumaile.co.jp" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">ご希望の見学日</label>
+              <input type="date" id="book-date" class="form-input" required />
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">ご希望の時間帯</label>
+              <select id="book-time" class="form-select">
+                <option value="10:00">10:00 〜 (午前の光と空気体感)</option>
+                <option value="13:30">13:30 〜 (午後の温湿度体感)</option>
+                <option value="16:00">16:00 〜 (夕暮れの照明演出体感)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">特に確かめたいポイント（任意）</label>
+              <input type="text" id="book-comments" class="form-input" placeholder="例: 無垢材の香り、造作風呂の質感、床暖房のあたたかさ" />
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1.1rem; font-size: 1.1rem;">
+            📅 リアル展示場の見学予約を送信する（完全無料） →
+          </button>
+        </form>
+
+        <div id="booking-success-message" style="display: none; background: #d1fae5; border: 2px solid var(--accent-green); padding: 1.5rem; border-radius: var(--radius-md); margin-top: 1.5rem; text-align: center;">
+          <h3 style="color: #065f46; font-size: 1.3rem; margin-bottom: 0.5rem;">✅ ご見学予約が完了いたしました！</h3>
+          <p style="color: #047857;" id="booking-notice-text"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 6: A4 10-PAGE EQUIVALENT HANDCRAFTED HOUSING FEATURE ARTICLE (REWRITTEN & LITERARY EXPANDED) -->
+    <!-- PAGE: HANDCRAFTED HOUSING FEATURE ARTICLE (手づくり住宅解体新書 全10章) -->
+    <!-- PAGE: HANDCRAFTED HOUSING FEATURE ARTICLE (手づくり住宅解体新書 全10章) -->
+    <!-- PAGE: HANDCRAFTED HOUSING FEATURE ARTICLE (手づくり住宅解体新書 全10章) -->
+    <section id="article-feature" class="page-section">
+      <div class="hero">
+        <span class="hero-tag">「芳彩（かぐや）-結露しない家」モデルハウス 完全解体新書</span>
+        <h1 class="hero-title">完全手づくり住宅・リアル展示場解体新書<br><span style="font-size: 1.5rem; color: #f59e0b;">言葉を超えた心地よさ、自然素材と職人技術の神髄を明かす</span></h1>
+        <p class="hero-subtitle">
+          高級路線・富裕層アピールへのアンチテーゼ。化学的な心地よさは最新のラグジュアリーホテルで楽しめばいい。毎日の日常は、心が静まる心地よさを最優先に。「芳彩（かぐや）-結露しない家」モデルハウスの全要素を極限まで深掘りした特大特集。（全10章）
+        </p>
+      </div>
+
+      <!-- Chapter Tabs Header -->
+      <div class="article-nav-tabs">
+        <button class="art-tab-btn active" data-tab="ch1">第1章: 思想宣言</button>
+        <button class="art-tab-btn" data-tab="ch2">第2章: アプローチと引戸</button>
+        <button class="art-tab-btn" data-tab="ch3">第3章: 22帖LDK・ウッドデッキ</button>
+        <button class="art-tab-btn" data-tab="ch4">第4章: 珪藻土・シアター・水</button>
+        <button class="art-tab-btn" data-tab="ch5">第5章: 和モダン・エコカラットタイル</button>
+        <button class="art-tab-btn" data-tab="ch6">第6章: 造作バス・サウナ</button>
+        <button class="art-tab-btn" data-tab="ch7">第7章: 2階ホール・吉野杉</button>
+        <button class="art-tab-btn" data-tab="ch8">第8章: 主寝室・ウォークイン</button>
+        <button class="art-tab-btn" data-tab="ch9">第9章: 書斎・創エネV2H</button>
+        <button class="art-tab-btn" data-tab="ch10">第10章: 職人技と総括</button>
+      </div>
+
+      <!-- Chapter Contents Box -->
+      <div class="article-content-box">
+        <!-- Chapter 1 -->
+        <div id="art-ch1" class="art-tab-content active">
+          <span class="badge-number">第1章 (思想宣言)</span>
+          <h2 class="art-ch-title">【思想宣言】化学の快適はホテルで味わえばいい。日常に必要なのは、心が静まる本物の「木と土の香」</h2>
+          <p class="art-p-literary">
+            朝、静けさの中で目を覚ました時、肌をなでる空気が冷たく尖っていないこと。素足で一歩を踏み出した時、足の裏に伝わる吉野杉の微かな温もりが、身体の強張りを解いていくこと――。私たちが家づくりにおいて追求し続けているのは、そうした理屈以前の「日常の心地よさ」です。
+          </p>
+          <p class="art-p-literary">
+            近年、ハウスメーカー各社は「海外ブランドキッチン」や「輸入大理石」「最新のスマートシステム」を競い合い、住宅を高級ホテルや富裕層のステータスシンボルのように演出しています。しかし、考えてみてください。人工的に密閉され、化学芳香剤と空調で整えられたラグジュアリーホテルの快適さは、旅の非日常だからこそ胸を躍らせるものです。365日、家族が眠り、育ち、歳を重ねる日常の住まいに、そんな「人工的な緊張感」は必要でしょうか。
+          </p>
+          <div class="kaitai-sketch-frame" style="margin: 1.5rem 0;">
+            <img src="/images/kaitai/ch1_living_craft.jpg" alt="漆喰壁と吉野杉無垢材に包まれるLDKの手描き意匠スケッチ" class="kaitai-sketch-img" style="max-height: 460px; object-fit: contain; background: #faf9f6;" />
+            <div class="kaitai-sketch-caption">📐 【意匠スケッチ】素足で歩く吉野杉30mm赤身材と職人手塗りの天然珪藻土LDK</div>
+          </div>
+          <p class="art-p-literary">
+            <strong>「住ま居るの造る家は住み心地重視。外皮は超高断熱・高気密で外気をシャットアウト、中は自然の恩恵に包まれる優しい空気と芳香。」</strong><br>
+            私たちはそう心に誓っています。ツンと鼻を突くビニールクロスの接着剤臭や合成塗料の新築臭を徹底排除し、吉野杉、ヒノキ、そして手塗りの天然漆喰・珪藻土だけが呼吸する空間を造る。派手な装飾ではなく、日々の静かな幸せと家族の健康を最優先にする。この価値観を共有してくださるお施主様を、私たちは全力で応援し、一棟一棟心を込めて手づくりいたします。
+          </p>
+        </div>
+
+        <!-- Chapter 2 -->
+        <div id="art-ch2" class="art-tab-content">
+          <span class="badge-number">第2章 (アプローチ・玄関)</span>
+          <h2 class="art-ch-title">雨に濡れないカバードポーチ・網戸付き玄関引戸・手造り格子の静謐</h2>
+          <div class="kaitai-sketch-frame">
+            <img src="/images/kaitai/ch2_covered_porch.jpg" alt="雨に濡れないカバードポーチとアプローチ引戸の手描きスケッチ" class="kaitai-sketch-img" style="max-height: 420px; object-fit: contain; background: #faf9f6;" />
+            <div class="kaitai-sketch-caption">📐 【意匠スケッチ】雨に濡れないカバードポーチ・緩やかなスロープ・車寄せ</div>
+          </div>
+          <p class="art-p-literary">
+            モデルハウスのアプローチに一歩足を踏み入れると、まず目を引くのは大きな屋根が張り出した「車寄せ（カバードポーチ）」です。雨の日、車から降りて傘をささずにそのまま濡れずに玄関へと入れる配慮。ポーチの階段は車の緩衝止め（バリア）を兼ね、高齢者やお子様、車いすにも配慮したゆるやかなスロープ勾配が刻まれています。
+          </p>
+          <div class="kaitai-sketch-frame" style="margin: 1.5rem 0;">
+            <img src="/images/kaitai/ch2_blue_entrance_screen.jpg" alt="爽やかな風を通す網戸付き玄関引戸の手描きスケッチ" class="kaitai-sketch-img" style="max-height: 460px; object-fit: contain; background: #faf9f6;" />
+            <div class="kaitai-sketch-caption">📐 【意匠スケッチ】埼玉の涼風を室内に招く網戸付き玄関引戸</div>
+          </div>
+          <p class="art-p-literary">
+            玄関ドアには、一般的な開き戸ではなく「網戸付きの玄関引戸」を採用。埼玉特有の夏の心地よい北風を室内へ優しく迎え入れ、冬の強い風でもドアが煽られることがありません。玄関ホールに入ると、必要最小限でありながら機能美を極めたE.C.L（エントランスクローク）とコート掛けが整然と収まり、色彩豊かなアンティーク・ステンドグラスから漏れる光が壁を彩ります。
+          </p>
+          <p class="art-p-literary">
+            さらにホール正面には、熟練大工さんが鉋（かんな）で削り上げた繊細な手造り木製格子が凛と立ち、奥のリビングへの視線を上品に遮りながら、清らかな気配だけを通します。
+          </p>
+        </div>
+
+        <!-- Chapter 3 -->
+        <div id="art-ch3" class="art-tab-content">
+          <span class="badge-number">第3章 (22帖LDK・ウッドデッキ)</span>
+          <h2 class="art-ch-title">厚さ30mm吉野杉赤身材 × 柱のない大空間22帖LDKとウッドデッキの一体感</h2>
+          <div class="kaitai-sketch-frame">
+            <img src="/images/kaitai/ch3_yakusugi_ldk_view.jpg" alt="22帖柱なしLDKと無垢吉野杉フローリングの手描きパース" class="kaitai-sketch-img" style="max-height: 440px; object-fit: contain; background: #faf9f6;" />
+            <div class="kaitai-sketch-caption">📐 【意匠スケッチ】大黒柱と吉野杉30mm赤身材が広がる22帖の柱なし大空間LDK</div>
+          </div>
+          <p class="art-p-literary">
+            格子を抜けて広がるのは、22帖もの広大な柱なしLDK。足裏に触れる床材は、樹齢を重ねた<strong>「吉野杉の厚さ30mm赤身材」</strong>です。杉の中でも油分と赤みを豊富に含んだ赤身材は、水や湿気に極めて強く、冬場でもスリッパがいらないほどの自然な蓄熱性と弾力性を誇ります。
+          </p>
+          <div class="kaitai-sketch-frame" style="margin: 1.2rem 0;">
+            <img src="/images/kaitai/ch3_solid_wood_door.jpg" alt="専属大工さんが手仕事で仕上げた無垢材の特注建具スケッチ" class="kaitai-sketch-img" style="max-height: 440px; object-fit: contain; background: #faf9f6;" />
+            <div class="kaitai-sketch-caption">📐 【意匠スケッチ】木目を美しく通した職人手づくりの無垢一枚板風引戸</div>
+          </div>
+          <p class="art-p-literary">
+            リビング南側の大開口サッシを開け放つと、床とほぼフラットに続く屋根付きウッドデッキ（縁側テラス）へ視界が抜けます。ウリンやハードウッドで頑強に組まれたデッキは、雨天でも家族でBBQや夕涼みができる第二のリビング。室内と屋外が境界なく溶け合い、埼玉の空と風をダイレクトに感じる開放感を実現しています。
+          </p>
+        </div>
+
+        <!-- Chapter 4 -->
+        <div id="art-ch4" class="art-tab-content">
+          <span class="badge-number">第4章 (珪藻土・シアター・水)</span>
+          <h2 class="art-ch-title">壁全面が呼吸する手塗り珪藻土・120インチシアター・家中の水を浄化するダイポール</h2>
+          <p class="art-p-literary">
+            LDKの壁と天井一面に施されているのは、職人さんが鏝（こて）一本で仕上げた天然珪藻土と漆喰。ビニールクロスとは異なり、梅雨時の過剰な湿気を吸い込み、冬の乾燥期には潤いを放出して室内湿度を常に40〜60%の快適域に保ちます。料理の臭いや生活臭も微細な多孔質が素早く吸着分解するため、翌朝のリビングには森の中にいるような澄んだ空気が満ちています。
+          </p>
+          <div class="grid-2" style="margin: 1.5rem 0 1.2rem;">
+            <div class="kaitai-sketch-frame" style="margin: 0;">
+              <img src="/images/kaitai/ch4_theater_screen_napoleon.jpg" alt="120インチスクリーンで映画を楽しむホームシアタースケッチ" class="kaitai-sketch-img" style="max-height: 440px; object-fit: contain; background: #faf9f6;" />
+              <div class="kaitai-sketch-caption">📐 【意匠スケッチ】日常が映画館に変わる120インチ電動スクリーンと迫力の音響</div>
+            </div>
+            <div class="kaitai-sketch-frame" style="margin: 0;">
+              <img src="/images/kaitai/ch4_theater_projector.jpg" alt="天吊りプロジェクターとサラウンド音響設備のスケッチ" class="kaitai-sketch-img" style="max-height: 440px; object-fit: contain; background: #faf9f6;" />
+              <div class="kaitai-sketch-caption">📐 【意匠スケッチ】高画質天吊りプロジェクターと5.1chサラウンド音響システム</div>
+            </div>
+          </div>
+          <p class="art-p-literary">
+            さらにこのリビングには、休日の寛ぎを最高峰にする<strong>「120インチ電動格納シアタースクリーン」</strong>と5.1chサラウンドシステムをビルトイン。天井のプロジェクターから投射される大迫力の映像を、吉野杉の香りに包まれながら楽しめます。
+          </p>
+          <p class="art-p-literary">
+            そして見えない健康配慮として、水道メーター直後に高機能水処理装置<strong>「ダイポール」</strong>を標準装備。キッチン、洗面、お風呂からトイレに至るまで、家中の全蛇口から注がれる水がミネラル活性化され、肌触りの柔らかさと配管の防汚・長寿命化を同時に叶えています。
+          </p>
+        </div>
+
+        <!-- Chapter 5 -->
+        <div id="art-ch5" class="art-tab-content">
+          <div class="grid-2" style="align-items: start;">
+            <div>
+              <span class="badge-number">第5章 (和モダン・客間)</span>
+              <h2 class="art-ch-title">大壁和モダン・二間続きの障子開閉・エコカラットタイルが演出する陰影美</h2>
+              <p class="art-p-literary">
+                リビングに隣接する和室は、現代のライフスタイルに調和させた「大壁造りの和モダン空間」です。格式ばった真壁（しんかべ）の圧迫感を排し、リビングとフラットに繋がりながらも、手漉き和紙の太鼓障子を引き出すことで完全に独立した静謐な客間へと表情を変えます。
+              </p>
+              <p class="art-p-literary">
+                床の間代わりの飾り壁には、繊細な凹凸が美しいリクシルの機能性調湿タイル<strong>「エコカラット」</strong>を大胆に採用。間接照明の温かい光がタイルの陰影を浮き彫りにし、和の詫び寂びと現代建築の洗練が見事に融合しています。畳には熊本県八代産の無着色天然い草および藍染めデニム畳を使用し、青畳の芳しい香りが訪れる人の心を深く落ち着かせます。
+              </p>
+            </div>
+            <div class="kaitai-sketch-frame" style="margin: 0;">
+              <img src="/images/kaitai/ch8_denim_tatami.jpg" alt="藍染めデニム畳と和モダン空間の手描きスケッチ" class="kaitai-sketch-img" style="max-height: 460px; object-fit: contain; background: #faf9f6;" />
+              <div class="kaitai-sketch-caption">📐 【意匠スケッチ】デニム畳とエコカラットタイルの陰影が美しい和モダン客間</div>
+            </div>
+          </div>
+          <div class="kaitai-sketch-frame" style="margin-top: 1.2rem;">
+            <img src="/images/kaitai/ch5_ecocarat_bath.jpg" alt="エコカラットタイルと陰影照明のディテールスケッチ" class="kaitai-sketch-img" style="max-height: 440px; object-fit: contain; background: #faf9f6;" />
+            <div class="kaitai-sketch-caption">📐 【意匠スケッチ】調湿・消臭機能と造形美を両立したエコカラット壁面デザイン</div>
+          </div>
+        </div>
+
+        <!-- Chapter 6 -->
+        <div id="art-ch6" class="art-tab-content">
+          <div class="grid-2" style="align-items: start;">
+            <div>
+              <span class="badge-number">第6章 (在来造作風呂・サウナ)</span>
+              <h2 class="art-ch-title">職人さんが削り出す「十和田石 × 無垢ヒノキ」の在来造作風呂と本格フィンランドサウナ</h2>
+              <p class="art-p-literary">
+                住ま居るが最も情熱を注ぎ込む場所の一つが、既製品ユニットバスを一切使わない<strong>「職人手造りの在来浴室」</strong>です。壁と天井には水に強く芳香豊かな木曽ヒノキを張り巡らせ、浴槽と洗い場の床には、濡れても滑りにくく湯を青く透き通らせる名石「十和田石」を手作業で敷き詰めました。
+              </p>
+              <p class="art-p-literary">
+                お湯を張るだけで浴室全体にヒノキの甘やかな精油成分が立ち込め、一日の疲れを芯から癒す極上の森林浴へと変わります。
+              </p>
+              <p class="art-p-literary">
+                さらに脱衣室の奥には、家庭用としては規格外の<strong>「本格フィンランドサウナ」</strong>を併設。ロウリュ対応のサウナヒーターから立ち昇る蒸気と熱気、そして冷水シャワーとウッドデッキでの外気浴。最高のととのい体験が、自宅にいながらにして日常のものとなります。
+              </p>
+            </div>
+            <div class="kaitai-sketch-frame" style="margin: 0;">
+              <img src="/images/artisan_custom_bath.jpg" alt="十和田石と無垢ヒノキの職人在来造作風呂の実例写真" class="kaitai-sketch-img" style="max-height: 460px; object-fit: cover; border-radius: 8px;" />
+              <div class="kaitai-sketch-caption">📸 【実写】青く透き通る十和田石とヒノキ芳香に包まれる完全手づくりの在来浴室</div>
+            </div>
+          </div>
+          <div class="kaitai-sketch-frame" style="margin-top: 1.2rem;">
+            <img src="/images/kaitai/ch6_front_garden_terrace.jpg" alt="お風呂・サウナから繋がる前庭外気浴テラスの手描きスケッチ" class="kaitai-sketch-img" style="max-height: 440px; object-fit: contain; background: #faf9f6;" />
+            <div class="kaitai-sketch-caption">📐 【意匠スケッチ】サウナ上がりにそのまま外気浴を楽しめるプライベート前庭テラス</div>
+          </div>
+        </div>
+
+        <!-- Chapter 7 -->
+        <div id="art-ch7" class="art-tab-content">
+          <div class="grid-2" style="align-items: start;">
+            <div>
+              <span class="badge-number">第7章 (2階ホール・吉野杉階段)</span>
+              <h2 class="art-ch-title">踏み心地を極めた吉野杉の階段・広々とした2階多目的ホールとライブラリー</h2>
+              <p class="art-p-literary">
+                リビングから2階へと続く階段は、段鼻のカーブから蹴込み板に至るまで、大工さんが手鉋で削り合わせた特注の吉野杉無垢階段です。足裏のアーチに吸い付くような柔らかな踏み心地は、合板フローリングの硬質な冷たさとは対極にある温もりです。
+              </p>
+              <p class="art-p-literary">
+                階段を上がりきると広がるのは、廊下という概念を超えた「2階多目的ファミリーホール」。壁一面には家族の思い出の本や図鑑が並ぶ造作本棚とスタディカウンターが造り付けられ、子どもたちの読書スペースやテレワークコーナーとして多目的に活躍します。南側の高窓から吹き抜けを通して1階へと光と風が循環し、上下階で家族の気配が優しく繋がります。
+              </p>
+            </div>
+            <div class="kaitai-sketch-frame" style="margin: 0;">
+              <img src="/images/kaitai/ch7_bedroom_stained_glass.jpg" alt="2階ホールと寝室を彩るアンティークステンドグラスの手描きスケッチ" class="kaitai-sketch-img" style="max-height: 460px; object-fit: contain; background: #faf9f6;" />
+              <div class="kaitai-sketch-caption">📐 【意匠スケッチ】2階ホールに柔らかな陰影を落とすアンティークステンドグラス</div>
+            </div>
+          </div>
+          <div class="kaitai-sketch-frame" style="margin-top: 1.2rem;">
+            <img src="/images/natural_interior_aroma.jpg" alt="無垢材と漆喰に包まれた2階ライブラリーホールの実写" class="kaitai-sketch-img" style="max-height: 440px; object-fit: cover; border-radius: 8px;" />
+            <div class="kaitai-sketch-caption">📸 【実写】吉野杉と手塗り珪藻土の香りが満ちる2階ファミリーライブラリー空間</div>
+          </div>
+        </div>
+
+        <!-- Chapter 8 -->
+        <div id="art-ch8" class="art-tab-content">
+          <div class="grid-2" style="align-items: start;">
+            <div>
+              <span class="badge-number">第8章 (主寝室・WIC)</span>
+              <h2 class="art-ch-title">深い睡眠を誘う漆喰壁と間接照明・桐（きり）無垢材で囲まれたウォークインクローゼット</h2>
+              <p class="art-p-literary">
+                主寝室は「一日の終わりに脳と身体をリセットするサンクチュアリ」として設計。壁には電磁波や有害物質を吸着する天然漆喰を厚塗りし、ベッドヘッドの背後には柔らかな間接照明を仕込むことで、直接的な光源を目に入れずに自然な眠気へと導きます。
+              </p>
+              <p class="art-p-literary">
+                寝室奥に設けられた大容量ウォークインクローゼット（WIC）は、床・壁・棚板に至るまですべて<strong>「無垢の桐（きり）材」</strong>で仕上げられています。桐の持つ圧倒的な調湿性能と天然の防虫成分（タンニン）により、大切な衣類や着物をカビや虫食いから半永久的に守ります。衣類に化学防虫剤を置く必要がないため、クローゼットの中までも清々しい木の香りが漂います。
+              </p>
+            </div>
+            <div class="kaitai-sketch-frame" style="margin: 0;">
+              <img src="/images/floor_heating_comfort.jpg" alt="天然漆喰壁と間接照明が包み込む主寝室の実写" class="kaitai-sketch-img" style="max-height: 460px; object-fit: cover; border-radius: 8px;" />
+              <div class="kaitai-sketch-caption">📸 【実写】夜間に穏やかな温熱と空気浄化をもたらす天然漆喰の主寝室空間</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chapter 9 -->
+        <div id="art-ch9" class="art-tab-content">
+          <div class="grid-2" style="align-items: start;">
+            <div>
+              <span class="badge-number">第9章 (書斎・ロフト・創エネ)</span>
+              <h2 class="art-ch-title">男の隠れ家ロフト書斎・10.33kW大容量太陽光発電とV2H（電気自動車連携）</h2>
+              <p class="art-p-literary">
+                主寝室の天井を見上げると、そこには秘密基地のような固定階段付きロフト空間が広がります。屋根勾配を活かした勾配天井には無垢の羽目板が美しく並び、お父さんの書斎や趣味の部屋として、あるいは季節ものの収納として贅沢なゆとりを生み出しています。
+              </p>
+              <p class="art-p-literary">
+                住ま居るのモデルハウスは、単なる自然素材住宅ではありません。2030年の社会基準を先取りした<strong>「V2H（Vehicle to Home：電気自動車を家の電源にする仕組み）」</strong>と<strong>「大容量10.33kW（53枚）屋根一体型太陽光発電」</strong>を備えた最先端のフリーエネルギーハウスです。
+              </p>
+              <p class="art-p-literary">
+                日中は太陽光で発電した電気で暮らし、余剰電力を電気自動車の大容量バッテリーへ急速充電。夜間や停電発生時には、車から家全体へ最大6kWの大パワーで電力を逆給電します。災害による長期間の停電でも普段通りエアコンや冷蔵庫が動き続ける圧倒的な安心感。HEMS（エネルギー可視化モニター）により、電気代高騰時代と無縁な経済性を実証しています。
+              </p>
+            </div>
+            <div class="kaitai-sketch-frame" style="margin: 0;">
+              <img src="/images/kaitai/ch9_solar_house_exterior.jpg" alt="屋根一体型10.33kW大容量太陽光パネルを搭載した外観スケッチ" class="kaitai-sketch-img" style="max-height: 460px; object-fit: contain; background: #faf9f6;" />
+              <div class="kaitai-sketch-caption">📐 【意匠スケッチ】屋根美観を損ねない屋根一体型10.33kWソーラー搭載の外観</div>
+            </div>
+          </div>
+          <div class="kaitai-sketch-frame" style="margin-top: 1.2rem;">
+            <img src="/images/kaitai/ch9_hems_monitor.jpg" alt="V2HとHEMSによるエネルギー自給自足モニターの手描きスケッチ" class="kaitai-sketch-img" style="max-height: 440px; object-fit: contain; background: #faf9f6;" />
+            <div class="kaitai-sketch-caption">📐 【意匠スケッチ】電気自動車連携（V2H）と家庭エネルギーを可視化するHEMSシステム</div>
+          </div>
+        </div>
+
+        <!-- Chapter 10 -->
+        <div id="art-ch10" class="art-tab-content">
+          <span class="badge-number">第10章 (職人技術と総括)</span>
+          <h2 class="art-ch-title">手づくりの真価――専属大工さんの手刻み技術と、向こう30年最先端を誇る基本性能</h2>
+          
+          <div class="grid-2" style="margin: 1.5rem 0 1.2rem;">
+            <div class="kaitai-sketch-frame" style="margin: 0;">
+              <img src="/images/kaitai/ch10_roof_insulation.jpg" alt="小屋裏の熱橋を完全に封じる桁上断熱とミリ単位の気密施工スケッチ" class="kaitai-sketch-img" style="max-height: 440px; object-fit: contain; background: #faf9f6;" />
+              <div class="kaitai-sketch-caption">📐 【構造スケッチ】屋根の熱を室内に入れない桁上断熱・気密テープの超高精度施工</div>
+            </div>
+            <div class="kaitai-sketch-frame" style="margin: 0;">
+              <img src="/images/craftsman_architect_tag.jpg" alt="一墨一削りに魂を込める専属大工さんの手刻み風景" class="kaitai-sketch-img" style="max-height: 440px; object-fit: cover; border-radius: 8px;" />
+              <div class="kaitai-sketch-caption">📸 【職人技】木を見極め、見えない骨組みを頑強に組み上げる住ま居る専属大工さん</div>
+            </div>
+          </div>
+
+          <p class="art-p-literary">
+            「解体新書」の最後に、私たちが最も大切にしている真実をお伝えします。どれほど高級な銘木を使っても、どれほど優れた断熱材を並べても、それを現場で組み上げる<strong>「大工さんの腕と魂」</strong>が伴わなければ、本物の住まいは絶対に生まれません。
+          </p>
+          <p class="art-p-literary">
+            住ま居るの家は、下請けに丸投げするような大量生産住宅とは根本から異なります。木の一本一本の癖（反りや狂い）を見極めてカンナを入れ、見えない土台や梁の仕口を手刻みで堅固に組む。コンセントボックスの裏一つ、サッシ周りのテープ一枚に至るまでミリ単位で気密（C値0.3以下）を突き詰める。この気の遠くなるような職人さんの手間暇こそが、築10年を超えても狂いが出ず、新築時以上の艶と深みを放つ最大の秘密です。
+          </p>
+
+          <div class="kaitai-sketch-frame" style="margin: 1.5rem 0;">
+            <img src="/images/structural_calculation_frame.jpg" alt="許容応力度計算による耐震等級3の強靭な木造構造フレーム" class="kaitai-sketch-img" style="max-height: 420px; object-fit: cover; border-radius: 8px;" />
+            <div class="kaitai-sketch-caption">📸 【構造真実】許容応力度計算による耐震等級3・直下率60%超を誇る強靭な構造躯体</div>
+          </div>
+
+          <div class="article-quote-box" style="margin: 2rem 0; background: #f8fafc; border-left: 4px solid var(--accent-gold); padding: 1.8rem; border-radius: 0 8px 8px 0;">
+            <h3 style="color: var(--primary-green-dark); font-size: 1.35rem; margin-bottom: 0.9rem; line-height: 1.4;">
+              【住ま居るの真髄】表面的な満足より、見えなくなる骨組み・筋肉を最重視する――築10年超でも向こう30年最先端であることの実証
+            </h3>
+            <p style="color: #334155; line-height: 1.85; margin-bottom: 0.8rem; font-size: 0.98rem;">
+              家づくりにおいて、間取りやデザイン、フォトリアルパースによる表面的なワクワク感はとても大切です。しかし住ま居るは、完成したら二度と見えなくなる<strong>「骨組み・筋肉（許容応力度計算による耐震等級3、直下率、そして科学的な気密・断熱施工）」</strong>を何よりも最重視します。
+            </p>
+            <p style="color: #334155; line-height: 1.85; margin-bottom: 0.8rem; font-size: 0.98rem;">
+              私たちがAI自動間取り生成、AIパース工房、24時間温熱換気AI相談室といった最先端テクノロジーをすべて一般ユーザーの皆様へ無料開放している理由――それこそが、私たちの「先進性」と「揺るぎない先見性」の実証です。
+            </p>
+            <p style="color: #334155; line-height: 1.85; margin: 0; font-size: 0.98rem;">
+              10年以上前に建てられた住ま居るのモデルハウスは、すでに30年以上先を見据えて設計されました。時代が省エネ基準の義務化やZEHを議論している現在でも、私たちの建物は向こう30年最先端を走り続けています。常に30年先の未来を見据え、家族の命を守り抜く強さと極上の住み心地を両立させる家づくり。これこそが、株式会社住ま居るが創業以来貫き続ける唯一無二の誇りです。
+            </p>
+          </div>
+          
+          <div style="text-align: center; margin-top: 2rem;">
+            <button class="btn btn-primary open-auth-modal" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 1.12rem; font-weight: 800; padding: 1rem 2.6rem; color: #ffffff !important; background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%); border: 2px solid #f59e0b; border-radius: 50px; cursor: pointer; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); box-shadow: 0 6px 20px rgba(27, 67, 50, 0.35); transition: all 0.25s ease;">
+              <span>🏛️ 「芳彩（かぐや）」リアル展示場の見学予約・資料請求はこちら</span>
+              <span style="font-size: 1.25rem;">→</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="dashboard" class="page-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #cbd5e1; padding-bottom: 1rem;">
+        <div>
+          <span class="hero-tag" style="margin-bottom: 4px;">マジックリンク保護専用マイページ</span>
+          <h2 style="font-size: 1.8rem; font-family: var(--font-heading); color: var(--primary-green-dark);" id="dash-user-name">お施主様 専用プロジェクトルーム</h2>
+          <div style="font-size: 0.9rem; color: var(--text-muted);">連絡先: <span id="dash-user-phone"></span> | <span id="dash-user-email"></span></div>
+        </div>
+        <button id="dash-upload-btn" class="btn btn-secondary">＋ 図面・写真ファイルをアップロードする</button>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- Sidebar: Saved Renders & Shared Documents -->
+        <div class="sidebar-panel">
+          <h4 style="color: var(--accent-gold); font-family: var(--font-heading); margin-bottom: 1rem;">🎨 保存済みパース履歴</h4>
+          <div id="dash-renders-gallery"></div>
+
+          <h4 style="color: var(--primary-green); font-family: var(--font-heading); margin: 1.8rem 0 1rem;">📄 共有ファイル・構造計算書</h4>
+          <div id="dash-files-list"></div>
+        </div>
+
+        <!-- Main: Live Chat with AI Agent & Architect -->
+        <div class="chat-panel">
+          <h4 style="color: var(--primary-green-dark); font-family: var(--font-heading); border-bottom: 1px solid #e2e8f0; padding-bottom: 0.8rem; margin-bottom: 1rem;">
+            💬 AIエージェント ＆ 担当建築士 リアルタイム相談チャット
+          </h4>
+          <div id="chat-history-box" class="chat-history"></div>
+          <form id="dashboard-chat-form" style="display: flex; gap: 8px;">
+            <input type="text" id="chat-input" class="form-input" placeholder="造作風呂の建材や耐震計算について質問してみる..." required />
+            <button type="submit" class="btn btn-primary" style="white-space: nowrap;">送信</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE: CREDLAYER (信頼性実証レイヤー) -->
+    <section id="credlayer" class="page-section">
+      <div class="hero" style="background: linear-gradient(135deg, #091e2f 0%, #064e3b 50%, #0f172a 100%); position: relative; overflow: hidden; border-radius: var(--radius-lg); padding: 3rem 2rem; color: #fff; margin-bottom: 2.5rem; border: 1px solid rgba(16, 185, 129, 0.3);">
+        <div style="position: absolute; top: -50px; right: -50px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%); pointer-events: none;"></div>
+        <span class="hero-tag" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.4);">
+          🛡️ 工務店CredLayer活用宣言｜根拠ある物理データ証明
+        </span>
+        <h1 class="hero-title" style="font-size: 2.4rem; line-height: 1.35; margin: 0.8rem 0;">
+          営業トークではなく、<br>
+          <span style="color: #34d399; font-size: 2.2rem;">多層的データ証明（CredLayer）で家を選ぶ。</span>
+        </h1>
+        <p class="hero-subtitle" style="color: #cbd5e1; max-width: 850px; line-height: 1.8;">
+          住宅メーカーの「高気密高断熱だから安心です」という言葉を鵜呑みにしていませんか？<br>
+          株式会社住ま居るは、価格競争を排し、温熱物理ログ・C値実測・100%構造計算・AIパース再現度・原価透明性の5つの信頼層（CredLayer）を全公開する信頼競争へと完全移行しています。
+        </p>
+        <div style="display: flex; gap: 12px; margin-top: 1.5rem; flex-wrap: wrap; align-items: center;">
+          <span style="background: #064e3b; color: #6ee7b7; border: 1px solid #059669; font-size: 0.85rem; font-weight: 800; padding: 6px 14px; border-radius: 20px;">
+            ✅ STATUS: Credibility Score 98.4% (全5層データ照合済み)
+          </span>
+          <button class="btn btn-primary" data-target="thermal-consultation" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff;">
+            💬 AI温熱相談室で物理データを質問する →
+          </button>
+        </div>
+      </div>
+
+      <!-- 5-LAYERS CREDIBILITY MATRIX -->
+      <div style="margin-bottom: 3rem;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <span style="background: #dcfce7; color: #166534; font-weight: 800; padding: 4px 16px; border-radius: 20px; font-size: 0.88rem;">
+            🔍 住ま居るが誇る5つの信頼証明（Credibility Layers）
+          </span>
+          <h2 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 2rem; margin-top: 0.6rem;">
+            工務店の信頼を裏付ける5つのCredLayer
+          </h2>
+        </div>
+
+        <div class="grid-3" style="gap: 1.5rem; margin-bottom: 2rem;">
+          <!-- Layer 1 -->
+          <div class="card" style="background: #ffffff; border: 2px solid #10b981; border-radius: var(--radius-lg); padding: 1.6rem; transition: transform 0.2s ease, box-shadow 0.2s ease;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem;">
+              <span style="font-size: 2rem;">⚡ Layer 1</span>
+              <span style="background: #dcfce7; color: #15803d; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 12px;">実証データ開示</span>
+            </div>
+            <h3 style="color: #047857; font-size: 1.25rem; margin-bottom: 0.6rem;">
+              温熱・省エネ物理データ層
+            </h3>
+            <p style="color: #475569; font-size: 0.92rem; line-height: 1.7;">
+              真冬の電気代明細（床暖房24h運転）、24時間温湿度ロガー（相対湿度45%維持）、サーモグラフィ熱橋カメラ画像を隠さず全開示。
+            </p>
+            <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px dashed #cbd5e1; font-size: 0.85rem; color: #059669; font-weight: 700;">
+              📊 1月〜2月平均暖房費: 鉄骨住宅の半額以下を実測検証
+            </div>
+          </div>
+
+          <!-- Layer 2 -->
+          <div class="card" style="background: #ffffff; border: 2px solid #0284c7; border-radius: var(--radius-lg); padding: 1.6rem; transition: transform 0.2s ease, box-shadow 0.2s ease;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem;">
+              <span style="font-size: 2rem;">📐 Layer 2</span>
+              <span style="background: #e0f2fe; color: #0369a1; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 12px;">100%構造計算</span>
+            </div>
+            <h3 style="color: #0369a1; font-size: 1.25rem; margin-bottom: 0.6rem;">
+              構造計算完全オープン層
+            </h3>
+            <p style="color: #475569; font-size: 0.92rem; line-height: 1.7;">
+              簡易的な壁量計算でお茶を濁さず、構造設計士による許容応力度計算（耐震等級3）を全棟で実施。直下率・偏心率データを共有。
+            </p>
+            <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px dashed #cbd5e1; font-size: 0.85rem; color: #0284c7; font-weight: 700;">
+              🏛️ 許容応力度計算 実施率 100%（全棟データ保管）
+            </div>
+          </div>
+
+          <!-- Layer 3 -->
+          <div class="card" style="background: #ffffff; border: 2px solid #d97706; border-radius: var(--radius-lg); padding: 1.6rem; transition: transform 0.2s ease, box-shadow 0.2s ease;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem;">
+              <span style="font-size: 2rem;">🌬️ Layer 3</span>
+              <span style="background: #fef3c7; color: #92400e; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 12px;">現場気密測定</span>
+            </div>
+            <h3 style="color: #b45309; font-size: 1.25rem; margin-bottom: 0.6rem;">
+              C値 0.3以下 実測保証層
+            </h3>
+            <p style="color: #475569; font-size: 0.92rem; line-height: 1.7;">
+              口頭の目標値ではなく、施工現場にて全棟で気密測定機による測定を実施。相当隙間面積C値 0.3cm²/㎡以下を実測値として証明します。
+            </p>
+            <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px dashed #cbd5e1; font-size: 0.85rem; color: #b45309; font-weight: 700;">
+              📏 実測平均 C値 = 0.28 cm²/㎡ を叩き出す現場施工力
+            </div>
+          </div>
+
+          <!-- Layer 4 -->
+          <div class="card" style="background: #ffffff; border: 2px solid #8b5cf6; border-radius: var(--radius-lg); padding: 1.6rem; transition: transform 0.2s ease, box-shadow 0.2s ease;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem;">
+              <span style="font-size: 2rem;">🎨 Layer 4</span>
+              <span style="background: #f3e8ff; color: #6b21a8; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 12px;">AI vs Real</span>
+            </div>
+            <h3 style="color: #6d28d9; font-size: 1.25rem; margin-bottom: 0.6rem;">
+              AIパース vs 施工現場 照合層
+            </h3>
+            <p style="color: #475569; font-size: 0.92rem; line-height: 1.7;">
+              施主が「AIパース工房」で作成した意匠を、狂いなく現実の建築として施工再現。イメージと完成後のギャップゼロを約束。
+            </p>
+            <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px dashed #cbd5e1; font-size: 0.85rem; color: #6d28d9; font-weight: 700;">
+              📸 AI描画パースと完成邸宅の完全一致実証ギャラリー公開
+            </div>
+          </div>
+
+          <!-- Layer 5 -->
+          <div class="card" style="background: #ffffff; border: 2px solid #ec4899; border-radius: var(--radius-lg); padding: 1.6rem; transition: transform 0.2s ease, box-shadow 0.2s ease; grid-column: span 2;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem;">
+              <span style="font-size: 2rem;">💳 Layer 5</span>
+              <span style="background: #fce7f3; color: #9d174d; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 12px;">営業歩合ゼロ</span>
+            </div>
+            <h3 style="color: #be185d; font-size: 1.25rem; margin-bottom: 0.6rem;">
+              営業人件費ゼロ・現場移管透明コスト層
+            </h3>
+            <p style="color: #475569; font-size: 0.92rem; line-height: 1.7;">
+              営業マンの歩合給や多大な待機コスト、豪華モデルハウス維持費を徹底カット。浮いた予算をすべて「付加断熱」「構造金物」「トリプルガラス樹脂サッシ」「専属大工さんの適正工賃」へとダイレクト還元しています。
+            </p>
+            <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px dashed #cbd5e1; font-size: 0.85rem; color: #be185d; font-weight: 700;">
+              💰 営業経費0円化により、同等予算でワンランク上の外皮性能・素材を実現
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE CREDIBILITY SCORE CALCULATOR WIDGET -->
+      <div class="card" style="background: #ffffff; border: 2px solid #059669; border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 3rem; box-shadow: var(--shadow-card);">
+        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+          <div>
+            <span style="background: #dcfce7; color: #15803d; font-weight: 800; font-size: 0.8rem; padding: 4px 12px; border-radius: 12px;">
+              🧮 インタラクティブ検証
+            </span>
+            <h3 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 1.4rem; margin-top: 0.3rem;">
+              Credibility Score (信頼設計カルテ) リアルタイム診断
+            </h3>
+          </div>
+          <span style="font-size: 0.9rem; color: #64748b;">
+            ご希望のプラン条件を選択して「物理的妥当性・信頼度」をチェック
+          </span>
+        </div>
+
+        <form id="cred-calculator-form">
+          <div class="grid-3" style="gap: 1.2rem;">
+            <div class="form-group">
+              <label class="form-label">想定延床面積（坪）</label>
+              <select id="cred-tsubo" class="form-select">
+                <option value="25">25坪 (コンパクト平屋・夫婦向け)</option>
+                <option value="30">30坪 (標準平屋 / 2階建て)</option>
+                <option value="35" selected>35坪 (ゆとり3LDK・4LDK)</option>
+                <option value="40">40坪 (二世帯 / 大空間LDK)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">希望の耐震構造計算レベル</label>
+              <select id="cred-seismic" class="form-select">
+                <option value="level3_calc" selected>許容応力度計算 耐震等級3 (住ま居る標準・推奨)</option>
+                <option value="level3_equiv">性能評価機関 簡易等級3相当</option>
+                <option value="level1">建築基準法ギリギリ (等級1)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">断熱・外皮性能目標</label>
+              <select id="cred-thermal" class="form-select">
+                <option value="g3_fuka" selected>HEAT20 G3 (付加断熱 + トリプル樹脂サッシ)</option>
+                <option value="g2_standard">HEAT20 G2 (樹脂複合 + 高気密)</option>
+                <option value="zeh">ZEH基準 (一般的建売レベル)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-2" style="gap: 1.2rem; margin-top: 1rem;">
+            <div class="form-group">
+              <label class="form-label">気密C値の実測保証チェック</label>
+              <select id="cred-cval" class="form-select">
+                <option value="c03" selected>全棟気密測定実施 (C値0.3以下保証)</option>
+                <option value="c10">C値 1.0以下 (気密測定任意)</option>
+                <option value="none">気密測定なし (計算値のみ)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">デザイン決定プロセス</label>
+              <select id="cred-design" class="form-select">
+                <option value="ai_studio" selected>AIパース工房で施主がビジュアル化 ＆ 建築士直結</option>
+                <option value="sales_talk">営業マンの紙スケッチ ＆ 口頭打ち合わせ</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-top: 1.8rem;">
+            <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-size: 1.1rem; padding: 0.9rem 2.5rem; font-weight: 800;">
+              🔍 このプランの Credibility Score を判定する →
+            </button>
+          </div>
+        </form>
+
+        <!-- Result Display Area -->
+        <div id="cred-result-box" style="margin-top: 2rem; padding: 1.5rem; border-radius: var(--radius-md); background: #f0fdf4; border: 2px solid #34d399; display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #a7f3d0; padding-bottom: 0.8rem; margin-bottom: 1rem;">
+            <h4 style="color: #065f46; font-size: 1.25rem; margin: 0; font-family: var(--font-heading);">
+              🛡️ 判定結果: Credibility Score = <span id="cred-score-num" style="font-size: 1.8rem; color: #047857; font-weight: 800;">98.5</span> / 100 点
+            </h4>
+            <span id="cred-badge-rank" style="background: #059669; color: #fff; font-weight: 800; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem;">
+              RANK: S+ (最高信頼設計)
+            </span>
+          </div>
+
+          <div id="cred-score-details" style="color: #1e293b; font-size: 0.95rem; line-height: 1.8;">
+            <!-- Detailed breakdown inserted dynamically via JS -->
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-top: 1.2rem; flex-wrap: wrap;">
+            <button class="btn btn-primary" data-target="dashboard" style="background: #0284c7; color: #fff; font-size: 0.9rem;">
+              👤 カルテ結果をマイページに一時保存
+            </button>
+            <button class="btn btn-primary" data-target="ai-studio" style="background: #d97706; color: #fff; font-size: 0.9rem;">
+              🎨 この性能仕様でAIパース工房を開く →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI VS REAL PROOF GALLERY -->
+      <div style="margin-bottom: 3rem;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <span style="background: #f3e8ff; color: #6b21a8; font-weight: 800; padding: 4px 16px; border-radius: 20px; font-size: 0.88rem;">
+            📸 AI Visual vs Actual House
+          </span>
+          <h2 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 1.8rem; margin-top: 0.6rem;">
+            「AIパース工房」で施主が描いたビジョン vs 実際の完成邸宅
+          </h2>
+          <p style="color: #64748b;">
+            AIが描いた夢のようなビジョンを、構造計算と匠の手刻みで100%現実に具現化した実証例です。
+          </p>
+        </div>
+
+        <div class="grid-2" style="gap: 1.5rem;">
+          <!-- Case 1 -->
+          <div class="card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-lg); overflow: hidden;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr;">
+              <div style="position: relative;">
+                <img src="/images/gallery/render_japan_modern.jpg" alt="AI生成パース" style="width: 100%; height: 220px; object-fit: cover;" />
+                <span style="position: absolute; bottom: 8px; left: 8px; background: rgba(15, 23, 42, 0.85); color: #f59e0b; font-size: 0.75rem; font-weight: 800; padding: 3px 8px; border-radius: 4px;">
+                  🎨 AI生成パース
+                </span>
+              </div>
+              <div style="position: relative;">
+                <img src="/images/hero_kaguya_house.jpg" alt="実際の完成写真" style="width: 100%; height: 220px; object-fit: cover;" />
+                <span style="position: absolute; bottom: 8px; left: 8px; background: rgba(15, 23, 42, 0.85); color: #10b981; font-size: 0.75rem; font-weight: 800; padding: 3px 8px; border-radius: 4px;">
+                  🏠 実際の完成写真
+                </span>
+              </div>
+            </div>
+            <div style="padding: 1.2rem;">
+              <h4 style="color: var(--primary-green-dark); font-size: 1.1rem; margin-bottom: 0.4rem;">
+                鶴ヶ島市 A様邸: 和モダン平屋 × 軒の深いエントランス
+              </h4>
+              <p style="font-size: 0.88rem; color: #475569; line-height: 1.6;">
+                黒ガルバリウムと格子状無垢ルーバーのコントラストをAIパースで決定。許容応力度計算により柱なし大開口ピクチャーウィンドウを完全再現。
+              </p>
+            </div>
+          </div>
+
+          <!-- Case 2 -->
+          <div class="card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-lg); overflow: hidden;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr;">
+              <div style="position: relative;">
+                <img src="/images/gallery/render_living_吹き抜け.jpg" alt="AI生成インドア" style="width: 100%; height: 220px; object-fit: cover;" />
+                <span style="position: absolute; bottom: 8px; left: 8px; background: rgba(15, 23, 42, 0.85); color: #f59e0b; font-size: 0.75rem; font-weight: 800; padding: 3px 8px; border-radius: 4px;">
+                  🎨 AI生成パース
+                </span>
+              </div>
+              <div style="position: relative;">
+                <img src="/images/gallery/real_interior_scent.jpg" alt="実際の完成内観写真" style="width: 100%; height: 220px; object-fit: cover;" />
+                <span style="position: absolute; bottom: 8px; left: 8px; background: rgba(15, 23, 42, 0.85); color: #10b981; font-size: 0.75rem; font-weight: 800; padding: 3px 8px; border-radius: 4px;">
+                  🏠 実際の完成写真
+                </span>
+              </div>
+            </div>
+            <div style="padding: 1.2rem;">
+              <h4 style="color: var(--primary-green-dark); font-size: 1.1rem; margin-bottom: 0.4rem;">
+                坂戸市 S様邸: ジャパンディ吹き抜けLDK × 低温水床暖房
+              </h4>
+              <p style="font-size: 0.88rem; color: #475569; line-height: 1.6;">
+                間接照明の温かみと吹き抜け大空間をAIでデザイン。HEAT20 G3外皮により上下温度差0.5℃以下の無風暖房空間を構築。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 8: ADMIN PORTAL, CRM & FLOORPLAN LIBRARY IMPORTER -->
+    <section id="admin" class="page-section">
+      <div class="hero">
+        <span class="hero-tag">管理者・チーフ建築士専用ポータル</span>
+        <h1 class="hero-title">社内統合管理コンソール<br><span style="color: #38bdf8; font-size: 1.6rem;">施主CRM連動 ＆ 間取りライブラリ・スケール正規化インポーター</span></h1>
+        <p class="hero-subtitle">登録されたお施主様のマイページ情報・展示場予約の管理と、AI間取り選別スタジオで提供する間取り図ライブラリ（自社図面＋X投稿・海外カタログ等の外部取込）の統合管理を行えます。</p>
+      </div>
+
+      <!-- Admin Tab Controls -->
+      <div style="display: flex; gap: 12px; margin-bottom: 2rem; border-bottom: 2px solid #334155; padding-bottom: 0.8rem;">
+        <button type="button" id="admin-tab-users" class="btn btn-primary" style="font-size: 0.95rem;">
+          👥 施主カルテ ＆ CRMワンタップ同期
+        </button>
+        <button type="button" id="admin-tab-plans" class="btn btn-secondary" style="font-size: 0.95rem;">
+          📂 間取りライブラリ管理 ＆ 外部図面インポーター
+        </button>
+      </div>
+
+      <!-- Tab 1: Users & CRM List -->
+      <div id="admin-view-users">
+        <div id="admin-users-list"></div>
+      </div>
+
+      <!-- Tab 2: Floorplan Library & Importer -->
+      <div id="admin-view-plans" style="display: none;">
+        
+        <!-- Importer Form Box -->
+        <div class="card" style="background: #ffffff; border: 2px solid #0284c7; border-radius: var(--radius-lg); padding: 1.8rem; margin-bottom: 2.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.8rem; margin-bottom: 1.2rem;">
+            <h3 style="color: #0369a1; font-family: var(--font-heading); font-size: 1.25rem; margin: 0;">
+              📥 外部図面（X投稿・海外カタログ等）取込 ＆ スケール正規化
+            </h3>
+            <span style="background: #e0f2fe; color: #0284c7; font-size: 0.8rem; font-weight: 800; padding: 4px 10px; border-radius: 12px;">
+              ミリ単位・壁厚130mm自動統一
+            </span>
+          </div>
+
+          <form id="admin-plan-import-form">
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">プラン名称・タイトル</label>
+                <input type="text" id="imp-title" class="form-input" placeholder="例: X投稿共有: 中庭テラスを囲む回遊動線の平屋" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">階数</label>
+                <select id="imp-stories" class="form-select">
+                  <option value="1">平屋 (1階建て)</option>
+                  <option value="2">2階建て</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">延床面積（㎡）</label>
+                <input type="number" id="imp-area-sqm" class="form-input" step="0.1" placeholder="例: 92.5" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">坪数（坪）</label>
+                <input type="number" id="imp-tsubo" class="form-input" step="0.1" placeholder="例: 28.0" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">間取りタイプ（部屋数）</label>
+                <input type="text" id="imp-rooms" class="form-input" placeholder="例: 3LDK+パントリー" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">ターゲット家族構成</label>
+                <select id="imp-family" class="form-select">
+                  <option value="子育て3〜4人">子育て3〜4人</option>
+                  <option value="夫婦・単身">夫婦・単身</option>
+                  <option value="二世帯・同居">二世帯・同居</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-2" style="margin-top: 1rem;">
+              <div class="form-group">
+                <label class="form-label">スケール正規化モジュール設定</label>
+                <select id="imp-module" class="form-select">
+                  <option value="910">尺モジュール (910mmグリッド基準)</option>
+                  <option value="1000">メーターモジュール (1000mmグリッド基準)</option>
+                  <option value="auto">AIスケール自動検出 (寸法線・文字認識で正規化)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">図面取込元ソース</label>
+                <select id="imp-source" class="form-select">
+                  <option value="自社既存顧客図面">自社既存顧客図面</option>
+                  <option value="X(旧Twitter)1日1プラン投稿者">X(旧Twitter)1日1プラン投稿者</option>
+                  <option value="海外カタログスキャン">海外カタログスキャン</option>
+                  <option value="その他建築設計資料">その他建築設計資料</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 1rem;">
+              <label class="form-label">こだわり特徴タグ（カンマ区切り）</label>
+              <input type="text" id="imp-features" class="form-input" placeholder="例: 中庭テラス, パントリー, 回遊動線, ファミリークローゼット" />
+            </div>
+
+            <div class="form-group" style="margin-top: 1rem;">
+              <label class="form-label">プランの特徴・おすすめ解説文</label>
+              <textarea id="imp-desc" class="form-textarea" rows="3" placeholder="プランの魅力や動線設計の意図を入力"></textarea>
+            </div>
+
+            <div style="text-align: right; margin-top: 1.5rem;">
+              <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; padding: 0.8rem 2rem;">
+                ➕ スケールを正規化して間取りライブラリに登録する
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Stored Floor Plans List -->
+        <div>
+          <h3 style="color: #f8fafc; font-family: var(--font-heading); font-size: 1.35rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
+            <span>📋 登録済み間取りライブラリ一覧 (<span id="admin-plans-count">30</span>プラン蓄積中)</span>
+            <span style="font-size: 0.85rem; color: #94a3b8; font-weight: normal;">※AI間取り選別スタジオで常時提供中</span>
+          </h3>
+          <div id="admin-plans-table-container" style="background: #ffffff; border-radius: var(--radius-md); overflow-x: auto; box-shadow: var(--shadow-card);">
+            <!-- Dynamically populated table of floor plans -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MAGIC LINK AUTH MODAL -->
+  <div id="auth-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 0.5rem;">専用マイページを作成・ログイン</h3>
+      <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.5rem;">面倒なパスワード設定は不要です。氏名・メール・電話番号の入力だけで、専用マジックリンクが発行されダッシュボードが開きます。</p>
+      
+      <form id="magic-link-form">
+        <div class="form-group">
+          <label class="form-label">お名前 (氏名)</label>
+          <input type="text" id="auth-name" class="form-input" placeholder="例: 鶴ヶ島 太郎" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">メールアドレス</label>
+          <input type="email" id="auth-email" class="form-input" placeholder="example@sumaile.co.jp" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">携帯電話番号</label>
+          <input type="tel" id="auth-phone" class="form-input" placeholder="090-1234-5678" required />
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 2rem;">
+          <button type="button" id="close-auth-modal" class="btn btn-secondary">キャンセル</button>
+          <button type="submit" class="btn btn-primary">マジックリンクを発行してログイン →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 株式会社住ま居る / スマイチ All Rights Reserved.<br>「芳彩（かぐや）— 結露しない家」 / 埼玉県鶴ヶ島市町屋176番地5<br>大工さん×建築士のタッグによるミリ単位自由設計 / 呼吸する珪藻土・無垢材 / HEAT20 G2・G3 / 実測C値0.3以下 / 耐震等級3 (全棟許容応力度計算)</p>
+    <div style="margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+      <a href="#" class="footer-admin-link" data-target="admin" style="color: #94a3b8; font-size: 0.8rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: color 0.2s ease;">
+        <span>🔐</span> 社員・関係者用 管理コンソール
+      </a>
+    </div>
+  </footer>
+
+  <script src="/js/app.js"></script>
+  <!-- Lightbox Modal for Case Studies -->
+  <div class="case-lightbox-modal" id="case-lightbox-modal">
+    <button class="case-lightbox-close" id="case-lightbox-close" aria-label="閉じる">&times;</button>
+    <img src="" alt="全画面拡大写真" class="case-lightbox-content" id="case-lightbox-content" />
+  </div>
+
+</body>
+</html>

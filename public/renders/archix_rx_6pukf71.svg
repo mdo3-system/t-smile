@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+    <defs>
+      <linearGradient id="rxSky" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#38bdf8"/>
+        <stop offset="100%" stop-color="#e0f2fe"/>
+      </linearGradient>
+      <filter id="rxGlow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="18" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+      <filter id="rxShadow" x="-10%" y="-10%" width="120%" height="120%">
+        <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.35"/>
+      </filter>
+    </defs>
+    
+    <!-- Background / Sky -->
+    <rect width="1200" height="800" fill="url(#rxSky)"/>
+    
+    <!-- Dynamic Scene -->
+    
+      <!-- Back Wall -->
+      <rect width="1200" height="800" fill="#f1f5f9"/>
+      <!-- Solid Wood Flooring -->
+      <polygon points="0,480 1200,480 1200,800 0,800" fill="#b45309"/>
+      <!-- Wood plank perspective lines -->
+      <line x1="600" y1="480" x2="100" y2="800" stroke="#78350f" stroke-width="2" opacity="0.3"/>
+      <line x1="600" y1="480" x2="350" y2="800" stroke="#78350f" stroke-width="2" opacity="0.3"/>
+      <line x1="600" y1="480" x2="600" y2="800" stroke="#78350f" stroke-width="2" opacity="0.3"/>
+      <line x1="600" y1="480" x2="850" y2="800" stroke="#78350f" stroke-width="2" opacity="0.3"/>
+      <line x1="600" y1="480" x2="1100" y2="800" stroke="#78350f" stroke-width="2" opacity="0.3"/>
+      <!-- High Exposed Timber Beams -->
+      <rect x="100" y="60" width="1000" height="40" fill="#78350f" rx="4"/>
+      <rect x="180" y="60" width="40" height="180" fill="#92400e"/>
+      <rect x="580" y="60" width="40" height="180" fill="#92400e"/>
+      <rect x="980" y="60" width="40" height="180" fill="#92400e"/>
+      <!-- Panoramic Garden Window -->
+      <rect x="120" y="160" width="680" height="320" fill="#e0f2fe" stroke="#334155" stroke-width="6"/>
+      <!-- Garden Outside Window -->
+      <rect x="125" y="340" width="670" height="135" fill="#047857" opacity="0.8"/>
+      <!-- Modern Low Sofa -->
+      <rect x="420" y="520" width="460" height="160" rx="14" fill="#334155" stroke="#1e293b" stroke-width="3"/>
+      <rect x="440" y="500" width="420" height="60" rx="10" fill="#475569"/>
+      <!-- Designer Coffee Table -->
+      <ellipse cx="640" cy="720" rx="160" ry="45" fill="#f8fafc" stroke="#cbd5e1" stroke-width="3"/>
+      <!-- Architectural Plant / Foliage -->
+      <path d="M 160 520 Q 200 420 180 360 Q 230 400 240 480 Z" fill="#15803d"/>
+      <path d="M 220 540 Q 270 410 290 350 Q 280 430 250 500 Z" fill="#166534"/>
+      <!-- Indirect Ceiling Glow -->
+      <rect x="100" y="100" width="1000" height="40" fill="#fef08a" opacity="0.6" filter="url(#rxGlow)"/>
+    
+    
+    <!-- ArchiX/Renrery Style Watermark & Spec Header -->
+    <g filter="url(#rxShadow)">
+      <rect x="40" y="40" width="560" height="80" rx="14" fill="#0f172a" opacity="0.9" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="65" y="72" fill="#f8fafc" font-family="'Inter', sans-serif" font-size="18" font-weight="700">
+        AI フォトリアルパース工房 [ArchiX Engine]
+      </text>
+      <text x="65" y="98" fill="#38bdf8" font-family="sans-serif" font-size="13">
+        吹き抜け大開口 LDK × ジャパンディ（北欧×和の静謐）（澄み渡る朝の自然光）
+      </text>
+      <rect x="490" y="55" width="90" height="28" rx="6" fill="#0284c7"/>
+      <text x="506" y="74" fill="#ffffff" font-family="sans-serif" font-size="12" font-weight="bold">4K リアル</text>
+    </g>
+  </svg>
