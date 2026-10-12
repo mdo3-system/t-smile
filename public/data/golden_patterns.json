@@ -1,0 +1,1283 @@
+{
+  "version": "1.0",
+  "description": "住ま居る 実務黄金パターン・プリセット定義集（後から追加・編集・インポート可能）",
+  "patterns": {
+    "kaiyu": {
+      "id": "kaiyu",
+      "name": "🌀 家事ラク回遊コア（玄関→パントリー→キッチン→水回り）",
+      "desc": "帰宅後すぐにパントリーへ荷物を置き、キッチン・洗面脱衣へぐるりと回遊できる究極の家事時短動線。",
+      "type": "two_story",
+      "tsuboTarget": 32.5,
+      "nodes": [
+        {
+          "id": "porch",
+          "name": "玄関ポーチ",
+          "floor": 1,
+          "tatami": 1.5,
+          "category": "entrance",
+          "color": "#7dd3fc",
+          "x": 420,
+          "y": 440,
+          "wMm": 1365,
+          "hMm": 1820
+        },
+        {
+          "id": "genkan",
+          "name": "玄関・土間",
+          "floor": 1,
+          "tatami": 2.5,
+          "category": "entrance",
+          "color": "#38bdf8",
+          "x": 420,
+          "y": 375,
+          "wMm": 1820,
+          "hMm": 2275
+        },
+        {
+          "id": "sic",
+          "name": "SIC(シューズイン)",
+          "floor": 1,
+          "tatami": 1.5,
+          "category": "storage",
+          "color": "#94a3b8",
+          "x": 500,
+          "y": 375,
+          "wMm": 1137.5,
+          "hMm": 2275
+        },
+        {
+          "id": "hall",
+          "name": "玄関ホール",
+          "floor": 1,
+          "tatami": 2.0,
+          "category": "circulation",
+          "color": "#cbd5e1",
+          "x": 420,
+          "y": 305,
+          "wMm": 1820,
+          "hMm": 1820
+        },
+        {
+          "id": "stairs1",
+          "name": "1F階段",
+          "floor": 1,
+          "tatami": 2.0,
+          "category": "circulation",
+          "color": "#94a3b8",
+          "x": 500,
+          "y": 305,
+          "wMm": 1820,
+          "hMm": 1820,
+          "flightId": "flight_1_2"
+        },
+        {
+          "id": "toilet1",
+          "name": "1Fトイレ",
+          "floor": 1,
+          "tatami": 1.0,
+          "category": "sanitary",
+          "color": "#a855f7",
+          "x": 570,
+          "y": 305,
+          "wMm": 910,
+          "hMm": 1820
+        },
+        {
+          "id": "dl",
+          "name": "ダイニング・リビング",
+          "floor": 1,
+          "tatami": 14.5,
+          "category": "living",
+          "color": "#fb923c",
+          "x": 260,
+          "y": 360,
+          "wMm": 5460,
+          "hMm": 4322.5
+        },
+        {
+          "id": "kitchen",
+          "name": "対面キッチン",
+          "floor": 1,
+          "tatami": 5.5,
+          "category": "kitchen",
+          "color": "#f59e0b",
+          "x": 330,
+          "y": 250,
+          "wMm": 2730,
+          "hMm": 3325
+        },
+        {
+          "id": "pantry",
+          "name": "パントリー",
+          "floor": 1,
+          "tatami": 2.0,
+          "category": "storage",
+          "color": "#a3e635",
+          "x": 240,
+          "y": 250,
+          "wMm": 1820,
+          "hMm": 1820
+        },
+        {
+          "id": "wash",
+          "name": "洗面脱衣室",
+          "floor": 1,
+          "tatami": 3.0,
+          "category": "sanitary",
+          "color": "#2dd4bf",
+          "x": 160,
+          "y": 250,
+          "wMm": 1820,
+          "hMm": 2730
+        },
+        {
+          "id": "bath",
+          "name": "システムバス",
+          "floor": 1,
+          "tatami": 2.0,
+          "category": "sanitary",
+          "color": "#06b6d4",
+          "x": 160,
+          "y": 180,
+          "wMm": 1820,
+          "hMm": 1820
+        },
+        {
+          "id": "tatami",
+          "name": "小上がり畳",
+          "floor": 1,
+          "tatami": 4.5,
+          "category": "japanese",
+          "color": "#4ade80",
+          "x": 260,
+          "y": 450,
+          "wMm": 2730,
+          "hMm": 2730
+        },
+        {
+          "id": "deck",
+          "name": "ウッドデッキ",
+          "floor": 1,
+          "tatami": 3.5,
+          "category": "outdoor",
+          "color": "#fdba74",
+          "x": 160,
+          "y": 450,
+          "wMm": 2730,
+          "hMm": 2117.5
+        },
+        {
+          "id": "master",
+          "name": "主寝室",
+          "floor": 2,
+          "tatami": 7.5,
+          "category": "private",
+          "color": "#818cf8",
+          "x": 300,
+          "y": 220,
+          "wMm": 3640,
+          "hMm": 3412.5
+        },
+        {
+          "id": "wic",
+          "name": "WIC",
+          "floor": 2,
+          "tatami": 3.5,
+          "category": "storage",
+          "color": "#94a3b8",
+          "x": 220,
+          "y": 220,
+          "wMm": 1820,
+          "hMm": 3185
+        },
+        {
+          "id": "bed1",
+          "name": "子ども部屋A",
+          "floor": 2,
+          "tatami": 5.0,
+          "category": "private",
+          "color": "#facc15",
+          "x": 480,
+          "y": 220,
+          "wMm": 2730,
+          "hMm": 3033.3
+        },
+        {
+          "id": "bed2",
+          "name": "子ども部屋B",
+          "floor": 2,
+          "tatami": 5.0,
+          "category": "private",
+          "color": "#fde047",
+          "x": 560,
+          "y": 300,
+          "wMm": 2730,
+          "hMm": 3033.3
+        },
+        {
+          "id": "hall2",
+          "name": "2Fホール",
+          "floor": 2,
+          "tatami": 3.0,
+          "category": "circulation",
+          "color": "#cbd5e1",
+          "x": 420,
+          "y": 305,
+          "wMm": 1820,
+          "hMm": 2730
+        },
+        {
+          "id": "stairs2",
+          "name": "2F階段室",
+          "floor": 2,
+          "tatami": 2.0,
+          "category": "circulation",
+          "color": "#94a3b8",
+          "x": 500,
+          "y": 305,
+          "wMm": 1820,
+          "hMm": 1820,
+          "flightId": "flight_1_2"
+        },
+        {
+          "id": "toilet2",
+          "name": "2Fトイレ",
+          "floor": 2,
+          "tatami": 1.0,
+          "category": "sanitary",
+          "color": "#c084fc",
+          "x": 570,
+          "y": 305,
+          "wMm": 910,
+          "hMm": 1820
+        },
+        {
+          "id": "balcony",
+          "name": "2Fバルコニー",
+          "floor": 2,
+          "tatami": 2.5,
+          "category": "outdoor",
+          "color": "#38bdf8",
+          "x": 300,
+          "y": 320,
+          "wMm": 3640,
+          "hMm": 1137.5
+        }
+      ],
+      "links": [
+        {
+          "source": "porch",
+          "target": "genkan"
+        },
+        {
+          "source": "genkan",
+          "target": "hall"
+        },
+        {
+          "source": "genkan",
+          "target": "sic"
+        },
+        {
+          "source": "sic",
+          "target": "pantry"
+        },
+        {
+          "source": "pantry",
+          "target": "kitchen"
+        },
+        {
+          "source": "kitchen",
+          "target": "wash"
+        },
+        {
+          "source": "wash",
+          "target": "bath"
+        },
+        {
+          "source": "hall",
+          "target": "dl"
+        },
+        {
+          "source": "hall",
+          "target": "stairs1"
+        },
+        {
+          "source": "hall",
+          "target": "toilet1"
+        },
+        {
+          "source": "dl",
+          "target": "kitchen"
+        },
+        {
+          "source": "dl",
+          "target": "tatami"
+        },
+        {
+          "source": "dl",
+          "target": "deck"
+        },
+        {
+          "source": "hall2",
+          "target": "stairs2"
+        },
+        {
+          "source": "hall2",
+          "target": "master"
+        },
+        {
+          "source": "master",
+          "target": "wic"
+        },
+        {
+          "source": "master",
+          "target": "balcony"
+        },
+        {
+          "source": "hall2",
+          "target": "bed1"
+        },
+        {
+          "source": "hall2",
+          "target": "bed2"
+        },
+        {
+          "source": "hall2",
+          "target": "toilet2"
+        }
+      ]
+    },
+    "hiraya": {
+      "id": "hiraya",
+      "name": "🏡 ワンフロア平屋・中庭テラス動線（28坪）",
+      "desc": "ワンフロアで完結するバリアフリー動線。LDKと主寝室が中庭を囲み、自然光が溢れる上質設計。",
+      "type": "flat",
+      "tsuboTarget": 28.0,
+      "nodes": [
+        {
+          "id": "genkan",
+          "name": "玄関・土間",
+          "floor": 1,
+          "tatami": 3.5,
+          "category": "entrance",
+          "color": "#38bdf8",
+          "x": 220,
+          "y": 360
+        },
+        {
+          "id": "hall",
+          "name": "玄関ホール",
+          "floor": 1,
+          "tatami": 2.5,
+          "category": "circulation",
+          "color": "#cbd5e1",
+          "x": 300,
+          "y": 320
+        },
+        {
+          "id": "ldk",
+          "name": "LDK大空間",
+          "floor": 1,
+          "tatami": 22.0,
+          "category": "living",
+          "color": "#fb923c",
+          "x": 450,
+          "y": 280
+        },
+        {
+          "id": "kitchen",
+          "name": "アイランド対面K",
+          "floor": 1,
+          "tatami": 5.5,
+          "category": "kitchen",
+          "color": "#f59e0b",
+          "x": 400,
+          "y": 180
+        },
+        {
+          "id": "pantry",
+          "name": "パントリー",
+          "floor": 1,
+          "tatami": 2.5,
+          "category": "storage",
+          "color": "#a3e635",
+          "x": 310,
+          "y": 170
+        },
+        {
+          "id": "wash",
+          "name": "洗面脱衣ランドリー",
+          "floor": 1,
+          "tatami": 4.0,
+          "category": "sanitary",
+          "color": "#2dd4bf",
+          "x": 240,
+          "y": 230
+        },
+        {
+          "id": "bath",
+          "name": "ユニットバス",
+          "floor": 1,
+          "tatami": 2.0,
+          "category": "sanitary",
+          "color": "#06b6d4",
+          "x": 170,
+          "y": 240
+        },
+        {
+          "id": "toilet",
+          "name": "トイレ",
+          "floor": 1,
+          "tatami": 1.5,
+          "category": "sanitary",
+          "color": "#a855f7",
+          "x": 330,
+          "y": 400
+        },
+        {
+          "id": "courtyard",
+          "name": "中庭テラス",
+          "floor": 1,
+          "tatami": 6.0,
+          "category": "outdoor",
+          "color": "#6ee7b7",
+          "x": 500,
+          "y": 410
+        },
+        {
+          "id": "master",
+          "name": "主寝室",
+          "floor": 1,
+          "tatami": 7.0,
+          "category": "private",
+          "color": "#818cf8",
+          "x": 620,
+          "y": 360
+        },
+        {
+          "id": "wic",
+          "name": "大型WIC",
+          "floor": 1,
+          "tatami": 3.5,
+          "category": "storage",
+          "color": "#94a3b8",
+          "x": 690,
+          "y": 290
+        },
+        {
+          "id": "free",
+          "name": "ワーク＆予備室",
+          "floor": 1,
+          "tatami": 5.0,
+          "category": "private",
+          "color": "#fde047",
+          "x": 600,
+          "y": 220
+        }
+      ],
+      "links": [
+        {
+          "source": "genkan",
+          "target": "hall"
+        },
+        {
+          "source": "hall",
+          "target": "ldk"
+        },
+        {
+          "source": "hall",
+          "target": "toilet"
+        },
+        {
+          "source": "hall",
+          "target": "wash"
+        },
+        {
+          "source": "wash",
+          "target": "bath"
+        },
+        {
+          "source": "kitchen",
+          "target": "pantry"
+        },
+        {
+          "source": "pantry",
+          "target": "wash"
+        },
+        {
+          "source": "ldk",
+          "target": "kitchen"
+        },
+        {
+          "source": "ldk",
+          "target": "courtyard"
+        },
+        {
+          "source": "courtyard",
+          "target": "master"
+        },
+        {
+          "source": "master",
+          "target": "wic"
+        },
+        {
+          "source": "ldk",
+          "target": "free"
+        }
+      ]
+    },
+    "living_center": {
+      "id": "living_center",
+      "name": "🌸 南面大開口LDK＋2間続き和室（32坪）",
+      "desc": "リビングと和室が建具全開放で一体化。南面いっぱいに広がる自然光と庭を取り込む開放プラン。",
+      "type": "two_story",
+      "tsuboTarget": 32.0,
+      "nodes": [
+        {
+          "id": "genkan",
+          "name": "玄関・式台",
+          "floor": 1,
+          "tatami": 4.0,
+          "category": "entrance",
+          "color": "#38bdf8",
+          "x": 220,
+          "y": 360
+        },
+        {
+          "id": "hall",
+          "name": "ホール・階段",
+          "floor": 1,
+          "tatami": 3.5,
+          "category": "circulation",
+          "color": "#cbd5e1",
+          "x": 310,
+          "y": 320
+        },
+        {
+          "id": "ldk",
+          "name": "LDK大空間",
+          "floor": 1,
+          "tatami": 18.0,
+          "category": "living",
+          "color": "#fb923c",
+          "x": 460,
+          "y": 320
+        },
+        {
+          "id": "tatami_open",
+          "name": "和室(2間続き建具開放)",
+          "floor": 1,
+          "tatami": 6.0,
+          "category": "japanese",
+          "color": "#4ade80",
+          "x": 610,
+          "y": 320
+        },
+        {
+          "id": "kitchen",
+          "name": "対面フラットK",
+          "floor": 1,
+          "tatami": 5.0,
+          "category": "kitchen",
+          "color": "#f59e0b",
+          "x": 440,
+          "y": 210
+        },
+        {
+          "id": "pantry",
+          "name": "パントリー",
+          "floor": 1,
+          "tatami": 1.5,
+          "category": "storage",
+          "color": "#a3e635",
+          "x": 360,
+          "y": 190
+        },
+        {
+          "id": "wash",
+          "name": "洗面脱衣室",
+          "floor": 1,
+          "tatami": 3.0,
+          "category": "sanitary",
+          "color": "#2dd4bf",
+          "x": 280,
+          "y": 210
+        },
+        {
+          "id": "bath",
+          "name": "システムバス",
+          "floor": 1,
+          "tatami": 2.0,
+          "category": "sanitary",
+          "color": "#06b6d4",
+          "x": 200,
+          "y": 220
+        },
+        {
+          "id": "toilet",
+          "name": "1Fトイレ",
+          "floor": 1,
+          "tatami": 1.5,
+          "category": "sanitary",
+          "color": "#a855f7",
+          "x": 280,
+          "y": 420
+        },
+        {
+          "id": "master",
+          "name": "主寝室",
+          "floor": 2,
+          "tatami": 8.0,
+          "category": "private",
+          "color": "#818cf8",
+          "x": 320,
+          "y": 240
+        },
+        {
+          "id": "wic",
+          "name": "WIC",
+          "floor": 2,
+          "tatami": 3.0,
+          "category": "storage",
+          "color": "#94a3b8",
+          "x": 240,
+          "y": 240
+        },
+        {
+          "id": "bed1",
+          "name": "子ども部屋A",
+          "floor": 2,
+          "tatami": 5.5,
+          "category": "private",
+          "color": "#facc15",
+          "x": 500,
+          "y": 240
+        },
+        {
+          "id": "bed2",
+          "name": "子ども部屋B",
+          "floor": 2,
+          "tatami": 5.5,
+          "category": "private",
+          "color": "#fde047",
+          "x": 580,
+          "y": 320
+        },
+        {
+          "id": "hall2",
+          "name": "2Fホール",
+          "floor": 2,
+          "tatami": 3.0,
+          "category": "circulation",
+          "color": "#cbd5e1",
+          "x": 410,
+          "y": 320
+        }
+      ],
+      "links": [
+        {
+          "source": "genkan",
+          "target": "hall"
+        },
+        {
+          "source": "hall",
+          "target": "ldk"
+        },
+        {
+          "source": "hall",
+          "target": "toilet"
+        },
+        {
+          "source": "hall",
+          "target": "wash"
+        },
+        {
+          "source": "wash",
+          "target": "bath"
+        },
+        {
+          "source": "ldk",
+          "target": "kitchen"
+        },
+        {
+          "source": "ldk",
+          "target": "tatami_open"
+        },
+        {
+          "source": "kitchen",
+          "target": "pantry"
+        },
+        {
+          "source": "hall2",
+          "target": "master"
+        },
+        {
+          "source": "master",
+          "target": "wic"
+        },
+        {
+          "source": "hall2",
+          "target": "bed1"
+        },
+        {
+          "source": "hall2",
+          "target": "bed2"
+        }
+      ]
+    },
+    "telework_kosodate": {
+      "id": "telework_kosodate",
+      "name": "💻 共働きテレワーク ＆ 見守りスタディ動線（34坪）",
+      "desc": "在宅勤務スペースをLDK横と寝室奥に2箇所確保。キッチンから子どものスタディコーナーが見守れる安心設計。",
+      "type": "two_story",
+      "tsuboTarget": 34.0,
+      "nodes": [
+        {
+          "id": "genkan",
+          "name": "玄関・土間",
+          "floor": 1,
+          "tatami": 3.5,
+          "category": "entrance",
+          "color": "#38bdf8",
+          "x": 220,
+          "y": 370
+        },
+        {
+          "id": "sic",
+          "name": "SIC",
+          "floor": 1,
+          "tatami": 2.0,
+          "category": "storage",
+          "color": "#94a3b8",
+          "x": 200,
+          "y": 290
+        },
+        {
+          "id": "hall",
+          "name": "ホール・階段",
+          "floor": 1,
+          "tatami": 3.0,
+          "category": "circulation",
+          "color": "#cbd5e1",
+          "x": 300,
+          "y": 330
+        },
+        {
+          "id": "ldk",
+          "name": "LDK大空間",
+          "floor": 1,
+          "tatami": 19.0,
+          "category": "living",
+          "color": "#fb923c",
+          "x": 450,
+          "y": 330
+        },
+        {
+          "id": "study",
+          "name": "見守りスタディ",
+          "floor": 1,
+          "tatami": 3.0,
+          "category": "private",
+          "color": "#facc15",
+          "x": 580,
+          "y": 330
+        },
+        {
+          "id": "kitchen",
+          "name": "対面キッチン",
+          "floor": 1,
+          "tatami": 5.0,
+          "category": "kitchen",
+          "color": "#f59e0b",
+          "x": 470,
+          "y": 220
+        },
+        {
+          "id": "pantry",
+          "name": "パントリー",
+          "floor": 1,
+          "tatami": 2.0,
+          "category": "storage",
+          "color": "#a3e635",
+          "x": 390,
+          "y": 190
+        },
+        {
+          "id": "wash",
+          "name": "独立洗面ランドリー",
+          "floor": 1,
+          "tatami": 4.0,
+          "category": "sanitary",
+          "color": "#2dd4bf",
+          "x": 310,
+          "y": 190
+        },
+        {
+          "id": "bath",
+          "name": "システムバス",
+          "floor": 1,
+          "tatami": 2.0,
+          "category": "sanitary",
+          "color": "#06b6d4",
+          "x": 230,
+          "y": 190
+        },
+        {
+          "id": "toilet1",
+          "name": "1Fトイレ",
+          "floor": 1,
+          "tatami": 1.5,
+          "category": "sanitary",
+          "color": "#a855f7",
+          "x": 300,
+          "y": 420
+        },
+        {
+          "id": "master",
+          "name": "主寝室",
+          "floor": 2,
+          "tatami": 7.0,
+          "category": "private",
+          "color": "#818cf8",
+          "x": 300,
+          "y": 220
+        },
+        {
+          "id": "telework",
+          "name": "完全個室書斎",
+          "floor": 2,
+          "tatami": 3.0,
+          "category": "private",
+          "color": "#38bdf8",
+          "x": 220,
+          "y": 220
+        },
+        {
+          "id": "wic",
+          "name": "WIC",
+          "floor": 2,
+          "tatami": 3.0,
+          "category": "storage",
+          "color": "#94a3b8",
+          "x": 300,
+          "y": 140
+        },
+        {
+          "id": "bed1",
+          "name": "子ども部屋A",
+          "floor": 2,
+          "tatami": 5.0,
+          "category": "private",
+          "color": "#fde047",
+          "x": 480,
+          "y": 220
+        },
+        {
+          "id": "bed2",
+          "name": "子ども部屋B",
+          "floor": 2,
+          "tatami": 5.0,
+          "category": "private",
+          "color": "#facc15",
+          "x": 560,
+          "y": 300
+        },
+        {
+          "id": "hall2",
+          "name": "2Fホール",
+          "floor": 2,
+          "tatami": 3.0,
+          "category": "circulation",
+          "color": "#cbd5e1",
+          "x": 400,
+          "y": 300
+        },
+        {
+          "id": "toilet2",
+          "name": "2Fトイレ",
+          "floor": 2,
+          "tatami": 1.0,
+          "category": "sanitary",
+          "color": "#c084fc",
+          "x": 400,
+          "y": 380
+        }
+      ],
+      "links": [
+        {
+          "source": "genkan",
+          "target": "hall"
+        },
+        {
+          "source": "genkan",
+          "target": "sic"
+        },
+        {
+          "source": "sic",
+          "target": "wash"
+        },
+        {
+          "source": "hall",
+          "target": "ldk"
+        },
+        {
+          "source": "hall",
+          "target": "toilet1"
+        },
+        {
+          "source": "ldk",
+          "target": "study"
+        },
+        {
+          "source": "ldk",
+          "target": "kitchen"
+        },
+        {
+          "source": "kitchen",
+          "target": "pantry"
+        },
+        {
+          "source": "pantry",
+          "target": "wash"
+        },
+        {
+          "source": "wash",
+          "target": "bath"
+        },
+        {
+          "source": "hall2",
+          "target": "master"
+        },
+        {
+          "source": "master",
+          "target": "telework"
+        },
+        {
+          "source": "master",
+          "target": "wic"
+        },
+        {
+          "source": "hall2",
+          "target": "bed1"
+        },
+        {
+          "source": "hall2",
+          "target": "bed2"
+        },
+        {
+          "source": "hall2",
+          "target": "toilet2"
+        }
+      ]
+    },
+    "three_story_ph": {
+      "id": "three_story_ph",
+      "name": "🏙️ 3階建て＋PH（2F大空間LDK＋吹抜＋屋上スカイテラス）",
+      "desc": "都市型狭小地にも最適な3階建て＋ペントハウス（PH）。2Fにプライバシー性の高いLDKと吹き抜け、屋上には眺望抜群のスカイテラスを配置。",
+      "type": "three_story_ph",
+      "tsuboTarget": 38.5,
+      "nodes": [
+        {
+          "id": "genkan_3f",
+          "name": "玄関・土間",
+          "floor": 1,
+          "tatami": 3.0,
+          "category": "entrance",
+          "color": "#38bdf8",
+          "x": 420,
+          "y": 380,
+          "wMm": 1820,
+          "hMm": 2730
+        },
+        {
+          "id": "hall_3f_1",
+          "name": "1Fホール",
+          "floor": 1,
+          "tatami": 2.0,
+          "category": "circulation",
+          "color": "#cbd5e1",
+          "x": 420,
+          "y": 300,
+          "wMm": 1820,
+          "hMm": 1820
+        },
+        {
+          "id": "bed_3f_1",
+          "name": "主寝室",
+          "floor": 1,
+          "tatami": 7.5,
+          "category": "private",
+          "color": "#818cf8",
+          "x": 280,
+          "y": 340,
+          "wMm": 3640,
+          "hMm": 3412.5
+        },
+        {
+          "id": "wic_3f_1",
+          "name": "WIC",
+          "floor": 1,
+          "tatami": 3.0,
+          "category": "storage",
+          "color": "#94a3b8",
+          "x": 200,
+          "y": 340,
+          "wMm": 1820,
+          "hMm": 2730
+        },
+        {
+          "id": "toilet_3f_1",
+          "name": "1Fトイレ",
+          "floor": 1,
+          "tatami": 1.0,
+          "category": "sanitary",
+          "color": "#a855f7",
+          "x": 570,
+          "y": 300,
+          "wMm": 910,
+          "hMm": 1820
+        },
+        {
+          "id": "ldk_3f_2",
+          "name": "2F ワンフロアLDK",
+          "floor": 2,
+          "tatami": 20.0,
+          "category": "living",
+          "color": "#fb923c",
+          "x": 320,
+          "y": 320,
+          "wMm": 6370,
+          "hMm": 5232.5
+        },
+        {
+          "id": "fukinuke_3f_2",
+          "name": "ダイニング吹き抜け",
+          "floor": 2,
+          "tatami": 4.0,
+          "category": "void",
+          "color": "#e0e7ff",
+          "x": 220,
+          "y": 320,
+          "wMm": 2730,
+          "hMm": 2420
+        },
+        {
+          "id": "kitchen_3f_2",
+          "name": "対面キッチン",
+          "floor": 2,
+          "tatami": 5.5,
+          "category": "kitchen",
+          "color": "#f59e0b",
+          "x": 400,
+          "y": 240,
+          "wMm": 2730,
+          "hMm": 3325
+        },
+        {
+          "id": "wash_3f_2",
+          "name": "洗面脱衣室",
+          "floor": 2,
+          "tatami": 3.0,
+          "category": "sanitary",
+          "color": "#2dd4bf",
+          "x": 480,
+          "y": 200,
+          "wMm": 1820,
+          "hMm": 2730
+        },
+        {
+          "id": "bath_3f_2",
+          "name": "システムバス",
+          "floor": 2,
+          "tatami": 2.0,
+          "category": "sanitary",
+          "color": "#06b6d4",
+          "x": 550,
+          "y": 200,
+          "wMm": 1820,
+          "hMm": 1820
+        },
+        {
+          "id": "hall_3f_3",
+          "name": "3Fホール",
+          "floor": 3,
+          "tatami": 3.0,
+          "category": "circulation",
+          "color": "#cbd5e1",
+          "x": 420,
+          "y": 300,
+          "wMm": 1820,
+          "hMm": 2730
+        },
+        {
+          "id": "bed_3f_a",
+          "name": "子ども部屋A",
+          "floor": 3,
+          "tatami": 5.5,
+          "category": "private",
+          "color": "#facc15",
+          "x": 300,
+          "y": 240,
+          "wMm": 2730,
+          "hMm": 3325
+        },
+        {
+          "id": "bed_3f_b",
+          "name": "子ども部屋B",
+          "floor": 3,
+          "tatami": 5.5,
+          "category": "private",
+          "color": "#fde047",
+          "x": 300,
+          "y": 360,
+          "wMm": 2730,
+          "hMm": 3325
+        },
+        {
+          "id": "balcony_3f_3",
+          "name": "3Fインナーバルコニー",
+          "floor": 3,
+          "tatami": 3.0,
+          "category": "outdoor",
+          "color": "#38bdf8",
+          "x": 420,
+          "y": 400,
+          "wMm": 3640,
+          "hMm": 1365
+        },
+        {
+          "id": "roof_terrace",
+          "name": "屋上スカイテラス",
+          "floor": 4,
+          "tatami": 12.0,
+          "category": "outdoor",
+          "color": "#0284c7",
+          "x": 350,
+          "y": 320,
+          "wMm": 5460,
+          "hMm": 3640
+        },
+        {
+          "id": "stairs_1_2_f1",
+          "name": "1F階段(1F⇄2F)",
+          "floor": 1,
+          "tatami": 2.0,
+          "category": "circulation",
+          "color": "#94a3b8",
+          "flightId": "flight_1_2",
+          "x": 480,
+          "y": 300,
+          "wMm": 1820,
+          "hMm": 1820
+        },
+        {
+          "id": "stairs_1_2_f2",
+          "name": "2F階段室(1F⇄2F)",
+          "floor": 2,
+          "tatami": 2.0,
+          "category": "circulation",
+          "color": "#94a3b8",
+          "flightId": "flight_1_2",
+          "x": 480,
+          "y": 300,
+          "wMm": 1820,
+          "hMm": 1820
+        },
+        {
+          "id": "stairs_2_3_f2",
+          "name": "2F階段室(2F⇄3F)",
+          "floor": 2,
+          "tatami": 2.0,
+          "category": "circulation",
+          "color": "#64748b",
+          "flightId": "flight_2_3",
+          "x": 340,
+          "y": 200,
+          "wMm": 1820,
+          "hMm": 1820
+        },
+        {
+          "id": "stairs_2_3_f3",
+          "name": "3F階段室(2F⇄3F)",
+          "floor": 3,
+          "tatami": 2.0,
+          "category": "circulation",
+          "color": "#64748b",
+          "flightId": "flight_2_3",
+          "x": 340,
+          "y": 200,
+          "wMm": 1820,
+          "hMm": 1820
+        },
+        {
+          "id": "stairs_3_ph_f3",
+          "name": "3F階段室(3F⇄PH)",
+          "floor": 3,
+          "tatami": 2.0,
+          "category": "circulation",
+          "color": "#475569",
+          "flightId": "flight_3_ph",
+          "x": 480,
+          "y": 300,
+          "wMm": 1820,
+          "hMm": 1820
+        },
+        {
+          "id": "stairs_3_ph_f4",
+          "name": "PH塔屋階段室",
+          "floor": 4,
+          "tatami": 2.0,
+          "category": "circulation",
+          "color": "#475569",
+          "flightId": "flight_3_ph",
+          "x": 480,
+          "y": 300,
+          "wMm": 1820,
+          "hMm": 1820
+        }
+      ],
+      "links": [
+        {
+          "source": "genkan_3f",
+          "target": "hall_3f_1"
+        },
+        {
+          "source": "hall_3f_1",
+          "target": "stairs_3f_1"
+        },
+        {
+          "source": "hall_3f_1",
+          "target": "bed_3f_1"
+        },
+        {
+          "source": "ldk_3f_2",
+          "target": "kitchen_3f_2"
+        },
+        {
+          "source": "ldk_3f_2",
+          "target": "fukinuke_3f_2"
+        },
+        {
+          "source": "ldk_3f_2",
+          "target": "stairs_3f_2"
+        },
+        {
+          "source": "hall_3f_3",
+          "target": "stairs_3f_3"
+        },
+        {
+          "source": "hall_3f_3",
+          "target": "bed_3f_a"
+        },
+        {
+          "source": "hall_3f_3",
+          "target": "bed_3f_b"
+        },
+        {
+          "source": "stairs_ph",
+          "target": "roof_terrace"
+        }
+      ]
+    }
+  }
+}

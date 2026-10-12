@@ -1,0 +1,121 @@
+    <section id="thermal-consultation" class="page-section">
+      <!-- ヒーローバナー -->
+      <div class="thermal-bot-hero">
+        <span class="thermal-bot-badge">
+          🌡️ 24時間365日 AI温熱・気密相談 ｜ 埼玉の現場実体験×30年の試行錯誤知見
+        </span>
+        <h1 class="thermal-bot-title">
+          24h温熱換気・高気密高断熱専用AIボット<br>
+          <span class="highlight">
+            実務検証に基づく設計知見200選 ＆ なんでも深掘り相談
+          </span>
+        </h1>
+        <p class="thermal-bot-subtitle">
+          埼玉の気候風土の中で、専門家や研究者の勉強会に足繁く通い、実際の現場で試行錯誤し、失敗と成功の実体験を通して私どもが現在たどり着いた知見を200問で体系化しました。<br>
+          「絶対的な正解」ではなく、常に進化し間違いもあるかもしれませんが、私どもが考える現時点での最善手としてご参考になさってください。気になる疑問を選べば、住ま居るAI温熱建築士が実体験と設計思想に基づいて誠実にお答えします。
+        </p>
+      </div>
+
+      <!-- 8大ジャンル別フィルター ＆ 検索バー -->
+      <div class="thermal-filter-bar">
+        <div class="thermal-tabs-scroll" id="thermal-category-tabs">
+          <button type="button" class="thermal-tab-pill active" data-cat="all">🌟 すべて (200問)</button>
+          <button type="button" class="thermal-tab-pill" data-cat="th_ins" data-name="🧱 断熱性能・UA値・外皮">🧱 断熱性能・UA値・外皮</button>
+          <button type="button" class="thermal-tab-pill" data-cat="th_air" data-name="💨 気密性能・C値・隙間">💨 気密性能・C値・隙間</button>
+          <button type="button" class="thermal-tab-pill" data-cat="th_fnd" data-name="🏗️ 基礎断熱・床断熱・床下">🏗️ 基礎断熱・床断熱・床下</button>
+          <button type="button" class="thermal-tab-pill" data-cat="th_vnt" data-name="🔄 24h換気・第1種全熱交換">🔄 24h換気・第1種全熱交換</button>
+          <button type="button" class="thermal-tab-pill" data-cat="th_win" data-name="🪟 窓・サッシ・日射遮蔽">🪟 窓・サッシ・日射遮蔽</button>
+          <button type="button" class="thermal-tab-pill" data-cat="th_cnd" data-name="💧 結露・カビ・壁体内湿気">💧 結露・カビ・壁体内湿気</button>
+          <button type="button" class="thermal-tab-pill" data-cat="th_hvac" data-name="❄️ 冷暖房・全館空調・パッシブ">❄️ 冷暖房・全館空調・パッシブ</button>
+          <button type="button" class="thermal-tab-pill" data-cat="th_law" data-name="⚖️ 2025年法改正・生涯コスト">⚖️ 2025年法改正・生涯コスト</button>
+        </div>
+
+        <div class="thermal-search-wrap">
+          <span class="thermal-search-icon">🔍</span>
+          <input type="text" id="thermal-search-input" class="thermal-search-input" placeholder="知見の検索、または質問を入力してEnter（例: 吹き抜けを取りたいけど光熱費が心配です）" />
+          <button type="button" id="thermal-top-consult-btn" class="thermal-consult-btn-top">
+            💬 AI温熱建築士に質問・相談
+          </button>
+        </div>
+      </div>
+
+      <!-- 統計・表示件数 -->
+      <div class="thermal-stats-bar">
+        <span id="thermal-filtered-count">200問の設計知見を表示中</span>
+        <span>※埼玉の気候風土での現場検証・実体験に基づく、住ま居る現時点の設計知見です</span>
+      </div>
+
+      <!-- 200問 Q&Aカード グリッド -->
+      <div class="thermal-qa-grid" id="thermal-qa-grid">
+        <!-- JavaScript (thermal-bot.js) により動的レンダリング -->
+      </div>
+    </section>
+
+    <!-- 詳細モーダル -->
+    <div class="thermal-modal-backdrop" id="thermal-detail-modal">
+      <div class="thermal-modal-content">
+        <button type="button" class="thermal-modal-close" id="thermal-detail-modal-close">✕</button>
+        <div class="thermal-modal-body">
+          <span class="thermal-cat-tag" id="thermal-modal-cat" style="margin-bottom: 0.8rem; display: inline-block;">カテゴリ</span>
+          <h2 id="thermal-modal-title">質問タイトル</h2>
+
+          <div class="thermal-section-block">
+            <h3>💡 結論・重要ポイント</h3>
+            <p id="thermal-modal-ans">結論テキスト</p>
+          </div>
+
+          <div class="thermal-section-block" style="border-left-color: #0284c7; background: #f0f9ff;">
+            <h3 style="color: #0369a1;">📐 標準基準・数値指標</h3>
+            <p id="thermal-modal-dim" style="font-weight: 700; color: #0369a1;">数値基準</p>
+          </div>
+
+          <div class="thermal-section-block" style="border-left-color: #6366f1; background: #eef2ff;">
+            <h3 style="color: #4338ca;">🔍 現場実務の技術根拠（物理原理・メリット・注意点）</h3>
+            <p id="thermal-modal-det">技術根拠</p>
+          </div>
+
+          <div class="thermal-section-block principle">
+            <h3 style="color: #b45309;">★ 住ま居るAI温熱建築士の「設計の原則」</h3>
+            <p id="thermal-modal-pri" style="font-weight: 700; color: #92400e;">設計原則</p>
+          </div>
+
+          <div style="font-size: 0.82rem; color: #64748b; margin-top: 0.8rem; background: #f8fafc; padding: 0.6rem 0.8rem; border-radius: 0.5rem; border: 1px solid #e2e8f0;">
+            ⚠️ 本知見は住ま居るが埼玉の気候風土で現場実務と試行錯誤を通して現在たどり着いた考え方です。絶対の正解ではなく、各敷地・条件に合わせて柔軟に検証いたします。
+          </div>
+
+          <div class="thermal-modal-footer-btn">
+            <button type="button" class="thermal-consult-now-btn" id="thermal-consult-now-btn">
+              💬 このテーマについてAI温熱建築士に深掘り相談する
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- チャット相談モーダル -->
+    <div class="thermal-modal-backdrop" id="thermal-chat-modal">
+      <div class="thermal-modal-content">
+        <button type="button" class="thermal-modal-close" id="thermal-chat-modal-close">✕</button>
+        <div class="thermal-modal-body">
+          <h2 style="font-size: 1.25rem; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span>🌡️</span> 住ま居るAI温熱建築士 チャット相談室
+          </h2>
+          <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 1rem;">
+            埼玉の厳しい夏冬の現場で培った実体験に基づき、UA値、C値、基礎断熱、換気方式、冷暖房計画などリアルタイムに回答いたします。
+          </p>
+
+          <div class="thermal-chat-box">
+            <div class="thermal-chat-messages" id="thermal-chat-messages">
+              <!-- チャット履歴 -->
+            </div>
+            <div class="thermal-chat-input-row">
+              <input type="text" id="thermal-chat-input" class="thermal-chat-input" placeholder="温熱・気密・換気の質問を入力してください..." />
+              <button type="button" id="thermal-chat-send-btn" class="thermal-chat-send-btn">送信</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- PAGE: AI FLOOR PLAN GENERATION STUDIO (FREE CUSTOM LAYOUT TOOL) -->

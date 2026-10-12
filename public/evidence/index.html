@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>光熱費・実測データ実証録｜株式会社住ま居る【埼玉・鶴ヶ島】</title>
+  <meta name="description" content="営業トークではなく数字と物理データで語る。延床35坪・真冬の電気代明細、24時間温湿度ロガーグラフ、サーモグラフィ比較、小屋裏エアコン実証録を公開中。" />
+  <link rel="canonical" href="https://t-smile.co.jp/evidence/" />
+
+  <!-- Open Graph Protocol (OGP) -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="光熱費・実測データ実証録｜株式会社住ま居る【埼玉・鶴ヶ島】" />
+  <meta property="og:description" content="営業トークではなく数字と物理データで語る。延床35坪・真冬の電気代明細、24時間温湿度ロガーグラフ、サーモグラフィ比較、小屋裏エアコン実証録を公開中。" />
+  <meta property="og:image" content="https://t-smile.co.jp/images/hero_kaguya_house.jpg" />
+  <meta property="og:url" content="https://t-smile.co.jp/evidence/" />
+  <meta property="og:site_name" content="株式会社住ま居る 家づくりAIラボ" />
+  <meta property="og:locale" content="ja_JP" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="光熱費・実測データ実証録｜株式会社住ま居る【埼玉・鶴ヶ島】" />
+  <meta name="twitter:description" content="営業トークではなく数字と物理データで語る。延床35坪・真冬の電気代明細、24時間温湿度ロガーグラフ、サーモグラフィ比較、小屋裏エアコン実証録を公開中。" />
+  <meta name="twitter:image" content="https://t-smile.co.jp/images/hero_kaguya_house.jpg" />
+
+  <!-- JSON-LD Breadcrumbs -->
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "🏠 ホーム", "item": "https://t-smile.co.jp/"}, {"@type": "ListItem", "position": 2, "name": "📊 光熱費実測データ実証録", "item": "https://t-smile.co.jp/evidence/"}]}
+  </script>
+
+  <!-- Google Fonts & Stylesheets -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" />
+
+  <style>
+    :root {
+      --lp-bg: #f8fafc;
+      --lp-card-bg: #ffffff;
+      --lp-text: #1e293b;
+      --lp-heading: #0f172a;
+      --lp-accent: #0284c7;
+      --lp-green: #059669;
+      --lp-gold: #d97706;
+      --lp-border: #e2e8f0;
+    }
+    body {
+      background: var(--lp-bg);
+      color: var(--lp-text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
+      line-height: 1.85;
+      margin: 0;
+      padding: 0;
+    }
+    .lp-header-wrap {
+      background: rgba(27, 67, 50, 0.98);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid #d4af37;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .lp-header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .lp-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+    .lp-nav-links {
+      display: flex;
+      gap: 0.6rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .lp-nav-links a {
+      color: #e2e8f0;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .lp-nav-links a:hover, .lp-nav-links a.active {
+      background: rgba(255, 255, 255, 0.15);
+      color: #38bdf8;
+    }
+    .lp-main-container {
+      max-width: 1040px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem;
+    }
+    .lp-crumb {
+      font-size: 0.88rem;
+      color: #64748b;
+      margin-bottom: 1.8rem;
+    }
+    .lp-crumb a {
+      color: #0284c7;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .lp-card {
+      background: var(--lp-card-bg);
+      border: 1px solid var(--lp-border);
+      border-radius: 16px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.05);
+      padding: 3rem;
+      margin-bottom: 2.5rem;
+    }
+    .lp-hero-tag {
+      display: inline-block;
+      background: #ecfdf5;
+      color: #059669;
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+      border: 1px solid #a7f3d0;
+    }
+    .lp-h1 {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--lp-heading);
+      line-height: 1.35;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    .lp-lead {
+      font-size: 1.12rem;
+      color: #475569;
+      line-height: 1.9;
+      margin-bottom: 2.5rem;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 1.8rem;
+    }
+    .lp-h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-top: 2.8rem;
+      margin-bottom: 1.2rem;
+      border-left: 5px solid #059669;
+      padding-left: 1rem;
+    }
+    .lp-h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-top: 2rem;
+      margin-bottom: 0.8rem;
+    }
+    .lp-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.8rem 0;
+      font-size: 0.95rem;
+    }
+    .lp-table th, .lp-table td {
+      border: 1px solid #e2e8f0;
+      padding: 12px 16px;
+      text-align: left;
+    }
+    .lp-table th {
+      background: #f1f5f9;
+      font-weight: 800;
+      color: #1e293b;
+      width: 25%;
+    }
+    .lp-highlight-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+      border: 1px solid #bae6fd;
+      border-radius: 12px;
+      padding: 1.8rem;
+      margin: 2rem 0;
+    }
+    .lp-badge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+      margin: 2rem 0;
+    }
+    .lp-badge-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 1.2rem;
+      text-align: center;
+    }
+    .lp-badge-val {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #0284c7;
+      margin: 0.4rem 0;
+    }
+    .lp-cta-box {
+      background: linear-gradient(135deg, #091e2f 0%, #0f172a 60%, #172554 100%);
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      text-align: center;
+      color: #ffffff;
+      margin-top: 3.5rem;
+    }
+    .lp-cta-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 1.1rem;
+      padding: 1rem 2.2rem;
+      border-radius: 12px;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
+      margin-top: 1.5rem;
+      transition: all 0.2s ease;
+    }
+    .lp-cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.6);
+    }
+    .lp-footer {
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 3rem 1.5rem;
+      font-size: 0.88rem;
+      text-align: center;
+      border-top: 1px solid #1e293b;
+    }
+    .lp-footer a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+    @media (max-width: 768px) {
+      .lp-card { padding: 1.8rem 1.2rem; }
+      .lp-h1 { font-size: 1.65rem; }
+      .lp-table th, .lp-table td { display: block; width: 100%; }
+      .lp-table th { background: #e2e8f0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="lp-header-wrap">
+    <div class="lp-header-inner">
+      <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+        <a href="/" class="lp-logo">
+          <span>家づくりAIラボ</span>
+          <span style="background: #f59e0b; color: #0f172a; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px;">by 住ま居る</span>
+        </a>
+        <span style="font-size: 0.72rem; color: #94a3b8; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);">
+          埼玉・鶴ヶ島IC 1h圏内｜創業30年・累計800棟
+        </span>
+      </div>
+      <nav>
+        <ul class="lp-nav-links">
+          <li><a href="/">🏠 ホーム</a></li>
+          <li><a href="/about/" class="">🛡️ 会社・信用 (CredLayer)</a></li>
+          <li><a href="/performance/" class="">📐 温熱・構造性能</a></li>
+          <li><a href="/evidence/" class="active">📊 実測データ実証録</a></li>
+          <li><a href="/ai-studio/" class="">🎨 AIパース工房</a></li>
+          <li><a href="/knowledge/thermal/" class="">💬 温熱知見200選</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="lp-main-container">
+    <nav class="lp-crumb" aria-label="パンくずリスト">
+      <a href="/">🏠 ホーム</a> &gt; <span>📊 光熱費実測データ実証録</span>
+    </nav>
+
+    <article class="lp-card">
+      
+      <span class="lp-hero-tag">📊 光熱費・実測データ実証録</span>
+      <h1 class="lp-h1">営業トークではなく、数字と物理データで語る</h1>
+      <p class="lp-lead">
+        延床35坪・真冬の電気代明細から温湿度ロガーグラフ、サーモグラフィ検証まで。<br>
+        埼玉県西部の過酷な冬・夏を乗り越える実証データをすべて包み隠さず公開します。
+      </p>
+
+      <h2 class="lp-h2">厳選実証アーカイブ</h2>
+      
+      <div style="display: grid; gap: 1.5rem; margin: 2rem 0;">
+        <div class="lp-badge-card" style="text-align: left; padding: 1.6rem;">
+          <span style="background: #e0f2fe; color: #0284c7; font-size: 0.78rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">記事01 ｜ 光熱費実証</span>
+          <h3 style="margin: 0.6rem 0; color: #0f172a;">真冬の電気代明細公開（延床35坪・全館22℃キープ）</h3>
+          <p style="font-size: 0.92rem; color: #475569; margin-bottom: 0.8rem;">
+            1月〜2月の厳冬期、低温水床暖房を24時間連続運転した際の買電量と電気代の実測推移。大手鉄骨住宅の同規模世帯と比較して暖房負荷はおよそ半分以下。太陽光発電の自家消費と組み合わせ、年間の実質光熱費収支はほぼプラスマイナスゼロを達成。
+          </p>
+        </div>
+
+        <div class="lp-badge-card" style="text-align: left; padding: 1.6rem;">
+          <span style="background: #ecfdf5; color: #059669; font-size: 0.78rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">記事02 ｜ 湿度実証</span>
+          <h3 style="margin: 0.6rem 0; color: #0f172a;">埼玉のからっ風に負けない「相対湿度45%」の維持ログ</h3>
+          <p style="font-size: 0.92rem; color: #475569; margin-bottom: 0.8rem;">
+            外気湿度が20%を下回る1月の晴天日における、室内各室（LDK、寝室、洗面脱衣室）の温湿度ロガーデータ。全熱交換換気と漆喰壁の調湿バッファーにより、加湿器1台の最小運転で室内相対湿度45〜50%を24時間安定キープ。
+          </p>
+        </div>
+
+        <div class="lp-badge-card" style="text-align: left; padding: 1.6rem;">
+          <span style="background: #fef3c7; color: #d97706; font-size: 0.78rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">記事03 ｜ 赤外線サーモグラフィ</span>
+          <h3 style="margin: 0.6rem 0; color: #0f172a;">サーモグラフィが暴く「熱橋（ヒートブリッジ）」の正体</h3>
+          <p style="font-size: 0.92rem; color: #475569; margin-bottom: 0.8rem;">
+            外気温2℃の早朝、当社施工住宅と一般的な鉄骨系住宅の外皮・室内壁面温度を赤外線サーモグラフィカメラで比較。鉄骨造の柱・梁周囲に見られる顕著な冷え込み（熱橋）に対し、木造付加断熱を施した当社の壁面は床から天井まで均一な21℃を表示。
+          </p>
+        </div>
+
+        <div class="lp-badge-card" style="text-align: left; padding: 1.6rem;">
+          <span style="background: #e0e7ff; color: #4338ca; font-size: 0.78rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">記事04 ｜ 夏期除湿実証</span>
+          <h3 style="margin: 0.6rem 0; color: #0f172a;">夏期・小屋裏エアコン1台による全館除湿メカニズム</h3>
+          <p style="font-size: 0.92rem; color: #475569; margin-bottom: 0.8rem;">
+            8月の猛暑日（外気温38℃）、小屋裏エアコン1台のみを冷房・再熱除湿運転させた全室温度分布。顕熱（温度）だけでなく潜熱（湿度）をコントロールし、室温26℃・湿度48%の高原ホテルのような快適性を実証。
+          </p>
+        </div>
+      </div>
+
+      <div class="lp-highlight-box">
+        <h3 style="margin-top: 0; color: #065f46; font-size: 1.15rem;">🏢 実証モデルハウスは鶴ヶ島市に実在します</h3>
+        <p style="margin: 0;">
+          これらのデータは机上の空論ではなく、すべて埼玉県鶴ヶ島市に実在する当社のモデルハウスで実測されたものです。<br>
+          トップページの「バーチャル展示場」や、実際の「リアル展示場体感」にて、その空気感をご自身でお確かめいただけます。
+        </p>
+      </div>
+    
+    </article>
+
+    <!-- Global CTA -->
+    <div class="lp-cta-box">
+      <span style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-weight: 800; padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; border: 1px solid rgba(56, 189, 248, 0.4);">
+        ✨ 完全無料・会員登録不要で即時利用可能
+      </span>
+      <h2 style="font-size: 1.8rem; margin: 1rem 0 0.5rem; color: #fff;">理想の住まいを、最新AIと工学データで描きませんか？</h2>
+      <p style="color: #cbd5e1; font-size: 1rem; max-width: 680px; margin: 0 auto;">
+        登録不要のAI間取りシミュレーター、フォトリアルパース生成、埼玉の気候を知り尽くした24h温熱換気AI相談室を完全無料開放しています。
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
+        <a href="/#floorplan-studio" class="lp-cta-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8);">📐 AI間取り作図を試す ➜</a>
+        <a href="/#ai-studio" class="lp-cta-btn" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a;">🎨 AIパース工房で描く ➜</a>
+        <a href="/#thermal-consultation" class="lp-cta-btn" style="background: linear-gradient(135deg, #059669, #10b981);">💬 温熱AI建築士に相談 ➜</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="lp-footer">
+    <p style="margin: 0 0 0.5rem 0; font-weight: 700; color: #e2e8f0;">
+      株式会社住ま居る（埼玉県鶴ヶ島市）
+    </p>
+    <p style="margin: 0 0 1rem 0; font-size: 0.82rem; color: #64748b;">
+      埼玉県知事許可（般－8）第60650号 ｜ 二級建築設計事務所 埼玉県知事（5）第10268号 ｜ 創業1994年・施工実績800棟以上
+    </p>
+    <p style="margin: 0; font-size: 0.78rem;">
+      <a href="/">トップページ</a> ｜ <a href="/about/">会社概要・信用の証明</a> ｜ <a href="/performance/">温熱・構造性能</a> ｜ <a href="/evidence/">光熱費実証録</a> ｜ <a href="/knowledge/thermal/">温熱知見200選</a>
+    </p>
+    <p style="margin-top: 1.5rem; font-size: 0.75rem; color: #475569;">
+      &copy; 株式会社住ま居る (Sumaile Co., Ltd.) All Rights Reserved.
+    </p>
+  </footer>
+
+</body>
+</html>

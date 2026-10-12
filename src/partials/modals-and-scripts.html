@@ -1,0 +1,163 @@
+  </main>
+
+  <!-- MAGIC LINK AUTH MODAL -->
+  <div id="auth-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 0.5rem;">専用マイページを作成・ログイン</h3>
+      <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.5rem;">面倒なパスワード設定は不要です。氏名・メール・電話番号の入力だけで、専用マジックリンクが発行されダッシュボードが開きます。</p>
+      
+      <form id="magic-link-form">
+        <div class="form-group">
+          <label class="form-label">お名前 (氏名)</label>
+          <input type="text" id="auth-name" class="form-input" placeholder="例: 鶴ヶ島 太郎" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">メールアドレス</label>
+          <input type="email" id="auth-email" class="form-input" placeholder="example@sumaile.co.jp" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">携帯電話番号</label>
+          <input type="tel" id="auth-phone" class="form-input" placeholder="090-1234-5678" required />
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 2rem;">
+          <button type="button" id="close-auth-modal" class="btn btn-secondary">キャンセル</button>
+          <button type="submit" class="btn btn-primary">マジックリンクを発行してログイン →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 株式会社住ま居る / スマイチ All Rights Reserved.<br>「芳彩（かぐや）— 結露しない家」 / 埼玉県鶴ヶ島市町屋176番地5<br>手刻み大工×建築士のタッグによるミリ単位自由設計 / 呼吸する珪藻土・無垢材 / HEAT20 G2・G3 / C値1.0以下（実測0.28〜0.6目安） / 耐震等級3 (全棟許容応力度計算)</p>
+    <div style="margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+      <a href="#" class="footer-admin-link" data-target="admin" style="color: #94a3b8; font-size: 0.8rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: color 0.2s ease;">
+        <span>🔐</span> 社員・関係者用 管理コンソール
+      </a>
+    </div>
+  </footer>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/plan-gallery.js"></script>
+  <script src="/js/plan-modeller.js"></script>
+  <!-- 📷 設計参考図・ネタ帳切り抜きオンデマンドモーダル -->
+  <div id="modal-architect-tip" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px); z-index: 10000; justify-content: center; align-items: center; padding: 1rem;">
+    <div style="background: #ffffff; border-radius: 16px; max-width: 680px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35); border: 1px solid #e2e8f0; display: flex; flex-direction: column;">
+      <div style="padding: 1.2rem 1.5rem; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border-top-left-radius: 16px; border-top-right-radius: 16px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.5rem;">📐</span>
+          <div>
+            <h4 id="tip-modal-title" style="margin: 0; font-size: 1.1rem; font-weight: 800; color: #0f172a;">設計参考図・ネタ帳切り抜き</h4>
+            <span id="tip-modal-subtitle" style="font-size: 0.75rem; color: #64748b; font-weight: 600;">プロの黄金法則と標準モジュール寸法</span>
+          </div>
+        </div>
+        <button type="button" id="btn-close-tip-modal" style="background: transparent; border: none; font-size: 1.5rem; color: #94a3b8; cursor: pointer; padding: 4px 8px; line-height: 1;">&times;</button>
+      </div>
+
+      <div style="padding: 1.5rem; flex: 1;" id="tip-modal-body">
+        <!-- JS動的挿入 -->
+      </div>
+
+      <div style="padding: 1rem 1.5rem; border-top: 1px solid #f1f5f9; background: #f8fafc; display: flex; justify-content: space-between; align-items: center; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;">
+        <button type="button" id="btn-tip-save-to-carte" class="btn btn-sm" style="background: #fef08a; border: 1.5px solid #ca8a04; color: #854d0e; font-weight: 800; padding: 6px 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+          <span>⭐</span>
+          <span id="btn-tip-save-text">マイカルテに保存</span>
+        </button>
+        <button type="button" id="btn-close-tip-modal-footer" class="btn btn-secondary btn-sm" style="padding: 6px 16px; font-weight: 700;">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/bubble-plan.js"></script>
+
+  <!-- 🤖 住ま居るAI建築士 間取り深掘り相談チャットモーダル -->
+  <div id="madori-chat-modal" class="madori-chat-modal">
+    <div class="madori-chat-box">
+      <div class="madori-chat-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.5rem;">🤖</span>
+          <div>
+            <h3 id="madori-chat-title" style="margin: 0; font-size: 1.05rem; font-weight: 800; color: #ffffff;">
+              住ま居るAI建築士 間取り深掘り相談室
+            </h3>
+            <span style="font-size: 0.72rem; color: #ede9fe;">設計プロの知見データベース直結 ｜ 24時間365日即時回答</span>
+          </div>
+        </div>
+        <button type="button" id="btn-close-madori-chat" style="background: transparent; border: none; font-size: 1.8rem; color: #ffffff; cursor: pointer; line-height: 1;">&times;</button>
+      </div>
+
+      <div class="madori-chat-history" id="madori-chat-history">
+        <!-- メッセージ動的挿入 -->
+      </div>
+
+      <div class="madori-chat-footer">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div style="display: flex; gap: 8px;">
+            <button type="button" id="btn-madori-save-carte" class="btn btn-sm" style="background: #fef08a; border: 1.5px solid #ca8a04; color: #854d0e; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; cursor: pointer;">
+              ⭐ この対話をマイカルテに保存
+            </button>
+            <span id="madori-save-status" style="font-size: 0.75rem; color: #16a34a; font-weight: 800; display: flex; align-items: center;"></span>
+          </div>
+          <button type="button" id="btn-madori-jump-bubble" class="btn btn-sm" style="background: #f0fdf4; border: 1px solid #86efac; color: #166534; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; cursor: pointer;">
+            🎈 この知見でバブル作図へ ➔
+          </button>
+        </div>
+
+        <form id="madori-chat-form" class="madori-chat-input-row">
+          <input type="text" id="madori-chat-input" class="form-input" placeholder="この知見についてさらに質問する (例: 延床32坪のわが家でも入る？費用の目安は？)" style="flex: 1; padding: 0.65rem 0.9rem; font-size: 0.88rem; border-radius: 8px;" />
+          <button type="submit" class="btn btn-primary" style="background: #7c3aed; color: #ffffff; white-space: nowrap; font-weight: 800; padding: 0.65rem 1.2rem; border-radius: 8px;">
+            送信 ✈️
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔍 Q&A 詳細図面・解説拡大モーダル -->
+  <div id="modal-qa-detail" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px); z-index: 10001; justify-content: center; align-items: center; padding: 1rem;">
+    <div style="background: #ffffff; border-radius: 18px; max-width: 780px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35); display: flex; flex-direction: column;">
+      <div style="padding: 1.2rem 1.5rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border-top-left-radius: 18px; border-top-right-radius: 18px;">
+        <div>
+          <span id="qa-detail-category" style="background: #ede9fe; color: #6d28d9; font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 12px; display: inline-block; margin-bottom: 4px;">カテゴリ</span>
+          <h3 id="qa-detail-title" style="margin: 0; font-size: 1.15rem; font-weight: 900; color: #0f172a;">Q&A タイトル</h3>
+        </div>
+        <button type="button" id="btn-close-qa-detail-modal" style="background: transparent; border: none; font-size: 1.6rem; color: #94a3b8; cursor: pointer; line-height: 1;">&times;</button>
+      </div>
+
+      <div style="padding: 1.5rem; flex: 1;">
+        <!-- 画像拡大表示 -->
+        <div style="background: #0f172a; border-radius: 12px; overflow: hidden; margin-bottom: 1.2rem; text-align: center;">
+          <img id="qa-detail-img" src="" alt="設計参考図面" style="max-width: 100%; max-height: 380px; object-fit: contain;" />
+        </div>
+        <div style="background: #f5f3ff; border: 1.5px solid #ddd6fe; border-radius: 10px; padding: 10px 14px; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.2rem;">📐</span>
+          <div>
+            <strong style="color: #6d28d9; font-size: 0.85rem;">標準モジュール・寸法基準:</strong>
+            <span id="qa-detail-dimension" style="color: #1e293b; font-size: 0.9rem; font-weight: 800; margin-left: 6px;">--</span>
+          </div>
+        </div>
+        <div id="qa-detail-body">
+          <!-- 動的挿入 -->
+        </div>
+      </div>
+
+      <div style="padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; background: #f8fafc; display: flex; justify-content: space-between; align-items: center; border-bottom-left-radius: 18px; border-bottom-right-radius: 18px;">
+        <button type="button" id="btn-qa-detail-ask-ai" class="btn btn-primary" style="background: #7c3aed; color: #fff; font-weight: 800; font-size: 0.9rem; padding: 0.6rem 1.4rem; border-radius: 8px;">
+          💬 この知見をAI建築士に詳しく聞く
+        </button>
+        <button type="button" onclick="document.getElementById('modal-qa-detail').style.display='none'" class="btn btn-secondary btn-sm" style="padding: 6px 16px;">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/madori-bot.js"></script>
+  <script src="/js/thermal-bot.js"></script>
+
+  <!-- Lightbox Modal for Case Studies -->
+  <div class="case-lightbox-modal" id="case-lightbox-modal">
+    <button class="case-lightbox-close" id="case-lightbox-close" aria-label="閉じる">&times;</button>
+    <img src="" alt="全画面拡大写真" class="case-lightbox-content" id="case-lightbox-content" />
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIパース工房＆建築特化型AIサービス｜株式会社住ま居る【埼玉】</title>
+  <meta name="description" content="埼玉限定・完全無料。対話型AIとStable Diffusionが理想の外観・内観パースを即時生成。マジックリンク専用チャットでプラン相談から見積まで営業マンなしで完結。" />
+  <link rel="canonical" href="https://t-smile.co.jp/ai-studio/" />
+
+  <!-- Open Graph Protocol (OGP) -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="AIパース工房＆建築特化型AIサービス｜株式会社住ま居る【埼玉】" />
+  <meta property="og:description" content="埼玉限定・完全無料。対話型AIとStable Diffusionが理想の外観・内観パースを即時生成。マジックリンク専用チャットでプラン相談から見積まで営業マンなしで完結。" />
+  <meta property="og:image" content="https://t-smile.co.jp/images/hero_kaguya_house.jpg" />
+  <meta property="og:url" content="https://t-smile.co.jp/ai-studio/" />
+  <meta property="og:site_name" content="株式会社住ま居る 家づくりAIラボ" />
+  <meta property="og:locale" content="ja_JP" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AIパース工房＆建築特化型AIサービス｜株式会社住ま居る【埼玉】" />
+  <meta name="twitter:description" content="埼玉限定・完全無料。対話型AIとStable Diffusionが理想の外観・内観パースを即時生成。マジックリンク専用チャットでプラン相談から見積まで営業マンなしで完結。" />
+  <meta name="twitter:image" content="https://t-smile.co.jp/images/hero_kaguya_house.jpg" />
+
+  <!-- JSON-LD Breadcrumbs -->
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "🏠 ホーム", "item": "https://t-smile.co.jp/"}, {"@type": "ListItem", "position": 2, "name": "🎨 AIパース工房", "item": "https://t-smile.co.jp/ai-studio/"}]}
+  </script>
+
+  <!-- Google Fonts & Stylesheets -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" />
+
+  <style>
+    :root {
+      --lp-bg: #f8fafc;
+      --lp-card-bg: #ffffff;
+      --lp-text: #1e293b;
+      --lp-heading: #0f172a;
+      --lp-accent: #0284c7;
+      --lp-green: #059669;
+      --lp-gold: #d97706;
+      --lp-border: #e2e8f0;
+    }
+    body {
+      background: var(--lp-bg);
+      color: var(--lp-text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
+      line-height: 1.85;
+      margin: 0;
+      padding: 0;
+    }
+    .lp-header-wrap {
+      background: rgba(27, 67, 50, 0.98);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid #d4af37;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .lp-header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .lp-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+    .lp-nav-links {
+      display: flex;
+      gap: 0.6rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .lp-nav-links a {
+      color: #e2e8f0;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .lp-nav-links a:hover, .lp-nav-links a.active {
+      background: rgba(255, 255, 255, 0.15);
+      color: #38bdf8;
+    }
+    .lp-main-container {
+      max-width: 1040px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem;
+    }
+    .lp-crumb {
+      font-size: 0.88rem;
+      color: #64748b;
+      margin-bottom: 1.8rem;
+    }
+    .lp-crumb a {
+      color: #0284c7;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .lp-card {
+      background: var(--lp-card-bg);
+      border: 1px solid var(--lp-border);
+      border-radius: 16px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.05);
+      padding: 3rem;
+      margin-bottom: 2.5rem;
+    }
+    .lp-hero-tag {
+      display: inline-block;
+      background: #ecfdf5;
+      color: #059669;
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+      border: 1px solid #a7f3d0;
+    }
+    .lp-h1 {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--lp-heading);
+      line-height: 1.35;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    .lp-lead {
+      font-size: 1.12rem;
+      color: #475569;
+      line-height: 1.9;
+      margin-bottom: 2.5rem;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 1.8rem;
+    }
+    .lp-h2 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-top: 2.8rem;
+      margin-bottom: 1.2rem;
+      border-left: 5px solid #059669;
+      padding-left: 1rem;
+    }
+    .lp-h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-top: 2rem;
+      margin-bottom: 0.8rem;
+    }
+    .lp-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.8rem 0;
+      font-size: 0.95rem;
+    }
+    .lp-table th, .lp-table td {
+      border: 1px solid #e2e8f0;
+      padding: 12px 16px;
+      text-align: left;
+    }
+    .lp-table th {
+      background: #f1f5f9;
+      font-weight: 800;
+      color: #1e293b;
+      width: 25%;
+    }
+    .lp-highlight-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+      border: 1px solid #bae6fd;
+      border-radius: 12px;
+      padding: 1.8rem;
+      margin: 2rem 0;
+    }
+    .lp-badge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+      margin: 2rem 0;
+    }
+    .lp-badge-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 1.2rem;
+      text-align: center;
+    }
+    .lp-badge-val {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #0284c7;
+      margin: 0.4rem 0;
+    }
+    .lp-cta-box {
+      background: linear-gradient(135deg, #091e2f 0%, #0f172a 60%, #172554 100%);
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      text-align: center;
+      color: #ffffff;
+      margin-top: 3.5rem;
+    }
+    .lp-cta-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 1.1rem;
+      padding: 1rem 2.2rem;
+      border-radius: 12px;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
+      margin-top: 1.5rem;
+      transition: all 0.2s ease;
+    }
+    .lp-cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.6);
+    }
+    .lp-footer {
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 3rem 1.5rem;
+      font-size: 0.88rem;
+      text-align: center;
+      border-top: 1px solid #1e293b;
+    }
+    .lp-footer a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+    @media (max-width: 768px) {
+      .lp-card { padding: 1.8rem 1.2rem; }
+      .lp-h1 { font-size: 1.65rem; }
+      .lp-table th, .lp-table td { display: block; width: 100%; }
+      .lp-table th { background: #e2e8f0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="lp-header-wrap">
+    <div class="lp-header-inner">
+      <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+        <a href="/" class="lp-logo">
+          <span>家づくりAIラボ</span>
+          <span style="background: #f59e0b; color: #0f172a; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px;">by 住ま居る</span>
+        </a>
+        <span style="font-size: 0.72rem; color: #94a3b8; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);">
+          埼玉・鶴ヶ島IC 1h圏内｜創業30年・累計800棟
+        </span>
+      </div>
+      <nav>
+        <ul class="lp-nav-links">
+          <li><a href="/">🏠 ホーム</a></li>
+          <li><a href="/about/" class="">🛡️ 会社・信用 (CredLayer)</a></li>
+          <li><a href="/performance/" class="">📐 温熱・構造性能</a></li>
+          <li><a href="/evidence/" class="">📊 実測データ実証録</a></li>
+          <li><a href="/ai-studio/" class="active">🎨 AIパース工房</a></li>
+          <li><a href="/knowledge/thermal/" class="">💬 温熱知見200選</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="lp-main-container">
+    <nav class="lp-crumb" aria-label="パンくずリスト">
+      <a href="/">🏠 ホーム</a> &gt; <span>🎨 AIパース工房</span>
+    </nav>
+
+    <article class="lp-card">
+      
+      <span class="lp-hero-tag">🎨 建築特化型AIパース生成スタジオ</span>
+      <h1 class="lp-h1">「家族の理想を描く」AIパース工房</h1>
+      <p class="lp-lead">
+        一生に一度の家づくりだからこそ、納得いくまで迷い、心ゆくまで夢を膨らませてほしい。<br>
+        言葉にするのが難しいご家族の想いや光の表情を、最新AIが指先ひとつで鮮やかにビジュアル化。<br>
+        施主が自由に想いを描き、職人・建築士が全棟許容応力度計算と付加断熱で形にする、新しい家づくりのアトリエです。
+      </p>
+
+      <h2 class="lp-h2">1. 営業マンを介さず、頭の中の理想をダイレクトに可視化</h2>
+      <p>
+        従来の家づくりでは、お施主様の想いは営業マンというフィルターを通してしか設計士や現場に伝わりませんでした。「思っていた質感と違う」「もっと自然光が差し込むリビングにしたかったのに、無難な間取りになってしまった」という妥協が生まれる最大の原因はここにあります。<br>
+        当スタジオでは、住宅建築特化の画像生成AIが専属アシスタントとして対話。言葉にするだけでフォトリアルな外観・内観パースをご家族で納得いくまで何度でも生成できます。
+      </p>
+
+      <div class="lp-badge-grid">
+        <div class="lp-badge-card" style="text-align: left;">
+          <h4 style="margin: 0 0 0.5rem; color: #0284c7;">30代 DINKS：ミニマリズムとプライベート</h4>
+          <p style="font-size: 0.85rem; color: #475569; margin: 0;">
+            ジャパンディ、ホテルライク、無機質×自然素材、大判タイル、間接照明、インナーガレージ。生活感を隠蔽するバックヤード動線。
+          </p>
+        </div>
+        <div class="lp-badge-card" style="text-align: left;">
+          <h4 style="margin: 0 0 0.5rem; color: #d97706;">50代 ゆとり世帯：庭屋一如の上質な平屋</h4>
+          <p style="font-size: 0.85rem; color: #475569; margin: 0;">
+            深い軒の佇まい、無垢名木、障子の再解釈、プライベートライブラリー、バリアフリー温熱。庭の四季を取り込むピクチャーサッシ。
+          </p>
+        </div>
+      </div>
+
+      <h2 class="lp-h2">2. パスワード不要「マジックリンク」による個別プロジェクトルーム</h2>
+      <p>
+        生成したパースの保存や、現実の概算見積・法規チェックを希望される場合は、お名前とメール・電話番号を入力するだけで完了します。
+      </p>
+      <ul style="padding-left: 1.5rem; line-height: 2;">
+        <li><strong>パスワード不要のマジックリンク認証:</strong> メールまたはSMSに届くワンタイムリンクでセキュアに個別ルームへログイン。</li>
+        <li><strong>専用チャットで建築士と直結:</strong> 営業マンの同席なし。生成パースを元に担当建築士とチャット上で直接ディスカッション。</li>
+        <li><strong>図面・構造・温熱計算書の共有:</strong> パースの意匠を崩さずに耐震等級3・HEAT20 G2/G3を両立させる実施図面をPDFでお届け。</li>
+        <li><strong>クラウド電子契約:</strong> 設計監理契約や請負契約もご自宅からペーパーレスで安全に完結。</li>
+      </ul>
+
+      <div class="lp-highlight-box">
+        <h3 style="margin-top: 0; color: #047857; font-size: 1.15rem;">【利用条件・対象エリア】</h3>
+        <p style="margin: 0;">
+          <strong>対象エリア:</strong> 埼玉県内にて新築・建て替えをご検討中の方（鶴ヶ島ICから車で片道1時間圏内での施工を前提といたします）。<br>
+          <strong>利用料金:</strong> 完全無料（AIパース生成・チャット相談・初期プランカルテ作成まで費用は一切かかりません）。
+        </p>
+      </div>
+    
+    </article>
+
+    <!-- Global CTA -->
+    <div class="lp-cta-box">
+      <span style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-weight: 800; padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; border: 1px solid rgba(56, 189, 248, 0.4);">
+        ✨ 完全無料・会員登録不要で即時利用可能
+      </span>
+      <h2 style="font-size: 1.8rem; margin: 1rem 0 0.5rem; color: #fff;">理想の住まいを、最新AIと工学データで描きませんか？</h2>
+      <p style="color: #cbd5e1; font-size: 1rem; max-width: 680px; margin: 0 auto;">
+        登録不要のAI間取りシミュレーター、フォトリアルパース生成、埼玉の気候を知り尽くした24h温熱換気AI相談室を完全無料開放しています。
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
+        <a href="/#floorplan-studio" class="lp-cta-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8);">📐 AI間取り作図を試す ➜</a>
+        <a href="/#ai-studio" class="lp-cta-btn" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a;">🎨 AIパース工房で描く ➜</a>
+        <a href="/#thermal-consultation" class="lp-cta-btn" style="background: linear-gradient(135deg, #059669, #10b981);">💬 温熱AI建築士に相談 ➜</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="lp-footer">
+    <p style="margin: 0 0 0.5rem 0; font-weight: 700; color: #e2e8f0;">
+      株式会社住ま居る（埼玉県鶴ヶ島市）
+    </p>
+    <p style="margin: 0 0 1rem 0; font-size: 0.82rem; color: #64748b;">
+      埼玉県知事許可（般－8）第60650号 ｜ 二級建築設計事務所 埼玉県知事（5）第10268号 ｜ 創業1994年・施工実績800棟以上
+    </p>
+    <p style="margin: 0; font-size: 0.78rem;">
+      <a href="/">トップページ</a> ｜ <a href="/about/">会社概要・信用の証明</a> ｜ <a href="/performance/">温熱・構造性能</a> ｜ <a href="/evidence/">光熱費実証録</a> ｜ <a href="/knowledge/thermal/">温熱知見200選</a>
+    </p>
+    <p style="margin-top: 1.5rem; font-size: 0.75rem; color: #475569;">
+      &copy; 株式会社住ま居る (Sumaile Co., Ltd.) All Rights Reserved.
+    </p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+    <section id="dashboard" class="page-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #cbd5e1; padding-bottom: 1rem;">
+        <div>
+          <span class="hero-tag" style="margin-bottom: 4px;">マジックリンク保護専用マイページ</span>
+          <h2 style="font-size: 1.8rem; font-family: var(--font-heading); color: var(--primary-green-dark);" id="dash-user-name">お施主様 専用プロジェクトルーム</h2>
+          <div style="font-size: 0.9rem; color: var(--text-muted);">連絡先: <span id="dash-user-phone"></span> | <span id="dash-user-email"></span></div>
+        </div>
+        <button id="dash-upload-btn" class="btn btn-secondary">＋ 図面・写真ファイルをアップロードする</button>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- Sidebar: Saved Renders & Shared Documents -->
+        <div class="sidebar-panel">
+          <h4 style="color: var(--accent-gold); font-family: var(--font-heading); margin-bottom: 1rem;">🎨 保存済みパース履歴</h4>
+          <div id="dash-renders-gallery"></div>
+
+          <h4 style="color: var(--primary-green); font-family: var(--font-heading); margin: 1.8rem 0 1rem;">📄 共有ファイル・構造計算書</h4>
+          <div id="dash-files-list"></div>
+        </div>
+
+        <!-- Main: Live Chat with AI Agent & Architect -->
+        <div class="chat-panel">
+          <h4 style="color: var(--primary-green-dark); font-family: var(--font-heading); border-bottom: 1px solid #e2e8f0; padding-bottom: 0.8rem; margin-bottom: 1rem;">
+            💬 AIエージェント ＆ 担当建築士 リアルタイム相談チャット
+          </h4>
+          <div id="chat-history-box" class="chat-history"></div>
+          <form id="dashboard-chat-form" style="display: flex; gap: 8px;">
+            <input type="text" id="chat-input" class="form-input" placeholder="造作風呂の建材や耐震計算について質問してみる..." required />
+            <button type="submit" class="btn btn-primary" style="white-space: nowrap;">送信</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- リアルモデルハウス体感・無料カルテ診断への着地バナー -->
+      <div style="margin-top: 2rem; background: linear-gradient(135deg, #064e3b 0%, #022c22 100%); border: 2px solid #34d399; border-radius: 12px; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.2rem; color: #fff;">
+        <div>
+          <span style="background: #059669; color: #a7f3d0; font-size: 0.78rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">
+            🏡 鶴ヶ島市に実在するモデルハウスで確かめる
+          </span>
+          <h3 style="margin: 0.4rem 0 0.2rem; font-size: 1.25rem; font-weight: 800; color: #fff;">
+            パースで描いた理想空間を、実物の空気感・木の香りで体感しませんか？
+          </h3>
+          <p style="margin: 0; font-size: 0.88rem; color: #cbd5e1;">
+            埼玉特有の無風・フラット温熱と無垢材の静謐空間。押し売りや営業マンの同行は一切ありません。
+          </p>
+        </div>
+        <button class="btn btn-primary" data-target="scent-experience" style="background: linear-gradient(135deg, #10b981, #059669); color: #fff; font-weight: 800; font-size: 1rem; padding: 0.8rem 1.6rem; border: none; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);">
+          🌿 リアル展示場体感を予約する ➜
+        </button>
+      </div>
+    </section>
+
+    <!-- PAGE: CREDLAYER (信頼性実証レイヤー) -->

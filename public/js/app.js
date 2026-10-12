@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initRealBookingForm();
   initArticleTabs();
   initCaseStudiesGallery();
+  initWagamaShowcase();
   initAdminFloorplanImporter();
   initCredLayerStudio();
   checkUrlToken();
@@ -1457,187 +1458,147 @@ async function loadAdminPlansData() {
 // =========================================================
 const caseStudiesData = {
   1: {
-    title: "①【川越市・T様邸】吹抜け大空間と愛猫と暮らす吉野杉の家",
-    sub: "延床34坪 / 許容応力度計算耐震等級3 / C値0.22 / HEAT20 G2 / 全24枚",
-    client: "「愛猫と一緒にストレスなく暮らしながら、冬でも素足で暖かく過ごせるリビングが一番の夢でした。既成のキャットウォークではなく、吉野杉の柱梁と一体になった職人手づくりの木製ステップと、日当たりの良い大きな吹抜けを作っていただきました。」",
-    carpenter: "「22帖の柱なし大空間を強靭に支えるため、大黒柱と梁の仕口を現場で手刻み調整。猫ちゃんの手足に優しいよう、杉の角を一本一本手カンナで丸く面取りして仕上げました。階段も足裏に吸い付く無垢吉野杉です。」",
-    architect: "「吹抜けによる冷気の吹き下ろしを防ぐため、気密実測C値0.22と付加断熱を設計。全棟許容応力度計算により、柱のない大空間でも耐震等級3・直下率68%を完璧に裏付けました。」",
+    title: "①【鶴ヶ島市・S様邸】きょうだい皆が選んだ信頼の家・天井高2.8mの大空間LDKと無垢杉の温もり",
+    sub: "天井高2.8m / 自然素材・珪藻土 / C値1.0以下保証（実測0.28〜0.6目安） / 全16枚",
+    client: "「きょうだいや親戚が次々に住ま居るさんで家を建てていて、『毎年毎年進化しているね』と評判を聞いていました。私たちの番になり、開放的な天井高280cmの大空間リビングをお願いしました。『天井を高くすると冬寒くなるのでは？』と心配でしたが、住んでみてびっくり。真冬でもエアコン1台で部屋中が均一に暖かく、夏も風がすっと抜けて涼しい。無垢杉の床は素足で歩くのが最高に気持ちよく、子どもたちも毎日素足で走り回っています。」",
+    carpenter: "「構造躯体は耐震性に優れた金物工法で強靭に緊結。その上で、天井高2.8mの空間美を引き立てる無垢杉の床や内部造作を、手刻みができる熟練大工が木癖を見極めながら丁寧に施工しました。珪藻土の壁も左官職人の手仕事で柔らかい陰影が出るよう仕上げています。」",
+    architect: "「天井高280cmの開放感と耐震性能を両立させるため、許容応力度計算による立体フレーム解析を行い、耐震等級3（最高等級）を確保。高天井でも上下温度差が生まれないよう、埼玉の気候に合わせた高断熱・高気密施工（C値1.0以下保証・実測0.28〜0.6目安）を行い、暖気の滞留を防ぐサーキュレーション気流を設計しました。」",
     photos: [
-      { url: "/images/cases/case1_living.jpg", caption: "【LDK全景】吉野杉30mm赤身材と職人手塗り珪藻土が包み込む、柱のない22帖大空間リビング" },
-      { url: "/images/cases/case1_kitchen.jpg", caption: "【造作キッチン】無垢吉野杉カウンターと職人特注収納。中庭の緑を望む開放的な対面レイアウト" },
-      { url: "/images/hero_architecture.jpg", caption: "【外観ファサード】深い軒と黒ガルバリウム×吉野杉格子が美しく調和する和モダンデザイン" },
-      { url: "/images/kaitai/ch1_living_craft.jpg", caption: "【初期意匠スケッチ】施主様と共有した吉野杉大黒柱とリビングの設計構想" },
-      { url: "/images/kaitai/ch2_covered_porch.jpg", caption: "【カバードポーチ】雨の日も傘をささずに乗り降りできる車寄せと深い軒" },
-      { url: "/images/kaitai/ch2_blue_entrance_screen.jpg", caption: "【玄関網戸引戸】埼玉の心地よい風を室内に招く網戸付き特注木製引戸" },
-      { url: "/images/kaitai/ch3_yakusugi_ldk_view.jpg", caption: "【リビング別角度】大黒柱の存在感と無垢フロアの温かみあふれる団らん空間" },
-      { url: "/images/kaitai/ch3_solid_wood_door.jpg", caption: "【手づくり無垢建具】大工さんが木目を美しく通して仕上げた世界に1つの引戸" },
-      { url: "/images/artisan_custom_bath.jpg", caption: "【在来造作風呂】青く透き通る十和田石と木曽ヒノキ芳香の職人手づくり浴室" },
-      { url: "/images/kaitai/ch6_front_garden_terrace.jpg", caption: "【前庭テラス】お風呂上がりやリビングからフラットに繋がるプライベートウッドデッキ" },
-      { url: "/images/natural_interior_aroma.jpg", caption: "【2階ライブラリー】家族の蔵書が並ぶ造作本棚とスタディカウンターコーナー" },
-      { url: "/images/floor_heating_comfort.jpg", caption: "【主寝室】自律調湿する手塗り漆喰壁と柔らかな間接照明がもたらす深い眠り" },
-      { url: "/images/kaitai/ch8_denim_tatami.jpg", caption: "【畳コーナー】愛猫とくつろぐ天然い草×藍染めデニム畳のモダン空間" },
-      { url: "/images/kaitai/ch4_theater_screen_napoleon.jpg", caption: "【ホームシアター】壁内に美しく格納される120インチ電動大画面スクリーン" },
-      { url: "/images/kaitai/ch4_theater_projector.jpg", caption: "【音響設備】吉野杉天井にビルトインされた5.1chサラウンドスピーカー" },
-      { url: "/images/kaitai/ch9_solar_house_exterior.jpg", caption: "【大容量太陽光】美観を損ねない屋根一体型10.33kWソーラーパネル搭載" },
-      { url: "/images/kaitai/ch9_hems_monitor.jpg", caption: "【V2H連携HEMS】電気自動車と連動して電気代ゼロと停電時安心を実現" },
-      { url: "/images/craftsman_architect_tag.jpg", caption: "【大工手刻み現場】専属大工職人が一本一本の木癖を見極めてカンナがけ" },
-      { url: "/images/kaitai/ch10_roof_insulation.jpg", caption: "【桁上断熱気密】夏の屋根熱を完全に遮断する超高気密桁上断熱施工" },
-      { url: "/images/structural_calculation_frame.jpg", caption: "【耐震等級3構造】許容応力度計算により直下率68%を証明した強靭な骨組み" },
-      { url: "/images/heat20_insulation_structure.jpg", caption: "【ダブル断熱断面】HEAT20 G2基準を凌駕する隙間なき断熱気密ディテール" },
-      { url: "/images/hero_kaguya_house.jpg", caption: "【夕景外観】格子から漏れる温かな明かりが街並みを照らす優美な佇まい" },
-      { url: "/images/kaitai/ch5_ecocarat_bath.jpg", caption: "【機能性タイル】玄関ホールとサニタリーの湿度を整えるエコカラット壁面" },
-      { url: "/images/cases/case1_living.jpg", caption: "【お引渡し記念】家族と愛猫の笑顔があふれる完成直後のリビング全貌" }
+      { url: "/images/cases_real/case1/photo_01.jpg", caption: "【LDK全景】天井高2.8mの開放感と無垢杉床の温もりが広がる大空間リビング" },
+      { url: "/images/cases_real/case1/photo_02.jpg", caption: "【吹き抜け・階段】光が降り注ぐ明るいリビング階段と珪藻土の塗り壁" },
+      { url: "/images/cases_real/case1/photo_03.jpg", caption: "【キッチン対面】家族の会話が弾む対面オープンキッチンと豊富な造作収納" },
+      { url: "/images/cases_real/case1/photo_04.jpg", caption: "【和室・畳コーナー】リビングとフラットに繋がるくつろぎの畳スペース" },
+      { url: "/images/cases_real/case1/photo_05.jpg", caption: "【ダイニング風景】木の温もりに包まれた家族団らんのダイニングエリア" },
+      { url: "/images/cases_real/case1/photo_06.jpg", caption: "【玄関ホール】大容量のシューズクロークと無垢材の上がり框" },
+      { url: "/images/cases_real/case1/photo_07.jpg", caption: "【外観ファサード】街並みに調和する端正で飽きのこないモダン外観" },
+      { url: "/images/cases_real/case1/photo_08.jpg", caption: "【主寝室】自律調湿する自然素材壁に包まれた静かな安らぎの主寝室" },
+      { url: "/images/cases_real/case1/photo_09.jpg", caption: "【子ども部屋】将来の成長に合わせて間仕切り可能な明るい2階洋室" },
+      { url: "/images/cases_real/case1/photo_10.jpg", caption: "【サニタリー】広々とした洗面カウンターと室内干しにも配慮した脱衣スペース" },
+      { url: "/images/cases_real/case1/photo_11.jpg", caption: "【バスルーム】ゆったりと足を伸ばして一日の疲れを癒せる高断熱浴室" },
+      { url: "/images/cases_real/case1/photo_12.jpg", caption: "【書斎・ワークスペース】テレワークや読書に集中できる造作カウンター" },
+      { url: "/images/cases_real/case1/photo_13.jpg", caption: "【収納ディテール】大工職人の手で組み上げられた使い勝手抜群のパントリー" },
+      { url: "/images/cases_real/case1/photo_14.jpg", caption: "【ウッドデッキ・庭】リビングからフラットに外へ繋がる庭先のアウトドアリビング" },
+      { url: "/images/cases_real/case1/photo_15.jpg", caption: "【夕景・照明計画】優しい間接照明が珪藻土の陰影を美しく照らし出す夜景" },
+      { url: "/images/cases_real/case1/photo_16.jpg", caption: "【お引渡し記念】「きょうだい全員が選んだ」信頼の住まいで始まる新しい暮らし" }
     ]
   },
   2: {
-    title: "②【鶴ヶ島市・M様邸】十和田石在来風呂と平屋風二世帯住宅",
-    sub: "延床42坪 / HEAT20 G3 / 薪ストーブ / 親子二世帯 / 全22枚",
-    client: "「親世帯と子世帯がほどよい距離感で暮らせる平屋風の家が希望でした。ユニットバスではない本物の温泉宿のようなお風呂と、冬に家中を暖める薪ストーブが家族全員のお気に入りです。」",
-    carpenter: "「薪ストーブの重量に耐える床補強と、十和田石風呂の防水下地造りに腕を振るいました。親御さんが歩きやすいバリアフリースロープも手鉋で美しく仕上げています。」",
-    architect: "「最高峰断熱HEAT20 G3基準（UA値0.24）を達成。真冬でも薪ストーブ1台の微小な熱で42坪家中が22℃均一を保てる熱物理シミュレーションを行いました。」",
+    title: "②【ときがわ町・K様邸】吉野杉大黒柱と山並みを望む吹き抜け・太陽光＆ZEHで叶えた自然共生住宅",
+    sub: "吉野杉大黒柱 / 太陽光ZEH / パッシブ設計 / C値1.0以下保証（実測0.28〜0.6目安） / 全16枚",
+    client: "「当初は『初期コストをできるだけ抑えたい』と考えていましたが、住ま居るさんから30年・50年のライフサイクルコストや光熱費のリアルなシミュレーションを見せてもらい、目からウロコでした。『後からやり直せない断熱・耐震・構造こそ最初に投資すべき』と納得。吉野杉の大黒柱が堂々と立つ吹き抜けリビングは、四季折々の山並みが見渡せる特等席です。太陽光発電の売電収入も大きく、冬も家中ポカポカで、まるで嘘のような快適な毎日です。」",
+    carpenter: "「骨組みは強固な金物工法を採用し、自然豊かなときがわ町の風景に映える吉野杉の大黒柱や内部造作は、手刻みができる大工が手作業でカンナがけを行い木肌の艶を引き出しました。手すりや棚も木癖を見極めて現場加工しています。」",
+    architect: "「南面の山並みを取り込む大開口と吹き抜けを設けつつ、埼玉の冬の寒風に負けない外皮断熱と許容応力度計算耐震等級3を両立。屋根勾配に合わせた太陽光パネル設計により、年間エネルギー収支ゼロを超えるZEH仕様を実現しました。」",
     photos: [
-      { url: "/images/artisan_custom_bath.jpg", caption: "【十和田石在来風呂】青い十和田石と木曽ヒノキが香る、毎夜が温泉気分の完全手づくり浴室" },
-      { url: "/images/cases/case1_living.jpg", caption: "【平屋風LDK】薪ストーブの炎が揺れる、吉野杉無垢床の大空間ファミリーリビング" },
-      { url: "/images/hero_kaguya_house.jpg", caption: "【外観平屋フォルム】大地にどっしりと根を下ろす、深い軒が美しい平屋風二世帯住宅" },
-      { url: "/images/kaitai/ch2_covered_porch.jpg", caption: "【玄関スロープ車寄せ】親世帯の車いすでも濡れずに入れるカバードポーチ" },
-      { url: "/images/cases/case1_kitchen.jpg", caption: "【二世帯キッチン】二世代で一緒に料理を楽しめる幅広の無垢アイランドカウンター" },
-      { url: "/images/kaitai/ch8_denim_tatami.jpg", caption: "【親世帯和室】熊本八代産天然い草と藍染めデニム畳を敷き詰めた落ち着きの間" },
-      { url: "/images/natural_interior_aroma.jpg", caption: "【子世帯ホール】2階に設けた子世帯専用のセカンドリビング＆ライブラリー" },
-      { url: "/images/floor_heating_comfort.jpg", caption: "【漆喰主寝室】静寂と澄んだ空気が包む、遮音と断熱を極めた親世帯寝室" },
-      { url: "/images/kaitai/ch6_front_garden_terrace.jpg", caption: "【中庭テラス】親世帯と子世帯が縁側感覚で集まるウッドデッキガーデン" },
-      { url: "/images/kaitai/ch3_solid_wood_door.jpg", caption: "【手づくり引き戸】防音性と軽やかな開閉感を両立させた大工造作ドア" },
-      { url: "/images/kaitai/ch4_theater_screen_napoleon.jpg", caption: "【家族シアター】孫たちとアニメや映画を楽しむ大画面スクリーン" },
-      { url: "/images/kaitai/ch4_theater_projector.jpg", caption: "【天吊りプロジェクター】配線を壁内に完全隠蔽したすっきりシアター" },
-      { url: "/images/kaitai/ch9_solar_house_exterior.jpg", caption: "【太陽光大容量】二世帯の光熱費をゼロにする10kWソーラー発電" },
-      { url: "/images/kaitai/ch9_hems_monitor.jpg", caption: "【省エネモニター】世帯ごとのエネルギー消費を可視化するHEMSシステム" },
-      { url: "/images/craftsman_architect_tag.jpg", caption: "【木組み施工】重量ある薪ストーブ煙突と大屋根を支える伝統手刻み工法" },
-      { url: "/images/kaitai/ch10_roof_insulation.jpg", caption: "【屋根遮熱断熱】夏の平屋特有の屋根熱を跳ね返す超高性能断熱仕様" },
-      { url: "/images/structural_calculation_frame.jpg", caption: "【構造躯体】二世帯の安心を何世代も支える許容応力度計算耐震等級3" },
-      { url: "/images/heat20_insulation_structure.jpg", caption: "【G3断熱工法】外張り断熱と充填断熱のダブル工法で家中ヒートショック皆無" },
-      { url: "/images/hero_architecture.jpg", caption: "【夜景外観】木の格子から暖かな光がこぼれ、家族を温かく迎え入れる玄関先" },
-      { url: "/images/kaitai/ch2_blue_entrance_screen.jpg", caption: "【二世帯玄関】両世帯が気兼ねなく出入りできる網戸付き大型引き戸" },
-      { url: "/images/kaitai/ch5_ecocarat_bath.jpg", caption: "【調湿壁】二世帯の脱衣室とトイレに施工された消臭調湿エコカラット" },
-      { url: "/images/cases/case1_kitchen.jpg", caption: "【朝の風景】朝日が差し込む中庭を眺めながら親子で過ごす穏やかな時間" }
+      { url: "/images/cases_real/case2/photo_01.jpg", caption: "【吉野杉大黒柱とLDK】堂々たる大黒柱と山並みを望むパッシブ吹き抜けリビング" },
+      { url: "/images/cases_real/case2/photo_02.jpg", caption: "【薪ストーブ＆土間】冬の団らんを暖かく包み込む本物の薪ストーブコーナー" },
+      { url: "/images/cases_real/case2/photo_03.jpg", caption: "【大パノラマ吹抜け】豊かな自然光と四季折々の借景を取り込む特大開口" },
+      { url: "/images/cases_real/case2/photo_04.jpg", caption: "【造作キッチン】無垢材の質感を活かした使い勝手の良いオープンキッチン" },
+      { url: "/images/cases_real/case2/photo_05.jpg", caption: "【2階ホール・手すり】職人の手鉋仕上げが心地よい吉野杉の手すりとキャットウォーク" },
+      { url: "/images/cases_real/case2/photo_06.jpg", caption: "【ロフト・置物屋】勾配天井を活かした秘密基地のような小屋裏スペース" },
+      { url: "/images/cases_real/case2/photo_07.jpg", caption: "【外観自然共生】ときがわの緑に美しく溶け込む深い軒と大屋根フォルム" },
+      { url: "/images/cases_real/case2/photo_08.jpg", caption: "【十和田石風バス】毎日のバスタイムが温泉宿気分になる癒しの浴室空間" },
+      { url: "/images/cases_real/case2/photo_09.jpg", caption: "【玄関アプローチ】木の格子とカバードポーチが家族と来客を温かく迎える玄関" },
+      { url: "/images/cases_real/case2/photo_10.jpg", caption: "【洗面化粧台】モザイクタイルと無垢カウンターが調和した大工造作洗面台" },
+      { url: "/images/cases_real/case2/photo_11.jpg", caption: "【和の趣】天然い草の香りが心地よい落ち着きのある和の客間" },
+      { url: "/images/cases_real/case2/photo_12.jpg", caption: "【木組みの構造美】大工の現場施工技術が光る力強い化粧梁の架構美" },
+      { url: "/images/cases_real/case2/photo_13.jpg", caption: "【パッシブ設計窓】冬の日射をたっぷり取り入れ、夏の熱を遮る庇のディテール" },
+      { url: "/images/cases_real/case2/photo_14.jpg", caption: "【太陽光発電】年間エネルギー収支ゼロを達成する屋根一体型ソーラー設計" },
+      { url: "/images/cases_real/case2/photo_15.jpg", caption: "【庭園・テラス】山の澄んだ空気を感じながら外気浴を楽しめるウッドデッキ" },
+      { url: "/images/cases_real/case2/photo_16.jpg", caption: "【夕暮れの情景】薪のパチパチとはぜる音と炎の揺らめきが彩る極上の夜" }
     ]
   },
   3: {
-    title: "③【坂戸市・K様邸】インナーガレージと中庭を囲むリゾート邸宅",
-    sub: "延床38坪 / 超高気密C値0.18 / ガレージ直結動線 / 全20枚",
-    client: "「愛車を眺めながら過ごせるインナーガレージと、外からの視線を遮った中庭プライベートテラスが夢でした。雨の日もガレージから濡れずにパントリーへ運べる動線が最高です。」",
-    carpenter: "「ガレージの大型開口を支える特大集成梁と大黒柱の納まりに技術を注ぎました。中庭テラスのウッドデッキも耐久性の高いハードウッドを手仕事で組み上げています。」",
-    architect: "「大開口ガレージでありながら耐震等級3を死守するため、門型フレームの構造計算を実施。実測C値0.18という超高気密を叩き出し、ガレージの排気流入も完全遮断しました。」",
+    title: "③【鶴ヶ島市・A様邸】「3年暮らしても不満ゼロ！」アイランドキッチンと回遊動線・素足が喜ぶ高気密高断熱",
+    sub: "アイランドキッチン / ぐるぐる回遊動線 / C値1.0以下保証（実測0.28〜0.6目安） / 全16枚",
+    client: "「以前住んでいた建売住宅は、結露はひどいし夏は蒸し風呂、冬は足元が底冷えして本当に辛かったんです。住ま居るさんで建てて3年が経ちますが、正直言って今でも『何一つ不満点がない』んです！私のわがままだったアイランドキッチンと家じゅうをぐるぐる回れる回遊動線、広いお風呂。共働きの家事が本当にラクになり、素足で家中を歩ける暖かさに毎日感動しています。『ちゃんと造る』とこんなにも暮らしが変わるんですね。」",
+    carpenter: "「構造躯体は金物工法でしっかり耐震性を担保。キッチンからパントリー、水回りへとスムーズに繋がる回遊動線に合わせて、引き戸の枠や収納棚を手刻みができる大工がミリ単位の造作で仕上げ、建具の滑らかな開閉感を現場調整しました。」",
+    architect: "「回遊動線で壁が少なくなる間取りでも、金物工法躯体と許容応力度計算により耐震等級3を確保。建物全棟で中間気密測定を実施し、足元と天井の温度差がほぼない快適な熱環境を設計しました。」",
     photos: [
-      { url: "/images/hero_architecture.jpg", caption: "【ガレージ外観】インナーガレージと深い軒が美しい、モダンリゾートデザインの外観" },
-      { url: "/images/cases/case1_living.jpg", caption: "【中庭を望むLDK】大開口サッシ越しにプライベート中庭の緑が広がる開放空間" },
-      { url: "/images/cases/case1_kitchen.jpg", caption: "【ガレージ直結キッチン】ガレージからパントリーへ重い荷物を直通できる神動線" },
-      { url: "/images/artisan_custom_bath.jpg", caption: "【中庭ビュー浴室】十和田石の浴槽に浸かりながら中庭の星空を眺めるバスタイム" },
-      { url: "/images/kaitai/ch6_front_garden_terrace.jpg", caption: "【中庭テラス】周囲の視線を気にせずBBQや外気浴を楽しめるプライベートコート" },
-      { url: "/images/natural_interior_aroma.jpg", caption: "【ガレージが見下ろせる書斎】愛車を見守りながらテレワークに集中できる2階コーナー" },
-      { url: "/images/floor_heating_comfort.jpg", caption: "【ラグジュアリー主寝室】珪藻土と間接照明がホテルのような静謐を生む主寝室" },
-      { url: "/images/kaitai/ch2_covered_porch.jpg", caption: "【エントランス】ガレージと玄関を繋ぐ雨に濡れないカバードポーチ" },
-      { url: "/images/kaitai/ch3_yakusugi_ldk_view.jpg", caption: "【無垢床の質感】素足に吸い付く吉野杉フローリングと上質な家具の調和" },
-      { url: "/images/kaitai/ch3_solid_wood_door.jpg", caption: "【ガレージ間仕切り扉】気密パッキンを仕込み音と匂いを遮断する特注大工ドア" },
-      { url: "/images/kaitai/ch4_theater_screen_napoleon.jpg", caption: "【リビングシアター】休日は映画館へと変貌する120インチスクリーン" },
-      { url: "/images/kaitai/ch4_theater_projector.jpg", caption: "【天井プロジェクター】すっきりとしたインテリアを邪魔しない隠蔽音響" },
-      { url: "/images/kaitai/ch9_solar_house_exterior.jpg", caption: "【EV充電対応ソーラー】屋根ソーラーから電気自動車へ直充電できる環境設計" },
-      { url: "/images/kaitai/ch9_hems_monitor.jpg", caption: "【エネルギー管理】ガレージEVと住宅の電力需給を一括制御するモニター" },
-      { url: "/images/craftsman_architect_tag.jpg", caption: "【大スパン梁架構】大工と建築士が現場で確認しながら組んだガレージ構造梁" },
-      { url: "/images/structural_calculation_frame.jpg", caption: "【門型フレーム計算】車2台分の大開口でも耐震等級3を維持する構造計算躯体" },
-      { url: "/images/heat20_insulation_structure.jpg", caption: "【C値0.18気密施工】サッシ周りの気密テープをミリ単位で圧着した職人技" },
-      { url: "/images/kaitai/ch8_denim_tatami.jpg", caption: "【和モダン小上がり】LDKの一角に設けた藍染めデニム畳のくつろぎスペース" },
-      { url: "/images/hero_kaguya_house.jpg", caption: "【夕景ライトアップ】外壁の木ルーバーと植栽が美しく浮かび上がる夜の情景" },
-      { url: "/images/cases/case1_living.jpg", caption: "【完成後リビング】友人たちを招いてリゾートのように寛ぐ週末の賑わい" }
+      { url: "/images/cases_real/case3/photo_01.jpg", caption: "【回遊アイランドキッチン】「3年暮らしても不満ゼロ！」家中をぐるぐる回れる神動線LDK" },
+      { url: "/images/cases_real/case3/photo_02.jpg", caption: "【無垢杉のフロア】一年中素足で気持ちよく過ごせる高気密高断熱のフロア" },
+      { url: "/images/cases_real/case3/photo_03.jpg", caption: "【リビングダイニング】開放感と家族の気配を感じられる一体型レイアウト" },
+      { url: "/images/cases_real/case3/photo_04.jpg", caption: "【キッチン背面収納】生活感をすっきり隠せる大工特注の大型カップボード" },
+      { url: "/images/cases_real/case3/photo_05.jpg", caption: "【ゆったりバスルーム】一日の家事と仕事の疲れをじっくり癒す広々システムバス" },
+      { url: "/images/cases_real/case3/photo_06.jpg", caption: "【家事ラクランドリー】洗う・干す・畳む・しまうが一箇所で完結する専用動線" },
+      { url: "/images/cases_real/case3/photo_07.jpg", caption: "【玄関シューズクローク】ベビーカーやアウトドア用品もすっぽり収まる土間収納" },
+      { url: "/images/cases_real/case3/photo_08.jpg", caption: "【外観モダンデザイン】ホワイト×ウッドのコントラストが爽やかな外観スタイル" },
+      { url: "/images/cases_real/case3/photo_09.jpg", caption: "【階段下スペース】空間を無駄なく活用した収納＆ルンバ基地" },
+      { url: "/images/cases_real/case3/photo_10.jpg", caption: "【2階洋室】日当たりの良い南向きの居室と機能的なウォークインクローゼット" },
+      { url: "/images/cases_real/case3/photo_11.jpg", caption: "【スタディコーナー】料理をしながら子どもの学習を見守れるワークカウンター" },
+      { url: "/images/cases_real/case3/photo_12.jpg", caption: "【トイレ手洗い造作】コンパクトながら上質なタイルと無垢材で仕立てた手洗い器" },
+      { url: "/images/cases_real/case3/photo_13.jpg", caption: "【高断熱樹脂サッシ】冬でも結露ゼロ・外の騒音を遮断する高性能複層ガラス" },
+      { url: "/images/cases_real/case3/photo_14.jpg", caption: "【玄関ポーチ】雨の日でも鍵を開けやすく濡れない深いキャノピー" },
+      { url: "/images/cases_real/case3/photo_15.jpg", caption: "【室内通風計画】埼玉の季節風を計算した心地よい風の通り道" },
+      { url: "/images/cases_real/case3/photo_16.jpg", caption: "【暮らしの風景】建売住宅から住み替えて実感した「本物の高気密高断熱」の快適さ" }
     ]
   },
   4: {
-    title: "④【日高市・S様邸】杉と土壁の茶室・隠れ家ロフトのある和モダン",
-    sub: "延床31坪 / 伝統木組み / 珪藻土手塗り / 全21枚",
-    client: "「お茶を点てられる本格的な茶室と、大工さんの手仕事が感じられる落ち着いた家が希望でした。玄関に入った瞬間のい草と杉の香りに、訪れる人が皆感動してくれます。」",
-    carpenter: "「茶室のにじり口や床の間、名栗（なぐり）加工の柱など、伝統的な大工技術を随所に散りばめました。ロフトの固定階段も吉野杉無垢材から手造りしています。」",
-    architect: "「伝統和風の美しさをそのままに、断熱性能はHEAT20 G2（UA値0.42）、耐震等級3を両立。古民家のような趣を持ちながら、現代の高気密・高断熱を実現しました。」",
+    title: "④【日高市・I様邸】冬の光熱費が月5万円から1万円台に激減！住み心地重視で叶えた省エネ健康住宅",
+    sub: "冬光熱費激減 / 全館暖房 / 自然素材珪藻土 / C値1.0以下保証（実測0.28〜0.6目安） / 全16枚",
+    client: "「以前の家では床暖房とエアコンをフル稼働させていて、冬になると毎月の電気・ガス代が5万円を超えて家計の大きな負担でした。住ま居るさんにお願いして建て替えたところ、真冬でも光熱費が1万円を少し超える程度に激減して本当にびっくりしました！しかも、前の家よりどの部屋も格段に暖かい。廊下もお風呂も寒くなく、家族が風邪を引かなくなりました。省エネ住宅の本当の凄さを毎日実感しています。」",
+    carpenter: "「骨組みは金物工法でガッチリ組み上げ、熱を逃がさない丁寧な気密・断熱施工を現場で徹底。コンセントボックスや配管周りまで気密テープで隙間なく密閉しました。自然素材の杉床や壁の珪藻土も、湿気を適度に吸放出するよう大工・左官の手仕事で施工しています。」",
+    architect: "「日高市の冬の冷え込みに対応するため、断熱材の厚みとサッシの遮熱・断熱仕様をパッシブシミュレーション。暖房エネルギー消費量を従来の1/4以下に抑える熱性能を数値で証明しました。」",
     photos: [
-      { url: "/images/kaitai/ch8_denim_tatami.jpg", caption: "【茶室空間】炉を切った本格的な京間畳と、職人手塗りの珪藻土土壁が織りなす静寂" },
-      { url: "/images/cases/case1_living.jpg", caption: "【和モダンLDK】丸太梁を現しにした吹き抜けと、杉の温もりあふれるリビング" },
-      { url: "/images/artisan_custom_bath.jpg", caption: "【ヒノキ風呂】十和田石と木曽ヒノキで仕立てた、旅館のような風情の浴室" },
-      { url: "/images/hero_kaguya_house.jpg", caption: "【和の佇まい】焼き杉調ガルバリウムと格子戸が美しい、日高の自然に映える外観" },
-      { url: "/images/cases/case1_kitchen.jpg", caption: "【無垢キッチン】木目の美しい吉野杉造作収納と、使い勝手を極めた和の台所" },
-      { url: "/images/kaitai/ch2_blue_entrance_screen.jpg", caption: "【格子引き戸】涼風を通す伝統デザインの網戸付き玄関引き戸" },
-      { url: "/images/kaitai/ch2_covered_porch.jpg", caption: "【深い軒下】雨宿りしながら庭の飛び石を眺められる和のエントランス" },
-      { url: "/images/natural_interior_aroma.jpg", caption: "【隠れ家ロフト書斎】屋根裏に設けた趣味と読書に没頭できる固定階段付きロフト" },
-      { url: "/images/floor_heating_comfort.jpg", caption: "【寝室】優しい間接照明が和紙調の壁を照らす、心静まる主寝室" },
-      { url: "/images/kaitai/ch6_front_garden_terrace.jpg", caption: "【濡れ縁テラス】庭の苔とモミジを眺めながらお茶をいただく手造り濡れ縁" },
-      { url: "/images/kaitai/ch3_solid_wood_door.jpg", caption: "【名栗仕上げ建具】手カンナの削り跡が美しい、職人手造りの名栗引き戸" },
-      { url: "/images/kaitai/ch1_living_craft.jpg", caption: "【意匠スケッチ】茶室とリビングのつながりを綿密に検討した手描き図面" },
-      { url: "/images/kaitai/ch4_theater_screen_napoleon.jpg", caption: "【隠しスクリーン】和室の鴨居裏に目立たないよう仕込んだシアタースクリーン" },
-      { url: "/images/kaitai/ch4_theater_projector.jpg", caption: "【プロジェクター設備】和の意匠を邪魔しないよう木製ボックスに格納" },
-      { url: "/images/craftsman_architect_tag.jpg", caption: "【大工手刻み風景】茶室の床柱や化粧梁を一本一本丁寧に手加工する大工さん" },
-      { url: "/images/structural_calculation_frame.jpg", caption: "【伝統×構造計算】変形梁架構でも耐震等級3を証明した立体骨組みモデル" },
-      { url: "/images/kaitai/ch10_roof_insulation.jpg", caption: "【小屋裏断熱】ロフトが夏でも暑くならない高性能断熱・通気工法" },
-      { url: "/images/heat20_insulation_structure.jpg", caption: "【自然素材断熱】木質繊維断熱材を充填した壁内結露ゼロの壁構造" },
-      { url: "/images/hero_architecture.jpg", caption: "【夕景の美】和紙障子を通して柔らかく漏れる行灯のような外観の灯り" },
-      { url: "/images/kaitai/ch5_ecocarat_bath.jpg", caption: "【床の間タイル】和室の飾り床に設えた間接照明と調湿エコカラット" },
-      { url: "/images/cases/case1_living.jpg", caption: "【四季の暮らし】春には桜、秋には紅葉を借景として楽しむ窓辺の風景" }
+      { url: "/images/cases_real/case4/photo_01.jpg", caption: "【省エネ大空間LDK】「冬の光熱費が月5万から1万台に激減！」家中ぽかぽかの快適リビング" },
+      { url: "/images/cases_real/case4/photo_02.jpg", caption: "【自然素材珪藻土壁】空気を清浄に保ち、湿度を自律コントロールする職人手塗り壁" },
+      { url: "/images/cases_real/case4/photo_03.jpg", caption: "【明るいダイニング】庭の緑を絵画のように切り取るピクチャーウィンドウ" },
+      { url: "/images/cases_real/case4/photo_04.jpg", caption: "【機能美キッチン】無駄な動線を省き、家族で料理を楽しめるワイドキッチン" },
+      { url: "/images/cases_real/case4/photo_05.jpg", caption: "【小上がり和室】下部引き出し収納を備えた多目的な和のスペース" },
+      { url: "/images/cases_real/case4/photo_06.jpg", caption: "【玄関ホール】清々しい木の香りが漂う広々とした玄関エントランス" },
+      { url: "/images/cases_real/case4/photo_07.jpg", caption: "【外観シンプルモダン】日高の気候風土に合わせた耐久性の高い外装デザイン" },
+      { url: "/images/cases_real/case4/photo_08.jpg", caption: "【主寝室】温度ムラがなく朝までぐっすり熟睡できる超高断熱ベッドルーム" },
+      { url: "/images/cases_real/case4/photo_09.jpg", caption: "【子ども部屋】無垢床が心地よく、アレルギーの心配がないクリーンな居室" },
+      { url: "/images/cases_real/case4/photo_10.jpg", caption: "【洗面脱衣室】冬のヒートショックを完全に防ぐ家中均一温度設計" },
+      { url: "/images/cases_real/case4/photo_11.jpg", caption: "【浴室】浴槽のお湯が冷めにくい高断熱浴槽と浴室暖房設計" },
+      { url: "/images/cases_real/case4/photo_12.jpg", caption: "【造作TVボード】壁面と一体化させた無垢材のフロートテレビボード" },
+      { url: "/images/cases_real/case4/photo_13.jpg", caption: "【気密施工の証】隙間なきプロの現場施工でC値1.0以下保証をクリア" },
+      { url: "/images/cases_real/case4/photo_14.jpg", caption: "【軒天・庇の陰影】夏の強い直射日光を遮り、冷房負荷を劇的に下げるパッシブ庇" },
+      { url: "/images/cases_real/case4/photo_15.jpg", caption: "【夜の温もり】家中どこにいても寒さを感じない理想の住み心地" },
+      { url: "/images/cases_real/case4/photo_16.jpg", caption: "【光熱費激減の実証】電気代高騰の時代に家計を力強く支える省エネ健康住宅" }
     ]
   },
   5: {
-    title: "⑤【東松山市・H様邸】太陽光10kW＋V2Hオフグリッド自然素材住宅",
-    sub: "延床36坪 / フリーエネルギー / 吉野杉30mm / 全23枚",
-    client: "「電気代高騰の時代だからこそ、太陽光とEV車でエネルギーを自給自足できる家にしたいと考えました。災害で停電しても普段通り生活できる圧倒的な安心感があります。」",
-    carpenter: "「10kWの太陽光パネルを載せる大屋根を支えるため、小屋組の強度を手刻み補強。吉野杉の無垢床も30mmの厚物材を一枚ずつ隙間なく敷き詰めました。」",
-    architect: "「屋根一体型ソーラーとV2Hシステムを最適設計。真夏の冷房も冬の暖房も太陽光で完全にまかない、年間光熱費が実質プラスになるエネルギー収支を実証しました。」",
+    title: "⑤【川越市・Y様邸】30帖大LDK×白タイル床×ピットリビング・理想のデザインを形にしたラグジュアリーモダン",
+    sub: "30帖大空間 / 白タイル床 / ピットリビング / C値1.0以下保証（実測0.28〜0.6目安） / 全16枚",
+    client: "「30帖大の広々としたLDKに、真っ白なタイルの床、間接照明、開放的な吹き抜け、そして一段下がったピットリビング。『ホテルのラウンジのような非日常感のある家にしたい』という私のわがままを全て叶えてもらいました。大空間でもエアコンの効きが良く、友人を招くと『これ本当に個人の家なの？』と歓声が上がります。デザイン性と快適性が両立した最高のお気に入り空間です。」",
+    carpenter: "「金物工法による大スパン躯体と、一段下がりのピットリビングを実現するため、床組みの段差納まりやタイル下地の水平精度に徹底してこだわりました。間接照明の光が綺麗に伸びるよう、手刻みができる大工が天井や壁面の造作もミリ単位で調整しています。」",
+    architect: "「30帖の大スパン吹き抜け空間でありながら、全棟許容応力度計算により耐震等級3を死守。大開口サッシからの冬の日射取得と夏の遮熱を綿密に計算し、タイル床の熱容量を活かした快適な室内環境をつくりました。」",
     photos: [
-      { url: "/images/kaitai/ch9_solar_house_exterior.jpg", caption: "【10.33kWソーラー外観】屋根と一体化したスマートな大容量太陽光パネル搭載の外観" },
-      { url: "/images/kaitai/ch9_hems_monitor.jpg", caption: "【V2H・HEMSシステム】電気自動車への給電と家庭消費電力を一括コントロールする画面" },
-      { url: "/images/cases/case1_living.jpg", caption: "【ゼロエネ大空間LDK】太陽光発電の電気でエアコン1台稼働、年中22℃の快適リビング" },
-      { url: "/images/cases/case1_kitchen.jpg", caption: "【高効率エコキッチン】IHクッキングヒーターと無垢カウンターを融合した省エネ台所" },
-      { url: "/images/artisan_custom_bath.jpg", caption: "【十和田石エコバス】エコキュートの湧き上げ電力を昼間の太陽光でまかなう造作風呂" },
-      { url: "/images/hero_architecture.jpg", caption: "【パッシブ外観】冬の日射をたっぷり取り入れ、夏の強い陽射しを遮る深い庇デザイン" },
-      { url: "/images/kaitai/ch2_covered_porch.jpg", caption: "【EV充電カバードポーチ】雨に濡れずにEVケーブルを充電接続できる屋根付き車寄せ" },
-      { url: "/images/natural_interior_aroma.jpg", caption: "【2階多目的ホール】屋根の熱が一切降りてこない快適な2階ワークスペース" },
-      { url: "/images/floor_heating_comfort.jpg", caption: "【省エネ寝室】漆喰の蓄熱効果で夜間も室温が下がりにくい快眠主寝室" },
-      { url: "/images/kaitai/ch8_denim_tatami.jpg", caption: "【畳コーナー】家族が寝転んでゲームや読書を楽しむ掘りごたつ付き畳スペース" },
-      { url: "/images/kaitai/ch6_front_garden_terrace.jpg", caption: "【南面ウッドデッキ】太陽の恵みをいっぱいに浴びる吉野杉フラットデッキ" },
-      { url: "/images/kaitai/ch3_solid_wood_door.jpg", caption: "【気密仕切り引き戸】部屋ごとの空調効率をさらに高める大工手造りの気密ドア" },
-      { url: "/images/kaitai/ch4_theater_screen_napoleon.jpg", caption: "【シアタールーム】自家発電した電気で心置きなく楽しむ大画面映画鑑賞" },
-      { url: "/images/kaitai/ch4_theater_projector.jpg", caption: "【プロジェクター音響】省電力LEDプロジェクターを天井にビルトイン" },
-      { url: "/images/craftsman_architect_tag.jpg", caption: "【屋根荷重構造検査】太陽光パネルの重量を考慮した大工と建築士の躯体チェック" },
-      { url: "/images/structural_calculation_frame.jpg", caption: "【全棟許容応力度計算】太陽光積載時でも耐震等級3（最高等級）を証明した構造計算書" },
-      { url: "/images/kaitai/ch10_roof_insulation.jpg", caption: "【超高断熱桁上気密】小屋裏の熱を室内に一滴も入れない遮熱シートとフェノバボード" },
-      { url: "/images/heat20_insulation_structure.jpg", caption: "【HEAT20 G2外皮】気密テープを二重施工した隙間なきパーフェクト外皮" },
-      { url: "/images/hero_kaguya_house.jpg", caption: "【黄昏時の佇まい】停電時でも蓄電池とEVから家中すべての部屋に明かりが灯る安心" },
-      { url: "/images/kaitai/ch2_blue_entrance_screen.jpg", caption: "【通風玄関】エアコンに頼らない中間期は心地よい自然風を循環させる引戸" },
-      { url: "/images/kaitai/ch5_ecocarat_bath.jpg", caption: "【サニタリー調湿】梅雨時の部屋干しでも洗濯物がカラリと乾くエコカラット洗面所" },
-      { url: "/images/kaitai/ch1_living_craft.jpg", caption: "【設計当初のスケッチ】創エネと自然素材が調和する家を夢見た手描きパース" },
-      { url: "/images/cases/case1_living.jpg", caption: "【電気代実証データ】年間光熱費が実質マイナス3万円を達成した入居1年後の記念写真" }
+      { url: "/images/cases_real/case5/photo_01.jpg", caption: "【30帖大LDK×白タイル】圧倒的開放感とリゾート感が漂うホワイトモダンリビング" },
+      { url: "/images/cases_real/case5/photo_02.jpg", caption: "【ピットリビング（一段下がり）】籠もり感と広がりを同時に味わえる贅沢なステップダウン" },
+      { url: "/images/cases_real/case5/photo_03.jpg", caption: "【吹き抜け・間接照明】夜になるとホテルのような優雅な陰影を放つ吹き抜け天井" },
+      { url: "/images/cases_real/case5/photo_04.jpg", caption: "【アイランドキッチン】大空間の主役となる洗練されたハイグレードキッチン" },
+      { url: "/images/cases_real/case5/photo_05.jpg", caption: "【オープン階段】視線が奥まで抜ける軽やかなスチール×無垢踏板のシースルー階段" },
+      { url: "/images/cases_real/case5/photo_06.jpg", caption: "【ラグジュアリーサニタリー】海外ホテルのような洗練されたワイドミラーと洗面空間" },
+      { url: "/images/cases_real/case5/photo_07.jpg", caption: "【外観キュービックモダン】スクエアな立体造形が美しい川越のランドマーク邸宅" },
+      { url: "/images/cases_real/case5/photo_08.jpg", caption: "【エントランス】プライバシーを守りつつ大開口で光を招き入れる玄関" },
+      { url: "/images/cases_real/case5/photo_09.jpg", caption: "【2階ホール】吹き抜けを通じて1階と緩やかにつながる開放的なセカンドスペース" },
+      { url: "/images/cases_real/case5/photo_10.jpg", caption: "【主寝室】間接照明と上質なファブリックが調和したホテルのようなマスターベッドルーム" },
+      { url: "/images/cases_real/case5/photo_11.jpg", caption: "【ウォークインクローゼット】ブティックのように洋服が並ぶ大容量ワードローブ" },
+      { url: "/images/cases_real/case5/photo_12.jpg", caption: "【タイル床と温熱設計】エアコンの暖気が蓄熱され、冬でも底冷えしない床断熱工法" },
+      { url: "/images/cases_real/case5/photo_13.jpg", caption: "【大開口サッシ】30帖の空間に光を注ぎ込む超大型トリプルガラス開口" },
+      { url: "/images/cases_real/case5/photo_14.jpg", caption: "【中庭・パティオ】外からの視線を遮りながら青空を切り取るプライベートコート" },
+      { url: "/images/cases_real/case5/photo_15.jpg", caption: "【夜景ライティング】リゾートホテルのように幻想的な光に包まれるLDK全景" },
+      { url: "/images/cases_real/case5/photo_16.jpg", caption: "【理想の実現】「私のわがままを全て叶えた」妥協のないラグジュアリー住宅" }
     ]
   },
   6: {
-    title: "⑥【所沢市・Y様邸】造作ライブラリーと回遊動線の子育て住宅",
-    sub: "延床33坪 / 家事ラク回遊 / 大工造作本棚 / 全20枚",
-    client: "「共働きで忙しい毎日のため、キッチン・洗面・ファミクロがぐるぐる回れる回遊動線と、子どもたちが自然と本を好きになる壁一面のライブラリーを叶えていただきました。」",
-    carpenter: "「階段ホールの壁一面に、棚板の高さを変えられる大工造作の本棚を施工。お子様がぶつかっても痛くないよう、角をすべて優しく丸める加工を行いました。」",
-    architect: "「回遊動線により壁が少なくなるプランでも、耐力壁をバランス良く配置して直下率70%・耐震等級3を確保。24時間第1種熱交換換気により子どものアレルギーも予防します。」",
+    title: "⑥【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱",
+    sub: "光熱費半減 / 高気密高断熱 / 自然素材 / C値1.0以下保証（実測0.28〜0.6目安） / 全10枚",
+    client: "「両親が建ててくれた思い出の家を建て替えるにあたり、何より極度の寒がりである妻が『心から暖かいと思える家』にしたいと考えました。高気密高断熱を謳う大手ハウスメーカーも何社か見学しましたが、見積もりがあまりにも高額でため息ばかり…。そんな時に地元の住ま居るさんを知り、適正な価格で本物の高性能住宅を提案してくれました。完成した家に住んでみると、妻が『暖かすぎるくらい！』と大喜び。光熱費も前の家の半分以下になり、建て替えて本当に良かったです。」",
+    carpenter: "「構造躯体は金物工法で高い耐震性を確保。日当たりと風の通り道を考慮しながら、室内の無垢ドアや造作カウンターも、手刻みができる大工が木癖を見極めて一つ一つ丁寧に仕上げました。」",
+    architect: "「大手ハウスメーカーと同等以上の断熱スペック（C値1.0以下保証・実測0.28〜0.6目安、付加断熱仕様）を、中間マージンをカットした工務店ならではの適正価格で実現。許容応力度計算耐震等級3と長寿命な通気構造で、次世代まで安心して住み継げる住宅を設計しました。」",
     photos: [
-      { url: "/images/natural_interior_aroma.jpg", caption: "【壁一面の造作本棚】絵本や図鑑が並び、子どもたちが階段に座って本を読むファミリーホール" },
-      { url: "/images/cases/case1_kitchen.jpg", caption: "【回遊キッチン】パントリーと脱衣室へぐるりと回れる、共働きに優しい家事ラク動線" },
-      { url: "/images/cases/case1_living.jpg", caption: "【見守りLDK】キッチンで料理をしながら勉強スペースとリビング全体を見渡せる間取り" },
-      { url: "/images/artisan_custom_bath.jpg", caption: "【十和田石ファミリー風呂】親子3人でゆったり浸かれる滑りにくく温かい手づくり浴室" },
-      { url: "/images/hero_architecture.jpg", caption: "【明るい街並み外観】白漆喰と木製ルーバーが爽やかな印象を与える子育て世代の外観" },
-      { url: "/images/kaitai/ch2_covered_porch.jpg", caption: "【ベビーカー対応玄関】雨の日も濡れずにベビーカーを畳める広々カバードポーチ" },
-      { url: "/images/floor_heating_comfort.jpg", caption: "【快眠キッズ＆主寝室】天然漆喰が化学物質やホコリを吸着分解する澄んだ空気の寝室" },
-      { url: "/images/kaitai/ch8_denim_tatami.jpg", caption: "【お昼寝畳スペース】おむつ替えや赤ちゃんのハイハイに安心な天然い草畳コーナー" },
-      { url: "/images/kaitai/ch6_front_garden_terrace.jpg", caption: "【プール遊びテラス】夏にはビニールプールを広げて水遊びができる屋根付きウッドデッキ" },
-      { url: "/images/kaitai/ch3_solid_wood_door.jpg", caption: "【指はさみ防止引き戸】お子様の安全に配慮してソフトクローズを組み込んだ造作建具" },
-      { url: "/images/kaitai/ch4_theater_screen_napoleon.jpg", caption: "【ファミリーシアター】休日の夜、家族みんなでアニメや知育動画を楽しむ大画面" },
-      { url: "/images/kaitai/ch4_theater_projector.jpg", caption: "【天井プロジェクター】子どもがコードに引っかかる心配のない天吊り安全設計" },
-      { url: "/images/kaitai/ch9_solar_house_exterior.jpg", caption: "【太陽光発電】子育てにかかる将来の電気代をぐっと抑える屋根一体型ソーラー" },
-      { url: "/images/kaitai/ch9_hems_monitor.jpg", caption: "【エネルギー教育】子どもと一緒に電気の使い方を学べるHEMSタッチモニター" },
-      { url: "/images/craftsman_architect_tag.jpg", caption: "【職人さんの木工仕事】お子様の成長に合わせて棚を組み替えられる可動式ダボ加工" },
-      { url: "/images/structural_calculation_frame.jpg", caption: "【直下率70%の強さ】回遊動線の開口部が多くても大地震に耐え抜く強靭な耐力壁配置" },
-      { url: "/images/heat20_insulation_structure.jpg", caption: "【24h換気計画】花粉やPM2.5を99%除去して室内にきれいな空気だけを届ける換気システム" },
-      { url: "/images/kaitai/ch10_roof_insulation.jpg", caption: "【小屋裏断熱】2階の子ども部屋が夏でも涼しく勉強に集中できる超高断熱天井" },
-      { url: "/images/hero_kaguya_house.jpg", caption: "【夜のあたたかな風景】子どもたちの元気な笑い声が聞こえてくる温もりある外観" },
-      { url: "/images/cases/case1_living.jpg", caption: "【入居後の風景】無垢の杉床に座って遊ぶ子どもたちの笑顔がまぶしいリビング" }
+      { url: "/images/cases_real/case6/photo_01.jpg", caption: "【高気密高断熱LDK】寒がりの奥様も「暖かすぎる」と太鼓判！建て替えで叶えた本物の温もり" },
+      { url: "/images/cases_real/case6/photo_02.jpg", caption: "【木の温もりあふれる居間】両親の家の面影を継承しつつ現代の最高性能へ生まれ変わった室内" },
+      { url: "/images/cases_real/case6/photo_03.jpg", caption: "【明るい対面キッチン】家族の様子を見守りながら快適に料理ができるスペース" },
+      { url: "/images/cases_real/case6/photo_04.jpg", caption: "【続き間の和室】冠婚葬祭や来客にも柔軟に対応できる本格和室" },
+      { url: "/images/cases_real/case6/photo_05.jpg", caption: "【ゆったり玄関】段差を抑え、将来のバリアフリーにも配慮した玄関ホール" },
+      { url: "/images/cases_real/case6/photo_06.jpg", caption: "【外観和モダン】思い出の敷地に堂々と建つ、耐久性と美しさを兼ね備えた外観" },
+      { url: "/images/cases_real/case6/photo_07.jpg", caption: "【水回り動線】家事の移動距離を最短にする機能的なランドリー＆サニタリー" },
+      { url: "/images/cases_real/case6/photo_08.jpg", caption: "【断熱施工のこだわり】大手ハウスメーカー以上の断熱仕様を工務店適正価格で実現" },
+      { url: "/images/cases_real/case6/photo_09.jpg", caption: "【光熱費半減のデータ】前の家と比べて電気・ガス代が半減したエコな暮らし" },
+      { url: "/images/cases_real/case6/photo_10.jpg", caption: "【入居後の笑顔】「寒さのストレスから完全に解放された」喜びの実感" }
     ]
   }
 };
@@ -2057,4 +2018,124 @@ function initCredLayerStudio() {
     resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   });
 }
+
+// =========================================================
+// 13. 私のわがまま 俺のわがまま かなう家 (Interactive Showcase Engine)
+// =========================================================
+let allWagamaData = [];
+let currentWagamaCategory = 'all';
+let wagamaVisibleCount = 9;
+
+async function initWagamaShowcase() {
+  const container = document.getElementById('wagama-cards-grid');
+  const tabs = document.querySelectorAll('.wagama-tab-btn');
+  const loadMoreBtn = document.getElementById('wagama-load-more-btn');
+  const countAllEl = document.getElementById('wagama-count-all');
+  if (!container) return;
+
+  try {
+    const res = await fetch('/data/wagama_testimonials.json');
+    if (!res.ok) return;
+    allWagamaData = await res.json();
+
+    if (countAllEl) countAllEl.textContent = allWagamaData.length;
+
+    // Tab switcher listeners
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => {
+          t.classList.remove('active');
+          t.style.background = '#fff';
+          const cat = t.getAttribute('data-wagama-cat');
+          if (cat === 'ore_wagama') t.style.color = '#0284c7';
+          else if (cat === 'watashi_wagama') t.style.color = '#d97706';
+          else if (cat === 'client_voice') t.style.color = '#059669';
+          else t.style.color = 'var(--primary-green)';
+        });
+
+        tab.classList.add('active');
+        const cat = tab.getAttribute('data-wagama-cat');
+        if (cat === 'ore_wagama') { tab.style.background = '#0284c7'; tab.style.color = '#fff'; }
+        else if (cat === 'watashi_wagama') { tab.style.background = '#d97706'; tab.style.color = '#fff'; }
+        else if (cat === 'client_voice') { tab.style.background = '#059669'; tab.style.color = '#fff'; }
+        else { tab.style.background = 'var(--primary-green)'; tab.style.color = '#fff'; }
+
+        currentWagamaCategory = cat;
+        wagamaVisibleCount = 9;
+        renderWagamaCards();
+      });
+    });
+
+    // Load More listener
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', () => {
+        wagamaVisibleCount += 9;
+        renderWagamaCards();
+      });
+    }
+
+    renderWagamaCards();
+  } catch (err) {
+    console.error('[Wagama Showcase Load Error]', err);
+  }
+}
+
+function renderWagamaCards() {
+  const container = document.getElementById('wagama-cards-grid');
+  const loadMoreBtn = document.getElementById('wagama-load-more-btn');
+  if (!container) return;
+
+  const filtered = allWagamaData.filter(item => {
+    if (currentWagamaCategory === 'all') return true;
+    return item.category === currentWagamaCategory;
+  });
+
+  const toShow = filtered.slice(0, wagamaVisibleCount);
+
+  container.innerHTML = toShow.map(item => {
+    let badgeClass = 'voice';
+    let badgeLabel = item.badge;
+    let resolIcon = '🔨';
+    let resolText = '大工手刻み × 構造建築士が完全具現化';
+
+    if (item.category === 'ore_wagama') {
+      badgeClass = 'ore';
+      resolIcon = '📐';
+      resolText = '許容応力度計算耐震等級3 × 気密C値0.2台';
+    } else if (item.category === 'watashi_wagama') {
+      badgeClass = 'watashi';
+      resolIcon = '🌲';
+      resolText = '吉野杉・珪藻土・十和田石の職人手づくり';
+    }
+
+    return `
+      <div class="wagama-card">
+        <div class="wagama-card-thumb-wrap">
+          <img src="${item.image}" alt="${item.title}" class="wagama-card-thumb" loading="lazy" />
+          <span class="wagama-badge ${badgeClass}">${badgeLabel}</span>
+        </div>
+        <div class="wagama-card-body">
+          <h3 class="wagama-card-title">${item.title}</h3>
+          <div class="wagama-speech-bubble">
+            ${item.oral_story}
+          </div>
+          <div class="wagama-craft-resolution">
+            <span>${resolIcon}</span>
+            <span>${resolText}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  if (loadMoreBtn) {
+    if (wagamaVisibleCount >= filtered.length) {
+      loadMoreBtn.style.display = 'none';
+    } else {
+      loadMoreBtn.style.display = 'inline-block';
+      loadMoreBtn.textContent = `さらに「わがまま・生の声」を見る (残り${filtered.length - wagamaVisibleCount}件) ↓`;
+    }
+  }
+}
+
 

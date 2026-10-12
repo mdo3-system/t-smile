@@ -1,0 +1,1062 @@
+    <section id="floorplan-studio" class="page-section">
+      <div class="hero hero-soft-sky" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 45%, #ffffff 100%); border: 2px solid #bae6fd; border-radius: 16px; padding: 2.5rem 2rem 2.2rem; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(2, 132, 199, 0.08); text-align: center;">
+        <span class="hero-tag" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: #0369a1; font-weight: 800; font-size: 0.88rem; padding: 6px 18px; border-radius: 20px; display: inline-block; margin-bottom: 1rem;">
+          敷地制限抜きで自由にアイデアを磨く ｜ 初期の理想プラン作成ツール
+        </span>
+        <h1 class="hero-title" style="color: #0f172a; font-size: 2.1rem; font-weight: 900; line-height: 1.4; margin-bottom: 1rem;">
+          自由設計 AI間取りシミュレーター<br>
+          <span style="color: #0284c7; font-size: 1.35rem; font-weight: 800; display: inline-block; margin-top: 0.4rem; line-height: 1.5;">ご家族みんなで「あーでもない、こーでもない」と話しながら、<br>バブルでラフに置くだけでAIが相談に乗り、理想の間取りを自動生成</span>
+        </h1>
+        
+        <!-- 敷地制限抜き・自由設計特化の明記ボックス -->
+        <div style="background: #ffffff; border: 1.5px solid #38bdf8; border-radius: 12px; padding: 1.3rem 1.6rem; margin-top: 1.2rem; text-align: left; max-width: 960px; margin-left: auto; margin-right: auto; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.06);">
+          <h3 style="color: #0369a1; font-size: 1.08rem; font-weight: 800; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+            <span>💡</span> 【家族それぞれのスマホで同じ画面を見ながら、あーでもない・こーでもないと理想を磨く】
+          </h3>
+          <p style="color: #334155; font-size: 0.95rem; line-height: 1.8; margin: 0;">
+            実際の建築では敷地形状や建ぺい率・斜線制限が重要ですが、家づくりの初期段階から個人のユーザーがそこまで配慮することは非常に困難です。本シミュレーターの最大の特長は、<strong>「ご夫婦やご家族がそれぞれのスマホで同じ画面を見ながら、『キッチンはここが良いかな？』『リビングをもっと広く！』と相談し合えること」</strong>です。<br>
+            敷地の制限にとらわれず、AI建築士に相談しながらバブルでざっくり部屋を並べるだけで、美しい間取り図へと自動生成。さらに320超（今後500以上へ順次拡充予定）の豊富な実例プランを参考にしたり、たたき台にして自由にアレンジを深めていただけます。<br>
+            <span style="font-size: 0.85rem; color: #64748b; margin-top: 6px; display: inline-block; line-height: 1.6;">
+              ※実際の土地への配置や建築基準法への適合は、後のステップでプロの建築士がしっかり調整・サポートいたします。<br>
+              <strong style="color: #dc2626;">※本シミュレーター上では、建築基準法等の法適合性の判定は行っていません。</strong>
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <!-- 2大プランニングモード切替タブ (① データベース選別 vs ② Bubble Plan) -->
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 8px;">
+          <button type="button" id="btn-fp-mode-search" class="btn btn-primary" style="font-weight: 800; font-size: 1rem; padding: 0.8rem 1.8rem; border-radius: 30px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);">
+            📐 ① 323プランから選別・参考プランを見る
+          </button>
+          <button type="button" id="btn-fp-mode-bubble" class="btn" style="background: linear-gradient(135deg, #fef3c7, #fde68a); color: #b45309; border: 2.5px solid #f59e0b; font-weight: 900; font-size: 1rem; padding: 0.8rem 1.8rem; border-radius: 30px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.25); cursor: pointer;">
+            🎈 ② バブルで直感作成！Bubble Plan（ゼロから自由に作図）✨
+          </button>
+        </div>
+        <p style="font-size: 0.86rem; color: #475569; margin: 0; line-height: 1.6;">
+          💡 <strong>「どちらからでも始められます」</strong>：過去の323実例から選んでたたき台にするのはもちろん、<strong>最初から②バブルプランを開いて敷地図・ご自身の希望に合わせてゼロから部屋ブロックを自由に配置することも可能</strong>です。
+        </p>
+      </div>
+
+      <div id="floorplan-search-section-wrap">
+
+      <!-- Step Indicator (1: 条件選択 → 2: AI選別3選比較 → 3: チャット相談改変) -->
+      <div class="fp-step-indicator">
+        <div class="fp-step-pill active" id="pill-step-1">
+          <span>1️⃣</span> 基本条件の選択
+        </div>
+        <div style="color: #94a3b8; font-weight: 800;">➔</div>
+        <div class="fp-step-pill" id="pill-step-2">
+          <span>2️⃣</span> AIおすすめ3選の選別・比較
+        </div>
+        <div style="color: #94a3b8; font-weight: 800;">➔</div>
+        <div class="fp-step-pill" id="pill-step-3">
+          <span>3️⃣</span> AI相談改変 ＆ パース連動
+        </div>
+      </div>
+
+      <!-- STEP 1: INITIAL CONDITIONS SELECTION PANEL (まどりLABOスタイル) -->
+      <div id="fp-step1-container">
+        <div class="fp-wizard-card">
+          <div style="text-align: center; margin-bottom: 2rem;">
+            <h2 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 1.6rem; margin-bottom: 0.4rem;">
+              まずは理想の住まいの条件をお選びください
+            </h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+              320超（今後500以上へ順次拡充予定）の多彩な実例・プロ設計プランから、AIがご希望に合致する上位プランを即座に選別・ご提案します。
+            </p>
+          </div>
+
+          <!-- 1. 階数 -->
+          <div class="fp-option-group">
+            <label class="fp-option-label"><span>🏢</span> 1. 建物の階数</label>
+            <div class="fp-button-grid" id="opt-floors">
+              <button type="button" class="fp-choice-btn selected" data-value="1">平屋 (1階建て)</button>
+              <button type="button" class="fp-choice-btn" data-value="2">2階建て</button>
+              <button type="button" class="fp-choice-btn" data-value="3">3階建て</button>
+            </div>
+          </div>
+
+          <!-- 2. 広さ（坪数） -->
+          <div class="fp-option-group">
+            <label class="fp-option-label"><span>📐</span> 2. 希望の広さ・延床面積</label>
+            <div class="fp-button-grid" id="opt-size" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+              <button type="button" class="fp-choice-btn" data-min="20" data-max="25" data-label="20〜25坪 (コンパクト)">20〜25坪 (約70〜82㎡)</button>
+              <button type="button" class="fp-choice-btn selected" data-min="26" data-max="30" data-label="26〜30坪 (標準人気)">26〜30坪 (約85〜99㎡)</button>
+              <button type="button" class="fp-choice-btn" data-min="31" data-max="35" data-label="31〜35坪 (ゆとり)">31〜35坪 (約100〜115㎡)</button>
+              <button type="button" class="fp-choice-btn" data-min="36" data-max="44" data-label="36〜44坪 (ゆったり・二世帯)">36〜44坪 (約118〜145㎡)</button>
+              <button type="button" class="fp-choice-btn" data-min="45" data-max="100" data-label="45坪以上 (大型邸宅・完全分離二世帯)">45坪以上 (約150㎡〜大型)</button>
+            </div>
+          </div>
+
+          <!-- 3. 世帯・家族構成 -->
+          <div class="fp-option-group">
+            <label class="fp-option-label"><span>👨‍👩‍👧‍👦</span> 3. 家族構成・世帯人数</label>
+            <div class="fp-button-grid" id="opt-family">
+              <button type="button" class="fp-choice-btn" data-value="夫婦・単身">単身・ご夫婦2人</button>
+              <button type="button" class="fp-choice-btn selected" data-value="子育て3〜4人">子育て世帯（3〜4人）</button>
+              <button type="button" class="fp-choice-btn" data-value="二世帯・同居">二世帯住宅・親世代同居</button>
+            </div>
+          </div>
+
+          <!-- 4. こだわり・欲しい空間（複数選択可） -->
+          <div class="fp-option-group">
+            <label class="fp-option-label"><span>✨</span> 4. こだわり重視ポイント（複数選択可）</label>
+            <div class="fp-tag-grid" id="opt-features">
+              <button type="button" class="fp-tag-btn selected" data-value="中庭テラス">🌿 中庭テラス・光庭</button>
+              <button type="button" class="fp-tag-btn selected" data-value="パントリー">🥫 パントリー (食品庫)</button>
+              <button type="button" class="fp-tag-btn" data-value="回遊動線">🔄 家事ラク回遊動線</button>
+              <button type="button" class="fp-tag-btn" data-value="ファミリークローゼット">👔 ファミリークローゼット</button>
+              <button type="button" class="fp-tag-btn" data-value="小上がり畳">🍵 小上がり畳コーナー</button>
+              <button type="button" class="fp-tag-btn" data-value="独立書斎">💻 テレワーク・独立書斎</button>
+              <button type="button" class="fp-tag-btn" data-value="土間リビング">🚪 土間リビング・土間収納</button>
+              <button type="button" class="fp-tag-btn" data-value="アイランドキッチン">🍳 アイランドキッチン</button>
+              <button type="button" class="fp-tag-btn" data-value="ランドリールーム">🧺 室内干しランドリールーム</button>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-top: 2.5rem;">
+            <button type="button" id="btn-start-ai-chat" class="btn btn-primary" style="padding: 1.1rem 3rem; font-size: 1.15rem; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);">
+              🔍 この条件でAIに間取りを選別してもらう（無料） →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2: AI MATCHED RECOMMENDATION CARDS (3選比較パネル) -->
+      <div id="fp-step2-container" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; background: #ffffff; padding: 0.8rem 1.4rem; border-radius: 10px; border: 1px solid #cbd5e1;">
+          <button type="button" id="btn-back-to-step1" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.88rem;">
+            ← 条件を選び直す
+          </button>
+          <div style="font-size: 0.92rem; color: #1e293b; font-weight: 700;" id="fp-selected-summary-text">
+            選択条件: 平屋 ｜ 26〜30坪 ｜ 子育て世帯（3〜4人）
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 1.8rem;">
+          <span style="background: #e0f2fe; color: #0284c7; font-weight: 800; padding: 4px 14px; border-radius: 14px; font-size: 0.85rem;">
+            🎯 AI MATCHING RESULT
+          </span>
+          <h2 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 1.75rem; margin-top: 0.5rem;">
+            あなたの条件に合致する「おすすめ間取り3選」
+          </h2>
+          <p style="color: #64748b; font-size: 0.95rem;">
+            気になる間取りを1つ選んでください。そのプランをベースにAIチャットで「あーでもないこーでもない」と自由に改変できます。
+          </p>
+        </div>
+
+        <!-- 最有力プラン大画面フィーチャー（スライダー・フロア切替・仕様パネル） -->
+        <div id="fp-step2-featured-hero" class="fp-hero-featured-box" style="margin-bottom: 2.5rem;">
+          <!-- JSで動的にレンダリング -->
+        </div>
+
+        <div style="margin: 2rem 0 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+          <h3 style="font-size: 1.2rem; font-weight: 800; color: #0f172a; margin: 0;">
+            その他の厳選候補プラン（全323プランより選別）
+          </h3>
+          <span style="font-size: 0.8rem; color: #64748b;">
+            カードをタップすると上記の大画面スライダーと比較仕様が切り替わります
+          </span>
+        </div>
+
+        <!-- 3 Matched Plan Cards Container -->
+        <div id="fp-matched-cards-grid" class="grid-3" style="gap: 1.5rem; margin-bottom: 2rem;">
+          <!-- Dynamically populated from API /api/floorplan/match -->
+        </div>
+      </div>
+
+      <!-- STEP 3: BASE PLAN DETAIL & "あーでもないこーでもない" AI REMIX CHAT -->
+      <div id="fp-step3-container" style="display: none;">
+        
+        <!-- Navigation bar to Step 2 -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; background: #ffffff; padding: 0.8rem 1.4rem; border-radius: 10px; border: 1px solid #cbd5e1;">
+          <button type="button" id="btn-back-to-step2" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.88rem;">
+            ← おすすめ一覧（3選）に戻る
+          </button>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span id="fp-current-plan-title-bar" style="font-weight: 800; color: #0284c7; font-size: 0.95rem;">
+              選択中: 陽だまりの中庭テラスを囲む平屋
+            </span>
+            <button type="button" id="btn-sync-to-perspective" class="btn btn-primary" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800; font-size: 0.85rem; padding: 0.4rem 1rem;">
+              🎨 この間取りでパースを作る →
+            </button>
+          </div>
+        </div>
+
+        <!-- Studio Grid: Left Chat Panel & Right Live Floor Plan Viewer -->
+        <div class="fp-studio-grid">
+        
+        <!-- Left: AI Architect Conversational Chat Panel -->
+        <div class="fp-chat-card">
+          <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 0.8rem; margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h3 style="font-size: 1.15rem; color: var(--primary-green-dark); font-family: var(--font-heading);">💬 間取りチャット相談</h3>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">チャットで部屋の追加・広さの変更を指示</div>
+            </div>
+            <span style="font-size: 0.75rem; background: #e0f2fe; border: 1px solid #38bdf8; color: #0369a1; font-weight: 700; padding: 2px 8px; border-radius: 12px;">
+              ⚡ 即時再作図
+            </span>
+          </div>
+
+          <!-- Chat History -->
+          <div id="fp-chat-history" class="fp-chat-history">
+            <!-- Dynamically populated -->
+          </div>
+
+          <!-- Quick Suggestion Chips -->
+          <div style="font-size: 0.8rem; color: #64748b; font-weight: 700; margin-top: 6px;">💡 ワンタップで間取りを変更してみる:</div>
+          <div id="fp-chat-chips" class="fp-chips-box">
+            <!-- Chips populated dynamically -->
+          </div>
+
+          <!-- Chat Input Form -->
+          <form id="fp-chat-form" style="display: flex; gap: 8px; margin-top: 6px;">
+            <input type="text" id="fp-chat-input" class="form-input" placeholder="例: LDKを広くして、和室とパントリーを追加したい" required style="font-size: 0.92rem; padding: 0.75rem;" />
+            <button type="submit" id="fp-chat-send-btn" class="btn btn-primary" style="white-space: nowrap; padding: 0.75rem 1.4rem; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff;">
+              送信 ✈️
+            </button>
+          </form>
+        </div>
+
+        <!-- Right: Live Vector Floor Plan Display & 3D BIM Actions -->
+        <div>
+          <!-- Plan Meta Header -->
+          <div style="background: #ffffff; border: 1px solid #cbd5e1; padding: 1.2rem 1.5rem; border-radius: var(--radius-lg); margin-bottom: 1.2rem; box-shadow: var(--shadow-card);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <span class="badge-number" id="res-plan-type" style="background: #0284c7;">自由設計プラン</span>
+                <h2 id="res-plan-title" style="font-family: var(--font-heading); color: #0f172a; font-size: 1.35rem; margin-top: 4px;">理想の間取りプラン</h2>
+                <div style="font-size: 0.9rem; color: var(--text-muted);" id="res-plan-specs">
+                  延床面積: 34.0坪 (112.4㎡) ｜ 4LDK
+                </div>
+              </div>
+              <!-- Floor Switching Tabs (B1F, 1F, 2F, 3F, PH) -->
+              <div id="fp-floor-tabs" style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <!-- Dynamically generated floor buttons -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 2D SVG Canvas Display -->
+          <div id="fp-svg-viewport" style="background: #ffffff; border: 2px solid #0284c7; border-radius: var(--radius-lg); padding: 1rem; box-shadow: var(--shadow-card); overflow: auto; text-align: center; min-height: 480px; display: flex; align-items: center; justify-content: center;">
+            <div style="color: #64748b; font-size: 1.05rem;">
+              ⏳ 間取り図面を準備しています...
+            </div>
+          </div>
+
+          <!-- Room Specifications List for Current Level -->
+          <div style="margin-top: 1.8rem;">
+            <h4 style="color: var(--primary-green-dark); font-family: var(--font-heading); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px;">
+              <span>📋</span> <span id="res-rooms-floor-label">選択中フロア</span> の寸法・仕上げ建材詳細一覧
+            </h4>
+            <div id="res-rooms-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
+              <!-- Dynamic Room Cards -->
+            </div>
+          </div>
+
+          <!-- Export & Integration Actions -->
+          <div style="margin-top: 2rem; background: #f0fdf4; border: 2px solid var(--accent-green); padding: 1.8rem; border-radius: var(--radius-lg); text-align: center;">
+            <h3 style="color: #065f46; font-family: var(--font-heading); font-size: 1.35rem; margin-bottom: 0.4rem;">
+              ✨ 間取りプランの確定 ＆ 3D BIM (IFC) 出力
+            </h3>
+            <p style="color: #047857; margin-bottom: 1.2rem; font-size: 0.95rem;">
+              地下1階から屋上PHまで、全フロアの壁・スラブ立体情報を内包した国際標準規格 ISO-10303-21 (IFC2X3) ファイルを出力できます。RevitやArchiCAD等で即座に3Dモデル化が可能です。
+            </p>
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+              <button id="btn-download-ifc" class="btn btn-primary" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-size: 1rem;">
+                📥 3D BIM (全階IFCファイル) をダウンロード (Revit/ArchiCAD互換)
+              </button>
+              <button id="btn-save-plan-mypage" class="btn btn-secondary" style="background: #1e293b; color: #fff; font-size: 0.95rem;">
+                💾 この間取りをマイページに保存・建築士に相談
+              </button>
+              <button class="btn btn-secondary" data-target="scent-experience" style="background: #d97706; color: #fff; border: none; font-size: 0.95rem;">
+                🌿 リアル展示場で本物の寸法と香りを体感 →
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+      </div> <!-- /#floorplan-search-section-wrap -->
+
+            <div id="floorplan-bubble-studio-wrap" style="display: none;">
+        <div class="bubble-studio-container">
+
+          <!-- ========================================================
+               STEP 0: 敷地測量図アップロード ＆ 建設地都市計画・省エネ地域AI判定ゲート
+               （測量図・敷地条件がないとはみ出し判定ができないため、初期必須ステップ）
+               ======================================================== -->
+          <div id="bubble-site-gate-wrap" class="bubble-gate-card">
+            <!-- 🎈 たたき台プラン引き継ぎ案内バナー (AI検索から作図へ移動時に表示) -->
+            <div id="bubble-gate-tataki-banner" style="display: none; background: #fffbeb; border: 2px solid #f59e0b; border-radius: 12px; padding: 12px 18px; margin-bottom: 1.5rem; text-align: left; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.12);">
+              <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 0.95rem; color: #b45309;">
+                <span style="font-size: 1.3rem;">🎈</span>
+                <span>参考プラン <span id="bubble-gate-tataki-title" style="color: #92400e; text-decoration: underline;"></span> をたたき台として引き継ぎました！</span>
+              </div>
+              <p style="margin: 6px 0 0 28px; font-size: 0.84rem; color: #78350f; line-height: 1.6;">
+                まずは実際の建設地の住所・測量図から建物枠を割り出します。チャットヒアリング後に、このプランの部屋構成がバブルキャンバス上に初期展開されます。
+              </p>
+            </div>
+
+            <div class="bubble-gate-header">
+              <span class="bubble-gate-step-badge">📐 STEP 0 ｜ 敷地測量図の読込 ＆ 建設地AI判定</span>
+              <h2 style="color: #0f172a; font-size: 1.6rem; font-weight: 900; margin: 4px 0 6px 0;">
+                まずは敷地測量図と建設地から、建物の「最大外郭枠」を割り出します
+              </h2>
+              <p style="color: #475569; font-size: 0.92rem; margin: 0; max-width: 820px; margin-left: auto; margin-right: auto; line-height: 1.7;">
+                敷地の測量図をアップロード（またはカメラ撮影）し、建設地の住所をご入力ください。<br>
+                Gemini AIが<strong>地積測量図の境界寸法を読み取り、省エネ地域区分・都市計画（用途地域・建ぺい率・容積率）を自動判定</strong>してマイカルテに登録。<br>
+                <strong>民法境界離隔65cm</strong>と<strong>駐車計画（軽/普通/大型）</strong>を差し引いた正確な「建物最大外郭枠」を自動生成します。
+              </p>
+            </div>
+
+            <div class="bubble-gate-grid">
+              <!-- 左カラム: 測量図アップロード ＆ 建設地住所入力 -->
+              <div class="bubble-gate-box">
+                <div style="font-size: 0.95rem; font-weight: 800; color: #0284c7; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                  <span>📁</span> ① 敷地測量図のアップロード（カメラ撮影可）
+                </div>
+
+                <!-- アップロードドロップゾーン -->
+                <div id="bubble-survey-dropzone" class="bubble-upload-zone">
+                  <div style="font-size: 2.2rem; margin-bottom: 6px;">📷 / 📄</div>
+                  <strong style="color: #0369a1; font-size: 0.92rem; display: block; margin-bottom: 4px;">
+                    測量図（地積測量図・求積図・公図）をここにドロップ
+                  </strong>
+                  <span style="font-size: 0.78rem; color: #64748b;">
+                    またはクリックしてファイル選択（JPG, PNG, PDF対応・スマホカメラ起動可）
+                  </span>
+                  <input type="file" id="bubble-survey-file-input" accept="image/*,application/pdf" style="display: none;" />
+                </div>
+
+                <!-- サンプル測量図ボタン群（手元にないユーザー向け） -->
+                <div style="margin-bottom: 1.2rem;">
+                  <div style="font-size: 0.76rem; font-weight: 700; color: #64748b; margin-bottom: 6px;">
+                    💡 お手元に測量図がない方はサンプルで即座に体験できます：
+                  </div>
+                  <div id="bubble-sample-buttons-wrap" style="display: flex; gap: 6px; flex-wrap: wrap;">
+                    <button type="button" class="btn btn-sm btn-sample-survey active" data-sample="sample_50_south" style="background: #0284c7; color: #ffffff; border: 1px solid #0284c7; font-size: 0.75rem; font-weight: 800; padding: 4px 8px; border-radius: 6px;">
+                      📋 50坪整形地 (南道路)
+                    </button>
+                    <button type="button" class="btn btn-sm btn-sample-survey" data-sample="sample_30_square" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; font-size: 0.75rem; font-weight: 700; padding: 4px 8px; border-radius: 6px;">
+                      📋 30坪正方形地 (10m×10m・南道路)
+                    </button>
+                    <button type="button" class="btn btn-sm btn-sample-survey" data-sample="sample_40_north" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; font-size: 0.75rem; font-weight: 700; padding: 4px 8px; border-radius: 6px;">
+                      📋 40坪コンパクト地 (北道路)
+                    </button>
+                    <button type="button" class="btn btn-sm btn-sample-survey" data-sample="sample_65_east" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; font-size: 0.75rem; font-weight: 700; padding: 4px 8px; border-radius: 6px;">
+                      📋 65坪ゆったり地 (東道路)
+                    </button>
+                  </div>
+                </div>
+
+                <!-- プレビュー表示 -->
+                <div id="bubble-survey-preview-wrap" style="display: none;" class="bubble-survey-preview-box">
+                  <img id="bubble-survey-preview-img" src="" alt="測量図プレビュー" class="bubble-survey-preview-img" />
+                  <span id="bubble-survey-preview-status" style="position: absolute; bottom: 8px; left: 8px; background: rgba(15,23,42,0.85); color: #38bdf8; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px;">
+                    ⚡ Gemini Vision 解析完了: 敷地面積 165.3㎡ (50.0坪) 検出
+                  </span>
+                </div>
+
+                <!-- 建設地住所入力 -->
+                <div style="margin-top: 1rem; border-top: 1px solid #e2e8f0; padding-top: 1rem;">
+                  <label style="font-size: 0.85rem; font-weight: 800; color: #1e293b; display: block; margin-bottom: 6px;">
+                    🏠 ② 建設地住所の入力（省エネ地域区分・都市計画を自動取得）：
+                  </label>
+                  <div style="display: flex; gap: 8px;">
+                    <input type="text" id="gate-site-address" class="form-input" placeholder="例: 埼玉県鶴ヶ島市町屋176" value="埼玉県鶴ヶ島市町屋" style="font-size: 0.88rem; padding: 0.6rem 0.8rem;" />
+                    <button type="button" id="btn-gate-lookup-address" class="btn btn-primary" style="white-space: nowrap; font-size: 0.82rem; background: #0284c7; padding: 0.6rem 1rem;">
+                      自動判定 🔍
+                    </button>
+                  </div>
+
+                  <!-- 自動判定結果表示バッジ -->
+                  <div id="gate-urban-result-box" style="margin-top: 10px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 12px; font-size: 0.78rem; line-height: 1.7; color: #334155;">
+                    <div>・建設地: <strong id="gate-res-address">埼玉県鶴ヶ島市町屋</strong></div>
+                    <div>・省エネ地域区分: <strong id="gate-res-climate" style="color: #0284c7;">6地域</strong> ｜ 用途地域: <strong id="gate-res-zone" style="color: #065f46;">無指定 (市街化調整区域)</strong></div>
+                    <div>・建ぺい率: <strong id="gate-res-kenpei">60%</strong> ｜ 容積率: <strong id="gate-res-youseki">200%</strong> ｜ 防火指定: <strong id="gate-res-fire">法22条区域外 (指定なし)</strong></div>
+                    <div>・敷地面積: <strong id="gate-res-tsubo">50.0 坪</strong> (165.3㎡) ｜ 最大建築可能面積: <strong id="gate-res-max-build" style="color: #d97706;">30.0 坪 (99.2㎡)</strong></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 右カラム: Gemini道路・駐車計画ヒアリング対話チャット -->
+              <div class="bubble-gate-box">
+                <div style="font-size: 0.95rem; font-weight: 800; color: #0284c7; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+                  <span style="display: flex; align-items: center; gap: 8px;">
+                    <span>🤖</span> ③ Gemini設計士の道路・配置ヒアリング
+                  </span>
+                  <span style="font-size: 0.72rem; background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 12px; font-weight: 700;">
+                    対話で外郭枠確定
+                  </span>
+                </div>
+
+                <div id="gate-chat-history" class="bubble-gate-chat-history">
+                  <div class="bubble-gate-chat-bubble ai">
+                    測量図を読み取りました！図面から判別しづらい<strong>「道路の接道方位」</strong>と<strong>「お車の駐車計画」</strong>を確認させてください。建物の大枠（最大建築可能エリア）を正確に割り出します。
+                  </div>
+                  <div class="bubble-gate-chat-bubble ai">
+                    <strong>Q1: 敷地の接道方位（道路がある方角）はどちらですか？</strong>
+                  </div>
+                </div>
+
+                <!-- クイック選択チップス -->
+                <div id="gate-chat-chips" class="bubble-gate-chips">
+                  <!-- JSで動的生成 -->
+                </div>
+
+                <!-- 確定ボタン（チャット回答完了まで非活性化・ロック） -->
+                <div style="margin-top: 1rem; border-top: 1px solid #e2e8f0; padding-top: 1rem; text-align: center;">
+                  <button type="button" id="btn-gate-confirm-and-start" class="btn" disabled style="width: 100%; justify-content: center; background: #94a3b8; color: #ffffff; font-weight: 900; font-size: 0.95rem; padding: 0.9rem; border-radius: 10px; border: none; opacity: 0.6; cursor: not-allowed; transition: all 0.3s ease;">
+                    🔒 チャットでヒアリングに回答すると確定ボタンが押せます
+                  </button>
+                  <div style="font-size: 0.72rem; color: #64748b; margin-top: 6px;">
+                    ※ヒアリング回答後、敷地情報・都市計画データが自動的に「マイカルテ」に登録されます
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========================================================
+               MAIN WORKSPACE: Bubble Plan 作図・シミュレーション本体
+               （STEP 0確定後に展開。敷地枠内でバブルを直線矩形でレイアウト）
+               ======================================================== -->
+          <div id="bubble-main-workspace" style="display: none;">
+
+          <!-- Header Bar: 概算見積もり ＆ 性能・仕様バッジ ＆ 家族招待・AI問診 -->
+          <div class="bubble-header-card">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap;">
+                <span style="font-size: 1.4rem;">🎈</span>
+                <h3 style="color: #065f46; font-size: 1.25rem; font-weight: 900; margin: 0;">
+                  Bubble Plan — 家族でつくる直感間取りシミュレーター
+                </h3>
+
+                <button type="button" id="btn-reopen-site-gate" class="btn btn-sm" style="background: #ffffff; color: #0284c7; border: 1px solid #bae6fd; font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; cursor: pointer;">
+                  🔄 敷地・測量図を変更
+                </button>
+              </div>
+              <p style="color: #047857; font-size: 0.85rem; margin: 0 0 8px 0;">
+                測量図から割り出した建物最大外郭枠の中で、部屋ブロック（直線矩形）を直感レイアウト！
+              </p>
+              <!-- AI問診 & シークレット要望 & マイカルテ アクションボタン群 -->
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" id="btn-open-bubble-lifestyle-modal" class="btn btn-sm" style="background: #0284c7; color: #fff; font-weight: 800; font-size: 0.8rem; border-radius: 8px; padding: 5px 12px; border: none; cursor: pointer;">
+                  💬 AI問診チャットで自動作図
+                </button>
+                <button type="button" id="btn-open-bubble-secret-modal" class="btn btn-sm" style="background: #f59e0b; color: #0f172a; font-weight: 800; font-size: 0.8rem; border-radius: 8px; padding: 5px 12px; border: none; cursor: pointer;">
+                  🤫 夫婦シークレット要望(秘匿入力)
+                </button>
+                <button type="button" id="btn-open-my-carte-modal" class="btn btn-sm" style="background: #10b981; color: #fff; font-weight: 800; font-size: 0.8rem; border-radius: 8px; padding: 5px 12px; border: none; cursor: pointer;">
+                  📋 マイカルテを見る (<span id="carte-badge-count">0</span>件)
+                </button>
+              </div>
+            </div>
+
+            <!-- Realtime Cost & Spec Badges -->
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <div class="bubble-metrics-badge">
+                <span class="bubble-metrics-label">📐 想定延床面積</span>
+                <span class="bubble-metrics-val" id="bubble-total-tsubo" style="color: #0284c7;">32.5 坪</span>
+                <span style="font-size: 0.72rem; color: #64748b;" id="bubble-total-sqm">107.4 ㎡</span>
+              </div>
+              <div class="bubble-metrics-badge">
+                <span class="bubble-metrics-label">💰 建物本体概算 (税込)</span>
+                <span class="bubble-metrics-val" id="bubble-est-price" style="color: #d97706;">約 2,795 万円</span>
+                <span style="font-size: 0.72rem; color: #059669;" id="bubble-current-tier-spec">住ま居る標準 (HEAT20 G2.5)</span>
+              </div>
+              <div class="bubble-metrics-badge">
+                <span class="bubble-metrics-label">✨ AI動線スコア</span>
+                <span class="bubble-metrics-val" id="bubble-ai-score" style="color: #10b981;">94 点</span>
+                <span style="font-size: 0.72rem; color: #64748b;">家事ラク・回遊高評価</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 断熱等性能等級別の標準価格（目安）セレクター ＆ 5段階比較カード (HEAT20 G2.5を等級6と7の間に配置) -->
+          <div class="bubble-insulation-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+              <div>
+                <strong style="color: #0369a1; font-size: 0.95rem;">🌡️ 断熱材・省エネ等級別の標準価格（目安・税込本体価格）</strong>
+                <span style="font-size: 0.78rem; color: #64748b; margin-left: 8px;">タップして等級ごとの坪単価と概算見積もりを瞬時に比較できます</span>
+              </div>
+              <span style="font-size: 0.75rem; background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; padding: 2px 8px; border-radius: 6px; font-weight: 700;">
+                ★ 住ま居る標準（断熱材基準：付加断熱40mm＋樹脂トリプルサッシ ｜ HEAT20 G2.5・耐震等級3）
+              </span>
+            </div>
+
+            <!-- 5段階グリッド: 等級4 / 等級5 / 等級6 / ★住ま居る標準(G2.5) / 等級7(G3) -->
+            <div class="bubble-insulation-grid">
+              <!-- 等級4 -->
+              <div class="bubble-insulation-tier" data-tier="grade4" data-tsubo="680000">
+                <div class="bubble-insulation-tier-title">
+                  <span>等級4 (省エネ)</span>
+                  <span style="font-size: 0.75rem; color: #64748b;">坪68万〜</span>
+                </div>
+                <div class="bubble-insulation-tier-price" id="price-tier-grade4">約 2,210 万円</div>
+                <div class="bubble-insulation-tier-desc">平成28年基準・アルミ樹脂複合複層 (Ua値0.87)</div>
+              </div>
+              <!-- 等級5 (ZEH) -->
+              <div class="bubble-insulation-tier" data-tier="grade5" data-tsubo="740000">
+                <div class="bubble-insulation-tier-title">
+                  <span>等級5 (ZEH)</span>
+                  <span style="font-size: 0.75rem; color: #64748b;">坪74万〜</span>
+                </div>
+                <div class="bubble-insulation-tier-price" id="price-tier-grade5">約 2,405 万円</div>
+                <div class="bubble-insulation-tier-desc">ZEH水準・高性能グラスウール (Ua値0.60)</div>
+              </div>
+              <!-- 等級6 (HEAT20 G2) -->
+              <div class="bubble-insulation-tier" data-tier="grade6" data-tsubo="820000">
+                <div class="bubble-insulation-tier-title">
+                  <span>等級6 (HEAT20 G2)</span>
+                  <span style="font-size: 0.75rem; color: #64748b;">坪82万〜</span>
+                </div>
+                <div class="bubble-insulation-tier-price" id="price-tier-grade6">約 2,665 万円</div>
+                <div class="bubble-insulation-tier-desc">樹脂サッシ＋充填断熱 (Ua値0.46)</div>
+              </div>
+              <!-- ★ 住ま居る標準仕様 (HEAT20 G2.5) -->
+              <div class="bubble-insulation-tier recommended active" data-tier="grade_g25" data-tsubo="860000">
+                <div class="bubble-insulation-tier-title">
+                  <span style="color: #065f46; font-weight: 900;">★住ま居る標準 (G2.5)</span>
+                  <span style="font-size: 0.75rem; color: #059669; font-weight: 800;">坪86万〜</span>
+                </div>
+                <div class="bubble-insulation-tier-price" id="price-tier-grade_g25" style="color: #047857;">約 2,795 万円</div>
+                <div class="bubble-insulation-tier-desc" style="color: #065f46; font-weight: 700;">樹脂トリプル＋付加断熱40mm (Ua値0.32・C値0.3) ｜ 許容応力度計算耐震等級3</div>
+              </div>
+              <!-- 等級7 (HEAT20 G3 / 最高峰) -->
+              <div class="bubble-insulation-tier" data-tier="grade7" data-tsubo="920000">
+                <div class="bubble-insulation-tier-title">
+                  <span>等級7 (HEAT20 G3)</span>
+                  <span style="font-size: 0.75rem; color: #64748b;">坪92万〜</span>
+                </div>
+                <div class="bubble-insulation-tier-price" id="price-tier-grade7">約 2,990 万円</div>
+                <div class="bubble-insulation-tier-desc">樹脂トリプル＋付加断熱100mm (Ua値0.23)</div>
+              </div>
+            </div>
+
+            <!-- 見積もり注記: 設備機器別途 ＆ 吹き抜け3/4・バルコニー1/2・ウッドデッキ1/4（延床面積非算入） -->
+            <div class="bubble-estimate-note-badge">
+              <span>⚠️</span>
+              <span><strong>【見積もりの明示事項】</strong> 上記は建物本体工事の概算（税込）です。吹き抜け・勾配天井（坪単価の3/4）、バルコニー（坪単価の1/2）、ウッドデッキ（坪単価の1/4）は法定延床面積には加算せず予算按分で計上。設備機器（キッチン・風呂・洗面・トイレ等）および屋外給排水工事、地盤改良工事、諸経費は別途となります。</span>
+            </div>
+          </div>
+
+          <!-- 敷地・都市計画確定情報バー (民法離隔 ＆ 狭小地20cm許容 ＆ 道路側20cm標準) -->
+          <div class="bubble-site-bar">
+            <div class="bubble-site-control-group">
+              <strong style="color: #0369a1; font-size: 0.88rem; display: flex; align-items: center; gap: 6px;">
+                <span>🏞️</span> 敷地・離隔距離スペック:
+              </strong>
+              <span id="bubble-spec-badge-site" style="background: #ffffff; border: 1px solid #cbd5e1; padding: 3px 8px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; color: #1e293b;">
+                敷地 50.0坪 ｜ 南道路6.0m ｜ 道路離隔: 20cm標準
+              </span>
+              <span id="bubble-spec-badge-urban" style="background: #ecfdf5; border: 1px solid #a7f3d0; padding: 3px 8px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; color: #065f46;">
+                無指定 (市街化調整区域) ｜ 建60%/容200% ｜ 法22条区域外
+              </span>
+              <!-- 境界離隔距離の切替セレクト -->
+              <label style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.78rem; font-weight: 700; color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca; padding: 2px 8px; border-radius: 6px;">
+                <span>隣地境界離隔:</span>
+                <select id="bubble-select-boundary-margin" style="font-size: 0.76rem; font-weight: 800; border: 1px solid #f87171; border-radius: 4px; background: #fff; padding: 1px 4px; color: #b91c1c;">
+                  <option value="650" selected>65cm (民法50cm+柱壁厚14cm標準)</option>
+                  <option value="500">50cm (民法基準ジャスト)</option>
+                  <option value="300">30cm (ゆとり狭小地)</option>
+                  <option value="200">20cm (狭小地ギリギリ・最大幅重視)</option>
+                </select>
+              </label>
+            </div>
+
+            <div style="font-size: 0.78rem; color: #0284c7; font-weight: 700;" id="bubble-building-max-size-label">
+              🔒 道路側離隔20cm ＋ 隣地離隔を引いた「建物最大外郭枠」内で部屋ブロックが動きます
+            </div>
+          </div>
+
+          <!-- Floor & Golden Pattern Toolbar -->
+          <div class="bubble-toolbar">
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+              <!-- Floor Tabs (1F / 2F / 3F / PH) -->
+              <div class="bubble-floor-tabs">
+                <button type="button" class="bubble-floor-tab active" data-floor="1">
+                  🏠 1階
+                </button>
+                <button type="button" class="bubble-floor-tab" data-floor="2">
+                  🛏️ 2階
+                </button>
+                <button type="button" class="bubble-floor-tab" data-floor="3">
+                  🌳 3階
+                </button>
+                <button type="button" class="bubble-floor-tab" data-floor="4">
+                  ☀️ PH(塔屋)
+                </button>
+              </div>
+              <span id="bubble-floor-breakdown" style="font-size: 0.8rem; font-weight: 700; color: #64748b;">
+                1F: 19.5坪 ｜ 2F: 13.0坪
+              </span>
+            </div>
+
+            <!-- 表示モード切替 ＆ 🪄 建築グリッド自動整形ボタン -->
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <!-- 描画モード切替 (バブル / 矩形) -->
+              <div style="display: inline-flex; background: #e2e8f0; border-radius: 8px; padding: 2px;">
+                <button type="button" id="btn-mode-bubble-view" class="btn btn-sm active" style="font-size: 0.74rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; background: #0284c7; color: #fff; border: none; cursor: pointer;">
+                  🔘 バブル(重なり・凸凹許容)
+                </button>
+                <button type="button" id="btn-mode-rect-view" class="btn btn-sm" style="font-size: 0.74rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; background: transparent; color: #475569; border: none; cursor: pointer;">
+                  🟦 矩形(設計ブロック)
+                </button>
+              </div>
+
+              <!-- 🪄 建築グリッド自動整形ボタン -->
+              <button type="button" id="btn-auto-grid-align" class="btn btn-sm" style="font-size: 0.76rem; font-weight: 900; background: linear-gradient(135deg, #f59e0b, #d97706); color: #0f172a; padding: 5px 12px; border-radius: 8px; border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.15); cursor: pointer;" title="重なり合ったバブルの広さと位置を汲み取り、227.5mmモジュールの四角形に整流します">
+                🪄 建築グリッドへ自動整形
+              </button>
+
+              <!-- Golden Pattern Selector & External JSON Load -->
+              <select id="bubble-pattern-select" class="form-select" style="font-size: 0.78rem; padding: 0.35rem 0.6rem; font-weight: 700; border-radius: 8px; border: 1.5px solid #0284c7; background: #f0f9ff;">
+                <option value="kaiyu" selected>🌀 家事ラク回遊コア</option>
+                <option value="three_story_ph">🏙️ 3階建て＋PH（ルーフバルコニー）</option>
+                <option value="hiraya">🏡 ワンフロア平屋（28坪）</option>
+                <option value="living_center">🌸 南面大開口LDK＋和室</option>
+                <option value="telework_kosodate">💻 共働きテレワーク動線</option>
+              </select>
+              <button type="button" id="btn-import-golden-pattern" class="btn btn-secondary btn-sm" style="font-size: 0.72rem; padding: 0.35rem 0.6rem; font-weight: 700; background: #ffffff; border: 1.5px dashed #0284c7; color: #0284c7; cursor: pointer;" title="実務設計士の黄金パターンJSONファイルを読み込みます">
+                📂 JSON
+              </button>
+              <input type="file" id="bubble-file-golden-pattern" accept=".json" style="display: none;" />
+
+              <!-- 💾 途中保存 ＆ 📂 続きを復元 (翌日以降も継続) -->
+              <div style="display: inline-flex; gap: 4px;">
+                <button type="button" id="btn-save-plan-progress" class="btn btn-sm" style="font-size: 0.74rem; padding: 0.35rem 0.65rem; font-weight: 800; background: #ecfdf5; border: 1.5px solid #10b981; color: #065f46; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 4px;" title="現在の間取り検討状況をブラウザに途中保存します（翌日以降も再開可能）">
+                  <span>💾</span>
+                  <span>途中保存</span>
+                </button>
+                <button type="button" id="btn-restore-plan-progress" class="btn btn-sm" style="font-size: 0.74rem; padding: 0.35rem 0.65rem; font-weight: 800; background: #eff6ff; border: 1.5px solid #3b82f6; color: #1e40af; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 4px;" title="前回保存した間取りデータを復元して続きから再開します">
+                  <span>📂</span>
+                  <span>続きを復元</span>
+                </button>
+              </div>
+
+              <!-- 📋 マイカルテ (保存した参考図・カタログ・要望) -->
+              <button type="button" id="btn-open-my-carte" class="btn btn-sm" style="font-size: 0.76rem; padding: 0.35rem 0.75rem; font-weight: 800; background: #fef08a; border: 1.5px solid #ca8a04; color: #854d0e; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);" title="保存した設計参考図、カタログ、端末写真をまとめて確認できます">
+                <span>📋 マイカルテ</span>
+                <span id="my-carte-badge-count" style="background: #eab308; color: #ffffff; padding: 0 6px; border-radius: 999px; font-size: 0.68rem; font-weight: 900;">0</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 💡 前回保存データの復元通知バナー (自動検知で表示) -->
+          <div id="bubble-saved-progress-banner" style="display: none; background: #ecfdf5; border: 1.5px solid #10b981; border-radius: 10px; padding: 8px 14px; margin-bottom: 10px; justify-content: space-between; align-items: center; font-size: 0.78rem; color: #065f46;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 1.1rem;">💡</span>
+              <span>前回の途中保存データが見つかりました（<b id="saved-progress-time-text">--/-- --:--</b> 保存）。続きから再開しますか？</span>
+            </div>
+            <div style="display: flex; gap: 6px;">
+              <button type="button" id="btn-banner-restore-yes" class="btn btn-sm" style="background: #059669; color: #ffffff; font-weight: 800; padding: 3px 10px; border-radius: 6px; border: none; cursor: pointer;">前回の続きを再開 ➔</button>
+              <button type="button" id="btn-banner-restore-dismiss" class="btn btn-sm" style="background: transparent; color: #64748b; font-size: 0.75rem; border: none; cursor: pointer;">閉じる</button>
+            </div>
+          </div>
+
+          <!-- 🧭 素人でも迷わない！間取り計画 優先決定ステップナビ (①②④⑤③順) -->
+          <div class="bubble-step-nav-bar" id="bubble-step-nav-bar">
+            <div style="display: flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 900; color: #0369a1;">
+              <span>🧭 決定順ナビ:</span>
+            </div>
+            <!-- ① 駐車場 -->
+            <div class="bubble-step-item" id="step-nav-car" data-step="1" title="敷地前面に車を置いて、建物の最大外郭枠を確定します">
+              <span class="step-num">①</span>
+              <span>🚗 駐車場(車配置)</span>
+              <span class="step-status" id="step-status-car">⚪未</span>
+            </div>
+            <span class="bubble-step-arrow">➔</span>
+            <!-- ② 玄関 -->
+            <div class="bubble-step-item" id="step-nav-entrance" data-step="2" title="車や道路からのアプローチ動線を受けて、玄関の位置をFIXします">
+              <span class="step-num">②</span>
+              <span>🚪 玄関・アプローチ</span>
+              <span class="step-status" id="step-status-entrance">⚪未</span>
+            </div>
+            <span class="bubble-step-arrow">➔</span>
+            <!-- ④ 主空間 (1F LDK / 2Fリビング時は主寝室・水回り) -->
+            <div class="bubble-step-item" id="step-nav-ldk" data-step="4" title="玄関が決まったら、日当たりの良い南面・庭側に主たる大空間(LDK/居室)を大きくFIXします">
+              <span class="step-num">④</span>
+              <span id="step-nav-ldk-title">🛋️ LDK(日照・中心)</span>
+              <span class="step-status" id="step-status-ldk">⚪未</span>
+            </div>
+            <span class="bubble-step-arrow">➔</span>
+            <!-- ⑤ 各室＆インナーコーナー -->
+            <div class="bubble-step-item" id="step-nav-rooms" data-step="5" title="水回り・各個室、そしてLDK内の書斎・家事兼用コーナーを配置します">
+              <span class="step-num">⑤</span>
+              <span>🧺 各室＆インナーコーナー</span>
+              <span class="step-status" id="step-status-rooms">⚪未</span>
+            </div>
+            <span class="bubble-step-arrow">➔</span>
+            <!-- ③ 階段室 (ホール階段 / LDK内リビング階段) -->
+            <div class="bubble-step-item" id="step-nav-stairs" data-step="3" title="全体の広がりを見定めて、ホールまたはLDK内に階段室(縦動線コア)をFIXします">
+              <span class="step-num">③</span>
+              <span id="step-nav-stairs-title">🪜 階段室(ホール/LDK内)</span>
+              <span class="step-status" id="step-status-stairs">⚪未</span>
+            </div>
+          </div>
+
+          <!-- 🎈 隙間が出たときのバルーン自動充填・使いこなしガイド -->
+          <div style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 1.5px solid #86efac; border-radius: 10px; padding: 8px 14px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);">
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: #166534; font-weight: 700;">
+              <span style="font-size: 1.2rem;">🎈</span>
+              <span><strong>【隙間・デッドスペースが出たときのコツ】</strong> 広げたい部屋（LDKや収納・ホール等）をクリックして、操作欄の<strong>「🎈 ↔ 隣の隙間に合わせて膨らませる」</strong>を押すと、バルーンのように隙間を心地よく埋められます！</span>
+            </div>
+            <span style="background: #dcfce7; color: #15803d; font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 12px; border: 1px solid #86efac;">
+              📐 建築モジュール(227.5mm単位)連動
+            </span>
+          </div>
+
+          <!-- Main Interactive Simulation Canvas & Palette Grid -->
+          <div class="bubble-main-grid">
+            
+            <!-- 上部: 全体幅のフルワイド作図キャンバス (スマホ・PC対応) -->
+            <div class="bubble-canvas-wrapper" id="bubble-plan-canvas-wrap">
+              <canvas id="bubble-plan-canvas"></canvas>
+              <!-- Canvas Guide Badge -->
+              <div style="position: absolute; bottom: 10px; left: 12px; right: 12px; background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(4px); color: #38bdf8; padding: 6px 12px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; pointer-events: none; border: 1px solid #0284c7; text-align: center; display: flex; justify-content: space-between; align-items: center;">
+                <span>👆 部屋を配置！隙間が出たら部屋をタップ ➔【🎈 ↔ 隣の隙間に合わせて膨らませる】でデッドスペースを自在に吸収できます</span>
+                <span id="bubble-autosave-indicator" style="color: #4ade80; font-size: 0.68rem; font-weight: 800;">⚡ 自動保存有効</span>
+              </div>
+            </div>
+
+            <!-- 下部: スマホ操作最適化 4分割設定パネルグリッド -->
+            <div class="bubble-settings-panels-grid">
+              
+              <!-- 【パネル1】🔍 選択中ブロック操作・インスペクター -->
+              <div class="bubble-inspect-card" id="inspect-panel-card">
+                <div style="font-size: 0.82rem; font-weight: 800; color: #0284c7; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
+                  <span id="inspect-card-title">🔍 選択中のブロック</span>
+                  <span id="inspect-node-floor" style="background: #e0f2fe; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem;">1階</span>
+                </div>
+                
+                <div id="inspect-empty-notice" style="color: #94a3b8; font-size: 0.76rem; text-align: center; padding: 1.5rem 0;">
+                  上の図面で部屋ブロックや車をタップすると<br>寸法調整・FIX固定・切り抜き参考図が表示されます
+                </div>
+
+                <!-- 部屋ブロック操作パネル -->
+                <div id="inspect-control-box" style="display: none;">
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+                    <span id="inspect-node-name" style="font-size: 1rem; font-weight: 900; color: #0f172a;">LDK</span>
+                    <span id="inspect-node-tatami" style="font-size: 0.82rem; font-weight: 800; color: #0284c7;">16.0 帖</span>
+                  </div>
+
+                  <!-- 2F階段ロック注意書き (上階の階段位置は下階にFIXして動かせない) -->
+                  <div id="inspect-stair-lock-notice" style="display: none; background: #fef2f2; border: 1.5px solid #ef4444; border-radius: 8px; padding: 6px 8px; margin-bottom: 6px; font-size: 0.7rem; color: #991b1b; font-weight: 700; line-height: 1.4;">
+                    🔒 <b>下階階段位置と完全同期・固定中</b><br>
+                    階層間の縦動線を一致させるため、上階の階段は下階の位置に完全ロックされています（位置変更は1階で行ってください）。
+                  </div>
+
+                  <!-- 📌 位置FIXトグルボタン -->
+                  <div style="margin-bottom: 6px;">
+                    <button type="button" id="btn-node-fix-toggle" class="btn btn-sm" style="width: 100%; font-size: 0.75rem; font-weight: 800; padding: 5px; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 4px; background: #f1f5f9; border: 1.5px solid #cbd5e1; color: #334155; cursor: pointer;">
+                      <span id="node-fix-icon">📌</span>
+                      <span id="node-fix-text">この部屋の位置をFIX(固定ロック)</span>
+                    </button>
+                  </div>
+
+                  <!-- 🛋️ LDKインナーコーナー / WIC内包案内 -->
+                  <div id="inspect-inner-corner-notice" style="display: none; background: #ecfdf5; border: 1.5px solid #10b981; border-radius: 8px; padding: 6px 8px; margin-bottom: 6px; font-size: 0.7rem; color: #065f46; font-weight: 700;">
+                    <span id="inspect-inner-corner-text">💡 親室内に内包されています（床面積の二重計上なし）</span>
+                  </div>
+                  
+                  <!-- 🎈 バルーン隙間吸収・自動拡張ボタン (ユーザーが広げたい部屋を選んで自在に膨らませる) -->
+                  <div style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 1.5px solid #86efac; border-radius: 8px; padding: 6px 8px; margin-bottom: 8px;">
+                    <button type="button" id="btn-node-auto-expand" class="btn btn-sm" style="width: 100%; font-size: 0.78rem; font-weight: 900; padding: 6px; border-radius: 6px; background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; border: none; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                      <span>🎈 ↔ 隣の隙間に合わせて膨らませる</span>
+                    </button>
+                    <div style="font-size: 0.68rem; color: #166534; font-weight: 700; text-align: center; margin-top: 4px; line-height: 1.4;">
+                      💡 隙間（デッドスペース）に向けて部屋をバルーンのように自動充填！<br>
+                      （タップするごとに建築モジュール227.5mmずつ心地よく膨らみます）
+                    </div>
+                  </div>
+
+                  <!-- Adjust Tatami Buttons -->
+                  <div style="display: flex; gap: 4px; margin-bottom: 6px;">
+                    <button type="button" id="btn-node-tatami-minus" class="btn btn-secondary btn-sm" style="flex: 1; font-weight: 800; padding: 4px; font-size: 0.72rem;">➖ 0.5帖縮小</button>
+                    <button type="button" id="btn-node-tatami-plus" class="btn btn-primary btn-sm" style="flex: 1; font-weight: 800; background: #0284c7; padding: 4px; font-size: 0.72rem;">➕ 0.5帖拡大</button>
+                  </div>
+
+                  <!-- 実寸モジュール寸法（間口幅・奥行）の自由変更コントロール (227.5mm単位) -->
+                  <div style="background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px 8px; margin-bottom: 6px;">
+                    <div style="font-size: 0.7rem; font-weight: 800; color: #334155; margin-bottom: 4px; display: flex; justify-content: space-between;">
+                      <span>📐 寸法(227.5mm単位)</span>
+                      <span id="inspect-node-dimensions-text" style="color: #0284c7; font-weight: 800;">7.28m × 4.55m</span>
+                    </div>
+                    <!-- 幅調整 -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                      <span style="font-size: 0.7rem; color: #475569; font-weight: 700;">幅:</span>
+                      <div style="display: flex; gap: 2px; align-items: center;">
+                        <button type="button" id="btn-node-w-minus" class="btn btn-secondary btn-sm" style="padding: 1px 5px; font-size: 0.7rem; font-weight: 800;">-227.5</button>
+                        <input type="number" id="input-node-w-mm" step="227.5" min="455" max="15000" style="width: 68px; text-align: center; font-size: 0.75rem; font-weight: 800; padding: 1px; border: 1px solid #cbd5e1; border-radius: 4px;" />
+                        <span style="font-size: 0.65rem; color: #64748b;">mm</span>
+                        <button type="button" id="btn-node-w-plus" class="btn btn-secondary btn-sm" style="padding: 1px 5px; font-size: 0.7rem; font-weight: 800;">+227.5</button>
+                      </div>
+                    </div>
+                    <!-- 奥行調整 -->
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                      <span style="font-size: 0.7rem; color: #475569; font-weight: 700;">奥行:</span>
+                      <div style="display: flex; gap: 2px; align-items: center;">
+                        <button type="button" id="btn-node-d-minus" class="btn btn-secondary btn-sm" style="padding: 1px 5px; font-size: 0.7rem; font-weight: 800;">-227.5</button>
+                        <input type="number" id="input-node-d-mm" step="227.5" min="455" max="15000" style="width: 68px; text-align: center; font-size: 0.75rem; font-weight: 800; padding: 1px; border: 1px solid #cbd5e1; border-radius: 4px;" />
+                        <span style="font-size: 0.65rem; color: #64748b;">mm</span>
+                        <button type="button" id="btn-node-d-plus" class="btn btn-secondary btn-sm" style="padding: 1px 5px; font-size: 0.7rem; font-weight: 800;">+227.5</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 🧲 境界線・壁際に寄せる指示ボタン群 -->
+                  <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 4px 6px; margin-bottom: 6px;">
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;">
+                      <button type="button" id="btn-snap-north" class="btn btn-secondary btn-sm" style="font-size: 0.65rem; padding: 3px 1px; font-weight: 700;">⬆ 北寄</button>
+                      <button type="button" id="btn-snap-south" class="btn btn-secondary btn-sm" style="font-size: 0.65rem; padding: 3px 1px; font-weight: 700;">⬇ 南寄</button>
+                      <button type="button" id="btn-snap-west" class="btn btn-secondary btn-sm" style="font-size: 0.65rem; padding: 3px 1px; font-weight: 700;">⬅ 西寄</button>
+                      <button type="button" id="btn-snap-east" class="btn btn-secondary btn-sm" style="font-size: 0.65rem; padding: 3px 1px; font-weight: 700;">➔ 東寄</button>
+                    </div>
+                  </div>
+
+                  <!-- 📷 設計参考図・ネタ帳切り抜き (オンデマンド表示) -->
+                  <div style="margin-bottom: 6px;">
+                    <button type="button" id="btn-show-architect-tip" class="btn btn-sm" style="width: 100%; font-size: 0.72rem; font-weight: 800; padding: 4px; border-radius: 6px; background: #f0f9ff; border: 1.5px dashed #0284c7; color: #0284c7; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                      <span>📷 この部屋の設計参考図・ネタ帳切り抜き</span>
+                    </button>
+                  </div>
+                  
+                  <div style="display: flex; gap: 4px;">
+                    <button type="button" id="btn-node-floor-switch" class="btn btn-secondary btn-sm" style="flex: 1; font-size: 0.7rem; padding: 4px;">階層移動(1F⇔2F)</button>
+                    <button type="button" id="btn-node-delete" class="btn btn-sm" style="flex: 1; font-size: 0.7rem; background: #fee2e2; color: #dc2626; border: 1px solid #f87171; padding: 4px;">🗑️ 削除</button>
+                  </div>
+                </div>
+
+                <!-- 車両ブロック操作パネル -->
+                <div id="inspect-car-control-box" style="display: none;">
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+                    <span id="inspect-car-name" style="font-size: 1rem; font-weight: 900; color: #0f172a;">🚗 普通車</span>
+                    <span id="inspect-car-dim" style="font-size: 0.78rem; font-weight: 800; color: #0284c7;">2.3m × 5.0m</span>
+                  </div>
+                  <div style="margin-bottom: 6px;">
+                    <button type="button" id="btn-car-fix-toggle" class="btn btn-sm" style="width: 100%; font-size: 0.75rem; font-weight: 800; padding: 5px; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 4px; background: #f1f5f9; border: 1.5px solid #cbd5e1; color: #334155; cursor: pointer;">
+                      <span id="car-fix-icon">📌</span>
+                      <span id="car-fix-text">この駐車位置をFIX(固定ロック)</span>
+                    </button>
+                  </div>
+                  <div style="display: flex; gap: 4px; margin-bottom: 6px;">
+                    <button type="button" id="btn-car-rotate" class="btn btn-secondary btn-sm" style="flex: 1; font-weight: 800; padding: 4px; font-size: 0.7rem;">🔄 縦/横回転</button>
+                    <button type="button" id="btn-car-builtin-toggle" class="btn btn-secondary btn-sm" style="flex: 1; font-weight: 800; padding: 4px; font-size: 0.7rem;">🏠 ビルトイン切替</button>
+                  </div>
+                  <button type="button" id="btn-car-delete" class="btn btn-sm" style="width: 100%; font-size: 0.7rem; background: #fee2e2; color: #dc2626; border: 1px solid #f87171; padding: 4px;">🗑️ 車両を削除</button>
+                </div>
+              </div>
+
+              <!-- 【パネル2】🛁 住宅設備機器パレット (大手メーカー規格寸法で直接配置！) -->
+              <div class="bubble-setting-card" style="border: 1.5px solid #86efac; background: #f0fdf4;">
+                <div>
+                  <div style="font-size: 0.82rem; font-weight: 900; color: #166534; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center;">
+                    <span>🛁 住宅設備機器パレット</span>
+                    <span style="font-size: 0.68rem; background: #fef08a; border: 1px solid #facc15; padding: 1px 6px; border-radius: 4px; color: #854d0e; font-weight: 800;">📐 矩形化後に配置</span>
+                  </div>
+                  <div style="font-size: 0.68rem; color: #15803d; margin-bottom: 6px;">
+                    ※バブルプランを「建築グリッドへ自動整形（矩形化）」した後に標準寸法の設備を直接配置できます
+                  </div>
+                  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px;">
+                    <button type="button" class="btn btn-sm btn-place-equipment" data-type="kitchen" data-preset="i2550" style="background: #ffffff; border: 1px solid #86efac; color: #166534; font-size: 0.7rem; font-weight: 800; padding: 5px 3px; text-align: left; line-height: 1.2;">
+                      🍳 キッチン I型2550<br><span style="font-size: 0.62rem; color: #15803d;">2550×650mm</span>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-place-equipment" data-type="kitchen" data-preset="l2550" style="background: #ffffff; border: 1px solid #86efac; color: #166534; font-size: 0.7rem; font-weight: 800; padding: 5px 3px; text-align: left; line-height: 1.2;">
+                      🍳 キッチン L型<br><span style="font-size: 0.62rem; color: #15803d;">2550×1800mm</span>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-place-equipment" data-type="bath" data-preset="ub1616" style="background: #ffffff; border: 1px solid #86efac; color: #166534; font-size: 0.7rem; font-weight: 800; padding: 5px 3px; text-align: left; line-height: 1.2;">
+                      🛁 UB 1616 (1坪)<br><span style="font-size: 0.62rem; color: #15803d;">1820×1820mm</span>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-place-equipment" data-type="bath" data-preset="ub1620" style="background: #ffffff; border: 1px solid #86efac; color: #166534; font-size: 0.7rem; font-weight: 800; padding: 5px 3px; text-align: left; line-height: 1.2;">
+                      🛁 UB 1620 (1.25坪)<br><span style="font-size: 0.62rem; color: #15803d;">1820×2275mm</span>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-place-equipment" data-type="washroom" data-preset="w750" style="background: #ffffff; border: 1px solid #86efac; color: #166534; font-size: 0.7rem; font-weight: 800; padding: 5px 3px; text-align: left; line-height: 1.2;">
+                      🪞 洗面台 1ボウル<br><span style="font-size: 0.62rem; color: #15803d;">W750×D550mm</span>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-place-equipment" data-type="washroom" data-preset="w1600" style="background: #ffffff; border: 1px solid #86efac; color: #166534; font-size: 0.7rem; font-weight: 800; padding: 5px 3px; text-align: left; line-height: 1.2;">
+                      🪞 洗面 2ボウル<br><span style="font-size: 0.62rem; color: #15803d;">W1600×D550mm</span>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-place-equipment" data-type="toilet" data-preset="tankless_std" style="background: #ffffff; border: 1px solid #86efac; color: #166534; font-size: 0.7rem; font-weight: 800; padding: 5px 3px; text-align: left; line-height: 1.2;">
+                      🚽 タンクレス標準<br><span style="font-size: 0.62rem; color: #15803d;">910×1820mm(0.5坪)</span>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-place-equipment" data-type="toilet" data-preset="tankless_compact" style="background: #ffffff; border: 1px solid #86efac; color: #166534; font-size: 0.7rem; font-weight: 800; padding: 5px 3px; text-align: left; line-height: 1.2;">
+                      🚽 手洗い別省スペース<br><span style="font-size: 0.62rem; color: #15803d;">850×1365mm(0.4坪)</span>
+                    </button>
+                    <!-- 🔥 バイオエタノール暖炉 (Table 5) -->
+                    <button type="button" class="btn btn-sm btn-place-equipment" data-type="equipment" data-preset="bio_fireplace" style="background: #fff7ed; border: 1.5px solid #fb923c; color: #c2410c; font-size: 0.7rem; font-weight: 800; padding: 5px 3px; text-align: left; line-height: 1.2; grid-column: span 2;">
+                      🔥 バイオエタノール暖炉 (煙突不要・煤ゼロ・西川材空間の癒やし)<br><span style="font-size: 0.62rem; color: #ea580c;">間口910×奥行455mm ｜ 周囲500mm不燃壁仕上げ</span>
+                    </button>
+                  </div>
+                </div>
+                <div style="font-size: 0.66rem; color: #166534; margin-top: 6px; padding-top: 4px; border-top: 1px dashed #86efac;">
+                  ※配置後もインスペクターで+227.5mm単位の微調整が可能です
+                </div>
+              </div>
+
+              <!-- 【パネル3】🛋️ 居室・LDK・WICパレット (主寝室・洋室へのWIC内包対応！) -->
+              <div class="bubble-setting-card" style="border: 1.5px solid #fcd34d; background: #fffbeb;">
+                <div>
+                  <div style="font-size: 0.82rem; font-weight: 900; color: #92400e; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center;">
+                    <span>🛋️ 居室・LDK・WICパレット</span>
+                    <span style="font-size: 0.68rem; background: #fef3c7; padding: 1px 6px; border-radius: 4px; color: #b45309; font-weight: 800;">WIC内包対応</span>
+                  </div>
+                  <div style="font-size: 0.68rem; color: #b45309; margin-bottom: 6px;">
+                    WIC・書斎・家事は寝室やLDK内に重ね合わせて内包できます
+                  </div>
+                  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px;">
+                    <button type="button" class="btn-add-bubble" data-type="living" data-name="大空間LDK" data-tatami="16" data-color="#fb923c" style="font-size: 0.7rem; padding: 4px;">
+                      <span class="bubble-color-dot" style="background: #fb923c;"></span> LDK(+16帖)
+                    </button>
+                    <button type="button" class="btn-add-bubble" data-type="private" data-name="主寝室" data-tatami="8" data-color="#818cf8" style="font-size: 0.7rem; padding: 4px;">
+                      <span class="bubble-color-dot" style="background: #818cf8;"></span> 主寝室(+8帖)
+                    </button>
+                    <button type="button" class="btn-add-bubble" data-type="private" data-name="洋室・子ども部屋" data-tatami="5" data-color="#facc15" style="font-size: 0.7rem; padding: 4px;">
+                      <span class="bubble-color-dot" style="background: #facc15;"></span> 洋室(+5帖)
+                    </button>
+                    <button type="button" class="btn-add-bubble" data-type="japanese" data-name="和室・タタミ" data-tatami="4.5" data-color="#4ade80" style="font-size: 0.7rem; padding: 4px;">
+                      <span class="bubble-color-dot" style="background: #4ade80;"></span> 和室(+4.5帖)
+                    </button>
+
+                    <!-- 👗 WIC（ウォークインクローゼット）主寝室・洋室への内包ボタン -->
+                    <button type="button" class="btn btn-sm btn-add-wic-room" data-tatami="3.0" data-wmm="1820" data-hmm="2730" style="background: #fdf2f8; border: 1.5px solid #ec4899; color: #be185d; font-size: 0.7rem; font-weight: 800; padding: 4px; text-align: left; line-height: 1.2;">
+                      👗 WIC (3帖)<br><span style="font-size: 0.62rem; color: #db2777;">寝室内に内包可能</span>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-add-wic-room" data-tatami="2.0" data-wmm="1820" data-hmm="1820" style="background: #fdf2f8; border: 1.5px solid #ec4899; color: #be185d; font-size: 0.7rem; font-weight: 800; padding: 4px; text-align: left; line-height: 1.2;">
+                      👗 WIC (2帖)<br><span style="font-size: 0.62rem; color: #db2777;">省スペース内包</span>
+                    </button>
+
+                    <!-- LDKインナーコーナー -->
+                    <button type="button" class="btn btn-sm btn-add-inner-corner" data-type="corner_den" data-name="💻 夫の書斎" data-tatami="1.5" data-color="#38bdf8" data-wmm="1365" data-hmm="1820" style="background: #ffffff; border: 1px solid #fcd34d; color: #92400e; font-size: 0.68rem; font-weight: 700; padding: 4px; text-align: left;">
+                      💻 夫の書斎 (+1.5帖)
+                    </button>
+                    <button type="button" class="btn btn-sm btn-add-inner-corner" data-type="corner_housework" data-name="🧺 妻の家事コーナー" data-tatami="1.5" data-color="#ec4899" data-wmm="1365" data-hmm="1820" style="background: #ffffff; border: 1px solid #fcd34d; color: #92400e; font-size: 0.68rem; font-weight: 700; padding: 4px; text-align: left;">
+                      🧺 妻の家事 (+1.5帖)
+                    </button>
+                    <button type="button" class="btn btn-sm btn-add-inner-corner" data-type="corner_shared" data-name="🤝 夫婦兼用コーナー" data-tatami="2.5" data-color="#10b981" data-wmm="1820" data-hmm="2275" style="background: #ecfdf5; border: 1.5px solid #10b981; color: #065f46; font-size: 0.7rem; font-weight: 800; padding: 4px; text-align: left; grid-column: span 2;">
+                      🤝 夫婦兼用ワークコーナー (書斎×家事シェア +2.5帖)
+                    </button>
+
+                    <button type="button" class="btn-add-bubble" data-type="entrance" data-name="玄関・土間" data-tatami="2.0" data-color="#7dd3fc" style="font-size: 0.7rem; padding: 4px;">
+                      <span class="bubble-color-dot" style="background: #7dd3fc;"></span> 玄関(+2帖)
+                    </button>
+                    <button type="button" class="btn-add-bubble" data-type="circulation" data-name="階段" data-tatami="2.0" data-color="#94a3b8" data-wmm="1820" data-hmm="1820" style="font-size: 0.7rem; padding: 4px;">
+                      <span class="bubble-color-dot" style="background: #94a3b8;"></span> 階段室(+2帖)
+                    </button>
+
+                    <!-- 🌾 住ま居る黄金則 特殊空間ブロック群 (Table 1〜7) -->
+                    <button type="button" class="btn-add-bubble" data-type="japanese" data-name="小上がり畳(下部収納付)" data-tatami="4.5" data-color="#4ade80" data-wmm="2730" data-hmm="2730" style="background: #f0fdf4; border: 1.5px solid #22c55e; color: #15803d; font-size: 0.68rem; font-weight: 800; padding: 4px; text-align: left; line-height: 1.2;">
+                      🌾 小上がり畳(収納付)<br><span style="font-size: 0.6rem; color: #16a34a;">4.5帖(H350引出)</span>
+                    </button>
+                    <button type="button" class="btn-add-bubble" data-type="sanitary" data-name="室内干しランドリールーム" data-tatami="2.0" data-color="#2dd4bf" data-wmm="1820" data-hmm="1820" style="background: #f0fdfa; border: 1.5px solid #14b8a6; color: #0f766e; font-size: 0.68rem; font-weight: 800; padding: 4px; text-align: left; line-height: 1.2;">
+                      🧺 室内干しランドリー<br><span style="font-size: 0.6rem; color: #0d9488;">2.0帖(家事楽0歩)</span>
+                    </button>
+                    <button type="button" class="btn-add-bubble" data-type="entrance" data-name="土間SIC(2way玄関)" data-tatami="2.0" data-color="#38bdf8" data-wmm="1820" data-hmm="1820" style="background: #f0f9ff; border: 1.5px solid #0284c7; color: #0369a1; font-size: 0.68rem; font-weight: 800; padding: 4px; text-align: left; line-height: 1.2;">
+                      👞 土間SIC(2way玄関)<br><span style="font-size: 0.6rem; color: #0284c7;">2.0帖(家族/来客分離)</span>
+                    </button>
+                    <button type="button" class="btn-add-bubble" data-type="garden" data-name="尺庭(90cm反射光)" data-tatami="1.0" data-color="#34d399" data-wmm="910" data-hmm="1820" style="background: #ecfdf5; border: 1.5px solid #10b981; color: #065f46; font-size: 0.68rem; font-weight: 800; padding: 4px; text-align: left; line-height: 1.2;">
+                      🌿 尺庭(90cm反射光)<br><span style="font-size: 0.6rem; color: #059669;">1.0帖(北側・密集採光)</span>
+                    </button>
+                    <button type="button" class="btn-add-bubble" data-type="outdoor" data-name="西川材ウッドデッキ" data-tatami="3.0" data-color="#d97706" data-wmm="2730" data-hmm="1820" style="background: #fffbeb; border: 1.5px solid #f59e0b; color: #b45309; font-size: 0.68rem; font-weight: 800; padding: 4px; text-align: left; line-height: 1.2; grid-column: span 2;">
+                      🪵 西川材ウッドデッキ (天然木・フラット段差ゼロ・深庇1200mm +3.0帖)
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 【パネル4】🚗 駐車場・外構・自由部屋パレット -->
+              <div class="bubble-setting-card" style="border: 1.5px solid #cbd5e1; background: #f8fafc;">
+                <div>
+                  <div style="font-size: 0.82rem; font-weight: 900; color: #1e293b; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center;">
+                    <span>🚗 駐車場・外構・自由作成</span>
+                    <span id="bubble-car-count-badge" style="font-size: 0.68rem; background: #e2e8f0; padding: 1px 6px; border-radius: 4px; color: #475569; font-weight: 800;">車 0台</span>
+                  </div>
+                  
+                  <!-- 車両追加 -->
+                  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; margin-bottom: 6px;">
+                    <button type="button" class="btn btn-sm btn-add-car" data-car="standard" style="background: #ffffff; border: 1px solid #cbd5e1; color: #1e293b; font-size: 0.68rem; font-weight: 700; padding: 4px;">
+                      🚗 普通車 (2.3×5m)
+                    </button>
+                    <button type="button" class="btn btn-sm btn-add-car" data-car="compact" style="background: #ffffff; border: 1px solid #cbd5e1; color: #1e293b; font-size: 0.68rem; font-weight: 700; padding: 4px;">
+                      🚙 軽 (2.2×3.6m)
+                    </button>
+                    <button type="button" class="btn btn-sm btn-add-car" data-car="large" style="background: #ffffff; border: 1px solid #cbd5e1; color: #1e293b; font-size: 0.68rem; font-weight: 700; padding: 4px;">
+                      🚐 SUV (2.5×5.8m)
+                    </button>
+                    <button type="button" class="btn btn-sm btn-add-car" data-car="builtin" style="background: #ecfdf5; border: 1px solid #059669; color: #065f46; font-size: 0.68rem; font-weight: 800; padding: 4px;">
+                      🏠 ビルトイン
+                    </button>
+                  </div>
+
+                  <!-- バルコニー・吹き抜け -->
+                  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; margin-bottom: 6px;">
+                    <button type="button" class="btn-add-bubble" data-type="outdoor" data-name="2Fバルコニー" data-tatami="2.0" data-color="#38bdf8" data-floor="2" style="font-size: 0.68rem; padding: 4px;">
+                      <span class="bubble-color-dot" style="background: #38bdf8;"></span> バルコニー(+2帖)
+                    </button>
+                    <button type="button" class="btn-add-bubble" data-type="void" data-name="吹き抜け" data-tatami="4.0" data-color="#e0e7ff" style="font-size: 0.68rem; padding: 4px;">
+                      <span class="bubble-color-dot" style="background: #6366f1;"></span> 吹き抜け(+4帖)
+                    </button>
+                  </div>
+
+                  <!-- 自由な部屋名・帖数で追加 -->
+                  <div style="border-top: 1px dashed #cbd5e1; padding-top: 6px;">
+                    <div style="display: flex; gap: 4px; margin-bottom: 4px; align-items: center;">
+                      <input type="text" id="custom-room-name" placeholder="部屋名 (例: 防音室)" style="flex: 2; font-size: 0.72rem; padding: 3px 5px; border: 1px solid #cbd5e1; border-radius: 4px;" />
+                      <input type="number" id="custom-room-tatami" placeholder="帖数" value="3.0" step="0.5" min="0.5" max="30" style="width: 48px; font-size: 0.72rem; padding: 3px; border: 1px solid #cbd5e1; border-radius: 4px; text-align: center;" />
+                      <span style="font-size: 0.68rem; color: #64748b;">帖</span>
+                    </div>
+                    <button type="button" id="btn-add-custom-room" class="btn btn-sm" style="width: 100%; font-size: 0.72rem; font-weight: 800; background: #0284c7; color: #fff; padding: 4px; border-radius: 4px;">
+                      ➕ 自由作成した部屋を追加
+                    </button>
+                  </div>
+                </div>
+
+                <!-- AI Dynamic Feedback -->
+                <div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid #e2e8f0; font-size: 0.68rem; color: #166534; line-height: 1.4;">
+                  <span style="font-weight: 800;">🤖 AI動線診断:</span>
+                  <div id="bubble-ai-advices-list">配置に合わせて自動診断中</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- BOTTOM ACTION: Save to Carte & Seamless Transfer to 3D CAD Modeller -->
+          <div class="bubble-transfer-banner">
+            <div>
+              <div style="font-size: 1.15rem; font-weight: 900; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
+                <span>✨</span> 理想の間取りがまとまったら：パース生成 ＆ マイカルテに保存！
+              </div>
+              <p style="font-size: 0.85rem; margin: 0; opacity: 0.95;">
+                確定した外郭枠と部屋ブロックから建築基準寸法（壁芯・柱逃げ）の3Dモデラーへ転送してリアルパース生成。カルテに保存して家族で比較できます。
+              </p>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button type="button" id="btn-save-bubble-to-carte" class="btn" style="background: #ffffff; color: #0369a1; font-weight: 900; font-size: 0.95rem; padding: 0.85rem 1.4rem; border-radius: 12px; border: 2px solid #bae6fd; box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer;">
+                💾 この間取りをマイカルテに保存
+              </button>
+              <button type="button" id="btn-transfer-bubble-to-cad" class="btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #0f172a; font-weight: 900; font-size: 1rem; padding: 0.85rem 1.6rem; border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.25); cursor: pointer;">
+                📐 3Dモデラーへ転送してパースを生成する ➡️
+              </button>
+            </div>
+          </div>
+
+          </div> <!-- /#bubble-main-workspace -->
+
+        </div>
+      </div>
+          </div>
+        </div>
+      </div> <!-- /#floorplan-search-section-wrap -->
+
+    </section>
+
+    <!-- PAGE: 24/365 AI BUILDING PHYSICS & THERMAL ENVIRONMENT CONSULTATION (新設) -->
+    <!-- 旧簡易温熱セクションは最新の200問知見ボットスタジオへ統合移行完了 -->
+
+    <!-- PAGE 3: CRAFTSMANSHIP (お客様×大工さん×建築士の施工実例写真集) -->

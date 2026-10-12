@@ -1,0 +1,648 @@
+/* ========================================================
+   24h温熱換気・高気密高断熱専用AIボット & 200問知見スタジオ
+   thermal-bot.css
+   株式会社住ま居る / スマイチ
+======================================================== */
+
+/* ヒーローセクション */
+.thermal-bot-hero {
+  background: linear-gradient(135deg, #064e3b 0%, #0f172a 50%, #065f46 100%);
+  color: #fff;
+  padding: 3.5rem 1.5rem 2.5rem;
+  text-align: center;
+  border-radius: 1.5rem;
+  margin: 1.5rem auto 2.5rem;
+  max-width: 1200px;
+  box-shadow: 0 20px 40px -15px rgba(6, 78, 59, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.thermal-bot-hero::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 30%, rgba(16, 185, 129, 0.15), transparent 70%);
+  pointer-events: none;
+}
+
+.thermal-bot-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  color: #6ee7b7;
+  padding: 0.4rem 1.2rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.2rem;
+}
+
+.thermal-bot-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1.35;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.thermal-bot-title span.highlight {
+  color: #34d399;
+  display: inline-block;
+}
+
+.thermal-bot-subtitle {
+  color: #cbd5e1;
+  font-size: 1rem;
+  line-height: 1.8;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* フィルターバー & カテゴリタブ */
+.thermal-filter-bar {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  padding: 0 1rem;
+}
+
+.thermal-tabs-scroll {
+  display: flex;
+  gap: 0.6rem;
+  overflow-x: auto;
+  padding-bottom: 0.8rem;
+  scrollbar-width: thin;
+  scrollbar-color: #10b981 #f1f5f9;
+}
+
+.thermal-tabs-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.thermal-tabs-scroll::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 9999px;
+}
+.thermal-tabs-scroll::-webkit-scrollbar-thumb {
+  background: #10b981;
+  border-radius: 9999px;
+}
+
+.thermal-tab-pill {
+  flex-shrink: 0;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  padding: 0.6rem 1.2rem;
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.thermal-tab-pill:hover {
+  border-color: #10b981;
+  color: #065f46;
+  background: #f0fdf4;
+  transform: translateY(-1px);
+}
+
+.thermal-tab-pill.active {
+  background: linear-gradient(135deg, #059669, #10b981);
+  border-color: #059669;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+}
+
+/* 検索バー */
+.thermal-search-wrap {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  position: relative;
+}
+
+.thermal-search-input {
+  flex: 1;
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  padding: 0.85rem 1.2rem 0.85rem 2.8rem;
+  border-radius: 1rem;
+  font-size: 0.95rem;
+  color: #1e293b;
+  outline: none;
+  transition: all 0.2s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.thermal-search-input:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+}
+
+.thermal-search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 1.1rem;
+  pointer-events: none;
+}
+
+.thermal-consult-btn-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #059669, #0d9488);
+  color: #fff;
+  border: none;
+  padding: 0.85rem 1.5rem;
+  border-radius: 1rem;
+  font-size: 0.92rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+  white-space: nowrap;
+}
+
+.thermal-consult-btn-top:hover {
+  background: linear-gradient(135deg, #047857, #0f766e);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(13, 148, 136, 0.35);
+}
+
+/* 統計・状態表示 */
+.thermal-stats-bar {
+  max-width: 1200px;
+  margin: 0 auto 1.5rem;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+  color: #64748b;
+}
+
+/* Q&Aカードグリッド */
+.thermal-qa-grid {
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+  padding: 0 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.thermal-qa-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+}
+
+.thermal-qa-card:hover {
+  transform: translateY(-4px);
+  border-color: #34d399;
+  box-shadow: 0 16px 24px -6px rgba(16, 185, 129, 0.15);
+}
+
+.thermal-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.thermal-cat-tag {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.25rem 0.65rem;
+  border-radius: 0.5rem;
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.thermal-q-number {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 800;
+}
+
+.thermal-q-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.5;
+  margin-bottom: 0.8rem;
+}
+
+.thermal-short-ans {
+  font-size: 0.88rem;
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.thermal-dim-badge {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 0.6rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  color: #047857;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.thermal-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 0.8rem;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.thermal-source-badge {
+  color: #0284c7;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 180px;
+}
+
+.thermal-card-action {
+  color: #059669;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* 詳細モーダル */
+.thermal-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.thermal-modal-backdrop.active {
+  display: flex;
+}
+
+.thermal-modal-content {
+  background: #ffffff;
+  border-radius: 1.5rem;
+  max-width: 760px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  position: relative;
+  padding: 2.2rem;
+  animation: thermalModalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes thermalModalPop {
+  0% { transform: scale(0.95); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.thermal-modal-close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 9999px;
+  width: 2.4rem;
+  height: 2.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.thermal-modal-close:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.thermal-modal-body h2 {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1.4;
+  margin-bottom: 1.2rem;
+  padding-right: 2.5rem;
+}
+
+.thermal-section-block {
+  margin-bottom: 1.5rem;
+  background: #f8fafc;
+  border-radius: 1rem;
+  padding: 1.2rem;
+  border-left: 4px solid #10b981;
+}
+
+.thermal-section-block.principle {
+  border-left-color: #f59e0b;
+  background: #fffbeb;
+}
+
+.thermal-section-block h3 {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.thermal-section-block p {
+  font-size: 0.92rem;
+  color: #334155;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+.thermal-modal-footer-btn {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.8rem;
+}
+
+.thermal-consult-now-btn {
+  flex: 1;
+  background: linear-gradient(135deg, #059669, #0d9488);
+  color: #fff;
+  border: none;
+  padding: 1rem;
+  border-radius: 1rem;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+.thermal-consult-now-btn:hover {
+  background: linear-gradient(135deg, #047857, #0f766e);
+  transform: translateY(-2px);
+}
+
+/* チャットモーダル */
+.thermal-chat-box {
+  display: flex;
+  flex-direction: column;
+  height: min(620px, 70vh);
+}
+
+.thermal-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  background: #f8fafc;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e2e8f0;
+}
+
+.thermal-msg {
+  display: flex;
+  gap: 0.85rem;
+  max-width: 92%;
+  animation: thermalFadeIn 0.25s ease-out;
+}
+
+@keyframes thermalFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.thermal-msg.bot {
+  align-self: flex-start;
+}
+
+.thermal-msg.user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.thermal-msg-avatar {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+}
+
+.thermal-msg.user .thermal-msg-avatar {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.25);
+}
+
+.thermal-msg-bubble {
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.thermal-msg.bot .thermal-msg-bubble {
+  background: #ffffff;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+.thermal-msg.bot .thermal-reply-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 800;
+  color: #065f46;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.85rem;
+  font-size: 0.88rem;
+}
+
+.thermal-msg.bot .thermal-reply-section {
+  background: #f8fafc;
+  border-left: 4px solid #059669;
+  border-radius: 0.4rem;
+  padding: 0.7rem 0.9rem;
+  margin: 0.75rem 0;
+}
+
+.thermal-msg.bot .thermal-reply-section.highlight {
+  border-left-color: #0284c7;
+  background: #f0f9ff;
+}
+
+.thermal-msg.bot .thermal-reply-section.principle {
+  border-left-color: #f59e0b;
+  background: #fffbeb;
+}
+
+.thermal-msg.bot .thermal-reply-section h4 {
+  margin: 0 0 0.35rem 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.thermal-msg.bot .thermal-reply-section p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: #334155;
+  white-space: pre-wrap;
+}
+
+.thermal-msg.bot .thermal-reply-footer {
+  font-size: 0.8rem;
+  color: #64748b;
+  background: #f8fafc;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.4rem;
+  border: 1px solid #e2e8f0;
+  margin-top: 0.85rem;
+  line-height: 1.5;
+}
+
+.thermal-msg.user .thermal-msg-bubble {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: #ffffff;
+  font-weight: 500;
+  white-space: pre-wrap;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25);
+}
+
+/* ローディングドットアニメーション */
+.thermal-loading-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0;
+}
+
+.thermal-loading-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #059669;
+  animation: thermalPulse 1.2s infinite ease-in-out both;
+}
+
+.thermal-loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+.thermal-loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes thermalPulse {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1.1); opacity: 1; }
+}
+
+.thermal-chat-input-row {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.thermal-chat-input {
+  flex: 1;
+  border: 2px solid #cbd5e1;
+  border-radius: 0.85rem;
+  padding: 0.85rem 1.1rem;
+  outline: none;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+
+.thermal-chat-input:focus {
+  border-color: #059669;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.thermal-chat-send-btn {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: #fff;
+  border: none;
+  border-radius: 0.85rem;
+  padding: 0 1.6rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 6px rgba(5, 150, 105, 0.3);
+}
+
+.thermal-chat-send-btn:hover {
+  background: linear-gradient(135deg, #047857, #059669);
+  transform: translateY(-1px);
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+  .thermal-bot-title {
+    font-size: 1.6rem;
+  }
+  .thermal-qa-grid {
+    grid-template-columns: 1fr;
+  }
+  .thermal-search-wrap {
+    flex-direction: column;
+  }
+  .thermal-modal-content {
+    padding: 1.5rem;
+  }
+}

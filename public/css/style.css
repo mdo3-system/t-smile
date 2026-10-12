@@ -409,12 +409,40 @@ header {
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: #f8fafc;
+  color: #1e293b;
+  border: 1.5px solid #cbd5e1;
+  font-weight: 700;
 }
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: #e2e8f0;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+
+.hero-section.bg-dark .btn-secondary {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.pg-header-card .btn-secondary,
+.pg-showcase-box .btn-secondary,
+#floorplan-studio .btn-secondary,
+#floorplan-studio button.btn-secondary {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  border: 1.5px solid #cbd5e1 !important;
+  text-shadow: none !important;
+}
+
+.pg-header-card .btn-secondary:hover,
+.pg-showcase-box .btn-secondary:hover,
+#floorplan-studio .btn-secondary:hover,
+#floorplan-studio button.btn-secondary:hover {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+  border-color: #94a3b8 !important;
 }
 
 /* Statement Split Cards (Image + Text Side-by-Side) */
@@ -1729,12 +1757,18 @@ footer {
   color: #92400e;
 }
 
-.case-card-btn {
+.case-card-actions {
   margin-top: auto;
-  width: 100%;
-  padding: 0.65rem 0.8rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.case-card-btn {
+  flex: 1;
+  padding: 0.65rem 0.6rem;
   border-radius: 6px;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 700;
   border: 1px solid #cbd5e1;
   background: #f8fafc;
@@ -1744,6 +1778,29 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
+}
+
+.case-static-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0284c7;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.case-static-link:hover {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
 }
 
 .case-overview-card:hover .case-card-btn {
@@ -2164,7 +2221,7 @@ footer {
   }
 }
 
-/* Global Button Utilities & High Contrast White Text */
+/* Global Button Utilities */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -2175,13 +2232,12 @@ footer {
   text-decoration: none;
   border-radius: var(--radius-md);
   transition: all 0.25s ease;
-  color: #ffffff !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .btn-primary {
   background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
   color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .btn-primary:hover {
@@ -2189,6 +2245,19 @@ footer {
   color: #ffffff !important;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(27, 67, 50, 0.35);
+}
+
+.btn-secondary {
+  background: #f8fafc !important;
+  color: #1e293b !important;
+  border: 1.5px solid #cbd5e1 !important;
+  text-shadow: none !important;
+}
+
+.btn-secondary:hover {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+  border-color: #94a3b8 !important;
 }
 
 .case-cta-button:hover {
@@ -2260,4 +2329,123 @@ footer {
 .metaverse-deep-guide img:hover {
   transform: scale(1.02);
 }
+
+/* =========================================================
+   私のわがまま 俺のわがまま かなう家 (Wagama Showcase Cards)
+   ========================================================= */
+.wagama-card {
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+}
+
+.wagama-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
+  border-color: rgba(45, 106, 79, 0.35);
+}
+
+.wagama-card-thumb-wrap {
+  position: relative;
+  width: 100%;
+  height: 210px;
+  background: #0f172a;
+  overflow: hidden;
+}
+
+.wagama-card-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.wagama-card:hover .wagama-card-thumb {
+  transform: scale(1.05);
+}
+
+.wagama-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 12px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  border-radius: 20px;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.wagama-badge.ore {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+}
+
+.wagama-badge.watashi {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+}
+
+.wagama-badge.voice {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.wagama-card-body {
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.wagama-card-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 0.8rem;
+  line-height: 1.45;
+  font-family: var(--font-heading);
+}
+
+.wagama-speech-bubble {
+  position: relative;
+  background: #f8fafc;
+  border-left: 4px solid var(--primary-green);
+  padding: 0.85rem 1rem;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 1rem;
+  color: #334155;
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.wagama-speech-bubble::before {
+  content: '“';
+  font-family: serif;
+  font-size: 2rem;
+  color: rgba(45, 106, 79, 0.25);
+  position: absolute;
+  top: -4px;
+  left: 6px;
+  line-height: 1;
+}
+
+.wagama-craft-resolution {
+  margin-top: auto;
+  padding-top: 0.8rem;
+  border-top: 1px dashed #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.wagama-tab-btn.active {
+  box-shadow: 0 4px 14px rgba(45, 106, 79, 0.35);
+}
+
 

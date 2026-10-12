@@ -1,0 +1,104 @@
+
+  <!-- Header & Navigation (Two-Tier Compact Layout) -->
+  <header style="padding: 0.6rem 1.2rem;">
+    <div class="nav-container-twotier">
+      <!-- Tier 1: Brand & AI Services / Bots -->
+      <div class="nav-tier-top">
+        <div style="display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;">
+          <a href="#" class="logo" data-target="top">
+            <span>家づくりAIラボ</span>
+            <span class="logo-badge">by 住ま居る</span>
+          </a>
+          <div class="brand-cred-tag" style="display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.72rem; color: #cbd5e1; background: rgba(0, 0, 0, 0.28); border: 1px solid rgba(255, 255, 255, 0.15); padding: 2px 8px; border-radius: 4px;">
+            <span style="color: #38bdf8; font-weight: 700;">埼玉・鶴ヶ島IC 1h圏内</span>
+            <span style="opacity: 0.3;">|</span>
+            <span>創業30年・累計800棟</span>
+            <span style="opacity: 0.3;">|</span>
+            <span style="color: #6ee7b7;">般-8 第60650号</span>
+          </div>
+        </div>
+
+        <!-- AI Tools & Interactive Bots (Top Row) -->
+        <div class="nav-ai-suite">
+          <span class="nav-group-label" style="color: #fde68a;">🏡 理想を描くアトリエ（設計申込特典＆無料体験）:</span>
+          <ul class="nav-links-tier">
+            <li><a class="nav-link-btn highlight-sky" data-target="floorplan-studio">📐 AI間取り選別・作図</a></li>
+            <li><a class="nav-link-btn highlight-amber" data-target="ai-studio">🎨 理想パース工房</a></li>
+            <li><a class="nav-link-btn highlight-emerald" data-target="thermal-consultation">💬 24h温熱換気相談</a></li>
+            <li><a class="nav-link-btn highlight-purple" data-target="madori-consultation-bot" title="設計プロの知見200選 ＆ AI建築士なんでも深掘り相談">🤖 間取りなんでも相談</a></li>
+          </ul>
+        </div>
+
+        <!-- Mobile Hamburger Button -->
+        <button class="nav-toggle" id="nav-toggle" aria-label="メニュー切り替え">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <!-- Tier 2: Main Navigation & Showroom (Bottom Row) -->
+      <div class="nav-tier-bottom">
+        <ul class="nav-links-tier nav-main-links">
+          <li><a class="nav-link active" data-target="top">🏠 ホーム</a></li>
+          <li><a class="nav-link" href="/awards/kankyo-housing/" style="color: #fde68a; font-weight: 800; border: 1px solid rgba(245, 158, 11, 0.5); padding: 3px 10px; border-radius: 20px; background: rgba(180, 83, 9, 0.35);">🏆 埼玉県環境住宅賞実話</a></li>
+          <li><a class="nav-link" data-target="credlayer" style="color: #34d399; font-weight: 800; border: 1px solid rgba(52, 211, 153, 0.4); padding: 3px 10px; border-radius: 20px; background: rgba(6, 78, 59, 0.4);">🛡️ CredLayer (信頼実証)</a></li>
+          <li><a class="nav-link" data-target="article-feature" style="color: #f59e0b; font-weight: 800;">📖 手づくり住宅解体新書（全10章）</a></li>
+          <li><a class="nav-link" data-target="our-philosophy">🏛️ 私たちの家づくり（芳彩・かぐや）</a></li>
+          <li><a class="nav-link" data-target="craftsmanship">🔨 お客様×大工さん×建築士（施工実例）</a></li>
+          <li><a class="nav-link" data-target="metaverse">🌐 バーチャル展示場</a></li>
+          <li><a class="nav-link" data-target="scent-experience">🌿 リアル展示場体感</a></li>
+          <li><a class="nav-link carte-btn" id="nav-auth-btn" data-target="dashboard">👤 マイカルテ</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Overlay & Menu -->
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+  <aside class="mobile-drawer" id="mobile-drawer" aria-label="モバイルナビゲーション">
+    <ul class="mobile-drawer-links">
+      <li style="padding: 0.75rem 1rem 0.5rem; font-size: 0.76rem; color: #94a3b8; border-bottom: 1px solid rgba(255, 255, 255, 0.1); line-height: 1.5;">
+        🏛️ <strong style="color: #e2e8f0;">株式会社住ま居る</strong>（鶴ヶ島市）<br>
+        創業30年・累計800棟｜知事許可(般-8)第60650号
+      </li>
+      <li><a class="mobile-nav-link active" data-target="top">🏠 ホーム（高気密高断熱注文住宅）</a></li>
+      <li><a class="mobile-nav-link" href="/awards/kankyo-housing/" style="background: linear-gradient(135deg, #b45309, #d97706); color: #fff; font-weight: 800;">🏆 【受賞実話】埼玉県環境住宅賞</a></li>
+      <li><a class="mobile-nav-link highlight" data-target="credlayer" style="background: linear-gradient(135deg, #064e3b, #059669); color: #fff; font-weight: 800;">🛡️ CredLayer (信頼実証レイヤー)</a></li>
+      <li><a class="mobile-nav-link highlight" data-target="floorplan-studio">📐 AI間取り選別＆相談スタジオ</a></li>
+      <li><a class="mobile-nav-link highlight" data-target="ai-studio" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a;">🎨 AIフォトリアルパース工房</a></li>
+      <li><a class="mobile-nav-link highlight" data-target="thermal-consultation" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff;">💬 24時間365日 AI温熱・気密相談</a></li>
+      <li><a class="mobile-nav-link" data-target="article-feature" style="color: #f59e0b; font-weight: 700;">📖 手づくり住宅解体新書（全10章）</a></li>
+      <li><a class="mobile-nav-link" data-target="our-philosophy">🏛️ 私たちの家づくり（芳彩・かぐや）</a></li>
+      <li><a class="mobile-nav-link" data-target="metaverse">🌐 バーチャル展示場</a></li>
+      <li><a class="mobile-nav-link" data-target="scent-experience">🌿 リアル展示場体感予約</a></li>
+      <li><a class="mobile-nav-link" id="nav-auth-btn-mobile" data-target="dashboard">👤 マイページ・設計カルテ</a></li>
+    </ul>
+  </aside>
+
+  <!-- Mobile Thumb-Friendly Fixed Bottom Navigation -->
+  <nav class="mobile-bottom-bar" aria-label="クイック操作バー">
+    <a class="bottom-tab-btn active" data-target="top">
+      <span class="tab-icon">🏠</span>
+      <span>ホーム</span>
+    </a>
+    <a class="bottom-tab-btn" data-target="floorplan-studio" style="color: #38bdf8; font-weight: 800;">
+      <span class="tab-icon">📐</span>
+      <span>間取り</span>
+    </a>
+    <a class="bottom-tab-btn" data-target="ai-studio" style="color: #f59e0b; font-weight: 800;">
+      <span class="tab-icon">🎨</span>
+      <span>パース</span>
+    </a>
+    <a class="bottom-tab-btn" data-target="thermal-consultation" style="color: #10b981; font-weight: 800;">
+      <span class="tab-icon">💬</span>
+      <span>温熱AI</span>
+    </a>
+    <a class="bottom-tab-btn" data-target="article-feature" style="color: #f59e0b; font-weight: 800;">
+      <span class="tab-icon">📖</span>
+      <span>解体新書</span>
+    </a>
+  </nav>
+
+  <!-- Main Content Container -->
+  <main class="main-content">

@@ -1,0 +1,120 @@
+    <section id="ai-studio" class="page-section">
+      <div class="hero hero-soft-amber" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 40%, #ffffff 100%); border: 2px solid #fde68a; border-radius: 16px; padding: 2.5rem 2rem 2.2rem; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.08); text-align: center;">
+        <span class="hero-tag" style="background: #fef3c7; border: 1.5px solid #f59e0b; color: #b45309; font-weight: 800; font-size: 0.88rem; padding: 6px 18px; border-radius: 20px; display: inline-block; margin-bottom: 1rem;">
+          🎨 ArchiX / Renrery 参考 ｜ 会員登録不要・完全無料
+        </span>
+        <h1 class="hero-title" style="color: #0f172a; font-size: 2.2rem; font-weight: 900; line-height: 1.35; margin-bottom: 0.8rem;">
+          AIフォトリアルパース工房<br>
+          <span style="color: #d97706; font-size: 1.55rem; font-weight: 800; display: inline-block; margin-top: 0.3rem;">間取りがなくてもOK！空間・スタイルを選ぶだけで理想の邸宅を瞬時描画</span>
+        </h1>
+        <p class="hero-subtitle" style="color: #334155; font-size: 1.05rem; line-height: 1.85; max-width: 860px; margin: 0 auto; font-weight: 500;">
+          「間取りの前に、まずは自分の暮らしたいイメージを固めたい」「こんな空間に住みたいというワクワクを可視化したい」という方のために。<br>
+          空間の部位、デザインテイスト、光の表情を選ぶだけで、フォトリアルな4K建築パースを何枚でも無料で生成できます。
+        </p>
+      </div>
+
+      <!-- ArchiX Style Interactive Studio Card -->
+      <div class="card" style="max-width: 1080px; margin: 0 auto; background: #ffffff; border: 2px solid #f59e0b; border-radius: var(--radius-lg); padding: 2rem;">
+        
+        <!-- Tab Mode: いきなりパース作成 vs 間取り連動モード -->
+        <div style="display: flex; gap: 10px; margin-bottom: 1.8rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 1rem;">
+          <button type="button" id="archix-mode-preset" class="btn btn-primary" style="background: #f59e0b; color: #0f172a; font-weight: 800;">
+            ✨ ① いきなりパース作成（直感プリセット）
+          </button>
+          <button type="button" id="archix-mode-from-plan" class="btn btn-secondary" style="font-weight: 700;">
+            📐 ② 間取り図面からパースを生成する
+          </button>
+        </div>
+
+        <form id="archix-preset-form">
+          <!-- 1. 空間タイプの選択 -->
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label class="form-label" style="font-weight: 800; font-size: 1.05rem; display: flex; align-items: center; gap: 6px;">
+              <span>🏡</span> 1. 描きたい空間・部位を選択
+            </label>
+            <div class="fp-button-grid" id="archix-space-grid">
+              <button type="button" class="fp-choice-btn selected" data-space="facade">🏡 邸宅外観（ファサード）</button>
+              <button type="button" class="fp-choice-btn" data-space="ldk">🛋️ 吹き抜け大開口 LDK</button>
+              <button type="button" class="fp-choice-btn" data-space="kitchen">🍳 アイランド対面キッチン</button>
+              <button type="button" class="fp-choice-btn" data-space="bedroom">🛏️ ホテルライク主寝室</button>
+              <button type="button" class="fp-choice-btn" data-space="terrace">🌿 中庭・ウッドデッキテラス</button>
+              <button type="button" class="fp-choice-btn" data-space="bath">🛁 職人造作・リゾートバス</button>
+            </div>
+          </div>
+
+          <!-- 2. デザインスタイル -->
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label class="form-label" style="font-weight: 800; font-size: 1.05rem; display: flex; align-items: center; gap: 6px;">
+              <span>🎨</span> 2. インテリア＆建築スタイル（テイスト）
+            </label>
+            <div class="fp-button-grid" id="archix-style-grid">
+              <button type="button" class="fp-choice-btn selected" data-style="japandi">🌸 ジャパンディ（北欧×和の静謐）</button>
+              <button type="button" class="fp-choice-btn" data-style="scandi">🌲 北欧ナチュラル（明るい無垢木）</button>
+              <button type="button" class="fp-choice-btn" data-style="hotellike">🏛️ ホテルライク・グレージュモダン</button>
+              <button type="button" class="fp-choice-btn" data-style="japanese">🏯 数寄屋現代和モダン（杉・漆喰）</button>
+              <button type="button" class="fp-choice-btn" data-style="minimal">🍃 ミニマルリゾート（光と自然）</button>
+            </div>
+          </div>
+
+          <!-- 3. ライティング・時間帯 -->
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label class="form-label" style="font-weight: 800; font-size: 1.05rem; display: flex; align-items: center; gap: 6px;">
+              <span>☀️</span> 3. 光の演出・時間帯
+            </label>
+            <div class="fp-button-grid" id="archix-lighting-grid">
+              <button type="button" class="fp-choice-btn selected" data-lighting="daylight">☀️ 澄み渡る朝の自然光</button>
+              <button type="button" class="fp-choice-btn" data-lighting="soft">🌤️ 柔らかな午後の陽だまり</button>
+              <button type="button" class="fp-choice-btn" data-lighting="goldenhour">🌇 黄昏のトワイライト</button>
+              <button type="button" class="fp-choice-btn" data-lighting="night">🌙 温もりの間接照明・夜景</button>
+            </div>
+          </div>
+
+          <!-- 4. 自由プロンプト（任意） -->
+          <div class="form-group" style="margin-bottom: 1.8rem;">
+            <label class="form-label" style="font-weight: 700; font-size: 0.92rem; color: #475569;">
+              ✏️ こだわり条件の自由入力（任意）
+            </label>
+            <input type="text" id="archix-prompt-input" class="form-input" placeholder="例: 庭の緑が映えるピクチャーウインドウ、アイアンと古材のアクセント、勾配天井の化粧梁" />
+          </div>
+
+          <!-- Generate Action Button -->
+          <div style="text-align: center;">
+            <button type="submit" id="btn-generate-archix" class="btn btn-primary" style="padding: 1.1rem 3.5rem; font-size: 1.15rem; background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800; box-shadow: 0 6px 20px rgba(217, 119, 6, 0.4);">
+              ⚡ フォトリアルパースを瞬時に生成する（完全無料） ✨
+            </button>
+          </div>
+        </form>
+
+        <!-- Dynamic Live Perspective Preview Card -->
+        <div id="archix-result-container" style="margin-top: 2.5rem; display: none;">
+          <div style="background: #0f172a; border-radius: 12px; padding: 1.2rem; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; color: #f8fafc;">
+              <span id="archix-result-title" style="font-weight: 700; font-size: 1.1rem; color: #38bdf8;">
+                パース完成プレビュー
+              </span>
+              <span style="background: #0284c7; color: #fff; font-size: 0.75rem; font-weight: 800; padding: 3px 10px; border-radius: 8px;">
+                4K REAL SVG
+              </span>
+            </div>
+
+            <!-- Preview Image Frame -->
+            <div style="position: relative; max-width: 100%; border-radius: 8px; overflow: hidden; background: #000; border: 1px solid #334155;">
+              <img id="archix-preview-img" src="" alt="生成パース" style="width: 100%; height: auto; display: block;" />
+            </div>
+
+            <!-- Action Buttons for Generated Perspective -->
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1.2rem; flex-wrap: wrap;">
+              <a id="archix-download-btn" href="#" download="archix_perspective.svg" class="btn btn-secondary" style="font-size: 0.9rem;">
+                📥 パース画像を保存・ダウンロード
+              </a>
+              <button type="button" id="btn-archix-to-floorplan" class="btn btn-primary" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-size: 0.95rem;">
+                📐 この空間イメージを元に、間取りを選別・相談する →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- PAGE: MADORI CONSULTATION BOT & 100 ARCHITECTURAL INSIGHTS -->

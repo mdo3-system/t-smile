@@ -5,6 +5,8 @@ const url = require('node:url');
 const db = require('./db.js');
 const { startGpuWorker } = require('./gpu_worker.js');
 const { createFloorPlanTopology, solve2DGeometry, renderFloorPlanSvg, generateIfcModel, runMultiAgentOrchestration } = require('./floorplan_generator.js');
+const rateLimiter = require('./rate_limiter.js');
+const aiConsultantEngine = require('./ai_consultant_engine.js');
 
 const PORT = process.env.PORT || 3005;
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
@@ -28,6 +30,10 @@ const FLOORPLANS_STORE = new Map();
 const RENDERS_DIR = path.join(PUBLIC_DIR, 'renders');
 if (!fs.existsSync(RENDERS_DIR)) {
   fs.mkdirSync(RENDERS_DIR, { recursive: true });
+}
+const STOCKS_DIR = path.join(RENDERS_DIR, 'stocks');
+if (!fs.existsSync(STOCKS_DIR)) {
+  fs.mkdirSync(STOCKS_DIR, { recursive: true });
 }
 
 // Architectural Perspective Titles
@@ -231,8 +237,66 @@ function generateArchiXPerspectiveSvg({ id, spaceType, style, lighting, customPr
 }
 
 // 24/365 AI Building Physics & Thermal Environment Agent (Objective, Neutral Expert)
+// 📁 data/thermal_knowledge/ フォルダ内の実務資料・Markdownを動的読み込み
+function getThermalKnowledgeSnippets() {
+  const dir = path.join(__dirname, '..', 'data', 'thermal_knowledge');
+  if (!fs.existsSync(dir)) return [];
+  const files = fs.readdirSync(dir);
+  const docs = [];
+  for (const f of files) {
+    if (f.endsWith('.md') || f.endsWith('.txt')) {
+      try {
+        const content = fs.readFileSync(path.join(dir, f), 'utf-8');
+        docs.push({ filename: f, content });
+      } catch (e) {
+        console.warn('[ThermalKnowledge] Read error:', f, e);
+      }
+    }
+  }
+  return docs;
+}
+
+function searchThermalKnowledgeDocs(query) {
+  const docs = getThermalKnowledgeSnippets();
+  if (docs.length === 0) return null;
+  const qLower = query.toLowerCase();
+  const words = qLower.split(/[\s　、。！？・]+/).filter(w => w.length >= 2);
+  
+  let bestMatch = null;
+  let maxScore = 0;
+
+  for (const doc of docs) {
+    // セクション（## 見出し）ごとに分割
+    const sections = doc.content.split(/(?=^##?\s+)/m);
+    for (const sec of sections) {
+      const sLower = sec.toLowerCase();
+      let score = 0;
+      for (const w of words) {
+        if (sLower.includes(w)) score += 2;
+      }
+      if (score > maxScore && score >= 2) {
+        maxScore = score;
+        bestMatch = { filename: doc.filename, text: sec.trim() };
+      }
+    }
+  }
+  return bestMatch;
+}
+
 function generateAiAgentResponse(userText) {
   const t = userText.toLowerCase();
+
+  // 1. data/thermal_knowledge/ フォルダ内の実務資料からの検索ヒット
+  const matchedDoc = searchThermalKnowledgeDocs(userText);
+  if (matchedDoc && matchedDoc.text.length > 30) {
+    return `【24h 温熱換気AI相談室 回答】
+住ま居るの現場実務ナレッジ（${matchedDoc.filename}）よりお答えします：
+
+${matchedDoc.text}
+
+💡 **住ま居るの客観的視点**:
+温熱・換気はカタログ値だけでなく、現場での丁寧な気密施工・熱橋対策がすべてです。さらに詳しく知りたい点があれば何でもお尋ねください。`;
+  }
   
   if (t.includes('結露') || t.includes('カビ') || t.includes('湿気') || t.includes('防ぐ')) {
     return `【24h 温熱換気AI相談室 回答】
@@ -497,7 +561,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   // 6. Post Chat Message & get AI reply
-  if (pathname.includes('/chat') && method === 'POST') {
+  if (pathname.startsWith('/api/dashboard/') && pathname.includes('/chat') && method === 'POST') {
     const parts = pathname.split('/');
     const userId = parts[3];
     try {
@@ -743,18 +807,672 @@ LDKの広がりと開放感を優先し、隣接する収納と間仕切りの�
     return sendJson(res, 200, { success: true, plan });
   }
 
-  // 10-F. 24/365 AI Thermal & Building Physics Chat Consultation API
-  if (pathname === '/api/thermal-chat' && method === 'POST') {
+  // 10-E2. 🤖 住ま居るAI建築士 間取り相談＆知見100選 深掘り対話API (高精度キーワード解析＆プロ回答エンジン)
+  if ((pathname === '/api/madori-bot/chat' || pathname === '/api/madori-bot/consult') && method === 'POST') {
     try {
       const body = await parseJsonBody(req);
-      const answer = generateAiAgentResponse(body.message || '');
+      const userMsg = (body.message || '').trim();
+      const qaId = body.qaId || null;
+
+      // 100問知見JSONの読み込み
+      let qaData = null;
+      try {
+        const qaJsonPath = path.join(PUBLIC_DIR, 'data', 'qa_knowledge_100.json');
+        if (fs.existsSync(qaJsonPath)) {
+          qaData = JSON.parse(fs.readFileSync(qaJsonPath, 'utf-8'));
+        }
+      } catch (err) {
+        console.warn('[MadoriBot] Failed to read qa_knowledge_100.json:', err);
+      }
+
+      let matchedQa = null;
+      if (qaId && qaData && qaData.questions) {
+        matchedQa = qaData.questions.find(q => q.id === qaId);
+      }
+
+      // 回答テキストの構築
+      let reply = '';
+      let recommendedQas = [];
+
+      // 温熱・断熱・結露に関する相談が間取り相談に来た場合の親切な誘導
+      const tLower = userMsg.toLowerCase();
+      const isThermalQuery = ['結露', 'c値', 'ua値', '断熱等級', '気密', 'heat20', '壁内結露', '熱交換換気'].some(k => tLower.includes(k));
+
+      if (matchedQa) {
+        // ① 特定のQに対する深掘り回答（メリット・デメリット併記）
+        reply = `【住ま居るAI建築士より】
+ご質問ありがとうございます！
+「${matchedQa.question}」について、より詳細な設計黄金則と我が家への取り入れ方をお答えします。
+
+📐 **推奨標準寸法・モジュール基準**
+${matchedQa.dimension}
+
+💡 **住ま居る設計哲学とプロの黄金ルール（メリット・デメリット）**
+${matchedQa.details}
+
+✨ **施主様への個別アドバイス・後悔を防ぐコツ**
+・本仕様を取り入れる際は、隣接する生活動線（${matchedQa.categoryName}）との干渉がないかを必ず事前にご確認ください。
+・「${matchedQa.shortAnswer}」を基本としながら、ご家族の生活リズムに合わせた微調整が可能です。
+・さらに具体的な敷地寸法やご家族の人数、ご予算に合わせた個別アレンジも可能です。続けて気になる点があれば何でもお尋ねください！`;
+
+        if (qaData && qaData.questions) {
+          recommendedQas = qaData.questions
+            .filter(q => q.category === matchedQa.category && q.id !== matchedQa.id)
+            .slice(0, 3)
+            .map(q => ({ id: q.id, question: q.question, categoryName: q.categoryName }));
+        }
+      } else if (isThermalQuery) {
+        // ② 温熱・気密の専門相談への誘導
+        reply = `【住ま居るAI建築士より】
+温熱環境・断熱・気密（C値・UA値・結露防止）に関するご質問ですね！
+
+住ま居るでは、温熱・換気環境の専門的なご相談に対して、30年来の現場実務データと科学的根拠を全解放した専用窓口**「24h温熱換気AI相談室」**をご用意しております。
+
+ヘッダーナビの「💬 24h温熱換気AI相談」から、壁内結露対策やC値0.3・HEAT20 G2.5の真実について忖度なしの完全回答をいつでもご覧いただけます。
+
+※なお、間取り・プランニングの観点では「大開口吹き抜けやリビングイン階段を設けても、家全体が均一に暖まる高断熱躯体（Ua値0.32・C値0.3）」が基本前提となっております！`;
+        if (qaData && qaData.questions) {
+          recommendedQas = qaData.questions.slice(0, 3).map(q => ({ id: q.id, question: q.question, categoryName: q.categoryName }));
+        }
+      } else {
+        // ③ 自由入力に対する高度なキーワード解析とマッチング
+        let bestHit = null;
+
+        if (qaData && qaData.questions) {
+          // 主要キーワード辞書
+          const keywordDict = [
+            { words: ['乾太', 'かんた', 'ガス乾燥', '衣類乾燥'], targetId: 'w_03' },
+            { words: ['ミーレ', '食洗機', 'ボッシュ', '大型食洗'], targetId: 'k_09' },
+            { words: ['通路幅', 'キッチンの幅', '背面収納の間'], targetId: 'k_01' },
+            { words: ['冷蔵庫', '冷蔵庫の位置', '手前', '奥'], targetId: 'k_02' },
+            { words: ['アイランド', 'ペニンシュラ', '対面キッチン'], targetId: 'k_03' },
+            { words: ['パントリー', '食品庫'], targetId: 'k_04' },
+            { words: ['天板', 'キッチンの高さ', 'ワークトップ'], targetId: 'k_05' },
+            { words: ['小上がり', '畳コーナー', '段差', '35cm'], targetId: 'ldk_01' },
+            { words: ['吹き抜け', 'ふきぬけ', 'シーリングファン'], targetId: 'ldk_03' },
+            { words: ['スタディ', 'テレワーク', '書斎', 'ヌック', 'ワークスペース'], targetId: 'ldk_05' },
+            { words: ['無垢床', 'ヒノキ', 'スギ', '西川材'], targetId: 'ldk_08' },
+            { words: ['珪藻土', '塗り壁', '調湿'], targetId: 'ldk_10' },
+            { words: ['脱衣室', '洗面所', 'セパレート', '分離'], targetId: 'w_01' },
+            { words: ['ランドリー', '室内干し', '物干し'], targetId: 'w_02' },
+            { words: ['お風呂', 'ユニットバス', '1616', '1620'], targetId: 'w_04' },
+            { words: ['ダブルボウル', '2ボウル', '洗面台'], targetId: 'w_05' },
+            { words: ['ファミクロ', 'ファミリークローゼット', '直結'], targetId: 'w_06' },
+            { words: ['2way', '家族動線', '来客動線', '土間', 'sic', 'シューズクローク'], targetId: 'ent_01' },
+            { words: ['上がり框', '玄関段差', '框'], targetId: 'ent_03' },
+            // 家相・風水の特化キーワード（特定設問を先に判定）
+            { words: ['家相と住みやすさ', '家相の対立', '家相優先', '家相と動線', 'どちらを優先', '住みやすさ'], targetId: 'kas_25' },
+            { words: ['水回り（風呂・トイレ・洗面）が「南側」', '水回り南側', '南側の水回り', '水回りが南', '風呂が南', '南向き風呂', 'ビューバス', '南側ランドリー'], targetId: 'kas_21' },
+            { words: ['欠け', '凹み', 'ビルトインガレージ', '家の形に', '家の凹み', '変形住宅'], targetId: 'kas_07' },
+            { words: ['鬼門', '裏鬼門', '北東', '南西', '鬼門にキッチン', '裏鬼門にキッチン'], targetId: 'kas_01' },
+            { words: ['太極', '家の中心', '中心のトイレ', '玄関の真上', '玄関上のトイレ'], targetId: 'kas_04' },
+            { words: ['直線階段', '玄関正面階段', '玄関の正面に階段', '玄関から階段'], targetId: 'kas_05' },
+            { words: ['神棚', '仏壇'], targetId: 'kas_06' },
+            { words: ['北枕', 'ベッドの向き', '寝室方角'], targetId: 'kas_09' },
+            { words: ['南東玄関', '辰巳玄関', '北玄関', '辰巳'], targetId: 'kas_20' },
+            { words: ['路殺', 't字路', '突き当たり', '三角形敷地', '変形敷地'], targetId: 'kas_22' },
+            { words: ['正中線', '四隅線'], targetId: 'kas_03' },
+            { words: ['家相', '風水'], targetId: 'kas_25' },
+            { words: ['尺庭', '坪庭', '中庭', '90cm', '光庭'], targetId: 'gar_01' },
+            { words: ['ウッドデッキ', 'デッキ', '天然木デッキ'], targetId: 'gar_02' },
+            { words: ['ハイドア', '天井ドア', '2400', '天井までのドア'], targetId: 'ldk_20' },
+            { words: ['減窓', '窓を減らす', '窓減らす', '採光計算'], targetId: 'ldk_23' },
+            { words: ['パントリー扉', 'ロールスクリーン', '食品庫の扉'], targetId: 'k_20' },
+            { words: ['階段下', '階段下トイレ', '階段下スペース', '階段下の活用'], targetId: 'st_04' },
+            { words: ['wic通路幅', 'ウォークイン通路', 'wic寸法', 'クローゼット通路幅'], targetId: 'st_02' },
+            { words: ['ホスクリーン', 'アイアンバー', '物干し金物', '室内物干し器具'], targetId: 'eq_19' },
+            { words: ['引き戸', '開き戸', 'ドアの開き方', '引き戸と開き戸'], targetId: 'ldk_11' },
+            { words: ['sic可動棚', 'シューズクローク棚', '可動棚固定棚', '靴棚可動'], targetId: 'st_16' },
+            { words: ['カップボードゴミ箱', 'ゴミ箱スペース', 'ダストボックス位置', 'ゴミ箱置き場'], targetId: 'k_17' },
+            { words: ['壁掛けテレビ', 'テレビ下地', '配線隠し', '空配管', '呼び36', '呼び28'], targetId: 'ldk_17' },
+            { words: ['ルンバ', 'ロボット掃除機', 'ルンバ基地'], targetId: 'ldk_24' },
+            { words: ['タッチレス', 'ハンズフリー水栓', 'センサー水栓'], targetId: 'k_16' },
+            { words: ['スロップシンク', '泥汚れ', 'つけ置き'], targetId: 'w_20' },
+            { words: ['肩湯', '楽湯', 'ジェットバス'], targetId: 'w_24' },
+            { words: ['スマートキー', '顔認証', 'タッチキー', '電子錠'], targetId: 'ent_17' },
+            { words: ['太陽光', '蓄電池', 'ソーラー', '自家消費'], targetId: 'eq_21' },
+            { words: ['エコキュート', '370l', '460l', '給湯器'], targetId: 'eq_22' },
+            { words: ['人工芝', '天然芝', '芝生', '防草シート'], targetId: 'gar_22' },
+            { words: ['平屋', '将来平屋', '1階完結'], targetId: 'ldk_06' },
+            { words: ['回遊動線', '行き止まり', '回れる家'], targetId: 'ldk_13' },
+            { words: ['2階トイレ', 'トイレ1箇所', 'トイレ減額'], targetId: 'w_12' },
+            { words: ['子供部屋', '子ども部屋', '間仕切り', '2部屋'], targetId: 'ldk_12' },
+            { words: ['ただいま手洗い', '玄関手洗い'], targetId: 'ent_15' }
+          ];
+
+          for (const item of keywordDict) {
+            if (item.words.some(w => tLower.includes(w.toLowerCase()))) {
+              bestHit = qaData.questions.find(q => q.id === item.targetId);
+              if (bestHit) break;
+            }
+          }
+
+          // 辞書でヒットしない場合、質問文・キーワードタグ・本文の広範マッチング
+          if (!bestHit) {
+            const hits = qaData.questions.filter(q => {
+              const kwMatch = (q.keywords || []).some(k => tLower.includes(k.toLowerCase()));
+              const textMatch = q.question.toLowerCase().includes(tLower) || q.details.toLowerCase().includes(tLower);
+              return kwMatch || textMatch;
+            });
+            if (hits.length > 0) bestHit = hits[0];
+          }
+        }
+
+        if (bestHit) {
+          reply = `【住ま居るAI建築士より】
+「${userMsg}」について、住ま居るの設計知見データベースより回答いたします！
+
+💡 **結論・重要ポイント**
+${bestHit.shortAnswer}
+
+📐 **標準寸法・モジュール基準**
+${bestHit.dimension}
+
+🔍 **設計のプロの知見（メリット・デメリット）**
+${bestHit.details}
+
+さらに「${bestHit.categoryName}」に関する他の疑問や、実際の敷地への落とし込み、ご予算についても続けてご質問いただけます！`;
+
+          if (qaData && qaData.questions) {
+            recommendedQas = qaData.questions
+              .filter(q => q.category === bestHit.category && q.id !== bestHit.id)
+              .slice(0, 3)
+              .map(q => ({ id: q.id, question: q.question, categoryName: q.categoryName }));
+          }
+        } else {
+          // 一般的な質問へのAI建築士の総合的回答
+          reply = `【住ま居るAI建築士より】
+「${userMsg}」についてのご相談を承りました。
+
+住ま居るでは、30年以上の設計・施工実務を通じて培った「家事ラク動線・適材適所収納・無駄のないモジュール寸法・自然素材の心地よさ」の観点から総合的にアドバイスいたします。
+
+【メリットと注意すべきデメリット】
+・**生活動線の最適化**: 玄関→SIC→パントリー→キッチン→水回りのスムーズなつながりを重視します。
+・**構造と寸法の無理のなさ**: 日本の伝統尺モジュール（910mm / 227.5mmピッチ）に則ることで、耐震性とコストパフォーマンスが最大化されます。
+・**空間の居場所づくり**: 単なる広い部屋ではなく、小上がり畳やスタディコーナー、尺庭（光庭）などの豊かな奥行きを演出します。
+
+より詳しいご要望（「延床〇〇坪」「家族〇人」「〇〇を広くしたい」など）を教えていただければ、具体的な部屋配置や寸法をご提案いたします！`;
+
+          if (qaData && qaData.questions) {
+            recommendedQas = qaData.questions.slice(0, 3).map(q => ({ id: q.id, question: q.question, categoryName: q.categoryName }));
+          }
+        }
+      }
+
       return sendJson(res, 200, {
         success: true,
-        reply: answer,
+        reply,
+        matchedQa: matchedQa ? { id: matchedQa.id, question: matchedQa.question, dimension: matchedQa.dimension, image: matchedQa.image } : null,
+        recommendedQas,
         timestamp: new Date().toISOString()
       });
     } catch (e) {
+      console.error('[MadoriBot Chat API Error]', e);
       return sendJson(res, 500, { success: false, error: e.message });
+    }
+  }
+
+// 10-F. 🌡️ 24h温熱換気・高気密高断熱AI相談ボットAPI (200問マスター知見＆建築物理学エンジン)
+  if ((pathname === '/api/thermal-bot/chat' || pathname === '/api/thermal-chat' || pathname === '/api/thermal-bot/consult') && method === 'POST') {
+    try {
+      const body = await parseJsonBody(req);
+      const userMsg = (body.message || '').trim();
+      const qaId = body.qaId || null;
+
+      // 200問温熱知見JSONの読み込み
+      let thermalData = null;
+      try {
+        const thermalJsonPath = path.join(PUBLIC_DIR, 'data', 'thermal_qa_200.json');
+        if (fs.existsSync(thermalJsonPath)) {
+          thermalData = JSON.parse(fs.readFileSync(thermalJsonPath, 'utf-8'));
+        }
+      } catch (err) {
+        console.warn('[ThermalBot] Failed to read thermal_qa_200.json:', err);
+      }
+
+      let matchedQa = null;
+      if (qaId && thermalData && thermalData.questions) {
+        matchedQa = thermalData.questions.find(q => q.id === qaId);
+      }
+
+      let reply = '';
+      let recommendedQas = [];
+
+      if (matchedQa) {
+        // 特定のQ&Aが直接選択された場合
+        reply = `【住ま居るAI温熱建築士より】
+「${matchedQa.question}」について、私どもが埼玉の現場で試行錯誤してたどり着いた実務知見よりお答えいたします！
+
+💡 **結論・重要ポイント**
+${matchedQa.shortAnswer}
+
+📐 **標準基準・数値指標**
+${matchedQa.dimension}
+
+🔍 **現場実務の技術根拠（物理原理・メリット・注意点）**
+${matchedQa.details}
+
+★ **設計の原則**
+${matchedQa.principle}
+
+※本回答は住ま居るが埼玉の気候風土の中で、勉強会や実際の現場での試行錯誤（成功と失敗の実体験）を通して現在たどり着いた考え方です。絶対の正解ではなく、間違いがあるかもしれないことを前提に、私どもが考える現時点での最善手としてご提案しています。
+
+同じカテゴリ「${matchedQa.categoryName}」に関する他の疑問や、実際のUA値・C値計算、エアコン選定についても続けてご質問いただけます！`;
+
+        if (thermalData && thermalData.questions) {
+          recommendedQas = thermalData.questions
+            .filter(q => q.category === matchedQa.category && q.id !== matchedQa.id)
+            .slice(0, 3)
+            .map(q => ({ id: q.id, question: q.question, categoryName: q.categoryName }));
+        }
+      } else {
+        // 自然言語メッセージ・自由質問（プラン・温熱複合相談）のテキストコーパス検索＆対話生成
+        const answerResult = await aiConsultantEngine.answerConsultation(userMsg, body.history || []);
+        reply = answerResult.reply;
+        recommendedQas = answerResult.recommendedQas;
+      }
+
+      return sendJson(res, 200, {
+        success: true,
+        reply,
+        recommendedQas,
+        timestamp: new Date().toISOString()
+      });
+    } catch (e) {
+      console.error('[ThermalBot Chat API Error]', e);
+      return sendJson(res, 500, { success: false, error: e.message });
+    }
+  }
+
+    // Helper: Call Local Stable Diffusion WebUI img2img API
+  async function callSdImg2Img({ base64Image, prompt, negativePrompt, denoise = 0.45, width = 768, height = 576 }) {
+    return new Promise((resolve, reject) => {
+      const payload = JSON.stringify({
+        init_images: [base64Image],
+        prompt: prompt,
+        negative_prompt: negativePrompt || "(worst quality, low quality:1.4), (deformed architecture, crooked walls:1.3), blurry, 3d cgi render look, cartoon, plastic, watermark, text",
+        denoising_strength: denoise,
+        steps: 25,
+        cfg_scale: 7.0,
+        width: width,
+        height: height,
+        sampler_name: "DPM++ 2M Karras"
+      });
+
+      const sdReq = http.request({
+        hostname: '127.0.0.1',
+        port: 7860,
+        path: '/sdapi/v1/img2img',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(payload)
+        },
+        timeout: 45000
+      }, (sdRes) => {
+        let data = '';
+        sdRes.on('data', c => data += c);
+        sdRes.on('end', () => {
+          try {
+            const json = JSON.parse(data);
+            if (json.images && json.images.length > 0) {
+              resolve(json.images[0]);
+            } else {
+              reject(new Error('No images returned from SD WebUI'));
+            }
+          } catch (err) {
+            reject(err);
+          }
+        });
+      });
+
+      sdReq.on('error', err => reject(err));
+      sdReq.on('timeout', () => {
+        sdReq.destroy();
+        reject(new Error('SD WebUI request timed out'));
+      });
+      sdReq.write(payload);
+      sdReq.end();
+    });
+  }
+
+  // 10-G1. Rate Limit Status API (残生成回数・待機枠の確認)
+  if (pathname === '/api/perspective/rate-status' && method === 'GET') {
+    const clientIp = rateLimiter.getClientIp(req);
+    const status = rateLimiter.getRateLimitStatus(clientIp);
+    return sendJson(res, 200, { success: true, status });
+  }
+
+  // 10-G2. Stock Interior/Furniture Image Upload API (マイ・ムードボード)
+  if (pathname === '/api/perspective/stock-upload' && method === 'POST') {
+    try {
+      const body = await parseJsonBody(req);
+      if (!body.base64Image) {
+        return sendJson(res, 400, { success: false, error: '画像データがありません。' });
+      }
+      let rawBase64 = body.base64Image;
+      if (rawBase64.includes(',')) rawBase64 = rawBase64.split(',')[1];
+
+      const stockId = 'stk_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 6);
+      const filename = `${stockId}.jpg`;
+      const filePath = path.join(STOCKS_DIR, filename);
+      fs.writeFileSync(filePath, Buffer.from(rawBase64, 'base64'));
+
+      const stockItem = {
+        id: stockId,
+        title: body.title || 'WEBお気に入り家具・インテリア',
+        category: body.category || 'furniture',
+        tags: body.tags || ['ユーザー保存', 'インテリア'],
+        url: `/renders/stocks/${filename}`,
+        uploadedAt: new Date().toISOString()
+      };
+
+      return sendJson(res, 201, { success: true, stockItem });
+    } catch (e) {
+      return sendJson(res, 500, { success: false, error: e.message });
+    }
+  }
+
+  // 10-G3. Stock Images List API (初期サンプル＋ユーザー保存画像)
+  if (pathname === '/api/perspective/stock-list' && method === 'GET') {
+    try {
+      // Default curated catalog samples
+      const defaultSamples = [
+        { id: 'def_kitchen_island', title: '対面フラットアイランド（セラミック天板）', category: 'kitchen', url: '/sample_data/model_ldk.jpg', tags: ['アイランドキッチン', 'セラミック', 'グレージュ'] },
+        { id: 'def_ychair_dining', title: '無垢一枚板 ＆ Yチェア（北欧名作）', category: 'furniture', url: '/renders/ldk_japandi.png', tags: ['無垢材', 'Yチェア', 'ジャパンディ'] },
+        { id: 'def_living_sofa', title: 'ローバック・フェザーモジュールソファ', category: 'furniture', url: '/sample_data/model_exterior.JPG', tags: ['ローソファ', 'リゾート', '木製ルーバー'] }
+      ];
+
+      // Read user uploaded stock files
+      const userStockItems = [];
+      if (fs.existsSync(STOCKS_DIR)) {
+        const files = fs.readdirSync(STOCKS_DIR).filter(f => f.endsWith('.jpg') || f.endsWith('.png'));
+        files.forEach(f => {
+          userStockItems.push({
+            id: f.replace(/\.[^/.]+$/, ''),
+            title: 'マイストック画像',
+            category: 'custom',
+            url: `/renders/stocks/${f}`,
+            tags: ['カスタムアップロード', 'お気に入り']
+          });
+        });
+      }
+
+      return sendJson(res, 200, { success: true, stocks: [...defaultSamples, ...userStockItems.reverse()] });
+    } catch (e) {
+      return sendJson(res, 500, { success: false, error: e.message });
+    }
+  }
+
+  // 10-G4. Photo-to-Perspective Virtual Staging API (Stable Diffusion WebUI Powered with Rate-Limiting & Queue Protection)
+  if (pathname === '/api/perspective/upload-generate' && method === 'POST') {
+    const clientIp = rateLimiter.getClientIp(req);
+    const limitCheck = rateLimiter.checkAndConsumeRateLimit(clientIp);
+
+    if (!limitCheck.allowed) {
+      console.warn(`[Perspective API] Rate limit / Queue rejected for IP ${clientIp}: ${limitCheck.reason}`);
+      return sendJson(res, 429, {
+        success: false,
+        reason: limitCheck.reason,
+        error: limitCheck.message,
+        waitSeconds: limitCheck.waitSeconds || 0,
+        rateLimit: rateLimiter.getRateLimitStatus(clientIp)
+      });
+    }
+
+    try {
+      const body = await parseJsonBody(req);
+      const renderId = 'ps_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 6);
+      
+      // 1. Get Reference Image (from user upload, 3D model capture, or sample photo)
+      let base64Init = body.initImage;
+      if (!base64Init && body.samplePreset) {
+        const sampleFile = path.join(__dirname, '..', 'sample_data', body.samplePreset);
+        if (fs.existsSync(sampleFile)) {
+          base64Init = fs.readFileSync(sampleFile).toString('base64');
+        }
+      }
+      if (!base64Init) {
+        const fallbackFile = path.join(__dirname, '..', 'sample_data', 'model_ldk.jpg');
+        base64Init = fs.readFileSync(fallbackFile).toString('base64');
+      }
+
+      if (base64Init.includes(',')) {
+        base64Init = base64Init.split(',')[1];
+      }
+
+      // Save reference image for Before/After comparison
+      const refFilename = `ref_${renderId}.jpg`;
+      const refPath = path.join(RENDERS_DIR, refFilename);
+      fs.writeFileSync(refPath, Buffer.from(base64Init, 'base64'));
+      const referenceUrl = `/renders/${refFilename}`;
+
+      // 2. Expanded Prompt Builder
+      // 空間用途・部屋タイプ（Room Type Prompts）
+      const roomTypePrompts = {
+        ldk: "grand open-concept LDK living dining kitchen, cohesive great room architecture",
+        living: "cozy elegant living room lounge, comfortable seating, sunlit family relaxation space",
+        kitchen: "dedicated gourmet kitchen space, chef island counter, high-end culinary haven",
+        dining: "formal welcoming dining room, gathering table, architectural pendant centerpiece",
+        bedroom: "luxurious tranquil master bedroom suite, king size bed with upholstered headboard, serene sleeping sanctuary",
+        japanese: "authentic Japanese washitsu tatami room, delicate cedar wood trim, wabi-sabi tranquility, tokonoma alcove",
+        koagari: "modern raised tatami mat corner (koagari), sunken table, multi-functional warm relaxation nook",
+        guest: "welcoming Japanese guest room, hospitality ambiance, refined minimalist design",
+        kids: "bright cheerful children bedroom, creative study area, warm playful aesthetic",
+        loft: "atmospheric attic loft hideaway, exposed roof rafters, skylight sunlight, cozy den",
+        study: "quiet focused private study den, custom built-in timber desk, floor-to-ceiling bookshelves",
+        bath: "luxury resort-style private bathroom, freestanding soaking tub, frameless glass shower, spa sanctuary",
+        washroom: "elegant vanity powder room and dressing area, custom vanity mirror, dual sinks",
+        toilet: "refined minimalist restroom toilet, floating vanity, warm indirect cove lighting",
+        wic: "boutique walk-in closet dressing suite, custom glass wardrobe displays, vanity counter",
+        shop: "stylish boutique cafe shop interior, welcoming customer service counter, warm commercial ambiance",
+        office: "creative atelier design studio office, collaborative workspace, clean architectural aesthetic",
+        garage: "architectural built-in showcase garage, polished epoxy floor, automotive hobby gallery"
+      };
+
+      const stylePrompts = {
+        japandi: "Japandi interior style, light natural oak and cedar, warm greige accents, minimalist clean lines, organic rounded shapes",
+        japanese: "Modern Sukiya Japanese style, authentic fragrant hinoki cypress and cedar, delicate wooden lattice louvers, washi paper screens, low-height furniture",
+        hotellike: "Luxury hotel-like greige interior, matte porcelain tiles, sleek leather sofa, modern brass lighting, high-end architectural digest showcase",
+        scandi: "Scandinavian hygge interior, light blonde oak timber, white plastered walls, cozy textured fabric sofa, warm natural atmosphere",
+        minimal: "Minimalist resort architecture, seamless indoor-outdoor connection, expansive glazing, raw textured stone accent wall",
+        vintage: "Vintage industrial interior, exposed blackened steel frames, reclaimed timber, exposed brick, dark brown leather lounge",
+        coastal: "California coastal interior, wide-plank herringbone wood floors, crisp white walls, marine navy accents, airy breezy open feel",
+        classic: "European modern classic, elegant wall moldings, chevron parquet floor, marble fireplace mantelpiece",
+        minka: "Kominka renovated Japanese classic, dark antique timber beams, massive main pillar, deep rich wood patina",
+        passive: "Modern passive solar architecture, deep overhang eaves, earth floor living room (doma), abundant natural cross-ventilation"
+      };
+
+      const lightingPrompts = {
+        morning: "clear morning sunlight, soft sunbeams streaming through windows, crisp fresh morning air",
+        afternoon: "warm gentle afternoon sunlight, cozy sunlit living space",
+        twilight: "golden hour twilight, purple and orange dusk sky, warm interior lamps glowing inside",
+        night: "moody architectural night lighting, warm 2700K indirect cove lighting, intimate shadow play",
+        rainy: "soft rainy day diffused lighting, lush wet garden greenery through glass, peaceful serene mood",
+        cloudy: "gentle overcast sky diffuse soft light, perfectly balanced shadowless interior",
+        fireplace: "flickering cozy fireplace firelight, warm ambient glow, relaxing evening ambiance",
+        deep_eaves: "midsummer deep eaves shade, cool tranquil indoor shadow with bright garden beyond"
+      };
+
+      const furniturePrompts = {
+        ychair: "Hans Wegner style Wishbone Y-chairs",
+        liveedge: "solid live-edge slab wooden dining table",
+        lowsofa: "low-profile modular fabric sectional sofa",
+        leather_lounge: "premium leather lounge chair with ottoman",
+        island_kitchen: "open island kitchen counter with bar stools",
+        toilet_suite: "high-end tankless ceramic toilet fixture, minimalist washlet, sleek modern floating counter",
+        woodstove: "modern freestanding wood-burning stove with stacked firewood",
+        ph5: "Louis Poulsen PH5 style architectural pendant light",
+        mortex: "sleek Mortex greige custom counter",
+        bookshelf: "floor-to-ceiling built-in recessed wooden bookshelf library",
+        study_counter: "built-in timber study work counter",
+        tatami_corner: "raised tatami mat relaxation corner",
+        skeleton_stairs: "minimalist open-riser steel skeleton floating staircase"
+      };
+
+      const plantPrompts = {
+        umbellata: "lush large Ficus Umbellata potted tree",
+        olive: "delicate potted olive tree in clay planter",
+        everfresh: "airy Everfresh tree with feathery green foliage",
+        doudan: "dramatic Enkianthus perulatus branches in large glass cylinder vase",
+        art: "large contemporary abstract canvas wall painting",
+        ceramic: "artisan ceramic vases and pottery",
+        linen: "flowing natural linen sheer curtains",
+        wool_rug: "handwoven textured wool area rug"
+      };
+
+      const materialPrompts = {
+        diatom: "breathable natural diatomaceous earth plastered walls, artisan hand-troweled texture",
+        nishikawa: "Saitama local Nishikawa timber solid cypress and cedar flooring",
+        oak: "premium natural brushed oak wood flooring",
+        stone: "natural cut stone ledger accent wall",
+        beams: "exposed structural heavy timber ceiling beams",
+        triple_glass: "triple-pane high-insulation wood-composite large sliding glass doors",
+        high_door: "frameless full-height high doors flush with ceiling",
+        washi_tatami: "rimless Ryukyu washi paper tatami mats",
+        deck_flat: "seamless barrier-free connection to exterior wooden deck"
+      };
+
+      // Ceiling Prompts (吹き抜け・勾配天井・見せ梁)
+      const ceilingPrompts = {
+        flat: "smooth flat ceiling with subtle recessed architectural downlights",
+        sloped: "dramatic vaulted sloped cathedral ceiling, beautiful exposed heavy timber rafters and purlins",
+        void: "magnificent double-height high open void atrium living room, two-story tall picture window with soft ambient sunlight pouring down",
+        cove: "architectural recessed cove ceiling with hidden soft warm indirect LED illumination"
+      };
+
+      const selectedStyles = Array.isArray(body.styles) ? body.styles : [body.styles || 'japandi'];
+      const selectedLighting = body.lighting || 'morning';
+      const selectedFurniture = Array.isArray(body.furniture) ? body.furniture : [];
+      const selectedPlants = Array.isArray(body.plants) ? body.plants : [];
+      const selectedMaterials = Array.isArray(body.materials) ? body.materials : ['diatom', 'nishikawa'];
+      const selectedCeiling = body.ceilingType || 'sloped';
+      const selectedScene = body.scene || '';
+      const selectedRoomType = body.roomType || 'ldk';
+
+      // Dedicated Part Stock Prompts (部位別ストック情報)
+      const stockParts = [];
+      if (body.stockSlots) {
+        if (body.stockSlots.overall) stockParts.push(`overall aesthetic: ${body.stockSlots.overall}`);
+        if (body.stockSlots.kitchen) stockParts.push(`exact matching system kitchen design: ${body.stockSlots.kitchen}`);
+        if (body.stockSlots.furniture) stockParts.push(`furniture matching: ${body.stockSlots.furniture}`);
+        if (body.stockSlots.lighting) stockParts.push(`lighting style: ${body.stockSlots.lighting}`);
+      } else if (body.stockInspiration) {
+        stockParts.push(`inspired by interior design elements: ${body.stockInspiration}`);
+      }
+
+      // Check if room is strictly windowless
+      const isWindowless = (body.windowSetting === 'none' || body.windowSetting === 'solid_wall');
+
+      // Window Aperture Prompt (なし / 大開口 / スリット等)
+      let windowPrompt = "";
+      if (isWindowless) {
+        windowPrompt = "solid unbroken enclosed drywall, windowless room, entirely solid architectural walls, seamless closed partition without any windows or glass openings";
+      } else if (body.windowSetting === 'add_large_window' || body.windowSetting === 'sweep_2560') {
+        windowPrompt = "large full-height floor-to-ceiling glass picture window, bright natural sunlight";
+      } else if (body.windowSetting === 'add_high_slit' || body.windowSetting === 'slit_600') {
+        windowPrompt = "high-level horizontal ribbon slit window, gentle indirect daylight rays";
+      } else if (body.windowSetting === 'waist_1650') {
+        windowPrompt = "modern sliding waist-height timber sash window";
+      }
+
+      // Lighting adjustment: Remove 'through windows' when windowless
+      let lightingPromptText = lightingPrompts[selectedLighting] || selectedLighting;
+      if (isWindowless) {
+        lightingPromptText = lightingPromptText.replace(/through windows/gi, 'from subtle warm architectural downlights and lamps')
+                                               .replace(/through glass/gi, 'with calm diffused indoor ambient light');
+      }
+
+      // Filter furniture: Remove kitchen if room is not ldk/kitchen or kitchenType is none
+      let effectiveFurniture = selectedFurniture;
+      if (body.kitchenType === 'none' || (selectedRoomType !== 'ldk' && selectedRoomType !== 'kitchen')) {
+        effectiveFurniture = effectiveFurniture.filter(f => f !== 'island_kitchen');
+      }
+
+      // Filter materials: Remove triple_glass if windowless
+      let effectiveMaterials = selectedMaterials;
+      if (isWindowless) {
+        effectiveMaterials = effectiveMaterials.filter(m => m !== 'triple_glass');
+      }
+
+      // Door Swing prompt (内開き / 外開き)
+      let doorSwingPrompt = "";
+      if (body.doorSwing === 'outward') {
+        doorSwingPrompt = "outward-opening flush door swinging towards hallway";
+      } else if (body.doorSwing === 'inward') {
+        doorSwingPrompt = "inward-opening flush door swinging into room";
+      }
+
+      const promptParts = [
+        "masterpiece, photorealistic architectural photograph, 8k resolution, award-winning interior architecture, canon eos r5, professional photography",
+        roomTypePrompts[selectedRoomType] || roomTypePrompts.ldk,
+        ceilingPrompts[selectedCeiling] || ceilingPrompts.sloped,
+        selectedStyles.map(s => stylePrompts[s] || s).join(', '),
+        lightingPromptText,
+        windowPrompt,
+        doorSwingPrompt,
+        effectiveMaterials.map(m => materialPrompts[m] || m).join(', '),
+        effectiveFurniture.map(f => furniturePrompts[f] || f).join(', '),
+        selectedPlants.map(p => plantPrompts[p] || p).join(', '),
+        stockParts.join(', '),
+        selectedScene ? selectedScene : '',
+        body.customPrompt || ''
+      ].filter(Boolean);
+
+      const fullPrompt = promptParts.join(', ');
+      const denoise = parseFloat(body.denoisingStrength) || 0.45;
+
+      // Negative Prompt with windowless enforcement
+      let effectiveNegativePrompt = body.negativePrompt || "(worst quality, low quality:1.4), (deformed architecture, crooked walls:1.3), blurry, 3d cgi render look, cartoon, plastic, watermark, text";
+      if (isWindowless) {
+        effectiveNegativePrompt += ", (window:1.6), (windows:1.6), (glass window:1.6), (picture window:1.6), (glass door:1.6), (patio door:1.6), outdoor view, exterior view, outside greenery, window sill, window frame, sunlight through glass";
+      }
+
+      console.log(`[Perspective API] Generating with Prompt: ${fullPrompt.substring(0, 100)}... (denoise: ${denoise}, queueActive: ${limitCheck.activeJobs})`);
+
+      let imageUrl = '';
+      try {
+        const base64Gen = await callSdImg2Img({
+          base64Image: base64Init,
+          prompt: fullPrompt,
+          negativePrompt: effectiveNegativePrompt,
+          denoise: denoise,
+          width: 768,
+          height: 576
+        });
+        const outFilename = `perspective_${renderId}.png`;
+        const outPath = path.join(RENDERS_DIR, outFilename);
+        fs.writeFileSync(outPath, Buffer.from(base64Gen, 'base64'));
+        imageUrl = `/renders/${outFilename}`;
+        console.log(`[Perspective API] Successfully generated photorealistic perspective! -> ${imageUrl}`);
+      } catch (sdErr) {
+        console.warn(`[Perspective API] SD WebUI error (${sdErr.message}). Using fallback rendering.`);
+        imageUrl = `/renders/ldk_japandi.png`;
+      }
+
+      return sendJson(res, 200, {
+        success: true,
+        renderId,
+        imageUrl,
+        referenceUrl,
+        promptSummary: fullPrompt,
+        rateLimit: rateLimiter.getRateLimitStatus(clientIp),
+        appliedOptions: {
+          styles: selectedStyles,
+          lighting: selectedLighting,
+          ceilingType: selectedCeiling,
+          furniture: selectedFurniture,
+          plants: selectedPlants,
+          materials: selectedMaterials,
+          scene: selectedScene,
+          denoisingStrength: denoise
+        }
+      });
+    } catch (e) {
+      console.error('[Perspective Upload-Generate API Error]', e);
+      return sendJson(res, 500, { success: false, error: e.message });
+    } finally {
+      rateLimiter.releaseActiveJob();
     }
   }
 
@@ -838,8 +1556,9 @@ LDKの広がりと開放感を優先し、隣接する収納と間仕切りの�
   let reqPath = pathname === '/' ? '/index.html' : pathname;
   let filePath = path.join(PUBLIC_DIR, reqPath);
 
-  // Default to index.html if not found or no extension
-  if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
+  if (pathname.startsWith('/sample_data/')) {
+    filePath = path.join(__dirname, '..', pathname);
+  } else if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
     filePath = path.join(PUBLIC_DIR, 'index.html');
   }
 

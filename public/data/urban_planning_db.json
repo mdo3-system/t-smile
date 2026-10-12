@@ -1,0 +1,109 @@
+{
+  "prefectures": {
+    "saitama": {
+      "name": "埼玉県",
+      "defaultClimateRegion": "5地域/6地域",
+      "cities": {
+        "tsurugashima": {
+          "name": "鶴ヶ島市",
+          "climateRegion": "6地域",
+          "defaultZone": "第一種低層住居専用地域",
+          "kenpei": 50,
+          "youseki": 100,
+          "fireZone": "法22条区域",
+          "altitudeLimit": "第1種高度地区 (北側1.25)",
+          "districts": {
+            "machiya": { "zone": "無指定 (市街化調整区域)", "kenpei": 60, "youseki": 200, "fireZone": "法22条区域外 (指定なし)" },
+            "fujimi": { "zone": "第一種中高層住居専用地域", "kenpei": 60, "youseki": 200, "fireZone": "法22条区域" },
+            "kyoei": { "zone": "第一種住居地域", "kenpei": 60, "youseki": 200, "fireZone": "法22条区域" },
+            "matsuodai": { "zone": "第一種低層住居専用地域", "kenpei": 50, "youseki": 100, "fireZone": "法22条区域" }
+          }
+        },
+        "sakado": {
+          "name": "坂戸市",
+          "climateRegion": "6地域",
+          "defaultZone": "第一種低層住居専用地域",
+          "kenpei": 50,
+          "youseki": 100,
+          "fireZone": "法22条区域",
+          "altitudeLimit": "第1種高度地区",
+          "districts": {
+            "chiyoda": { "zone": "第一種低層住居専用地域", "kenpei": 50, "youseki": 100 },
+            "minamicho": { "zone": "近隣商業地域", "kenpei": 80, "youseki": 300 },
+            "hannoki": { "zone": "市街化調整区域", "kenpei": 60, "youseki": 200 }
+          }
+        },
+        "kawagoe": {
+          "name": "川越市",
+          "climateRegion": "6地域",
+          "defaultZone": "第一種低層住居専用地域",
+          "kenpei": 50,
+          "youseki": 100,
+          "fireZone": "法22条区域 / 準防火地域",
+          "altitudeLimit": "第1種高度地区",
+          "districts": {
+            "kasumigaseki": { "zone": "第一種低層住居専用地域", "kenpei": 50, "youseki": 100 },
+            "matoba": { "zone": "第一種住居地域", "kenpei": 60, "youseki": 200 },
+            "minamidai": { "zone": "第二種低層住居専用地域", "kenpei": 60, "youseki": 100 }
+          }
+        },
+        "sayama": {
+          "name": "狭山市",
+          "climateRegion": "6地域",
+          "defaultZone": "第一種低層住居専用地域",
+          "kenpei": 50,
+          "youseki": 100,
+          "fireZone": "法22条区域"
+        },
+        "hidaka": {
+          "name": "日高市",
+          "climateRegion": "5地域",
+          "defaultZone": "第一種低層住居専用地域",
+          "kenpei": 50,
+          "youseki": 80,
+          "fireZone": "法22条区域"
+        },
+        "saitama_city": {
+          "name": "さいたま市",
+          "climateRegion": "6地域",
+          "defaultZone": "第一種低層住居専用地域",
+          "kenpei": 50,
+          "youseki": 100,
+          "fireZone": "準防火地域 / 法22条区域"
+        },
+        "chichibu": {
+          "name": "秩父市",
+          "climateRegion": "4地域",
+          "defaultZone": "第一種住居地域",
+          "kenpei": 60,
+          "youseki": 200,
+          "fireZone": "法22条区域"
+        }
+      }
+    },
+    "tokyo": {
+      "name": "東京都",
+      "defaultClimateRegion": "6地域",
+      "defaultZone": "第一種低層住居専用地域",
+      "kenpei": 50,
+      "youseki": 100
+    }
+  },
+  "defaultSettings": {
+    "climateRegion": "6地域 (埼玉・東京標準)",
+    "zone": "第一種低層住居専用地域",
+    "kenpei": 50,
+    "youseki": 100,
+    "fireZone": "法22条区域 (木造標準)",
+    "boundaryDistanceMinMm": 650,
+    "civilLawDistanceMinMm": 500,
+    "wallThicknessMm": 140,
+    "carSizes": {
+      "compact": { "name": "軽自動車", "widthM": 2.2, "depthM": 3.6 },
+      "standard": { "name": "普通乗用車", "widthM": 2.3, "depthM": 5.0 },
+      "large": { "name": "大型SUV・ミニバン", "widthM": 2.5, "depthM": 5.8 }
+    },
+    "carMarginMm": 200,
+    "builtinGarageWallMarginMm": 300
+  }
+}
