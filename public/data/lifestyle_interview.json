@@ -1,0 +1,223 @@
+{
+  "title": "住ま居る 夫婦の本音＆暮らしAIヒアリング（家づくりカルテ作成）",
+  "version": "1.0.0",
+  "description": "夫婦のすれ違いを解消し、車や生活動線、秘密の本音まで引き出してAIが融合案を提案するヒアリング体系",
+  "phases": [
+    {
+      "id": "phase0_basics",
+      "title": "ステップ1：まずは基本の条件（車・家族・今の不満）",
+      "target": "common",
+      "questions": [
+        {
+          "id": "car_parking",
+          "category": "parking",
+          "title": "🚗 車は何台停めますか？来客用や将来の台数は？",
+          "description": "埼玉の家づくりでは、駐車場の台数と配置が土地の広さや庭、建物の形を大きく左右します。",
+          "type": "single_choice",
+          "options": [
+            { "id": "car_1", "label": "日常用 1台（通勤・買い物）", "tags": ["1台"] },
+            { "id": "car_2", "label": "日常用 2台（夫婦一人1台必須）", "tags": ["2台", "一人1台"] },
+            { "id": "car_2_plus_guest", "label": "日常用 2台 ＋ 来客用1台（合計3台分）", "tags": ["3台", "来客用あり"] },
+            { "id": "car_1_plus_guest", "label": "日常用 1台 ＋ 来客用1台（合計2台分）", "tags": ["2台", "来客用あり"] },
+            { "id": "car_garage", "label": "ビルトインガレージ（雨に濡れずに乗り降りしたい）", "tags": ["インナーガレージ"] },
+            { "id": "car_none", "label": "車は持たない（自転車・バイク中心）", "tags": ["車なし"] }
+          ],
+          "sub_question": {
+            "title": "EV（電気自動車）の充電コンセントや、自転車・バイクは何台置きますか？",
+            "type": "text",
+            "placeholder": "例：子ども用自転車2台、将来EVコンセント欲しい、夫の大型バイク1台"
+          }
+        },
+        {
+          "id": "current_home_frustration",
+          "category": "pain_point",
+          "title": "❄️ 今のお住まいで「一番ガマンならない不満」は何ですか？",
+          "description": "現在のストレスの裏返しこそが、新居で絶対に叶えたい最優先事項です。（複数選択可）",
+          "type": "multi_choice",
+          "options": [
+            { "id": "p_cold", "label": "冬寒くて朝起きられない・結露・窓の冷気", "icon": "🥶" },
+            { "id": "p_hot", "label": "夏2階がサウナのように暑い・エアコンが効かない", "icon": "🥵" },
+            { "id": "p_storage", "label": "収納が足りず、リビングや玄関に物が溢れる", "icon": "📦" },
+            { "id": "p_laundry", "label": "洗濯物を干す・たたむ・しまう動線が最悪", "icon": "👕" },
+            { "id": "p_sound", "label": "足音や生活音、周囲の騒音・夜勤の生活リズム", "icon": "🔊" },
+            { "id": "p_utility", "label": "電気代・光熱費が高すぎて請求書を見るのが怖い", "icon": "⚡" },
+            { "id": "p_narrow", "label": "キッチンや脱衣所が狭く、すれ違いや作業がしづらい", "icon": "🚪" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase1_daily_flow",
+      "title": "ステップ2：生活動線とリアルな時間割（夫婦共通）",
+      "target": "common",
+      "questions": [
+        {
+          "id": "laundry_cycle",
+          "category": "laundry",
+          "title": "👕 洗濯はいつ、どこで乾かして、どこにしまいますか？",
+          "type": "single_choice",
+          "options": [
+            {
+              "id": "l_kanta_famcl",
+              "label": "乾太くん（ガス乾燥機）完結 ➔ そのまま隣のファミクロへ（たたむ手間ゼロ）",
+              "description": "共働き最強の時短動線。部屋干しも外干しも不要に。"
+            },
+            {
+              "id": "l_indoor_hang",
+              "label": "年中部屋干し派（ランドリールームで除湿機・換気乾燥）",
+              "description": "花粉・黄砂・PM2.5・雨を完全シャットアウト。"
+            },
+            {
+              "id": "l_outdoor_sun",
+              "label": "やっぱり太陽の下で外干ししたい（バルコニー・庭）",
+              "description": "お日様の匂い重視。ただし取り込み動線は短く。"
+            },
+            {
+              "id": "l_night_wash",
+              "label": "夜寝る前に回して朝までに乾かしたい（静音配慮必須）",
+              "description": "寝室やLDKに音が響かない防音区画が必要。"
+            }
+          ]
+        },
+        {
+          "id": "morning_rush",
+          "category": "morning",
+          "title": "⏰ 平日の朝7:00〜7:30、洗面台の「渋滞」は起きますか？",
+          "type": "single_choice",
+          "options": [
+            {
+              "id": "m_congestion_high",
+              "label": "毎日大渋滞！夫婦も子どもも時間がかぶる（2人並んで使いたい）",
+              "suggest": "幅1200mm以上のワイドカウンター または 2ボウル洗面"
+            },
+            {
+              "id": "m_bath_separate",
+              "label": "入浴・着替えと、歯磨き・メイクの場所を完全に分けたい",
+              "suggest": "「洗面室」と「脱衣室」の完全2室分離（誰かが風呂でも気兼ねなし）"
+            },
+            {
+              "id": "m_normal",
+              "label": "起きる時間がズレているので1人ずつ使えればOK",
+              "suggest": "標準的な機能的洗面スペース＋使いやすい収納"
+            }
+          ]
+        },
+        {
+          "id": "kitchen_style",
+          "category": "kitchen",
+          "title": "🍳 キッチンからリビングへの見え方と配膳動線は？",
+          "type": "single_choice",
+          "options": [
+            {
+              "id": "k_open_island",
+              "label": "開放的なフルフラット対面・アイランド（家族と会話・ぐるぐる回れる）",
+              "point": "空間が広く見える。常に綺麗に保つ工夫が必要。"
+            },
+            {
+              "id": "k_hidden_hands",
+              "label": "手元隠し立ち上がりカウンター（洗い物や手元の散らかりを隠したい）",
+              "point": "リビングからは常にスッキリ見え、ズボラでも安心。"
+            },
+            {
+              "id": "k_side_dining",
+              "label": "キッチン×ダイニング横並び一直線（横スライド2歩で配膳・下膳）",
+              "point": "振り返る必要ゼロ。共働きの片付けが圧倒的にラクに。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase2_husband",
+      "title": "ステップ3：夫のライフスタイルとこだわり（夫モード）",
+      "target": "husband",
+      "questions": [
+        {
+          "id": "h_retreat",
+          "category": "space",
+          "title": "🛋️ 家の中で「自分だけの居場所・こもり感」は欲しいですか？",
+          "type": "single_choice",
+          "options": [
+            { "id": "h_private_room", "label": "しっかり集中できる独立した書斎・ワークルーム（2〜3帖）", "point": "Web会議・PC作業・読書" },
+            { "id": "h_nook", "label": "LDKの片隅に、程よく気配を感じる1.5帖のおこもりヌック", "point": "家族と同じ空間にいながら自分の世界" },
+            { "id": "h_garage", "label": "バイク・DIY・車をいじれる土間ガレージスペース", "point": "男のロマン・趣味の作業場" },
+            { "id": "h_none_living", "label": "個室は不要。広々としたリビングのソファーでくつろげれば満足", "point": "家族団らん最優先" }
+          ]
+        },
+        {
+          "id": "h_bath_time",
+          "category": "bath",
+          "title": "🛁 お風呂や晩酌、休日のリラックス方法は？",
+          "type": "single_choice",
+          "options": [
+            { "id": "h_bath_big", "label": "足を伸ばせる広めの浴槽で、1日の疲れをじっくり癒やしたい", "point": "1618〜1620サイズ" },
+            { "id": "h_terrace_beer", "label": "お風呂上がりや休日に、外の風を感じてビールを飲めるテラス・ウッドデッキ", "point": "アウトドアリビング" },
+            { "id": "h_movie", "label": "大画面テレビやスピーカーで、映画・スポーツ観戦に没頭したい", "point": "遮音と配線配慮" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase3_wife",
+      "title": "ステップ4：妻のライフスタイルとストレスゼロ（妻モード）",
+      "target": "wife",
+      "questions": [
+        {
+          "id": "w_storage_peace",
+          "category": "tidying",
+          "title": "🧹 「これだけは視界から消し去りたい！」と思う生活感は？",
+          "type": "multi_choice",
+          "options": [
+            { "id": "w_husband_clutter", "label": "夫や子どもの脱ぎっぱなしの服・カバン・郵便物の放置", "icon": "🎒" },
+            { "id": "w_appliances", "label": "炊飯器・電子レンジ・トースターなどのキッチン家電の雑多感", "icon": "🍞" },
+            { "id": "w_laundry_hang", "label": "リビングにぶら下がる部屋干し洗濯物の生活感", "icon": "🧦" },
+            { "id": "w_shoes_toys", "label": "玄関の脱ぎ散らかした靴・ベビーカー・おもちゃ", "icon": "👟" }
+          ]
+        },
+        {
+          "id": "w_me_time",
+          "category": "personal",
+          "title": "💄 忙しい毎日の中で「自分をいたわる時間」はどう過ごしたい？",
+          "type": "single_choice",
+          "options": [
+            { "id": "w_powder_corner", "label": "ゆっくり座ってスキンケアやメイクができる自分専用パウダースペース", "point": "寝室または洗面横" },
+            { "id": "w_kitchen_desk", "label": "料理の合間にコーヒーを飲んだり手帳を開けるママズコーナー", "point": "パントリー奥のミニデスク" },
+            { "id": "w_sun_sofa", "label": "陽だまりの中で、誰にも邪魔されず読書やスマホを見られる窓辺ベンチ", "point": "陽だまりヌック" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phase4_confession",
+      "title": "ステップ5：【秘密の本音】パートナーには直接言いにくいこと",
+      "target": "secret",
+      "notice": "※ここで答えた内容は、相手を否定するためではなく、AIが『お互いがハッピーになる融合案・妥協案』を導き出すために使われます。",
+      "questions": [
+        {
+          "id": "husband_secret_wish",
+          "target": "husband",
+          "title": "🤫 【夫の本音】実は妻に言いづらいけれど、これだけは譲れない・心配なこと",
+          "type": "single_choice",
+          "options": [
+            { "id": "hs_budget", "label": "予算オーバーが本当に心配。でもケチだと思われたくない", "ai_resolve": "構造・断熱（命）は最高仕様のまま、将来可変設計で初期建築費を最適化" },
+            { "id": "hs_hobby", "label": "漫画・ゲーム・コレクションを捨てろと言われたくない、並べる場所が欲しい", "ai_resolve": "ウォークインクローゼット奥や階段下の隠しニッチ本棚で家族の視界に入れずに両立" },
+            { "id": "hs_space", "label": "妻の希望ばかり優先されて、自分の居場所（1.5帖でもいい）が消えないか不安", "ai_resolve": "デッドスペースを活用した「おこもり書斎ヌック」で面積を増やさずに創出" }
+          ],
+          "custom_text_prompt": "自由記入（任意）：パートナーには内緒の要望があればご記入ください"
+        },
+        {
+          "id": "wife_secret_wish",
+          "target": "wife",
+          "title": "🤫 【妻の本音】実は夫に言いづらいけれど、これだけは譲れない・直してほしいこと",
+          "type": "single_choice",
+          "options": [
+            { "id": "ws_lazy_clutter", "label": "夫が片付けられない人なので、言わなくても勝手に片付く仕組みにしておきたい", "ai_resolve": "帰宅動線に『とりあえず放り込むだけフック＆カゴ』を設置し、散らかりを自動防止" },
+            { "id": "ws_guest_privacy", "label": "夫の友達や来客が来た時、寝室や脱衣所・洗濯物は絶対に絶対に見られたくない", "ai_resolve": "パブリック（LDK）とプライベート（水回り・寝室）を1枚の引き戸で完全遮断できる2WAY動線" },
+            { "id": "ws_kitchen_lonely", "label": "キッチンで孤独に孤立して料理や後片付けをするのは絶対に嫌。家族を視界に入れたい", "ai_resolve": "対面フラット＋スタディコーナー連動で、子どもを見守り夫と会話しながら料理できる配置" }
+          ],
+          "custom_text_prompt": "自由記入（任意）：パートナーには内緒の要望があればご記入ください"
+        }
+      ]
+    }
+  ]
+}
