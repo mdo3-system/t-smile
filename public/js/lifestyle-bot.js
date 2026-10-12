@@ -1,46 +1,50 @@
 /**
  * lifestyle-bot.js - 夫婦の本音＆暮らしAIヒアリング・家づくりカルテ生成エンジン
+ * Version 1.2.0: LINE招待・夫スマホ/妻スマホ同期・建築士プロ知恵袋対応
  */
 (function() {
   'use strict';
 
   let interviewData = null;
   let currentPhaseIndex = 0;
+  let currentRole = 'all'; // 'all', 'husband', 'wife'
+
   let answers = {
     car_parking: null,
-    car_details: '',
-    pain_points: [],
+    car_parking_details: '',
+    current_home_frustration: [],
     laundry_cycle: null,
     morning_rush: null,
+    stair_and_ph: null,
     kitchen_style: null,
-    husband_retreat: null,
-    husband_bath: null,
-    wife_clutter: [],
-    wife_me_time: null,
-    husband_secret: null,
-    husband_secret_text: '',
-    wife_secret: null,
-    wife_secret_text: ''
+    h_retreat: null,
+    h_bath_time: null,
+    w_storage_peace: [],
+    w_me_time: null,
+    husband_secret_wish: null,
+    husband_secret_wish_text: '',
+    wife_secret_wish: null,
+    wife_secret_wish_text: ''
   };
 
-  // 空間パーツ別イメージ集（独立した生活シーンパーツ）
+  // 空間パーツ別イメージ集
   const spaceParts = [
     {
       id: "part_wash_sep",
-      title: "🚿 洗面室・脱衣室の完全分離＋ワイドカウンター",
+      title: "🚿 洗面室・脱衣室（着替え室）の完全分離＋ワイドカウンター",
       desc: "誰かが入浴中でも気兼ねなく歯磨き・ドライヤー・メイクができる2室分離。朝7時の洗面渋滞を完全に解消します。",
       img: "/images/cases/case4_washitsu_living.jpg"
     },
     {
       id: "part_laundry_famcl",
       title: "👕 乾太くん×ファミクロ直結「たたむ手間ゼロ動線」",
-      desc: "脱衣室で洗濯乾燥した服を、隣のファミリークローゼットへハンガーのまま収納。リビングの洗濯物の山を根絶。",
+      desc: "脱衣室でガス高速乾燥した服を、隣のファミリークローゼットへハンガーのまま収納。リビングの洗濯物の山を根絶。",
       img: "/images/natural_interior_aroma.jpg"
     },
     {
       id: "part_nook_study",
       title: "🛋️ 階段下・LDK一角のおこもりヌック書斎（1.5帖）",
-      desc: "完全個室にせずとも、家族の気配を感じながら自分の世界に浸れる秘密基地。面積を増やさずご主人の居場所を創出。",
+      desc: "完全個室にせずとも、家族の気配を感じながら自分の世界に浸れる秘密基地。面積・コストを増やさずご主人の居場所を創出。",
       img: "/images/cases/case6_library_stair.jpg"
     },
     {
@@ -62,6 +66,9 @@
     const container = document.getElementById('lifestyle-interview-root');
     if (!container) return;
 
+    // URLパラメータからの共有復帰（LINE等からの招待）
+    parseUrlParams();
+
     // ローカルストレージ復帰
     try {
       const saved = localStorage.getItem('sumairu_lifestyle_answers');
@@ -77,10 +84,40 @@
         interviewData = await res.json();
       }
     } catch(e) {
-      console.warn("Failed to load interview JSON, fallback ready", e);
+      console.warn("Failed to load interview JSON", e);
     }
 
     renderCurrentPhase();
+  }
+
+  function parseUrlParams() {
+    try {
+      const hash = window.location.hash || '';
+      const search = window.location.search || '';
+      const params = new URLSearchParams(search || hash.split('?')[1] || '');
+      
+      const roleParam = params.get('role');
+      if (roleParam) currentRole = roleParam;
+
+      const dataParam = params.get('d');
+      if (dataParam) {
+        const decoded = JSON.parse(decodeURIComponent(escape(atob(dataParam))));
+        answers = Object.assign(answers, decoded);
+        saveProgress();
+      }
+    } catch(e) {
+      console.warn("Failed to parse URL sync data", e);
+    }
+  }
+
+  function generateShareUrl(targetRole) {
+    try {
+      const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(answers))));
+      const baseUrl = window.location.origin + window.location.pathname;
+      return `${baseUrl}?role=${targetRole}&d=${encoded}#madori-consultation-bot`;
+    } catch(e) {
+      return window.location.href;
+    }
   }
 
   function saveProgress() {
@@ -110,6 +147,10 @@
     const currentPhase = phases[currentPhaseIndex];
     const progressPercent = Math.round(((currentPhaseIndex) / totalPhases) * 100);
 
+    // LINE招待URLの作成
+    const inviteWifeUrl = generateShareUrl('wife');
+    const inviteHusbandUrl = generateShareUrl('husband');
+
     let html = `
       <div class="lifestyle-interview-container">
         <!-- ヘッダー -->
@@ -117,9 +158,31 @@
           <div class="lifestyle-header-badge">🌿 夫婦の会話が弾む・AI設計ヒアリング</div>
           <h2 class="lifestyle-header-title">${currentPhase.title}</h2>
           <p class="lifestyle-header-desc">
-            夫婦で画面を見ながら、あーでもないこーでもないと自由に選んでみてください。<br>
-            ※途中で閉じた場合も、前回の続きからいつでも再開できます。
+            夫婦で画面を見ながら選ぶか、LINEでパートナーのスマホに送って別々に答えて合体することも可能です。<br>
+            ※途中で閉じても、前回の続きからいつでも再開できます。
           </p>
+        </div>
+
+        <!-- LINE共有・スマホ招待バナー -->
+        <div style="padding: 1rem 1.5rem 0.5rem; background: #fafaf9;">
+          <div class="lifestyle-line-invite-bar">
+            <div>
+              <div style="font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+                <span>📲</span> 夫と妻、別々のスマホで回答して合体する
+              </div>
+              <div style="font-size: 0.78rem; opacity: 0.9; margin-top: 2px;">
+                片方が答えたらLINEでパートナーに送るだけで、お互いの本音を自動で合体・融合します。
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <a href="https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(inviteWifeUrl)}" target="_blank" rel="noopener" class="lifestyle-line-btn">
+                💬 妻にLINEで送る
+              </a>
+              <a href="https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(inviteHusbandUrl)}" target="_blank" rel="noopener" class="lifestyle-line-btn">
+                💬 夫にLINEで送る
+              </a>
+            </div>
+          </div>
         </div>
 
         <!-- プログレスバー -->
@@ -149,6 +212,15 @@
         <div class="lifestyle-question-box" data-qid="${q.id}">
           <div class="lifestyle-question-title">${q.title}</div>
           ${q.description ? `<div class="lifestyle-question-hint">${q.description}</div>` : ''}
+
+          <!-- 建築士の知恵袋・目からウロコTip -->
+          ${q.pro_tip ? `
+            <div class="lifestyle-protip-box">
+              <div class="lifestyle-protip-title">${q.pro_tip.title}</div>
+              <p class="lifestyle-protip-text">${q.pro_tip.text}</p>
+            </div>
+          ` : ''}
+
           <div class="lifestyle-options-grid">
       `;
 
@@ -220,7 +292,7 @@
     // 選択肢クリック
     const optionBtns = container.querySelectorAll('.lifestyle-option-btn');
     optionBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('click', () => {
         const qid = btn.getAttribute('data-qid');
         const optid = btn.getAttribute('data-optid');
         const type = btn.getAttribute('data-type');
@@ -237,7 +309,6 @@
           }
         } else {
           answers[qid] = optid;
-          // 同一qidの他ボタンの選択解除
           const siblingBtns = container.querySelectorAll(`.lifestyle-option-btn[data-qid="${qid}"]`);
           siblingBtns.forEach(b => b.classList.remove('selected'));
           btn.classList.add('selected');
@@ -290,18 +361,35 @@
 
   // AI処方箋・家づくりカルテの出力
   function renderCarteOutput(container) {
-    // 融合案・妥協案のロジック導出
     const fusions = generateAIFusionRecommendations(answers);
+    const completeShareUrl = generateShareUrl('both_done');
 
     let html = `
       <div class="lifestyle-interview-container">
         <div class="lifestyle-header" style="background: linear-gradient(135deg, #064e3b 0%, #022c22 60%, #0f172a 100%);">
-          <div class="lifestyle-header-badge" style="background:#10b981;color:#fff;">🎉 ヒアリング完了・診断結果</div>
+          <div class="lifestyle-header-badge" style="background:#10b981;color:#fff;">🎉 夫婦の想いが合体・診断完了</div>
           <h2 class="lifestyle-header-title">【住ま居る AI家づくりカルテ】<br>ご夫婦の理想と暮らしの処方箋</h2>
           <p class="lifestyle-header-desc">
             お疲れ様でした！ご夫婦それぞれの回答と本音をAIが整理し、<strong>「お互いが我慢しない融合案・妥協案」</strong>を導き出しました。<br>
             この処方箋をもとにご家族でさらに話し合ったり、設計相談のベースとしてご活用いただけます。
           </p>
+        </div>
+
+        <!-- 完成カルテのLINE共有バナー -->
+        <div style="padding: 1rem 1.5rem 0.5rem; background: #fafaf9;">
+          <div class="lifestyle-line-invite-bar">
+            <div>
+              <div style="font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+                <span>📲</span> この完成カルテをLINEでパートナーや家族に送る
+              </div>
+              <div style="font-size: 0.78rem; opacity: 0.9; margin-top: 2px;">
+                相手のスマホでもこのカルテをそのまま閲覧・再編集できます。
+              </div>
+            </div>
+            <a href="https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(completeShareUrl)}" target="_blank" rel="noopener" class="lifestyle-line-btn">
+              💬 LINEでカルテを共有
+            </a>
+          </div>
         </div>
 
         <div class="lifestyle-body" style="background:#ffffff;">
@@ -459,15 +547,23 @@
 
     // 3. ランドリー＆生活感隠し
     list.push({
-      title: "妻の「生活感を見せたくない」 × 共働きの「洗濯時短」融合案",
-      solution: "乾太くんまたは部屋干しスペースを脱衣室に設け、そのまま隣のウォークスルー・ファミリークローゼットへ直結。来客が通るLDKや玄関からは引き戸1枚で完全に視界を遮断できるため、急な来客があっても洗濯物の散らかりが1秒で隠せます。"
+      title: "妻の「生活感を見せたくない」 × 共働きの「洗濯時短（乾太くん）」融合案",
+      solution: "乾太くん（ガス衣類乾燥機）または部屋干しスペースを脱衣室に設け、そのまま隣のウォークスルー・ファミリークローゼットへ直結。来客が通るLDKや玄関からは引き戸1枚で完全に視界を遮断できるため、急な来客があっても洗濯物の散らかりが1秒で隠せます。"
     });
 
     // 4. 洗面渋滞の解消
     list.push({
-      title: "朝の身支度渋滞 × 家族のプライバシー配慮",
+      title: "朝の身支度渋滞 × 家族のプライバシー配慮（着替え室の分離）",
       solution: "【洗面室と脱衣室の完全分離】を採用。誰かが朝シャワーを浴びたり入浴していても、気兼ねなく洗面台で歯磨きやメイクが可能。幅1200mmのカウンターなら大人2人が並んでストレスフリーに朝の支度を完了できます。"
     });
+
+    // 5. 階段・PH・屋上の立体活用
+    if (ans.stair_and_ph === 'stair_nook' || ans.stair_and_ph === 'stair_rooftop_ph') {
+      list.push({
+        title: "階段室の立体活用（ルンバ基地・ヌック ＆ PH光の井戸）",
+        solution: "階段下にお掃除ロボット専用基地やコンセントを内蔵し、段差下を無駄なく活用。さらに上部ペントハウス（PH）から階下へ自然光を落とし込むことで、北側でも明るく風通しの良いパッシブ換気経路を確立します。"
+      });
+    }
 
     return list;
   }
