@@ -410,6 +410,82 @@
         </div>
       </div>
 
+      <!-- 実例ドキュメント：夫婦のあーでもないこーでもない会話ストーリー -->
+      <div style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 40%, #ffffff 100%); border: 2px solid #f59e0b; border-radius: 24px; padding: 2.5rem; margin: 3.5rem 0; box-shadow: 0 12px 35px rgba(217, 119, 6, 0.12);">
+        <div style="display: inline-block; background: #d97706; color: #fff; font-size: 0.85rem; font-weight: 900; padding: 4px 16px; border-radius: 20px; margin-bottom: 0.8rem;">
+          📖 実録・夫婦の家づくりカルテ活用ストーリー
+        </div>
+        <h2 style="font-size: 1.85rem; font-weight: 900; color: #78350f; margin: 0.4rem 0 0.8rem; line-height: 1.4;">
+          「天井は木張りがいい？それとも白い吹き抜け？」<br>
+          <span style="font-size: 1.35rem; color: #b45309;">図面1枚から始まった、夫婦の“あーでもない、こーでもない”</span>
+        </h2>
+        <p style="font-size: 0.98rem; color: #92400e; line-height: 1.85; margin-bottom: 2rem;">
+          設計士との対面打ち合わせは2時間で終了。「あとは次回までに考えてきてくださいね」と言われても、平面図だけでは実際の空間の明るさや天井の圧迫感は分かりません。<br>
+          そんな時、ご自宅のスマホから<strong>代表専用 Dell Precision 3680（Stable Diffusion）</strong>へリクエスト。<br>
+          ご夫婦で意見が割れたポイントを、わずか数秒で何パターンもビジュアル化して納得するまでの実際のプロセスです。
+        </p>
+
+        <!-- 3ステップの会話比較カード -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 1.8rem;">
+          
+          <!-- STEP 1: 初回生成（木張り天井） -->
+          <div style="background: #ffffff; border: 1.5px solid #fed7aa; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+              <span style="background: #ea580c; color: #fff; font-size: 0.78rem; font-weight: 800; padding: 3px 10px; border-radius: 12px;">STEP 1 ｜ 夫のこだわり</span>
+              <span style="font-size: 0.78rem; color: #78350f; font-weight: 700;">生成時間: 12.9秒</span>
+            </div>
+            <img src="/renders/case02_generated_3d_plan.png" alt="天井木張りバージョン" style="width: 100%; height: 210px; object-fit: cover; border-radius: 10px; margin-bottom: 1rem;" />
+            <h4 style="margin: 0 0 0.6rem; color: #0f172a; font-size: 1.05rem;">① 天井木張り・落ち着きの和モダン</h4>
+            
+            <!-- 夫婦の会話吹き出し -->
+            <div style="background: #f8fafc; border-radius: 10px; padding: 0.8rem 1rem; font-size: 0.85rem; line-height: 1.6; margin-top: auto; border-left: 4px solid #0284c7;">
+              <strong style="color: #0369a1;">👨 夫:</strong> 「高級旅館みたいに天井を全部木張りにしたら、重厚感があって落ち着く空間にならないかな？」<br>
+              <strong style="color: #c026d3;">👩 妻:</strong> 「素敵だけど、少し部屋が暗く見えそう…。せっかく南向きだし、もっとパッと明るい開放感が欲しいかも？」
+            </div>
+          </div>
+
+          <!-- STEP 2: 妻のリクエストで再生成（白い左官壁 × 吹き抜け） -->
+          <div style="background: #ffffff; border: 2.5px solid #059669; border-radius: 16px; padding: 1.5rem; box-shadow: 0 6px 20px rgba(5, 150, 105, 0.15); display: flex; flex-direction: column; position: relative;">
+            <div style="position: absolute; top: -12px; right: 20px; background: #059669; color: #fff; font-size: 0.75rem; font-weight: 900; padding: 3px 12px; border-radius: 12px;">
+              ★ 夫婦で満場一致！
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+              <span style="background: #059669; color: #fff; font-size: 0.78rem; font-weight: 800; padding: 3px 10px; border-radius: 12px;">STEP 2 ｜ 妻の提案で再生成</span>
+              <span style="font-size: 0.78rem; color: #047857; font-weight: 700;">生成時間: 8.9秒</span>
+            </div>
+            <img src="/renders/case02_var_b_white_fukinuke.png" alt="天井白い左官壁吹き抜けバージョン" style="width: 100%; height: 210px; object-fit: cover; border-radius: 10px; margin-bottom: 1rem;" />
+            <h4 style="margin: 0 0 0.6rem; color: #065f46; font-size: 1.05rem;">② 天井白い左官壁 × 一部吹き抜け大開口</h4>
+            
+            <!-- 夫婦の会話吹き出し -->
+            <div style="background: #f0fdf4; border-radius: 10px; padding: 0.8rem 1rem; font-size: 0.85rem; line-height: 1.6; margin-top: auto; border-left: 4px solid #059669;">
+              <strong style="color: #0369a1;">👨 夫:</strong> 「うわっ！吹き抜けの高窓から光が降り注いで、一気に明るくなった！天井も白壁だとすごく広く感じるね！」<br>
+              <strong style="color: #c026d3;">👩 妻:</strong> 「やっぱり白い珪藻土壁にして大正解！これなら朝の光もたっぷり入るし、この案をカルテに保存して社長に見せよう！」
+            </div>
+          </div>
+
+          <!-- STEP 3: 夜の雰囲気も検証（露出梁 × トワイライト） -->
+          <div style="background: #ffffff; border: 1.5px solid #fed7aa; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+              <span style="background: #6366f1; color: #fff; font-size: 0.78rem; font-weight: 800; padding: 3px 10px; border-radius: 12px;">STEP 3 ｜ 夜のシーンも検証</span>
+              <span style="font-size: 0.78rem; color: #4338ca; font-weight: 700;">生成時間: 6.5秒</span>
+            </div>
+            <img src="/renders/case02_var_c_twilight_beams.png" alt="夕暮れ露出梁バージョン" style="width: 100%; height: 210px; object-fit: cover; border-radius: 10px; margin-bottom: 1rem;" />
+            <h4 style="margin: 0 0 0.6rem; color: #0f172a; font-size: 1.05rem;">③ 露出化粧梁 × 夕暮れの間接照明</h4>
+            
+            <!-- 夫婦の会話吹き出し -->
+            <div style="background: #f8fafc; border-radius: 10px; padding: 0.8rem 1rem; font-size: 0.85rem; line-height: 1.6; margin-top: auto; border-left: 4px solid #6366f1;">
+              <strong style="color: #0369a1;">👨 夫:</strong> 「夜に間接照明を灯した時の雰囲気も気になるね。梁の陰影はどう出るかな？」<br>
+              <strong style="color: #c026d3;">👩 妻:</strong> 「夜はリゾートホテルみたいに幻想的…！昼の明るさと夜のくつろぎ、両方納得できたから迷いがなくなったね！」
+            </div>
+          </div>
+
+        </div>
+
+        <div style="margin-top: 1.8rem; background: rgba(255, 255, 255, 0.8); border-radius: 12px; padding: 1.2rem 1.5rem; font-size: 0.92rem; color: #78350f; text-align: center; font-weight: 700;">
+          ✨ 1回の対面打ち合わせは2時間。でも、ご自宅で何時間でも心ゆくまで試せるから、一切の後悔のない「納得の家づくり」が実現します。
+        </div>
+      </div>
+
       <!-- 確定平面図からの立体化ギャラリー -->
       <h2 class="lp-h2" style="border-left: 5px solid #0284c7; margin-top: 3.5rem;">3. 確定図面をもとにした多角的な立体化（平面図確定後）</h2>
       <p style="font-size: 1rem; color: #334155;">
