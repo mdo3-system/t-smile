@@ -840,7 +840,11 @@ def generate_ai_studio_page():
           <div style="text-align: center; margin-bottom: 1.5rem;">
             <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">🏠</div>
             <h3 style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0;">家カルテ・マジックリンクログイン</h3>
-            <p style="font-size: 0.88rem; color: #64748b; margin-top: 0.4rem;">パスワード不要。ご登録のメールアドレスを入力すると、ワンタイムログインURLが届きます。</p>
+            <p style="font-size: 0.86rem; color: #64748b; margin-top: 0.4rem;">設計お申し込み時にお伺いしたメールアドレスでログインできます。<br>パスワード不要のワンタイムURLをお届けします。</p>
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 0.6rem 0.8rem; margin-top: 0.8rem; font-size: 0.8rem; color: #166534; text-align: left; display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 1.2rem;">💬</span>
+              <span><strong>公式LINE友だち登録（新規開設予定）：</strong>公式LINEへご登録いただくと、Dell Precision 3680で生成されたパースの完成通知や確定図面がスマホLINEへ直接届くようになります。</span>
+            </div>
           </div>
 
           <form id="magic-login-form" onsubmit="handleMagicLoginSubmit(event)">
