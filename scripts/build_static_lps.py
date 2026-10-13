@@ -1558,6 +1558,14 @@ def generate_flow_page():
         "mainEntity": [
             {
                 "@type": "Question",
+                "name": "3次元点群データはWEB上でずっと見ることができますか？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "WEBブラウザ上での3D点群クラウド閲覧は設計期間となる約半年間（約6ヶ月）ご利用いただけます。永続的にWEB上で閲覧できるものではございませんが、点群から作成したCAD現況図や断面図面はずっとお手元に残ります（生データは専用ソフトが必要なため基本はお渡ししませんが実費約8,000円で受領可能）。"
+                }
+            },
+            {
+                "@type": "Question",
                 "name": "なぜ契約前に「15万円の設計お申し込み」が必要なのですか？",
                 "acceptedAnswer": {
                     "@type": "Answer",
@@ -1722,6 +1730,9 @@ def generate_flow_page():
           <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">
             敷地をレーザースキャンした7GB超の3D点群データ。敷地のミリ単位の高低差、隣家窓の位置、電柱、越境物、擁壁の勾配を画面上で360度いつでも把握できます。
           </p>
+          <div style="margin-top: 0.8rem; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 0.6rem 0.8rem; font-size: 0.8rem; color: #0369a1; line-height: 1.6;">
+            <strong>※3次元閲覧期間について：</strong>WEBブラウザ上での3D点群クラウド閲覧は設計・検討期間となる<strong>約半年間（約6ヶ月）</strong>有効です。ずっとWEB上で閲覧できるものではありませんが、設計に必要な図面一式はずっとお手元に残ります。
+          </div>
         </div>
 
         <!-- 特典2: 行政調査 -->
@@ -1790,7 +1801,13 @@ def generate_flow_page():
             </span>
           </div>
         </div>
-        <p style="color: #94a3b8; font-size: 0.82rem; text-align: center; margin-top: 0.9rem; margin-bottom: 0;">
+        <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid #334155; border-radius: 8px; padding: 1rem 1.2rem; margin-top: 1.2rem; font-size: 0.84rem; color: #cbd5e1; line-height: 1.75; text-align: left;">
+          <strong style="color: #38bdf8;">📌 3次元点群データの閲覧期間とデータのお渡しについて（重要）：</strong><br>
+          ・<strong>3次元WEB閲覧期間：</strong>JFD社のクラウドシステム上での3次元立体閲覧は、設計・プラン検討期間である<strong>約半年間（約6ヶ月）</strong>ご利用いただけます。ずっとWEB上で見続けられるものではありませんが、設計打ち合わせや配置確認には十分な期間を確保しております。<br>
+          ・<strong>お手元に残る図面（一生の資産）：</strong>この点群データから作成された<strong>【CAD敷地現況図】【等高線断面図】【役所行政調査報告書】</strong>は、紙およびPDFデータとしてすべてお客様へお渡しします。万一ご契約に至らなかった場合でもお手元に残るため、他社建築時も含め実務上はこれで完全に十分です。<br>
+          ・<strong>点群生データについて：</strong>7GB超の点群生データ自体は専用の点群解析CADソフトがないと扱えないため通常はお渡ししておりません（※ご希望の場合は実費オプション＋約8,000円程度で生データ受領も可能ですが、基本的には図面一式で十分です）。
+        </div>
+        <p style="color: #94a3b8; font-size: 0.82rem; text-align: center; margin-top: 0.6rem; margin-bottom: 0;">
           ※敷地の場所や個人情報が特定されないよう配慮したサンプルデータ画面です。
         </p>
       </div>
@@ -2032,6 +2049,13 @@ def generate_flow_page():
       <!-- FAQ Section -->
       <h2 class="lp-h2">4. 家づくりの進め方 よくあるご質問（FAQ）</h2>
       <div style="margin: 1.8rem 0;">
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.4rem; margin-bottom: 1rem;">
+          <h3 style="margin-top: 0; font-size: 1.05rem; color: #0f172a;">Q. 3次元点群データは、WEB上でずっと見ることができますか？</h3>
+          <p style="font-size: 0.92rem; color: #475569; margin-bottom: 0; line-height: 1.75;">
+            A. WEBブラウザ上での3D点群クラウド閲覧は、設計・プラン検討期間となる<strong>約半年間（約6ヶ月）</strong>ご利用いただけます。永続的にWEB上で閲覧できるものではございませんが、設計に必要な期間はしっかりとご確認いただけます。なお、この点群データから作成した「敷地現況図（CAD/PDF）」「高低差・等高線断面図」は紙やPDFとしてずっとお手元に残りますのでご安心ください（※点群の生データ自体は専用ソフトが必要なため基本はお渡ししませんが、ご希望時は実費＋約8,000円程度でデータ受領も可能です）。
+          </p>
+        </div>
+
         <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.4rem; margin-bottom: 1rem;">
           <h3 style="margin-top: 0; font-size: 1.05rem; color: #0f172a;">Q. なぜ契約前に「15万円の設計お申し込み」が必要なのですか？</h3>
           <p style="font-size: 0.92rem; color: #475569; margin-bottom: 0; line-height: 1.75;">
