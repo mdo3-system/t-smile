@@ -10,7 +10,7 @@ import json
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PUBLIC_DIR = os.path.join(BASE_DIR, 'public')
 
-def get_common_layout(title, description, canonical_url, og_image, breadcrumbs, content_html, active_nav=''):
+def get_common_layout(title, description, canonical_url, og_image, breadcrumbs, content_html, active_nav='', extra_head='', extra_scripts=''):
     """共通の洗練されたレスポンシブHTMLレイアウト"""
     crumb_items = []
     crumb_ld_items = []
@@ -67,6 +67,7 @@ def get_common_layout(title, description, canonical_url, og_image, breadcrumbs, 
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css" />
+  {extra_head}
 
   <style>
     :root {{
@@ -307,6 +308,7 @@ def get_common_layout(title, description, canonical_url, og_image, breadcrumbs, 
       <nav>
         <ul class="lp-nav-links">
           <li><a href="/">🏠 ホーム</a></li>
+          <li><a href="/madori-consultation/" class="{ 'active' if active_nav == 'madori' else '' }" style="background: rgba(124, 58, 237, 0.25); color: #c4b5fd; border: 1px solid rgba(167, 139, 250, 0.3);">🤖 間取り相談＆カルテ</a></li>
           <li><a href="/about/" class="{ 'active' if active_nav == 'about' else '' }">🛡️ 会社・信用 (CredLayer)</a></li>
           <li><a href="/performance/" class="{ 'active' if active_nav == 'performance' else '' }">📐 温熱・構造性能</a></li>
           <li><a href="/evidence/" class="{ 'active' if active_nav == 'evidence' else '' }">📊 実測データ実証録</a></li>
@@ -353,13 +355,14 @@ def get_common_layout(title, description, canonical_url, og_image, breadcrumbs, 
       埼玉県知事許可（般－8）第60650号 ｜ 二級建築設計事務所 埼玉県知事（5）第10268号 ｜ 創業1994年・施工実績800棟以上
     </p>
     <p style="margin: 0; font-size: 0.78rem;">
-      <a href="/">トップページ</a> ｜ <a href="/about/">会社概要・信用の証明</a> ｜ <a href="/performance/">温熱・構造性能</a> ｜ <a href="/evidence/">光熱費実証録</a> ｜ <a href="/knowledge/thermal/">温熱知見200選</a>
+      <a href="/">トップページ</a> ｜ <a href="/madori-consultation/">間取り相談＆カルテ</a> ｜ <a href="/about/">会社概要・信用の証明</a> ｜ <a href="/performance/">温熱・構造性能</a> ｜ <a href="/evidence/">光熱費実証録</a> ｜ <a href="/knowledge/thermal/">温熱知見200選</a>
     </p>
     <p style="margin-top: 1.5rem; font-size: 0.75rem; color: #475569;">
       &copy; 株式会社住ま居る (Sumaile Co., Ltd.) All Rights Reserved.
     </p>
   </footer>
 
+  {extra_scripts}
 </body>
 </html>"""
 
@@ -387,8 +390,21 @@ def generate_about_page():
         <tr><th>事業内容</th><td>注文住宅の設計・施工・監理、リフォーム・断熱改修、不動産・相続相談、農地法・都市計画法等の開発手続き</td></tr>
         <tr><th>建設業許可</th><td><strong>埼玉県知事許可（般－8）第60650号</strong></td></tr>
         <tr><th>設計事務所登録</th><td><strong>二級建築設計事務所 埼玉県知事（5）第10268号</strong></td></tr>
-        <tr><th>提携・連携体制</th><td>埼玉西部の熟練職人ネットワーク、外部構造設計事務所、地盤保証機関、瑕疵担保責任保険</td></tr>
+        <tr><th>代表取締役・設計統括</th><td><strong>菅原 功樹</strong>（二級建築士・既存住宅状況調査技術者 ｜ 全国から年間150件の許容応力度構造計算審査を受託する工学設計責任者）</td></tr>
+        <tr><th>現場監理統括</th><td><strong>菅原 （弟）</strong>（2級建築施工管理技士・第二種電気工事士 ｜ 現場施工管理・電気設備まで自社監理）</td></tr>
+        <tr><th>経理・法務・重要事項説明</th><td><strong>菅原 （妻）</strong>（宅地建物取引士 ｜ 資金計画・不動産法務・登記税制サポート）</td></tr>
+        <tr><th>モデルハウスご案内・受付</th><td><strong>ベテラン女性スタッフ2名</strong>（地元を知る温かなつなぎ役。強引な営業は一切行わず、モデルハウスご案内やAIパース指示を担当）</td></tr>
+        <tr><th>提携・連携体制</th><td>埼玉西部の熟練職人ネットワーク、外部構造設計事務所、地盤保証機関、瑕疵担保責任保険（JIO等）</td></tr>
       </table>
+
+      <div class="lp-highlight-box">
+        <h3 style="margin-top: 0; color: #047857; font-size: 1.15rem;">少人数精鋭の「技術者直営工務店」としての姿勢</h3>
+        <p style="margin-bottom: 0; font-size: 0.95rem; line-height: 1.85;">
+          私たちは、莫大な展示場出店料や営業マンの歩合給を建築費に上乗せする営業会社ではありません。<br>
+          また、「家族経営」という情緒やアットホーム感だけを過剰に売りにするつもりもありません。<br>
+          年間150件の構造計算審査を手掛ける二級建築士の設計、施工管理技士・電気工事士の現場監理、宅地建物取引士の法務という、<strong>客観的な国家資格と工学的根拠に裏打ちされた技術者集団</strong>として、一棟一棟責任を持って向き合っています。
+        </p>
+      </div>
 
       <h2 class="lp-h2">2. 代表メッセージ：「価格競争から信用競争への転換」</h2>
       <div class="lp-highlight-box">
@@ -765,7 +781,7 @@ def generate_award_story_page():
       </p>
       <p>
         しかし、地域密着で一棟一棟を手づくりする私たちにとって、<strong>お引渡しは「一生のお付き合いの始まり」</strong>です。<br>
-        「H様、本当におめでとうございます！」「住ま居るさんのおかげですよ」——式典の会場で交わされた笑顔と温かい握手。4年という歳月を経て、お施主様と私たちが同じ誇りを分かち合えたこの日は、会社にとっても生涯忘れられない宝物となりました。
+        「H様、本当におめでとうございます！」「住ま居るさんのおかげですよ」——公の場で晴れやかに表彰されるお施主様のお姿を、心からの誇りと感謝を持って見守りました。4年という歳月を経て、お施主様と私たちが同じ誇りを分かち合えたこの日は、会社にとっても生涯忘れられない宝物となりました。
       </p>
 
       <div class="lp-highlight-box" style="margin-top: 2.5rem; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff; border: 2px solid #d4af37;">
@@ -894,6 +910,316 @@ def generate_thermal_pillar_page():
     return "https://t-smile.co.jp/knowledge/thermal/"
 
 
+def generate_madori_consultation_page():
+    """夫婦・家族の間取りなんでも相談 ＆ 家づくりカルテ無料診断専用LPを生成"""
+    out_dir = os.path.join(PUBLIC_DIR, 'madori-consultation')
+    os.makedirs(out_dir, exist_ok=True)
+    out_file = os.path.join(out_dir, 'index.html')
+
+    web_app_ld = {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "夫婦のAI間取りなんでも相談＆家づくりカルテ無料診断",
+        "url": "https://t-smile.co.jp/madori-consultation/",
+        "applicationCategory": "LifestyleApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "description": "夫と妻それぞれのスマホで直感タップ回答しLINEで共有・合体。意見のズレをAIがプロ視点で融合し、家づくりカルテを即時無料作成するWeb診断システム。",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "JPY"
+        },
+        "provider": {
+            "@type": "Organization",
+            "name": "株式会社住ま居る",
+            "url": "https://t-smile.co.jp/"
+        }
+    }
+
+    faq_ld = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "夫婦で希望の間取りや生活スタイルが合わない時はどう解決しますか？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "どちらかが我慢する妥協案ではなく、動線と視線のゾーニングによって両立を図ります。例えば、夫の趣味やガレージ動線と、妻の家事時短・パントリー動線を分離することで、お互いのプライバシーと利便性を100%確保できます。"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "埼玉での家づくり、車の台数や来客用駐車場・EVはどう計画すべきですか？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "埼玉西部（鶴ヶ島・川越等）では夫婦1人1台（計2台）が基本です。さらに両親や友人が気兼ねなく停められる来客用1台（計3台）や、アプローチ兼用スペースを確保すると路上駐車トラブルを防げます。将来のEV用200V先行配管も必須です。"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "乾太くん（ガス衣類乾燥機）と部屋干し、ランドリー動線の最適解は？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "共働き世帯には乾太くんまたは除湿乾燥付きランドリールームが圧倒的人気です。ポイントは、乾太くんのすぐ下にスライド収納を設け、隣接するファミリークローゼットへ直結させること。洗濯物をたたむ・運ぶ手間をゼロに短縮できます。"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "洗面所と脱衣室・着替え室を分けるメリットは何ですか？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "朝の身支度渋滞を完全解消できる点です。入浴中や着替え中でも、気兼ねなく洗面台で歯磨きやメイクができます。来客時にも生活感のある洗濯カゴを見せずに手を洗ってもらえる清潔な間取りが完成します。"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "電気代が高騰する中、給湯器（お日さまエコキュート）と光熱費はどう選ぶべきですか？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "深夜電力の値上げにより、従来の夜間沸き上げエコキュートはメリットが減少しました。太陽光発電を載せる場合、昼間の余剰電力でお湯を沸かす『お日さまエコキュート』が最も経済的です。"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "階段下の空間活用やペントハウス（PH）、ロフトはどう生かせますか？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "階段下はお掃除ロボット専用基地や書斎ヌックとして有効活用できます。上部のペントハウス（PH）は、北側でも家全体に自然光を落とし込み、夏場の熱気を抜くパッシブ換気塔（光の井戸）として威力を発揮します。"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "家づくりカルテを作成すると、しつこい営業電話や訪問はありますか？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "一切ありません。住ま居るには営業専属マンがおらず、創業30年間一度も訪問販売や売り込み電話を行っておりません。カルテはお客様ご家族の話し合いツールとして自由にご活用いただけます。"
+                }
+            }
+        ]
+    }
+
+    howto_ld = {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "夫婦でスマホを使って家づくりカルテを無料作成する手順",
+        "description": "夫と妻それぞれのスマホで回答し、LINEで合体してAI融合プランを作成する4ステップ。",
+        "step": [
+            {
+                "@type": "HowToStep",
+                "position": 1,
+                "name": "スマホで自分モードを選んで直感回答",
+                "text": "「夫モード」または「妻モード」を選択し、車や生活動線など7問に直感でタップ回答（所要時間約3分）。"
+            },
+            {
+                "@type": "HowToStep",
+                "position": 2,
+                "name": "LINEでパートナーに招待リンクを送信",
+                "text": "「LINEで招待」ボタンをタップしてパートナーに送信。回答データが暗号化URLで共有されます。"
+            },
+            {
+                "@type": "HowToStep",
+                "position": 3,
+                "name": "パートナーのスマホで回答合体＆AI融合案提示",
+                "text": "パートナーがリンクを開くと回答が自動合体。AIが2人の希望を融合した解決策を即時出力します。"
+            },
+            {
+                "@type": "HowToStep",
+                "position": 4,
+                "name": "家づくりカルテを出力・モデルハウス見学へ",
+                "text": "完成したカルテを画面保存・印刷。モデルハウス見学や設計相談の共通言語としてそのまま持参できます。"
+            }
+        ]
+    }
+
+    extra_head = f"""
+  <link rel="stylesheet" href="/css/madori-bot.css" />
+  <link rel="stylesheet" href="/css/lifestyle-bot.css" />
+  <script type="application/ld+json">
+  {json.dumps(web_app_ld, ensure_ascii=False)}
+  </script>
+  <script type="application/ld+json">
+  {json.dumps(faq_ld, ensure_ascii=False)}
+  </script>
+  <script type="application/ld+json">
+  {json.dumps(howto_ld, ensure_ascii=False)}
+  </script>
+"""
+
+    extra_scripts = """
+  <script src="/js/lifestyle-bot.js" defer></script>
+"""
+
+    content = """
+      <span class="lp-hero-tag" style="background: #f5f3ff; color: #7c3aed; border-color: #ddd6fe;">
+        🤖 夫婦・家族で本音整理 ｜ AI間取りなんでも相談 ＆ 家づくりカルテ無料診断
+      </span>
+      <h1 class="lp-h1">
+        「夫のこだわり」と「妻の本音」をプロ視点で融合。<br>
+        <span style="color: #7c3aed;">夫婦それぞれのスマホで答える、家づくりカルテ診断</span>
+      </h1>
+      <p class="lp-lead">
+        家づくりを始めた多くのご夫婦が直面する、「意見の食い違い」や「遠慮」。<br>
+        「車は何台停める？」「洗濯は部屋干し派？乾太くん派？」「朝の洗面渋滞をどう防ぐ？」「お日さまエコキュートと光熱費の関係は？」<br>
+        夫は夫のスマホで、妻は妻のスマホで直感タップ。LINEで送って合体するだけで、<strong>妥協ではなく「両者のいいとこ取り」をするAI融合プラン＆家づくりカルテ</strong>を即時無料で自動生成します。
+      </p>
+
+      <!-- 4ステップ利用ガイド -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 2rem 0 2.5rem;">
+        <div style="background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 12px; padding: 1.2rem; text-align: center;">
+          <div style="font-size: 1.8rem; margin-bottom: 0.3rem;">📱</div>
+          <div style="font-weight: 800; color: #6b21a8; font-size: 0.95rem; margin-bottom: 0.2rem;">STEP 1: スマホで回答</div>
+          <p style="font-size: 0.82rem; color: #64748b; margin: 0; line-height: 1.6;">「夫モード」「妻モード」を選び、7問に直感タップ（約3分）。</p>
+        </div>
+        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 1.2rem; text-align: center;">
+          <div style="font-size: 1.8rem; margin-bottom: 0.3rem;">💬</div>
+          <div style="font-weight: 800; color: #15803d; font-size: 0.95rem; margin-bottom: 0.2rem;">STEP 2: LINEで招待</div>
+          <p style="font-size: 0.82rem; color: #64748b; margin: 0; line-height: 1.6;">招待ボタンからパートナーのLINEへ送信。回答が暗号化URLで共有。</p>
+        </div>
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 1.2rem; text-align: center;">
+          <div style="font-size: 1.8rem; margin-bottom: 0.3rem;">🧩</div>
+          <div style="font-weight: 800; color: #1d4ed8; font-size: 0.95rem; margin-bottom: 0.2rem;">STEP 3: 2人の回答合体</div>
+          <p style="font-size: 0.82rem; color: #64748b; margin: 0; line-height: 1.6;">パートナーが開くと自動合体！意見のズレをAIがプロ視点で融合。</p>
+        </div>
+        <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 1.2rem; text-align: center;">
+          <div style="font-size: 1.8rem; margin-bottom: 0.3rem;">📋</div>
+          <div style="font-weight: 800; color: #b45309; font-size: 0.95rem; margin-bottom: 0.2rem;">STEP 4: カルテ無料出力</div>
+          <p style="font-size: 0.82rem; color: #64748b; margin: 0; line-height: 1.6;">完成したカルテを画面保存・印刷。モデルハウス見学へそのまま持参。</p>
+        </div>
+      </div>
+
+      <!-- インタラクティブ診断ボット本体マウント部 -->
+      <div style="background: #ffffff; border: 2px solid #8b5cf6; border-radius: 16px; padding: 1.8rem 1.2rem; margin: 2rem 0; box-shadow: 0 10px 35px rgba(124, 58, 237, 0.08);">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <span style="background: #7c3aed; color: #fff; font-weight: 800; font-size: 0.82rem; padding: 4px 14px; border-radius: 20px;">
+            ✨ 会員登録不要・完全無料 ｜ スマホ・PC両対応
+          </span>
+          <h2 style="font-size: 1.55rem; color: #4c1d95; margin: 0.7rem 0 0.3rem; font-weight: 800;">
+            夫婦の本音＆暮らしAIヒアリング・カルテ作成
+          </h2>
+          <p style="color: #64748b; font-size: 0.92rem; margin: 0;">
+            まずはご自身のモードを選択してスタートしてください。
+          </p>
+        </div>
+        
+        <!-- Bot Root Mount Point -->
+        <div id="lifestyle-interview-root">
+          <div style="padding: 2.5rem; text-align: center; color: #64748b;">
+            <p>診断システムを初期化しています...</p>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="lp-h2">1. 夫婦の「意見のズレ」をプロはどう解くか？（6大設計知見）</h2>
+      <p>間取りで揉めやすい6大テーマについて、株式会社住ま居るが30年・800棟の実務で培った「両立の設計解法」を公開します。</p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 1.8rem 0;">
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+          <h3 style="margin-top: 0; color: #0284c7; font-size: 1.12rem;">🚗 1. 駐車計画：日常2台＋来客用1台</h3>
+          <p style="font-size: 0.88rem; color: #475569; line-height: 1.75; margin-bottom: 0;">
+            埼玉西部の暮らしでは夫婦1人1台（計2台）が必須。さらに両親や友人が気兼ねなく停められる「来客用1台」をアプローチ兼用で設計。将来のEV用200V先行配管で後悔ゼロに。
+          </p>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+          <h3 style="margin-top: 0; color: #059669; font-size: 1.12rem;">🧺 2. 乾太くん × 脱衣室 × ファミクロ直結</h3>
+          <p style="font-size: 0.88rem; color: #475569; line-height: 1.75; margin-bottom: 0;">
+            「干す・取り込む」作業を完全スキップ。乾太くんの真下にスライド収納を造作し、隣のファミリークローゼットへダイレクト収納。急な来客時も引き戸1枚で生活感を完全隠蔽。
+          </p>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+          <h3 style="margin-top: 0; color: #7c3aed; font-size: 1.12rem;">🚿 3. 洗面所と脱衣室・着替え室の分離</h3>
+          <p style="font-size: 0.88rem; color: #475569; line-height: 1.75; margin-bottom: 0;">
+            朝7時の身支度渋滞を完全解決。家族が入浴中でも気兼ねなくメイクや歯磨きが可能。幅1200mmカウンターなら大人2人がストレスなく並んで身支度できます。
+          </p>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+          <h3 style="margin-top: 0; color: #d97706; font-size: 1.12rem;">⚡ 4. 太陽光 × お日さまエコキュート</h3>
+          <p style="font-size: 0.88rem; color: #475569; line-height: 1.75; margin-bottom: 0;">
+            電気代高騰の時代、深夜電力でお湯を沸かす従来方式は損。昼間の太陽光発電の余剰電力を自家消費してお湯を沸かす「お日さまエコキュート」で光熱費を極小化。
+          </p>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+          <h3 style="margin-top: 0; color: #0891b2; font-size: 1.12rem;">🪜 5. 階段下ヌック・ルンバ基地 ＆ 屋上PH</h3>
+          <p style="font-size: 0.88rem; color: #475569; line-height: 1.75; margin-bottom: 0;">
+            階段下にお掃除ロボット専用コンセント基地や読書ヌックを配置。上部ペントハウス（PH）は北側でも家全体に柔らかな自然光を落とし込むパッシブ換気塔に。
+          </p>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+          <h3 style="margin-top: 0; color: #db2777; font-size: 1.12rem;">🤫 6. 秘密の本音：設計士にだけ伝える大人の工夫</h3>
+          <p style="font-size: 0.88rem; color: #475569; line-height: 1.75; margin-bottom: 0;">
+            「パートナーには直接言いにくい…」という要望も、AIが間取りの工夫として設計士にだけ伝える安全設計。角を立てずに理想の住空間を実現します。
+          </p>
+        </div>
+      </div>
+
+      <h2 class="lp-h2">2. よくあるご質問（FAQ）</h2>
+      <div style="margin: 1.8rem 0;">
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.4rem; margin-bottom: 1rem;">
+          <h3 style="margin-top: 0; font-size: 1.05rem; color: #0f172a;">Q. 夫婦で希望の間取りや好みが正反対なのですが、どうすれば良いですか？</h3>
+          <p style="font-size: 0.92rem; color: #475569; margin-bottom: 0; line-height: 1.75;">
+            A. どちらかが我慢する「妥協」をする必要はありません。動線（誰がどこを通るか）と視線（どこから何が見えるか）を正しくゾーニングすれば、夫の趣味空間と妻の生活感ゼロ空間は100%両立できます。本ツールのAI融合案をぜひご活用ください。
+          </p>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.4rem; margin-bottom: 1rem;">
+          <h3 style="margin-top: 0; font-size: 1.05rem; color: #0f172a;">Q. 家づくりカルテを作ったら、しつこい営業電話や訪問はありますか？</h3>
+          <p style="font-size: 0.92rem; color: #475569; margin-bottom: 0; line-height: 1.75;">
+            A. 一切ありません。株式会社住ま居るには営業専属マンがおらず、創業30年間、訪問販売や押し売り営業は一度も行っておりません。カルテはお客様ご家族の話し合いツールとして、いつでも何度でも自由にお使いいただけます。
+          </p>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.4rem; margin-bottom: 1rem;">
+          <h3 style="margin-top: 0; font-size: 1.05rem; color: #0f172a;">Q. 夫のスマホと妻のスマホで別々に回答して合体できますか？</h3>
+          <p style="font-size: 0.92rem; color: #475569; margin-bottom: 0; line-height: 1.75;">
+            A. はい、可能です。どちらかが回答した後、「LINEで招待」ボタンを押してURLを送信してください。パートナーがそのURLを開くだけで、会員登録なしで2人のデータが安全に合体されます。
+          </p>
+        </div>
+      </div>
+
+      <h2 class="lp-h2">3. 株式会社住ま居るの技術者直営体制</h2>
+      <div style="background: #ffffff; border: 2px solid #059669; border-radius: 12px; padding: 2rem; margin: 2rem 0; box-shadow: 0 4px 20px rgba(5,150,105,0.06);">
+        <h3 style="color: #065f46; margin-top: 0; font-size: 1.25rem;">営業マンゼロ。国家資格と工学データで建てる地域工務店</h3>
+        <p style="color: #334155; line-height: 1.85; font-size: 0.95rem;">
+          私たちは、派手な営業マンやアットホームな家族経営の情緒だけを売りにする工務店ではありません。<br>
+          設計は、<strong>全国から年間150件の許容応力度構造計算審査を受託する二級建築士・菅原代表</strong>が責任を持って直接担当。<br>
+          施工は、<strong>2級建築施工管理技士および第二種電気工事士の資格を持つ現場監督（弟）</strong>が徹底監理。<br>
+          法務・資金計画は、<strong>宅地建物取引士（妻）</strong>が確かな専門知識でサポートいたします。<br>
+          モデルハウスには営業経験の長いベテラン女性スタッフ2名が温かくお迎えし、押し売りや無理な営業は一切ありませんので、どうぞ安心してお立ち寄りください。
+        </p>
+
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
+          <a href="/#scent-experience" class="lp-cta-btn" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-size: 0.95rem; padding: 0.8rem 1.6rem;">
+            🌿 芳彩（かぐや）実物モデルハウス体感予約 ➜
+          </a>
+          <a href="/about/" class="lp-cta-btn" style="background: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1; font-size: 0.95rem; padding: 0.8rem 1.6rem; box-shadow: none;">
+            🛡️ 会社概要・信用の証明（CredLayer）を見る ➜
+          </a>
+        </div>
+      </div>
+    """
+
+    html = get_common_layout(
+        title="【夫婦・家族で本音整理】AI間取りなんでも相談＆家づくりカルテ無料診断｜株式会社住ま居る【埼玉】",
+        description="夫と妻それぞれのスマホで回答し、LINEで共有・合体！車・駐車場、朝の洗面動線、乾太くん・洗濯、着替え室、給湯器と光熱費、階段室・PHまで、夫婦の意見のズレをAIがプロ視点で融合し「家づくりカルテ」を即時無料作成。埼玉県鶴ヶ島・川越の技術工務店・住ま居る。",
+        canonical_url="https://t-smile.co.jp/madori-consultation/",
+        og_image="https://t-smile.co.jp/images/hero_kaguya_house.jpg",
+        breadcrumbs=[("🏠 ホーム", "/"), ("🤖 間取りなんでも相談＆家づくりカルテ", "")],
+        content_html=content,
+        active_nav='madori',
+        extra_head=extra_head,
+        extra_scripts=extra_scripts
+    )
+    with open(out_file, 'w', encoding='utf-8') as f:
+        f.write(html)
+    return "https://t-smile.co.jp/madori-consultation/"
+
+
 def build_all_lps():
     """すべての静的LPおよびピラーページを生成し、URLリストを返す"""
     urls = []
@@ -902,6 +1228,7 @@ def build_all_lps():
     urls.append(generate_evidence_page())
     urls.append(generate_ai_studio_page())
     urls.append(generate_award_story_page())
+    urls.append(generate_madori_consultation_page())
     thermal_url = generate_thermal_pillar_page()
     if thermal_url:
         urls.append(thermal_url)

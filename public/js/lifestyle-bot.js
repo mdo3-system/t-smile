@@ -113,8 +113,8 @@
   function generateShareUrl(targetRole) {
     try {
       const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(answers))));
-      const baseUrl = window.location.origin + window.location.pathname;
-      return `${baseUrl}?role=${targetRole}&d=${encoded}#madori-consultation-bot`;
+      const origin = window.location.origin;
+      return `${origin}/madori-consultation/?role=${targetRole}&d=${encoded}#lifestyle-interview-root`;
     } catch(e) {
       return window.location.href;
     }
