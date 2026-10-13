@@ -62,7 +62,7 @@ function getPerspectiveTitle(spaceType, style, lighting) {
   return `${spaceNames[spaceType] || '空間パース'} × ${styleNames[style] || 'モダン'}（${lightingNames[lighting] || '自然光'}）`;
 }
 
-// ArchiX / Renrery Style SVG Perspective Generator
+// Smile Professional Perspective SVG Perspective Generator
 function generateArchiXPerspectiveSvg({ id, spaceType, style, lighting, customPrompt }) {
   const isNight = lighting === 'night' || lighting === 'goldenhour';
   const isTwilight = lighting === 'goldenhour';
@@ -219,7 +219,7 @@ function generateArchiXPerspectiveSvg({ id, spaceType, style, lighting, customPr
     <g filter="url(#rxShadow)">
       <rect x="40" y="40" width="560" height="80" rx="14" fill="#0f172a" opacity="0.9" stroke="#38bdf8" stroke-width="1.5"/>
       <text x="65" y="72" fill="#f8fafc" font-family="'Inter', sans-serif" font-size="18" font-weight="700">
-        AI フォトリアルパース工房 [ArchiX Engine]
+        AI フォトリアルパース工房 [Smile AI Engine]
       </text>
       <text x="65" y="98" fill="#38bdf8" font-family="sans-serif" font-size="13">
         ${getPerspectiveTitle(spaceType, style, lighting)}

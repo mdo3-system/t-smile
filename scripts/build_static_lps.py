@@ -1066,92 +1066,255 @@ def generate_madori_consultation_page():
         夫は夫のスマホで、妻は妻のスマホで直感タップ。LINEで送って合体するだけで、<strong>妥協ではなく「両者のいいとこ取り」をするAI融合プラン＆家づくりカルテ</strong>を即時無料で自動生成します。
       </p>
 
-      <!-- 4コマ漫画イラストで見る体験ストーリー -->
+      <!-- 誰でも使える無料3大ツール vs 申込後プレミアム使い分けマップ -->
+      <div style="background: #ffffff; border: 2px solid #0284c7; border-radius: 16px; padding: 1.8rem; margin: 2rem 0; box-shadow: 0 4px 20px rgba(2, 132, 199, 0.08);">
+        <div style="text-align: center; margin-bottom: 1.2rem;">
+          <span style="background: #e0f2fe; color: #0284c7; font-weight: 800; font-size: 0.85rem; padding: 4px 16px; border-radius: 20px; border: 1px solid #bae6fd;">
+            🧭 住ま居る AIツールの全体マップ ＆ 正しい使い分け
+          </span>
+          <h2 style="font-size: 1.45rem; color: #0f172a; margin: 0.6rem 0 0.2rem; font-weight: 900;">
+            「どれが無料で、どれが申し込み後？」使い分けが一目でわかるガイド
+          </h2>
+          <p style="color: #64748b; font-size: 0.9rem; margin: 0;">
+            まずは登録不要の【完全無料3大ツール】でご家族の想いを整理。次のステップで【限定プレミアムアトリエ】をご活用いただけます。
+          </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem;">
+          <!-- 無料3大ツール -->
+          <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 1.4rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem;">
+              <span style="background: #16a34a; color: #fff; font-size: 0.78rem; font-weight: 800; padding: 3px 10px; border-radius: 12px;">誰でも今すぐ無料</span>
+              <span style="font-size: 1.2rem;">🟢</span>
+            </div>
+            <h3 style="color: #14532d; font-size: 1.1rem; margin: 0 0 0.6rem; font-weight: 800;">【完全無料】3大AIシミュレーター</h3>
+            <ul style="padding-left: 1.2rem; margin: 0; line-height: 1.8; font-size: 0.88rem; color: #166534;">
+              <li><strong>🔍 間取りプラン検索（約100選）:</strong> 坪数・予算・平屋等の実例を瞬時絞り込み・比較</li>
+              <li><strong>💬 家づくりカルテ（本ページ）:</strong> 夫婦それぞれのスマホで本音を回答、AIが中立カルテ作成</li>
+              <li><strong>🌡️ 温熱環境・断熱シミュレーション:</strong> 埼玉エリア特化、HEAT20 G2/G3・光熱費試算</li>
+            </ul>
+            <div style="margin-top: 0.9rem; font-size: 0.8rem; color: #15803d; font-weight: 700;">
+              ※会員登録・名前・電話番号の入力不要。何度でも試せます。
+            </div>
+          </div>
+
+          <!-- 申込後限定プレミアム -->
+          <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 1.4rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem;">
+              <span style="background: #0f172a; color: #f59e0b; font-size: 0.78rem; font-weight: 800; padding: 3px 10px; border-radius: 12px;">15万円設計申込後</span>
+              <span style="font-size: 1.2rem;">⭐</span>
+            </div>
+            <h3 style="color: #0f172a; font-size: 1.1rem; margin: 0 0 0.6rem; font-weight: 800;">【限定】プレミアム設計アトリエ</h3>
+            <ul style="padding-left: 1.2rem; margin: 0; line-height: 1.8; font-size: 0.88rem; color: #334155;">
+              <li><strong>🎨 プロ級AI 3Dパースアトリエ:</strong> 雑誌クオリティの3Dパースが指先ひとつで無制限生成</li>
+              <li><strong>🧩 直感バブルプランスタジオ:</strong> パズル感覚で家族の生活動線を画面上でレイアウト</li>
+              <li><strong>🛰️ JFD 3次元LiDAR点群測量:</strong> ミリ単位の等高線・現況図（万一不成立でも図面引渡保証）</li>
+              <li><strong>🏛️ 菅原代表の構造・設計相談（3回）:</strong> 150棟構造計算のノウハウで安全図面を直接作成</li>
+            </ul>
+            <div style="margin-top: 0.9rem;">
+              <a href="/flow/" style="color: #0284c7; font-weight: 800; font-size: 0.82rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                📐 家づくりの流れ・15万円申込特典を詳しく見る →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4コマ漫画イラストで見る体験ストーリー（世代別タブ切り替え） -->
       <div style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 2px solid #f59e0b; border-radius: 16px; padding: 2.2rem 1.6rem; margin: 2rem 0; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.1);">
-        <div style="text-align: center; margin-bottom: 1.8rem;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
           <span style="background: #b45309; color: #fff; font-weight: 800; font-size: 0.85rem; padding: 4px 16px; border-radius: 20px;">
             📖 漫画でわかる！夫婦の家づくりカルテ体験記
           </span>
           <h2 style="font-size: 1.65rem; color: #78350f; margin: 0.8rem 0 0.4rem; font-weight: 900;">
             「あ、これ面白い！」から始まる、夫婦の理想の住まいづくり
           </h2>
-          <p style="color: #92400e; font-size: 0.95rem; margin: 0;">
-            なぜ、スマホで答えるだけで「夫婦の意見のズレ」が魔法のように解けるのか？ 4つのステップでお見せします。
+          <p style="color: #92400e; font-size: 0.95rem; margin: 0 0 1.2rem;">
+            なぜ、スマホで答えるだけで「夫婦の意見のズレ」が魔法のように解けるのか？ ご年代に合わせてご覧ください。
           </p>
+
+          <!-- 世代別切り替えスイッチ -->
+          <div style="display: inline-flex; background: #fde68a; padding: 4px; border-radius: 30px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);">
+            <button type="button" id="tab-btn-50s" class="carte-persona-btn active" onclick="switchCartePersona('50s')" style="background: #b45309; color: #fff; border: none; padding: 8px 24px; border-radius: 24px; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: all 0.2s;">
+              🍵 50代〜 セカンドライフ・大人の平屋編
+            </button>
+            <button type="button" id="tab-btn-young" class="carte-persona-btn" onclick="switchCartePersona('young')" style="background: transparent; color: #78350f; border: none; padding: 8px 24px; border-radius: 24px; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: all 0.2s;">
+              🧒 30〜40代 子育て・共働き世帯編
+            </button>
+          </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;">
-          
-          <!-- コマ1: 妻が夜スタート -->
-          <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #fde68a; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
-            <div style="background: #d97706; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
-              <span>第1話：夜のリビングで</span>
-              <span>STEP 1</span>
+        <!-- パネル1: 50代〜 セカンドライフ・大人の平屋編（初期表示） -->
+        <div id="carte-panel-50s" class="carte-persona-panel" style="display: block;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;">
+            
+            <!-- コマ1: 50代妻がお茶を飲みながら提案 -->
+            <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #fde68a; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+              <div style="background: #b45309; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
+                <span>第1話：落ち着いたリビングで</span>
+                <span>STEP 1</span>
+              </div>
+              <img src="/images/carte_story_50s/comic_50s_step1.jpg" alt="50代の妻がお茶を飲みながら夫にタブレットを見せて提案する様子" style="width: 100%; height: auto; display: block;" loading="lazy">
+              <div style="padding: 1.2rem; flex-grow: 1;">
+                <h3 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #92400e; font-weight: 800;">
+                  妻「ほらお父さん、これからの二人の暮らし、ちょっとやってみない？」
+                </h3>
+                <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
+                  緑茶を飲みながらタブレットを操作。「子どもたちも独立したし、そろそろ私たちの家を考えない？」。難しい建築用語はなく、直感タップで選ぶだけだからカンタン！
+                </p>
+              </div>
             </div>
-            <img src="/images/carte_story/comic_step1_wife.jpg" alt="夜のリビングで妻がスマホで面白がって答える様子" style="width: 100%; height: auto; display: block;" loading="lazy">
-            <div style="padding: 1.2rem; flex-grow: 1;">
-              <h3 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #92400e; font-weight: 800;">
-                妻「えっ、何これ？面白い！質問に答えるだけ？」
-              </h3>
-              <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
-                子どもが寝た後の静かな時間、スマホで直感タップ。「日常の車は何台？」「朝7時の洗面台渋滞は？」「乾太くんからファミクロへの直結動線は？」…面倒な文字入力はなく、3分でサクサク回答！
-              </p>
-            </div>
-          </div>
 
-          <!-- コマ2: 夫へLINE共有 -->
-          <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #fde68a; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
-            <div style="background: #16a34a; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
-              <span>第2話：夫のスマホにLINE</span>
-              <span>STEP 2</span>
+            <!-- コマ2: 50代夫が平屋・断熱を入力 -->
+            <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #fde68a; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+              <div style="background: #16a34a; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
+                <span>第2話：夫がスマホでサクサク回答</span>
+                <span>STEP 2</span>
+              </div>
+              <img src="/images/carte_story_50s/comic_50s_step2.jpg" alt="50代の夫が書斎でスマホを持って平屋や断熱の希望を真剣に入力する様子" style="width: 100%; height: auto; display: block;" loading="lazy">
+              <div style="padding: 1.2rem; flex-grow: 1;">
+                <h3 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #166534; font-weight: 800;">
+                  夫「老後は階段のない平屋がいいな…ヒートショックのない暖かい家」
+                </h3>
+                <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
+                  妻から届いたLINEリンクをタップ。「バリアフリー」「冬も暖かい高断熱」「庭いじり動線」…自分のスマホで落ち着いて回答。アプリの登録も面倒な入力も一切なし！
+                </p>
+              </div>
             </div>
-            <img src="/images/carte_story/comic_step2_husband.jpg" alt="夫のスマホにLINEが届いて回答する様子" style="width: 100%; height: auto; display: block;" loading="lazy">
-            <div style="padding: 1.2rem; flex-grow: 1;">
-              <h3 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #166534; font-weight: 800;">
-                夫「お、LINEきた！俺の意見も聞いてくれるの？」
-              </h3>
-              <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
-                妻から送られたLINEリンクをタップ。「駐車場は来客用も欲しい」「将来のEV充電はどうする？」。アプリのインストールも会員登録も不要。夫のスマホでもそのままサクッと回答完了！
-              </p>
-            </div>
-          </div>
 
-          <!-- コマ3: 秘密の本音入力 -->
-          <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #fde68a; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
-            <div style="background: #7c3aed; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
-              <span>第3話：秘密の本音（角が立たない）</span>
-              <span>STEP 3</span>
+            <!-- コマ3: 相手に言えなかった本音 -->
+            <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #fde68a; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+              <div style="background: #7c3aed; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
+                <span>第3話：相手に言えない本音もこっそり</span>
+                <span>STEP 3</span>
+              </div>
+              <img src="/images/carte_story_50s/comic_50s_step3.jpg" alt="夫婦それぞれが相手に遠慮していた本音（妻の手芸部屋、夫の庭の見える書斎）を入力する様子" style="width: 100%; height: auto; display: block;" loading="lazy">
+              <div style="padding: 1.2rem; flex-grow: 1;">
+                <h3 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #5b21b6; font-weight: 800;">
+                  「相手に遠慮して言えなかった本音」も、AIになら書ける！🔓
+                </h3>
+                <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
+                  妻「子どもが巣立ったから、実は私の手芸や絵の趣味の小部屋がほしい…」。夫「実は定年後は、庭を眺められる小さな書斎がほしいな…」。長年連れ添ったからこそ言えない希望も、AIがやさしく受け止めます。
+                </p>
+              </div>
             </div>
-            <img src="/images/carte_story/comic_step3_secret.jpg" alt="お互いに相手には直接言いにくい本音をこっそり入力" style="width: 100%; height: auto; display: block;" loading="lazy">
-            <div style="padding: 1.2rem; flex-grow: 1;">
-              <h3 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #5b21b6; font-weight: 800;">
-                「相手には直接言えない本音」もこっそり…🔓
-              </h3>
-              <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
-                「本当は趣味のスペースが欲しい」「実は水回りの掃除を夫にも分担してほしい」。面と向かって言うと喧嘩になりそうな本音も、AIが設計士にだけ上手な工夫として伝える安心設計！
-              </p>
-            </div>
-          </div>
 
-          <!-- コマ4: AIカルテ出力・夫婦納得 -->
-          <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #fde68a; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
-            <div style="background: #0284c7; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
-              <span>第4話：AI融合案カルテ提出！</span>
-              <span>STEP 4</span>
+            <!-- コマ4: 2人の上質平屋カルテ完成 -->
+            <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #fde68a; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+              <div style="background: #0284c7; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
+                <span>第4話：理想の上質カルテ完成！</span>
+                <span>STEP 4</span>
+              </div>
+              <img src="/images/carte_story_50s/comic_50s_step4.jpg" alt="完成した家づくりカルテを見て夫婦で笑顔で喜ぶ様子" style="width: 100%; height: auto; display: block;" loading="lazy">
+              <div style="padding: 1.2rem; flex-grow: 1;">
+                <h3 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #0369a1; font-weight: 800;">
+                  夫婦「お互いの希望が両方叶ってる！これなら遠慮なく相談できるね！」
+                </h3>
+                <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
+                  AIが二人の本音を融合し、趣味部屋と書斎とバリアフリーが両立した平屋カルテを瞬時出力。「どちらかが我慢する妥協」ではない、大人の豊かな暮らしの指針が手に入ります！
+                </p>
+              </div>
             </div>
-            <img src="/images/carte_story/comic_step4_report.jpg" alt="AIがカルテを出力し夫婦で笑顔で喜ぶ様子" style="width: 100%; height: auto; display: block;" loading="lazy">
-            <div style="padding: 1.2rem; flex-grow: 1;">
-              <h3 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #0369a1; font-weight: 800;">
-                夫婦「すごい！これなら二人とも大満足だね！」
-              </h3>
-              <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
-                AIが二人の回答を自動合体！「どちらかが我慢する妥協」ではなく、動線とゾーニングによる「いいとこ取り解決策」を即時出力。このカルテを持ってモデルハウスに行くだけで全て伝わります！
-              </p>
-            </div>
-          </div>
 
+          </div>
         </div>
+
+        <!-- パネル2: 30〜40代 子育て・共働き世帯編 -->
+        <div id="carte-panel-young" class="carte-persona-panel" style="display: none;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;">
+            
+            <!-- コマ1: 妻が夜スタート -->
+            <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #fde68a; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+              <div style="background: #d97706; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
+                <span>第1話：夜のリビングで</span>
+                <span>STEP 1</span>
+              </div>
+              <img src="/images/carte_story/comic_step1_wife.jpg" alt="夜のリビングで妻がスマホで面白がって答える様子" style="width: 100%; height: auto; display: block;" loading="lazy">
+              <div style="padding: 1.2rem; flex-grow: 1;">
+                <h3 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #92400e; font-weight: 800;">
+                  妻「えっ、何これ？面白い！質問に答えるだけ？」
+                </h3>
+                <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
+                  子どもが寝た後の静かな時間、スマホで直感タップ。「日常の車は何台？」「朝7時の洗面台渋滞は？」「乾太くんからファミクロへの直結動線は？」…面倒な文字入力はなく、3分でサクサク回答！
+                </p>
+              </div>
+            </div>
+
+            <!-- コマ2: 夫へLINE共有 -->
+            <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #fde68a; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+              <div style="background: #16a34a; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
+                <span>第2話：夫のスマホにLINE</span>
+                <span>STEP 2</span>
+              </div>
+              <img src="/images/carte_story/comic_step2_husband.jpg" alt="夫のスマホにLINEが届いて回答する様子" style="width: 100%; height: auto; display: block;" loading="lazy">
+              <div style="padding: 1.2rem; flex-grow: 1;">
+                <h3 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #166534; font-weight: 800;">
+                  夫「お、LINEきた！俺の意見も聞いてくれるの？」
+                </h3>
+                <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
+                  妻から送られたLINEリンクをタップ。「駐車場は来客用も欲しい」「将来のEV充電はどうする？」。アプリのインストールも会員登録も不要。夫のスマホでもそのままサクッと回答完了！
+                </p>
+              </div>
+            </div>
+
+            <!-- コマ3: 秘密の本音入力 -->
+            <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #fde68a; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+              <div style="background: #7c3aed; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
+                <span>第3話：秘密の本音（角が立たない）</span>
+                <span>STEP 3</span>
+              </div>
+              <img src="/images/carte_story/comic_step3_secret.jpg" alt="お互いに相手には直接言いにくい本音をこっそり入力" style="width: 100%; height: auto; display: block;" loading="lazy">
+              <div style="padding: 1.2rem; flex-grow: 1;">
+                <h3 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #5b21b6; font-weight: 800;">
+                  「相手には直接言えない本音」もこっそり…🔓
+                </h3>
+                <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
+                  「本当は趣味のスペースが欲しい」「実は水回りの掃除を夫にも分担してほしい」。面と向かって言うと喧嘩になりそうな本音も、AIが設計士にだけ上手な工夫として伝える安心設計！
+                </p>
+              </div>
+            </div>
+
+            <!-- コマ4: AIカルテ出力・夫婦納得 -->
+            <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #fde68a; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+              <div style="background: #0284c7; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
+                <span>第4話：AI融合案カルテ提出！</span>
+                <span>STEP 4</span>
+              </div>
+              <img src="/images/carte_story/comic_step4_report.jpg" alt="AIがカルテを出力し夫婦で笑顔で喜ぶ様子" style="width: 100%; height: auto; display: block;" loading="lazy">
+              <div style="padding: 1.2rem; flex-grow: 1;">
+                <h3 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #0369a1; font-weight: 800;">
+                  夫婦「すごい！これなら二人とも大満足だね！」
+                </h3>
+                <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
+                  AIが二人の回答を自動合体！「どちらかが我慢する妥協」ではなく、動線とゾーニングによる「いいとこ取り解決策」を即時出力。このカルテを持ってモデルハウスに行くだけで全て伝わります！
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
+
+      <script>
+      function switchCartePersona(type) {
+        var p50s = document.getElementById('carte-panel-50s');
+        var pYoung = document.getElementById('carte-panel-young');
+        var btn50s = document.getElementById('tab-btn-50s');
+        var btnYoung = document.getElementById('tab-btn-young');
+        if (type === '50s') {
+          if (p50s) p50s.style.display = 'block';
+          if (pYoung) pYoung.style.display = 'none';
+          if (btn50s) { btn50s.style.background = '#b45309'; btn50s.style.color = '#fff'; }
+          if (btnYoung) { btnYoung.style.background = 'transparent'; btnYoung.style.color = '#78350f'; }
+        } else {
+          if (p50s) p50s.style.display = 'none';
+          if (pYoung) pYoung.style.display = 'block';
+          if (btnYoung) { btnYoung.style.background = '#d97706'; btnYoung.style.color = '#fff'; }
+          if (btn50s) { btn50s.style.background = 'transparent'; btn50s.style.color = '#78350f'; }
+        }
+      }
+      </script>
 
       <!-- 何ができるのか？何をするのか？の徹底解説 -->
       <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 2rem; margin: 2rem 0; box-shadow: 0 6px 25px rgba(0,0,0,0.04);">
@@ -1632,27 +1795,239 @@ def generate_flow_page():
         </p>
       </div>
 
-      <!-- 申込者限定特典：バブルプラン ＆ Gemini 3Dパース工房 -->
-      <h2 class="lp-h2">3. 申込者限定機能：ArchiX感覚の「理想アトリエ」解放</h2>
-      <p>15万円の設計お申し込みをいただいたお客様には、専用ログインアカウントを発行。ご自宅のPCやタブレットから、以下のプロ仕様シミュレーションを納得いくまで何度でもお使いいただけます。</p>
+      <!-- 申込者限定特典：プロ級AIパースアトリエ ＆ バブルプランスタジオ -->
+      <h2 class="lp-h2">3. 申込者限定特典：プロ仕様「AIパースアトリエ ＆ バブルプラン」解放</h2>
+      <p style="font-size: 1.05rem; line-height: 1.85; color: #334155;">
+        15万円の設計お申し込みをいただいたお客様には、専用ログインアカウントを発行。<br>
+        <strong>建築士やCGクリエイターに何十万円も払って依頼していたような、雑誌の表紙クオリティの3Dパース</strong>が、ご自宅のスマホやタブレットから指先ひとつで何度でも自由に作り放題になります。
+      </p>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
-        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.6rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
-          <div style="font-size: 2rem; margin-bottom: 0.4rem;">🧩</div>
-          <h3 style="color: #0f172a; font-size: 1.2rem; margin-top: 0;">① バブルプラン（間取りゾーニング検討）</h3>
-          <p style="font-size: 0.88rem; color: #475569; line-height: 1.75; margin: 0;">
-            「LDKを南側に」「キッチンと水回りを横並びに」「玄関横にガレージ動線を」。パズルのように部屋パーツを画面上で動かしながら、ご夫婦で直感的に間取りのゾーニングを煮詰められます。
+      <!-- 4コマ漫画で見るAIパースアトリエ体験 -->
+      <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #16a34a; border-radius: 16px; padding: 2.2rem 1.6rem; margin: 2.5rem 0; box-shadow: 0 10px 30px rgba(22, 163, 74, 0.1);">
+        <div style="text-align: center; margin-bottom: 1.8rem;">
+          <span style="background: #15803d; color: #fff; font-weight: 800; font-size: 0.85rem; padding: 4px 16px; border-radius: 20px;">
+            🎨 漫画でわかる！プロ級AIパースアトリエ体験記
+          </span>
+          <h3 style="font-size: 1.65rem; color: #14532d; margin: 0.8rem 0 0.4rem; font-weight: 900;">
+            「これ、私たちの家！？」夜のリビングで夢が広がる魔法の時間
+          </h3>
+          <p style="color: #166534; font-size: 0.95rem; margin: 0;">
+            設計打ち合わせが待ち遠しくなる、エモーショナルな家づくり体験を4コマ漫画でお届けします。
           </p>
         </div>
 
-        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.6rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
-          <div style="font-size: 2rem; margin-bottom: 0.4rem;">🎨</div>
-          <h3 style="color: #0f172a; font-size: 1.2rem; margin-top: 0;">② 住ま居る特化・Gemini 3Dパース生成</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;">
+          
+          <!-- コマ1: 限定アトリエ解放 -->
+          <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #86efac; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+            <div style="background: #0f172a; color: #f59e0b; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
+              <span>第1話：申込者限定解放</span>
+              <span>STEP 1</span>
+            </div>
+            <img src="/images/perse_studio/comic_perse_step1.jpg" alt="設計申込者限定でプロ級AIパースアトリエが解放されて喜ぶ夫婦" style="width: 100%; height: auto; display: block;" loading="lazy">
+            <div style="padding: 1.2rem; flex-grow: 1;">
+              <h4 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #14532d; font-weight: 800;">
+                「えっ！？プロのCGクリエイターが作るような高品位パースが、自分たちで作り放題！？」
+              </h4>
+              <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
+                15万円の設計申込後、専用アトリエにログイン！建築士やCG会社に外注すれば1枚数十万円かかるような超高精度パースが、スマホからいつでも自由に使えるように！
+              </p>
+            </div>
+          </div>
+
+          <!-- コマ2: 直感レイアウト＆素材選択 -->
+          <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #86efac; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+            <div style="background: #16a34a; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
+              <span>第2話：直感レイアウト＆素材選択</span>
+              <span>STEP 2</span>
+            </div>
+            <img src="/images/perse_studio/comic_perse_step2.jpg" alt="タブレットでバブルプランや無垢材の素材を指先で楽しく選択する様子" style="width: 100%; height: auto; display: block;" loading="lazy">
+            <div style="padding: 1.2rem; flex-grow: 1;">
+              <h4 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #15803d; font-weight: 800;">
+                「キッチンと洗面をつなげて、床は温もりある無垢材にして…！」
+              </h4>
+              <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
+                バブルプランでパズルのように部屋パーツを動かし、家事ラク動線を検討。「夕暮れの間接照明」「吹き抜け」「ジャパンディ」など、好みのスタイルを指先タップで選ぶだけ！
+              </p>
+            </div>
+          </div>
+
+          <!-- コマ3: AI 3Dパース生成・感動 -->
+          <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #86efac; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+            <div style="background: #7c3aed; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
+              <span>第3話：息をのむ瞬間</span>
+              <span>STEP 3</span>
+            </div>
+            <img src="/images/perse_studio/comic_perse_step3.jpg" alt="AIパース生成ボタンを押して雑誌表紙クオリティのパースが立ち現れ感動する様子" style="width: 100%; height: auto; display: block;" loading="lazy">
+            <div style="padding: 1.2rem; flex-grow: 1;">
+              <h4 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #5b21b6; font-weight: 800;">
+                「うわぁっ！雑誌の表紙みたいな3Dパースができた！光の当たり方も本物そっくり！」
+              </h4>
+              <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
+                ボタンを押してわずか数秒！埼玉の柔らかな自然光、吉野杉の木目、天井の化粧梁までリアルに描写。分厚いカタログでは想像できなかった「暮らす空間」が一瞬で目の前に！
+              </p>
+            </div>
+          </div>
+
+          <!-- コマ4: 後悔ゼロの家族会議 -->
+          <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #86efac; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+            <div style="background: #0284c7; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
+              <span>第4話：打ち合わせが待ち遠しい</span>
+              <span>STEP 4</span>
+            </div>
+            <img src="/images/perse_studio/comic_perse_step4.jpg" alt="夜のリビングで何十枚ものパースを比較しながら笑顔で語り合う夫婦" style="width: 100%; height: auto; display: block;" loading="lazy">
+            <div style="padding: 1.2rem; flex-grow: 1;">
+              <h4 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #0369a1; font-weight: 800;">
+                「何十通りも試せるから後悔ゼロ！設計士さん（菅原代表）に見せるのが待ち遠しい！」
+              </h4>
+              <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
+                夜、お酒やコーヒーを片手に「こっちの木目の色もいいね」「夜の照明も素敵」と何パターンも保存。漠然とした不安が消え、設計士との打ち合わせが最高に楽しい時間へ昇華します！
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- インタラクティブ・3Dパース生成アニメーションデモ（エモーショナルUI） -->
+      <div style="background: #0f172a; border: 2px solid #38bdf8; border-radius: 16px; padding: 2.2rem 1.6rem; margin: 2.5rem 0; box-shadow: 0 15px 40px rgba(0,0,0,0.3); color: #fff;">
+        <div style="text-align: center; margin-bottom: 1.8rem;">
+          <span style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-weight: 800; font-size: 0.85rem; padding: 4px 16px; border-radius: 20px; border: 1px solid rgba(56, 189, 248, 0.4);">
+            🎬 体感アニメーションシミュレーター
+          </span>
+          <h3 style="font-size: 1.65rem; color: #fff; margin: 0.8rem 0 0.4rem; font-weight: 900;">
+            ボタンを押すだけ。プロの3Dパースが瞬時に描かれる様子を体感
+          </h3>
+          <p style="color: #94a3b8; font-size: 0.95rem; margin: 0;">
+            スタイルや光の表情を切り替えてみてください。プロ仕様のAI空間演算エンジンが瞬時にパースを描き分けます。
+          </p>
+        </div>
+
+        <!-- コントロールバー -->
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
+          <button type="button" class="demo-anim-btn active" onclick="runPerseDemo('daylight')" style="background: #38bdf8; color: #0f172a; border: none; padding: 8px 18px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; cursor: pointer;">
+            ☀️ 澄み渡る朝の自然光 × 吹き抜けLDK
+          </button>
+          <button type="button" class="demo-anim-btn" onclick="runPerseDemo('sunset')" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 8px 18px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; cursor: pointer;">
+            🌇 黄昏のトワイライト × ジャパンディ
+          </button>
+          <button type="button" class="demo-anim-btn" onclick="runPerseDemo('night')" style="background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.2); padding: 8px 18px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; cursor: pointer;">
+            🌙 温もりの間接照明 × 無垢杉の平屋
+          </button>
+        </div>
+
+        <!-- パース描画スクリーンフレーム -->
+        <div style="position: relative; max-width: 900px; margin: 0 auto; border-radius: 12px; overflow: hidden; border: 2px solid #334155; background: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          
+          <!-- 生成ステータスオーバーレイ（アニメーション用） -->
+          <div id="demo-perse-loading" style="display: none; position: absolute; inset: 0; background: rgba(15, 23, 42, 0.85); z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+            <div style="width: 48px; height: 48px; border: 4px solid #38bdf8; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+            <p id="demo-perse-status" style="margin-top: 1rem; font-weight: 800; color: #38bdf8; font-size: 1.05rem;">
+              埼玉の自然光と木目を計算中...
+            </p>
+          </div>
+
+          <!-- パース画像表示部 -->
+          <img id="demo-perse-img" src="/images/hero_architecture.jpg" alt="プロ仕様3D建築パースの生成プレビュー" style="width: 100%; height: auto; display: block; transition: opacity 0.4s ease;" loading="lazy">
+
+          <!-- キャプションバー -->
+          <div style="background: rgba(15, 23, 42, 0.9); padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div>
+              <span id="demo-perse-title" style="color: #38bdf8; font-weight: 800; font-size: 1rem;">
+                【朝の自然光 × 吹き抜け大開口LDK】吉野杉フローリングと化粧梁の陰影
+              </span>
+              <p style="margin: 2px 0 0; color: #94a3b8; font-size: 0.8rem;">
+                Google Gemini API × 住ま居る独自・住宅特化プロンプトエンジン高速描画
+              </p>
+            </div>
+            <span style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-size: 0.78rem; font-weight: 800; padding: 4px 12px; border-radius: 8px;">
+              申込者限定・無制限
+            </span>
+          </div>
+
+        </div>
+
+        <p style="text-align: center; color: #94a3b8; font-size: 0.85rem; margin-top: 1.2rem; margin-bottom: 0;">
+          ※実際の機能では、お客様自身が自由な部屋・素材・光・こだわり文言を入力して、何十枚でも高解像度パースを生成いただけます。
+        </p>
+      </div>
+
+      <style>
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      </style>
+
+      <script>
+      var perseData = {
+        'daylight': {
+          'src': '/images/hero_architecture.jpg',
+          'title': '【朝の自然光 × 吹き抜け大開口LDK】吉野杉フローリングと化粧梁の陰影',
+          'status': '朝の澄んだ太陽光と外皮断熱サッシを空間演算中...'
+        },
+        'sunset': {
+          'src': '/images/natural_interior_aroma.jpg',
+          'title': '【黄昏のトワイライト × ジャパンディ】漆喰の陰影と北欧グレージュの調和',
+          'status': '夕暮れ時の黄金の光と間接照明をレンダリング中...'
+        },
+        'night': {
+          'src': '/images/hero_kaguya_house.jpg',
+          'title': '【温もりの間接照明 × 芳彩の平屋】ヒノキの香りが漂う大人のセカンドリビング',
+          'status': '暖色系LED間接照明と無垢ヒノキの質感をトレース中...'
+        }
+      };
+
+      function runPerseDemo(mode) {
+        var loader = document.getElementById('demo-perse-loading');
+        var img = document.getElementById('demo-perse-img');
+        var title = document.getElementById('demo-perse-title');
+        var status = document.getElementById('demo-perse-status');
+        var btns = document.querySelectorAll('.demo-anim-btn');
+        
+        btns.forEach(function(b) {
+          b.style.background = 'rgba(255,255,255,0.1)';
+          b.style.color = '#e2e8f0';
+          b.style.border = '1px solid rgba(255,255,255,0.2)';
+        });
+
+        if (event && event.target) {
+          event.target.style.background = '#38bdf8';
+          event.target.style.color = '#0f172a';
+          event.target.style.border = 'none';
+        }
+
+        if (loader && status && perseData[mode]) {
+          status.innerText = perseData[mode].status;
+          loader.style.display = 'flex';
+          setTimeout(function() {
+            if (img) img.src = perseData[mode].src;
+            if (title) title.innerText = perseData[mode].title;
+            loader.style.display = 'none';
+          }, 450);
+        }
+      }
+      </script>
+
+      <!-- 2大限定アトリエ詳細カード -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 1.6rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+          <div style="font-size: 2rem; margin-bottom: 0.4rem;">🧩</div>
+          <h3 style="color: #0f172a; font-size: 1.2rem; margin-top: 0; font-weight: 800;">① 直感バブルプラン（生活動線スタジオ）</h3>
           <p style="font-size: 0.88rem; color: #475569; line-height: 1.75; margin: 0;">
-            複雑な設定は一切不要。Googleの最新Gemini APIを活用し、住ま居る独自の「埼玉の光と無垢材の質感」に特化したプロンプトで、ArchiXのようにフォトリアルな外観・内観パースを高速生成。理想の空間を鮮明にイメージできます。
+            「LDKを南側に」「キッチンと洗面所を横並びの回遊動線に」「玄関横に土間収納とガレージ」。パズルのように部屋パーツを画面上で指先で動かしながら、ご夫婦で直感的に間取りのゾーニングを楽しく煮詰められます。
+          </p>
+        </div>
+
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 1.6rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+          <div style="font-size: 2rem; margin-bottom: 0.4rem;">🎨</div>
+          <h3 style="color: #0f172a; font-size: 1.2rem; margin-top: 0; font-weight: 800;">② 住ま居る特化・プロ級AI 3Dパース生成</h3>
+          <p style="font-size: 0.88rem; color: #475569; line-height: 1.75; margin: 0;">
+            難しい設定や英語プロンプトは一切不要。Googleの最新Gemini APIを活用し、住ま居る独自の「埼玉の柔らかな自然光と無垢材の質感」に特化したプロンプトエンジンが、プロ仕様のフォトリアル外観・内観パースを数秒で瞬時生成。夜の夫婦会議が最高に盛り上がります。
           </p>
         </div>
       </div>
+
 
       <!-- FAQ Section -->
       <h2 class="lp-h2">4. 家づくりの進め方 よくあるご質問（FAQ）</h2>
