@@ -1509,6 +1509,116 @@ ${matchedQa.principle}
     }
   }
 
+  // 10-G5. Dell Precision 3680 Worker Poll API (代表PC用キュー受取)
+  if (pathname === '/api/perspective/worker-poll' && method === 'GET') {
+    const token = parsedUrl.query.token;
+    if (token !== 'precision_3680_worker_secret_2026') {
+      return sendJson(res, 403, { success: false, error: 'Unauthorized worker token' });
+    }
+    const job = db.getNextQueuedJob();
+    if (job) {
+      db.updateJobStatus(job.id, 'processing');
+      return sendJson(res, 200, { success: true, job });
+    }
+    return sendJson(res, 200, { success: true, job: null });
+  }
+
+  // 10-G6. Dell Precision 3680 Worker Upload API (完成画像受領＆カルテ反映)
+  if (pathname === '/api/perspective/worker-upload' && method === 'POST') {
+    try {
+      const body = await parseJsonBody(req);
+      if (body.token !== 'precision_3680_worker_secret_2026') {
+        return sendJson(res, 403, { success: false, error: 'Unauthorized worker token' });
+      }
+      if (!body.jobId || !body.base64Image) {
+        return sendJson(res, 400, { success: false, error: 'jobId and base64Image are required' });
+      }
+      const filename = `render_${body.jobId}.png`;
+      const filePath = path.join(RENDERS_DIR, filename);
+      fs.writeFileSync(filePath, Buffer.from(body.base64Image, 'base64'));
+      const imageUrl = `/renders/${filename}`;
+      db.updateJobStatus(body.jobId, 'completed', imageUrl);
+      return sendJson(res, 200, { success: true, message: 'Job completed and image saved', imageUrl });
+    } catch (e) {
+      console.error('[Worker Upload Error]', e);
+      return sendJson(res, 500, { success: false, error: e.message });
+    }
+  }
+
+  // 10-G7. Carte Member Perspective Request API (施主パース生成依頼・最大3件制限)
+  if (pathname === '/api/perspective/request-job' && method === 'POST') {
+    try {
+      const body = await parseJsonBody(req);
+      const userId = body.userId || 'applicant_guest';
+      
+      // 1家族最大3件のキュー待ち制限チェック
+      const activeCount = db.getActiveJobsCountByUser(userId);
+      if (activeCount >= 3) {
+        return sendJson(res, 429, {
+          success: false,
+          error: '現在レンダリング中のパースが3件あります。代表のDell Precision 3680にて順次生成中ですので、完了まで少々お待ちください（約1〜2分）。',
+          activeCount
+        });
+      }
+
+      // プロンプト生成（部位別または図面指定）
+      const prompt = body.prompt || `photorealistic custom house interior, ${body.spaceType || 'ldk'}, high-end Japanese modern architecture, solid wood and diatomaceous earth walls, 8k resolution`;
+      const negativePrompt = body.negativePrompt || 'blurry, distorted, low quality, crooked walls, cgi look, plastic';
+
+      const job = db.createJob({
+        userId,
+        prompt,
+        negativePrompt,
+        style: body.style || 'japandi'
+      });
+
+      return sendJson(res, 201, {
+        success: true,
+        message: '生成リクエストを受け付けました。Dell Precision 3680にてレンダリングを開始します。',
+        jobId: job.id,
+        activeCount: activeCount + 1
+      });
+    } catch (e) {
+      return sendJson(res, 500, { success: false, error: e.message });
+    }
+  }
+
+  // 10-G8. Carte Member Perspective Jobs List API
+  if (pathname === '/api/perspective/user-jobs' && method === 'GET') {
+    const userId = parsedUrl.query.userId || 'applicant_guest';
+    const jobs = db.getUserJobs(userId);
+    const activeCount = db.getActiveJobsCountByUser(userId);
+    return sendJson(res, 200, { success: true, jobs, activeCount });
+  }
+
+  // 10-G9. Partner Invitation API (夫婦共有マイカルテ)
+  if (pathname === '/api/carte/invite-partner' && method === 'POST') {
+    try {
+      const body = await parseJsonBody(req);
+      if (!body.primaryUserId || !body.partnerEmail) {
+        return sendJson(res, 400, { success: false, error: 'primaryUserId and partnerEmail are required' });
+      }
+      const primaryUser = db.getUserById(body.primaryUserId);
+      if (!primaryUser) {
+        return sendJson(res, 404, { success: false, error: 'Primary user not found' });
+      }
+      // パートナーにも同一のmagic_tokenまたはリンクを発行
+      const partnerUser = db.createUser({
+        name: body.partnerName || `${primaryUser.name}様パートナー`,
+        email: body.partnerEmail,
+        phone: primaryUser.phone || '0000000000'
+      });
+      return sendJson(res, 200, {
+        success: true,
+        message: 'パートナー様へ家カルテの招待マジックリンクを発行しました。',
+        partnerToken: partnerUser.magic_token,
+        magicUrl: `http://localhost:${PORT}/dashboard.html?token=${partnerUser.magic_token}`
+      });
+    } catch (e) {
+      return sendJson(res, 500, { success: false, error: e.message });
+    }
+
+
   // 10-H. Admin Floor Plans Management API
   if (pathname === '/api/admin/floorplans' && method === 'GET') {
     const plans = db.getAllFloorPlans(100);

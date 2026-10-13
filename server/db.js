@@ -186,6 +186,11 @@ function getUserJobs(userId) {
   return db.prepare(`SELECT * FROM jobs WHERE user_id = ? ORDER BY created_at DESC`).all(userId);
 }
 
+function getActiveJobsCountByUser(userId) {
+  const row = db.prepare(`SELECT COUNT(*) as count FROM jobs WHERE user_id = ? AND status IN ('queued', 'processing')`).get(userId);
+  return row ? row.count : 0;
+}
+
 function getAllJobs() {
   return db.prepare(`SELECT * FROM jobs ORDER BY created_at DESC LIMIT 50`).all();
 }
@@ -369,6 +374,7 @@ module.exports = {
   getNextQueuedJob,
   updateJobStatus,
   getUserJobs,
+  getActiveJobsCountByUser,
   getAllJobs,
   addFile,
   getUserFiles,
