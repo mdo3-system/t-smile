@@ -82,12 +82,24 @@ function switchPage(pageId) {
   if (pageId === 'our-philosophy') {
     effectivePageId = 'top';
     scrollToAnchor = 'our-philosophy';
+  } else if (pageId === 'floorplan-bubble') {
+    effectivePageId = 'floorplan-studio';
+    setTimeout(() => {
+      const bubbleBtn = document.getElementById('btn-fp-mode-bubble');
+      if (bubbleBtn) bubbleBtn.click();
+    }, 150);
+  }
+
+  let targetSec = document.getElementById(effectivePageId);
+  if (!targetSec) {
+    console.warn(`[switchPage] Target section '#${effectivePageId}' not found. Falling back to 'top' to prevent blank page.`);
+    effectivePageId = 'top';
+    targetSec = document.getElementById('top');
   }
 
   const sections = document.querySelectorAll('.page-section');
   sections.forEach(sec => sec.classList.remove('active'));
   
-  const targetSec = document.getElementById(effectivePageId);
   if (targetSec) {
     targetSec.classList.add('active');
     if (scrollToAnchor) {

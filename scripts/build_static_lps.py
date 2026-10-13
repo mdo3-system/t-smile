@@ -340,9 +340,9 @@ def get_common_layout(title, description, canonical_url, og_image, breadcrumbs, 
         登録不要のAI間取りシミュレーター、フォトリアルパース生成、埼玉の気候を知り尽くした24h温熱換気AI相談室を完全無料開放しています。
       </p>
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
-        <a href="/#floorplan-studio" class="lp-cta-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8);">📐 AI間取り作図を試す ➜</a>
-        <a href="/#ai-studio" class="lp-cta-btn" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a;">🎨 AIパース工房で描く ➜</a>
-        <a href="/#thermal-consultation" class="lp-cta-btn" style="background: linear-gradient(135deg, #059669, #10b981);">💬 温熱AI建築士に相談 ➜</a>
+        <a href="/#floorplan-studio" class="lp-cta-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); font-weight: 800;">📐 間取りプラン選別・実例検索 ➜</a>
+        <a href="/madori-consultation/" class="lp-cta-btn" style="background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: #fff; font-weight: 800;">💬 夫婦の家づくりカルテ ➜</a>
+        <a href="/#thermal-consultation" class="lp-cta-btn" style="background: linear-gradient(135deg, #059669, #10b981); font-weight: 800;">🌡️ 24h温熱換気AI相談 ➜</a>
       </div>
     </div>
   </main>
@@ -363,6 +363,8 @@ def get_common_layout(title, description, canonical_url, og_image, breadcrumbs, 
     </p>
   </footer>
 
+  <script src="/js/app.js" defer></script>
+  <script src="/js/manga-viewer.js" defer></script>
   {extra_scripts}
 </body>
 </html>"""
