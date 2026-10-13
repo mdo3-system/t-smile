@@ -24,7 +24,7 @@ import urllib.error
 
 # 設定
 SERVER_BASE_URL = os.environ.get("SMILE_SERVER_URL", "https://t-smile.co.jp")
-SD_WEBUI_URL = os.environ.get("SD_WEBUI_URL", "http://127.0.0.1:7860")
+SD_WEBUI_URL = os.environ.get("SD_WEBUI_URL", "http://127.0.0.1:7861")
 WORKER_TOKEN = os.environ.get("WORKER_TOKEN", "precision_3680_worker_secret_2026")
 POLL_INTERVAL_SEC = 5
 

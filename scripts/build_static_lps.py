@@ -709,11 +709,11 @@ def generate_ai_studio_page():
 
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
         <div class="lp-badge-card" style="text-align: left; padding: 0; overflow: hidden; border: 1px solid #e2e8f0;">
-          <img src="/renders/render_living_%E5%90%B9%E3%81%8D%E6%8A%9C%E3%81%91.jpg" alt="LDK吹き抜けパース" style="width: 100%; height: 200px; object-fit: cover;" onerror="this.src='/images/cases_real/case1/photo_01.jpg'" />
+          <img src="/renders/case02_generated_3d_plan.png" alt="ときがわ町K様邸 確定平面図からPrecision 3680で生成したLDK内観パース" style="width: 100%; height: 200px; object-fit: cover;" onerror="this.src='/images/cases_real/case1/photo_01.jpg'" />
           <div style="padding: 1.2rem;">
-            <span style="background: #ecfdf5; color: #059669; font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">部位: LDKリビング</span>
-            <h4 style="margin: 0.4rem 0 0.5rem; color: #0f172a; font-size: 1.05rem;">吹き抜け大開口 × 陽だまりLDK</h4>
-            <p style="font-size: 0.84rem; color: #64748b; margin: 0;">天井高2.8mの大空間。南面大開口から差し込む自然光と、吉野杉の無垢梁が描く静謐な陰影。</p>
+            <span style="background: #ecfdf5; color: #059669; font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">実証作例: ときがわ町K様邸 平面図より生成</span>
+            <h4 style="margin: 0.4rem 0 0.5rem; color: #0f172a; font-size: 1.05rem;">無垢杉の温もり × 陽だまり大空間LDK</h4>
+            <p style="font-size: 0.84rem; color: #64748b; margin: 0;">実際の平面図からPrecision 3680（RTX 4060 Ti）でわずか12秒で生成。吉野杉の無垢床と木製造作キッチンが美しく調和。</p>
           </div>
         </div>
 
