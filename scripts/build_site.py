@@ -201,7 +201,7 @@ def build_knowledge_pages_and_sitemap():
     for u in urls_for_sitemap:
         if u == 'https://t-smile.co.jp/':
             priority = "1.0"
-        elif '/about/' in u or '/performance/' in u or '/evidence/' in u or '/ai-studio/' in u or '/awards/' in u or '/madori-consultation/' in u or u.endswith('/knowledge/thermal/'):
+        elif '/about/' in u or '/performance/' in u or '/evidence/' in u or '/ai-studio/' in u or '/awards/' in u or '/madori-consultation/' in u or '/flow/' in u or u.endswith('/knowledge/thermal/'):
             priority = "0.95"
         elif '/cases/' in u:
             priority = "0.9"

@@ -309,6 +309,7 @@ def get_common_layout(title, description, canonical_url, og_image, breadcrumbs, 
         <ul class="lp-nav-links">
           <li><a href="/">🏠 ホーム</a></li>
           <li><a href="/madori-consultation/" class="{ 'active' if active_nav == 'madori' else '' }" style="background: rgba(124, 58, 237, 0.25); color: #c4b5fd; border: 1px solid rgba(167, 139, 250, 0.3);">🤖 間取り相談＆カルテ</a></li>
+          <li><a href="/flow/" class="{ 'active' if active_nav == 'flow' else '' }" style="background: rgba(2, 132, 199, 0.2); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.3);">📐 家づくりの流れ・15万特典</a></li>
           <li><a href="/about/" class="{ 'active' if active_nav == 'about' else '' }">🛡️ 会社・信用 (CredLayer)</a></li>
           <li><a href="/performance/" class="{ 'active' if active_nav == 'performance' else '' }">📐 温熱・構造性能</a></li>
           <li><a href="/evidence/" class="{ 'active' if active_nav == 'evidence' else '' }">📊 実測データ実証録</a></li>
@@ -355,7 +356,7 @@ def get_common_layout(title, description, canonical_url, og_image, breadcrumbs, 
       埼玉県知事許可（般－8）第60650号 ｜ 二級建築設計事務所 埼玉県知事（5）第10268号 ｜ 創業1994年・施工実績800棟以上
     </p>
     <p style="margin: 0; font-size: 0.78rem;">
-      <a href="/">トップページ</a> ｜ <a href="/madori-consultation/">間取り相談＆カルテ</a> ｜ <a href="/about/">会社概要・信用の証明</a> ｜ <a href="/performance/">温熱・構造性能</a> ｜ <a href="/evidence/">光熱費実証録</a> ｜ <a href="/knowledge/thermal/">温熱知見200選</a>
+      <a href="/">トップページ</a> ｜ <a href="/madori-consultation/">間取り相談＆カルテ</a> ｜ <a href="/flow/">家づくりの流れ・15万円設計申込特典</a> ｜ <a href="/about/">会社概要・信用の証明</a> ｜ <a href="/performance/">温熱・構造性能</a> ｜ <a href="/evidence/">光熱費実証録</a> ｜ <a href="/knowledge/thermal/">温熱知見200選</a>
     </p>
     <p style="margin-top: 1.5rem; font-size: 0.75rem; color: #475569;">
       &copy; 株式会社住ま居る (Sumaile Co., Ltd.) All Rights Reserved.
@@ -1065,27 +1066,122 @@ def generate_madori_consultation_page():
         夫は夫のスマホで、妻は妻のスマホで直感タップ。LINEで送って合体するだけで、<strong>妥協ではなく「両者のいいとこ取り」をするAI融合プラン＆家づくりカルテ</strong>を即時無料で自動生成します。
       </p>
 
-      <!-- 4ステップ利用ガイド -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 2rem 0 2.5rem;">
-        <div style="background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 12px; padding: 1.2rem; text-align: center;">
-          <div style="font-size: 1.8rem; margin-bottom: 0.3rem;">📱</div>
-          <div style="font-weight: 800; color: #6b21a8; font-size: 0.95rem; margin-bottom: 0.2rem;">STEP 1: スマホで回答</div>
-          <p style="font-size: 0.82rem; color: #64748b; margin: 0; line-height: 1.6;">「夫モード」「妻モード」を選び、7問に直感タップ（約3分）。</p>
+      <!-- 4コマ漫画イラストで見る体験ストーリー -->
+      <div style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 2px solid #f59e0b; border-radius: 16px; padding: 2.2rem 1.6rem; margin: 2rem 0; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.1);">
+        <div style="text-align: center; margin-bottom: 1.8rem;">
+          <span style="background: #b45309; color: #fff; font-weight: 800; font-size: 0.85rem; padding: 4px 16px; border-radius: 20px;">
+            📖 漫画でわかる！夫婦の家づくりカルテ体験記
+          </span>
+          <h2 style="font-size: 1.65rem; color: #78350f; margin: 0.8rem 0 0.4rem; font-weight: 900;">
+            「あ、これ面白い！」から始まる、夫婦の理想の住まいづくり
+          </h2>
+          <p style="color: #92400e; font-size: 0.95rem; margin: 0;">
+            なぜ、スマホで答えるだけで「夫婦の意見のズレ」が魔法のように解けるのか？ 4つのステップでお見せします。
+          </p>
         </div>
-        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 1.2rem; text-align: center;">
-          <div style="font-size: 1.8rem; margin-bottom: 0.3rem;">💬</div>
-          <div style="font-weight: 800; color: #15803d; font-size: 0.95rem; margin-bottom: 0.2rem;">STEP 2: LINEで招待</div>
-          <p style="font-size: 0.82rem; color: #64748b; margin: 0; line-height: 1.6;">招待ボタンからパートナーのLINEへ送信。回答が暗号化URLで共有。</p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;">
+          
+          <!-- コマ1: 妻が夜スタート -->
+          <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #fde68a; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+            <div style="background: #d97706; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
+              <span>第1話：夜のリビングで</span>
+              <span>STEP 1</span>
+            </div>
+            <img src="/images/carte_story/comic_step1_wife.jpg" alt="夜のリビングで妻がスマホで面白がって答える様子" style="width: 100%; height: auto; display: block;" loading="lazy">
+            <div style="padding: 1.2rem; flex-grow: 1;">
+              <h3 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #92400e; font-weight: 800;">
+                妻「えっ、何これ？面白い！質問に答えるだけ？」
+              </h3>
+              <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
+                子どもが寝た後の静かな時間、スマホで直感タップ。「日常の車は何台？」「朝7時の洗面台渋滞は？」「乾太くんからファミクロへの直結動線は？」…面倒な文字入力はなく、3分でサクサク回答！
+              </p>
+            </div>
+          </div>
+
+          <!-- コマ2: 夫へLINE共有 -->
+          <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #fde68a; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+            <div style="background: #16a34a; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
+              <span>第2話：夫のスマホにLINE</span>
+              <span>STEP 2</span>
+            </div>
+            <img src="/images/carte_story/comic_step2_husband.jpg" alt="夫のスマホにLINEが届いて回答する様子" style="width: 100%; height: auto; display: block;" loading="lazy">
+            <div style="padding: 1.2rem; flex-grow: 1;">
+              <h3 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #166534; font-weight: 800;">
+                夫「お、LINEきた！俺の意見も聞いてくれるの？」
+              </h3>
+              <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
+                妻から送られたLINEリンクをタップ。「駐車場は来客用も欲しい」「将来のEV充電はどうする？」。アプリのインストールも会員登録も不要。夫のスマホでもそのままサクッと回答完了！
+              </p>
+            </div>
+          </div>
+
+          <!-- コマ3: 秘密の本音入力 -->
+          <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #fde68a; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+            <div style="background: #7c3aed; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
+              <span>第3話：秘密の本音（角が立たない）</span>
+              <span>STEP 3</span>
+            </div>
+            <img src="/images/carte_story/comic_step3_secret.jpg" alt="お互いに相手には直接言いにくい本音をこっそり入力" style="width: 100%; height: auto; display: block;" loading="lazy">
+            <div style="padding: 1.2rem; flex-grow: 1;">
+              <h3 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #5b21b6; font-weight: 800;">
+                「相手には直接言えない本音」もこっそり…🔓
+              </h3>
+              <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
+                「本当は趣味のスペースが欲しい」「実は水回りの掃除を夫にも分担してほしい」。面と向かって言うと喧嘩になりそうな本音も、AIが設計士にだけ上手な工夫として伝える安心設計！
+              </p>
+            </div>
+          </div>
+
+          <!-- コマ4: AIカルテ出力・夫婦納得 -->
+          <div style="background: #ffffff; border-radius: 12px; border: 1.5px solid #fde68a; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+            <div style="background: #0284c7; color: #fff; font-weight: 800; font-size: 0.88rem; padding: 6px 14px; display: flex; justify-content: space-between;">
+              <span>第4話：AI融合案カルテ提出！</span>
+              <span>STEP 4</span>
+            </div>
+            <img src="/images/carte_story/comic_step4_report.jpg" alt="AIがカルテを出力し夫婦で笑顔で喜ぶ様子" style="width: 100%; height: auto; display: block;" loading="lazy">
+            <div style="padding: 1.2rem; flex-grow: 1;">
+              <h3 style="font-size: 1.05rem; margin: 0 0 0.5rem; color: #0369a1; font-weight: 800;">
+                夫婦「すごい！これなら二人とも大満足だね！」
+              </h3>
+              <p style="font-size: 0.85rem; color: #475569; line-height: 1.7; margin: 0;">
+                AIが二人の回答を自動合体！「どちらかが我慢する妥協」ではなく、動線とゾーニングによる「いいとこ取り解決策」を即時出力。このカルテを持ってモデルハウスに行くだけで全て伝わります！
+              </p>
+            </div>
+          </div>
+
         </div>
-        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 1.2rem; text-align: center;">
-          <div style="font-size: 1.8rem; margin-bottom: 0.3rem;">🧩</div>
-          <div style="font-weight: 800; color: #1d4ed8; font-size: 0.95rem; margin-bottom: 0.2rem;">STEP 3: 2人の回答合体</div>
-          <p style="font-size: 0.82rem; color: #64748b; margin: 0; line-height: 1.6;">パートナーが開くと自動合体！意見のズレをAIがプロ視点で融合。</p>
-        </div>
-        <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 1.2rem; text-align: center;">
-          <div style="font-size: 1.8rem; margin-bottom: 0.3rem;">📋</div>
-          <div style="font-weight: 800; color: #b45309; font-size: 0.95rem; margin-bottom: 0.2rem;">STEP 4: カルテ無料出力</div>
-          <p style="font-size: 0.82rem; color: #64748b; margin: 0; line-height: 1.6;">完成したカルテを画面保存・印刷。モデルハウス見学へそのまま持参。</p>
+      </div>
+
+      <!-- 何ができるのか？何をするのか？の徹底解説 -->
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 2rem; margin: 2rem 0; box-shadow: 0 6px 25px rgba(0,0,0,0.04);">
+        <h2 style="font-size: 1.5rem; color: #0f172a; margin-top: 0; margin-bottom: 1.2rem; border-left: 5px solid #7c3aed; padding-left: 1rem;">
+          家づくりカルテで「何ができるのか？」「何をするのか？」
+        </h2>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.8rem;">
+          <div>
+            <h3 style="color: #7c3aed; font-size: 1.2rem; margin-top: 0; display: flex; align-items: center; gap: 8px;">
+              <span>🎁</span> このカルテで手に入る「3大メリット」
+            </h3>
+            <ul style="padding-left: 1.2rem; line-height: 1.9; color: #334155; font-size: 0.95rem;">
+              <li><strong>夫婦の意見のズレを完全可視化:</strong> 「車は何台？」「朝の洗面は？」「洗濯は乾太くん派？」など、言葉ではうまく伝えられないこだわりが客観レポートに。</li>
+              <li><strong>妥協ではない「プロのAI融合プラン」:</strong> 夫の「趣味・ガレージ」と妻の「家事時短・生活感ゼロ」を、建築のゾーニング手法で両立させる具体策が手に入ります。</li>
+              <li><strong>モデルハウス見学の「最強パスポート」:</strong> 何枚もアンケートを書く面倒がゼロに。カルテをスマホで見せるだけで、設計士と阿吽の呼吸で話が進みます。</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 style="color: #059669; font-size: 1.2rem; margin-top: 0; display: flex; align-items: center; gap: 8px;">
+              <span>⚡</span> あなたがすることは「たったこれだけ」
+            </h3>
+            <ul style="padding-left: 1.2rem; line-height: 1.9; color: #334155; font-size: 0.95rem;">
+              <li><strong>所要時間はわずか3分:</strong> 面倒な文字入力はなく、直感タップで選ぶだけ。</li>
+              <li><strong>会員登録・個人情報の入力不要:</strong> 電話番号や名前の入力は一切ありません。誰にも邪魔されず、夫婦だけで何度でも試せます。</li>
+              <li><strong>LINEでワンタップ共有:</strong> どちらかが回答後、「LINEで招待」を押すだけで、相手のスマホへ安全に引き継がれます。</li>
+              <li><strong>しつこい営業電話は完全ゼロ:</strong> 売り込みの電話や訪問は創業30年一度も行っていません。</li>
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -1108,6 +1204,28 @@ def generate_madori_consultation_page():
           <div style="padding: 2.5rem; text-align: center; color: #64748b;">
             <p>診断システムを初期化しています...</p>
           </div>
+        </div>
+      </div>
+
+      <!-- 次のステップへのご案内カード -->
+      <div style="background: linear-gradient(135deg, #091e2f 0%, #0f172a 100%); color: #fff; border-radius: 16px; padding: 2.5rem 2rem; margin: 3rem 0 2rem; border: 2px solid #38bdf8; text-align: center;">
+        <span style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-weight: 800; font-size: 0.85rem; padding: 4px 16px; border-radius: 20px; border: 1px solid rgba(56, 189, 248, 0.4);">
+          🗺️ カルテを作成した後のステップ
+        </span>
+        <h2 style="font-size: 1.65rem; color: #fff; margin: 1rem 0 0.5rem; font-weight: 800;">
+          カルテができたらどうする？ 契約までの誠実な進め方
+        </h2>
+        <p style="color: #cbd5e1; max-width: 780px; margin: 0 auto 1.8rem; font-size: 0.95rem; line-height: 1.8;">
+          カルテが完成したら、まずは芳彩モデルハウスで実物体感（無料）。<br>
+          その後、契約前に敷地の真実をすべて白日の下に晒す<strong>「15万円の設計お申し込み（JFD 3次元点群測量・現況図・役所調査特典付き）」</strong>へと進みます。万一契約に至らなくても調査図面はお渡しするため、1円も無駄になりません。
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+          <a href="/flow/" class="lp-cta-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-weight: 800; font-size: 1rem; padding: 0.9rem 2rem;">
+            📐 家づくりの流れと15万円設計申込特典を詳しく見る ➜
+          </a>
+          <a href="/#scent-experience" class="lp-cta-btn" style="background: rgba(255, 255, 255, 0.15); color: #fff; border: 1px solid rgba(255, 255, 255, 0.3); font-size: 1rem; padding: 0.9rem 2rem;">
+            🌿 芳彩（かぐや）実物モデルハウス体感予約 ➜
+          </a>
         </div>
       </div>
 
@@ -1220,6 +1338,380 @@ def generate_madori_consultation_page():
     return "https://t-smile.co.jp/madori-consultation/"
 
 
+def generate_flow_page():
+    """家づくりの流れ ＆ 15万円設計申込特典（JFD 3次元点群測量・現況図）解説LPを生成"""
+    out_dir = os.path.join(PUBLIC_DIR, 'flow')
+    os.makedirs(out_dir, exist_ok=True)
+    out_file = os.path.join(out_dir, 'index.html')
+
+    howto_ld = {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "住ま居るの家づくりの進め方と15万円設計申込フロー",
+        "description": "無料の家づくりカルテ・モデルハウス見学から、15万円の設計お申し込み（JFD 3D点群測量・行政調査・地盤確認）、バブルプラン＆3Dパース活用、3回の設計打合せ、ご契約までの全フロー。",
+        "step": [
+            {
+                "@type": "HowToStep",
+                "position": 1,
+                "name": "家づくりカルテで夫婦の本音整理（無料）",
+                "text": "夫婦それぞれのスマホで直感タップ回答しLINEで合体。意見のズレと融合案を客観カルテ化。"
+            },
+            {
+                "@type": "HowToStep",
+                "position": 2,
+                "name": "芳彩（かぐや）モデルハウス体感見学（無料）",
+                "text": "無垢のヒノキや超高断熱を五感で体感。ベテラン女性スタッフが温かく案内し、売り込み営業はゼロ。カルテを見せるだけで要望が100%伝わります。"
+            },
+            {
+                "@type": "HowToStep",
+                "position": 3,
+                "name": "設計お申し込み（15万円・JFD 3D点群測量特典）",
+                "text": "敷地の真実を明らかにする実地調査。7GBの3次元点群データ、役所行政調査、地盤確認。万一契約に至らなくても調査図面はお渡しします。"
+            },
+            {
+                "@type": "HowToStep",
+                "position": 4,
+                "name": "申込者限定アトリエ解放（バブルプラン＆Gemini 3Dパース）",
+                "text": "間取りゾーニングツールや、Gemini APIを活用した住ま居る特化3Dパース生成を使い放題で理想の空間をシミュレーション。"
+            },
+            {
+                "@type": "HowToStep",
+                "position": 5,
+                "name": "3回の設計打ち合わせ＆住設ショールーム見学",
+                "text": "二級建築士・菅原代表と濃密な打ち合わせ。タカラ・クリナップ・TOTO等のショールーム見学と連動し、プランを完全昇華。"
+            },
+            {
+                "@type": "HowToStep",
+                "position": 6,
+                "name": "安心の納得ご契約",
+                "text": "耐震等級3計算書・気密測定C値保証・詳細見積もりが全て出揃ってからの安心契約。"
+            }
+        ]
+    }
+
+    faq_ld = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "なぜ契約前に「15万円の設計お申し込み」が必要なのですか？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "契約後の「地盤改良や擁壁で数百万円追加になった」という予算オーバー事故を完全にゼロにするためです。JFD社の高精度3次元点群測量や行政法規の現地調査を契約前に徹底的に行い、敷地の真実を明らかにするための実費調査費用です。"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "もし設計申し込み後に本契約をしなかった場合、15万円はどうなりますか？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "JFD社の3次元点群測量データ、敷地調査報告書、現況図、地盤調査報告書（実施済みの場合）の全てをお客様にそのままお渡しします。他社で建てる場合でも数十万円相当の測量図面としてそのまま使えるため、お客様の費用は一切無駄になりません。"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "バブルプランや3Dパース生成は誰でも使えますか？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "バブルプランおよび住ま居る特化のGemini 3Dパース生成は、15万円の設計お申し込みをいただいたお客様限定の特別アトリエ機能です。専用ログインを発行し、何度でも納得いくまで理想の間取りとパースを生成していただけます。"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "設計の打ち合わせは何回くらい行いますか？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "通常3回程度の濃密な打ち合わせを行います。1回目で調査報告と一次プラン提示、2回目でバブルプランやパース、ショールーム要望の反映、3回目で構造計算・温熱計算・詳細見積もりを確定させます。"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "キッチンや風呂などの住宅設備は自由に選べますか？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "はい、完全に自由です。タカラスタンダードのホーロー、クリナップのステンレス、TOTO、パナソニックなど、建て主様のお好みに合わせて各社ショールームで実物をご確認いただきながら自由に選定いただけます。"
+                }
+            }
+        ]
+    }
+
+    extra_head = f"""
+  <script type="application/ld+json">
+  {json.dumps(howto_ld, ensure_ascii=False)}
+  </script>
+  <script type="application/ld+json">
+  {json.dumps(faq_ld, ensure_ascii=False)}
+  </script>
+"""
+
+    content = """
+      <span class="lp-hero-tag" style="background: #e0f2fe; color: #0284c7; border-color: #bae6fd;">
+        📐 全行程・完全透明化 ｜ 家づくりの進め方ロードマップ
+      </span>
+      <h1 class="lp-h1">
+        「こんなはずじゃなかった」を契約前にゼロにする。<br>
+        <span style="color: #0284c7;">15万円設計お申し込み特典と、ご契約までの誠実フロー</span>
+      </h1>
+      <p class="lp-lead">
+        大手ハウスメーカーや多くの住宅会社では、「無料相談・無料プラン」で契約を急かされ、契約後に地盤改良費用や擁壁造成、行政法規の追加で数百万円の予算オーバーが発生することが後を絶ちません。<br>
+        株式会社住ま居るでは、契約前に敷地の真実（3次元点群測量・行政法規・地盤）をすべて明らかにし、納得のプランを練り上げる<strong>「15万円の設計お申し込み」制度</strong>を設けています。万一本契約に至らなかった場合でも、調査成果物はお客様にお渡しするため、1円も無駄になりません。
+      </p>
+
+      <!-- 5ステージ・ロードマップ俯瞰 -->
+      <h2 class="lp-h2">1. 家づくり全体の5ステップ（全体俯瞰）</h2>
+      <p>初回来場からお引き渡しまで、後悔や不安のない透明な進め方を定めています。</p>
+
+      <div style="display: flex; flex-direction: column; gap: 1.5rem; margin: 2rem 0 2.5rem;">
+        
+        <!-- Stage 1 -->
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; gap: 1.2rem; align-items: flex-start;">
+          <div style="background: #7c3aed; color: #fff; font-weight: 900; font-size: 1rem; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">1</div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 0.4rem;">
+              <span style="background: #f5f3ff; color: #7c3aed; font-weight: 800; font-size: 0.8rem; padding: 2px 10px; border-radius: 12px;">完全無料・登録不要</span>
+              <h3 style="margin: 0; font-size: 1.2rem; color: #0f172a;">【本音整理】夫婦それぞれのスマホで「家づくりカルテ」作成</h3>
+            </div>
+            <p style="margin: 0; font-size: 0.92rem; color: #475569; line-height: 1.7;">
+              まずは夫婦で画面を見ながら「車の台数」「朝の洗面渋滞」「乾太くん・洗濯動線」「秘密の希望」に回答。AIが妥協ではない融合案を導き出します。
+              <a href="/madori-consultation/" style="color: #7c3aed; font-weight: 700; text-decoration: underline; margin-left: 6px;">今すぐカルテを作る ➜</a>
+            </p>
+          </div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; gap: 1.2rem; align-items: flex-start;">
+          <div style="background: #059669; color: #fff; font-weight: 900; font-size: 1rem; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">2</div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 0.4rem;">
+              <span style="background: #ecfdf5; color: #059669; font-weight: 800; font-size: 0.8rem; padding: 2px 10px; border-radius: 12px;">完全無料・営業電話ゼロ</span>
+              <h3 style="margin: 0; font-size: 1.2rem; color: #0f172a;">【実物体感】芳彩（かぐや）実物モデルハウス見学（鶴ヶ島）</h3>
+            </div>
+            <p style="margin: 0; font-size: 0.92rem; color: #475569; line-height: 1.7;">
+              無垢の木の香り、足ざわり、真冬・真夏の温熱性能を五感で体感。ベテラン女性スタッフが温かくお迎えし、売り込み営業は一切ありません。作成したカルテを見せるだけで、長時間のアンケート記入なしに理想が伝わります。
+            </p>
+          </div>
+        </div>
+
+        <!-- Stage 3 (Highlighted) -->
+        <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 2px solid #0284c7; border-radius: 12px; padding: 1.8rem; box-shadow: 0 6px 20px rgba(2,132,199,0.1); display: flex; gap: 1.2rem; align-items: flex-start;">
+          <div style="background: #0284c7; color: #fff; font-weight: 900; font-size: 1rem; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">3</div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 0.4rem;">
+              <span style="background: #0284c7; color: #fff; font-weight: 800; font-size: 0.8rem; padding: 2px 10px; border-radius: 12px;">安心の図面引渡保証付き</span>
+              <h3 style="margin: 0; font-size: 1.25rem; color: #0369a1;">【最重要ステップ】設計お申し込み（15万円）＆ 3D点群調査・専用アトリエ解放</h3>
+            </div>
+            <p style="margin: 0; font-size: 0.94rem; color: #334155; line-height: 1.75;">
+              契約後の予算オーバーをゼロにするための本格調査。JFD社による<strong>3次元点群測量（7GB）</strong>、行政法令調査、地盤・現況調査を実施。さらに申込者専用の<strong>「バブルプラン」＆「Gemini 3Dパース工房」</strong>が使い放題に！
+            </p>
+          </div>
+        </div>
+
+        <!-- Stage 4 -->
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; gap: 1.2rem; align-items: flex-start;">
+          <div style="background: #d97706; color: #fff; font-weight: 900; font-size: 1rem; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">4</div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 0.4rem;">
+              <span style="background: #fef3c7; color: #b45309; font-weight: 800; font-size: 0.8rem; padding: 2px 10px; border-radius: 12px;">二級建築士 菅原代表直接担当</span>
+              <h3 style="margin: 0; font-size: 1.2rem; color: #0f172a;">【理想の具体化】3回の設計打ち合わせ ＆ 住設ショールーム見学</h3>
+            </div>
+            <p style="margin: 0; font-size: 0.92rem; color: #475569; line-height: 1.7;">
+              1回目（調査報告と一次プラン提示）➜ 2回目（バブルプラン・パース反映とショールーム見学）➜ 3回目（許容応力度計算 耐震等級3・温熱計算・詳細見積確定）。建て主様が自由に選んだ住宅設備（タカラ、クリナップ、TOTO等）を組み込みます。
+            </p>
+          </div>
+        </div>
+
+        <!-- Stage 5 -->
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; gap: 1.2rem; align-items: flex-start;">
+          <div style="background: #0f172a; color: #fff; font-weight: 900; font-size: 1rem; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">5</div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 0.4rem;">
+              <span style="background: #f1f5f9; color: #475569; font-weight: 800; font-size: 0.8rem; padding: 2px 10px; border-radius: 12px;">完全納得・着工へ</span>
+              <h3 style="margin: 0; font-size: 1.2rem; color: #0f172a;">【心からの安心】ご契約 ＆ 着工</h3>
+            </div>
+            <p style="margin: 0; font-size: 0.92rem; color: #475569; line-height: 1.7;">
+              すべての図面、構造計算書、気密測定保証、確定見積もりが揃ってからの安心ご契約。契約後の不透明な追加費用は一切発生しません。
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 15万円設計申込特典の徹底深掘り -->
+      <h2 class="lp-h2">2. なぜ「15万円の設計お申し込み」なのか？（超豪華特典と保証）</h2>
+      <div class="lp-highlight-box" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 1.5px solid #cbd5e1;">
+        <h3 style="margin-top: 0; color: #0f172a; font-size: 1.2rem;">無料相談の甘い言葉に潜む「契約後トラブル」を防ぐために</h3>
+        <p style="font-size: 0.94rem; color: #475569; line-height: 1.8; margin-bottom: 0;">
+          「間取りの提案も地盤調査も無料です」と謳う会社の多くは、大雑把な図面で早期契約を迫り、契約後に地盤改良費200万円や擁壁工事、水道引き込み費用の追加を請求します。<br>
+          私たちはそうした不誠実を許しません。契約前に測量会社（JFD社）へ外注費を払い、敷地と法規の全データを解明する実費として15万円をいただいております。
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+        
+        <!-- 特典1: JFD 3次元点群測量 -->
+        <div style="background: #ffffff; border: 2px solid #0284c7; border-radius: 12px; padding: 1.6rem; box-shadow: 0 4px 15px rgba(2,132,199,0.06);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+            <span style="background: #e0f2fe; color: #0284c7; font-weight: 800; font-size: 0.8rem; padding: 3px 10px; border-radius: 12px;">特典 1</span>
+            <span style="font-size: 0.82rem; color: #64748b; font-weight: 700;">外注測量（梅レベル）</span>
+          </div>
+          <h3 style="margin: 0 0 0.6rem; color: #0369a1; font-size: 1.15rem;">JFD 3次元点群測量 ＆ 敷地現況図</h3>
+          <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">
+            敷地をレーザースキャンした7GB超の3D点群データ。敷地のミリ単位の高低差、隣家窓の位置、電柱、越境物、擁壁の勾配を画面上で360度いつでも把握できます。
+          </p>
+        </div>
+
+        <!-- 特典2: 行政調査 -->
+        <div style="background: #ffffff; border: 2px solid #059669; border-radius: 12px; padding: 1.6rem; box-shadow: 0 4px 15px rgba(5,150,105,0.06);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+            <span style="background: #ecfdf5; color: #059669; font-weight: 800; font-size: 0.8rem; padding: 3px 10px; border-radius: 12px;">特典 2</span>
+            <span style="font-size: 0.82rem; color: #64748b; font-weight: 700;">二級建築士直接調査</span>
+          </div>
+          <h3 style="margin: 0 0 0.6rem; color: #065f46; font-size: 1.15rem;">役所・行政調査（法令リスクの徹底排除）</h3>
+          <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">
+            用途地域、建ぺい率・容積率、斜線制限、農地転用、市街化調整区域、上下水道配管の状況など、後からプラン変更が生じないよう役所実地調査を完遂します。
+          </p>
+        </div>
+
+        <!-- 特典3: 地盤・解体調査 -->
+        <div style="background: #ffffff; border: 2px solid #d97706; border-radius: 12px; padding: 1.6rem; box-shadow: 0 4px 15px rgba(217,119,6,0.06);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+            <span style="background: #fef3c7; color: #d97706; font-weight: 800; font-size: 0.8rem; padding: 3px 10px; border-radius: 12px;">特典 3</span>
+            <span style="font-size: 0.82rem; color: #64748b; font-weight: 700;">建て替え・地盤事前確認</span>
+          </div>
+          <h3 style="margin: 0 0 0.6rem; color: #92400e; font-size: 1.15rem;">既存建物現況調査 ＆ 地盤事前調査</h3>
+          <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">
+            既存建物がある場合の解体範囲や状況確認、周辺地盤データに基づく地盤補強の要否を事前判定。予算の狂いを未然に防ぎます。
+          </p>
+        </div>
+
+        <!-- 特典4: 安心の引渡保証 -->
+        <div style="background: #ffffff; border: 2px solid #7c3aed; border-radius: 12px; padding: 1.6rem; box-shadow: 0 4px 15px rgba(124,58,237,0.06);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+            <span style="background: #f5f3ff; color: #7c3aed; font-weight: 800; font-size: 0.8rem; padding: 3px 10px; border-radius: 12px;">安心保証</span>
+            <span style="font-size: 0.82rem; color: #64748b; font-weight: 700;">お金が無駄にならない</span>
+          </div>
+          <h3 style="margin: 0 0 0.6rem; color: #5b21b6; font-size: 1.15rem;">万一不成立でも「調査図面・報告書」をお渡し</h3>
+          <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">
+            万一本契約に至らなかった場合でも、敷地調査報告書・現況図・地盤調査書はすべてお客様にお渡しします。他社で建てる際にも数十万円相当の図面としてそのまま使えます！
+          </p>
+        </div>
+
+      </div>
+
+      <!-- 3次元点群測量データのビジュアルプレビュー ＆ 操作動画枠 -->
+      <div style="background: #0f172a; border-radius: 16px; padding: 2rem; color: #fff; margin: 2.5rem 0; border: 2px solid #38bdf8;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <span style="background: #d97706; color: #fff; font-size: 0.82rem; font-weight: 800; padding: 4px 16px; border-radius: 20px;">
+            📹 3D点群データ操作デモ動画（※準備中・近日公開）
+          </span>
+          <h3 style="font-size: 1.4rem; color: #38bdf8; margin: 0.6rem 0 0.3rem;">
+            画面上で敷地の高低差・隣家窓・日照を360度把握
+          </h3>
+          <p style="color: #cbd5e1; font-size: 0.9rem; margin: 0;">
+            JFD社による3次元スキャンデータ解析画面。お施主様の敷地をミリ単位でデジタル化します。
+          </p>
+        </div>
+
+        <div style="position: relative; border-radius: 10px; overflow: hidden; border: 2px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+          <img src="/images/survey/pointcloud_survey_preview.jpg" alt="JFD社 3次元点群測量データ解析画面プレビュー" style="width: 100%; height: auto; display: block;" loading="lazy">
+          <div style="position: absolute; inset: 0; background: rgba(15, 23, 42, 0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem;">
+            <div style="width: 68px; height: 68px; border-radius: 50%; background: rgba(255, 255, 255, 0.95); display: flex; align-items: center; justify-content: center; font-size: 2.2rem; box-shadow: 0 8px 30px rgba(0,0,0,0.6); color: #0f172a;">
+              ▶
+            </div>
+            <p style="color: #ffffff; font-weight: 800; font-size: 1.1rem; margin-top: 1rem; text-shadow: 0 2px 6px rgba(0,0,0,0.9);">
+              敷地状況を画面上でいつでもミリ単位リアルタイム把握
+            </p>
+            <span style="background: rgba(15, 23, 42, 0.85); color: #e2e8f0; font-size: 0.82rem; padding: 4px 14px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.25);">
+              ※現在、実際の画面操作デモ動画を準備中ですが、すでにSSD等への大容量データ連携・準備が進んでおります
+            </span>
+          </div>
+        </div>
+        <p style="color: #94a3b8; font-size: 0.82rem; text-align: center; margin-top: 0.9rem; margin-bottom: 0;">
+          ※敷地の場所や個人情報が特定されないよう配慮したサンプルデータ画面です。
+        </p>
+      </div>
+
+      <!-- 申込者限定特典：バブルプラン ＆ Gemini 3Dパース工房 -->
+      <h2 class="lp-h2">3. 申込者限定機能：ArchiX感覚の「理想アトリエ」解放</h2>
+      <p>15万円の設計お申し込みをいただいたお客様には、専用ログインアカウントを発行。ご自宅のPCやタブレットから、以下のプロ仕様シミュレーションを納得いくまで何度でもお使いいただけます。</p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.6rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+          <div style="font-size: 2rem; margin-bottom: 0.4rem;">🧩</div>
+          <h3 style="color: #0f172a; font-size: 1.2rem; margin-top: 0;">① バブルプラン（間取りゾーニング検討）</h3>
+          <p style="font-size: 0.88rem; color: #475569; line-height: 1.75; margin: 0;">
+            「LDKを南側に」「キッチンと水回りを横並びに」「玄関横にガレージ動線を」。パズルのように部屋パーツを画面上で動かしながら、ご夫婦で直感的に間取りのゾーニングを煮詰められます。
+          </p>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.6rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+          <div style="font-size: 2rem; margin-bottom: 0.4rem;">🎨</div>
+          <h3 style="color: #0f172a; font-size: 1.2rem; margin-top: 0;">② 住ま居る特化・Gemini 3Dパース生成</h3>
+          <p style="font-size: 0.88rem; color: #475569; line-height: 1.75; margin: 0;">
+            複雑な設定は一切不要。Googleの最新Gemini APIを活用し、住ま居る独自の「埼玉の光と無垢材の質感」に特化したプロンプトで、ArchiXのようにフォトリアルな外観・内観パースを高速生成。理想の空間を鮮明にイメージできます。
+          </p>
+        </div>
+      </div>
+
+      <!-- FAQ Section -->
+      <h2 class="lp-h2">4. 家づくりの進め方 よくあるご質問（FAQ）</h2>
+      <div style="margin: 1.8rem 0;">
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.4rem; margin-bottom: 1rem;">
+          <h3 style="margin-top: 0; font-size: 1.05rem; color: #0f172a;">Q. なぜ契約前に「15万円の設計お申し込み」が必要なのですか？</h3>
+          <p style="font-size: 0.92rem; color: #475569; margin-bottom: 0; line-height: 1.75;">
+            A. 契約後の「地盤改良や擁壁造成で数百万円追加になった」という予算オーバー事故を完全にゼロにするためです。JFD社の高精度3次元点群測量や行政法規の現地調査を契約前に徹底的に行い、敷地の真実を明らかにするための実費調査費用です。
+          </p>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.4rem; margin-bottom: 1rem;">
+          <h3 style="margin-top: 0; font-size: 1.05rem; color: #0f172a;">Q. もし設計申し込み後に本契約をしなかった場合、15万円はどうなりますか？</h3>
+          <p style="font-size: 0.92rem; color: #475569; margin-bottom: 0; line-height: 1.75;">
+            A. JFD社の3次元点群測量データ、敷地調査報告書、現況図、地盤調査報告書（実施済みの場合）の全てをお客様にそのままお渡しします。他社で建てる場合でも数十万円相当の測量図面としてそのまま使えるため、お客様の費用は一切無駄になりません。
+          </p>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.4rem; margin-bottom: 1rem;">
+          <h3 style="margin-top: 0; font-size: 1.05rem; color: #0f172a;">Q. キッチンや風呂などの住宅設備は自由に選べますか？</h3>
+          <p style="font-size: 0.92rem; color: #475569; margin-bottom: 0; line-height: 1.75;">
+            A. はい、完全に自由です。タカラスタンダードのホーロー、クリナップのステンレス、TOTO、パナソニックなど、建て主様のお好みに合わせて各社ショールームで実物をご確認いただきながら自由に選定いただけます。
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Box -->
+      <div class="lp-highlight-box" style="margin-top: 2.5rem; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff; border: 2px solid #38bdf8; text-align: center;">
+        <h3 style="color: #38bdf8; font-size: 1.35rem; margin-top: 0;">まずは夫婦の「家づくりカルテ」からスタートしませんか？</h3>
+        <p style="color: #cbd5e1; max-width: 760px; margin: 0 auto 1.5rem; font-size: 0.96rem; line-height: 1.8;">
+          登録不要・完全無料。スマホで直感タップするだけで、夫婦の意見のズレを解消したカルテが即時手に入ります。<br>
+          そのカルテを持って、芳彩モデルハウスへお気軽にお越しください。
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+          <a href="/madori-consultation/" class="lp-cta-btn" style="background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: #fff; font-weight: 800; font-size: 1.05rem; padding: 0.9rem 2.2rem;">
+            🤖 夫婦の家づくりカルテを無料作成する ➜
+          </a>
+          <a href="/#scent-experience" class="lp-cta-btn" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-weight: 800; font-size: 1.05rem; padding: 0.9rem 2.2rem;">
+            🌿 芳彩モデルハウス体感見学を予約する ➜
+          </a>
+        </div>
+      </div>
+    """
+
+    html = get_common_layout(
+        title="家づくりの流れと15万円設計申込特典（JFD 3次元点群測量・現況図）｜株式会社住ま居る【埼玉】",
+        description="無料の家づくりカルテ・モデルハウス見学から、15万円の設計お申し込み（JFD 3D点群測量・行政調査・地盤確認・安心の図面引渡保証）、バブルプラン＆3Dパース活用、3回の設計打合せ、ご契約までの全フローを完全公開。",
+        canonical_url="https://t-smile.co.jp/flow/",
+        og_image="https://t-smile.co.jp/images/survey/pointcloud_survey_preview.jpg",
+        breadcrumbs=[("🏠 ホーム", "/"), ("📐 家づくりの流れ・15万円設計申込特典", "")],
+        content_html=content,
+        active_nav='flow',
+        extra_head=extra_head
+    )
+    with open(out_file, 'w', encoding='utf-8') as f:
+        f.write(html)
+    return "https://t-smile.co.jp/flow/"
+
+
 def build_all_lps():
     """すべての静的LPおよびピラーページを生成し、URLリストを返す"""
     urls = []
@@ -1229,6 +1721,7 @@ def build_all_lps():
     urls.append(generate_ai_studio_page())
     urls.append(generate_award_story_page())
     urls.append(generate_madori_consultation_page())
+    urls.append(generate_flow_page())
     thermal_url = generate_thermal_pillar_page()
     if thermal_url:
         urls.append(thermal_url)
@@ -1240,3 +1733,4 @@ if __name__ == '__main__':
     res = build_all_lps()
     for u in res:
         print(f" - {u}")
+
