@@ -1238,12 +1238,23 @@
         // IMAGE VIEWER & PATH HELPERS
         // =========================================================================
         function copySourceImgPath() {
+            let p = '';
             const pathElem = document.getElementById('lblSourceImgFullPath');
-            const p = pathElem ? pathElem.textContent : '';
-            if (p && !p.startsWith('（')) {
+            if (pathElem && pathElem.textContent && !pathElem.textContent.startsWith('（')) {
+                p = pathElem.textContent.trim();
+            } else if (activeModalIndex !== -1 && allItems[activeModalIndex]) {
+                const item = allItems[activeModalIndex];
+                if (item.image) {
+                    const ABS_BASE_DIR = 'E:\\Dropbox\\■住ま居る\\■住ま居る共有\\ﾒﾀﾊﾞｰｽ展示場\\Antigravity\\public';
+                    const normPath = item.image.split('/').join('\\');
+                    p = ABS_BASE_DIR + (normPath.startsWith('\\') ? normPath : '\\' + normPath);
+                }
+            }
+
+            if (p) {
                 copyText(p, '元画像の絶対ファイルパス');
             } else {
-                showToast('図解画像パスがありません', true);
+                showToast('図解画像パスが設定されていません', true);
             }
         }
 
@@ -1272,22 +1283,68 @@
         }
 
         // =========================================================================
-        // COPY & SHARE HELPERS
+        // COPY & SHARE HELPERS (堅牢な3段フォールバック付き)
         // =========================================================================
         function copyToClipboard(elementId, label) {
             const el = document.getElementById(elementId);
-            if (!el) return;
-            copyText(el.value, label);
+            if (!el) {
+                showToast(`コピー対象（${label}）が見つかりません`, true);
+                return;
+            }
+            const val = el.value !== undefined ? el.value : el.textContent;
+            copyText(val, label);
         }
 
         function copyText(text, label) {
-            if (!text) return;
-            navigator.clipboard.writeText(text).then(() => {
-                showToast(`「${label}」をクリップボードにコピーしました！`);
-            }).catch(err => {
-                console.error('Copy failed:', err);
-                showToast('コピーに失敗しました', true);
-            });
+            if (!text || text.trim() === '') {
+                showToast(`コピーする内容（${label}）が空です`, true);
+                return;
+            }
+            const trimmed = text.trim();
+
+            // 1. モダンブラウザの Clipboard API (HTTPS / localhost)
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(trimmed).then(() => {
+                    showToast(`「${label}」をクリップボードにコピーしました！`);
+                }).catch(err => {
+                    console.warn('navigator.clipboard failed, attempting fallback...', err);
+                    fallbackCopy(trimmed, label);
+                });
+            } else {
+                // 2. 非セキュア環境・権限ブロック時のフォールバック
+                fallbackCopy(trimmed, label);
+            }
+        }
+
+        function fallbackCopy(text, label) {
+            try {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";
+                textArea.style.top = "0";
+                textArea.style.left = "-9999px";
+                textArea.style.opacity = "0";
+                textArea.setAttribute('readonly', '');
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                const successful = document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                if (successful) {
+                    showToast(`「${label}」をクリップボードにコピーしました！`);
+                } else {
+                    promptManualCopy(text, label);
+                }
+            } catch (err) {
+                console.error('execCommand copy failed:', err);
+                promptManualCopy(text, label);
+            }
+        }
+
+        function promptManualCopy(text, label) {
+            window.prompt(`【手動コピー】以下の「${label}」を Ctrl+C でコピーしてください:`, text);
         }
 
         function shareToX() {

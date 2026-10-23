@@ -1,19 +1,24 @@
 {
-  "version": "2.10.0",
+  "version": "2.10.1",
   "buildDate": "2026-10-23",
-  "releaseName": "Official Production Deployment: Saitama 63 Municipalities, Dynamic Mortgage TOP5, Wishlist Memo Carte & Complete Funnel",
+  "releaseName": "Video Portal Robust Fallback Copy & Clipboard Enhancement",
   "components": {
     "madoriSketch": "2.5.1",
     "smileStudio": "2.5.0",
     "bubblePlan": "2.0.0",
     "speedPlanner": "2.2.0",
-    "knowledgeVideoPortal": "1.8.0",
+    "knowledgeVideoPortal": "1.8.1",
     "subsidyNavi": "2.4.1",
     "mortgageDiagnosis": "2.4.0",
     "plansSSG": "2.7.0",
     "domEngine": "1.1.0"
   },
   "changelog": [
+    {
+      "version": "2.10.1",
+      "date": "2026-10-23",
+      "summary": "【SNS/YouTube動画ポータル クリップボードコピー機能の抜本強化】画像パス、Veo 3プロンプト、YouTubeタイトル/概要、各種SNS（Instagram/X/Threads）のコピー処理に3段階の堅牢フォールバック（navigator.clipboard ➔ execCommand('copy') ➔ window.prompt）を実装し、非HTTPS環境や権限ブロック環境でも確実にクリップボード格納・手動取得できるよう改善。"
+    },
     {
       "version": "2.10.0",
       "date": "2026-10-23",
