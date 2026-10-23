@@ -95,7 +95,32 @@
           step: 4,
           title: '第4話：打ち合わせが待ち遠しい',
           src: '/images/perse_studio/comic_perse_step4.jpg',
-          caption: '「何十通りも試せるから後悔ゼロ！設計士さん（菅原代表）に見せるのが待ち遠しい！」<br><span style="font-size:0.85rem; color:#94a3b8;">夜、お酒やコーヒーを片手に「こっちの木目もいいね」「夜の照明も素敵」と何パターンも保存。打ち合わせが最高に楽しい時間へ昇華！</span>'
+          caption: '「何十通りも試せるから後悔ゼロ！設計士さんに見せるのが待ち遠しい！」<br><span style="font-size:0.85rem; color:#94a3b8;">夜、お酒やコーヒーを片手に「こっちの木目もいいね」「夜の照明も素敵」と何パターンも保存。打ち合わせが最高に楽しい時間へ昇華！</span>'
+        }
+      ]
+    },
+    'how-to-use': {
+      title: '📖 30秒でわかる！AIプラン検索＆パース工房の使い方',
+      nextActionUrl: '#floorplan-studio',
+      nextActionText: '✨ さっそくプランを試してみる ➜',
+      panels: [
+        {
+          step: 1,
+          title: '第1話：図面がなくても大丈夫！',
+          src: '/images/perse_studio/comic_perse_step1.jpg',
+          caption: '妻「えっ、図面がなくても作れるの？」「そうなんです！好きな空間やスタイル（ジャパンディ・北欧モダンなど）をポチポチ選ぶだけ！」<br><span style="font-size:0.85rem; color:#94a3b8;">難しいCADや専門知識はゼロでOK。スマホやタブレットから直感タップで理想の住まいを形にできます。</span>'
+        },
+        {
+          step: 2,
+          title: '第2話：AIが瞬時にプラン＆パース自動生成！',
+          src: '/images/perse_studio/comic_perse_step2.jpg',
+          caption: '夫「うわぁ！もうできた！光の当たり方までリアルだね！」<br><span style="font-size:0.85rem; color:#94a3b8;">わずか数秒で、プロクオリティの3Dパースや間取りプランをAIが自動描画。受給できる補助金や概算予算まで即時把握！</span>'
+        },
+        {
+          step: 3,
+          title: '第3話：家カルテに保存＆いつでも電話相談！',
+          src: '/images/perse_studio/comic_perse_step4.jpg',
+          caption: '夫婦「気に入ったプランはワンタップで家カルテに保存！わからない時は電話で大工さんや建築士に直接聞けるから安心だね！」<br><span style="font-size:0.85rem; color:#94a3b8;">お電話でのご質問も大歓迎: <strong>049-271-2350</strong>（9:00〜18:00・水日祝も予約可）。何でもお気軽にご相談ください！</span>'
         }
       ]
     }
@@ -460,6 +485,14 @@
           }
         });
       }
+    });
+
+    // 4. 「使い方を聞く（漫画で解説）」ボタン
+    document.querySelectorAll('.btn-open-how-to-use').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openMangaModal('how-to-use', 0);
+      });
     });
   }
 

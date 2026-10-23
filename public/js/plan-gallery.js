@@ -16,6 +16,7 @@
   let viewMode = 'gemini'; // '2d' | 'gemini' | 'compare'
   let invert2D = false;
   let sliderPos = 50; // 0 - 100%
+  let currentSearchConditions = null;
 
   // アコーディオン内の全プランギャラリー用
   let galleryFilterState = {
@@ -31,13 +32,49 @@
   };
   let galleryDisplayCount = 12;
 
-  // 初期化
+  // 初期化（既存323プラン ＋ 間取り工房で作成・追加された共創プランの自動統合合算）
   async function init() {
     try {
       const res = await fetch('/data/plans.json');
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      allPlans = await res.json();
-      console.log(`[PlanStudio] Successfully loaded ${allPlans.length} plans.`);
+      let basePlans = await res.json();
+
+      // サーバー上の追加・共創プラン（community_plans.json）を合算
+      let communityPlans = [];
+      try {
+        const cRes = await fetch('/data/community_plans.json');
+        if (cRes.ok) communityPlans = await cRes.json();
+      } catch (ce) {
+        console.warn('[PlanStudio] community_plans.json fetch skipped:', ce);
+      }
+
+      // ローカルストレージ内の投稿プランもキャッシュ合算（即時反映用）
+      let localPlans = [];
+      try {
+        const rawLocal = localStorage.getItem('smile_community_plans');
+        if (rawLocal) localPlans = JSON.parse(rawLocal);
+      } catch (le) {}
+
+      // 重複を除去して合算マージ（新規共創プランを最新順・先頭に配置）
+      const comList = (Array.isArray(communityPlans) ? communityPlans : []).concat(Array.isArray(localPlans) ? localPlans : []);
+      const comMap = new Map();
+      comList.forEach(p => { if (p && p.id) comMap.set(p.id, p); });
+      const uniqueCom = Array.from(comMap.values());
+
+      const baseMap = new Map();
+      basePlans.forEach(p => { if (p && p.id && !comMap.has(p.id)) baseMap.set(p.id, p); });
+      const uniqueBase = Array.from(baseMap.values());
+
+      // 新着共創プランを先頭に、続いて既存323プランを連結
+      allPlans = [...uniqueCom, ...uniqueBase];
+      const addedCount = uniqueCom.length;
+      console.log(`[PlanStudio] Total active plans: ${allPlans.length} (Base: ${uniqueBase.length}, Community added: ${addedCount})`);
+
+      // HEROタイトルや件数表示を動的に更新（323 ➔ 323+件）
+      const heroTitle = document.querySelector('#floorplan-studio .hero-title');
+      if (heroTitle && addedCount > 0) {
+        heroTitle.innerHTML = `全<span class="mono-num text-sky-600">${allPlans.length}</span>実例プラン選定 ＆ 概算価格の目安確認 <span style="font-size: 0.8rem; background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 12px; font-weight: 800; vertical-align: middle;">+${addedCount}件 新規追加中</span>`;
+      }
     } catch (err) {
       console.error('[PlanStudio] Failed to load plans.json:', err);
       return;
@@ -47,6 +84,7 @@
     setupStep1Events();
     setupNavigationEvents();
     setupStep3Events();
+    initMadoriKeywordSlots();
   }
 
   // --- STEP 1: 代表プラン実演スライドショー＆2D-3Dスライダー実演 ---
@@ -364,87 +402,39 @@
     };
   }
 
-  // AI間取りマッチング処理 (全323件のplans.jsonから最適なプランを選別)
+  // AI間取りマッチング処理 (階数と広さのみで選別、全件表示)
   function runAiPlanMatching() {
     const cond = getStep1Conditions();
+    currentSearchConditions = cond;
 
-    // スコアリング
-    const scoredPlans = allPlans.map(plan => {
-      let score = 70; // 基礎点
-
-      // 1. 階数一致
-      if (plan.floor_count === cond.floorCount) {
-        score += 15;
-      } else {
-        score -= 20;
-      }
-
-      // 2. 坪数範囲
-      if (plan.total_tsubo >= cond.minTsubo && plan.total_tsubo <= cond.maxTsubo) {
-        score += 15;
-      } else {
-        const diff = Math.min(Math.abs(plan.total_tsubo - cond.minTsubo), Math.abs(plan.total_tsubo - cond.maxTsubo));
-        score -= Math.min(25, diff * 3);
-      }
-
-      // 3. 玄関方位
-      if (cond.direction !== 'すべて') {
-        if (plan.entrance_direction === cond.direction) {
-          score += 12;
-        } else {
-          score -= 10;
-        }
-      }
-
-      // 4. 寸法適合
-      if (plan.max_width_m <= cond.maxWidth && plan.max_depth_m <= cond.maxDepth) {
-        score += 8;
-      } else {
-        score -= 15;
-      }
-
-      // 5. LDK広さ
-      if (cond.minLdk > 0) {
-        if (plan.ldk_tatami >= cond.minLdk) {
-          score += 10;
-        } else {
-          score -= 10;
-        }
-      }
-
-      // 6. キッチン形状
-      if (cond.kitchen !== 'すべて') {
-        if (plan.kitchen_type === cond.kitchen) {
-          score += 10;
-        } else {
-          score -= 5;
-        }
-      }
-
-      // 7. こだわりタグ一致
-      let tagMatchCount = 0;
-      cond.features.forEach(feat => {
-        if ((plan.tags || []).includes(feat)) {
-          tagMatchCount++;
-          score += 6;
-        }
-      });
-
-      // 適合率（パーセント化）
-      const matchPercent = Math.min(99, Math.max(65, Math.round(score)));
-
-      return {
-        ...plan,
-        matchScore: matchPercent,
-        tagMatchCount
-      };
+    // 検索は「階数」と「広さ」のみで厳密に選別
+    let matched = allPlans.filter(plan => {
+      const matchFloor = plan.floor_count === cond.floorCount;
+      const matchTsubo = plan.total_tsubo >= cond.minTsubo && plan.total_tsubo <= cond.maxTsubo;
+      return matchFloor && matchTsubo;
     });
 
-    // スコア順にソート
-    scoredPlans.sort((a, b) => b.matchScore - a.matchScore);
+    // 該当なしの場合は同じ階数の近似坪数プランをフォールバック提示
+    if (matched.length === 0) {
+      matched = allPlans.filter(plan => plan.floor_count === cond.floorCount);
+      matched.sort((a, b) => {
+        const diffA = Math.min(Math.abs(a.total_tsubo - cond.minTsubo), Math.abs(a.total_tsubo - cond.maxTsubo));
+        const diffB = Math.min(Math.abs(b.total_tsubo - cond.minTsubo), Math.abs(b.total_tsubo - cond.maxTsubo));
+        return diffA - diffB;
+      });
+    } else {
+      // 延床面積（坪数）順にソート
+      matched.sort((a, b) => a.total_tsubo - b.total_tsubo);
+    }
 
-    // 上位候補 4プランを選出
-    currentMatchedPlans = scoredPlans.slice(0, 4);
+    // 表示用スコア付与
+    matched = matched.map((plan, idx) => ({
+      ...plan,
+      matchScore: Math.max(88, 99 - idx)
+    }));
+
+    // ★ 全件表示 (制限なし)
+    currentMatchedPlans = matched;
 
     // Step 2 へ画面遷移
     goToStep2(cond, currentMatchedPlans);
@@ -459,7 +449,7 @@
       { level: '4', name: '等級4', era: '建築物省エネ法 義務化基準', rate: 680000, spec: 'アルミ樹脂複合サッシ (UA値 0.87)', color: '#0284c7' },
       { level: '5', name: '等級5', era: 'ZEH水準 省エネ住宅', rate: 740000, spec: '高性能グラスウール＋樹脂サッシ (UA値 0.60)', color: '#0d9488' },
       { level: '6', name: '等級6', era: 'HEAT20 G2 快適基準', rate: 820000, spec: 'オール樹脂複層・高性能充填断熱 (UA値 0.46)', color: '#059669' },
-      { level: 'g25', name: '★住ま居る標準', era: 'HEAT20 G2.5 (許容応力度耐震3)', rate: 860000, spec: '樹脂トリプル＋付加断熱40mm (UA値 0.32・C値 0.3以下) ｜ 西川材無垢＋珪藻土', color: '#d97706', isRecommended: true },
+      { level: 'g25', name: '★住ま居る標準', era: 'HEAT20 G2.5 (許容応力度耐震3)', rate: 860000, spec: '樹脂トリプル＋付加断熱40mm (UA値 0.32・全棟C値1.0以下保証/実測0.3台) ｜ 西川材無垢＋珪藻土', color: '#d97706', isRecommended: true },
       { level: '7', name: '等級7', era: 'HEAT20 G3 最高峰', rate: 930000, spec: '樹脂トリプル＋付加断熱100mm (UA値 0.23)', color: '#7c3aed' }
     ];
 
@@ -499,8 +489,13 @@
     // 条件要約テキストの更新
     const summaryText = document.getElementById('fp-selected-summary-text');
     if (summaryText) {
-      const floorStr = cond.floorCount === 1 ? '平屋' : cond.floorCount === 2 ? '2階建て' : '3階建(小屋裏含)';
-      summaryText.textContent = `選択条件: ${floorStr} ｜ ${cond.sizeLabel} ｜ ${cond.direction} ｜ LDK${cond.minLdk > 0 ? cond.minLdk + '帖+' : '指定無'} ｜ ${cond.kitchen} ｜ こだわり${cond.features.length}点`;
+      const floorStr = cond.floorCount === 1 ? '平屋' : cond.floorCount === 2 ? '2階建て' : '3階建て';
+      summaryText.textContent = `選択条件: ${floorStr} ｜ ${cond.sizeLabel}（該当: 全 ${matchedPlans.length} 件）`;
+    }
+
+    const badgeTotal = document.getElementById('fp-matched-total-badge');
+    if (badgeTotal) {
+      badgeTotal.textContent = `全 ${matchedPlans.length} 件`;
     }
 
     // 初期選択プランは第1候補（最有力プラン）
@@ -515,6 +510,9 @@
     // 下部の厳選候補プランカード一覧
     renderMatchedCards(matchedPlans);
 
+    // 間取りキーワードスロット初期化
+    initMadoriKeywordSlots();
+
     // 全プラン展開アコーディオンの準備
     initAllPlansAccordion(cond);
 
@@ -523,7 +521,7 @@
     if (studioEl) studioEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  // Step 2: 最有力プランの大画面フィーチャー表示（スライダー比較＋仕様詳細）
+  // Step 2: プランの大画面フィーチャー表示（前/次切替・スライダー比較・家カルテメモ保存・仕様詳細）
   function renderStep2FeaturedHero(plan) {
     const heroBox = document.getElementById('fp-step2-featured-hero');
     if (!heroBox || !plan) return;
@@ -531,41 +529,64 @@
     const curFloor = plan.floors[selectedStep2FloorIndex] || plan.floors[0] || {};
     const has3D = !!curFloor.gemini_3d;
     const has2D = !!curFloor.clean_2d;
-    const floorStr = plan.floor_count === 1 ? '平屋 (1F)' : plan.floor_count === 2 ? '2階建て' : '3階建（小屋裏含）';
+    const floorStr = plan.floor_count === 1 ? '平屋 (1F)' : plan.floor_count === 2 ? '2階建て' : '3階建て';
+
+    const currentIndex = Math.max(0, currentMatchedPlans.findIndex(p => p.id === plan.id));
+    const totalCount = currentMatchedPlans.length;
+
+    // 既に家カルテに保存されているか確認してメモを取り出す
+    let existingMemo = '';
+    try {
+      const raw = localStorage.getItem('smile_house_carte_data');
+      if (raw) {
+        const carte = JSON.parse(raw);
+        if (carte && carte.savedPlans) {
+          const found = carte.savedPlans.find(p => p.id === plan.id);
+          if (found && found.memo) existingMemo = found.memo;
+        }
+      }
+    } catch(e) {}
 
     heroBox.innerHTML = `
-      <!-- ヘッダー -->
-      <div class="fp-hero-header">
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-            <span style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #ffffff; font-weight: 800; font-size: 0.82rem; padding: 4px 14px; border-radius: 20px; box-shadow: 0 2px 8px rgba(217,119,6,0.3);">
-              🎯 適合度 ${plan.matchScore || 95}%（選択中プラン）
+      <!-- ヘッダー (表題部 ＆ 前・次のプランナビゲーション) -->
+      <div class="fp-hero-header" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.2rem; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 1rem;">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <!-- 前のプラン・次のプラン 切り替えボタンバー -->
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <button type="button" id="btn-hero-prev-plan" class="btn btn-secondary" style="padding: 5px 14px; font-size: 0.82rem; font-weight: 800; border-radius: 20px; background: #ffffff; color: #0284c7; border: 1.5px solid #0284c7; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;" title="前のプランへ">
+              ◀ 前のプラン
+            </button>
+            <span id="hero-plan-counter" style="font-size: 0.82rem; font-weight: 800; color: #1e293b; background: #f1f5f9; padding: 5px 12px; border-radius: 12px; border: 1px solid #cbd5e1; white-space: nowrap;">
+              プラン ${currentIndex + 1} / 全 ${totalCount} 件
             </span>
-            <span style="background: #0284c7; color: #ffffff; font-size: 0.78rem; font-weight: 700; padding: 4px 12px; border-radius: 12px;">
+            <button type="button" id="btn-hero-next-plan" class="btn btn-secondary" style="padding: 5px 14px; font-size: 0.82rem; font-weight: 800; border-radius: 20px; background: #0284c7; color: #ffffff; border: 1.5px solid #0284c7; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;" title="次のプランへ">
+              次のプラン ▶
+            </button>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 2px;">
+            <span style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #ffffff; font-size: 0.8rem; font-weight: 800; padding: 4px 12px; border-radius: 12px;">
               ${floorStr}
             </span>
             <span style="color: #475569; font-size: 0.88rem; font-weight: 700;">
               🧭 ${plan.entrance_direction} ｜ 間口 ${plan.max_width_m}m × 奥行 ${plan.max_depth_m}m
             </span>
           </div>
-          <h2 style="margin: 4px 0 0; font-size: 1.45rem; color: #0f172a; font-family: var(--font-heading); line-height: 1.4;">
+          <h2 style="margin: 2px 0 0; font-size: 1.45rem; color: #0f172a; font-family: var(--font-heading); line-height: 1.4;">
             ${escapeHtml(plan.title)}
           </h2>
         </div>
 
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-          <button type="button" id="btn-hero-goto-bubble" class="btn btn-primary" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #0f172a; font-weight: 900; font-size: 0.95rem; padding: 0.8rem 1.6rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(245,158,11,0.35); cursor: pointer;">
-            🎈 このプランをたたき台に作図する →
-          </button>
-          <button type="button" id="btn-hero-goto-chat" class="btn btn-secondary" style="background: #ffffff; color: #0284c7; border: 1.5px solid #0284c7; font-weight: 800; font-size: 0.9rem; padding: 0.8rem 1.4rem; border-radius: 12px;">
-            詳細・3Dスライダー比較へ ➔
+          <button type="button" id="btn-hero-goto-chat" class="btn btn-primary" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #ffffff; font-weight: 800; font-size: 0.95rem; padding: 0.8rem 1.8rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(2,132,199,0.35); cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+            💬 このプランについて間取りチャット相談する（無料） →
           </button>
         </div>
       </div>
 
       <!-- メイン2カラムレイアウト (左: 図面スライダー / 右: 特徴・仕様) -->
       <div class="fp-hero-main-layout">
-        <!-- 左: 大画面スライダーステージ -->
+        <!-- 左: 大画面スライダーステージ ＆ スライダー下 家カルテ登録・メモ入力 -->
         <div>
           <!-- フロアタブ ＆ モード切替 -->
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 8px;">
@@ -587,6 +608,54 @@
           <!-- スライダービューア枠 -->
           <div class="fp-hero-slider-stage" id="hero-slider-stage">
             <!-- renderStep2HeroStage で描画 -->
+          </div>
+
+          <!-- ★ スライダー下: この図面を家カルテに登録＆メモ入力ボックス -->
+          <div class="fp-hero-carte-box" style="margin-top: 1rem; background: #faf5ff; border: 1.5px solid #c084fc; border-radius: 12px; padding: 1.1rem; box-shadow: 0 4px 12px rgba(147, 51, 234, 0.08);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 1.25rem;">💾</span>
+                <strong style="color: #7e22ce; font-size: 0.95rem;">この図面を<span class="carte-hover-trigger" style="cursor: pointer; text-decoration: underline dashed #7e22ce;" title="タップまたはクリックで家カルテ解説を開く">「家カルテ」</span>に登録（夫婦のストック＆検討メモ）</strong>
+              </div>
+              <div style="display: flex; gap: 6px; align-items: center;">
+                <button type="button" class="btn-open-carte-guide-modal" style="background: #ffffff; border: 1px solid #9333ea; color: #7e22ce; font-size: 0.76rem; font-weight: 800; padding: 2px 8px; border-radius: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                  📖 家カルテとは？
+                </button>
+                <a href="/madori-consultation/" target="_blank" rel="noopener" style="font-size: 0.76rem; color: #7c3aed; text-decoration: underline; font-weight: 700;">
+                  🌐 解説ページ ↗
+                </a>
+              </div>
+            </div>
+
+            <!-- 家カルテの役割・安心ポイントミニガイド -->
+            <div style="background: #ffffff; border: 1px solid #e9d5ff; border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; font-size: 0.8rem; color: #4b5563; line-height: 1.6;">
+              <div style="color: #6b21a8; font-weight: 800; margin-bottom: 2px; display: flex; align-items: center; gap: 4px;">
+                <span>💡</span> <strong>家カルテって何するの？</strong>
+              </div>
+              ご夫婦それぞれのスマホから「気に入った図面」や「ここをこうしたいメモ」を安全に蓄積・比較できる無料ツールです。<br>
+              <strong>AIは回答を求められるまで勝手な提案や口出しはいたしません。</strong>まずは夫婦の想いを残すことに専念できます。
+            </div>
+
+            <textarea id="fp-plan-memo-input" style="width: 100%; min-height: 60px; padding: 8px 12px; border: 1px solid #d8b4fe; border-radius: 8px; font-size: 0.85rem; font-family: inherit; resize: vertical; box-sizing: border-box; background: #ffffff;" placeholder="例: パントリーとキッチンの動線がすごく良い！ただ洗面脱衣室をもう少し広くして乾太くんを置きたい、など">${escapeHtml(existingMemo)}</textarea>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; flex-wrap: wrap; gap: 8px;">
+              <button type="button" id="btn-save-plan-to-carte" class="btn btn-primary" style="background: linear-gradient(135deg, #7c3aed, #9333ea); color: #fff; font-weight: 800; font-size: 0.88rem; padding: 0.6rem 1.4rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(124, 58, 237, 0.3); border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                💾 この図面とメモを家カルテに登録する
+              </button>
+              <a href="#dashboard" style="font-size: 0.82rem; font-weight: 700; color: #7c3aed; text-decoration: none;">
+                👉 家カルテ（マイページ）を開く ↗
+              </a>
+            </div>
+
+            <!-- 📲 LINE通知予告 -->
+            <div style="margin-top: 8px; padding: 6px 10px; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 6px; font-size: 0.75rem; color: #065f46; display: flex; align-items: center; gap: 6px;">
+              <span>📲</span>
+              <span><strong>公式LINE連携通知を準備中:</strong> カルテにメモを追加した際やスタッフからの返信があった際、メールより見やすいLINE通知でお届け予定です。</span>
+            </div>
+
+            <div id="fp-carte-save-toast" style="display: none; margin-top: 8px; padding: 8px 12px; background: #ecfdf5; border: 1px solid #6ee7b7; color: #065f46; border-radius: 6px; font-size: 0.82rem; font-weight: 700;">
+              ✅ この図面とメモを「家カルテ」に登録しました！夫婦のスマホでいつでも見返せます。
+            </div>
           </div>
         </div>
 
@@ -644,7 +713,7 @@
               </table>
             </div>
             <div style="font-size: 0.7rem; color: #64748b; margin-top: 6px; line-height: 1.4;">
-              ⚖️ <strong>【建築基準法・省エネ適合義務化】</strong> 2025年法改正により新築住宅は断熱等級4以上への適合が義務化されています（等級1〜3は新築不可のため対象外）。<br>💡 <strong>住ま居る標準（HEAT20 G2.5）</strong>は、全棟許容応力度計算による耐震等級3とC値0.3以下の実測気密保証を包括した究極の住み心地仕様です。
+              ⚖️ <strong>【建築基準法・省エネ適合義務化】</strong> 2025年法改正により新築住宅は断熱等級4以上への適合が義務化されています（等級1〜3は新築不可のため対象外）。<br>💡 <strong>住ま居る標準（HEAT20 G2.5）</strong>は、全棟許容応力度計算による耐震等級3と全棟実測C値1.0以下保証（実績0.3台）を包括した究極の住み心地仕様です。
             </div>
           </div>
 
@@ -690,6 +759,43 @@
       btnGotoChat.onclick = () => goToStep3(plan);
     }
 
+    // 前のプラン・次のプランボタン
+    const btnPrev = document.getElementById('btn-hero-prev-plan');
+    if (btnPrev) {
+      btnPrev.onclick = () => {
+        if (!currentMatchedPlans || currentMatchedPlans.length === 0) return;
+        const curIdx = currentMatchedPlans.findIndex(p => p.id === selectedStep2Plan.id);
+        const nextIdx = (curIdx - 1 + currentMatchedPlans.length) % currentMatchedPlans.length;
+        selectedStep2Plan = currentMatchedPlans[nextIdx];
+        selectedStep2FloorIndex = 0;
+        renderStep2FeaturedHero(selectedStep2Plan);
+        renderMatchedCards(currentMatchedPlans);
+      };
+    }
+
+    const btnNext = document.getElementById('btn-hero-next-plan');
+    if (btnNext) {
+      btnNext.onclick = () => {
+        if (!currentMatchedPlans || currentMatchedPlans.length === 0) return;
+        const curIdx = currentMatchedPlans.findIndex(p => p.id === selectedStep2Plan.id);
+        const nextIdx = (curIdx + 1) % currentMatchedPlans.length;
+        selectedStep2Plan = currentMatchedPlans[nextIdx];
+        selectedStep2FloorIndex = 0;
+        renderStep2FeaturedHero(selectedStep2Plan);
+        renderMatchedCards(currentMatchedPlans);
+      };
+    }
+
+    // 家カルテ登録ボタン
+    const btnSaveCarte = document.getElementById('btn-save-plan-to-carte');
+    if (btnSaveCarte) {
+      btnSaveCarte.onclick = () => {
+        const memoEl = document.getElementById('fp-plan-memo-input');
+        const memoText = memoEl ? memoEl.value.trim() : '';
+        savePlanToHouseCarte(plan, memoText);
+      };
+    }
+
     // フロアタブイベント
     heroBox.querySelectorAll('[data-hero-floor]').forEach(btn => {
       btn.onclick = (e) => {
@@ -721,6 +827,310 @@
         renderStep2HeroStage();
       };
     }
+  }
+
+  // ==========================================
+  // 家カルテ (House Carte) への図面・メモ登録処理
+  // ==========================================
+  function savePlanToHouseCarte(plan, memoText) {
+    try {
+      let carteData = {};
+      const raw = localStorage.getItem('smile_house_carte_data');
+      if (raw) {
+        try { carteData = JSON.parse(raw); } catch(e) { carteData = {}; }
+      }
+      if (!carteData.savedPlans) carteData.savedPlans = [];
+
+      const existingIdx = carteData.savedPlans.findIndex(p => p.id === plan.id);
+      const entry = {
+        id: plan.id,
+        title: plan.title,
+        tsubo: plan.total_tsubo,
+        floorCount: plan.floor_count,
+        rooms: plan.rooms,
+        entrance: plan.entrance_direction,
+        memo: memoText,
+        savedAt: new Date().toLocaleString('ja-JP'),
+        thumb: (plan.floors && plan.floors[0]) ? (plan.floors[0].gemini_3d || plan.floors[0].clean_2d) : '',
+        family: currentSearchConditions ? currentSearchConditions.family : '',
+        features: currentSearchConditions ? currentSearchConditions.features : []
+      };
+
+      if (existingIdx >= 0) {
+        carteData.savedPlans[existingIdx] = entry;
+      } else {
+        carteData.savedPlans.unshift(entry);
+      }
+
+      localStorage.setItem('smile_house_carte_data', JSON.stringify(carteData));
+
+      const toast = document.getElementById('fp-carte-save-toast');
+      if (toast) {
+        toast.style.display = 'block';
+        setTimeout(() => {
+          toast.style.display = 'none';
+        }, 5000);
+      }
+    } catch (err) {
+      console.error('[PlanStudio] Failed to save plan to house carte:', err);
+      alert('家カルテへの保存に失敗しました。');
+    }
+  }
+
+  // ==========================================
+  // 間取りキーワードスロット ＆ 解説モーダル
+  // ==========================================
+  const MADORI_KEYWORDS = [
+    {
+      id: 'circ',
+      icon: '🔄',
+      label: '家事ラク回遊動線',
+      desc: 'キッチン・パントリー・洗面脱衣室・玄関を行き止まりなく回れる動線設計',
+      dimension: '通路幅は最小800mm、2人すれ違いには1,000〜1,100mmを推奨。全建具を上吊り引き戸（敷居・段差ゼロ）にすると移動ストレスが激減します。',
+      pitfall: '回遊口を増やしすぎると壁量が減り、耐震性（耐力壁の直下率）が不足しやすくなります。住ま居るでは全棟許容応力度計算により、偏心率0.15以下を維持しながら安全な大開口回遊を実現します。',
+      advice: '「ただいま手洗い」や「買い物直行動線」と組み合わせることで、家事時間を1日30分以上短縮できます。'
+    },
+    {
+      id: 'pantry',
+      icon: '🥫',
+      label: 'ウォークスルーパントリー',
+      desc: '玄関とキッチンを直結し、食品や調理家電を一括収納できる食品庫',
+      dimension: '棚の奥行きは300〜450mmが黄金寸法。500mm以上にすると奥の物が死蔵します。通路幅は800〜900mmを確保。',
+      pitfall: '可動棚のピッチを固定にすると高さの違う調味料やボックスが入りません。住ま居るでは50mmピッチのフル稼働ステンレスレールを採用します。',
+      advice: '冷蔵庫をパントリー内に隠蔽配置すると、リビングから生活感が完全に消え、ホテルライクなLDKに仕上がります。'
+    },
+    {
+      id: 'laundry',
+      icon: '🧺',
+      label: '室内干しランドリールーム',
+      desc: '洗う・干す・畳む・しまうを1室で完結させる専用ランドリー空間',
+      dimension: '標準サイズは2〜3帖。天井物干しバーは床から1,800mm高。スロップシンク（幅500mm）と乾太くん専用ガス台を配置。',
+      pitfall: '気密換気が不十分だとカビや生乾き臭の原因に。住ま居るでは第一種全熱交換換気（澄家）の排気口を床面に設置し、ホコリと湿気を下から排出し2〜3時間でスピード乾燥させます。',
+      advice: 'ファミクロを隣接させることで、乾いた衣類を1歩で収納できる「ゼロ歩動線」が完成します。'
+    },
+    {
+      id: 'sic',
+      icon: '👞',
+      label: '土間SIC (シューズインクローク)',
+      desc: '靴だけでなくベビーカー・キャンプ用品・ゴルフバッグも直置きできる大容量土間',
+      dimension: '家族用玄関と来客用玄関を分ける2way動線。有効間口900mm以上、棚奥行き300mm。コート掛けパイプ幅600〜900mm。',
+      pitfall: '家族用動線が狭すぎると結局メイン玄関で靴を脱ぐ習慣に戻ってしまいます。靴の脱ぎ履きスペースに余裕を持たせることが肝心です。',
+      advice: '濡れた雨具をそのまま掛けられる水切り床仕上げと、換気ファン連動により泥臭・湿気を屋外へ排出します。'
+    },
+    {
+      id: 'void',
+      icon: '🌿',
+      label: '吹き抜け ＆ パッシブ採光',
+      desc: '1階と2階を縦に繋ぎ、高い位置の高窓（ハイサイドライト）から自然光を奥深くまで導く設計',
+      dimension: '吹抜面積は6〜8帖が最適バランス。天井高5.2m前後に調光間接照明とシーリングファンを設置。',
+      pitfall: '一般的な断熱性の住宅では「冬寒く、夏2階がサウナ」になります。住ま居るはUA値0.32・全棟実測C値0.3台の超高気密高断熱のため、上下温度差1℃以内で年中快適です。',
+      advice: '冬の暖かい日射熱（パッシブ熱）を床や珪藻土壁に蓄熱させ、無暖房でも室温20℃をキープできます。'
+    },
+    {
+      id: 'tatami',
+      icon: '🍵',
+      label: '小上がり畳コーナー',
+      desc: 'リビングの床から一段上げて設けるモダンな和空間',
+      dimension: '段差は300〜350mm（大人が腰掛けやすく、膝への負担が少ないベンチ高）。広さは3〜4.5帖。段差下部に深型引き出し収納を配置。',
+      pitfall: '段差高さを200mm未満にすると「つまずきやすく、腰掛けにくい」中途半端な段差になります。300mm以上をしっかり確保するのが鉄則です。',
+      advice: '小さなお子様の遊び場やお昼寝スペースとして、また洗濯物を畳む家事スペースとしても大活躍します。'
+    },
+    {
+      id: 'famicro',
+      icon: '👔',
+      label: '1階ファミリークローゼット',
+      desc: '家族全員の普段着やアウターを1箇所に集約する集中収納',
+      dimension: '広さは3〜4帖。ハンガーパイプ奥行き600mm、通路幅800mm。枕棚高さ1,900mm。',
+      pitfall: '家族個別の引き出しケースが入る寸法を事前に測っておかないと、通路に物が溢れてしまいます。',
+      advice: '帰宅後に「玄関→洗面→ファミクロで着替え→LDKへ」と流れるただいま動線を作ると、リビングに脱いだ服が散らかりません。'
+    },
+    {
+      id: 'study',
+      icon: '💻',
+      label: 'テレワーク・独立書斎',
+      desc: 'WEB会議や集中作業、読書に特化した防音配慮の個室ワークスペース',
+      dimension: '広さは1.5〜2.5帖で十分に機能します。デスク天板は奥行き600mm×幅1,200〜1,800mm。',
+      pitfall: 'WEB会議中にリビングのテレビ音や子どもの声が入る失敗。住ま居るでは壁内に吸音断熱材を充填し、気密遮音パッキン付きドアを採用します。',
+      advice: '北側に小窓を設けると、日中を通じて直射日光の眩しさがなく、画面が見やすい均一な光環境が得られます。'
+    },
+    {
+      id: 'island',
+      icon: '🍳',
+      label: 'アイランドキッチン ＆ 横並びダイニング',
+      desc: '壁から独立したオープンキッチンと、横並びに繋げたダイニング配膳動線',
+      dimension: 'キッチン周囲の通路幅は1,000〜1,100mm（すれ違い快適幅）。ダイニング横並び動線により配膳・下膳歩数をゼロに短縮。',
+      pitfall: '手元を隠す立ち上がりがないため、洗い物や調味料が常に見えます。パントリーに家電を逃がし、手元ニッチを設けるのがポイントです。',
+      advice: '調理しながら家族と目が合い、会話が自然に弾む住ま居る人気No.1のLDKレイアウトです。'
+    },
+    {
+      id: 'garage',
+      icon: '🚗',
+      label: 'ビルトイン・インナーガレージ',
+      desc: '雨風に濡れずに乗降でき、愛車をホビースペースとしても楽しむ屋内車庫',
+      dimension: '1台用で間口3.5m×奥行き6m（約6.5坪）。2台用で間口6m以上。車庫からパントリーへの勝手口動線を確保。',
+      pitfall: '1階開口部が大きくなるため木造住宅では耐震性が落ちやすい弱点があります。住ま居るでは門型フレームと許容応力度計算により耐震等級3を確実に達成します。',
+      advice: '排気ガスが居住空間に入らないよう、給排気ダクトと気密防音引き戸で完全遮断します。'
+    },
+    {
+      id: 'kaso',
+      icon: '⛩️',
+      label: '家相・風水 (鬼門・裏鬼門の現代解釈)',
+      desc: '北東（表鬼門）と南西（裏鬼門）に水回り・火気・玄関を避ける伝統的吉相配置',
+      dimension: '建物重心（太極）から45度の扇状範囲に表鬼門・裏鬼門を割り出し。',
+      pitfall: '家相にこだわりすぎて採光や家事動線が極端に悪くなる本末転倒が起きがちです。',
+      advice: '住ま居るの澄家全熱換気と基礎断熱により、湿気や臭気の滞留が原理的に起きないため、現代の快適動線と家相の安心感を高次元で両立させます。'
+    },
+    {
+      id: 'passive',
+      icon: '☀️',
+      label: '南面大開口 ＆ パッシブ遮蔽',
+      desc: '冬は太陽の自然熱をたっぷり取り込み、夏は軒・庇で直射日光を遮る科学的パッシブ設計',
+      dimension: '軒（のき）・庇（ひさし）の出幅は窓の高さの約1/3（900〜1,000mm）。南面窓は日射取得型トリプルガラス。',
+      pitfall: '夏の強い西日を軒だけで防ぐことはできません。西側は窓を極小化するか、外付けアウターシェードを設けるのが定石です。',
+      advice: '年間冷暖房費を約40%削減しながら、自然の恩恵を五感で感じる心地よい暮らしを実現します。'
+    }
+  ];
+
+  function initMadoriKeywordSlots() {
+    const container = document.getElementById('fp-keyword-slots-container');
+    if (!container) return;
+
+    container.innerHTML = MADORI_KEYWORDS.map(kw => `
+      <button type="button" class="fp-kw-slot-btn" data-kw-id="${kw.id}" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 25px; font-size: 0.88rem; font-weight: 800; color: #1e293b; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+        <span style="font-size: 1.1rem;">${kw.icon}</span>
+        <span>${escapeHtml(kw.label)}</span>
+      </button>
+    `).join('');
+
+    container.querySelectorAll('.fp-kw-slot-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-kw-id');
+        const item = MADORI_KEYWORDS.find(k => k.id === id);
+        if (item) openMadoriAdviceModal(item);
+      });
+      btn.addEventListener('mouseenter', () => {
+        btn.style.borderColor = '#0284c7';
+        btn.style.background = '#e0f2fe';
+        btn.style.color = '#0284c7';
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.borderColor = '#cbd5e1';
+        btn.style.background = '#f8fafc';
+        btn.style.color = '#1e293b';
+      });
+    });
+
+    // モーダル閉じるイベント
+    const modal = document.getElementById('modal-madori-advice');
+    const btnClose = document.getElementById('btn-close-kw-modal');
+    if (modal && btnClose) {
+      btnClose.onclick = () => { modal.style.display = 'none'; };
+      modal.onclick = (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+      };
+    }
+  }
+
+  function openMadoriAdviceModal(item) {
+    const modal = document.getElementById('modal-madori-advice');
+    const titleEl = document.getElementById('modal-kw-title');
+    const iconEl = document.getElementById('modal-kw-icon');
+    const bodyEl = document.getElementById('modal-kw-body');
+
+    if (!modal || !titleEl || !bodyEl) return;
+
+    if (iconEl) iconEl.textContent = item.icon;
+    titleEl.textContent = item.label;
+
+    bodyEl.innerHTML = `
+      <div style="font-size: 0.95rem; color: #334155; line-height: 1.8; margin-bottom: 1.2rem; background: #f8fafc; padding: 1rem; border-radius: 10px; border-left: 4px solid #0284c7;">
+        <strong>【用語の概要】</strong><br>
+        ${escapeHtml(item.desc)}
+      </div>
+
+      <div style="margin-bottom: 1rem; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 1rem;">
+        <div style="font-weight: 800; color: #166534; font-size: 0.92rem; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+          <span>📐</span> プロが教える黄金寸法 ＆ 推奨配置
+        </div>
+        <div style="font-size: 0.86rem; color: #1e293b; line-height: 1.7;">
+          ${escapeHtml(item.dimension)}
+        </div>
+      </div>
+
+      <div style="margin-bottom: 1rem; background: #fffbeb; border: 1.5px solid #fde047; border-radius: 12px; padding: 1rem;">
+        <div style="font-weight: 800; color: #92400e; font-size: 0.92rem; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+          <span>⚠️</span> よくある失敗例 ＆ 住ま居るの工学的解決策
+        </div>
+        <div style="font-size: 0.86rem; color: #1e293b; line-height: 1.7;">
+          ${escapeHtml(item.pitfall)}
+        </div>
+      </div>
+
+      <div style="margin-bottom: 1.2rem; background: #f5f3ff; border: 1.5px solid #c4b5fd; border-radius: 12px; padding: 1rem;">
+        <div style="font-weight: 800; color: #6d28d9; font-size: 0.92rem; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+          <span>💡</span> 設計プロのアドバイス
+        </div>
+        <div style="font-size: 0.86rem; color: #1e293b; line-height: 1.7;">
+          ${escapeHtml(item.advice)}
+        </div>
+      </div>
+
+      <!-- アクションボタンエリア -->
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 1.5rem; border-top: 1.5px solid #e2e8f0; padding-top: 1.2rem;">
+        <button type="button" id="btn-add-kw-to-carte" class="btn btn-primary" style="background: linear-gradient(135deg, #7c3aed, #9333ea); color: #fff; font-weight: 800; font-size: 0.92rem; padding: 0.75rem 1.4rem; border-radius: 10px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);">
+          📝 このキーワード（${escapeHtml(item.label)}）を家カルテの要望メモに追加
+        </button>
+
+        <div id="kw-added-toast" style="display: none; padding: 8px 12px; background: #ecfdf5; border: 1px solid #6ee7b7; color: #065f46; border-radius: 6px; font-size: 0.84rem; font-weight: 700; text-align: center;">
+          ✅ 家カルテの検討メモに「${escapeHtml(item.label)}」を追加保存しました！
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 0.82rem; margin-top: 4px;">
+          <a href="#madori-consultation-bot" onclick="document.getElementById('modal-madori-advice').style.display='none';" style="font-weight: 700; color: #059669; text-decoration: none;">
+            🌿 夫婦の暮らしヒアリング＆家カルテへ進む ↗
+          </a>
+          <a href="#madori-consultation-bot" onclick="document.getElementById('modal-madori-advice').style.display='none'; setTimeout(() => { document.getElementById('tab-btn-knowledge') && document.getElementById('tab-btn-knowledge').click(); }, 300);" style="font-weight: 700; color: #7c3aed; text-decoration: none;">
+            📖 設計プロの知見200選で詳しく見る ↗
+          </a>
+        </div>
+      </div>
+    `;
+
+    // キーワードを家カルテのメモに追記するボタンイベント
+    const btnAdd = document.getElementById('btn-add-kw-to-carte');
+    if (btnAdd) {
+      btnAdd.onclick = () => {
+        try {
+          let carteData = {};
+          const raw = localStorage.getItem('smile_house_carte_data');
+          if (raw) {
+            try { carteData = JSON.parse(raw); } catch(e) { carteData = {}; }
+          }
+          if (!carteData.desiredKeywords) carteData.desiredKeywords = [];
+          if (!carteData.desiredKeywords.includes(item.label)) {
+            carteData.desiredKeywords.push(item.label);
+          }
+          // また現在選択中のプランのメモ欄にも追記
+          const memoEl = document.getElementById('fp-plan-memo-input');
+          if (memoEl) {
+            const currentVal = memoEl.value.trim();
+            memoEl.value = currentVal ? `${currentVal}
+【希望】${item.label}` : `【希望】${item.label}`;
+          }
+          localStorage.setItem('smile_house_carte_data', JSON.stringify(carteData));
+
+          const toast = document.getElementById('kw-added-toast');
+          if (toast) {
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 4000);
+          }
+        } catch (err) {
+          console.error('[PlanStudio] Failed to append keyword to carte:', err);
+        }
+      };
+    }
+
+    modal.style.display = 'flex';
   }
 
   // Step 2 大画面スライダーステージの描画
@@ -1040,6 +1450,7 @@
       return `
         <div class="pg-plan-card" data-acc-plan-id="${plan.id}" style="cursor: pointer;">
           <div class="pg-card-thumb-wrap">
+            ${plan.isCommunityPlan ? '<span class="pg-card-badge-community" style="position: absolute; top: 8px; left: 8px; background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.3); z-index: 2;"><i class="fa-solid fa-sparkles"></i> 新着共創プラン</span>' : ''}
             <img src="${thumb}" alt="${escapeHtml(plan.title)}" class="pg-card-thumb" loading="lazy" />
             <span class="pg-card-badge-dir">🧭 ${plan.entrance_direction}</span>
             <span class="pg-card-badge-floor">${plan.floor_count === 1 ? '平屋' : plan.floor_count === 2 ? '2階建' : '3階建'}</span>
@@ -1157,7 +1568,7 @@
 
   // Step 3 スライダー比較ステージ描画
   function renderStep3Stage() {
-    const stage = document.getElementById('fp-viewer-stage');
+    const stage = document.getElementById('fp-viewer-stage') || document.getElementById('fp-svg-viewport');
     if (!stage || !activePlan) return;
 
     const curFloor = activePlan.floors[activeFloorIndex] || activePlan.floors[0] || {};
@@ -1633,10 +2044,66 @@
       .replace(/'/g, '&#39;');
   }
 
+  // --- 15万円設計申込 プレミアムアトリエゲート＆認証制御 ---
+  function openAtelierGateModal() {
+    const modal = document.getElementById('atelier-gate-modal');
+    if (modal) modal.style.display = 'block';
+  }
+  function closeAtelierGateModal() {
+    const modal = document.getElementById('atelier-gate-modal');
+    if (modal) modal.style.display = 'none';
+  }
+  function showPasscodePrompt() {
+    const area = document.getElementById('passcode-unlock-area');
+    if (area) area.style.display = 'block';
+  }
+  function isAtelierUnlocked() {
+    return localStorage.getItem('smile_atelier_unlocked') === 'true';
+  }
+  function verifyAtelierPasscode() {
+    const inp = document.getElementById('atelier-passcode-input');
+    const msg = document.getElementById('passcode-msg');
+    if (inp && (inp.value === '150000' || inp.value === 'smile' || inp.value === '777')) {
+      localStorage.setItem('smile_atelier_unlocked', 'true');
+      alert('🎉 パスコード認証が完了しました！プレミアム設計アトリエをご利用いただけます。');
+      closeAtelierGateModal();
+      if (window.location.hash !== '#floorplan-studio') {
+        window.location.hash = '#floorplan-studio';
+      }
+    } else {
+      if (msg) msg.style.display = 'block';
+    }
+  }
+
+  // グローバル露出（HTMLイベント属性との互換性確保）
+  window.openAtelierGateModal = openAtelierGateModal;
+  window.closeAtelierGateModal = closeAtelierGateModal;
+  window.showPasscodePrompt = showPasscodePrompt;
+  window.verifyAtelierPasscode = verifyAtelierPasscode;
+  window.isAtelierUnlocked = isAtelierUnlocked;
+
+  function initAtelierGate() {
+    const bubbleBtn = document.getElementById('btn-fp-mode-bubble');
+    if (bubbleBtn) {
+      bubbleBtn.addEventListener('click', (e) => {
+        if (!isAtelierUnlocked()) {
+          e.preventDefault();
+          e.stopPropagation();
+          openAtelierGateModal();
+        }
+      }, true);
+    }
+  }
+
   // 起動
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
+  function start() {
     init();
+    initAtelierGate();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
   }
 })();

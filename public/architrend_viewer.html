@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARCHITREND 3D Webビューアー（斉藤様邸）| 住ま居る</title>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: #0f172a;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #fff;
+  }
+  #canvas-container {
+    width: 100vw;
+    height: 100vh;
+  }
+  #ui-overlay {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(15, 23, 42, 0.90);
+    padding: 16px 20px;
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    max-width: 400px;
+    z-index: 10;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  }
+  h1 {
+    font-size: 16px;
+    margin: 0 0 4px;
+    color: #38bdf8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .badge {
+    background: #059669;
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  p {
+    font-size: 12px;
+    margin: 0 0 12px;
+    color: #94a3b8;
+    line-height: 1.5;
+  }
+  .btn-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  button {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  button:hover { background: #1d4ed8; transform: translateY(-1px); }
+  button.toggle {
+    background: #475569;
+  }
+  button.toggle.active {
+    background: #f59e0b;
+    color: #000;
+  }
+  button.snap {
+    background: #059669;
+    width: 100%;
+    margin-top: 6px;
+    padding: 10px;
+    font-size: 13px;
+  }
+  button.snap:hover { background: #047857; }
+  #status {
+    font-size: 11px;
+    color: #fbbf24;
+    margin-top: 8px;
+  }
+  .hint {
+    background: rgba(255,255,255,0.05);
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    color: #cbd5e1;
+    margin-top: 10px;
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/fflate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+
+<div id="ui-overlay">
+  <h1>斉藤様邸 ARCHITREND 3D <span class="badge">Web版</span></h1>
+  <p>福井コンピュータのFBXをブラウザでダイレクト描画。屋根を外して内部の間取りを見たり、LDK室内に立って見回せます。</p>
+  
+  <div class="btn-group">
+    <button id="btn-toggle-roof" class="toggle">🏠 屋根を外す（間取り表示）</button>
+    <button id="btn-ldk-focus" style="background:#0284c7;">🔍 LDK間取りフォーカス</button>
+    <button id="btn-ldk-living" style="background:#8b5cf6;">🛋️ LDK内観（リビング視点）</button>
+    <button id="btn-ldk-kitchen" style="background:#7c3aed;">🍳 LDK内観（対面キッチン視点）</button>
+    <button id="btn-top" style="background:#334155;">🦅 俯瞰（敷地全体）</button>
+    <button id="btn-front" style="background:#334155;">🏡 外観正面</button>
+  </div>
+  
+  <div style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; padding: 10px; margin-top: 8px; font-size: 11px; color: #fbbf24; line-height: 1.5;">
+    ℹ️ <strong>フェーズ2&3（3Dアングル連携）開発中：</strong> 自由アングルからの3DダイレクトAIレンダリングは現在実証実験中。初期検討はフェーズ1（部位パーツ工房）をご利用ください。
+  </div>
+
+  <div id="status">3Dモデル読み込み中...</div>
+  <div id="cam-coords" style="font-size: 11px; color: #38bdf8; font-family: monospace; margin-top: 6px;"></div>
+  <div class="hint">💡 操作方法: 左ドラッグで周囲を見回す、右ドラッグで平行移動、ホイールでズーム</div>
+</div>
+
+<div id="canvas-container"></div>
+
+<script>
+  const container = document.getElementById('canvas-container');
+  const statusEl = document.getElementById('status');
+  const camCoordsEl = document.getElementById('cam-coords');
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xf1f5f9);
+
+  // 広角レンズ（FOV 72）で室内の広がりを自然に描画
+  const camera = new THREE.PerspectiveCamera(72, window.innerWidth / window.innerHeight, 1, 200000);
+  camera.position.set(0, 3000, 5000);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.shadowMap.enabled = true;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  container.appendChild(renderer.domElement);
+
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.05;
+  controls.maxPolarAngle = Math.PI / 2 + 0.1;
+
+  // 室内を明るく見せるための照明設計
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1.3);
+  scene.add(ambientLight);
+
+  const dirLight = new THREE.DirectionalLight(0xfffbeb, 1.2);
+  dirLight.position.set(4000, 8000, 3000);
+  dirLight.castShadow = true;
+  scene.add(dirLight);
+
+  // 室内補助光（LDKの中央を照らす）
+  const interiorLight = new THREE.PointLight(0xffedd5, 1.2, 5000);
+  interiorLight.position.set(200, 250, 0);
+  scene.add(interiorLight);
+
+  const hemiLight = new THREE.HemisphereLight(0xffffff, 0x64748b, 0.8);
+  scene.add(hemiLight);
+
+  // Grid
+  const gridHelper = new THREE.GridHelper(15000, 60, 0x94a3b8, 0xe2e8f0);
+  gridHelper.position.y = -2;
+  scene.add(gridHelper);
+
+  let houseModel = null;
+  let roofMeshes = [];
+  let ceilingMeshes = [];
+  let isRoofHidden = false;
+  let isCeilingHidden = false;
+  let bBox = null;
+  let bCenter = new THREE.Vector3();
+  let bSize = new THREE.Vector3();
+
+  const loader = new THREE.FBXLoader();
+  const fbxUrl = '/sample_data/architrend/' + encodeURIComponent('斉藤 広子 様邸新築工事.fbx');
+
+  loader.load(
+    fbxUrl,
+    function (object) {
+      houseModel = object;
+      
+      bBox = new THREE.Box3().setFromObject(object);
+      bBox.getSize(bSize);
+      bBox.getCenter(bCenter);
+      
+      console.log('Model Box:', bBox, 'Size:', bSize, 'Center:', bCenter);
+      
+      // Center the house on grid
+      object.position.x -= bCenter.x;
+      object.position.y -= bBox.min.y;
+      object.position.z -= bCenter.z;
+
+      // Identify roof & ceiling meshes
+      // 屋根: 高さ55%以上, 天井/2階床: 高さ250cm以上かつ320cm以下
+      const thresholdRoofY = bSize.y * 0.55;
+      object.traverse(child => {
+        if (child.isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+          if (child.material) {
+            child.material.side = THREE.DoubleSide;
+          }
+          const childBox = new THREE.Box3().setFromObject(child);
+          const relY = childBox.min.y - bBox.min.y;
+          if (relY > thresholdRoofY) {
+            roofMeshes.push(child);
+          } else if (relY >= 250 && relY <= 320) {
+            ceilingMeshes.push(child);
+          }
+        }
+      });
+
+      scene.add(object);
+
+      // 初期カメラ（鳥観）
+      camera.position.set(bSize.x * 0.8, bSize.y * 1.1, bSize.z * 1.3);
+      controls.target.set(0, bSize.y * 0.3, 0);
+      controls.update();
+
+      statusEl.style.color = '#10b981';
+      statusEl.textContent = `✅ ARCHITREND 3Dモデル読み込み完了！ (W:${Math.round(bSize.x)}, H:${Math.round(bSize.y)}, D:${Math.round(bSize.z)})`;
+    },
+    function (xhr) {
+      if (xhr.lengthComputable) {
+        const percent = Math.round((xhr.loaded / xhr.total) * 100);
+        statusEl.textContent = `読み込み中: ${percent}% (${(xhr.loaded / 1024 / 1024).toFixed(1)}MB / ${(xhr.total / 1024 / 1024).toFixed(1)}MB)`;
+      }
+    },
+    function (error) {
+      console.error('FBX Load Error:', error);
+      statusEl.style.color = '#ef4444';
+      statusEl.textContent = '⚠️ 読み込みエラー: ' + error.message;
+    }
+  );
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    if (camCoordsEl) {
+      camCoordsEl.textContent = `Cam: [${Math.round(camera.position.x)}, ${Math.round(camera.position.y)}, ${Math.round(camera.position.z)}] | Target: [${Math.round(controls.target.x)}, ${Math.round(controls.target.y)}, ${Math.round(controls.target.z)}]`;
+    }
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  // 屋根・天井の非表示制御関数
+  function setRoofVisibility(visible) {
+    roofMeshes.forEach(m => { m.visible = visible; });
+  }
+  function setCeilingVisibility(visible) {
+    ceilingMeshes.forEach(m => { m.visible = visible; });
+  }
+
+  // 屋根トグルボタン
+  const roofBtn = document.getElementById('btn-toggle-roof');
+  roofBtn.addEventListener('click', () => {
+    isRoofHidden = !isRoofHidden;
+    setRoofVisibility(!isRoofHidden);
+    if (isRoofHidden) {
+      roofBtn.classList.add('active');
+      roofBtn.textContent = '🏠 屋根を表示する';
+      camera.position.set(0, bSize.y * 1.8, bSize.z * 0.9);
+      controls.target.set(0, bSize.y * 0.2, 0);
+      controls.update();
+    } else {
+      roofBtn.classList.remove('active');
+      roofBtn.textContent = '🏠 屋根を外す（間取り表示）';
+    }
+  });
+
+  // LDK間取りフォーカス（屋根・天井を外してLDKの上空斜めからクローズアップ）
+  document.getElementById('btn-ldk-focus').addEventListener('click', () => {
+    setRoofVisibility(false);
+    setCeilingVisibility(false);
+    roofBtn.classList.add('active');
+    roofBtn.textContent = '🏠 屋根を表示する';
+    
+    // 東側LDKの上空斜めから間取りをしっかり見下ろす
+    camera.position.set(220, 380, 400);
+    controls.target.set(200, 80, -20);
+    controls.update();
+    statusEl.textContent = '🔍 LDK間取りフォーカス: 開口部・キッチンカウンター・無垢床が一目で分かります。';
+  });
+
+  // LDK室内（リビング側視点）: リビング南側からキッチン・ダイニングを広々と見渡す
+  document.getElementById('btn-ldk-living').addEventListener('click', () => {
+    setRoofVisibility(false);
+    setCeilingVisibility(false); // 天井を外して室内を明るく見通しよく
+    roofBtn.classList.add('active');
+    roofBtn.textContent = '🏠 屋根を表示する';
+    
+    // リビングのソファー位置（X:220, Y:135, Z:240）からキッチン（X:200, Y:115, Z:-80）を見渡す
+    camera.position.set(220, 135, 240);
+    controls.target.set(200, 115, -80);
+    controls.update();
+    statusEl.textContent = '🛋️ LDKリビング視点: 南側リビングから対面キッチンとダイニングを一望。ドラッグや矢印キーで室内を歩けます。';
+  });
+
+  // LDK室内（キッチン対面視点）: 対面キッチン内からリビング・南窓を見渡す
+  document.getElementById('btn-ldk-kitchen').addEventListener('click', () => {
+    setRoofVisibility(false);
+    setCeilingVisibility(false);
+    roofBtn.classList.add('active');
+    roofBtn.textContent = '🏠 屋根を表示する';
+    
+    // キッチン奥（X:190, Y:140, Z:-150）からリビング南窓（X:210, Y:115, Z:220）を見渡す
+    camera.position.set(190, 140, -150);
+    controls.target.set(210, 115, 220);
+    controls.update();
+    statusEl.textContent = '🍳 対面キッチン視点: 料理をしながらリビング・ダイニングで寛ぐ家族を見渡せる特等席です。';
+  });
+
+  // 俯瞰
+  document.getElementById('btn-top').addEventListener('click', () => {
+    camera.position.set(0, bSize.y * 2.8, 0);
+    controls.target.set(0, 0, 0);
+    controls.update();
+    statusEl.textContent = '🦅 敷地全体の真上俯瞰に移動しました。';
+  });
+
+  // 正面外観
+  document.getElementById('btn-front').addEventListener('click', () => {
+    roofMeshes.forEach(m => m.visible = true);
+    setCeilingVisibility(true);
+    roofBtn.classList.remove('active');
+    roofBtn.textContent = '🏠 屋根を外す（間取り表示）';
+    camera.position.set(0, bSize.y * 0.5, bSize.z * 1.6);
+    controls.target.set(0, bSize.y * 0.3, 0);
+    controls.update();
+    statusEl.textContent = '🏡 外観正面に移動しました。';
+  });
+
+  // キーボードウォークスルー操作 (WASD / 矢印キー)
+  window.addEventListener('keydown', (e) => {
+    const moveSpeed = 15;
+    const forward = new THREE.Vector3();
+    camera.getWorldDirection(forward);
+    forward.y = 0;
+    forward.normalize();
+    const right = new THREE.Vector3();
+    right.crossVectors(camera.up, forward).normalize();
+
+    if (e.key === 'w' || e.key === 'ArrowUp') {
+      camera.position.addScaledVector(forward, moveSpeed);
+      controls.target.addScaledVector(forward, moveSpeed);
+    } else if (e.key === 's' || e.key === 'ArrowDown') {
+      camera.position.addScaledVector(forward, -moveSpeed);
+      controls.target.addScaledVector(forward, -moveSpeed);
+    } else if (e.key === 'a' || e.key === 'ArrowLeft') {
+      camera.position.addScaledVector(right, moveSpeed);
+      controls.target.addScaledVector(right, moveSpeed);
+    } else if (e.key === 'd' || e.key === 'ArrowRight') {
+      camera.position.addScaledVector(right, -moveSpeed);
+      controls.target.addScaledVector(right, -moveSpeed);
+    }
+    controls.update();
+  });
+
+</script>
+
+</body>
+</html>

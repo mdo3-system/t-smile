@@ -30,6 +30,24 @@ class ThermalBotStudio {
     } catch (e) {
       console.warn('[ThermalBot] Failed to load thermal_qa_200.json:', e);
     }
+
+    // Load YouTube & Veo3 video links mapping
+    this.videoLinks = {};
+    try {
+      const vRes = await fetch('/api/knowledge-video/links');
+      if (vRes.ok) {
+        this.videoLinks = await vRes.json();
+      } else {
+        const altRes = await fetch('/data/knowledge_video_links.json');
+        if (altRes.ok) this.videoLinks = await altRes.json();
+      }
+    } catch (ve) {
+      console.log('[ThermalBot] No video links API, checking localStorage');
+      try {
+        const raw = localStorage.getItem('sumairu_knowledge_video_links_v1');
+        if (raw) this.videoLinks = JSON.parse(raw);
+      } catch (err) {}
+    }
   }
 
   bindEvents() {
@@ -197,20 +215,33 @@ class ThermalBotStudio {
 
     grid.innerHTML = items.map(q => {
       const qNum = q.questionNumber || q.id.replace(/[^0-9]/g, '');
+      const vInfo = (this.videoLinks && this.videoLinks[q.id]) || {};
+      const hasVideo = !!(vInfo.youtubeUrl || vInfo.youtubeVideoId);
+      const imgPath = q.image || `/images/knowledge/thermal_${q.category}.jpg`;
+
       return `
         <div class="thermal-qa-card" data-id="${q.id}">
-          <div>
-            <div class="thermal-card-header">
-              <span class="thermal-cat-tag">${this.escapeHtml(q.categoryName)}</span>
-              <span class="thermal-q-number">Q${qNum}</span>
+          <div style="position: relative; width: 100%; height: 110px; overflow: hidden; background: #0f172a;">
+            <img src="${imgPath}" alt="${this.escapeHtml(q.question)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/images/thermal_interior_hero.jpg'" />
+            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(15,23,42,0.8) 100%);"></div>
+            <div style="position: absolute; top: 8px; left: 8px; display: flex; gap: 4px; align-items: center;">
+              <span class="thermal-cat-tag" style="background: rgba(2,132,199,0.85); backdrop-filter: blur(4px);">${this.escapeHtml(q.categoryName)}</span>
+              <span class="thermal-q-number" style="background: rgba(15,23,42,0.85);">Q${qNum}</span>
             </div>
-            <h3 class="thermal-q-title">${this.escapeHtml(q.question)}</h3>
+            ${hasVideo ? `
+              <div style="position: absolute; bottom: 8px; right: 8px; background: rgba(239,68,68,0.9); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">
+                <span>▶ 10秒動画</span>
+              </div>
+            ` : ''}
+          </div>
+          <div style="padding: 1rem 1.25rem 0.5rem 1.25rem;">
+            <h3 class="thermal-q-title" style="margin-top: 0.2rem;">${this.escapeHtml(q.question)}</h3>
             <p class="thermal-short-ans">${this.escapeHtml(q.shortAnswer)}</p>
             <div class="thermal-dim-badge">📐 ${this.escapeHtml(q.dimension)}</div>
           </div>
           <div class="thermal-card-footer">
             <span style="color: #059669; font-weight: 700; font-size: 0.78rem;">🏡 埼玉現場の実務知見</span>
-            <span class="thermal-card-action">詳しく見る ➜</span>
+            <span class="thermal-card-action">図解と動画を見る ➜</span>
           </div>
         </div>
       `;
@@ -239,6 +270,46 @@ class ThermalBotStudio {
     document.getElementById('thermal-modal-dim').textContent = q.dimension;
     document.getElementById('thermal-modal-det').textContent = q.details;
     document.getElementById('thermal-modal-pri').textContent = q.principle;
+
+    // Video & Diagram Embed Box
+    let videoBox = document.getElementById('thermal-modal-video-box');
+    if (!videoBox) {
+      videoBox = document.createElement('div');
+      videoBox.id = 'thermal-modal-video-box';
+      const ansBlock = document.getElementById('thermal-modal-ans');
+      if (ansBlock && ansBlock.parentElement) {
+        ansBlock.parentElement.insertAdjacentElement('afterend', videoBox);
+      }
+    }
+
+    const vInfo = (this.videoLinks && this.videoLinks[q.id]) || {};
+    const ytId = vInfo.youtubeVideoId || (vInfo.youtubeUrl ? (vInfo.youtubeUrl.match(/(?:youtu\.be\/|watch\?v=)([\w-]{11})/) || [])[1] : null);
+
+    if (ytId) {
+      videoBox.innerHTML = `
+        <div style="margin: 1rem 0; background: #0f172a; border: 1px solid #334155; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.2);">
+          <div style="padding: 8px 12px; background: #1e293b; color: #f87171; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between;">
+            <span style="display:flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#ef4444"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              10秒解説YouTube動画（Veo 3 × AI温熱建築士）
+            </span>
+            <a href="${vInfo.youtubeUrl}" target="_blank" style="color: #cbd5e1; text-decoration: underline; font-size: 0.78rem;">YouTubeで開く ↗</a>
+          </div>
+          <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+            <iframe src="https://www.youtube.com/embed/${ytId}?rel=0" style="position: absolute; top:0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen></iframe>
+          </div>
+        </div>
+      `;
+    } else {
+      videoBox.innerHTML = `
+        <div style="margin: 0.8rem 0; padding: 10px 14px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; font-size: 0.82rem; color: #475569; display: flex; align-items: center; justify-content: space-between;">
+          <span style="display:flex; align-items:center; gap:6px;">
+            🎬 <strong>10秒解説動画</strong>: Google Veo 3 にて順次生成中
+          </span>
+          <a href="/knowledge-video-portal/" target="_blank" style="color: #0284c7; font-weight: 700; text-decoration: none;">動画スタジオ ↗</a>
+        </div>
+      `;
+    }
 
     modal.classList.add('active');
   }

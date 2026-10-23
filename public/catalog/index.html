@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>完全工学仕様書 ＆ 公的証明書原本ダイジェスト（Webカタログ・A4印刷/PDF対応）｜株式会社住ま居る</title>
+  <meta name="description" content="株式会社住ま居るの標準工学仕様（APW430・W断熱・マーベックス第1種換気・許容応力度耐震3・金物工法・C値1.0以下保証）と、BELS最高ランク評価書・気密測定報告書・長期優良住宅認定通知書などの公的証明書原本を凝縮したA4ダイジェストカタログ。" />
+  <link rel="canonical" href="https://t-smile.co.jp/catalog/" />
+  
+  <!-- OGP & Fonts -->
+  <meta property="og:title" content="完全工学仕様書 ＆ 公的証明書原本ダイジェスト｜株式会社住ま居る" />
+  <meta property="og:description" content="埼玉の気候風土で家族を守る本物の高気密高断熱。公的証明書原本と工学仕様を完全開示。" />
+  <meta property="og:image" content="https://t-smile.co.jp/images/hero_kaguya_house.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=M+PLUS+Rounded+1c:wght@800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* 全体リセット & 画面表示用スタイル */
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0f172a;
+      color: #1e293b;
+      font-family: 'Noto Sans JP', sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 画面表示用フローティングツールバー */
+    .catalog-bar {
+      position: sticky;
+      top: 0;
+      z-index: 9999;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.8rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .catalog-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .catalog-bar-title {
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+    .catalog-bar-actions {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+    }
+    .btn-print {
+      background: linear-gradient(135deg, #059669, #047857);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.9rem;
+      padding: 0.6rem 1.4rem;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
+      transition: transform 0.2s ease;
+    }
+    .btn-print:hover { transform: translateY(-2px); }
+    .btn-back {
+      background: rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      font-size: 0.85rem;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .btn-back:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
+
+    /* A4用紙コンテナ（画面表示時） */
+    .catalog-container {
+      max-width: 210mm;
+      margin: 1.5rem auto 4rem;
+      padding: 0 10px;
+    }
+    .catalog-page {
+      width: 210mm;
+      min-height: 297mm;
+      background: #ffffff;
+      margin: 0 auto 2.5rem;
+      padding: 16mm 15mm;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* ページ共通ヘッダー・フッター */
+    .page-header {
+      border-bottom: 2px solid #0f172a;
+      padding-bottom: 6px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .page-header-logo {
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: #0f172a;
+    }
+    .page-header-topic {
+      font-size: 0.72rem;
+      color: #64748b;
+      font-weight: 700;
+    }
+    .page-footer {
+      border-top: 1px solid #cbd5e1;
+      padding-top: 6px;
+      margin-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      color: #64748b;
+    }
+
+    /* コンポーネント */
+    h2.sec-title {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #0f172a;
+      margin: 0 0 10px;
+      border-left: 4px solid #059669;
+      padding-left: 8px;
+      line-height: 1.3;
+    }
+    .lead-p {
+      font-size: 0.86rem;
+      color: #334155;
+      line-height: 1.7;
+      margin: 0 0 12px;
+    }
+    .spec-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-right: 6px;
+    }
+
+    /* 印刷時の設定（@media print） */
+    @page {
+      size: A4 portrait;
+      margin: 10mm 10mm 10mm 10mm;
+    }
+    @media print {
+      body {
+        background: #fff !important;
+        color: #000 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .catalog-container {
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+      .catalog-page {
+        margin: 0 !important;
+        padding: 0 0 10mm 0 !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        width: 100% !important;
+        min-height: 277mm !important;
+        height: auto !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .page-footer {
+        position: relative;
+        bottom: 0;
+      }
+    }
+
+    /* スマホ画面対応 */
+    @media (max-width: 820px) {
+      .catalog-container { width: 100%; padding: 0 8px; }
+      .catalog-page { width: 100%; min-height: auto; padding: 1.2rem 1rem; margin-bottom: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 操作ツールバー（印刷・ダウンロード） -->
+  <aside class="catalog-bar no-print" aria-label="カタログ操作バー">
+    <div class="catalog-bar-left">
+      <a href="/" class="btn-back">← ホーム</a>
+      <a href="/category/spec/" class="btn-back">📐 仕様詳細</a>
+      <span class="catalog-bar-title">📘 株式会社住ま居る 完全工学仕様 ＆ 公的証明書ダイジェスト（全9ページ）</span>
+    </div>
+    <div class="catalog-bar-actions">
+      <button onclick="window.print()" class="btn-print" type="button">
+        🖨️ このカタログを印刷 / PDF保存する（A4対応）
+      </button>
+      <a href="tel:049-271-2350" style="color: #38bdf8; font-weight: 800; font-size: 0.9rem; text-decoration: none;">
+        📞 049-271-2350
+      </a>
+    </div>
+  </aside>
+
+  <div class="catalog-container">
+
+    <!-- ==================== P1: 表紙 ==================== -->
+    <article class="catalog-page" style="justify-content: space-between; text-align: center; background: radial-gradient(circle at top right, #f8fafc 0%, #ffffff 100%);">
+      <div style="border-bottom: 2px solid #0f172a; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-weight: 900; font-size: 0.85rem; color: #0f172a; letter-spacing: 0.05em;">株式会社住ま居る ｜ 家づくりAIラボ</span>
+        <span style="font-size: 0.72rem; color: #64748b; font-weight: 700;">公式工学仕様・公的証明原本集 Vol.2026</span>
+      </div>
+
+      <div style="margin: 1.5rem 0;">
+        <span style="background: #0f172a; color: #38bdf8; font-size: 0.82rem; font-weight: 800; padding: 4px 16px; border-radius: 20px; display: inline-block; margin-bottom: 0.8rem; letter-spacing: 0.05em;">
+          公的証明書 ＆ 実測データ完全開示型カタログ
+        </span>
+        <h1 style="font-size: 2rem; font-weight: 900; color: #0f172a; line-height: 1.35; margin: 0 0 0.8rem;">
+          完全工学仕様書 ＆<br>
+          <span style="color: #059669;">第三者公的証明書原本集</span>
+        </h1>
+        <p style="font-size: 0.95rem; color: #475569; max-width: 580px; margin: 0 auto 1.2rem; font-weight: 600; line-height: 1.7;">
+          埼玉の気候風土で家族の命と生涯の快適性を守る、<br>
+          「本物の高気密高断熱 × 許容応力度耐震等級3」の工学的裏付け。
+        </p>
+
+        <!-- 代表建物実例ビジュアル（工学と自然素材の調和） -->
+        <div style="display: flex; gap: 12px; justify-content: center; max-width: 600px; margin: 0 auto 1.2rem;">
+          <div style="flex: 1; border-radius: 8px; overflow: hidden; border: 1px solid #cbd5e1; box-shadow: 0 2px 8px rgba(0,0,0,0.06); background: #f8fafc;">
+            <img src="/images/modelhouse_kaguya.webp" alt="住ま居る 芳彩（かぐや）モデルハウス" style="width: 100%; height: 110px; object-fit: cover; display: block;" loading="lazy">
+            <div style="font-size: 0.68rem; color: #475569; padding: 3px 6px; font-weight: 700; background: #fff;">芳彩（かぐや）モデルハウス（毛呂山展示場）</div>
+          </div>
+          <div style="flex: 1; border-radius: 8px; overflow: hidden; border: 1px solid #cbd5e1; box-shadow: 0 2px 8px rgba(0,0,0,0.06); background: #f8fafc;">
+            <img src="/images/cases_real/hagiwara/photo_facade_kuki.webp" alt="埼玉県H様邸（H様邸）『空気が廻る家』 埼玉県環境住宅賞受賞実邸" style="width: 100%; height: 110px; object-fit: cover; display: block;" loading="lazy">
+            <div style="font-size: 0.68rem; color: #475569; padding: 3px 6px; font-weight: 700; background: #fff;">実例施工：埼玉県・H様邸『空気が廻る家』（埼玉県環境住宅賞受賞／実測C値0.1）</div>
+          </div>
+        </div>
+
+        <div style="background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 10px; padding: 1.2rem; text-align: left; max-width: 600px; margin: 0 auto;">
+          <div style="font-weight: 800; font-size: 0.85rem; color: #0f172a; margin-bottom: 0.4rem;">
+            📐 本書に収録されている実物データ・工学指標：
+          </div>
+          <ul style="margin: 0; padding-left: 1.2rem; font-size: 0.8rem; color: #334155; line-height: 1.8;">
+            <li><strong>YKK AP APW430樹脂トリプルガラス</strong> ＋ <strong>高本コーポレーション外張40〜100mm W断熱</strong></li>
+            <li><strong>マーベックス澄家</strong> 全熱交換第1種換気システム（床下設置・湿度回収70%超）</li>
+            <li><strong>BELS最高ランク★★★★★評価書</strong> ＆ <strong>現場気密性能試験結果報告書原本（C値1.0以下保証）</strong></li>
+            <li><strong>全棟許容応力度計算耐震等級3</strong> ＆ <strong>Tec-One/Presettor高耐力金物工法</strong></li>
+            <li><strong>地上型3Dレーザースキャナ測量</strong> ＆ <strong>埼玉県基準の農地転用・市街化調整区域数百件の実績</strong></li>
+            <li><strong>断熱等性能等級別・323プラン連動の本体坪単価・総額目安</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid #cbd5e1; padding-top: 0.8rem; text-align: center;">
+        <div style="font-weight: 900; font-size: 1.05rem; color: #0f172a; margin-bottom: 0.2rem;">株式会社住ま居る</div>
+        <div style="font-size: 0.76rem; color: #64748b; line-height: 1.6;">
+          本社: 〒350-2224 埼玉県鶴ヶ島市町屋176番地5 ｜ モデルハウス: 埼玉県入間郡毛呂山町（本社より車で約10分・完全予約制） ｜ TEL: 049-271-2350<br>
+          埼玉県知事許可（般－8）第60650号 ｜ 二級建築設計事務所 埼玉県知事（5）第10278号 ｜ 創業30年・累計800棟超
+        </div>
+      </div>
+    </article>
+
+    <!-- ==================== P2: 核心工学スペック3大ハイライト ==================== -->
+    <article class="catalog-page">
+      <div>
+        <header class="page-header">
+          <span class="page-header-logo">株式会社住ま居る 完全工学仕様カタログ</span>
+          <span class="page-header-topic">01 ｜ 核心スペック3大ハイライト</span>
+        </header>
+        <h2 class="sec-title">型番・数値を一切隠さない「3大工学ハイライト」</h2>
+        <p class="lead-p">
+          「高断熱」「省エネ」という言葉だけの宣伝はいたしません。埼玉の酷暑と冬のからっ風を制するために選び抜いた、主要設備の型番と物理的根拠を開示します。
+        </p>
+
+        <!-- ハイライト1: APW430 -->
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <span style="font-weight: 800; font-size: 0.95rem; color: #0f172a;">① YKK AP APW430 樹脂トリプルガラス（日射遮蔽・取得最適設計）</span>
+            <span style="background: #e0f2fe; color: #0369a1; font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">熱貫流率 0.90 W/m²K</span>
+          </div>
+          <p style="font-size: 0.8rem; color: #334155; margin: 0; line-height: 1.65;">
+            住宅の熱損失の約6〜7割を占める開口部。住ま居るでは、世界最高水準の断熱性能を誇る樹脂トリプルガラス「APW430」を標準採用。南面には冬の太陽熱を取り込む「日射取得型」、東西北面には夏の強烈な西日と熱気を跳ね返す「日射遮蔽型」を方位ごとに最適配置し、エアコンに頼らない温度維持を実現します。
+          </p>
+        </div>
+
+        <!-- ハイライト2: 高本W断熱 -->
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <span style="font-weight: 800; font-size: 0.95rem; color: #0f172a;">② 高本コーポレーション外張断熱（40〜100mm）× 充填W断熱工法</span>
+            <span style="background: #ecfdf5; color: #047857; font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">UA値 0.32〜0.23 (HEAT20 G2.5〜G3)</span>
+          </div>
+          <p style="font-size: 0.8rem; color: #334155; margin: 0; line-height: 1.65;">
+            柱と柱の間に断熱材を詰めるだけでは、柱（木部）が熱橋（ヒートブリッジ）となり熱が逃げます。住ま居るは、高本コーポレーションの高性能押出法ポリスチレンフォーム（40mm〜100mm）で家全体を外側からすっぽり包み込む「外張＋充填のダブル断熱」。冬の足元の冷え込みをゼロにし、壁体内結露を永久に防ぎます。
+          </p>
+        </div>
+
+        <!-- ハイライト3: マーベックス澄家 -->
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <span style="font-weight: 800; font-size: 0.95rem; color: #0f172a;">③ マーベックス社「澄家」全熱交換型 第1種換気システム（床下設置）</span>
+            <span style="background: #fef3c7; color: #92400e; font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">熱回収率 70%超 ＋ 湿度回収</span>
+          </div>
+          <p style="font-size: 0.8rem; color: #334155; margin: 0; line-height: 1.65;">
+            換気によって室内の快適な温湿度を捨てない「全熱交換システム」。床下に本体を設置することで、ハウスダストや花粉、アレルゲンが溜まりやすい床上30cmの汚染空気を足元から排気。換気音が居住空間に響かず、給気口から吹き出す冷風ドラフトも起きません。
+          </p>
+        </div>
+
+        <!-- 気密性能保証 -->
+        <div style="background: #ecfdf5; border: 1px solid #86efac; border-radius: 8px; padding: 12px 14px;">
+          <div style="font-weight: 800; font-size: 0.9rem; color: #065f46; margin-bottom: 4px;">
+            🎯 全棟現場実測・気密性能 C値1.0以下保証（実績0.28〜0.6目安）
+          </div>
+          <p style="font-size: 0.78rem; color: #166534; margin: 0; line-height: 1.6;">
+            どんなに良いサッシや断熱材を使っても、隙間だらけでは計画換気が成立せず、冷暖房が漏れ出します。住ま居るでは、全棟で大工工事完了段階に第三者専門機関による「気密測定試験」を実施。C値1.0以下を完全保証（実績平均0.3〜0.5台多数）し、測定報告書原本をお施主様へ手渡しいたします。
+          </p>
+        </div>
+      </div>
+
+      <footer class="page-footer">
+        <span>株式会社住ま居る ｜ 標準工学仕様書</span>
+        <span>Page 2 / 9</span>
+      </footer>
+    </article>
+
+    <!-- ==================== P3: 公的証明書原本① BELS & 気密試験 ==================== -->
+    <article class="catalog-page">
+      <div>
+        <header class="page-header">
+          <span class="page-header-logo">株式会社住ま居る 完全工学仕様カタログ</span>
+          <span class="page-header-topic">02 ｜ 第三者公的証明書の完全開示 (1)</span>
+        </header>
+        <h2 class="sec-title">言葉ではなく「第三者公的証明書」で語る</h2>
+        <p class="lead-p">
+          自社宣伝ではなく、国が認めた登録住宅性能評価機関による公的証明書原本を完全公開いたします。
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px;">
+          <!-- BELS -->
+          <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; background: #fafafa; text-align: center;">
+            <img src="/images/certs/cert_bels_01.webp" alt="BELS最高ランク評価書原本" style="width: 100%; height: 180px; object-fit: contain; border: 1px solid #e2e8f0; border-radius: 4px; background: #fff;" loading="lazy">
+            <div style="font-weight: 800; font-size: 0.88rem; color: #0f172a; margin-top: 6px;">BELS最高評価 ★★★★★</div>
+            <div style="font-size: 0.72rem; color: #059669; font-weight: 700;">一次エネルギー消費量削減率 50%超達成</div>
+            <p style="font-size: 0.72rem; color: #64748b; margin: 4px 0 0; text-align: left; line-height: 1.5;">
+              国土交通省が定めた建築物省エネルギー性能表示制度（BELS）において、最高ランクの星5つ（ZEH水準を大幅に上回る低炭素性能）を取得した原本実物です。
+            </p>
+          </div>
+
+          <!-- 気密試験 -->
+          <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; background: #fafafa; text-align: center;">
+            <img src="/images/certs/cert_c_value_09.webp" alt="住宅気密性能試験結果報告書原本" style="width: 100%; height: 180px; object-fit: contain; border: 1px solid #e2e8f0; border-radius: 4px; background: #fff;" loading="lazy">
+            <div style="font-weight: 800; font-size: 0.88rem; color: #0f172a; margin-top: 6px;">気密性能試験結果報告書</div>
+            <div style="font-size: 0.72rem; color: #0284c7; font-weight: 700;">減圧特性グラフ ＆ 総相当隙間面積実測</div>
+            <p style="font-size: 0.72rem; color: #64748b; margin: 4px 0 0; text-align: left; line-height: 1.5;">
+              現場ファンで室内を減圧し、内外差圧と通気量を計測したグラフ原本。手刻み大工と専任建築士の徹底的な気密テープ・ウレタン気密施工の証拠です。
+            </p>
+          </div>
+        </div>
+
+        <div style="background: #f1f5f9; border-left: 3px solid #0f172a; padding: 8px 12px; margin-top: 14px; font-size: 0.75rem; color: #334155; line-height: 1.6;">
+          <strong>💡 技術者の誇り：</strong> 住ま居るでは、机上の計算書（カタログスペック）だけで性能を誇示しません。施工現場において実際に測定器を回し、第三者機関の公印が押された証明書を1棟1棟作成してお渡ししています。
+        </div>
+      </div>
+
+      <footer class="page-footer">
+        <span>株式会社住ま居る ｜ 公的証明原本集</span>
+        <span>Page 3 / 9</span>
+      </footer>
+    </article>
+
+    <!-- ==================== P4: 公的証明書原本② 長期優良 & 外皮計算 ==================== -->
+    <article class="catalog-page">
+      <div>
+        <header class="page-header">
+          <span class="page-header-logo">株式会社住ま居る 完全工学仕様カタログ</span>
+          <span class="page-header-topic">03 ｜ 第三者公的証明書の完全開示 (2)</span>
+        </header>
+        <h2 class="sec-title">所管行政庁の公印が押された認定原本</h2>
+        <p class="lead-p">
+          長期優良住宅認定通知書、および外皮熱貫流率（UA値）・一次エネルギー消費量計算書原本です。
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px;">
+          <!-- 長期優良住宅 -->
+          <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; background: #fafafa; text-align: center;">
+            <img src="/images/certs/cert_chouki_21.webp" alt="長期優良住宅認定通知書原本" style="width: 100%; height: 180px; object-fit: contain; border: 1px solid #e2e8f0; border-radius: 4px; background: #fff;" loading="lazy">
+            <div style="font-weight: 800; font-size: 0.88rem; color: #0f172a; margin-top: 6px;">長期優良住宅認定通知書</div>
+            <div style="font-size: 0.72rem; color: #7c3aed; font-weight: 700;">埼玉県所管行政庁公印・計画認定</div>
+            <p style="font-size: 0.72rem; color: #64748b; margin: 4px 0 0; text-align: left; line-height: 1.5;">
+              耐震性・劣化対策・維持管理容易性・省エネ性のすべてにおいて国の最高基準を満たし、所管行政庁から正式認定を受けた公印原本です。
+            </p>
+          </div>
+
+          <!-- 外皮計算書 -->
+          <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; background: #fafafa; text-align: center;">
+            <img src="/images/certs/cert_envelope_11.webp" alt="外皮・一次エネルギー計算図書原本" style="width: 100%; height: 180px; object-fit: contain; border: 1px solid #e2e8f0; border-radius: 4px; background: #fff;" loading="lazy">
+            <div style="font-weight: 800; font-size: 0.88rem; color: #0f172a; margin-top: 6px;">外皮・一次エネ計算書原本</div>
+            <div style="font-size: 0.72rem; color: #d97706; font-weight: 700;">部材別面積加重平均 UA値0.32算出</div>
+            <p style="font-size: 0.72rem; color: #64748b; margin: 4px 0 0; text-align: left; line-height: 1.5;">
+              屋根・壁・基礎・窓ガラス・サッシ枠の部材一本一本の熱貫流率を面積加重平均した正規計算書原本。HEAT20 G2.5超を工学的に裏付けます。
+            </p>
+          </div>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; margin-top: 14px;">
+          <div style="font-weight: 800; font-size: 0.82rem; color: #0f172a; margin-bottom: 3px;">
+            🛡️ 資産価値を守る公的エビデンス（税制優遇・住宅ローン金利優遇）
+          </div>
+          <p style="font-size: 0.75rem; color: #475569; margin: 0; line-height: 1.6;">
+            長期優良住宅およびBELS最高ランクの取得により、住宅ローン控除限度額の最大化、登録免許税・不動産取得税・固定資産税の減税特例、フラット35S（金利引き下げAプラン）が満額適用されます。
+          </p>
+        </div>
+      </div>
+
+      <footer class="page-footer">
+        <span>株式会社住ま居る ｜ 公的証明原本集</span>
+        <span>Page 4 / 9</span>
+      </footer>
+    </article>
+
+    <!-- ==================== P5: 耐震・許容応力度計算 & 金物工法 ==================== -->
+    <article class="catalog-page">
+      <div>
+        <header class="page-header">
+          <span class="page-header-logo">株式会社住ま居る 完全工学仕様カタログ</span>
+          <span class="page-header-topic">04 ｜ 構造計算 ＆ 金物工法</span>
+        </header>
+        <h2 class="sec-title">全棟許容応力度計算耐震等級3 ＆ 金物接合工法</h2>
+        <p class="lead-p">
+          簡易な壁量計算（仕様規定）ではありません。立体フレーム解析による「部材1本1本の応力算定」を実施。
+        </p>
+
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px;">
+          <h3 style="font-size: 0.92rem; font-weight: 800; color: #0f172a; margin: 0 0 6px;">
+            🏢 約300ページに及ぶ「許容応力度計算書」原本添付
+          </h3>
+          <p style="font-size: 0.8rem; color: #334155; margin: 0; line-height: 1.65;">
+            地震力、風圧力、固定荷重、積雪荷重が柱・梁・基礎・地盤にどのように伝わるかを三次元立体解析。直下率の多寡に関わらず、すべてのピン接合と単純梁を安全側に構造検討し、大地震の余震が連続しても倒壊しない耐震等級3（最高等級）を工学的に保証します。年間150件の構造審査・構造設計に携わる専任技術者が直接設計。
+          </p>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px;">
+          <h3 style="font-size: 0.92rem; font-weight: 800; color: #0f172a; margin: 0 0 6px;">
+            🛠️ 高耐力金物工法（Tec-One / Presettor）採用 ｜ 見学会を行わない工学的理由
+          </h3>
+          <p style="font-size: 0.8rem; color: #334155; margin: 0; line-height: 1.65;">
+            従来の木造軸組工法のような大きな木材欠損（ほぞ穴）をなくし、梁や柱のスリット内に専用高耐力金物を埋め込んで強靭なピンで緊結する金物接合工法を採用。金物は木材内部に完全に隠れるため、現場を表面から見ても強度は分かりません。だからこそ、表面的な見学会を行う時間があるなら、1ミリでも安全な構造計算と図面作りに全時間を注ぎます。
+          </p>
+        </div>
+
+        <div style="background: #fefce8; border: 1px solid #fde047; border-radius: 8px; padding: 12px 14px;">
+          <h3 style="font-size: 0.92rem; font-weight: 800; color: #713f12; margin: 0 0 6px;">
+            🪓 熟練手刻み専属大工による内部造作 ＆ 自然素材
+          </h3>
+          <p style="font-size: 0.8rem; color: #854d0e; margin: 0; line-height: 1.65;">
+            構造躯体は金物工法で強靭に緊結しつつ、内部の無垢吉野杉フローリング、手刻み木製格子手すり、造作家具、北海道産稚内珪藻土の左官仕上げは、手刻みができる専属大工・職人が木癖を見極めて施工します。
+          </p>
+        </div>
+      </div>
+
+      <footer class="page-footer">
+        <span>株式会社住ま居る ｜ 構造工学仕様</span>
+        <span>Page 5 / 9</span>
+      </footer>
+    </article>
+
+    <!-- ==================== P6: 敷地3D現況測量 ＆ 埼玉県農地転用 ==================== -->
+    <article class="catalog-page">
+      <div>
+        <header class="page-header">
+          <span class="page-header-logo">株式会社住ま居る 完全工学仕様カタログ</span>
+          <span class="page-header-topic">05 ｜ 敷地3D測量 ＆ 農地転用</span>
+        </header>
+        <h2 class="sec-title">敷地3D点群測量 ＆ 埼玉県基準の農地転用・開発許可</h2>
+        <p class="lead-p">
+          敷地の高低差や隣家離隔の誤差をゼロにする3Dデジタル技術と、埼玉県下一円の許認可実務力。
+        </p>
+
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px;">
+          <h3 style="font-size: 0.92rem; font-weight: 800; color: #0f172a; margin: 0 0 6px;">
+            📡 地上型3Dレーザースキャナ測量 ｜ デジタルツインから始まる基礎設計
+          </h3>
+          <p style="font-size: 0.8rem; color: #334155; margin: 0; line-height: 1.65;">
+            机上の敷地求積図やメジャーでの簡易測量では見落とされる擁壁の傾き、地面の微小な勾配、隣家の電線や庇の離隔を、数億点の立体点群データとして立体計測。ミリ単位で現況を把握した上で、許容応力度計算の基礎梁設計と日射シミュレーションを実施します。
+          </p>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px;">
+          <h3 style="font-size: 0.92rem; font-weight: 800; color: #0f172a; margin: 0 0 6px;">
+            🌾 埼玉県下一円・農地転用（4条・5条）・分家住宅・市街化調整区域数百件の実績
+          </h3>
+          <p style="font-size: 0.8rem; color: #334155; margin: 0 0 8px; line-height: 1.65;">
+            他社で「建てられない」と断られた市街化調整区域や農地。本社所在地（鶴ヶ島市町屋）自体が市街化調整区域にある住ま居るは、<strong>農業委員会を経由し、最終的な許認可権者である埼玉県（知事）の審査基準</strong>を知り尽くしています。
+          </p>
+          <div style="font-size: 0.72rem; color: #64748b; line-height: 1.6; border-top: 1px dashed #cbd5e1; padding-top: 6px;">
+            <strong>主な対応エリア：</strong> 鶴ヶ島市、川越市、坂戸市、東松山市、日高市、毛呂山町、越生町、鳩山町、川島町、吉見町、滑川町、嵐山町、小川町、ときがわ町、狭山市、入間市、飯能市、寄居町、深谷市、熊谷市、行田市など埼玉県全域。
+          </div>
+        </div>
+
+        <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 10px 14px;">
+          <div style="font-weight: 800; font-size: 0.82rem; color: #065f46; margin-bottom: 3px;">
+            📐 専任建築士が直接折衝・ワンストップ申請
+          </div>
+          <p style="font-size: 0.75rem; color: #166534; margin: 0; line-height: 1.6;">
+            公図調査、現地境界確定、現況測量、農業委員会総会折衝、埼玉県開発指導課との事前協議まで、外部任せにせず専任の建築士が直接一貫対応いたします。
+          </p>
+        </div>
+      </div>
+
+      <footer class="page-footer">
+        <span>株式会社住ま居る ｜ 敷地調査・許認可仕様</span>
+        <span>Page 6 / 9</span>
+      </footer>
+    </article>
+
+    <!-- ==================== P7: 価格・坪単価一覧 & 323プラン ==================== -->
+    <article class="catalog-page">
+      <div>
+        <header class="page-header">
+          <span class="page-header-logo">株式会社住ま居る 完全工学仕様カタログ</span>
+          <span class="page-header-topic">06 ｜ 価格 ＆ 坪単価一覧</span>
+        </header>
+        <h2 class="sec-title">価格・坪単価の完全明朗開示</h2>
+        <p class="lead-p">
+          大手ハウスメーカーの坪単価高騰（100万〜120万円超）が進む中、全棟許容応力度耐震等級3・金物工法・熟練大工造作を基本とした明朗な価格基準を定めています。
+        </p>
+
+        <!-- 価格テーブル -->
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.78rem; margin: 10px 0 14px; text-align: left;">
+          <thead>
+            <tr style="background: #0f172a; color: #fff;">
+              <th style="padding: 6px 8px; border: 1px solid #334155;">性能グレード</th>
+              <th style="padding: 6px 8px; border: 1px solid #334155;">主な仕様・サッシ・換気</th>
+              <th style="padding: 6px 8px; border: 1px solid #334155;">UA値</th>
+              <th style="padding: 6px 8px; border: 1px solid #334155;">本体坪単価（税込）</th>
+              <th style="padding: 6px 8px; border: 1px solid #334155;">30〜33坪 本体総額目安</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background: #fff;">
+              <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 700;">等級5（ZEH水準）</td>
+              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">高性能グラスウール充填 ＋ アルミ樹脂複合サッシ</td>
+              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">0.60</td>
+              <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 800; color: #0284c7;">約 74 万円〜</td>
+              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">約 2,220万 〜 2,440万円</td>
+            </tr>
+            <tr style="background: #f8fafc;">
+              <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 700;">等級6（HEAT20 G2）</td>
+              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">高性能充填断熱 ＋ 樹脂ペアサッシ (APW330等)</td>
+              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">0.46</td>
+              <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 800; color: #0284c7;">約 82 万円〜</td>
+              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">約 2,460万 〜 2,700万円</td>
+            </tr>
+            <tr style="background: #ecfdf5; border: 2px solid #059669;">
+              <td style="padding: 6px 8px; border: 1px solid #a7f3d0; font-weight: 900; color: #065f46;">
+                ★ 住ま居る標準<br><span style="font-size: 0.68rem; color: #047857;">(HEAT20 G2.5超)</span>
+              </td>
+              <td style="padding: 6px 8px; border: 1px solid #a7f3d0; line-height: 1.4;">
+                <strong>APW430樹脂トリプル</strong> ＋ <strong>高本外張40mm W断熱</strong> ＋ <strong>マーベックス澄家第1種換気</strong> ＋ 許容応力度耐震3 ＋ 金物工法 ＋ 実測C値1.0以下保証
+              </td>
+              <td style="padding: 6px 8px; border: 1px solid #a7f3d0; font-weight: 900; color: #065f46;">0.32</td>
+              <td style="padding: 6px 8px; border: 1px solid #a7f3d0; font-weight: 900; color: #047857;">約 86 万円〜</td>
+              <td style="padding: 6px 8px; border: 1px solid #a7f3d0; font-weight: 900; color: #065f46;">約 2,580万 〜 2,840万円</td>
+            </tr>
+            <tr style="background: #fff;">
+              <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 700;">等級7（HEAT20 G3）</td>
+              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">APW430樹脂トリプル ＋ 外張100mm W断熱 ＋ マーベックス第1種換気</td>
+              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">0.23</td>
+              <td style="padding: 6px 8px; border: 1px solid #cbd5e1; font-weight: 800; color: #7c3aed;">約 92 万円〜</td>
+              <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">約 2,760万 〜 3,030万円</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="background: #f1f5f9; border-radius: 6px; padding: 8px 12px; font-size: 0.72rem; color: #475569; line-height: 1.6;">
+          ※上記は建物本体工事の概算（税込）です。住ま居るで公開している「全323実例プラン」では、延床坪数と上記テーブルに基づき、Web間取りシミュレーター上で瞬時に等級ごとの概算見積もりを試算いただけます。<br>
+          ※屋外給排水工事、地盤改良工事（要判定時）、照明・カーテン、確認申請等の諸経費は敷地状況に応じて別途透明にお見積もりいたします。
+        </div>
+      </div>
+
+      <footer class="page-footer">
+        <span>株式会社住ま居る ｜ 価格・坪単価基準</span>
+        <span>Page 7 / 9</span>
+      </footer>
+    </article>
+
+    <!-- ==================== P8: 厳選実例 ＆ 施主様の声 ==================== -->
+    <article class="catalog-page">
+      <div>
+        <header class="page-header">
+          <span class="page-header-logo">株式会社住ま居る 完全工学仕様カタログ</span>
+          <span class="page-header-topic">07 ｜ 厳選施工実例 ＆ 施主様の声</span>
+        </header>
+        <h2 class="sec-title">数字が証明する暮らしの心地よさ</h2>
+        <p class="lead-p">
+          全6邸の厳選事例より、代表的な2邸の工学仕様と施主様の生の声をご紹介します。
+        </p>
+
+        <!-- Case 1 -->
+        <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; margin-bottom: 12px; background: #fff;">
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <img src="/images/cases_real/case1/photo_01.jpg" alt="鶴ヶ島市S様邸 完成写真" style="width: 140px; height: 95px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1;" loading="lazy">
+            <div style="flex: 1;">
+              <span style="background: #0284c7; color: #fff; font-size: 0.65rem; font-weight: 800; padding: 1px 6px; border-radius: 3px;">Case 01 ｜ 鶴ヶ島市・S様邸</span>
+              <div style="font-weight: 800; font-size: 0.85rem; color: #0f172a; margin: 2px 0;">天井高2.8m大空間LDKと無垢杉の温もり</div>
+              <div style="font-size: 0.72rem; color: #64748b;">耐震等級3（許容応力度計算） ｜ 実測C値0.38 ｜ UA値0.44</div>
+              <p style="font-size: 0.72rem; color: #334155; margin: 4px 0 0; line-height: 1.5;">
+                「天井を高くすると冬寒くなるのではと心配でしたが、真冬でもエアコン1台で部屋中が均一に暖かく、無垢杉の床は素足で歩くのが最高に気持ちいいです。」
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case 2 -->
+        <div style="border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; margin-bottom: 10px; background: #fff;">
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <img src="/images/cases_real/case2/photo_01.jpg" alt="ときがわ町K様邸 完成写真" style="width: 140px; height: 95px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1;" loading="lazy">
+            <div style="flex: 1;">
+              <span style="background: #059669; color: #fff; font-size: 0.65rem; font-weight: 800; padding: 1px 6px; border-radius: 3px;">Case 02 ｜ ときがわ町・K様邸</span>
+              <div style="font-weight: 800; font-size: 0.85rem; color: #0f172a; margin: 2px 0;">吉野杉大黒柱と山並みを望む吹き抜け・地域材パッシブZEH</div>
+              <div style="font-size: 0.72rem; color: #64748b;">耐震等級3（許容応力度計算） ｜ 実測C値0.32 ｜ UA値0.38 ｜ 太陽光ZEH</div>
+              <p style="font-size: 0.72rem; color: #334155; margin: 4px 0 0; line-height: 1.5;">
+                「後から直せない構造・断熱こそ最初に投資すべきと納得。太陽光発電の売電と超高断熱で冬も家中ポカポカ、年間光熱費実質ゼロを達成しました。」
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Award Honored Case: Toda-shi Hagiwara-tei -->
+        <div style="border: 2px solid #f59e0b; border-radius: 8px; padding: 10px; margin-bottom: 12px; background: #fffbeb;">
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <img src="/images/cases_real/hagiwara/photo_facade_kuki.webp" alt="埼玉県H様邸（H様邸）『空気が廻る家』" style="width: 140px; height: 95px; object-fit: cover; border-radius: 4px; border: 1px solid #f59e0b;" loading="lazy">
+            <div style="flex: 1;">
+              <span style="background: #b45309; color: #fff; font-size: 0.65rem; font-weight: 800; padding: 1px 6px; border-radius: 3px;">🏆 特別実邸 ｜ 埼玉県・H様邸（H様邸）</span>
+              <div style="font-weight: 800; font-size: 0.85rem; color: #92400e; margin: 2px 0;">埼玉県環境住宅賞 受賞実邸『空気が廻る家』｜ 1F床置き＋ロフト空調＆床下全熱交換換気</div>
+              <div style="font-size: 0.72rem; color: #78350f;">実測C値0.1 ｜ UA値0.37（BELS★★★★★最高等級・ZEH） ｜ 許容応力度耐震3 ｜ 長期優良</div>
+              <p style="font-size: 0.72rem; color: #451a03; margin: 4px 0 0; line-height: 1.5;">
+                エアコン2台と床下全熱交換換気による全館空気循環。太陽光とお日さまエコキュート昼稼働で夏冷房月1.4万円・冬暖房月1.0万円（年中22〜26℃均一）を実証。「設計効果が見える化され評価に値する（秋元智子審査委員）」と絶賛された実邸です。（※詳細住所は非公開）
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 0.68rem; color: #475569; line-height: 1.5; margin-bottom: 8px;">
+          ※記載のUA値・実測C値は、各邸の間取り・開口部設計および現場実測による実データです。住ま居るでは全邸「C値1.0以下保証」「許容応力度耐震等級3」を標準とし、個別設計ごとに公的証明書原本をお渡ししています。
+        </div>
+        <div style="background: #ecfdf5; border: 1px solid #86efac; border-radius: 6px; padding: 6px 10px; font-size: 0.68rem; color: #065f46; line-height: 1.5;">
+          📊 既存住宅の断熱改修・窓リノベ実績（冬の電気代月5万円超 ➜ 1万円台へ激減）の光熱費実測データもWeb上にて完全公開中。
+        </div>
+      </div>
+
+      <footer class="page-footer">
+        <span>株式会社住ま居る ｜ 施工事例</span>
+        <span>Page 8 / 9</span>
+      </footer>
+    </article>
+
+    <!-- ==================== P9: 家づくりの流れ & 相談窓口 ==================== -->
+    <article class="catalog-page">
+      <div>
+        <header class="page-header">
+          <span class="page-header-logo">株式会社住ま居る 完全工学仕様カタログ</span>
+          <span class="page-header-topic">08 ｜ 家づくりの流れ ＆ 会社案内</span>
+        </header>
+        <h2 class="sec-title">選べる4段階の家づくり相談窓口</h2>
+        <p class="lead-p">
+          住ま居るには営業マンが1人もおりません。ご自身のペースに合わせて最適なステップをお選びください。
+        </p>
+
+        <!-- 4ステップ -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+          <div style="border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 10px; background: #fafafa;">
+            <span style="font-size: 0.68rem; font-weight: 800; color: #9333ea;">ステップ 1 ｜ 無料・登録不要</span>
+            <div style="font-weight: 800; font-size: 0.8rem; color: #0f172a;">🤖 間取り相談 ＆ 家カルテ作成</div>
+            <div style="font-size: 0.7rem; color: #64748b; line-height: 1.4; margin-top: 2px;">
+              323プランから厳選。家族構成やこだわりを入力し3分でカルテ出力。
+            </div>
+          </div>
+          <div style="border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 10px; background: #fafafa;">
+            <span style="font-size: 0.68rem; font-weight: 800; color: #0891b2;">ステップ 2 ｜ 自宅から自由体験</span>
+            <div style="font-weight: 800; font-size: 0.8rem; color: #0f172a;">🌐 メタバース展示場 ＆ 3Dパース</div>
+            <div style="font-size: 0.7rem; color: #64748b; line-height: 1.4; margin-top: 2px;">
+              PC・スマホから自由見学。無料登録でカルテ共有やWebミーティングも可能。
+            </div>
+          </div>
+          <div style="border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 10px; background: #fafafa;">
+            <span style="font-size: 0.68rem; font-weight: 800; color: #059669;">ステップ 3 ｜ 現物を体感</span>
+            <div style="font-weight: 800; font-size: 0.8rem; color: #0f172a;">🏡 毛呂山モデルハウス見学予約</div>
+            <div style="font-size: 0.7rem; color: #64748b; line-height: 1.4; margin-top: 2px;">
+              無垢杉床の温もりとAPW430の遮音性を体感。本社より車で約10分（毛呂山町・完全予約制）。水・日も事前予約で見学可。
+            </div>
+          </div>
+          <div style="border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 10px; background: #fafafa;">
+            <span style="font-size: 0.68rem; font-weight: 800; color: #d97706;">ステップ 4 ｜ 本格設計相談</span>
+            <div style="font-weight: 800; font-size: 0.8rem; color: #0f172a;">📐 設計申込 ＆ 敷地・農転相談</div>
+            <div style="font-size: 0.7rem; color: #64748b; line-height: 1.4; margin-top: 2px;">
+              15万円申込特典（3D点群測量・地盤解析等）。お電話またはWebにて承ります。
+            </div>
+          </div>
+        </div>
+
+        <!-- 会社概要 -->
+        <div style="background: #0f172a; color: #fff; border-radius: 8px; padding: 12px 14px; text-align: center;">
+          <div style="font-weight: 900; font-size: 0.95rem; margin-bottom: 2px;">株式会社住ま居る（すまいる）</div>
+          <div style="font-size: 0.75rem; color: #cbd5e1; line-height: 1.6; margin-bottom: 8px;">
+            本社: 〒350-2224 埼玉県鶴ヶ島市町屋176番地5 ｜ モデルハウス: 埼玉県入間郡毛呂山町（本社より車で約10分・完全予約制）<br>
+            営業時間 9:00〜18:00 ｜ 定休日: 水曜日・日曜日（※事前予約によりモデルハウス見学は承ります）<br>
+            建設業許可: 埼玉県知事（般－8）第60650号 ｜ 二級建築士事務所登録: 埼玉県知事（5）第10278号
+          </div>
+          <div style="display: inline-block; background: #059669; color: #fff; font-weight: 900; font-size: 0.95rem; padding: 6px 18px; border-radius: 20px;">
+            📞 049-271-2350（お問合せ・ご相談受付窓口 ／ 専門スタッフが丁寧にお話を伺います）
+          </div>
+        </div>
+      </div>
+
+      <footer class="page-footer">
+        <span>株式会社住ま居る ｜ 家づくりの流れ・会社概要</span>
+        <span>Page 9 / 9</span>
+      </footer>
+    </article>
+
+  </div>
+
+</body>
+</html>

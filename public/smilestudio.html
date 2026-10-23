@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmileStudio AI工房 | 株式会社住ま居る - 厳選4大AIパース生成スタジオ</title>
+  <meta name="description" content="プラン申込み前の方も誰でも利用可能！「平面図の3Dドールハウス化（Gemini）」「簡易CGのフォトリアル化」「写真からのリノベ改修」「手描き水彩風パース」の4大特化生成。無垢材と珪藻土の自然素材美を失敗ゼロの3階層プリセットで即時ビジュアライズ。家カルテ完全同期。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-surface: #0f172a;
+      --bg-card: rgba(15, 23, 42, 0.94);
+      --border-subtle: rgba(255, 255, 255, 0.12);
+      --border-focus: #10b981;
+      --primary: #10b981;
+      --primary-dark: #059669;
+      --primary-glow: rgba(16, 185, 129, 0.35);
+      --accent-blue: #0284c7;
+      --accent-cyan: #38bdf8;
+      --accent-amber: #f59e0b;
+      --accent-purple: #8b5cf6;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    
+    body {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Common Two-Tier Header Matching Site Standard */
+    .common-site-header {
+      background: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.6rem 1.2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    }
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .header-tier1 {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .header-tier2 {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      overflow-x: auto;
+      padding-top: 4px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.78rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .header-tier2 a {
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .header-tier2 a:hover {
+      color: #38bdf8;
+    }
+
+    /* Main Container */
+    .app-layout {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      width: 100%;
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 16px 20px 60px;
+      box-sizing: border-box;
+      gap: 1.5rem;
+    }
+
+    /* Step Banner Bar */
+    .step-banner {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(2, 132, 199, 0.15) 100%);
+      border: 1.5px solid #10b981;
+      border-radius: var(--radius);
+      padding: 1.1rem 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1);
+    }
+    .step-banner-title {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .step-banner-desc {
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    /* Mode Selector Cards (4大パース生成スタジオ) */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 1024px) {
+      .mode-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .mode-grid { grid-template-columns: 1fr; }
+    }
+
+    .mode-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    .mode-card:hover {
+      border-color: rgba(56, 189, 248, 0.6);
+      transform: translateY(-2px);
+      background: rgba(30, 41, 59, 0.7);
+    }
+    .mode-card.active {
+      border-color: #38bdf8;
+      background: linear-gradient(145deg, rgba(2, 132, 199, 0.2) 0%, rgba(15, 23, 42, 0.9) 100%);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.25), inset 0 0 12px rgba(56, 189, 248, 0.1);
+    }
+    .mode-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      width: fit-content;
+    }
+    .badge-gemini { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+    .badge-sdxl { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .badge-reno { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .badge-sketch { background: rgba(139, 92, 246, 0.2); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.4); }
+
+    .mode-title {
+      font-size: 0.98rem;
+      font-weight: 900;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mode-desc {
+      font-size: 0.76rem;
+      color: #94a3b8;
+      line-height: 1.45;
+    }
+
+    /* 2-Column Work Area */
+    .studio-workspace {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      align-items: start;
+    }
+    @media (max-width: 1024px) {
+      .studio-workspace { grid-template-columns: 1fr; }
+    }
+
+    /* Left Card: Before / After Split Slider Stage */
+    .stage-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    .stage-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .stage-title {
+      font-size: 1rem;
+      font-weight: 900;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Comparison Viewer Container (3:2 Ratio) */
+    .compare-container {
+      position: relative;
+      width: 100%;
+      padding-top: 66.66%; /* 3:2 aspect ratio */
+      border-radius: 10px;
+      overflow: hidden;
+      background: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      user-select: none;
+      touch-action: pan-y;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+    }
+    .compare-layer {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .compare-layer-after {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+      transition: clip-path 0.04s ease-out;
+    }
+    .compare-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Split Slider Line & Handle */
+    .compare-divider {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
+      width: 3px;
+      background: #ffffff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 8px #38bdf8;
+      cursor: ew-resize;
+      z-index: 20;
+      transform: translateX(-50%);
+    }
+    .compare-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.9);
+      border: 2.5px solid #ffffff;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 12px rgba(56, 189, 248, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #38bdf8;
+      font-size: 1.1rem;
+      font-weight: 900;
+      cursor: ew-resize;
+    }
+
+    /* Badges on viewer */
+    .badge-overlay-left {
+      position: absolute;
+      top: 14px; left: 14px;
+      z-index: 10;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #cbd5e1;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      pointer-events: none;
+    }
+    .badge-overlay-right {
+      position: absolute;
+      top: 14px; right: 14px;
+      z-index: 10;
+      background: rgba(16, 185, 129, 0.9);
+      backdrop-filter: blur(8px);
+      border: 1px solid #34d399;
+      color: #ffffff;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
+      pointer-events: none;
+    }
+
+    /* Scanning HUD Overlay */
+    .scanning-hud {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.94);
+      backdrop-filter: blur(10px);
+      z-index: 30;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+    .scanning-laser {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #38bdf8, #10b981, transparent);
+      box-shadow: 0 0 15px #38bdf8;
+      animation: laserScan 2s infinite ease-in-out;
+    }
+    @keyframes laserScan {
+      0% { top: 5%; opacity: 0.2; }
+      50% { top: 90%; opacity: 1; }
+      100% { top: 5%; opacity: 0.2; }
+    }
+
+    /* Control Panel (Right Column) */
+    .control-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    .panel-section-title {
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    /* Input Source Tabs (3系統) */
+    .input-source-tabs {
+      display: flex;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 4px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .src-tab {
+      flex: 1;
+      padding: 8px 4px;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      color: #94a3b8;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .src-tab.active {
+      background: #0284c7;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);
+    }
+
+    /* Upload Box Area */
+    .upload-dropzone {
+      border: 2px dashed rgba(56, 189, 248, 0.4);
+      background: rgba(56, 189, 248, 0.04);
+      border-radius: 10px;
+      padding: 18px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .upload-dropzone:hover {
+      border-color: #38bdf8;
+      background: rgba(56, 189, 248, 0.08);
+    }
+
+    /* Preset Style Packages */
+    .style-chip-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .style-chip {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 8px 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      text-align: left;
+    }
+    .style-chip:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    .style-chip.active {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: #10b981;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+    }
+    .style-chip-name {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+    .style-chip-sub {
+      font-size: 0.68rem;
+      color: #94a3b8;
+    }
+
+    /* Lighting & Furnishing Buttons */
+    .btn-row {
+      display: flex;
+      gap: 6px;
+    }
+    .choice-btn {
+      flex: 1;
+      padding: 7px 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      color: #cbd5e1;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .choice-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .choice-btn.active {
+      background: #0284c7;
+      color: #ffffff;
+      border-color: #38bdf8;
+    }
+
+    /* Run Generate Button */
+    .btn-generate {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-weight: 900;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .btn-generate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(16, 185, 129, 0.55);
+    }
+    .btn-generate:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Secondary Action Bar */
+    .action-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .action-btn {
+      flex: 1;
+      min-width: 130px;
+      padding: 9px 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      color: #f8fafc;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .action-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: #38bdf8;
+    }
+    .action-btn.btn-save {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: #f59e0b;
+      color: #fde68a;
+    }
+    .action-btn.btn-save:hover {
+      background: rgba(245, 158, 11, 0.25);
+    }
+
+    /* Toast Notification */
+    .toast-notice {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1.5px solid #10b981;
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      font-size: 0.86rem;
+      font-weight: 700;
+      z-index: 9999;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .toast-notice.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Common Site Footer */
+    .common-site-footer {
+      background: #020617;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 2.5rem 1.5rem 2rem;
+      margin-top: auto;
+      color: #94a3b8;
+      font-size: 0.8rem;
+    }
+    .footer-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 2rem;
+    }
+    @media (max-width: 768px) {
+      .footer-inner { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Common Two-Tier Site Header -->
+  <header class="common-site-header">
+    <div class="header-inner">
+      <!-- Tier 1: Brand & AI Suite Links -->
+      <div class="header-tier1">
+        <div style="display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;">
+          <a href="/index.html" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #ffffff;">
+            <span style="font-size: 1.3rem; font-weight: 900; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">家づくりAIラボ</span>
+            <span style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 6px; border-radius: 4px; font-weight: 800;">by 住ま居る</span>
+          </a>
+          <div style="display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.72rem; color: #cbd5e1; background: rgba(0, 0, 0, 0.28); border: 1px solid rgba(255, 255, 255, 0.15); padding: 2px 8px; border-radius: 4px;">
+            <span style="color: #38bdf8; font-weight: 700;">施工エリア：埼玉県全域・一部東京都</span>
+            <span style="opacity: 0.3;">|</span>
+            <span>創業30年・累計800棟</span>
+            <span style="opacity: 0.3;">|</span>
+            <span style="color: #6ee7b7;">般-8 第60650号</span>
+          </div>
+        </div>
+
+        <!-- AI Suite Quick Links -->
+        <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+          <span style="color: #fde68a; font-size: 0.75rem; font-weight: 700; margin-right: 2px;">🏡 AI体験:</span>
+          <a href="/index.html#floorplan-studio" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3);">📐 AI 3Dプラン検索</a>
+          <a href="/smilestudio.html" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; box-shadow: 0 2px 8px rgba(245,158,11,0.4); border: 1.5px solid #fbbf24;">🎨 AI 3Dパース工房 (現在地)</a>
+          <a href="/index.html#thermal-consultation" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">💬 AI温熱換気相談</a>
+          <a href="/subsidy/index.html" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #047857, #10b981); color: #ffffff; box-shadow: 0 2px 8px rgba(16,185,129,0.3);">💰 AI補助金ナビ ↗</a>
+          <a href="/mortgage/index.html" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; box-shadow: 0 2px 8px rgba(56,189,248,0.3);">🏦 AI住宅ローン診断 ↗</a>
+        </div>
+      </div>
+
+      <!-- Tier 2: Main Links -->
+      <div class="header-tier2">
+        <a href="/index.html">🏠 ホーム</a>
+        <a href="/index.html#our-philosophy">🏛️ こだわり（芳彩・かぐや）</a>
+        <a href="/index.html#craftsmanship">🔨 施工実例（大工手刻み×800棟）</a>
+        <a href="/about/" style="color: #34d399; font-weight: 800;">🛡️ 信用実証 (CredLayer)</a>
+        <a href="/awards/kankyo-housing/" style="color: #fde68a; font-weight: 800;">🏆 埼玉県環境住宅賞</a>
+        <a href="/catalog/" style="color: #6ee7b7; font-weight: 800;">📘 工学カタログ</a>
+        <a href="/index.html#article-feature" style="color: #f59e0b; font-weight: 800;">📖 解体新書 (10章)</a>
+        <a href="/index.html#metaverse">🌐 メタバース展示場</a>
+        <a href="/index.html#scent-experience" style="color: #fde68a; font-weight: 800;">👣 モデルハウス見学予約</a>
+        <a href="/index.html#dashboard" style="color: #38bdf8; font-weight: 800;">👤 家カルテ</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-layout">
+
+    <!-- 電話サポートバナー -->
+    <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(2, 132, 199, 0.12) 100%); border: 1.5px solid #38bdf8; border-radius: 12px; padding: 0.8rem 1.4rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.4rem;">📞</span>
+        <div>
+          <div style="font-weight: 800; color: #38bdf8; font-size: 0.9rem;">図面のパース化や操作のご質問もお気軽に</div>
+          <div style="font-size: 0.76rem; color: #94a3b8;">建築士が丁寧にお答えします（しつこい営業電話等は一切ありません）</div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <a href="tel:049-281-1718" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; padding: 6px 14px; border-radius: 6px; font-weight: 800; font-size: 0.82rem; text-decoration: none;">049-281-1718</a>
+        <span style="font-size: 0.75rem; color: #94a3b8;">(9:00〜18:00 水休)</span>
+      </div>
+    </div>
+
+    <!-- 厳選4大パース生成スタジオ選択 (STEP 1) -->
+    <div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+        <h1 style="font-size: 1.25rem; font-weight: 900; color: #ffffff; display: flex; align-items: center; gap: 8px;">
+          <span>🎨</span> SmileStudio AI工房 <span style="font-size: 0.72rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 2px 7px; border-radius: 4px; font-weight: 800; font-family: monospace;">v2.5</span> ｜ 厳選4大パース生成スタジオ
+        </h1>
+        <span style="font-size: 0.75rem; color: #34d399; font-weight: 700;">★ プラン申し込み前の方も自由にお試しいただけます</span>
+      </div>
+
+      <div class="mode-grid">
+        <!-- Mode 1: 平面図の3D化 -->
+        <div class="mode-card active" id="card-mode-dollhouse" data-mode="dollhouse">
+          <div class="mode-badge badge-gemini">✨ Gemini 2.5 空間認識</div>
+          <div class="mode-title"><span>🛸</span> 平面図の3D立体化</div>
+          <div class="mode-desc">手描きスケッチ・チラシ・CAD間取り図から、家具付き立体3Dドールハウスパースを自動生成。</div>
+        </div>
+
+        <!-- Mode 2: 簡易CGのフォトリアル化 -->
+        <div class="mode-card" id="card-mode-photoreal" data-mode="photoreal">
+          <div class="mode-badge badge-sdxl">⚡ Stable Diffusion</div>
+          <div class="mode-title"><span>✨</span> 簡易CGフォトリアル化</div>
+          <div class="mode-desc">フリーソフト等ののっぺりCGから、無垢杉・珪藻土・自然光の息吹を宿す高級フォトリアルパースへ変換。</div>
+        </div>
+
+        <!-- Mode 3: 写真からのリノベ改修 -->
+        <div class="mode-card" id="card-mode-renovation" data-mode="renovation">
+          <div class="mode-badge badge-reno">🔨 SDXL img2img</div>
+          <div class="mode-title"><span>🏡</span> 写真からリノベ改修</div>
+          <div class="mode-desc">現在のお部屋や実家の写真から、自然素材＆間接照明の劇的リフォーム後アフターパースを生成。</div>
+        </div>
+
+        <!-- Mode 4: 手描き風スケッチパース -->
+        <div class="mode-card" id="card-mode-sketch" data-mode="sketch">
+          <div class="mode-badge badge-sketch">🎨 水彩LoRA</div>
+          <div class="mode-title"><span>✏️</span> 手描き水彩スケッチ</div>
+          <div class="mode-desc">図面やCG・写真を、住宅雑誌やプレゼン提案書のような温かみあるコピック調手描きパースに変換。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2カラム ワークスペース -->
+    <div class="studio-workspace">
+      
+      <!-- 左カラム: Before/After 比較スライダー ステージ -->
+      <section class="stage-card">
+        <div class="stage-header">
+          <div class="stage-title">
+            <span id="stage-icon">🛸</span>
+            <span id="stage-title-text">平面図 ➔ 3Dドールハウス立体パース（Before / After）</span>
+          </div>
+          <div style="font-size: 0.74rem; color: #94a3b8; display: flex; align-items: center; gap: 6px;">
+            <span>↔ スライダーを左右にドラッグして比較</span>
+          </div>
+        </div>
+
+        <!-- 3:2 スプリットスライダー ビューア -->
+        <div class="compare-container" id="compare-container">
+          <!-- Before Layer (下図・元画像) -->
+          <div class="compare-layer" id="compare-before-layer">
+            <img id="compare-before-img" class="compare-img" src="/renders/case02_floorplan_1f_blueprint.png" alt="元画像 (Before)">
+          </div>
+
+          <!-- After Layer (AI生成パース) -->
+          <div class="compare-layer-after" id="compare-after-layer">
+            <img id="compare-after-img" class="compare-img" src="/renders/dollhouse_3d_sample.jpg" alt="AI生成パース (After)">
+          </div>
+
+          <!-- Split Divider Line -->
+          <div class="compare-divider" id="compare-divider">
+            <div class="compare-handle">↔</div>
+          </div>
+
+          <!-- Badges -->
+          <div class="badge-overlay-left" id="badge-before-label">
+            <span>📐</span> <span id="label-before-text">元画像: 1F 平面間取り図</span>
+          </div>
+          <div class="badge-overlay-right" id="badge-after-label">
+            <span>✨</span> <span id="label-after-text">Gemini 3D立体ドールハウス</span>
+          </div>
+
+          <!-- Scanning HUD Overlay -->
+          <div class="scanning-hud" id="scanning-hud">
+            <div class="scanning-laser"></div>
+            <div style="font-size: 1.15rem; font-weight: 900; color: #38bdf8; margin-bottom: 4px;" id="hud-pipeline-title">
+              ✨ Gemini 2.5 空間認識 ＆ 3Dドールハウス生成中...
+            </div>
+            <div style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 16px;" id="hud-pipeline-desc">
+              部屋の用途・壁の配置・採光方向をマルチモーダル解析しています
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 440px; text-align: left; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 10px; padding: 12px 16px;">
+              <div id="scan-step-1" style="display: flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 700; color: #38bdf8;">
+                <span style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: #0284c7; color: #fff; font-size: 0.7rem;">1</span>
+                <span id="step-1-text">① 間取り図面解析（部屋境界・LDK・動線の読み取り）</span>
+              </div>
+              <div id="scan-step-2" style="display: flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 700; color: #cbd5e1;">
+                <span style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,0.1); color: #cbd5e1; font-size: 0.7rem;">2</span>
+                <span id="step-2-text">② 自然素材プロンプト・家具・立体陰影の構築</span>
+              </div>
+              <div id="scan-step-3" style="display: flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 700; color: #cbd5e1;">
+                <span style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,0.1); color: #cbd5e1; font-size: 0.7rem;">3</span>
+                <span id="step-3-text">③ 高解像度3Dドールハウスパースを出力</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 下部アクションバー -->
+        <div class="action-row">
+          <button type="button" class="action-btn btn-save" id="btn-save-to-carte">
+            <span>⭐</span> 家カルテに保存
+          </button>
+          <button type="button" class="action-btn" id="btn-download-img">
+            <span>📥</span> 高解像度保存
+          </button>
+          <button type="button" class="action-btn" id="btn-share-url">
+            <span>👨‍👩‍👧</span> 家族で共有
+          </button>
+          <a href="tel:049-281-1718" class="action-btn" style="text-decoration: none; color: #6ee7b7; border-color: rgba(110, 231, 183, 0.4);">
+            <span>💬</span> 建築士に相談
+          </a>
+        </div>
+      </section>
+
+      <!-- 右カラム: インプット ＆ スタイル設定 パネル -->
+      <section class="control-card">
+        
+        <!-- STEP 2: 元画像インプット (3系統) -->
+        <div>
+          <div class="panel-section-title">
+            <span>📁</span> STEP 2: 元画像の指定（3系統インプット）
+          </div>
+
+          <div class="input-source-tabs">
+            <button type="button" class="src-tab active" id="tab-upload">
+              📤 ファイルUP
+            </button>
+            <button type="button" class="src-tab" id="tab-preset">
+              📐 323プランから選ぶ
+            </button>
+            <button type="button" class="src-tab" id="tab-carte">
+              ⭐ 家カルテから選ぶ
+            </button>
+          </div>
+
+          <!-- Tab 1: Upload Dropzone -->
+          <div id="box-tab-upload" style="margin-top: 10px;">
+            <input type="file" id="user-file-input" accept="image/*,application/pdf" style="display: none;">
+            <div class="upload-dropzone" id="upload-dropzone">
+              <span style="font-size: 1.8rem;" id="dropzone-icon">📄</span>
+              <div style="font-size: 0.84rem; font-weight: 800; color: #38bdf8;" id="dropzone-title">
+                ここをクリックして間取り図・写真・CGをアップロード
+              </div>
+              <div style="font-size: 0.72rem; color: #94a3b8;" id="dropzone-desc">
+                スマホ写真、チラシ、PDF間取り図、CADパースに対応
+              </div>
+              <div id="upload-current-filename" style="font-size: 0.76rem; color: #34d399; font-weight: 800; display: none;"></div>
+            </div>
+          </div>
+
+          <!-- Tab 2: Preset 323 Plans -->
+          <div id="box-tab-preset" style="margin-top: 10px; display: none;">
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <button type="button" class="choice-btn active preset-plan-btn" data-plan="tokigawa_k" data-img-before="/renders/case02_floorplan_1f_blueprint.png" style="text-align: left; padding: 8px 10px;">
+                🏡 ときがわ町 K様邸（32坪・LDK＋琉球畳ヌック）
+              </button>
+              <button type="button" class="choice-btn preset-plan-btn" data-plan="tsurugashima_t" data-img-before="/renders/controlnet_extracted/鶴ヶ島市 T様邸/ldk_white_clay.png" style="text-align: left; padding: 8px 10px;">
+                🏡 鶴ヶ島市 T様邸（35坪・吹抜大空間リビング）
+              </button>
+              <button type="button" class="choice-btn preset-plan-btn" data-plan="hidaka_hiraya" data-img-before="/renders/case_thumbs/hidaka_I_thumb.jpg" style="text-align: left; padding: 8px 10px;">
+                🏡 日高市 平屋（28坪・中庭土間テラス）
+              </button>
+            </div>
+          </div>
+
+          <!-- Tab 3: House Carte Stock -->
+          <div id="box-tab-carte" style="margin-top: 10px; display: none;">
+            <div style="background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 10px; text-align: center;">
+              <div style="font-size: 0.8rem; font-weight: 800; color: #fde68a; margin-bottom: 4px;" id="carte-stock-title">
+                ⭐ 家カルテ保存済みプラン
+              </div>
+              <div style="font-size: 0.72rem; color: #cbd5e1; margin-bottom: 8px;" id="carte-stock-sub">
+                お気に入りストックから図面・パースを直接呼び出せます
+              </div>
+              <button type="button" class="choice-btn" id="btn-reload-carte-plan" style="width: 100%; background: #0284c7; color: #fff;">
+                家カルテの保存間取りをロード
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: 住ま居るスタイル選択 (3階層プリセット) -->
+        <div>
+          <div class="panel-section-title">
+            <span>🌿</span> STEP 3: テイスト・素材スタイル（失敗ゼロのプリセット）
+          </div>
+
+          <div class="style-chip-grid">
+            <div class="style-chip active" data-style="natural">
+              <span class="style-chip-name">🌿 芳彩・無垢ナチュラル</span>
+              <span class="style-chip-sub">吉野杉床 ＋ 白珪藻土 ＋ 自然光</span>
+            </div>
+            <div class="style-chip" data-style="wamodern">
+              <span class="style-chip-name">🎍 現代和モダン</span>
+              <span class="style-chip-sub">吉野杉大黒柱 ＋ 琉球畳 ＋ 格子</span>
+            </div>
+            <div class="style-chip" data-style="cafe">
+              <span class="style-chip-name">☕ カフェ・ヴィンテージ</span>
+              <span class="style-chip-sub">古材オーク ＋ アイアン ＋ タイル</span>
+            </div>
+            <div class="style-chip" data-style="hotel">
+              <span class="style-chip-name">🏨 ホテルライク</span>
+              <span class="style-chip-sub">600角大判タイル ＋ グレージュ間接光</span>
+            </div>
+            <div class="style-chip" data-style="japandi">
+              <span class="style-chip-name">🕊️ 北欧ジャパンディ</span>
+              <span class="style-chip-sub">アッシュ無垢 ＋ 静寂のアースカラー</span>
+            </div>
+            <div class="style-chip" data-style="modern">
+              <span class="style-chip-name">🏛️ モノトーン現代建築</span>
+              <span class="style-chip-sub">研ぎ出し大理石 ＋ 線形照明</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 時間帯・ライティング -->
+        <div>
+          <div style="font-size: 0.76rem; font-weight: 700; color: #cbd5e1; margin-bottom: 4px;">
+            ☀️ 光と時間帯
+          </div>
+          <div class="btn-row">
+            <button type="button" class="choice-btn active btn-light" data-light="day">☀️ 朝の自然光</button>
+            <button type="button" class="choice-btn btn-light" data-light="sunset">🌅 黄昏夕景</button>
+            <button type="button" class="choice-btn btn-light" data-light="night">🌙 夜の間接光</button>
+          </div>
+        </div>
+
+        <!-- 家具コーディネート -->
+        <div>
+          <div style="font-size: 0.76rem; font-weight: 700; color: #cbd5e1; margin-bottom: 4px;">
+            🛋️ 家具の設え
+          </div>
+          <div class="btn-row">
+            <button type="button" class="choice-btn btn-furn" data-furn="none">なし（素の建築美）</button>
+            <button type="button" class="choice-btn active btn-furn" data-furn="moderate">上品なミニマル</button>
+            <button type="button" class="choice-btn btn-furn" data-furn="rich">フルコーディネート</button>
+          </div>
+        </div>
+
+        <!-- 呪文プロンプト隠蔽（展開可能） -->
+        <details style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 6px 10px; font-size: 0.74rem;">
+          <summary style="color: #94a3b8; cursor: pointer; font-weight: 700;">
+            ⚙️ AIプロンプト自動構築プレビュー（内部ControlNet制御）
+          </summary>
+          <div id="sd-prompt-preview" style="font-family: monospace; color: #38bdf8; margin-top: 6px; line-height: 1.4; word-break: break-all;">
+            masterpiece, 8k, architectural photograph, spacious living dining room, warm solid yoshino cedar flooring, diatomaceous earth plaster walls, soft natural daylight, photorealistic interior design
+          </div>
+        </details>
+
+        <!-- AI生成実行ボタン -->
+        <button type="button" class="btn-generate" id="btn-run-generate">
+          <span>🚀</span> この設定でAIパースを生成する
+        </button>
+      </section>
+
+    </div>
+
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-notice" id="toast-notice">
+    <span id="toast-icon">✨</span>
+    <span id="toast-text">設定を更新しました</span>
+  </div>
+
+  <!-- Common Site Footer -->
+  <footer class="common-site-footer">
+    <div class="footer-inner">
+      <div>
+        <div style="font-size: 1.1rem; font-weight: 900; color: #ffffff; margin-bottom: 0.6rem;">株式会社住ま居る（スマイル）</div>
+        <p style="margin-bottom: 0.6rem; line-height: 1.6; color: #94a3b8;">
+          〒350-0219 埼玉県鶴ヶ島市町屋176番地5<br>
+          TEL: 049-281-1718 / FAX: 049-281-1727<br>
+          建設業許可：埼玉県知事許可（般-8）第60650号<br>
+          一級建築士事務所：埼玉県知事登録（1）第11854号
+        </p>
+      </div>
+      <div>
+        <div style="font-weight: 800; color: #ffffff; margin-bottom: 0.6rem;">AI家づくりスイート</div>
+        <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+          <a href="/index.html#floorplan-studio" style="color: #cbd5e1; text-decoration: none;">📐 AI 3Dプラン検索</a>
+          <a href="/smilestudio.html" style="color: #38bdf8; text-decoration: none; font-weight: 700;">🎨 AI 3Dパース工房</a>
+          <a href="/index.html#thermal-consultation" style="color: #cbd5e1; text-decoration: none;">💬 AI温熱換気相談</a>
+          <a href="/subsidy/index.html" style="color: #cbd5e1; text-decoration: none;">💰 AI補助金ナビ</a>
+          <a href="/mortgage/index.html" style="color: #cbd5e1; text-decoration: none;">🏦 AI住宅ローン診断</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight: 800; color: #ffffff; margin-bottom: 0.6rem;">実例アーカイブ</div>
+        <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+          <a href="/cases/case-1.html" style="color: #cbd5e1; text-decoration: none;">東松山市 K様邸（大黒柱の家）</a>
+          <a href="/cases/case-2.html" style="color: #cbd5e1; text-decoration: none;">ときがわ町 K様邸（吹抜LDK）</a>
+          <a href="/cases/case-3.html" style="color: #cbd5e1; text-decoration: none;">鶴ヶ島市 T様邸（モダン格子）</a>
+          <a href="/cases/case-5.html" style="color: #cbd5e1; text-decoration: none;">日高市 I様邸（平屋・中庭土間）</a>
+        </div>
+      </div>
+    </div>
+    <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1rem; color: #64748b; font-size: 0.75rem; flex-wrap: wrap;">
+      <span>© 2026 株式会社住ま居る All Rights Reserved. 自然素材×高気密高断熱（HEAT20 G2/G3）の手刻み注文住宅</span>
+      <span style="display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 4px; color: #38bdf8; font-family: monospace;">
+        <span>🏷️ Version:</span>
+        <strong style="color: #ffffff;">v2.4.0 (2026.10.22)</strong>
+      </span>
+    </div>
+  </footer>
+
+  <!-- Main Studio Engine Script -->
+  <script>
+    // 4大モードの定義とサンプルデータ
+    const MODE_CONFIGS = {
+      dollhouse: {
+        title: '平面図 ➔ 3Dドールハウス立体パース（Before / After）',
+        icon: '🛸',
+        badgeBefore: '元画像: 1F 平面間取り図',
+        badgeAfter: 'Gemini 3D立体ドールハウス',
+        defaultBefore: '/renders/case02_floorplan_1f_blueprint.png',
+        defaultAfter: '/renders/dollhouse_3d_sample.jpg',
+        pipelineTitle: '✨ Gemini 2.5 空間認識 ＆ 3Dドールハウス生成中...',
+        pipelineDesc: '部屋の用途・壁の配置・採光方向をマルチモーダル解析しています',
+        step1: '① 間取り図面解析（部屋境界・LDK・動線の読み取り）',
+        step2: '② 自然素材プロンプト・家具・立体陰影の構築',
+        step3: '③ 高解像度3Dドールハウスパースを出力',
+        dropzoneTitle: 'ここをクリックして平面図（手描き・チラシ・CAD）をアップロード',
+        dropzoneIcon: '📐'
+      },
+      photoreal: {
+        title: '簡易CG ➔ 高級フォトリアルパース（Before / After）',
+        icon: '✨',
+        badgeBefore: '元画像: 簡易3D CAD線画・Clay',
+        badgeAfter: 'SDXL フォトリアルパース',
+        defaultBefore: '/renders/controlnet_extracted/鶴ヶ島市 T様邸/ldk_white_clay.png',
+        defaultAfter: '/renders/multicase_median_benchmark/tsurugashima_t_ldk_median_b_denoise68.jpg',
+        pipelineTitle: '⚡ Stable Diffusion (ControlNet + SDXL) 推論中...',
+        pipelineDesc: '寸法・窓位置の骨格を完全固定したまま、質感・自然光を精緻に描画中',
+        step1: '① ControlNet Lineart & Depth で3D骨格・開口部を固定',
+        step2: '② 住ま居る無垢材・珪藻土LoRAを合成（吉野杉・白漆喰）',
+        step3: '③ SDXL推論（50 steps）フォトリアルレンダリング',
+        dropzoneTitle: 'ここをクリックして簡易CG・3Dパース画像をアップロード',
+        dropzoneIcon: '💻'
+      },
+      renovation: {
+        title: '写真 ➔ 劇的リノベーション改修パース（Before / After）',
+        icon: '🏡',
+        badgeBefore: '現状写真: 築25年 リビングダイニング',
+        badgeAfter: '住ま居る自然素材 リノベパース',
+        defaultBefore: '/renders/renovation_before.jpg',
+        defaultAfter: '/renders/renovation_after.jpg',
+        pipelineTitle: '🔨 Stable Diffusion (SDXL img2img) リノベ合成中...',
+        pipelineDesc: 'サッシ・構造柱を活かし、壁・床・天井を自然素材仕様へ置換中',
+        step1: '① 既存構造（窓・梁・配管）のセグメンテーション認識',
+        step2: '② 経年劣化した壁・床を吉野杉無垢床＆珪藻土へ置換',
+        step3: '③ 間接照明＆現代和モダン家具を配置した改修パース完成',
+        dropzoneTitle: 'ここをクリックしてお部屋の現状写真をアップロード',
+        dropzoneIcon: '📸'
+      },
+      sketch: {
+        title: '図面・CG ➔ 温かみある手描き水彩スケッチ（Before / After）',
+        icon: '✏️',
+        badgeBefore: '元画像: 3D CAD線画・下絵',
+        badgeAfter: '手描き水彩コピック風パース',
+        defaultBefore: '/renders/controlnet_extracted/鶴ヶ島市 T様邸/ldk_white_clay.png',
+        defaultAfter: '/renders/sketch_sample_watercolor.jpg',
+        pipelineTitle: '🎨 Stable Diffusion (Architectural Watercolor LoRA) 描画中...',
+        pipelineDesc: '手描き特有の柔らかな筆跡・木の温もり・水彩の滲みを再現中',
+        step1: '① 建築エッジラインをペン画タッチで精密抽出',
+        step2: '② 吉野杉の木目と中庭の緑を水彩ウォッシュ着色',
+        step3: '③ コピック調ハイライトとプレゼン用手描きパース完成',
+        dropzoneTitle: 'ここをクリックして図面・写真・CGをアップロード',
+        dropzoneIcon: '🎨'
+      }
+    };
+
+    // State
+    const state = {
+      mode: 'dollhouse',
+      source: 'upload',
+      style: 'natural',
+      lighting: 'day',
+      furniture: 'moderate',
+      sliderPos: 0.5,
+      uploadedFile: null,
+      uploadedDataUrl: null
+    };
+
+    // DOM Elements
+    const compareContainer = document.getElementById('compare-container');
+    const compareBeforeImg = document.getElementById('compare-before-img');
+    const compareAfterImg = document.getElementById('compare-after-img');
+    const compareAfterLayer = document.getElementById('compare-after-layer');
+    const compareDivider = document.getElementById('compare-divider');
+    const labelBeforeText = document.getElementById('label-before-text');
+    const labelAfterText = document.getElementById('label-after-text');
+    const stageIcon = document.getElementById('stage-icon');
+    const stageTitleText = document.getElementById('stage-title-text');
+
+    const scanningHud = document.getElementById('scanning-hud');
+    const hudPipelineTitle = document.getElementById('hud-pipeline-title');
+    const hudPipelineDesc = document.getElementById('hud-pipeline-desc');
+    const step1Text = document.getElementById('step-1-text');
+    const step2Text = document.getElementById('step-2-text');
+    const step3Text = document.getElementById('step-3-text');
+
+    const userFileInput = document.getElementById('user-file-input');
+    const uploadDropzone = document.getElementById('upload-dropzone');
+    const dropzoneTitle = document.getElementById('dropzone-title');
+    const dropzoneIcon = document.getElementById('dropzone-icon');
+    const uploadCurrentFilename = document.getElementById('upload-current-filename');
+
+    const tabUpload = document.getElementById('tab-upload');
+    const tabPreset = document.getElementById('tab-preset');
+    const tabCarte = document.getElementById('tab-carte');
+    const boxTabUpload = document.getElementById('box-tab-upload');
+    const boxTabPreset = document.getElementById('box-tab-preset');
+    const boxTabCarte = document.getElementById('box-tab-carte');
+
+    const sdPromptPreview = document.getElementById('sd-prompt-preview');
+    const btnRunGenerate = document.getElementById('btn-run-generate');
+    const btnSaveToCarte = document.getElementById('btn-save-to-carte');
+    const btnDownloadImg = document.getElementById('btn-download-img');
+    const btnShareUrl = document.getElementById('btn-share-url');
+
+    const toastNotice = document.getElementById('toast-notice');
+    const toastText = document.getElementById('toast-text');
+
+    function showToast(msg) {
+      toastText.textContent = msg;
+      toastNotice.classList.add('show');
+      setTimeout(() => toastNotice.classList.remove('show'), 2600);
+    }
+
+    // Split Slider Functionality
+    let isDragging = false;
+
+    function setSliderPosition(ratio) {
+      ratio = Math.max(0.01, Math.min(0.99, ratio));
+      state.sliderPos = ratio;
+      const pct = ratio * 100;
+      compareDivider.style.left = `${pct}%`;
+      compareAfterLayer.style.clipPath = `polygon(${pct}% 0, 100% 0, 100% 100%, ${pct}% 100%)`;
+    }
+
+    function handleDrag(clientX) {
+      const rect = compareContainer.getBoundingClientRect();
+      const ratio = (clientX - rect.left) / rect.width;
+      setSliderPosition(ratio);
+    }
+
+    compareDivider.addEventListener('mousedown', () => { isDragging = true; });
+    window.addEventListener('mouseup', () => { isDragging = false; });
+    window.addEventListener('mousemove', (e) => { if (isDragging) handleDrag(e.clientX); });
+    compareDivider.addEventListener('touchstart', () => { isDragging = true; }, { passive: true });
+    window.addEventListener('touchend', () => { isDragging = false; });
+    window.addEventListener('touchmove', (e) => {
+      if (isDragging && e.touches.length > 0) handleDrag(e.touches[0].clientX);
+    }, { passive: true });
+    compareContainer.addEventListener('click', (e) => { handleDrag(e.clientX); });
+
+    // Mode Switching
+    function setMode(modeKey) {
+      state.mode = modeKey;
+      const config = MODE_CONFIGS[modeKey];
+      if (!config) return;
+
+      document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+      const activeCard = document.querySelector(`.mode-card[data-mode="${modeKey}"]`);
+      if (activeCard) activeCard.classList.add('active');
+
+      stageIcon.textContent = config.icon;
+      stageTitleText.textContent = config.title;
+      labelBeforeText.textContent = config.badgeBefore;
+      labelAfterText.textContent = config.badgeAfter;
+
+      hudPipelineTitle.textContent = config.pipelineTitle;
+      hudPipelineDesc.textContent = config.pipelineDesc;
+      step1Text.textContent = config.step1;
+      step2Text.textContent = config.step2;
+      step3Text.textContent = config.step3;
+
+      dropzoneTitle.textContent = config.dropzoneTitle;
+      dropzoneIcon.textContent = config.dropzoneIcon;
+
+      // Reset image sources if no user file is actively overriding
+      if (!state.uploadedDataUrl) {
+        compareBeforeImg.src = config.defaultBefore;
+        compareAfterImg.src = config.defaultAfter;
+      } else {
+        compareBeforeImg.src = state.uploadedDataUrl;
+        compareAfterImg.src = config.defaultAfter;
+      }
+
+      setSliderPosition(0.5);
+      updatePrompt();
+      showToast(`スタジオを「${config.title.split('（')[0]}」に切り替えました`);
+    }
+
+    document.querySelectorAll('.mode-card').forEach(card => {
+      card.addEventListener('click', () => {
+        setMode(card.getAttribute('data-mode'));
+      });
+    });
+
+    // Input Tabs
+    function setInputTab(tabKey) {
+      state.source = tabKey;
+      [tabUpload, tabPreset, tabCarte].forEach(t => t.classList.remove('active'));
+      [boxTabUpload, boxTabPreset, boxTabCarte].forEach(b => b.style.display = 'none');
+
+      if (tabKey === 'upload') {
+        tabUpload.classList.add('active');
+        boxTabUpload.style.display = 'block';
+      } else if (tabKey === 'preset') {
+        tabPreset.classList.add('active');
+        boxTabPreset.style.display = 'block';
+      } else {
+        tabCarte.classList.add('active');
+        boxTabCarte.style.display = 'block';
+      }
+    }
+
+    tabUpload.addEventListener('click', () => setInputTab('upload'));
+    tabPreset.addEventListener('click', () => setInputTab('preset'));
+    tabCarte.addEventListener('click', () => setInputTab('carte'));
+
+    // Upload Handler
+    uploadDropzone.addEventListener('click', () => userFileInput.click());
+
+    userFileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        const file = e.target.files[0];
+        state.uploadedFile = file;
+        uploadCurrentFilename.textContent = `選択中: ${file.name}`;
+        uploadCurrentFilename.style.display = 'block';
+
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          state.uploadedDataUrl = re.target.result;
+          compareBeforeImg.src = re.target.result;
+          labelBeforeText.textContent = `アップロード: ${file.name}`;
+          showToast(`📤「${file.name}」をセットしました。「AIパースを生成する」を押してください`);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Preset Plan Buttons
+    document.querySelectorAll('.preset-plan-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.preset-plan-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const beforeImg = btn.getAttribute('data-img-before');
+        compareBeforeImg.src = beforeImg;
+        labelBeforeText.textContent = `実例: ${btn.textContent.trim().split('（')[0]}`;
+        showToast(`実例「${btn.textContent.trim().split('（')[0]}」をセットしました`);
+      });
+    });
+
+    // Carte Button
+    document.getElementById('btn-reload-carte-plan').addEventListener('click', () => {
+      try {
+        const raw = localStorage.getItem('smile_house_carte_data');
+        if (raw) {
+          const carte = JSON.parse(raw);
+          if (carte.savedPlans && carte.savedPlans.length > 0) {
+            const p = carte.savedPlans[0];
+            compareBeforeImg.src = p.blueprintImg || '/renders/case02_floorplan_1f_blueprint.png';
+            labelBeforeText.textContent = `家カルテ: ${p.title || '保存間取り'}`;
+            showToast(`⭐ 家カルテから「${p.title || '保存間取り'}」をロードしました`);
+            return;
+          }
+        }
+      } catch(e) {}
+      showToast('⭐ 家カルテ保存間取りをロードしました（ときがわ町K様邸）');
+      compareBeforeImg.src = '/renders/case02_floorplan_1f_blueprint.png';
+    });
+
+    // Style Chips
+    document.querySelectorAll('.style-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.style-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        state.style = chip.getAttribute('data-style');
+        updatePrompt();
+        showToast(`スタイルを「${chip.querySelector('.style-chip-name').textContent.trim()}」に設定`);
+      });
+    });
+
+    // Lighting Buttons
+    document.querySelectorAll('.btn-light').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.btn-light').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.lighting = btn.getAttribute('data-light');
+        updatePrompt();
+      });
+    });
+
+    // Furniture Buttons
+    document.querySelectorAll('.btn-furn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.btn-furn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.furniture = btn.getAttribute('data-furn');
+        updatePrompt();
+      });
+    });
+
+    // Prompt Update
+    function updatePrompt() {
+      const stylePrompts = {
+        natural: 'warm solid yoshino cedar wood flooring, pristine white diatomaceous earth plaster walls, natural light',
+        wamodern: 'modern japanese washitsu aesthetics, solid timber post and beams, ryukyu tatami nook, shoji screen',
+        cafe: 'reclaimed oak flooring, exposed cedar ceiling beams, matte black metal accents, subway tile counter',
+        hotel: 'large 600x600 stone tile flooring, indirect cove lighting 2700K, floating cabinetry, greige luxury minimalist',
+        japandi: 'japandi aesthetic, pale muted earth tones, low-profile wooden furniture, clean minimalism',
+        modern: 'contemporary sharp architectural lines, polished concrete, linear lighting, minimalist open space'
+      };
+
+      const lightPrompts = {
+        day: 'bright morning sunlight streaming through windows, soft natural shadows, 5000K daylight',
+        sunset: 'warm golden hour sunset rays pouring in, rich orange highlights, 3000K cozy atmosphere',
+        night: 'night time cozy architectural cove lighting, warm ambient 2700K glow, dark moody exterior'
+      };
+
+      const furnPrompts = {
+        none: 'empty uncluttered architecture, pristine vacant room',
+        moderate: 'tasteful minimal furniture, crafted wooden dining table, comfortable sofa, potted plant',
+        rich: 'luxuriously styled designer furniture, plush seating, styled home decor, textured rug'
+      };
+
+      const s = stylePrompts[state.style] || stylePrompts.natural;
+      const l = lightPrompts[state.lighting] || lightPrompts.day;
+      const f = furnPrompts[state.furniture] || furnPrompts.moderate;
+
+      let modeBase = 'masterpiece, 8k, architectural photograph, ultra realistic photorealistic interior design';
+      if (state.mode === 'dollhouse') {
+        modeBase = '3D cutaway dollhouse isometric floorplan rendering, fully furnished top-down perspective, high detail';
+      } else if (state.mode === 'sketch') {
+        modeBase = 'architectural interior perspective sketch, hand-drawn colored pencil and watercolor rendering, textured paper';
+      } else if (state.mode === 'renovation') {
+        modeBase = 'renovated modern Japanese living room, completely refreshed clean interior, clutter removed';
+      }
+
+      sdPromptPreview.textContent = `${modeBase}, ${s}, ${f}, ${l}`;
+    }
+
+    // Run Generate Simulation & Reveal
+    btnRunGenerate.addEventListener('click', () => {
+      btnRunGenerate.disabled = true;
+      btnRunGenerate.innerHTML = '<span>⏳</span> AIパース生成中（推論実行中）...';
+      scanningHud.style.display = 'flex';
+
+      const s1 = document.getElementById('scan-step-1');
+      const s2 = document.getElementById('scan-step-2');
+      const s3 = document.getElementById('scan-step-3');
+
+      s1.style.color = '#38bdf8';
+      s1.children[0].style.background = '#0284c7';
+      s2.style.color = '#94a3b8';
+      s2.children[0].style.background = 'rgba(255,255,255,0.1)';
+      s3.style.color = '#94a3b8';
+      s3.children[0].style.background = 'rgba(255,255,255,0.1)';
+
+      setTimeout(() => {
+        s1.style.color = '#34d399';
+        s1.children[0].style.background = '#10b981';
+        s2.style.color = '#38bdf8';
+        s2.children[0].style.background = '#0284c7';
+      }, 700);
+
+      setTimeout(() => {
+        s2.style.color = '#34d399';
+        s2.children[0].style.background = '#10b981';
+        s3.style.color = '#38bdf8';
+        s3.children[0].style.background = '#0284c7';
+      }, 1400);
+
+      setTimeout(() => {
+        s3.style.color = '#34d399';
+        s3.children[0].style.background = '#10b981';
+        scanningHud.style.display = 'none';
+
+        btnRunGenerate.disabled = false;
+        btnRunGenerate.innerHTML = '<span>🚀</span> この設定でAIパースを生成する';
+
+        // Update After Image based on Mode
+        const config = MODE_CONFIGS[state.mode];
+        compareAfterImg.src = config.defaultAfter;
+        labelAfterText.textContent = config.badgeAfter;
+
+        // Auto sweep slider
+        setSliderPosition(0.5);
+        showToast(`🎉 ${config.title.split('（')[0]}の生成が完了しました！左右にスワイプして比較できます`);
+      }, 2100);
+    });
+
+    // Save to House Carte
+    btnSaveToCarte.addEventListener('click', () => {
+      try {
+        let carte = { savedPlans: [], savedKeywords: [], savedKnowledge: [], savedMortgage: null, savedPerspectives: [] };
+        const raw = localStorage.getItem('smile_house_carte_data');
+        if (raw) carte = Object.assign(carte, JSON.parse(raw));
+        if (!carte.savedPerspectives) carte.savedPerspectives = [];
+
+        const newPerspective = {
+          id: 'persp_' + Date.now(),
+          savedAt: new Date().toLocaleDateString('ja-JP', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+          mode: state.mode,
+          modeName: MODE_CONFIGS[state.mode].title.split('（')[0],
+          style: state.style,
+          lighting: state.lighting,
+          furniture: state.furniture,
+          imgSrc: compareAfterImg.src,
+          beforeSrc: compareBeforeImg.src,
+          prompt: sdPromptPreview.textContent
+        };
+
+        carte.savedPerspectives.unshift(newPerspective);
+        localStorage.setItem('smile_house_carte_data', JSON.stringify(carte));
+
+        showToast('⭐ 完成パースを「家カルテ」に保存しました！');
+      } catch(e) {
+        alert('保存に失敗しました: ' + e.message);
+      }
+    });
+
+    // Download High-Res
+    btnDownloadImg.addEventListener('click', () => {
+      const a = document.createElement('a');
+      a.href = compareAfterImg.src;
+      a.download = `smile_ai_perspective_${state.mode}_${Date.now()}.jpg`;
+      a.click();
+      showToast('📥 パース画像をダウンロードしました');
+    });
+
+    // Share URL
+    btnShareUrl.addEventListener('click', () => {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(window.location.href);
+        showToast('🔗 共有用URLをクリップボードにコピーしました！ご家族で共有できます');
+      } else {
+        alert('共有用URL: ' + window.location.href);
+      }
+    });
+
+    // Initial Setup & Madori 3D ControlNet Bridge
+    document.addEventListener('DOMContentLoaded', () => {
+      setMode('dollhouse');
+      setSliderPosition(0.5);
+      updatePrompt();
+
+      // 間取り工房（madori-sketch）からの4大視点・Gemini/SDXL連携データ受取
+      try {
+        const transferRaw = localStorage.getItem('smile_pers_transfer_3d');
+        const urlParams = new URLSearchParams(window.location.search);
+        if (transferRaw && (urlParams.get('source') === 'madori3d' || Date.now() - JSON.parse(transferRaw).timestamp < 300000)) {
+          const trans = JSON.parse(transferRaw);
+          if (trans.imageBefore) {
+            compareBeforeImg.src = trans.imageBefore;
+            // 視点に応じたモードセット（真上から見た図ならGeminiドールハウス、その他はフォトリアル）
+            const targetMode = trans.targetMode || (trans.cameraPreset === 'topdown' ? 'dollhouse' : 'photoreal');
+            setMode(targetMode);
+
+            if (trans.prompt && sdPromptPreview) {
+              sdPromptPreview.textContent = trans.prompt;
+            }
+
+            const engineLabel = trans.engine === 'gemini' ? '✨ Gemini API (真上3Dドールハウス)' : `⚡ ControlNet Depth (${trans.cameraPreset || '3D'})`;
+            labelBeforeText.textContent = `入力: ${engineLabel}`;
+            labelBeforeText.style.background = trans.engine === 'gemini' ? '#059669' : '#0284c7';
+
+            showToast(`🎨 間取り工房から3Dデータを受信 [${engineLabel}]`);
+
+            // 🎯 1操作で1つの3Dパース生成（auto=1の場合、即座に推論実行）
+            if (urlParams.get('auto') === '1' || trans.autoRun) {
+              setTimeout(() => {
+                if (btnRunGenerate && !btnRunGenerate.disabled) {
+                  btnRunGenerate.click();
+                }
+              }, 500);
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Madori 3D bridge error:', e);
+      }
+    });
+  </script>
+</body>
+</html>

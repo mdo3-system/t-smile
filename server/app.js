@@ -510,13 +510,13 @@ const server = http.createServer(async (req, res) => {
   if (pathname === '/api/auth/magic-link' && method === 'POST') {
     try {
       const body = await parseJsonBody(req);
-      if (!body.name || !body.email || !body.phone) {
-        return sendJson(res, 400, { success: false, error: '氏名・メールアドレス・電話番号は必須です。' });
+      if (!body.name || !body.email) {
+        return sendJson(res, 400, { success: false, error: 'お名前・メールアドレスは必須です（電話番号は不要です）。' });
       }
       const user = db.createUser({
         name: body.name,
         email: body.email,
-        phone: body.phone
+        phone: body.phone || ''
       });
       const magicUrl = `http://localhost:${PORT}/dashboard.html?token=${user.magic_token}`;
       return sendJson(res, 200, {
@@ -631,6 +631,29 @@ const server = http.createServer(async (req, res) => {
         booking,
         user
       });
+    } catch (e) {
+      return sendJson(res, 500, { success: false, error: e.message });
+    }
+  }
+
+  // 8.5. Migrate Customer Data to Google Drive after Plan Application (Safety Backup & Verified Cleanup)
+  if (pathname === '/api/carte/migrate-to-drive' && method === 'POST') {
+    try {
+      const { exec } = require('child_process');
+      const scriptPath = path.join(__dirname, '..', 'scripts', 'google_drive_migration.py');
+      
+      exec(`python "${scriptPath}"`, (err, stdout, stderr) => {
+        if (err) {
+          console.error('[Drive Migration Error]', err, stderr);
+          return sendJson(res, 500, { success: false, error: err.message, stderr });
+        }
+        return sendJson(res, 200, {
+          success: true,
+          message: 'Google Driveへの安全移行とローカル事前バックアップが完了しました。',
+          output: stdout
+        });
+      });
+      return;
     } catch (e) {
       return sendJson(res, 500, { success: false, error: e.message });
     }

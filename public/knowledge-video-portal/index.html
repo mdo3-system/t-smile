@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="ja" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI知見動画＆マルチSNSスタジオ｜株式会社住ま居る - Veo 3 × YouTube × SNS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 850: '#0f172a', 950: '#020617' }
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans JP"', 'Inter', 'sans-serif'],
+                        mono: ['Consolas', 'Monaco', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #475569; }
+        .glass-panel { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(51, 65, 85, 0.7); }
+        .badge-status-unstarted { background: rgba(100, 116, 139, 0.2); color: #94a3b8; border-color: #475569; }
+        .badge-status-veo_ready { background: rgba(168, 85, 247, 0.2); color: #c084fc; border-color: #9333ea; }
+        .badge-status-youtube_uploaded { background: rgba(239, 68, 68, 0.2); color: #f87171; border-color: #dc2626; }
+        .badge-status-sns_done { background: rgba(34, 197, 94, 0.2); color: #4ade80; border-color: #16a34a; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased">
+
+    <!-- TOP HEADER -->
+    <header class="bg-slate-900/90 border-b border-slate-800 sticky top-0 z-40 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 via-indigo-600 to-rose-500 flex items-center justify-center text-white shadow-lg shadow-cyan-900/30 font-bold text-lg">
+                    <i class="fa-solid fa-clapperboard"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">住ま居る AI Lab</span>
+                        <h1 class="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2">
+                            AI知見動画＆マルチSNSスタジオ
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Veo 3 × YouTube × SNS</span>
+                        </h1>
+                    </div>
+                    <p class="text-[11px] text-slate-400">設計プロの知見200 ＆ 温熱換気相談200｜10秒解説動画・YouTube・Instagram・Threads・X 統合管理ポータル</p>
+                </div>
+            </div>
+
+            <!-- Header Action Controls -->
+            <div class="flex items-center gap-2 shrink-0">
+                <a href="/" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-house text-slate-400"></i>
+                    <span>展示場トップ</span>
+                </a>
+                <button onclick="exportDataJSON()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 text-xs font-bold border border-cyan-700/50 flex items-center gap-1.5 transition" title="現在の動画リンクと進行状況をJSONで保存">
+                    <i class="fa-solid fa-download"></i>
+                    <span>JSON保存</span>
+                </button>
+                <label class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-bold border border-slate-700 flex items-center gap-1.5 cursor-pointer transition" title="保存済みJSONを読込">
+                    <i class="fa-solid fa-upload"></i>
+                    <span>読込</span>
+                    <input type="file" id="jsonFileInput" accept=".json" class="hidden" onchange="importDataJSON(event)">
+                </label>
+                <button onclick="saveToProduction()" class="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-lg shadow-emerald-900/30 flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span>本サイトに反映</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN DASHBOARD CONTENT -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+        <!-- OVERALL PROGRESS SUMMARY CARDS -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- 1. Total Progress -->
+            <div class="glass-panel rounded-2xl p-4 flex flex-col justify-between">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-bold mb-2">
+                    <span>全体進行状況</span>
+                    <span id="statProgressPct" class="text-cyan-400 font-mono text-sm">0%</span>
+                </div>
+                <div class="flex items-baseline gap-2 mb-2">
+                    <span id="statCompletedCount" class="text-3xl font-black text-white font-mono">0</span>
+                    <span class="text-slate-400 text-xs">/ 400 件</span>
+                </div>
+                <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-700">
+                    <div id="statProgressBar" class="bg-gradient-to-r from-cyan-500 to-emerald-400 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- 2. Madori 200 Progress -->
+            <div class="glass-panel rounded-2xl p-4 flex flex-col justify-between border-l-4 border-l-amber-500">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-bold mb-1">
+                    <span class="text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-compass-drafting"></i> 設計プロの知見200</span>
+                    <a href="/madori-consultation/" target="_blank" class="text-[11px] text-slate-400 hover:text-white flex items-center gap-0.5">トップ <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i></a>
+                </div>
+                <div class="flex items-baseline gap-2 mb-2">
+                    <span id="statMadoriDone" class="text-2xl font-bold text-white font-mono">0</span>
+                    <span class="text-slate-400 text-xs">/ 200 件</span>
+                </div>
+                <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                    <div id="statMadoriBar" class="bg-amber-400 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- 3. Thermal 200 Progress -->
+            <div class="glass-panel rounded-2xl p-4 flex flex-col justify-between border-l-4 border-l-cyan-500">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-bold mb-1">
+                    <span class="text-cyan-300 flex items-center gap-1.5"><i class="fa-solid fa-temperature-three-quarters"></i> 温熱換気相談200</span>
+                    <a href="/performance/" target="_blank" class="text-[11px] text-slate-400 hover:text-white flex items-center gap-0.5">トップ <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i></a>
+                </div>
+                <div class="flex items-baseline gap-2 mb-2">
+                    <span id="statThermalDone" class="text-2xl font-bold text-white font-mono">0</span>
+                    <span class="text-slate-400 text-xs">/ 200 件</span>
+                </div>
+                <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                    <div id="statThermalBar" class="bg-cyan-400 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- 4. Status Counts Breakdowns -->
+            <div class="glass-panel rounded-2xl p-3 flex flex-col justify-center gap-1.5 text-xs">
+                <div class="flex items-center justify-between">
+                    <span class="text-slate-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-500"></span>未着手</span>
+                    <span id="countUnstarted" class="font-mono font-bold text-slate-300">0</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-purple-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-500"></span>Veo 3動画作成済</span>
+                    <span id="countVeoReady" class="font-mono font-bold text-purple-300">0</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-rose-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span>YouTube公開済</span>
+                    <span id="countYoutubeUploaded" class="font-mono font-bold text-rose-300">0</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>SNS展開完了</span>
+                    <span id="countSnsDone" class="font-mono font-bold text-emerald-300">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILTER & SEARCH BAR -->
+        <div class="glass-panel rounded-2xl p-4 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+            <!-- Genre Tabs -->
+            <div class="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-800 shrink-0 gap-1 overflow-x-auto custom-scrollbar">
+                <button onclick="setFilterGenre('all')" id="tabGenreAll" class="px-3 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap bg-cyan-600 text-white shadow">
+                    すべて (<span id="tabCountAll">400</span>)
+                </button>
+                <button onclick="setFilterGenre('madori')" id="tabGenreMadori" class="px-3 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap text-slate-400 hover:text-white">
+                    📐 設計プロの知見 (200)
+                </button>
+                <button onclick="setFilterGenre('thermal')" id="tabGenreThermal" class="px-3 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap text-slate-400 hover:text-white">
+                    🌡️ 温熱換気相談 (200)
+                </button>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex flex-wrap items-center gap-2 flex-1 justify-end">
+                <!-- Status Filter -->
+                <select id="selectStatusFilter" onchange="applyFilters()" class="bg-slate-900 text-slate-200 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold focus:outline-none focus:border-cyan-500">
+                    <option value="all">ステータス: すべて</option>
+                    <option value="unstarted">未着手のみ</option>
+                    <option value="veo_ready">Veo 3生成済</option>
+                    <option value="youtube_uploaded">YouTube公開済</option>
+                    <option value="sns_done">SNS完了</option>
+                    <option value="needs_youtube">⚠️ YouTube未登録のみ</option>
+                </select>
+
+                <!-- Category Filter -->
+                <select id="selectCategoryFilter" onchange="applyFilters()" class="bg-slate-900 text-slate-200 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold focus:outline-none focus:border-cyan-500 max-w-[160px]">
+                    <option value="all">全カテゴリ</option>
+                </select>
+
+                <!-- Keyword Search -->
+                <div class="relative min-w-[200px] flex-1 sm:flex-initial">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                    <input type="text" id="searchInput" oninput="applyFilters()" placeholder="知見タイトル・寸法・キーワード検索..." class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500">
+                </div>
+            </div>
+        </div>
+
+        <!-- ITEMS LIST SECTION -->
+        <div class="space-y-3">
+            <div class="flex items-center justify-between text-xs text-slate-400 px-1">
+                <span>表示件数: <b id="filteredCount" class="text-white font-mono">0</b> 件 / 400 件</span>
+                <span class="text-[11px]"><i class="fa-solid fa-lightbulb text-amber-400 mr-1"></i>カードの「AIクリエイティブ」からVeo 3プロンプトや各SNS投稿文をワンクリックコピーできます</span>
+            </div>
+
+            <!-- List Container -->
+            <div id="itemsContainer" class="space-y-3">
+                <!-- Dynamically loaded cards -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden glass-panel rounded-2xl p-12 text-center text-slate-400 space-y-3">
+                <i class="fa-solid fa-filter-circle-xmark text-4xl text-slate-600"></i>
+                <p class="text-sm font-bold text-slate-300">条件に一致する知見が見つかりませんでした</p>
+                <button onclick="resetFilters()" class="px-3 py-1.5 rounded-lg bg-slate-800 text-cyan-300 border border-slate-700 text-xs font-bold hover:bg-slate-700">フィルターを解除</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900/90 border-t border-slate-800 py-6 mt-12 text-center text-xs text-slate-500 space-y-2">
+        <p>© 2026 株式会社住ま居る - 高気密高断熱注文住宅 AI知見動画＆マルチSNSスタジオ</p>
+        <p class="text-[11px] text-slate-600">Google Veo 3 10-Second Explainer Automation & YouTube / Instagram Reels / Threads / X Cross-Posting Portal</p>
+    </footer>
+
+    <!-- ========================================================================= -->
+    <!-- AI CREATIVE ASSISTANT MODAL (Veo 3 / YouTube / X / Instagram / Threads) -->
+    <!-- ========================================================================= -->
+    <div id="creativeModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-4xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <!-- Modal Header -->
+            <div class="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between gap-3 bg-slate-850">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <div id="modalBadge" class="px-2.5 py-1 rounded-md text-xs font-bold border shrink-0"></div>
+                    <div class="overflow-hidden">
+                        <div id="modalCategory" class="text-xs text-slate-400 font-bold truncate"></div>
+                        <h3 id="modalTitle" class="text-sm sm:text-base font-bold text-white truncate"></h3>
+                    </div>
+                </div>
+                <button onclick="closeCreativeModal()" class="text-slate-400 hover:text-white p-1 text-lg shrink-0">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Modal Nav Tabs -->
+            <div class="flex items-center bg-slate-950 px-4 pt-2 border-b border-slate-800 gap-2 overflow-x-auto custom-scrollbar shrink-0">
+                <button onclick="setModalTab('veo')" id="tabVeo" class="px-3.5 py-2 text-xs font-bold border-b-2 border-purple-500 text-purple-300 flex items-center gap-1.5 transition whitespace-nowrap">
+                    <i class="fa-solid fa-video text-purple-400"></i> Veo 3 動画プロンプト
+                </button>
+                <button onclick="setModalTab('youtube')" id="tabYoutube" class="px-3.5 py-2 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 transition whitespace-nowrap">
+                    <i class="fa-brands fa-youtube text-rose-500"></i> YouTube 設定
+                </button>
+                <button onclick="setModalTab('instagram')" id="tabInstagram" class="px-3.5 py-2 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 transition whitespace-nowrap">
+                    <i class="fa-brands fa-instagram text-pink-400"></i> Instagram リール
+                </button>
+                <button onclick="setModalTab('x')" id="tabX" class="px-3.5 py-2 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 transition whitespace-nowrap">
+                    <i class="fa-brands fa-x-twitter text-slate-200"></i> X (Twitter) ポスト
+                </button>
+                <button onclick="setModalTab('threads')" id="tabThreads" class="px-3.5 py-2 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 transition whitespace-nowrap">
+                    <i class="fa-brands fa-threads text-emerald-400"></i> Threads
+                </button>
+            </div>
+
+            <!-- Modal Tab Content Panes -->
+            <div class="p-5 overflow-y-auto custom-scrollbar flex-1 space-y-4">
+
+                <!-- 1. Veo 3 Tab -->
+                <div id="paneVeo" class="space-y-4">
+                    <!-- 🖼️ Gemini添付用の元画像（図解・間取り図）と完全ファイルパス -->
+                    <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-700 flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 shadow-md">
+                        <div class="flex items-center gap-3 overflow-hidden min-w-0 flex-1">
+                            <div class="relative group cursor-pointer shrink-0" onclick="openImageViewerFromModal()" title="クリックで元画像を拡大表示">
+                                <img id="modalSourceImg" src="" alt="元画像図解" class="w-16 h-16 rounded-lg object-cover bg-slate-950 border border-slate-700 group-hover:border-cyan-400 transition shadow">
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-lg transition text-white text-xs">
+                                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                                </div>
+                            </div>
+                            <div class="overflow-hidden space-y-1 min-w-0 flex-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-bold text-cyan-300 flex items-center gap-1">
+                                        <i class="fa-solid fa-image text-cyan-400"></i> Gemini添付用の元画像（図解・間取り図）
+                                    </span>
+                                    <span id="modalHasImageBadge" class="text-[10px] px-1.5 py-0.2 rounded font-bold"></span>
+                                </div>
+                                <div class="space-y-0.5">
+                                    <span class="text-[10px] text-slate-400 block font-mono">ローカル絶対ファイルパス（Geminiのファイル選択でそのまま貼れます）:</span>
+                                    <code id="lblSourceImgFullPath" class="text-xs text-amber-300 font-mono font-bold truncate block select-all bg-slate-950 px-2 py-1 rounded border border-slate-800"></code>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex sm:flex-col gap-1.5 shrink-0 w-full sm:w-auto">
+                            <button type="button" onclick="copySourceImgPath()" class="flex-1 sm:flex-none px-3 py-1.5 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition shadow">
+                                <i class="fa-regular fa-copy"></i> 画像パスをコピー
+                            </button>
+                            <button type="button" onclick="openImageViewerFromModal()" class="flex-1 sm:flex-none px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] flex items-center justify-center gap-1 border border-slate-700 transition">
+                                <i class="fa-solid fa-up-right-from-square"></i> 画像を拡大表示
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Veo 3 推奨生成パラメータ (縦型9:16警告強化) -->
+                    <div class="p-3.5 rounded-xl bg-purple-950/40 border-2 border-purple-500/60 flex items-start gap-3 text-xs shadow-lg shadow-purple-950/50">
+                        <div class="text-xl text-amber-400 shrink-0 mt-0.5"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="space-y-1">
+                            <span class="font-extrabold text-purple-200 block text-xs">
+                                Google Veo 3 生成パラメータ設定（※設定必須）
+                            </span>
+                            <div class="text-slate-300 space-y-0.5 text-[11px] leading-relaxed">
+                                <div>• アスペクト比: <span class="bg-rose-500/20 text-rose-300 font-black px-1.5 py-0.5 rounded border border-rose-500/40">⚠️ 必ず【9:16 (Vertical / 縦型)】を選択してください</span>（※横画面16:9はShorts・リールでNG！）</div>
+                                <div>• 尺: <b class="text-white">10秒 (10s)</b> / 解像度: <b class="text-white">1080p (60fps推奨)</b></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Japanese Prompt (Veo 3 本番入力用) -->
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between text-xs font-bold">
+                            <span class="text-purple-300 font-bold flex items-center gap-1.5"><i class="fa-solid fa-wand-magic-sparkles text-purple-400"></i>Veo 3 入力プロンプト（日本語）</span>
+                            <button onclick="copyToClipboard('txtVeoJa', 'Veo 3 日本語プロンプト')" class="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold transition flex items-center gap-1.5 shadow-md shadow-purple-900/40">
+                                <i class="fa-regular fa-copy"></i> プロンプトをコピー
+                            </button>
+                        </div>
+                        <textarea id="txtVeoJa" readonly class="w-full bg-slate-950 border border-purple-500/40 rounded-xl p-3 text-xs font-mono text-purple-100 leading-relaxed h-36 focus:outline-none focus:border-purple-400"></textarea>
+                    </div>
+
+                    <!-- Local Video Save Path -->
+                    <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-3 text-xs">
+                        <div class="overflow-hidden">
+                            <span class="text-slate-400 text-[11px] block">生成した動画のローカル保存先（推奨パス）:</span>
+                            <code id="lblVeoPath" class="text-cyan-300 font-mono text-xs font-bold truncate block"></code>
+                        </div>
+                        <button onclick="copyText(document.getElementById('lblVeoPath').textContent, '動画保存先パス')" class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700 hover:text-white shrink-0">
+                            <i class="fa-regular fa-copy mr-1"></i>パスをコピー
+                        </button>
+                    </div>
+
+                    <!-- 🎬 Veo 3 動画制作＆ナレーション・合成パイプライン -->
+                    <div class="space-y-3 p-4 rounded-xl bg-slate-900/90 border border-purple-500/30">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <span class="text-xs font-bold text-purple-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-film text-purple-400"></i> 動画UP・ナレーション作成・合成フロー
+                            </span>
+                            <span id="veoStepBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-purple-950 text-purple-300 border border-purple-800 font-bold">制作アシスタント</span>
+                        </div>
+
+                        <!-- 1. 動画ファイルUP (ドラッグ＆ドロップまたはファイル選択) -->
+                        <div class="space-y-1.5">
+                            <label class="text-[11px] font-bold text-slate-300 flex items-center justify-between">
+                                <span>① Veo 3動画ファイル（.mp4）をアップロード:</span>
+                                <span id="uploadStatusText" class="text-[10px] text-slate-400 font-mono">未選択</span>
+                            </label>
+                            <div id="dropZoneVideo" class="border-2 border-dashed border-slate-700 hover:border-purple-500 rounded-xl p-3 text-center cursor-pointer transition bg-slate-950/60" onclick="document.getElementById('fileInputVeoVideo').click()">
+                                <input type="file" id="fileInputVeoVideo" accept="video/mp4,video/*" class="hidden" onchange="handleVeoVideoUpload(event)">
+                                <i class="fa-solid fa-cloud-arrow-up text-xl text-purple-400 mb-1"></i>
+                                <div class="text-xs text-slate-300 font-bold">ここをクリックまたは動画ファイルをドラッグ＆ドロップ</div>
+                                <div class="text-[10px] text-slate-500">（自動的に正しいパスに保存され、即時プレビュー可能になります）</div>
+                            </div>
+                            <div id="videoPreviewWrap" class="hidden mt-2 p-2.5 rounded-lg bg-black border border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                                <div class="flex items-center gap-3">
+                                    <video id="videoPreviewPlayer" controls class="w-20 h-28 rounded object-contain bg-black border border-slate-700"></video>
+                                    <div class="text-xs overflow-hidden">
+                                        <div class="font-bold text-emerald-400 flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> 元動画読み込み完了</div>
+                                        <div id="videoPreviewPath" class="text-[10px] text-slate-400 font-mono truncate"></div>
+                                    </div>
+                                </div>
+                                <button type="button" id="btnConvertToVert" onclick="convertToVertical()" class="px-3 py-1.5 rounded-lg bg-amber-600/30 hover:bg-amber-600/50 text-amber-300 border border-amber-500/50 font-bold text-xs flex items-center gap-1.5 transition" title="横画面（16:9）で撮影・生成された動画を、Shorts・リール最適な縦型9:16に自動クロップ変換します">
+                                    <i class="fa-solid fa-mobile-screen"></i> 横画面 ➔ 縦型9:16自動変換
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 2. ナレーション音声作成ボタン -->
+                        <div class="pt-2 border-t border-slate-800 space-y-2">
+                            <div class="flex items-center justify-between text-xs font-bold text-slate-300">
+                                <span>② ナレーション音声（Microsoft Neural Voice）:</span>
+                                <div class="flex items-center gap-2">
+                                    <select id="voiceTypeSelect" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded px-2 py-1 font-bold">
+                                        <option value="female">👩 七海 (女性アナウンサー)</option>
+                                        <option value="male">👨 圭太 (男性建築士)</option>
+                                        <option value="warm">🌸 七海 (柔らかなトーン)</option>
+                                    </select>
+                                    <button type="button" id="btnGenNarration" onclick="generateNarrationAudio()" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs shadow flex items-center gap-1 transition">
+                                        <i class="fa-solid fa-microphone-lines"></i> 🎙️ ナレーション作成
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="audioPreviewWrap" class="hidden p-2 rounded-lg bg-slate-950 border border-emerald-500/40 flex items-center justify-between gap-2">
+                                <audio id="audioPreviewPlayer" controls class="h-8 flex-1"></audio>
+                                <span class="text-[10px] font-bold text-emerald-400 shrink-0">✅ 音声準備完了</span>
+                            </div>
+                        </div>
+
+                        <!-- 3. 動画とナレーションの合成ボタン ＆ 静止画サムネイル抽出ボタン -->
+                        <div class="pt-2 border-t border-slate-800 flex flex-wrap items-center gap-2">
+                            <button type="button" id="btnCombineVideo" onclick="combineVideoAndAudio()" class="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-xs shadow-lg shadow-purple-900/30 flex items-center justify-center gap-1.5 transition">
+                                <i class="fa-solid fa-clapperboard"></i> 🎬 動画と音声を合成（完成動画生成）
+                            </button>
+                            <button type="button" id="btnExtractThumb" onclick="extractVideoThumbnail()" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-700 flex items-center gap-1.5 transition">
+                                <i class="fa-solid fa-image text-amber-400"></i> 🖼️ 静止画サムネイル抽出
+                            </button>
+                        </div>
+
+                        <!-- 合成完了・サムネイル結果プレビュー -->
+                        <div id="combineResultWrap" class="hidden p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/50 space-y-2">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-extrabold text-emerald-300 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-circle-check text-emerald-400"></i> 合成完了！完成動画プレビュー
+                                </span>
+                                <a id="linkDownloadFinal" href="#" download class="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] flex items-center gap-1">
+                                    <i class="fa-solid fa-download"></i> 完成動画を保存
+                                </a>
+                            </div>
+                            <video id="finalVideoPlayer" controls class="w-full max-h-48 rounded-lg bg-black object-contain"></video>
+                        </div>
+
+                        <!-- 抽出サムネイルプレビュー -->
+                        <div id="thumbResultWrap" class="hidden p-3 rounded-xl bg-amber-950/40 border border-amber-500/50 space-y-1.5">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-extrabold text-amber-300 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-image text-amber-400"></i> 抽出サムネイル（表紙画像）プレビュー
+                                </span>
+                                <a id="linkDownloadThumb" href="#" download class="px-2.5 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white font-bold text-[11px] flex items-center gap-1">
+                                    <i class="fa-solid fa-download"></i> 表紙画像を保存
+                                </a>
+                            </div>
+                            <img id="thumbPreviewImg" src="" alt="サムネイル" class="w-full max-h-40 rounded-lg object-contain bg-black">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. YouTube Tab -->
+                <div id="paneYoutube" class="space-y-4 hidden">
+                    <!-- YouTube Title -->
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between text-xs font-bold">
+                            <span class="text-slate-300"><i class="fa-brands fa-youtube text-rose-500 mr-1"></i>動画タイトル (SEO最適化)</span>
+                            <button onclick="copyToClipboard('txtYtTitle', 'YouTubeタイトル')" class="px-2.5 py-1 rounded-md bg-rose-600/30 text-rose-200 border border-rose-500/50 hover:bg-rose-600/50 transition flex items-center gap-1">
+                                <i class="fa-regular fa-copy"></i> タイトルコピー
+                            </button>
+                        </div>
+                        <input type="text" id="txtYtTitle" readonly class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs font-bold text-white focus:outline-none">
+                    </div>
+
+                    <!-- YouTube Description -->
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between text-xs font-bold">
+                            <span class="text-slate-300"><i class="fa-solid fa-align-left text-rose-500 mr-1"></i>概要欄・説明文 (知見トップページ相互リンク付き)</span>
+                            <button onclick="copyToClipboard('txtYtDesc', 'YouTube概要欄')" class="px-2.5 py-1 rounded-md bg-rose-600/30 text-rose-200 border border-rose-500/50 hover:bg-rose-600/50 transition flex items-center gap-1">
+                                <i class="fa-regular fa-copy"></i> 概要欄コピー
+                            </button>
+                        </div>
+                        <textarea id="txtYtDesc" readonly class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs font-mono text-slate-300 h-44 focus:outline-none"></textarea>
+                    </div>
+
+                    <!-- Quick Links & Actions -->
+                    <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
+                        <span class="text-slate-400">相互リンク先: <a id="linkTopPage" href="#" target="_blank" class="text-cyan-400 hover:underline font-bold"></a></span>
+                        <a href="https://studio.youtube.com" target="_blank" class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold flex items-center gap-1.5 shadow">
+                            <i class="fa-solid fa-arrow-up-from-bracket"></i> YouTube Studioを開く
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 3. Instagram Tab -->
+                <div id="paneInstagram" class="space-y-3 hidden">
+                    <div class="flex items-center justify-between text-xs font-bold">
+                        <span class="text-slate-300"><i class="fa-brands fa-instagram text-pink-400 mr-1"></i>Instagram リール用キャプション ＆ ハッシュタグ</span>
+                        <button onclick="copyToClipboard('txtInstaCaption', 'Instagramキャプション')" class="px-2.5 py-1 rounded-md bg-pink-600/30 text-pink-200 border border-pink-500/50 hover:bg-pink-600/50 transition flex items-center gap-1">
+                            <i class="fa-regular fa-copy"></i> キャプションをコピー
+                        </button>
+                    </div>
+                    <textarea id="txtInstaCaption" readonly class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs font-sans text-slate-200 h-44 focus:outline-none"></textarea>
+                </div>
+
+                <!-- 4. X (Twitter) Tab -->
+                <div id="paneX" class="space-y-3 hidden">
+                    <div class="flex items-center justify-between text-xs font-bold">
+                        <span class="text-slate-300"><i class="fa-brands fa-x-twitter mr-1"></i>X (Twitter) 最適化ポスト文 (140文字以内)</span>
+                        <div class="flex items-center gap-2">
+                            <button onclick="copyToClipboard('txtXPost', 'X ポスト文')" class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-200 border border-slate-700 hover:text-white transition flex items-center gap-1">
+                                <i class="fa-regular fa-copy"></i> コピー
+                            </button>
+                            <button onclick="shareToX()" class="px-3 py-1 rounded-md bg-sky-500 text-white font-bold hover:bg-sky-400 transition flex items-center gap-1 shadow">
+                                <i class="fa-brands fa-x-twitter"></i> Xにポストする
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="txtXPost" readonly class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs font-sans text-slate-200 h-36 focus:outline-none"></textarea>
+                </div>
+
+                <!-- 5. Threads Tab -->
+                <div id="paneThreads" class="space-y-3 hidden">
+                    <div class="flex items-center justify-between text-xs font-bold">
+                        <span class="text-slate-300"><i class="fa-brands fa-threads text-emerald-400 mr-1"></i>Threads 投稿文</span>
+                        <div class="flex items-center gap-2">
+                            <button onclick="copyToClipboard('txtThreadsPost', 'Threads投稿文')" class="px-2.5 py-1 rounded-md bg-emerald-600/30 text-emerald-200 border border-emerald-500/50 hover:bg-emerald-600/50 transition flex items-center gap-1">
+                                <i class="fa-regular fa-copy"></i> コピー
+                            </button>
+                            <a href="https://www.threads.net" target="_blank" class="px-3 py-1 rounded-md bg-emerald-600 text-white font-bold hover:bg-emerald-500 transition flex items-center gap-1 shadow">
+                                <i class="fa-brands fa-threads"></i> Threadsを開く
+                            </a>
+                        </div>
+                    </div>
+                    <textarea id="txtThreadsPost" readonly class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs font-sans text-slate-200 h-44 focus:outline-none"></textarea>
+                </div>
+            </div>
+
+            <!-- Modal Footer Controls -->
+            <div class="p-4 border-t border-slate-800 bg-slate-850 flex flex-wrap items-center justify-between gap-3">
+                <!-- Status Switcher inside Modal -->
+                <div class="flex items-center gap-2 text-xs">
+                    <span class="text-slate-400 font-bold">進行ステータス:</span>
+                    <select id="modalStatusSelect" onchange="updateItemStatusFromModal(this.value)" class="bg-slate-950 text-slate-200 border border-slate-700 rounded-lg px-2.5 py-1 font-bold focus:outline-none">
+                        <option value="unstarted">⚪ 未着手</option>
+                        <option value="veo_ready">🟣 Veo 3動画作成済</option>
+                        <option value="youtube_uploaded">🔴 YouTube公開済</option>
+                        <option value="sns_done">🟢 SNS展開完了</option>
+                    </select>
+                </div>
+
+                <!-- Prev / Next Navigation -->
+                <div class="flex items-center gap-2">
+                    <button onclick="navigateModal(-1)" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 flex items-center gap-1">
+                        <i class="fa-solid fa-chevron-left"></i> 前の知見
+                    </button>
+                    <button onclick="navigateModal(1)" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 flex items-center gap-1">
+                        次の知見 <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- IMAGE VIEWER MODAL -->
+    <!-- ========================================================================= -->
+    <div id="imageViewerModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4" onclick="closeImageViewer()">
+        <div class="max-w-4xl max-h-[90vh] flex flex-col items-center gap-3" onclick="event.stopPropagation()">
+            <img id="viewerImage" src="" alt="図解拡大" class="max-w-full max-h-[80vh] rounded-xl shadow-2xl border border-slate-700 object-contain bg-slate-900">
+            <div class="flex items-center gap-3 bg-slate-900/90 px-4 py-2 rounded-xl border border-slate-700 text-xs text-slate-300">
+                <span id="viewerImagePath" class="font-mono text-cyan-300"></span>
+                <button onclick="copyText(document.getElementById('viewerImagePath').textContent, '画像パス')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white font-bold border border-slate-600">
+                    <i class="fa-regular fa-copy mr-1"></i>パスコピー
+                </button>
+                <button onclick="closeImageViewer()" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white">
+                    閉じる
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-slate-900 border border-cyan-500/50 text-white px-4 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300">
+        <i class="fa-solid fa-circle-check text-cyan-400"></i>
+        <span id="toastMsg">通知メッセージ</span>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Global Portal State
+        let allItems = [];
+        let filteredItems = [];
+        let currentFilter = {
+            genre: 'all',      // 'all', 'madori', 'thermal'
+            status: 'all',     // 'all', 'unstarted', 'veo_ready', 'youtube_uploaded', 'sns_done', 'needs_youtube'
+            category: 'all',
+            search: ''
+        };
+        let activeModalIndex = -1;
+
+        // LocalStorage Key
+        const STORAGE_KEY = 'sumairu_knowledge_video_links_v1';
+
+        // Load Initial Data
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const res = await fetch('/data/knowledge_video_portal_data.json?v=' + Date.now());
+                const data = await res.json();
+                allItems = data.items || [];
+
+                // Merge saved LocalStorage overrides
+                loadLocalStorageOverrides();
+
+                // Populate category filter options
+                populateCategories();
+
+                // Apply initial filters & render
+                applyFilters();
+                updateStats();
+            } catch (err) {
+                console.error('Failed to load portal data:', err);
+                showToast('データの読み込みに失敗しました', true);
+            }
+        });
+
+        // Load & Merge LocalStorage
+        function loadLocalStorageOverrides() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (!saved) return;
+                const map = JSON.parse(saved);
+                allItems.forEach(item => {
+                    if (map[item.id]) {
+                        if (map[item.id].youtubeUrl !== undefined) item.youtubeUrl = map[item.id].youtubeUrl;
+                        if (map[item.id].youtubeVideoId !== undefined) item.youtubeVideoId = map[item.id].youtubeVideoId;
+                        if (map[item.id].veoVideoPath !== undefined) item.veoVideoPath = map[item.id].veoVideoPath;
+                        if (map[item.id].status !== undefined) item.status = map[item.id].status;
+                    }
+                });
+            } catch (e) {
+                console.warn('LocalStorage error:', e);
+            }
+        }
+
+        // Save Current State to LocalStorage
+        function persistToLocalStorage() {
+            const map = {};
+            allItems.forEach(item => {
+                map[item.id] = {
+                    youtubeUrl: item.youtubeUrl || '',
+                    youtubeVideoId: item.youtubeVideoId || '',
+                    veoVideoPath: item.veoVideoPath || '',
+                    status: item.status || 'unstarted'
+                };
+            });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
+            updateStats();
+        }
+
+        // Populate Categories
+        function populateCategories() {
+            const select = document.getElementById('selectCategoryFilter');
+            const cats = new Set();
+            allItems.forEach(i => cats.add(i.categoryName));
+            select.innerHTML = '<option value="all">全カテゴリ</option>';
+            Array.from(cats).sort().forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c;
+                opt.textContent = c;
+                select.appendChild(opt);
+            });
+        }
+
+        // Filter Controls
+        function setFilterGenre(genre) {
+            currentFilter.genre = genre;
+            ['all', 'madori', 'thermal'].forEach(g => {
+                const btn = document.getElementById('tabGenre' + g.charAt(0).toUpperCase() + g.slice(1));
+                if (g === genre) {
+                    btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap bg-cyan-600 text-white shadow';
+                } else {
+                    btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap text-slate-400 hover:text-white';
+                }
+            });
+            applyFilters();
+        }
+
+        function applyFilters() {
+            currentFilter.status = document.getElementById('selectStatusFilter').value;
+            currentFilter.category = document.getElementById('selectCategoryFilter').value;
+            currentFilter.search = document.getElementById('searchInput').value.trim().toLowerCase();
+
+            filteredItems = allItems.filter(item => {
+                // Genre
+                if (currentFilter.genre !== 'all' && item.genre !== currentFilter.genre) return false;
+                // Status
+                if (currentFilter.status === 'needs_youtube') {
+                    if (item.youtubeUrl && item.youtubeUrl.trim() !== '') return false;
+                } else if (currentFilter.status !== 'all' && item.status !== currentFilter.status) {
+                    return false;
+                }
+                // Category
+                if (currentFilter.category !== 'all' && item.categoryName !== currentFilter.category) return false;
+                // Search
+                if (currentFilter.search) {
+                    const q = currentFilter.search;
+                    const match = (item.question || '').toLowerCase().includes(q) ||
+                                  (item.shortAnswer || '').toLowerCase().includes(q) ||
+                                  (item.dimension || '').toLowerCase().includes(q) ||
+                                  (item.id || '').toLowerCase().includes(q) ||
+                                  (item.categoryName || '').toLowerCase().includes(q);
+                    if (!match) return false;
+                }
+                return true;
+            });
+
+            renderItems();
+            document.getElementById('filteredCount').textContent = filteredItems.length;
+        }
+
+        function resetFilters() {
+            setFilterGenre('all');
+            document.getElementById('selectStatusFilter').value = 'all';
+            document.getElementById('selectCategoryFilter').value = 'all';
+            document.getElementById('searchInput').value = '';
+            applyFilters();
+        }
+
+        // Render List Cards
+        function renderItems() {
+            const container = document.getElementById('itemsContainer');
+            const empty = document.getElementById('emptyState');
+            container.innerHTML = '';
+
+            if (filteredItems.length === 0) {
+                empty.classList.remove('hidden');
+                return;
+            }
+            empty.classList.add('hidden');
+
+            filteredItems.forEach((item, fIdx) => {
+                const card = document.createElement('div');
+                card.className = 'glass-panel rounded-2xl p-4 sm:p-5 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 transition hover:border-slate-600';
+
+                // Status info
+                const statusMeta = getStatusBadge(item.status);
+                const hasYt = !!(item.youtubeUrl && item.youtubeUrl.trim());
+
+                card.innerHTML = `
+                    <!-- Left: Thumbnail & Main Content -->
+                    <div class="flex items-start gap-4 flex-1 overflow-hidden">
+                        <!-- Thumbnail / Image -->
+                        <div class="relative w-24 h-24 rounded-xl overflow-hidden bg-slate-900 border border-slate-700 shrink-0 group cursor-pointer" onclick="openImageViewer('${item.image}')" title="クリックして拡大プレビュー">
+                            ${item.image ? `
+                                <img src="${item.image}" alt="図解" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='/images/knowledge/sample_fallback.jpg'">
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-xs font-bold transition">
+                                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                                </div>
+                            ` : `
+                                <div class="w-full h-full flex flex-col items-center justify-center text-slate-600 text-xs">
+                                    <i class="fa-solid fa-image text-xl mb-1"></i>
+                                    <span>図解準備中</span>
+                                </div>
+                            `}
+                        </div>
+
+                        <!-- Info Body -->
+                        <div class="space-y-1.5 flex-1 overflow-hidden">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold font-mono ${item.genre === 'madori' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'}">
+                                    ${item.id} #${item.questionNumber}
+                                </span>
+                                <span class="text-xs font-bold text-slate-400">${item.categoryName}</span>
+                                <span class="text-xs px-2 py-0.5 rounded-full font-bold border ${statusMeta.class}">
+                                    ${statusMeta.label}
+                                </span>
+                            </div>
+
+                            <h4 class="text-sm sm:text-base font-bold text-white leading-snug line-clamp-2">
+                                ${item.question}
+                            </h4>
+
+                            <div class="flex flex-wrap items-center gap-3 text-xs text-slate-300 pt-0.5">
+                                <span class="text-slate-400">💡 結論: <span class="text-slate-200 font-medium">${item.shortAnswer.slice(0, 40)}...</span></span>
+                                ${item.dimension ? `<span class="px-2 py-0.5 rounded bg-slate-800 text-cyan-300 font-bold mono-num border border-slate-700">基準: ${item.dimension}</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Input Fields & Action Launcher -->
+                    <div class="flex flex-col sm:flex-row lg:flex-col items-stretch lg:items-end justify-between gap-2.5 shrink-0 min-w-[280px] lg:max-w-[320px] border-t lg:border-t-0 lg:border-l border-slate-800 pt-3 lg:pt-0 lg:pl-4">
+                        <!-- YouTube URL Input -->
+                        <div class="w-full space-y-1">
+                            <label class="text-[10px] font-bold text-slate-400 flex items-center justify-between">
+                                <span class="flex items-center gap-1"><i class="fa-brands fa-youtube text-rose-500"></i> YouTube URL:</span>
+                                ${hasYt ? `<a href="${item.youtubeUrl}" target="_blank" class="text-rose-400 hover:underline flex items-center gap-0.5">再生 <i class="fa-solid fa-play text-[9px]"></i></a>` : '<span class="text-amber-400">未設定</span>'}
+                            </label>
+                            <div class="relative">
+                                <input type="url" value="${item.youtubeUrl || ''}" onchange="updateItemYoutube('${item.id}', this.value)" placeholder="https://youtu.be/..." class="w-full bg-slate-900 border ${hasYt ? 'border-rose-900/60 text-rose-200' : 'border-slate-700 text-white'} rounded-lg px-2.5 py-1 text-xs font-mono focus:outline-none focus:border-rose-500">
+                            </div>
+                        </div>
+
+                        <!-- Veo 3 Local Video Path -->
+                        <div class="w-full space-y-1">
+                            <label class="text-[10px] font-bold text-slate-400 flex items-center justify-between">
+                                <span class="flex items-center gap-1"><i class="fa-solid fa-video text-purple-400"></i> Veo 3 保存パス:</span>
+                            </label>
+                            <input type="text" value="${item.veoVideoPath || ''}" onchange="updateItemVeoPath('${item.id}', this.value)" placeholder="videos/veo3/..." class="w-full bg-slate-900 border border-slate-700 text-slate-300 rounded-lg px-2.5 py-1 text-xs font-mono focus:outline-none focus:border-purple-500">
+                        </div>
+
+                        <!-- Action Launcher Buttons -->
+                        <div class="flex items-center gap-2 w-full pt-1">
+                            <button onclick="cycleItemStatus('${item.id}')" class="flex-1 px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 transition flex items-center justify-center gap-1" title="ステータスを切り替え">
+                                <i class="fa-solid fa-arrows-rotate text-[11px] text-cyan-400"></i>
+                                <span>進行変更</span>
+                            </button>
+                            <button onclick="openCreativeModal('${item.id}')" class="flex-1 px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-600 hover:opacity-90 text-white text-xs font-bold shadow-md shadow-purple-900/30 transition flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                <span>AIクリエイティブ</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // Status Helper
+        function getStatusBadge(status) {
+            switch (status) {
+                case 'veo_ready':
+                    return { label: '🟣 Veo 3作成済', class: 'badge-status-veo_ready' };
+                case 'youtube_uploaded':
+                    return { label: '🔴 YouTube公開済', class: 'badge-status-youtube_uploaded' };
+                case 'sns_done':
+                    return { label: '🟢 SNS完了', class: 'badge-status-sns_done' };
+                default:
+                    return { label: '⚪ 未着手', class: 'badge-status-unstarted' };
+            }
+        }
+
+        // Status Cycle Handler
+        function cycleItemStatus(id) {
+            const item = allItems.find(i => i.id === id);
+            if (!item) return;
+            const cycle = ['unstarted', 'veo_ready', 'youtube_uploaded', 'sns_done'];
+            const nextIdx = (cycle.indexOf(item.status || 'unstarted') + 1) % cycle.length;
+            item.status = cycle[nextIdx];
+            persistToLocalStorage();
+            applyFilters();
+            showToast(`ステータスを「${getStatusBadge(item.status).label}」に更新しました`);
+        }
+
+        // Update Handlers
+        function updateItemYoutube(id, url) {
+            const item = allItems.find(i => i.id === id);
+            if (!item) return;
+            item.youtubeUrl = url.trim();
+            // Extract Video ID
+            const match = item.youtubeUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+            item.youtubeVideoId = match ? match[1] : '';
+            if (item.youtubeUrl && item.status === 'unstarted') {
+                item.status = 'youtube_uploaded';
+            }
+            persistToLocalStorage();
+            applyFilters();
+            showToast('YouTube URLを保存しました');
+        }
+
+        function updateItemVeoPath(id, path) {
+            const item = allItems.find(i => i.id === id);
+            if (!item) return;
+            item.veoVideoPath = path.trim();
+            if (item.veoVideoPath && item.status === 'unstarted') {
+                item.status = 'veo_ready';
+            }
+            persistToLocalStorage();
+            showToast('Veo 3 保存パスを保存しました');
+        }
+
+        // Update Stats
+        function updateStats() {
+            let doneCount = 0;
+            let madoriDone = 0;
+            let thermalDone = 0;
+            let unstarted = 0, veoReady = 0, youtubeUp = 0, snsDone = 0;
+
+            allItems.forEach(i => {
+                const s = i.status || 'unstarted';
+                if (s === 'sns_done' || s === 'youtube_uploaded') {
+                    doneCount++;
+                    if (i.genre === 'madori') madoriDone++;
+                    else thermalDone++;
+                }
+                if (s === 'unstarted') unstarted++;
+                else if (s === 'veo_ready') veoReady++;
+                else if (s === 'youtube_uploaded') youtubeUp++;
+                else if (s === 'sns_done') snsDone++;
+            });
+
+            const pct = Math.round((doneCount / allItems.length) * 100) || 0;
+            const madoriPct = Math.round((madoriDone / 200) * 100) || 0;
+            const thermalPct = Math.round((thermalDone / 200) * 100) || 0;
+
+            document.getElementById('statProgressPct').textContent = `${pct}%`;
+            document.getElementById('statCompletedCount').textContent = doneCount;
+            document.getElementById('statProgressBar').style.width = `${pct}%`;
+
+            document.getElementById('statMadoriDone').textContent = madoriDone;
+            document.getElementById('statMadoriBar').style.width = `${madoriPct}%`;
+
+            document.getElementById('statThermalDone').textContent = thermalDone;
+            document.getElementById('statThermalBar').style.width = `${thermalPct}%`;
+
+            document.getElementById('countUnstarted').textContent = unstarted;
+            document.getElementById('countVeoReady').textContent = veoReady;
+            document.getElementById('countYoutubeUploaded').textContent = youtubeUp;
+            document.getElementById('countSnsDone').textContent = snsDone;
+        }
+
+        // =========================================================================
+        // CREATIVE ASSISTANT MODAL HANDLERS
+        // =========================================================================
+        function openCreativeModal(id) {
+            const idx = allItems.findIndex(i => i.id === id);
+            if (idx === -1) return;
+            activeModalIndex = idx;
+            loadModalData(allItems[idx]);
+            document.getElementById('creativeModal').classList.remove('hidden');
+        }
+
+        function closeCreativeModal() {
+            document.getElementById('creativeModal').classList.add('hidden');
+        }
+
+        function loadModalData(item) {
+            const isMadori = item.genre === 'madori';
+            const b = document.getElementById('modalBadge');
+            b.className = `px-2.5 py-1 rounded-md text-xs font-bold border shrink-0 ${isMadori ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30'}`;
+            b.textContent = `${item.id} #${item.questionNumber}`;
+
+            document.getElementById('modalCategory').textContent = `${item.genreLabel} ❯ ${item.categoryName}`;
+            document.getElementById('modalTitle').textContent = item.question;
+
+            // 🖼️ 元画像（図解・間取り図）の設定 & Windows絶対パス生成
+            const imgElem = document.getElementById('modalSourceImg');
+            const pathElem = document.getElementById('lblSourceImgFullPath');
+            const badgeElem = document.getElementById('modalHasImageBadge');
+            const ABS_BASE_DIR = 'E:\\Dropbox\\■住ま居る\\■住ま居る共有\\ﾒﾀﾊﾞｰｽ展示場\\Antigravity\\public';
+
+            if (item.image) {
+                imgElem.src = item.image;
+                const normPath = item.image.split('/').join('\\');
+                const fullLocalPath = ABS_BASE_DIR + (normPath.startsWith('\\') ? normPath : '\\' + normPath);
+                pathElem.textContent = fullLocalPath;
+                badgeElem.textContent = '図解画像あり ✅';
+                badgeElem.className = 'text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold';
+            } else {
+                imgElem.src = '';
+                pathElem.textContent = '（この知見には図解画像がありません）';
+                badgeElem.textContent = '画像なし';
+                badgeElem.className = 'text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 font-bold';
+            }
+
+            // Populate fields
+            document.getElementById('txtVeoJa').value = item.veoPromptJa || '';
+            document.getElementById('lblVeoPath').textContent = item.veoVideoPath || '';
+
+            document.getElementById('txtYtTitle').value = item.youtubeTitle || '';
+            document.getElementById('txtYtDesc').value = item.youtubeDesc || '';
+            const linkTop = document.getElementById('linkTopPage');
+            linkTop.href = item.topUrl;
+            linkTop.textContent = `https://www.t-smile.co.jp${item.topUrl}`;
+
+            document.getElementById('txtXPost').value = item.xPost || '';
+            document.getElementById('txtInstaCaption').value = item.instaCaption || '';
+            document.getElementById('txtThreadsPost').value = item.threadsPost || '';
+
+            document.getElementById('modalStatusSelect').value = item.status || 'unstarted';
+
+            // Pipeline reset & auto-load
+            document.getElementById('uploadStatusText').textContent = item.veoVideoPath ? '設定済み' : '未選択';
+            const vidWrap = document.getElementById('videoPreviewWrap');
+            const vidPlayer = document.getElementById('videoPreviewPlayer');
+            const vidPath = document.getElementById('videoPreviewPath');
+            if (item.veoVideoPath) {
+                let cleanVPath = item.veoVideoPath;
+                if (cleanVPath.startsWith('public/')) cleanVPath = cleanVPath.slice(7);
+                if (cleanVPath.startsWith('/public/')) cleanVPath = cleanVPath.slice(8);
+                if (!cleanVPath.startsWith('/')) cleanVPath = '/' + cleanVPath;
+
+                vidWrap.classList.remove('hidden');
+                vidPlayer.src = cleanVPath;
+                vidPath.textContent = cleanVPath;
+            } else {
+                vidWrap.classList.add('hidden');
+                vidPlayer.src = '';
+                vidPath.textContent = '';
+            }
+
+            // Audio & combine resets (with auto-detect for existing generated audio)
+            const sub = item.genre === 'madori' ? 'madori' : 'thermal';
+            const expectedAudioUrl = `/videos/veo3/audio/${sub}/${item.id}.mp3`;
+            const audioWrap = document.getElementById('audioPreviewWrap');
+            const audioPlayer = document.getElementById('audioPreviewPlayer');
+
+            // 既存の音声をセット
+            audioPlayer.src = expectedAudioUrl;
+            audioPlayer.load();
+            audioWrap.classList.remove('hidden');
+
+            document.getElementById('combineResultWrap').classList.add('hidden');
+            document.getElementById('thumbResultWrap').classList.add('hidden');
+
+            // Default tab
+            setModalTab('veo');
+        }
+
+        // =========================================================================
+        // VEO 3 VIDEO PRODUCTION PIPELINE HANDLERS
+        // =========================================================================
+        async function handleVeoVideoUpload(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file || activeModalIndex === -1) return;
+            const item = allItems[activeModalIndex];
+
+            const statusText = document.getElementById('uploadStatusText');
+            statusText.textContent = 'アップロード中...';
+            showToast('動画ファイルを読み込んでいます...');
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const base64Data = e.target.result;
+                try {
+                    const res = await fetch('/api/knowledge-video/upload-video', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: item.id, videoBase64: base64Data })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        item.veoVideoPath = data.videoPath;
+                        if (item.status === 'unstarted') item.status = 'veo_ready';
+                        persistToLocalStorage();
+                        applyFilters();
+
+                        const vidWrap = document.getElementById('videoPreviewWrap');
+                        const vidPlayer = document.getElementById('videoPreviewPlayer');
+                        const vidPath = document.getElementById('videoPreviewPath');
+                        vidWrap.classList.remove('hidden');
+                        vidPlayer.src = data.videoPath;
+                        vidPath.textContent = data.videoPath;
+                        statusText.textContent = 'アップロード完了 ✅';
+                        showToast('🎬 動画のアップロード・保存が完了しました！');
+                    } else {
+                        throw new Error(data.error || 'Upload failed');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    statusText.textContent = 'エラー';
+                    showToast('動画の保存に失敗しました: ' + err.message, true);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function convertToVertical() {
+            if (activeModalIndex === -1) return;
+            const item = allItems[activeModalIndex];
+            const btn = document.getElementById('btnConvertToVert');
+
+            if (!confirm('この動画（横画面16:9等）をYouTube Shorts・リール最適な縦型9:16（1080×1920）に中央クロップ変換しますか？')) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 縦型9:16へクロップ変換中...';
+            showToast('📱 FFmpegで縦型9:16（1080×1920）に変換処理中...');
+
+            try {
+                const res = await fetch('/api/knowledge-video/convert-to-vertical', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: item.id })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    const vidPlayer = document.getElementById('videoPreviewPlayer');
+                    const vidPath = document.getElementById('videoPreviewPath');
+                    vidPlayer.src = data.videoPath;
+                    vidPlayer.load();
+                    vidPlayer.play().catch(() => {});
+                    vidPath.textContent = data.videoPath;
+                    showToast('🎉 縦型9:16（1080×1920）への自動変換が完了しました！');
+                } else {
+                    throw new Error(data.error || 'Conversion failed');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('変換エラー: ' + err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-mobile-screen"></i> 横画面 ➔ 縦型9:16自動変換';
+            }
+        }
+
+        async function generateNarrationAudio() {
+            if (activeModalIndex === -1) return;
+            const item = allItems[activeModalIndex];
+            const voice = document.getElementById('voiceTypeSelect').value;
+            const btn = document.getElementById('btnGenNarration');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 生成中...';
+            showToast('🎙️ ナレーション音声を生成しています...');
+
+            try {
+                const res = await fetch('/api/knowledge-video/generate-audio', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: item.id, voice: voice })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    const audioWrap = document.getElementById('audioPreviewWrap');
+                    const audioPlayer = document.getElementById('audioPreviewPlayer');
+                    audioWrap.classList.remove('hidden');
+                    let cleanPath = data.audioPath || '';
+                    if (cleanPath.startsWith('public/')) cleanPath = cleanPath.slice(7);
+                    if (cleanPath.startsWith('/public/')) cleanPath = cleanPath.slice(8);
+                    if (!cleanPath.startsWith('/')) cleanPath = '/' + cleanPath;
+                    audioPlayer.src = cleanPath + '?t=' + Date.now();
+                    audioPlayer.load();
+                    audioPlayer.play().catch(() => {});
+                    showToast('✅ ナレーション音声の作成が完了しました！');
+                } else {
+                    throw new Error(data.error || 'Audio gen failed');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('ナレーション生成エラー: ' + err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-microphone-lines"></i> 🎙️ ナレーション作成';
+            }
+        }
+
+        async function combineVideoAndAudio() {
+            if (activeModalIndex === -1) return;
+            const item = allItems[activeModalIndex];
+            const voice = document.getElementById('voiceTypeSelect').value;
+            const btn = document.getElementById('btnCombineVideo');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 合成レンダリング中...';
+            showToast('🎬 FFmpegで動画と音声を合成結合しています...');
+
+            try {
+                const res = await fetch('/api/knowledge-video/combine-video', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: item.id, voice: voice })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    let vPath = data.videoPath || '';
+                    if (vPath.startsWith('public/')) vPath = vPath.slice(7);
+                    if (vPath.startsWith('/public/')) vPath = vPath.slice(8);
+                    if (!vPath.startsWith('/')) vPath = '/' + vPath;
+
+                    item.status = 'veo_ready';
+                    item.veoVideoPath = vPath;
+                    persistToLocalStorage();
+                    applyFilters();
+
+                    const wrap = document.getElementById('combineResultWrap');
+                    const player = document.getElementById('finalVideoPlayer');
+                    const link = document.getElementById('linkDownloadFinal');
+                    wrap.classList.remove('hidden');
+                    player.src = vPath + '?t=' + Date.now();
+                    player.load();
+                    link.href = vPath;
+                    link.download = `${item.id}_final.mp4`;
+                    player.play().catch(() => {});
+                    showToast('🎉 動画とナレーションの合成が完了しました！');
+                } else {
+                    throw new Error(data.error || 'Combine failed');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('合成エラー: ' + err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-clapperboard"></i> 🎬 動画と音声を合成（完成動画生成）';
+            }
+        }
+
+        async function extractVideoThumbnail() {
+            if (activeModalIndex === -1) return;
+            const item = allItems[activeModalIndex];
+            const btn = document.getElementById('btnExtractThumb');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 抽出中...';
+            showToast('🖼️ 動画からサムネイル静止画を抽出中...');
+
+            try {
+                const res = await fetch('/api/knowledge-video/extract-thumbnail', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: item.id, time: '00:00:02' })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    const wrap = document.getElementById('thumbResultWrap');
+                    const img = document.getElementById('thumbPreviewImg');
+                    const link = document.getElementById('linkDownloadThumb');
+                    wrap.classList.remove('hidden');
+                    img.src = data.thumbnailUrl + '?t=' + Date.now();
+                    link.href = data.thumbnailUrl;
+                    link.download = `${item.id}_thumb.jpg`;
+                    showToast('🖼️ 静止画サムネイルの抽出が完了しました！');
+                } else {
+                    throw new Error(data.error || 'Extract failed');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('サムネイル抽出エラー: ' + err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-image text-amber-400"></i> 🖼️ 静止画サムネイル抽出';
+            }
+        }
+
+        function navigateModal(dir) {
+            if (activeModalIndex === -1) return;
+            let next = activeModalIndex + dir;
+            if (next < 0) next = allItems.length - 1;
+            if (next >= allItems.length) next = 0;
+            activeModalIndex = next;
+            loadModalData(allItems[next]);
+        }
+
+        function updateItemStatusFromModal(val) {
+            if (activeModalIndex === -1) return;
+            allItems[activeModalIndex].status = val;
+            persistToLocalStorage();
+            applyFilters();
+            showToast('ステータスを更新しました');
+        }
+
+        function setModalTab(tab) {
+            const tabs = ['veo', 'youtube', 'x', 'instagram', 'threads'];
+            tabs.forEach(t => {
+                const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+                const pane = document.getElementById('pane' + t.charAt(0).toUpperCase() + t.slice(1));
+                if (t === tab) {
+                    btn.classList.add('border-b-2');
+                    if (t === 'veo') btn.className = 'px-3.5 py-2 text-xs font-bold border-b-2 border-purple-500 text-purple-300 flex items-center gap-1.5 transition whitespace-nowrap';
+                    else if (t === 'youtube') btn.className = 'px-3.5 py-2 text-xs font-bold border-b-2 border-rose-500 text-rose-300 flex items-center gap-1.5 transition whitespace-nowrap';
+                    else if (t === 'x') btn.className = 'px-3.5 py-2 text-xs font-bold border-b-2 border-slate-200 text-slate-100 flex items-center gap-1.5 transition whitespace-nowrap';
+                    else if (t === 'instagram') btn.className = 'px-3.5 py-2 text-xs font-bold border-b-2 border-pink-500 text-pink-300 flex items-center gap-1.5 transition whitespace-nowrap';
+                    else if (t === 'threads') btn.className = 'px-3.5 py-2 text-xs font-bold border-b-2 border-emerald-500 text-emerald-300 flex items-center gap-1.5 transition whitespace-nowrap';
+                    pane.classList.remove('hidden');
+                } else {
+                    btn.className = 'px-3.5 py-2 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 transition whitespace-nowrap';
+                    pane.classList.add('hidden');
+                }
+            });
+        }
+
+        // =========================================================================
+        // IMAGE VIEWER & PATH HELPERS
+        // =========================================================================
+        function copySourceImgPath() {
+            const pathElem = document.getElementById('lblSourceImgFullPath');
+            const p = pathElem ? pathElem.textContent : '';
+            if (p && !p.startsWith('（')) {
+                copyText(p, '元画像の絶対ファイルパス');
+            } else {
+                showToast('図解画像パスがありません', true);
+            }
+        }
+
+        function openImageViewerFromModal() {
+            if (activeModalIndex === -1) return;
+            const item = allItems[activeModalIndex];
+            if (item && item.image) {
+                openImageViewer(item.image);
+            } else {
+                showToast('図解画像がありません', true);
+            }
+        }
+
+        function openImageViewer(src) {
+            if (!src) {
+                showToast('図解画像は現在準備中です', true);
+                return;
+            }
+            document.getElementById('viewerImage').src = src;
+            document.getElementById('viewerImagePath').textContent = src;
+            document.getElementById('imageViewerModal').classList.remove('hidden');
+        }
+
+        function closeImageViewer() {
+            document.getElementById('imageViewerModal').classList.add('hidden');
+        }
+
+        // =========================================================================
+        // COPY & SHARE HELPERS
+        // =========================================================================
+        function copyToClipboard(elementId, label) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            copyText(el.value, label);
+        }
+
+        function copyText(text, label) {
+            if (!text) return;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(`「${label}」をクリップボードにコピーしました！`);
+            }).catch(err => {
+                console.error('Copy failed:', err);
+                showToast('コピーに失敗しました', true);
+            });
+        }
+
+        function shareToX() {
+            const text = document.getElementById('txtXPost').value;
+            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank', 'width=550,height=420');
+        }
+
+        // =========================================================================
+        // EXPORT & IMPORT & PRODUCTION REFLECT
+        // =========================================================================
+        function exportDataJSON() {
+            const exportObj = {
+                version: "1.0.0",
+                exportedAt: new Date().toISOString(),
+                totalItems: allItems.length,
+                links: {}
+            };
+            allItems.forEach(item => {
+                exportObj.links[item.id] = {
+                    youtubeUrl: item.youtubeUrl || '',
+                    youtubeVideoId: item.youtubeVideoId || '',
+                    veoVideoPath: item.veoVideoPath || '',
+                    status: item.status || 'unstarted'
+                };
+            });
+            const blob = new Blob([JSON.stringify(exportObj, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sumairu_knowledge_video_links_${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('JSONファイルをダウンロードしました');
+        }
+
+        function importDataJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    const links = parsed.links || parsed;
+                    let count = 0;
+                    allItems.forEach(item => {
+                        if (links[item.id]) {
+                            if (links[item.id].youtubeUrl !== undefined) item.youtubeUrl = links[item.id].youtubeUrl;
+                            if (links[item.id].youtubeVideoId !== undefined) item.youtubeVideoId = links[item.id].youtubeVideoId;
+                            if (links[item.id].veoVideoPath !== undefined) item.veoVideoPath = links[item.id].veoVideoPath;
+                            if (links[item.id].status !== undefined) item.status = links[item.id].status;
+                            count++;
+                        }
+                    });
+                    persistToLocalStorage();
+                    applyFilters();
+                    showToast(`${count}件の動画リンクデータを読み込みました`);
+                } catch (err) {
+                    showToast('JSONの解析に失敗しました', true);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Reflect to Production Site
+        async function saveToProduction() {
+            persistToLocalStorage();
+            const exportMap = {};
+            allItems.forEach(item => {
+                exportMap[item.id] = {
+                    youtubeUrl: item.youtubeUrl || '',
+                    youtubeVideoId: item.youtubeVideoId || '',
+                    veoVideoPath: item.veoVideoPath || '',
+                    status: item.status || 'unstarted'
+                };
+            });
+
+            try {
+                // Also trigger download of knowledge_video_links.json for persistence
+                const blob = new Blob([JSON.stringify(exportMap, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'knowledge_video_links.json';
+                a.click();
+                URL.revokeObjectURL(url);
+
+                showToast('本サイト反映用 knowledge_video_links.json を出力しました！モーダル連動が有効です');
+            } catch (err) {
+                showToast('反映に失敗しました', true);
+            }
+        }
+
+        // Toast Helper
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toastMsg');
+            msgEl.textContent = msg;
+            toast.className = `fixed bottom-6 right-6 z-50 ${isError ? 'bg-rose-950 border-rose-500' : 'bg-slate-900 border-cyan-500/50'} text-white px-4 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2 transform transition-all duration-300`;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

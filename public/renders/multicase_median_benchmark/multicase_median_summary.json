@@ -1,0 +1,121 @@
+{
+  "timestamp": "2026-10-16 14:45:51",
+  "median_recommendation": {
+    "optimal_denoise": 0.56,
+    "depth_weight": 0.65,
+    "depth_guidance_end": 0.8,
+    "canny_weight": 0.38,
+    "canny_guidance_end": 0.7,
+    "rationale": "Guidance Endを0.70〜0.80に設定することで、CAD幾何形状を完全維持しながら後半20%のサンプリングステップで無垢檜・杉床の柔らかな木目と2700K朝の自然光・間接光を自然に融合生成できる。"
+  },
+  "cases": [
+    {
+      "id": "tsurugashima_s",
+      "name": "鶴ヶ島市 S様邸",
+      "sub": "認定低炭素旗艦邸（大空間・現し柱・無垢杉床）",
+      "outputs": [
+        {
+          "cid": "median_a_denoise52",
+          "denoise": 0.52,
+          "filename": "tsurugashima_s_median_a_denoise52.jpg",
+          "metrics": {
+            "warmth_ratio": 1.0,
+            "brightness": 252.2,
+            "preservation_rate": 4.0
+          }
+        },
+        {
+          "cid": "median_b_denoise56",
+          "denoise": 0.56,
+          "filename": "tsurugashima_s_median_b_denoise56.jpg",
+          "metrics": {
+            "warmth_ratio": 1.0,
+            "brightness": 252.1,
+            "preservation_rate": 4.6
+          }
+        }
+      ]
+    },
+    {
+      "id": "tsurugashima_a",
+      "name": "鶴ヶ島市 A様邸",
+      "sub": "無垢材モダン邸（開放LDK・木製カウンター）",
+      "outputs": [
+        {
+          "cid": "median_a_denoise52",
+          "denoise": 0.52,
+          "filename": "tsurugashima_a_median_a_denoise52.jpg",
+          "metrics": {
+            "warmth_ratio": 1.15,
+            "brightness": 233.3,
+            "preservation_rate": 9.8
+          }
+        },
+        {
+          "cid": "median_b_denoise56",
+          "denoise": 0.56,
+          "filename": "tsurugashima_a_median_b_denoise56.jpg",
+          "metrics": {
+            "warmth_ratio": 1.16,
+            "brightness": 227.6,
+            "preservation_rate": 5.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "yoshimi_o",
+      "name": "吉見町 O様邸",
+      "sub": "ワイドオープン郊外邸（大開口・ゆとり空間）",
+      "outputs": [
+        {
+          "cid": "median_a_denoise52",
+          "denoise": 0.52,
+          "filename": "yoshimi_o_median_a_denoise52.jpg",
+          "metrics": {
+            "warmth_ratio": 1.0,
+            "brightness": 254.2,
+            "preservation_rate": 0.2
+          }
+        },
+        {
+          "cid": "median_b_denoise56",
+          "denoise": 0.56,
+          "filename": "yoshimi_o_median_b_denoise56.jpg",
+          "metrics": {
+            "warmth_ratio": 1.0,
+            "brightness": 254.3,
+            "preservation_rate": 0.2
+          }
+        }
+      ]
+    },
+    {
+      "id": "tokigawa_k",
+      "name": "ときがわ町 K様邸",
+      "sub": "吹抜光融合邸（2層開口・吉野杉羽目板壁）",
+      "outputs": [
+        {
+          "cid": "median_a_denoise52",
+          "denoise": 0.52,
+          "filename": "tokigawa_k_median_a_denoise52.jpg",
+          "metrics": {
+            "warmth_ratio": 1.1,
+            "brightness": 233.5,
+            "preservation_rate": 17.2
+          }
+        },
+        {
+          "cid": "median_b_denoise56",
+          "denoise": 0.56,
+          "filename": "tokigawa_k_median_b_denoise56.jpg",
+          "metrics": {
+            "warmth_ratio": 1.12,
+            "brightness": 229.8,
+            "preservation_rate": 16.7
+          }
+        }
+      ]
+    }
+  ]
+}

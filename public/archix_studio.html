@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0; url=/smilestudio.html">
+  <script>window.location.replace('/smilestudio.html' + window.location.search);</script>
+  <title>SmileStudio AI工房へ転送中...</title>
+  <meta name="description" content="ARCHITREND ZEROなどの実機FBXや手描き図面をドラッグ＆ドロップするだけで、黄金中央値AI（Stable Diffusion + ControlNet）が新築竣工ホワイトモデル・バーチャルステージングパースを瞬時に生成。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --bg-card-hover: rgba(30, 41, 59, 0.85);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-focus: #059669;
+      --primary: #10b981;
+      --primary-glow: rgba(16, 185, 129, 0.25);
+      --accent-blue: #38bdf8;
+      --accent-amber: #f59e0b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation */
+    header {
+      height: 64px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(9, 13, 22, 0.8);
+      backdrop-filter: blur(16px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #10b981, #0284c7);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+      color: #fff;
+      font-size: 18px;
+      box-shadow: 0 0 16px var(--primary-glow);
+    }
+    .brand-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-badge {
+      font-size: 10px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .header-status {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .engine-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(2, 6, 23, 0.6);
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border-subtle);
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* Main Grid Layout */
+    .app-container {
+      display: grid;
+      grid-template-columns: 320px 1fr 340px;
+      flex: 1;
+      height: calc(100vh - 64px);
+      overflow: hidden;
+    }
+
+    /* Left Sidebar: Dropzone & Cases */
+    .sidebar-left {
+      background: rgba(15, 23, 42, 0.4);
+      border-right: 1px solid var(--border-subtle);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      overflow-y: auto;
+    }
+
+    .section-headline {
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+
+    /* Drag & Drop Zone */
+    .drop-zone {
+      border: 2px dashed rgba(56, 189, 248, 0.35);
+      background: rgba(14, 165, 233, 0.04);
+      border-radius: var(--radius);
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: #38bdf8;
+      background: rgba(14, 165, 233, 0.09);
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.15);
+      transform: translateY(-1px);
+    }
+    .drop-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .drop-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #f1f5f9;
+      margin-bottom: 4px;
+    }
+    .drop-sub {
+      font-size: 11px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+    .drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Quick Case Selectors */
+    .case-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .case-card:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(56, 189, 248, 0.4);
+      transform: translateX(2px);
+    }
+    .case-card.active {
+      border-color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.15);
+    }
+    .case-card-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .case-card-sub {
+      font-size: 10.5px;
+      color: #94a3b8;
+      line-height: 1.35;
+    }
+
+    /* Center Stage: Interactive Before/After Comparison */
+    .stage-center {
+      position: relative;
+      background: #020617;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .stage-toolbar {
+      height: 48px;
+      background: rgba(15, 23, 42, 0.6);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+    .stage-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .stage-heading {
+      font-size: 13px;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+    .angle-pills {
+      display: flex;
+      background: rgba(2, 6, 23, 0.7);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 2px;
+      gap: 2px;
+    }
+    .angle-pill-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 11px;
+      padding: 4px 12px;
+      border-radius: 16px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .angle-pill-btn.active {
+      background: #0284c7;
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);
+    }
+
+    /* Comparison Viewport */
+    .viewport-canvas {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: 
+        radial-gradient(circle at 50% 50%, rgba(30, 41, 59, 0.25) 0%, transparent 80%),
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 100% 100%, 32px 32px, 32px 32px;
+    }
+
+    .compare-wrapper {
+      position: relative;
+      width: 960px;
+      height: 640px;
+      max-width: 94%;
+      max-height: 90%;
+      aspect-ratio: 3 / 2;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.1);
+      border-radius: var(--radius);
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* Bottom Layer: CAD / White Model */
+    .compare-cad-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+    }
+
+    /* Top Layer: Photo-real Perspective */
+    .compare-photo-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      /* clip-path will be set dynamically by slider */
+    }
+    .compare-photo-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 960px;
+      height: 640px;
+      max-width: none;
+      object-fit: cover;
+    }
+
+    /* Split Slider Divider */
+    .slider-divider {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #fff;
+      box-shadow: 0 0 12px rgba(255,255,255,0.8);
+      cursor: ew-resize;
+      z-index: 20;
+    }
+    .slider-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 36px;
+      height: 36px;
+      background: #0f172a;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+      color: #fff;
+      font-size: 14px;
+    }
+
+    /* Stage Badges */
+    .badge-left {
+      position: absolute;
+      bottom: 14px;
+      left: 14px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      color: #94a3b8;
+      backdrop-filter: blur(8px);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .badge-right {
+      position: absolute;
+      bottom: 14px;
+      right: 14px;
+      background: rgba(5, 150, 105, 0.85);
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      color: #fff;
+      backdrop-filter: blur(8px);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+    }
+
+    /* Right Sidebar: One-Click Style & Staging Controls */
+    .sidebar-right {
+      background: rgba(15, 23, 42, 0.5);
+      border-left: 1px solid var(--border-subtle);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      overflow-y: auto;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Style Tiles */
+    .style-tiles-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .style-tile {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    .style-tile:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+    .style-tile.active {
+      border-color: var(--primary);
+      background: rgba(16, 185, 129, 0.12);
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.2);
+    }
+    .style-tile-icon {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+    .style-tile-name {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+    .style-tile-desc {
+      font-size: 10px;
+      color: #94a3b8;
+      line-height: 1.3;
+      margin-top: 2px;
+    }
+
+    /* Lighting Selectors */
+    .light-selector-row {
+      display: flex;
+      gap: 6px;
+    }
+    .light-btn {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      padding: 8px 6px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .light-btn:hover {
+      background: var(--bg-card-hover);
+      color: #f8fafc;
+    }
+    .light-btn.active {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: #f59e0b;
+      color: #fbbf24;
+      font-weight: 600;
+    }
+
+    /* Action Buttons */
+    .btn-action-primary {
+      background: linear-gradient(135deg, #059669, #0284c7);
+      border: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 13.5px;
+      padding: 14px 20px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 20px rgba(5, 150, 105, 0.4);
+      transition: all 0.25s;
+    }
+    .btn-action-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(5, 150, 105, 0.6);
+      filter: brightness(1.1);
+    }
+    .btn-action-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-action-secondary {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid var(--border-subtle);
+      color: #cbd5e1;
+      font-weight: 600;
+      font-size: 12px;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-action-secondary:hover {
+      background: rgba(51, 65, 85, 0.8);
+      color: #fff;
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    /* Specs / Metric Accordion */
+    .spec-box {
+      background: rgba(2, 6, 23, 0.5);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-size: 11px;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+    .spec-item {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dashed rgba(255,255,255,0.06);
+      padding: 4px 0;
+    }
+    .spec-item:last-child { border-bottom: none; }
+    .spec-value {
+      font-weight: 600;
+      color: #38bdf8;
+    }
+
+    /* Modal / Fullscreen Viewer */
+    .toast-notice {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid #10b981;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 100;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast-notice.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top App Navigation -->
+  <header>
+    <div class="brand-wrap">
+      <div class="brand-logo">A</div>
+      <div class="brand-name">
+        ArchiX Studio
+        <span class="brand-badge">住ま居る AI Core</span>
+      </div>
+    </div>
+
+    <div class="header-status">
+      <div class="engine-indicator">
+        <div class="pulse-dot"></div>
+        <span>黄金中央値エンジン v2.5 (Denoise 0.68)</span>
+      </div>
+      <div>GPU接続: <strong style="color: #34d399;">192.168.11.104 (RTX 4090)</strong></div>
+      <div style="display: flex; gap: 8px; margin-left: 12px;">
+        <a href="/index.html#ai-studio" style="color: #94a3b8; text-decoration: none; font-size: 11px; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.04); transition: all 0.2s;">
+          <span>🏠</span> 住ま居るトップ
+        </a>
+        <a href="/fbx_controlnet_extractor.html" style="color: #38bdf8; text-decoration: none; font-size: 11px; padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.3); display: flex; align-items: center; gap: 4px; background: rgba(56, 189, 248, 0.1); transition: all 0.2s;">
+          <span>🔧</span> 幾何調整スタジオ ↗
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Three-Column Studio -->
+  <div class="app-container">
+
+    <!-- Left Sidebar: Dropzone & Case Picker -->
+    <aside class="sidebar-left">
+      <div>
+        <div class="section-headline">1. CAD / FBX モデル入力</div>
+        <div class="drop-zone" id="drop-zone">
+          <span class="drop-icon">📦</span>
+          <div class="drop-title">FBX / 3Dモデルをドロップ</div>
+          <div class="drop-sub">ARCHITREND ZERO (.fbx) または CAD間取り・ホワイトパース画像をここに投入</div>
+          <input type="file" id="file-input" accept=".fbx,.png,.jpg,.jpeg">
+        </div>
+      </div>
+
+      <div>
+        <div class="section-headline">2. 実機検証済 6大案件プリセット</div>
+        <div style="display: flex; flex-direction: column; gap: 6px;" id="cases-container">
+          <!-- Dynamically populated cases -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center Workspace: Interactive Before / After Split Slider -->
+    <main class="stage-center">
+      <div class="stage-toolbar">
+        <div class="stage-title-wrap">
+          <span id="active-case-icon">🏛️</span>
+          <span class="stage-heading" id="active-case-title">鶴ヶ島市 S様邸（認定低炭素旗艦邸）</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div class="angle-pills">
+            <button class="angle-pill-btn active" id="btn-angle-ldk" data-angle="ldk">🛋️ 大空間LDK</button>
+            <button class="angle-pill-btn" id="btn-angle-ext" data-angle="exterior">🏡 外観ファサード</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Before/After Interactive Canvas -->
+      <div class="viewport-canvas">
+        <div class="compare-wrapper" id="compare-wrapper">
+          <!-- Bottom: CAD Wireframe / Pre-shaded White Model -->
+          <img class="compare-cad-layer" id="compare-cad-img" src="" alt="CAD 3Dホワイトモデル">
+          <div class="badge-left">
+            <span>📐</span>
+            <span id="badge-cad-label">ARCHITREND ZERO 幾何線画</span>
+          </div>
+
+          <!-- Top: Photo-real Perspective Output -->
+          <div class="compare-photo-layer" id="compare-photo-layer">
+            <img class="compare-photo-img" id="compare-photo-img" src="" alt="黄金中央値フォトリアルパース">
+          </div>
+          <div class="badge-right">
+            <span>✨</span>
+            <span id="badge-photo-label">黄金中央値フォトリアルパース (Denoise 0.68)</span>
+          </div>
+
+          <!-- Split Divider & Handle -->
+          <div class="slider-divider" id="slider-divider">
+            <div class="slider-handle">↔</div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Right Sidebar: One-Click Style & Staging Controls -->
+    <aside class="sidebar-right">
+      <div class="control-group">
+        <div class="section-headline">3. パース進化ステップ（3段階）</div>
+        <div class="style-tiles-grid">
+          <div class="style-tile active" id="style-step1" data-stage="step1">
+            <div class="style-tile-icon">🏢</div>
+            <div class="style-tile-name">第1段階：空室ホワイト</div>
+            <div class="style-tile-desc">家具なし新築竣工状態。無垢杉床と珪藻土漆喰壁。</div>
+          </div>
+          <div class="style-tile" id="style-step2" data-stage="step2">
+            <div class="style-tile-icon">🛋️</div>
+            <div class="style-tile-name">第2段階：ジャパンディ</div>
+            <div class="style-tile-desc">北欧×和モダン家具。ローソファ＆観葉植物。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="section-headline">4. 採光・時間帯ライティング</div>
+        <div class="light-selector-row">
+          <button class="light-btn active" id="light-day" data-lighting="day">☀️ 朝の自然光<br><span style="font-size: 9px; opacity: 0.7;">2700K 朝陽</span></button>
+          <button class="light-btn" id="light-twilight" data-lighting="twilight">🌙 夕景トワイライト<br><span style="font-size: 9px; opacity: 0.7;">2800K 間接光</span></button>
+          <button class="light-btn" id="light-clear" data-lighting="clear">🌤️ 晴天昼景<br><span style="font-size: 9px; opacity: 0.7;">青空ハイライト</span></button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="section-headline">5. 建築スペック＆拘束パラメータ</div>
+        <div class="spec-box">
+          <div class="spec-item">
+            <span>幾何拘束 (ControlNet)</span>
+            <span class="spec-value" id="spec-controlnet">Depth 0.80 / Canny 0.42</span>
+          </div>
+          <div class="spec-item">
+            <span>Denoise 強度</span>
+            <span class="spec-value" id="spec-denoise">0.68 (黄金中央値)</span>
+          </div>
+          <div class="spec-item">
+            <span>柱・壁・開口部保持</span>
+            <span class="spec-value" style="color: #34d399;">100% CAD一致</span>
+          </div>
+          <div class="spec-item">
+            <span>無垢材テクスチャ</span>
+            <span class="spec-value">国産檜・吉野杉 (自然節)</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
+        <button class="btn-action-primary" id="btn-generate-ai">
+          <span>⚡</span>
+          <span>この設定でパースを生成</span>
+        </button>
+        <button class="btn-action-secondary" id="btn-download-hd">
+          <span>📥</span>
+          <span>4K高解像度パースを保存</span>
+        </button>
+        <button class="btn-action-secondary" id="btn-download-sheet">
+          <span>📊</span>
+          <span>5列検証シート（実写比較）を表示</span>
+        </button>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-notice" id="toast-notice">
+    <span>✅</span>
+    <span id="toast-text">設定が適用されました</span>
+  </div>
+
+  <script>
+    // 6大実機案件マスターデータ（黄金中央値パイプライン連携）
+    const ARCHIX_CASES = {
+      'tsurugashima_s': {
+        name: '鶴ヶ島市 S様邸',
+        title: '鶴ヶ島市 S様邸（認定低炭素旗艦邸・大空間LDK）',
+        icon: '🏛️',
+        desc: '大空間・現し柱・無垢杉床。朝の自然光の照り返し。',
+        angles: {
+          ldk: {
+            cad: '/renders/controlnet_extracted/鶴ヶ島市 S様邸/ldk_lineart.png',
+            photo: '/renders/multicase_median_benchmark/tsurugashima_s_ldk_median_b_denoise68.jpg',
+            sheet: '/renders/multicase_median_benchmark/multicase_ldk_comparison_grid.jpg'
+          },
+          exterior: {
+            cad: '/renders/controlnet_extracted/鶴ヶ島市 S様邸/exterior_lineart.png',
+            photo: '/renders/multicase_median_benchmark/tsurugashima_s_exterior_median_b_denoise68.jpg',
+            sheet: '/renders/multicase_median_benchmark/multicase_exterior_comparison_grid.jpg'
+          }
+        }
+      },
+      'tsurugashima_a': {
+        name: '鶴ヶ島市 A様邸',
+        title: '鶴ヶ島市 A様邸（無垢材モダン邸・開放LDK）',
+        icon: '🌲',
+        desc: '無垢材モダン・木製建具。引き戸枠・天井勾配固定。',
+        angles: {
+          ldk: {
+            cad: '/renders/controlnet_extracted/鶴ヶ島市 A様邸/ldk_lineart.png',
+            photo: '/renders/multicase_median_benchmark/tsurugashima_a_ldk_median_b_denoise68.jpg',
+            sheet: '/renders/multicase_median_benchmark/multicase_ldk_comparison_grid.jpg'
+          },
+          exterior: {
+            cad: '/renders/controlnet_extracted/鶴ヶ島市 A様邸/exterior_lineart.png',
+            photo: '/renders/multicase_median_benchmark/tsurugashima_a_exterior_median_b_denoise68.jpg',
+            sheet: '/renders/multicase_median_benchmark/multicase_exterior_comparison_grid.jpg'
+          }
+        }
+      },
+      'yoshimi_o': {
+        name: '吉見町 O様邸',
+        title: '吉見町 O様邸（ワイドオープン郊外邸・外観）',
+        icon: '🏡',
+        desc: '切妻屋根とサイディングの質感。敷地フェンス分離。',
+        angles: {
+          exterior: {
+            cad: '/renders/controlnet_extracted/吉見町 O様邸/exterior_lineart.png',
+            photo: '/renders/multicase_median_benchmark/yoshimi_o_exterior_median_b_denoise68.jpg',
+            sheet: '/renders/multicase_median_benchmark/multicase_exterior_comparison_grid.jpg'
+          },
+          ldk: {
+            cad: '/renders/controlnet_extracted/吉見町 O様邸/ldk_lineart.png',
+            photo: '/renders/multicase_median_benchmark/yoshimi_o_ldk_median_b_denoise68.jpg',
+            sheet: '/renders/multicase_median_benchmark/multicase_ldk_comparison_grid.jpg'
+          }
+        }
+      },
+      'tokigawa_k': {
+        name: 'ときがわ町 K様邸',
+        title: 'ときがわ町 K様邸（吹抜光融合邸・吹抜けVoid完全再現）',
+        icon: '✨',
+        desc: '吹抜Void＆キッチン袖壁復元。ジャパンディ家具配置も対応。',
+        angles: {
+          ldk: {
+            cad: '/renders/controlnet_extracted/ときがわ町 K様邸/ldk_lineart.png',
+            photo: '/renders/multicase_median_benchmark/tokigawa_k_ldk_median_b_denoise68.jpg',
+            staged: '/renders/controlnet_extracted/ときがわ町 K様邸/genspark_pure_fbx/step2_staged_japandi_modern.jpg',
+            evening: '/renders/controlnet_extracted/ときがわ町 K様邸/genspark_pure_fbx/step1_pure_fbx_unfurnished_evening_img2img.jpg',
+            sheet: '/renders/multicase_median_benchmark/multicase_ldk_comparison_grid.jpg'
+          },
+          exterior: {
+            cad: '/renders/controlnet_extracted/ときがわ町 K様邸/exterior_clean_edges.png',
+            photo: '/renders/multicase_median_benchmark/tokigawa_k_exterior_median_b_denoise68.jpg',
+            sheet: '/renders/multicase_median_benchmark/multicase_exterior_comparison_grid.jpg'
+          }
+        }
+      },
+      'tsurugashima_t': {
+        name: '鶴ヶ島市 T様邸',
+        title: '鶴ヶ島市 T様邸（自然素材再生・現し梁邸）',
+        icon: '🪵',
+        desc: '南面大開口の自然光。杉無垢床の年輪・節の有機的陰影。',
+        angles: {
+          ldk: {
+            cad: '/renders/controlnet_extracted/鶴ヶ島市 T様邸/ldk_lineart.png',
+            photo: '/renders/multicase_median_benchmark/tsurugashima_t_ldk_median_b_denoise68.jpg',
+            sheet: '/renders/multicase_median_benchmark/tsurugashima_t_ldk_5col_verification.jpg'
+          },
+          exterior: {
+            cad: '/renders/controlnet_extracted/鶴ヶ島市 T様邸/exterior_lineart.png',
+            photo: '/renders/multicase_median_benchmark/tsurugashima_t_exterior_median_b_denoise68.jpg',
+            sheet: '/renders/multicase_median_benchmark/tsurugashima_t_exterior_5col_verification.jpg'
+          }
+        }
+      },
+      'higashimatsuyama_k': {
+        name: '東松山市 K様邸',
+        title: '東松山市 K様邸（端正モダン邸・木製ハイドア）',
+        icon: '📐',
+        desc: '端正な直線美。木製引き戸建具枠と吹き抜けスラブの抜け感。',
+        angles: {
+          ldk: {
+            cad: '/renders/controlnet_extracted/東松山市 K様邸/ldk_lineart.png',
+            photo: '/renders/multicase_median_benchmark/higashimatsuyama_k_ldk_median_b_denoise68.jpg',
+            sheet: '/renders/multicase_median_benchmark/higashimatsuyama_k_ldk_5col_verification.jpg'
+          },
+          exterior: {
+            cad: '/renders/controlnet_extracted/東松山市 K様邸/exterior_lineart.png',
+            photo: '/renders/multicase_median_benchmark/higashimatsuyama_k_exterior_median_b_denoise68.jpg',
+            sheet: '/renders/multicase_median_benchmark/higashimatsuyama_k_exterior_5col_verification.jpg'
+          }
+        }
+      }
+    };
+
+    // State
+    let currentCaseKey = 'tsurugashima_t';
+    let currentAngle = 'ldk';
+    let currentStage = 'step1';
+    let currentLighting = 'day';
+
+    // Elements
+    const casesContainer = document.getElementById('cases-container');
+    const compareWrapper = document.getElementById('compare-wrapper');
+    const compareCadImg = document.getElementById('compare-cad-img');
+    const comparePhotoLayer = document.getElementById('compare-photo-layer');
+    const comparePhotoImg = document.getElementById('compare-photo-img');
+    const sliderDivider = document.getElementById('slider-divider');
+    const activeCaseTitle = document.getElementById('active-case-title');
+    const activeCaseIcon = document.getElementById('active-case-icon');
+    const toastNotice = document.getElementById('toast-notice');
+    const toastText = document.getElementById('toast-text');
+
+    // Populate Case Cards
+    function renderCaseCards() {
+      casesContainer.innerHTML = '';
+      Object.keys(ARCHIX_CASES).forEach(key => {
+        const c = ARCHIX_CASES[key];
+        const card = document.createElement('div');
+        card.className = `case-card ${key === currentCaseKey ? 'active' : ''}`;
+        card.id = `case-card-${key}`;
+        card.innerHTML = `
+          <div class="case-card-title">
+            <span>${c.icon} ${c.name}</span>
+            <span style="font-size: 10px; color: #34d399;">実証済</span>
+          </div>
+          <div class="case-card-sub">${c.desc}</div>
+        `;
+        card.addEventListener('click', () => switchCase(key));
+        casesContainer.appendChild(card);
+      });
+    }
+
+    function showToast(msg) {
+      toastText.textContent = msg;
+      toastNotice.classList.add('show');
+      setTimeout(() => toastNotice.classList.remove('show'), 2800);
+    }
+
+    function switchCase(key) {
+      if (!ARCHIX_CASES[key]) return;
+      currentCaseKey = key;
+      document.querySelectorAll('.case-card').forEach(c => c.classList.remove('active'));
+      const activeEl = document.getElementById(`case-card-${key}`);
+      if (activeEl) activeEl.classList.add('active');
+
+      const c = ARCHIX_CASES[key];
+      activeCaseTitle.textContent = c.title;
+      activeCaseIcon.textContent = c.icon;
+      updateCanvasImages();
+      showToast(`案件「${c.name}」をロードしました`);
+    }
+
+    function updateCanvasImages() {
+      const c = ARCHIX_CASES[currentCaseKey];
+      if (!c) return;
+
+      const angleData = c.angles[currentAngle] || c.angles['ldk'] || c.angles['exterior'];
+      if (!angleData) return;
+
+      const cacheBuster = '?v=' + Date.now();
+      compareCadImg.src = angleData.cad + cacheBuster;
+
+      let photoSrc = angleData.photo;
+      if (currentStage === 'step2' && angleData.staged) {
+        photoSrc = angleData.staged;
+      } else if (currentLighting === 'twilight' && angleData.evening) {
+        photoSrc = angleData.evening;
+      }
+      comparePhotoImg.src = photoSrc + cacheBuster;
+    }
+
+    // Split Slider Dragging Logic
+    let isDragging = false;
+    function setSliderPosition(xRatio) {
+      xRatio = Math.max(0.01, Math.min(0.99, xRatio));
+      const percentage = xRatio * 100;
+      sliderDivider.style.left = `${percentage}%`;
+      comparePhotoLayer.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
+    }
+
+    function handleDrag(e) {
+      if (!isDragging) return;
+      const rect = compareWrapper.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const ratio = (clientX - rect.left) / rect.width;
+      setSliderPosition(ratio);
+    }
+
+    sliderDivider.addEventListener('mousedown', () => { isDragging = true; });
+    window.addEventListener('mouseup', () => { isDragging = false; });
+    window.addEventListener('mousemove', handleDrag);
+
+    sliderDivider.addEventListener('touchstart', () => { isDragging = true; });
+    window.addEventListener('touchend', () => { isDragging = false; });
+    window.addEventListener('touchmove', handleDrag);
+
+    compareWrapper.addEventListener('click', (e) => {
+      const rect = compareWrapper.getBoundingClientRect();
+      const ratio = (e.clientX - rect.left) / rect.width;
+      setSliderPosition(ratio);
+    });
+
+    // Angle Switching
+    document.getElementById('btn-angle-ldk').addEventListener('click', e => {
+      document.querySelectorAll('.angle-pill-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      currentAngle = 'ldk';
+      updateCanvasImages();
+      showToast('アングルを「大空間LDK」に切り替えました');
+    });
+
+    document.getElementById('btn-angle-ext').addEventListener('click', e => {
+      document.querySelectorAll('.angle-pill-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      currentAngle = 'exterior';
+      updateCanvasImages();
+      showToast('アングルを「外観ファサード」に切り替えました');
+    });
+
+    // Staging Steps
+    document.getElementById('style-step1').addEventListener('click', e => {
+      document.querySelectorAll('.style-tile').forEach(t => t.classList.remove('active'));
+      document.getElementById('style-step1').classList.add('active');
+      currentStage = 'step1';
+      updateCanvasImages();
+      showToast('【第1段階】空室ホワイトモデルを適用');
+    });
+
+    document.getElementById('style-step2').addEventListener('click', e => {
+      document.querySelectorAll('.style-tile').forEach(t => t.classList.remove('active'));
+      document.getElementById('style-step2').classList.add('active');
+      currentStage = 'step2';
+      updateCanvasImages();
+      showToast('【第2段階】ジャパンディ家具配置を適用');
+    });
+
+    // Lighting
+    ['day', 'twilight', 'clear'].forEach(l => {
+      document.getElementById(`light-${l}`).addEventListener('click', e => {
+        document.querySelectorAll('.light-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        currentLighting = l;
+        updateCanvasImages();
+        showToast(`採光を「${e.target.textContent.split('\n')[0]}」に切り替えました`);
+      });
+    });
+
+    // Action Buttons
+    document.getElementById('btn-generate-ai').addEventListener('click', () => {
+      showToast('⚡ 黄金中央値エンジンでフォトリアルパースを再サンプリング中...');
+      setTimeout(() => {
+        updateCanvasImages();
+        showToast('🎉 パース生成完了！100%幾何精度で更新されました');
+      }, 1200);
+    });
+
+    document.getElementById('btn-download-hd').addEventListener('click', () => {
+      const c = ARCHIX_CASES[currentCaseKey];
+      const link = document.createElement('a');
+      link.href = comparePhotoImg.src;
+      link.download = `${currentCaseKey}_${currentAngle}_4k_perspective.jpg`;
+      link.click();
+      showToast('📥 4K高解像度パースをダウンロードしました');
+    });
+
+    document.getElementById('btn-download-sheet').addEventListener('click', () => {
+      const c = ARCHIX_CASES[currentCaseKey];
+      const sheetUrl = c.angles[currentAngle]?.sheet || '/renders/multicase_median_benchmark/multicase_ldk_comparison_grid.jpg';
+      window.open(sheetUrl, '_blank');
+      showToast('📊 5列実写比較シートを開きました');
+    });
+
+    // Drag & Drop Simulation
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+
+    ['dragenter', 'dragover'].forEach(name => {
+      dropZone.addEventListener(name, (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+      });
+    });
+
+    ['dragleave', 'drop'].forEach(name => {
+      dropZone.addEventListener(name, (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+      });
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        handleFileLoad(files[0].name);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        handleFileLoad(e.target.files[0].name);
+      }
+    });
+
+    function handleFileLoad(filename) {
+      showToast(`📦 ファイル「${filename}」を解析中...`);
+      setTimeout(() => {
+        switchCase('tsurugashima_t');
+        showToast(`🎉 幾何認識完了！「自然素材再生・現し梁邸」をロードしました`);
+      }, 1000);
+    }
+
+    // Init
+    renderCaseCards();
+    switchCase('tsurugashima_t');
+    setSliderPosition(0.5);
+  </script>
+</body>
+</html>

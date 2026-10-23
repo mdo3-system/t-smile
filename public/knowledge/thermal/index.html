@@ -24,13 +24,13 @@
 
   <!-- JSON-LD Breadcrumbs -->
   <script type="application/ld+json">
-  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "🏠 ホーム", "item": "https://t-smile.co.jp/"}, {"@type": "ListItem", "position": 2, "name": "💬 温熱実務知見200選", "item": "https://t-smile.co.jp/knowledge/thermal/"}]}
+  {"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://t-smile.co.jp/"}, {"@type": "ListItem", "position": 2, "name": "温熱実務知見200選", "item": "https://t-smile.co.jp/knowledge/thermal/"}]}, {"@type": "HomeAndConstructionBusiness", "@id": "https://t-smile.co.jp/#organization", "name": "株式会社住ま居る", "url": "https://t-smile.co.jp/", "logo": "https://t-smile.co.jp/images/hero_kaguya_house.jpg", "telephone": "049-271-2350", "address": {"@type": "PostalAddress", "postalCode": "350-2224", "addressRegion": "埼玉県", "addressLocality": "鶴ヶ島市", "streetAddress": "町屋176番地5", "addressCountry": "JP"}, "geo": {"@type": "GeoCoordinates", "latitude": 35.93244, "longitude": 139.39082}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Thursday", "Friday", "Saturday"], "opens": "09:00", "closes": "18:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Wednesday", "Sunday"], "description": "定休日（※事前予約によりモデルハウスのご見学・ご案内は承っております）"}], "areaServed": "埼玉県全域", "hasCredential": [{"@type": "EducationalOccupationalCredential", "credentialCategory": "建設業許可", "name": "埼玉県知事許可（般－8）第60650号"}, {"@type": "EducationalOccupationalCredential", "credentialCategory": "建築設計事務所登録", "name": "二級建築設計事務所 埼玉県知事（5）第10278号"}]}]}
   </script>
 
   <!-- Google Fonts & Stylesheets -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800&family=Noto+Sans+JP:wght@400;700&family=Inter:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css" />
   
 
@@ -267,12 +267,14 @@
           <span style="background: #f59e0b; color: #0f172a; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px;">by 住ま居る</span>
         </a>
         <span style="font-size: 0.72rem; color: #94a3b8; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);">
-          埼玉・鶴ヶ島IC 1h圏内｜創業30年・累計800棟
+          施工エリア：埼玉県全域・一部東京都｜創業30年・累計800棟
         </span>
       </div>
       <nav>
         <ul class="lp-nav-links">
           <li><a href="/">🏠 ホーム</a></li>
+          <li><a href="/schedule/" class="" style="background: rgba(2, 132, 199, 0.25); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.35);">📅 家づくり工程</a></li>
+          <li><a href="/jfd-survey/" class="" style="background: rgba(13, 148, 136, 0.25); color: #5eead4; border: 1px solid rgba(45, 212, 191, 0.35);">🛰️ 3D点群測量</a></li>
           <li><a href="/madori-consultation/" class="" style="background: rgba(124, 58, 237, 0.25); color: #c4b5fd; border: 1px solid rgba(167, 139, 250, 0.3);">🤖 間取り相談＆カルテ</a></li>
           <li><a href="/flow/" class="" style="background: rgba(2, 132, 199, 0.2); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.3);">📐 家づくりの流れ・15万特典</a></li>
           <li><a href="/about/" class="">🛡️ 会社・信用 (CredLayer)</a></li>
@@ -280,6 +282,7 @@
           <li><a href="/evidence/" class="">📊 実測データ実証録</a></li>
           <li><a href="/ai-studio/" class="">🎨 AIパース工房</a></li>
           <li><a href="/knowledge/thermal/" class="active">💬 温熱知見200選</a></li>
+          <li><a href="/catalog/" class="" style="background: rgba(5, 150, 105, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);">📘 工学カタログ (PDF)</a></li>
         </ul>
       </nav>
     </div>
@@ -2238,6 +2241,7 @@
         登録不要のAI間取りシミュレーター、フォトリアルパース生成、埼玉の気候を知り尽くした24h温熱換気AI相談室を完全無料開放しています。
       </p>
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
+        <a href="/schedule/" class="lp-cta-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); font-weight: 800;">📅 家づくりスケジュール進捗シート ➜</a>
         <a href="/#floorplan-studio" class="lp-cta-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); font-weight: 800;">📐 間取りプラン選別・実例検索 ➜</a>
         <a href="/madori-consultation/" class="lp-cta-btn" style="background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: #fff; font-weight: 800;">💬 夫婦の家づくりカルテ ➜</a>
         <a href="/#thermal-consultation" class="lp-cta-btn" style="background: linear-gradient(135deg, #059669, #10b981); font-weight: 800;">🌡️ 24h温熱換気AI相談 ➜</a>
@@ -2251,18 +2255,40 @@
       株式会社住ま居る（埼玉県鶴ヶ島市）
     </p>
     <p style="margin: 0 0 1rem 0; font-size: 0.82rem; color: #64748b;">
-      埼玉県知事許可（般－8）第60650号 ｜ 二級建築設計事務所 埼玉県知事（5）第10268号 ｜ 創業1994年・施工実績800棟以上
+      埼玉県知事許可（般－8）第60650号 ｜ 二級建築設計事務所 埼玉県知事（5）第10278号 ｜ 創業1994年・施工実績800棟以上
     </p>
     <p style="margin: 0; font-size: 0.78rem;">
-      <a href="/">トップページ</a> ｜ <a href="/madori-consultation/">間取り相談＆カルテ</a> ｜ <a href="/flow/">家づくりの流れ・15万円設計申込特典</a> ｜ <a href="/about/">会社概要・信用の証明</a> ｜ <a href="/performance/">温熱・構造性能</a> ｜ <a href="/evidence/">光熱費実証録</a> ｜ <a href="/knowledge/thermal/">温熱知見200選</a>
+      <a href="/">トップページ</a> ｜ <a href="/schedule/">家づくりスケジュール</a> ｜ <a href="/jfd-survey/">3D点群測量と敷地調査</a> ｜ <a href="/madori-consultation/">間取り相談＆カルテ</a> ｜ <a href="/flow/">家づくりの流れ・15万円設計申込特典</a> ｜ <a href="/about/">会社概要・信用の証明</a> ｜ <a href="/performance/">温熱・構造性能</a> ｜ <a href="/evidence/">光熱費実証録</a> ｜ <a href="/knowledge/thermal/">温熱知見200選</a>
     </p>
     <p style="margin-top: 1.5rem; font-size: 0.75rem; color: #475569;">
-      &copy; 株式会社住ま居る (Sumaile Co., Ltd.) All Rights Reserved.
+      &copy; 株式会社住ま居る (Sumairu) All Rights Reserved.
     </p>
   </footer>
 
-  <script src="/js/app.js" defer></script>
-  <script src="/js/manga-viewer.js" defer></script>
+  <!-- 全頁共通: TOPへ戻る△ボタン -->
+  <button type="button" id="back-to-top-btn" class="back-to-top-btn" aria-label="トップへ戻る" title="ページの先頭へ戻る">
+    <span>▲</span>
+  </button>
+
+  <script src="/js/app.min.js" defer></script>
+  <script src="/js/manga-viewer.min.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('back-to-top-btn');
+      if (btn) {
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 300) {
+            btn.classList.add('is-visible');
+          } else {
+            btn.classList.remove('is-visible');
+          }
+        }, { passive: true });
+        btn.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+    });
+  </script>
   
 </body>
 </html>

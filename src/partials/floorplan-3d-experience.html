@@ -1,0 +1,270 @@
+<!-- ================================================================= -->
+<!-- 一次設計打ち合わせ後のお施主様専用：3D立体間取り あーでもないこーでもない体験アトリエ -->
+<!-- ================================================================= -->
+<div id="floorplan-3d-atelier-wrap" style="background: linear-gradient(135deg, #f8fafc 0%, #f0fdf4 50%, #ffffff 100%); border: 2.5px solid #0284c7; border-radius: 24px; padding: 2.5rem 2rem; margin: 2rem auto 3rem; max-width: 1140px; box-shadow: 0 15px 40px rgba(2, 132, 199, 0.12);">
+
+  <!-- 1. ヘッダー導入（共感と課題解決） -->
+  <div style="text-align: center; margin-bottom: 2rem;">
+    <div style="display: inline-flex; align-items: center; gap: 8px; background: #e0f2fe; border: 1.5px solid #0284c7; color: #0369a1; font-weight: 800; font-size: 0.88rem; padding: 6px 18px; border-radius: 20px; margin-bottom: 1rem;">
+      <span>📐</span> 一次設計打ち合わせ後のお施主様専用 ｜ 3D立体間取り体験アトリエ
+    </div>
+    <h3 style="color: #0f172a; font-size: 2rem; font-weight: 900; line-height: 1.4; margin: 0 0 0.8rem;">
+      白黒の平面図から、暮らしの「立体」が立ち上がる。<br>
+      <span style="color: #0284c7; font-size: 1.45rem;">ご夫婦で「あーでもない、こーでもない」と理想を磨く3Dプラン選定・立体空間確認</span>
+    </h3>
+    <p style="color: #475569; font-size: 1rem; line-height: 1.8; max-width: 880px; margin: 0 auto;">
+      「設計士から平面図と立面図を渡されたけれど、白黒の図面だけでは実際の部屋の広がりや光の入り方、無垢材やタイルの質感がピンとこない……」<br>
+      そんなお施主様のために、<strong>実在の確定設計図書（ときがわ町K様邸）</strong>をもとに、ご自宅のスマホから指先ひとつで床材・壁・照明・家具を切り替えて遊べる特別スタジオを用意しました。
+    </p>
+  </div>
+
+  <!-- 2. インタラクティブ・ビューア（2D図面原本 ⇔ 3D立体間取り） -->
+  <div style="background: #ffffff; border: 2px solid #cbd5e1; border-radius: 18px; padding: 1.8rem; box-shadow: 0 6px 20px rgba(0,0,0,0.06);">
+    
+    <!-- モード選択タブ（① 3D立体空間確認 ⇔ ② 2D原本設計図書） -->
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 1.2rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 0.8rem;">
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button type="button" id="btn-tab-3d-view" class="btn" style="background: #0284c7; color: #fff; font-weight: 800; font-size: 0.92rem; padding: 8px 18px; border-radius: 8px; border: none; cursor: pointer;">
+          ✨ ① 3D立体フロアプラン・空間確認
+        </button>
+        <button type="button" id="btn-tab-2d-view" class="btn" style="background: #f1f5f9; color: #475569; font-weight: 800; font-size: 0.92rem; padding: 8px 18px; border-radius: 8px; border: 1px solid #cbd5e1; cursor: pointer;">
+          📐 ② 確定設計図書（1F平面図原本）を見る
+        </button>
+      </div>
+      <div style="font-size: 0.82rem; color: #64748b; font-weight: 700;">
+        実例邸：ときがわ町K様邸（延床33.5坪 / 吹抜け大開口LDK）
+      </div>
+    </div>
+
+    <!-- コンテンツエリア A: 3D立体間取りシミュレーター -->
+    <div id="atelier-3d-panel">
+      <!-- 4大カスタマイズボタン群 -->
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem;">
+        <div style="font-size: 0.92rem; font-weight: 800; color: #0f172a; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 6px;">
+          <span>🎮</span> 【ワンタップで切り替え】ご夫婦で「あーでもない、こーでもない」と試してみる：
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;">
+          
+          <!-- ボタン 1: 基本・パイン床昼景 -->
+          <button type="button" class="btn-atelier-preset active" data-preset="base" style="background: #ffffff; border: 2px solid #0284c7; color: #0369a1; padding: 10px 12px; border-radius: 10px; text-align: left; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 8px rgba(2,132,199,0.15);">
+            <div style="font-size: 0.82rem; font-weight: 900;">🌲 ① パイン無垢床 ＆ 昼景</div>
+            <div style="font-size: 0.74rem; color: #64748b; margin-top: 2px;">吉野杉板壁＋吹抜け自然光</div>
+          </button>
+
+          <!-- ボタン 2: 壁タイル化 -->
+          <button type="button" class="btn-atelier-preset" data-preset="tile" style="background: #ffffff; border: 1.5px solid #cbd5e1; color: #334155; padding: 10px 12px; border-radius: 10px; text-align: left; cursor: pointer; transition: all 0.2s;">
+            <div style="font-size: 0.82rem; font-weight: 900;">🏛️ ② 右壁を大判タイルに変更</div>
+            <div style="font-size: 0.74rem; color: #64748b; margin-top: 2px;">高級グレーストーンタイル調</div>
+          </button>
+
+          <!-- ボタン 3: 床ウォールナット化 -->
+          <button type="button" class="btn-atelier-preset" data-preset="walnut" style="background: #ffffff; border: 1.5px solid #cbd5e1; color: #334155; padding: 10px 12px; border-radius: 10px; text-align: left; cursor: pointer; transition: all 0.2s;">
+            <div style="font-size: 0.82rem; font-weight: 900;">🪵 ③ 床をダークウォールナットに</div>
+            <div style="font-size: 0.74rem; color: #64748b; margin-top: 2px;">重厚でシックな深色ホテルライク</div>
+          </button>
+
+          <!-- ボタン 4: 夕暮れトワイライト -->
+          <button type="button" class="btn-atelier-preset" data-preset="twilight" style="background: #ffffff; border: 1.5px solid #cbd5e1; color: #334155; padding: 10px 12px; border-radius: 10px; text-align: left; cursor: pointer; transition: all 0.2s;">
+            <div style="font-size: 0.82rem; font-weight: 900;">🌇 ④ 夕暮れトワイライト＆間接照明</div>
+            <div style="font-size: 0.74rem; color: #64748b; margin-top: 2px;">夕陽の筋＋2700Kコーブ照明</div>
+          </button>
+
+          <!-- ボタン 5: 家具配置 -->
+          <button type="button" class="btn-atelier-preset" data-preset="furnished" style="background: #ffffff; border: 1.5px solid #cbd5e1; color: #334155; padding: 10px 12px; border-radius: 10px; text-align: left; cursor: pointer; transition: all 0.2s;">
+            <div style="font-size: 0.82rem; font-weight: 900;">🛋️ ⑤ ジャパンディ家具を配置</div>
+            <div style="font-size: 0.74rem; color: #64748b; margin-top: 2px;">低座ソファ・無垢テーブル配置</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- 画像表示スクリーン -->
+      <div style="position: relative; border-radius: 12px; overflow: hidden; background: #0f172a; border: 2px solid #334155; text-align: center; min-height: 480px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.25);">
+        <img id="atelier-main-img" src="/renders/controlnet_extracted/ときがわ町 K様邸/selftest_five_pillars/p1_v2_denoise048.jpg" alt="3D立体間取りシミュレーション" style="width: 100%; height: auto; max-height: 620px; object-fit: contain; display: block;" />
+        
+        <!-- バッジ表示 -->
+        <div id="atelier-status-badge" style="position: absolute; top: 16px; left: 16px; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); border: 1.5px solid #38bdf8; color: #e0f2fe; padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 800; display: flex; align-items: center; gap: 6px;">
+          <span>✨</span> <span id="atelier-badge-text">パイン無垢床 ＆ 昼の自然光（新築竣工・家具なし）</span>
+        </div>
+      </div>
+
+      <!-- 夫婦の会話吹き出し（共感・納得感のストーリー） -->
+      <div id="atelier-dialogue-box" style="margin-top: 1.2rem; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 1.2rem 1.4rem;">
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="font-size: 1.8rem; line-height: 1;">💬</div>
+          <div style="flex: 1; font-size: 0.92rem; line-height: 1.7; color: #166534;" id="atelier-dialogue-text">
+            <strong style="color: #0369a1;">👨 夫:</strong> 「吹抜けの高窓から光が降り注いで、一気に明るくなった！手前の無垢パイン床と奥の対面キッチンカウンターのつながりも広々としていていいね！」<br>
+            <strong style="color: #c026d3;">👩 妻:</strong> 「壁も白い珪藻土だからすごく開放感があるね！ねえ、右の壁を木の板からタイルに変えたらどうなるかな？ボタンを押してみて！」
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- コンテンツエリア B: 2D確定設計図書原本パネル（初期非表示） -->
+    <div id="atelier-2d-panel" style="display: none;">
+      <div style="background: #0f172a; border-radius: 12px; padding: 1rem; text-align: center;">
+        <div style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 0.6rem; text-align: left;">
+          📐 実際の1F確定設計図書（壁芯・寸法線・開口部・対面キッチン詳細図）
+        </div>
+        <img src="/renders/case02_floorplan_1f_blueprint.png" alt="ときがわ町K様邸 確定1F平面図原本" style="width: 100%; height: auto; max-height: 600px; object-fit: contain; border-radius: 8px; border: 1px solid #475569;" />
+      </div>
+      <div style="margin-top: 1rem; font-size: 0.88rem; color: #475569; line-height: 1.7; text-align: center;">
+        ※この白黒の平面図原本から、壁の幾何ラインや開口位置（ControlNet）を1ピクセルも狂わせずに忠実に立ち上げたのが上の「3D立体フロアプラン」です。
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 3. 【気付きのカード】「あれっ、このサイトは何をしているんだっけ？」 -->
+  <div style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 45%, #ffffff 100%); border: 2px solid #f59e0b; border-radius: 20px; padding: 2.2rem; margin-top: 2.2rem; box-shadow: 0 10px 30px rgba(217, 119, 6, 0.1);">
+    <div style="display: inline-block; background: #d97706; color: #ffffff; font-size: 0.82rem; font-weight: 900; padding: 4px 14px; border-radius: 20px; margin-bottom: 0.8rem;">
+      💡 大手ハウスメーカーでは「規格外」と断られてしまうような、あなただけの自由なこだわり
+    </div>
+    <h4 style="color: #78350f; font-size: 1.55rem; font-weight: 900; line-height: 1.4; margin: 0 0 0.8rem;">
+      「このカタログの標準仕様から選んでください」と言われて、モヤモヤしていませんか？
+    </h4>
+    <p style="color: #92400e; font-size: 0.98rem; line-height: 1.85; margin: 0 0 1.5rem;">
+      一生に一度の家づくり。せっかくなら、ご夫婦で「あーでもない、こーでもない」と心ゆくまで悩み、理想を膨らませてほしい。<br>
+      私たち<strong>株式会社住ま居る（埼玉県鶴ヶ島市・創業30年800棟）</strong>は、営業マンのフィルターを通さず、専任建築士と自社大工が直接お施主様の想いを受け止めます。<br>
+      あなたがこの画面で描いたどんな自由なこだわり（無垢材、タイル、吹き抜け、間接照明）も、<strong>全棟・許容応力度計算（耐震等級3）と高気密高断熱（断熱等級6/7・実測C値0.1〜0.3）</strong>の構造的裏付けをもって、現実に安全な図面へと落とし込みます。
+    </p>
+
+    <!-- 4. 【行動喚起 CTA】「一回は話を聞いてみたいな、よし話を聞こう！」 -->
+    <div style="background: #ffffff; border-radius: 14px; padding: 1.5rem; text-align: center; border: 1.5px solid #fde68a;">
+      <div style="font-size: 1.15rem; font-weight: 900; color: #0f172a; margin-bottom: 0.4rem;">
+        このこだわりと3Dプランをそのまま持って、一度お話ししてみませんか？
+      </div>
+      <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 1.2rem;">
+        強引な営業は一切ありません。他社様でご検討中の図面をお持ちいただいても大丈夫です。
+      </p>
+      
+      <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+        <!-- カルテ保存・無料相談ボタン -->
+        <button type="button" id="btn-atelier-save-consult" class="btn btn-primary" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800; font-size: 1rem; padding: 0.9rem 2rem; border-radius: 30px; box-shadow: 0 6px 20px rgba(217, 119, 6, 0.35); border: none; cursor: pointer;">
+          📋 この3Dプランを保存して専任スタッフに無料相談する（家カルテ発行）
+        </button>
+
+        <!-- 公式LINE相談ボタン -->
+        <a href="https://lin.ee/8fdyyGu" target="_blank" rel="noopener noreferrer" class="btn" style="background: #06c755; color: #ffffff; font-weight: 800; font-size: 1rem; padding: 0.9rem 1.8rem; border-radius: 30px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 6px 15px rgba(6, 199, 85, 0.3);">
+          <span>💬</span> 公式LINEでこの画像を送って専任スタッフに聞く（ID: @051vqxla）
+        </a>
+
+        <!-- 来社予約ボタン -->
+        <button type="button" class="btn" onclick="document.querySelector('#section-dashboard')?.scrollIntoView({behavior:'smooth'});" style="background: #0284c7; color: #ffffff; font-weight: 800; font-size: 1rem; padding: 0.9rem 1.8rem; border-radius: 30px; border: none; cursor: pointer; box-shadow: 0 6px 15px rgba(2, 132, 199, 0.25);">
+          🏡 鶴ヶ島モデルハウスで実物を体感する
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- インタラクティブ制御スクリプト -->
+<script>
+(function() {
+  const presets = {
+    base: {
+      img: '/renders/controlnet_extracted/ときがわ町 K様邸/selftest_five_pillars/p1_v2_denoise048.jpg',
+      badge: '🌲 パイン無垢床 ＆ 昼の自然光（新築竣工・家具なし）',
+      dialogue: '<strong style="color: #0369a1;">👨 夫:</strong> 「吹抜けの高窓から光が降り注いで、一気に明るくなった！手前の無垢パイン床と奥の対面キッチンカウンターのつながりも広々としていていいね！」<br><strong style="color: #c026d3;">👩 妻:</strong> 「壁も白い珪藻土だからすごく開放感があるね！ねえ、右の壁を木の板からタイルに変えたらどうなるかな？ボタンを押してみて！」'
+    },
+    tile: {
+      img: '/renders/controlnet_extracted/ときがわ町 K様邸/selftest_deep_material/tile_denoise058.jpg',
+      badge: '🏛️ 右壁：高級大判グレーストーンタイル（アクセントウォール）',
+      dialogue: '<strong style="color: #c026d3;">👩 妻:</strong> 「わぁ！右の壁を大判タイルにしたら、一気にモダンで洗練されたホテルのラウンジみたいになった！白壁とのメリハリがすごく綺麗！」<br><strong style="color: #0369a1;">👨 夫:</strong> 「本当だ、造作キッチンの木の笠木ともすごく調和してるね。床の色も濃いウォールナットにしたらどうなるだろう？」'
+    },
+    walnut: {
+      img: '/renders/controlnet_extracted/ときがわ町 K様邸/selftest_deep_material/perfect_walnut_safe_denoise048.jpg',
+      badge: '🪵 床材：ダークウォールナット無垢材（重厚・シック）',
+      dialogue: '<strong style="color: #0369a1;">👨 夫:</strong> 「うわっ、床をダークウォールナットにすると空間全体が引き締まって、すごく高級感と落ち着きが出るね！夜にお酒を飲むのに最高の雰囲気だ。」<br><strong style="color: #c026d3;">👩 妻:</strong> 「珪藻土の白壁が引き立って素敵！夕暮れや夜の間接照明の雰囲気も見てみたいな。」'
+    },
+    twilight: {
+      img: '/renders/controlnet_extracted/ときがわ町 K様邸/selftest_five_pillars/p4_v2_denoise055.jpg',
+      badge: '🌇 黄昏トワイライト ＆ 2700Kコーブ間接照明',
+      dialogue: '<strong style="color: #0369a1;">👨 夫:</strong> 「窓の外の夕暮れの藍色と、室内の温かい間接照明のコントラストがたまらないね。吹抜けの陰影がすごく綺麗だ。」<br><strong style="color: #c026d3;">👩 妻:</strong> 「仕事から帰ってきてこのリビングに入ったら、本当にホッと癒やされそう…！家具を置いた時のイメージも見てみよう！」'
+    },
+    furnished: {
+      img: '/renders/controlnet_extracted/ときがわ町 K様邸/selftest_five_pillars/p5_v2_denoise050.jpg',
+      badge: '🛋️ ジャパンディ・ローソファ ＆ 無垢テーブル配置',
+      dialogue: '<strong style="color: #c026d3;">👩 妻:</strong> 「家具が入ると、暮らしのスケール感がすごくよくわかる！低めのローソファにしたら吹抜けの高さが際立つね！」<br><strong style="color: #0369a1;">👨 夫:</strong> 「いいね！この組み合わせ、すごく気に入ったよ。このプランを保存して、今度の休みに住ま居るの社長さんに相談してみよう！」'
+    }
+  };
+
+  const mainImg = document.getElementById('atelier-main-img');
+  const badgeText = document.getElementById('atelier-badge-text');
+  const dialogueText = document.getElementById('atelier-dialogue-text');
+  const buttons = document.querySelectorAll('.btn-atelier-preset');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const presetKey = this.getAttribute('data-preset');
+      const data = presets[presetKey];
+      if (!data) return;
+
+      // ボタンのアクティブ状態更新
+      buttons.forEach(b => {
+        b.style.borderColor = '#cbd5e1';
+        b.style.color = '#334155';
+        b.style.borderWidth = '1.5px';
+        b.style.boxShadow = 'none';
+      });
+      this.style.borderColor = '#0284c7';
+      this.style.color = '#0369a1';
+      this.style.borderWidth = '2px';
+      this.style.boxShadow = '0 2px 8px rgba(2,132,199,0.15)';
+
+      // 画像＆テキスト切り替え
+      if (mainImg) mainImg.src = data.img;
+      if (badgeText) badgeText.textContent = data.badge;
+      if (dialogueText) dialogueText.innerHTML = data.dialogue;
+    });
+  });
+
+  // タブ切替 (3D vs 2D原本)
+  const btn3D = document.getElementById('btn-tab-3d-view');
+  const btn2D = document.getElementById('btn-tab-2d-view');
+  const panel3D = document.getElementById('atelier-3d-panel');
+  const panel2D = document.getElementById('atelier-2d-panel');
+
+  if (btn3D && btn2D && panel3D && panel2D) {
+    btn3D.addEventListener('click', () => {
+      btn3D.style.background = '#0284c7';
+      btn3D.style.color = '#fff';
+      btn3D.style.border = 'none';
+      btn2D.style.background = '#f1f5f9';
+      btn2D.style.color = '#475569';
+      btn2D.style.border = '1px solid #cbd5e1';
+      panel3D.style.display = 'block';
+      panel2D.style.display = 'none';
+    });
+
+    btn2D.addEventListener('click', () => {
+      btn2D.style.background = '#0284c7';
+      btn2D.style.color = '#fff';
+      btn2D.style.border = 'none';
+      btn3D.style.background = '#f1f5f9';
+      btn3D.style.color = '#475569';
+      btn3D.style.border = '1px solid #cbd5e1';
+      panel3D.style.display = 'none';
+      panel2D.style.display = 'block';
+    });
+  }
+
+  // カルテ相談ボタンクリック時、家カルテモーダルへスムーズ連動
+  const btnSaveConsult = document.getElementById('btn-atelier-save-consult');
+  if (btnSaveConsult) {
+    btnSaveConsult.addEventListener('click', () => {
+      const activeBtn = document.querySelector('.btn-atelier-preset[style*="0284c7"]') || document.querySelector('.btn-atelier-preset.active');
+      const presetKey = activeBtn ? activeBtn.getAttribute('data-preset') : 'base';
+      const presetInfo = presets[presetKey] ? presets[presetKey].badge : '理想の3D間取りプラン';
+      
+      const modal = document.getElementById('modal-carte') || document.getElementById('modal-atelier-gate');
+      if (modal) {
+        modal.classList.add('active');
+        modal.style.display = 'flex';
+      } else {
+        alert('【3D立体プランを保存しました】\n選択内容: ' + presetInfo + '\n\n専任建築士へそのままお繋ぎいたします。公式LINEまたは無料相談窓口よりお気軽にお問い合わせください。');
+      }
+    });
+  }
+})();
+</script>

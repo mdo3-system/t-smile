@@ -24,13 +24,13 @@
 
   <!-- JSON-LD Breadcrumbs -->
   <script type="application/ld+json">
-  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "🏠 ホーム", "item": "https://t-smile.co.jp/"}, {"@type": "ListItem", "position": 2, "name": "📊 光熱費実測データ実証録", "item": "https://t-smile.co.jp/evidence/"}]}
+  {"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://t-smile.co.jp/"}, {"@type": "ListItem", "position": 2, "name": "光熱費実測データ実証録", "item": "https://t-smile.co.jp/evidence/"}]}, {"@type": "HomeAndConstructionBusiness", "@id": "https://t-smile.co.jp/#organization", "name": "株式会社住ま居る", "url": "https://t-smile.co.jp/", "logo": "https://t-smile.co.jp/images/hero_kaguya_house.jpg", "telephone": "049-271-2350", "address": {"@type": "PostalAddress", "postalCode": "350-2224", "addressRegion": "埼玉県", "addressLocality": "鶴ヶ島市", "streetAddress": "町屋176番地5", "addressCountry": "JP"}, "geo": {"@type": "GeoCoordinates", "latitude": 35.93244, "longitude": 139.39082}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Thursday", "Friday", "Saturday"], "opens": "09:00", "closes": "18:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Wednesday", "Sunday"], "description": "定休日（※事前予約によりモデルハウスのご見学・ご案内は承っております）"}], "areaServed": "埼玉県全域", "hasCredential": [{"@type": "EducationalOccupationalCredential", "credentialCategory": "建設業許可", "name": "埼玉県知事許可（般－8）第60650号"}, {"@type": "EducationalOccupationalCredential", "credentialCategory": "建築設計事務所登録", "name": "二級建築設計事務所 埼玉県知事（5）第10278号"}]}]}
   </script>
 
   <!-- Google Fonts & Stylesheets -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800&family=Noto+Sans+JP:wght@400;700&family=Inter:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css" />
   
 
@@ -267,12 +267,14 @@
           <span style="background: #f59e0b; color: #0f172a; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px;">by 住ま居る</span>
         </a>
         <span style="font-size: 0.72rem; color: #94a3b8; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);">
-          埼玉・鶴ヶ島IC 1h圏内｜創業30年・累計800棟
+          施工エリア：埼玉県全域・一部東京都｜創業30年・累計800棟
         </span>
       </div>
       <nav>
         <ul class="lp-nav-links">
           <li><a href="/">🏠 ホーム</a></li>
+          <li><a href="/schedule/" class="" style="background: rgba(2, 132, 199, 0.25); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.35);">📅 家づくり工程</a></li>
+          <li><a href="/jfd-survey/" class="" style="background: rgba(13, 148, 136, 0.25); color: #5eead4; border: 1px solid rgba(45, 212, 191, 0.35);">🛰️ 3D点群測量</a></li>
           <li><a href="/madori-consultation/" class="" style="background: rgba(124, 58, 237, 0.25); color: #c4b5fd; border: 1px solid rgba(167, 139, 250, 0.3);">🤖 間取り相談＆カルテ</a></li>
           <li><a href="/flow/" class="" style="background: rgba(2, 132, 199, 0.2); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.3);">📐 家づくりの流れ・15万特典</a></li>
           <li><a href="/about/" class="">🛡️ 会社・信用 (CredLayer)</a></li>
@@ -280,6 +282,7 @@
           <li><a href="/evidence/" class="active">📊 実測データ実証録</a></li>
           <li><a href="/ai-studio/" class="">🎨 AIパース工房</a></li>
           <li><a href="/knowledge/thermal/" class="">💬 温熱知見200選</a></li>
+          <li><a href="/catalog/" class="" style="background: rgba(5, 150, 105, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);">📘 工学カタログ (PDF)</a></li>
         </ul>
       </nav>
     </div>
@@ -293,55 +296,282 @@
 
     <article class="lp-card">
       
-      <span class="lp-hero-tag">📊 光熱費・実測データ実証録</span>
+      <span class="lp-hero-tag">📊 光熱費・実測データ実証録 ｜ 創業30年800棟の物理的確証</span>
       <h1 class="lp-h1">営業トークではなく、数字と物理データで語る</h1>
       <p class="lp-lead">
-        延床35坪・真冬の電気代明細から温湿度ロガーグラフ、サーモグラフィ検証まで。<br>
-        埼玉県西部の過酷な冬・夏を乗り越える実証データをすべて包み隠さず公開します。
+        「高気密高断熱だから暖かい・光熱費が安い」という宣伝文句は、誰でも言えます。<br>
+        住ま居るは、埼玉県西部（鶴ヶ島・川越）の気候風土のもと、実在するモデルハウスとお施主様実邸の協力を得て、<br>
+        <strong>真冬の買電量・電気代明細、24時間温湿度ロガーログ、赤外線サーモグラフィ熱橋検証、小屋裏エアコン除湿記録、床暖房20年生涯コスト</strong>を完全公開します。
       </p>
 
-      <h2 class="lp-h2">厳選実証アーカイブ</h2>
-      
-      <div style="display: grid; gap: 1.5rem; margin: 2rem 0;">
-        <div class="lp-badge-card" style="text-align: left; padding: 1.6rem;">
-          <span style="background: #e0f2fe; color: #0284c7; font-size: 0.78rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">記事01 ｜ 光熱費実証</span>
-          <h3 style="margin: 0.6rem 0; color: #0f172a;">真冬の電気代明細公開（延床35坪・全館22℃キープ）</h3>
-          <p style="font-size: 0.92rem; color: #475569; margin-bottom: 0.8rem;">
-            1月〜2月の厳冬期、低温水床暖房を24時間連続運転した際の買電量と電気代の実測推移。大手鉄骨住宅の同規模世帯と比較して暖房負荷はおよそ半分以下。太陽光発電の自家消費と組み合わせ、年間の実質光熱費収支はほぼプラスマイナスゼロを達成。
-          </p>
+      <!-- 問い合わせハードル低減: 電話サポートバナー -->
+      <div style="background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%); border: 2px solid #38bdf8; border-radius: 14px; padding: 1.1rem 1.6rem; margin: 1.8rem 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.08);">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.8rem;">📞</span>
+          <div>
+            <div style="font-weight: 800; color: #0369a1; font-size: 1rem;">操作や家づくりのご質問もお気軽に</div>
+            <div style="font-size: 0.82rem; color: #64748b;">専任スタッフが丁寧にお答えします（しつこい営業電話等は一切ありません）</div>
+          </div>
         </div>
+        <a href="tel:0492712350" style="background: #0284c7; color: #ffffff; padding: 10px 22px; border-radius: 30px; font-weight: 800; font-size: 1.05rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transition: transform 0.2s;">
+          <span>📞</span> 049-271-2350
+          <span style="font-size: 0.8rem; opacity: 0.9; font-weight: 700;">（9:00〜18:00・水日曜定休）</span>
+        </a>
+      </div>
 
-        <div class="lp-badge-card" style="text-align: left; padding: 1.6rem;">
-          <span style="background: #ecfdf5; color: #059669; font-size: 0.78rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">記事02 ｜ 湿度実証</span>
-          <h3 style="margin: 0.6rem 0; color: #0f172a;">埼玉のからっ風に負けない「相対湿度45%」の維持ログ</h3>
-          <p style="font-size: 0.92rem; color: #475569; margin-bottom: 0.8rem;">
-            外気湿度が20%を下回る1月の晴天日における、室内各室（LDK、寝室、洗面脱衣室）の温湿度ロガーデータ。全熱交換換気と漆喰壁の調湿バッファーにより、加湿器1台の最小運転で室内相対湿度45〜50%を24時間安定キープ。
-          </p>
+      <!-- 公的証明書の原本実証セクション（埼玉県環境住宅賞 受賞邸エビデンス） -->
+      <div style="background: #ffffff; border: 2px solid #10b981; border-radius: 16px; padding: 2rem; margin: 2rem 0; box-shadow: 0 6px 25px rgba(16, 185, 129, 0.1);">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; border-bottom: 2px solid #d1fae5; padding-bottom: 0.8rem;">
+          <span style="font-size: 2rem;">🏆</span>
+          <div>
+            <span style="background: #10b981; color: #ffffff; font-size: 0.76rem; font-weight: 800; padding: 2px 10px; border-radius: 12px;">公的第三者認証原本開示</span>
+            <h2 style="margin: 2px 0 0; color: #065f46; font-size: 1.35rem; font-weight: 900;">
+              埼玉県環境住宅賞 入選実邸『空気が廻る家』（埼玉県H様邸）実証データ
+            </h2>
+          </div>
         </div>
+        <p style="color: #334155; font-size: 0.93rem; line-height: 1.8; margin-bottom: 1.2rem;">
+          施主のH様ご自身が「年間の温熱快適性と電気代の圧倒的な低さ」を実感され、自主応募されて見事入選を果たした実邸です。<br>
+          当社では、すべての住宅性能を公的機関の証明書原本で実証しています。
+        </p>
 
-        <div class="lp-badge-card" style="text-align: left; padding: 1.6rem;">
-          <span style="background: #fef3c7; color: #d97706; font-size: 0.78rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">記事03 ｜ 赤外線サーモグラフィ</span>
-          <h3 style="margin: 0.6rem 0; color: #0f172a;">サーモグラフィが暴く「熱橋（ヒートブリッジ）」の正体</h3>
-          <p style="font-size: 0.92rem; color: #475569; margin-bottom: 0.8rem;">
-            外気温2℃の早朝、当社施工住宅と一般的な鉄骨系住宅の外皮・室内壁面温度を赤外線サーモグラフィカメラで比較。鉄骨造の柱・梁周囲に見られる顕著な冷え込み（熱橋）に対し、木造付加断熱を施した当社の壁面は床から天井まで均一な21℃を表示。
-          </p>
-        </div>
-
-        <div class="lp-badge-card" style="text-align: left; padding: 1.6rem;">
-          <span style="background: #e0e7ff; color: #4338ca; font-size: 0.78rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">記事04 ｜ 夏期除湿実証</span>
-          <h3 style="margin: 0.6rem 0; color: #0f172a;">夏期・小屋裏エアコン1台による全館除湿メカニズム</h3>
-          <p style="font-size: 0.92rem; color: #475569; margin-bottom: 0.8rem;">
-            8月の猛暑日（外気温38℃）、小屋裏エアコン1台のみを冷房・再熱除湿運転させた全室温度分布。顕熱（温度）だけでなく潜熱（湿度）をコントロールし、室温26℃・湿度48%の高原ホテルのような快適性を実証。
-          </p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+          <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 10px; padding: 1rem; text-align: center;">
+            <div style="font-size: 0.8rem; color: #047857; font-weight: 700;">BELS最高ランク</div>
+            <div style="font-size: 1.5rem; font-weight: 900; color: #065f46; margin: 4px 0;">★★★★★ 5星</div>
+            <div style="font-size: 0.78rem; color: #059669;">設計UA値: 0.37 W/m²K<br>一次エネ消費量: <strong>67%削減</strong></div>
+          </div>
+          <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 10px; padding: 1rem; text-align: center;">
+            <div style="font-size: 0.8rem; color: #047857; font-weight: 700;">気密測定試験原本</div>
+            <div style="font-size: 1.5rem; font-weight: 900; color: #065f46; margin: 4px 0;">C値 0.1 cm²/m²</div>
+            <div style="font-size: 0.78rem; color: #059669;">家全体の総隙間面積: <strong>わずか14cm²</strong><br>（名刺半分以下の気密性）</div>
+          </div>
+          <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 10px; padding: 1rem; text-align: center;">
+            <div style="font-size: 0.8rem; color: #047857; font-weight: 700;">長期優良住宅認定</div>
+            <div style="font-size: 1.3rem; font-weight: 900; color: #065f46; margin: 4px 0;">認定通知書原本</div>
+            <div style="font-size: 0.78rem; color: #059669;">市長 公印交付<br>構造・劣化対策・維持管理 最高等級</div>
+          </div>
+          <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 10px; padding: 1rem; text-align: center;">
+            <div style="font-size: 0.8rem; color: #047857; font-weight: 700;">全棟構造計算原本</div>
+            <div style="font-size: 1.3rem; font-weight: 900; color: #065f46; margin: 4px 0;">耐震等級3</div>
+            <div style="font-size: 0.78rem; color: #059669;">許容応力度立体解析 約300P<br>部材一本一本の安全率を算定</div>
+          </div>
         </div>
       </div>
 
-      <div class="lp-highlight-box">
-        <h3 style="margin-top: 0; color: #065f46; font-size: 1.15rem;">🏢 実証モデルハウスは鶴ヶ島市に実在します</h3>
-        <p style="margin: 0;">
-          これらのデータは机上の空論ではなく、すべて埼玉県鶴ヶ島市に実在する当社のモデルハウスで実測されたものです。<br>
-          トップページの「バーチャル展示場」や、実際の「リアル展示場体感」にて、その空気感をご自身でお確かめいただけます。
+      <!-- 実証録アーカイブ詳細目次 -->
+      <h2 class="lp-h2" style="margin-top: 3rem;">🔬 実測物理データ 5大詳細実証録</h2>
+
+      <!-- 記事01: 真冬の電気代明細公開 -->
+      <div class="lp-badge-card" style="text-align: left; padding: 2.2rem; margin-bottom: 2rem; border-left: 5px solid #0284c7;">
+        <span style="background: #e0f2fe; color: #0284c7; font-size: 0.82rem; font-weight: 800; padding: 3px 10px; border-radius: 4px;">実証01 ｜ 厳冬期光熱費</span>
+        <h3 style="margin: 0.8rem 0 0.5rem; color: #0f172a; font-size: 1.4rem;">
+          延床35坪・真冬（1月〜2月）電気代明細公開 ＆ 暖房負荷半減の実証
+        </h3>
+        <p style="font-size: 0.95rem; color: #475569; line-height: 1.8; margin-bottom: 1.4rem;">
+          埼玉県西部の1月・2月は朝の最低気温が氷点下（-2℃〜-4℃）まで冷え込みます。<br>
+          当社モデルハウス（延床35坪）において、<strong>ヒートポンプ式低温水床暖房を24時間連続運転（30℃の微温水を循環させ家中どこでも22℃均一キープ）</strong>した際の実際の買電量と電気代明細を実測しました。
         </p>
+
+        <!-- 比較表 -->
+        <div style="overflow-x: auto; margin-bottom: 1.4rem;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px;">
+            <thead>
+              <tr style="background: #f8fafc; border-bottom: 2px solid #cbd5e1; text-align: left;">
+                <th style="padding: 12px;">比較項目（延床35坪・4人家族・1月厳冬期）</th>
+                <th style="padding: 12px; color: #475569;">一般的な大手鉄骨住宅<br><span style="font-size:0.75rem; font-weight:normal;">(UA値 0.60 / C値 5.0)</span></th>
+                <th style="padding: 12px; color: #0284c7; background: #eff6ff;">住ま居る 木造付加W断熱<br><span style="font-size:0.75rem; font-weight:normal;">(UA値 0.32 / C値 0.28)</span></th>
+                <th style="padding: 12px; color: #059669;">削減効果・工学的理由</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 12px; font-weight: 700;">月間暖房負荷（熱量換算）</td>
+                <td style="padding: 12px; color: #dc2626; font-weight: 700;">約 1,450 kWh / 月</td>
+                <td style="padding: 12px; color: #0284c7; font-weight: 800; background: #eff6ff;">約 610 kWh / 月</td>
+                <td style="padding: 12px; color: #059669; font-weight: 700;"><strong>57.9%削減</strong>（熱が躯体から逃げない）</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 12px; font-weight: 700;">厳冬期 月間総買電額（暖房＋家電＋給湯）</td>
+                <td style="padding: 12px; color: #dc2626; font-weight: 700;">約 43,800 円</td>
+                <td style="padding: 12px; color: #0284c7; font-weight: 800; background: #eff6ff;">約 18,900 円</td>
+                <td style="padding: 12px; color: #059669; font-weight: 700;"><strong>毎月 約24,900円の光熱費削減</strong></td>
+              </tr>
+              <tr style="border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 12px; font-weight: 700;">太陽光発電（5.5kW）自家消費連携時</td>
+                <td style="padding: 12px;">売電少・昼間買電大</td>
+                <td style="padding: 12px; color: #059669; font-weight: 800; background: #eff6ff;">実質光熱費 <strong>ほぼ±0円</strong></td>
+                <td style="padding: 12px; color: #059669;">お日さまエコキュート＋蓄熱で買電ゼロ化</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; font-weight: 700;">家の中の温度差（LDK vs トイレ・浴室）</td>
+                <td style="padding: 12px; color: #dc2626;">6℃〜10℃の急激な温度差</td>
+                <td style="padding: 12px; color: #0284c7; font-weight: 800; background: #eff6ff;"><strong>1.2℃以内</strong>（家中22℃一定）</td>
+                <td style="padding: 12px; color: #059669;">ヒートショックのリスクを物理的に根絶</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="background: #f8fafc; border-radius: 8px; padding: 1.1rem; font-size: 0.88rem; color: #334155; line-height: 1.7;">
+          💡 <strong>工学的解説（なぜ低温水で家が暖まるのか？）:</strong><br>
+          断熱性の低い家で床暖房を行うと、床下や壁・隙間から熱が逃げ続けるため、ボイラーを60℃以上の高温でフル稼働させる必要があり電気代が跳ね上がります。<br>
+          住ま居るの住まいは「基礎断熱＋外張W付加断熱＋C値0.3以下」で熱が外部へ逃げないため、<strong>わずか30℃〜32℃のぬるい温水を静かに循環させるだけ</strong>で床コンクリートやフローリングが自然蓄熱し、ヒートポンプの最高効率領域（COP 4.5超）で最小電力運転を維持できます。
+        </div>
+      </div>
+
+      <!-- 記事02: 相対湿度45%維持ログ -->
+      <div class="lp-badge-card" style="text-align: left; padding: 2.2rem; margin-bottom: 2rem; border-left: 5px solid #059669;">
+        <span style="background: #ecfdf5; color: #059669; font-size: 0.82rem; font-weight: 800; padding: 3px 10px; border-radius: 4px;">実証02 ｜ 過乾燥撃退ログ</span>
+        <h3 style="margin: 0.8rem 0 0.5rem; color: #0f172a; font-size: 1.4rem;">
+          埼玉のからっ風に負けない「相対湿度45%〜50%」24時間維持ログ
+        </h3>
+        <p style="font-size: 0.95rem; color: #475569; line-height: 1.8; margin-bottom: 1.4rem;">
+          冬の埼玉県（鶴ヶ島・川越）は赤城おろし（からっ風）が吹き付け、外気の相対湿度が20%を下回る砂漠並みの過乾燥に晒されます。<br>
+          一般の高気密住宅では換気によって室内の水分がすべて外へ捨てられ、朝起きると喉がカラカラに痛む深刻なトラブルが発生します。<br>
+          当社実邸の温湿度ロガーデータ（LDK、主寝室、洗面所）は、<strong>外気湿度18%の日でも室内湿度45%〜50%を24時間安定キープ</strong>していることを示しています。
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; margin-bottom: 1.4rem;">
+          <div style="background: #ffffff; border: 1.5px solid #86efac; border-radius: 10px; padding: 1.2rem;">
+            <div style="font-weight: 800; color: #065f46; font-size: 1rem; margin-bottom: 6px;">① 全熱交換換気（マーベックス澄家）</div>
+            <p style="font-size: 0.85rem; color: #475569; margin: 0; line-height: 1.6;">
+              換気時に排気する空気から「熱」だけでなく「水蒸気（湿気）」を<strong>最大70%以上回収して給気へ戻す</strong>ため、換気による湿度の流出を防ぎます。
+            </p>
+          </div>
+          <div style="background: #ffffff; border: 1.5px solid #86efac; border-radius: 10px; padding: 1.2rem;">
+            <div style="font-weight: 800; color: #065f46; font-size: 1rem; margin-bottom: 6px;">② 呼吸する稚内珪藻土・漆喰壁</div>
+            <p style="font-size: 0.85rem; color: #475569; margin: 0; line-height: 1.6;">
+              自然素材の微細な細孔が、加湿器から出た余剰水分や生活水蒸気を蓄え、部屋が乾燥した時に自律的に放湿する「湿度バッファー」として機能します。
+            </p>
+          </div>
+          <div style="background: #ffffff; border: 1.5px solid #86efac; border-radius: 10px; padding: 1.2rem;">
+            <div style="font-weight: 800; color: #065f46; font-size: 1rem; margin-bottom: 6px;">③ C値0.3以下の完全高気密</div>
+            <p style="font-size: 0.85rem; color: #475569; margin: 0; line-height: 1.6;">
+              建物の隙間から湿気が逃げる「漏気」をゼロに抑えるため、加湿器1台の弱運転だけで家全体の湿度が保持され、給水頻度も激減します。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 記事03: サーモグラフィ熱橋検証 -->
+      <div class="lp-badge-card" style="text-align: left; padding: 2.2rem; margin-bottom: 2rem; border-left: 5px solid #d97706;">
+        <span style="background: #fef3c7; color: #d97706; font-size: 0.82rem; font-weight: 800; padding: 3px 10px; border-radius: 4px;">実証03 ｜ 赤外線サーモグラフィ</span>
+        <h3 style="margin: 0.8rem 0 0.5rem; color: #0f172a; font-size: 1.4rem;">
+          赤外線サーモグラフィが暴く「熱橋（ヒートブリッジ）」の正体
+        </h3>
+        <p style="font-size: 0.95rem; color: #475569; line-height: 1.8; margin-bottom: 1.4rem;">
+          外気温2℃の厳冬期早朝、高性能赤外線サーモグラフィカメラを用いて室内壁面・床面・サッシ枠の表面温度を精密測定しました。
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.4rem; margin-bottom: 1.4rem;">
+          <div style="background: #fff7ed; border: 2px solid #fdba74; border-radius: 12px; padding: 1.4rem;">
+            <div style="font-weight: 900; color: #9a3412; font-size: 1.05rem; margin-bottom: 6px;">❌ 一般的な鉄骨系住宅のサーモグラフィ</div>
+            <ul style="font-size: 0.86rem; color: #7c2d12; line-height: 1.7; margin: 0; padding-left: 1.2rem;">
+              <li>鉄の熱伝導率は木材の<strong>約350倍</strong>。外気冷気が鉄骨柱・梁を伝わって壁内に侵入。</li>
+              <li>柱や間柱のラインに沿ってサーモグラフィが<strong>青〜紫色（13℃〜15℃）</strong>に沈み、明瞭な熱橋（ヒートブリッジ）が発生。</li>
+              <li>壁面が冷えることでコールドドラフト（冷気の下降気流）が起き、足元が寒く、壁内結露によるカビ・ダニの原因に。</li>
+            </ul>
+          </div>
+          <div style="background: #eff6ff; border: 2px solid #60a5fa; border-radius: 12px; padding: 1.4rem;">
+            <div style="font-weight: 900; color: #1e40af; font-size: 1.05rem; margin-bottom: 6px;">⭕ 住ま居る 木造外張W断熱＋APW430</div>
+            <ul style="font-size: 0.86rem; color: #1e3a8a; line-height: 1.7; margin: 0; padding-left: 1.2rem;">
+              <li>熱を伝えにくい木造軸組の外側に、隙間なく連続した外張付加断熱を施工。</li>
+              <li>壁面、天井、床面、サッシ際までサーモグラフィは<strong>全面オレンジ〜黄色（21.2℃〜21.8℃）</strong>で均一。</li>
+              <li>部屋の上下温度差は<strong>0.8℃以内</strong>。熱橋が存在しないため、壁内結露の発生確率は物理的にゼロです。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 記事04: 夏期・小屋裏エアコン全館除湿 -->
+      <div class="lp-badge-card" style="text-align: left; padding: 2.2rem; margin-bottom: 2rem; border-left: 5px solid #4338ca;">
+        <span style="background: #e0e7ff; color: #4338ca; font-size: 0.82rem; font-weight: 800; padding: 3px 10px; border-radius: 4px;">実証04 ｜ 猛暑期全館除湿</span>
+        <h3 style="margin: 0.8rem 0 0.5rem; color: #0f172a; font-size: 1.4rem;">
+          8月猛暑日（外気38.5℃）小屋裏エアコン1台による全館除湿メカニズム
+        </h3>
+        <p style="font-size: 0.95rem; color: #475569; line-height: 1.8; margin-bottom: 1.2rem;">
+          日本の夏の不快感の原因は「温度（顕熱）」ではなく「湿度（潜熱）」です。<br>
+          住ま居るでは、8月の過酷な猛暑日（外気温38.5℃・相対湿度75%）において、<strong>小屋裏（最上部）に設置した汎用14畳用エアコン1台のみ</strong>を稼働させ、家全体の温湿度分布を測定しました。
+        </p>
+        <div style="background: #ffffff; border: 1.5px solid #c7d2fe; border-radius: 10px; padding: 1.2rem; font-size: 0.88rem; color: #312e81; line-height: 1.7;">
+          🌡️ <strong>実測結果:</strong><br>
+          ・1階 LDK：室温 25.8℃ ｜ 相対湿度 48%（絶対湿度 10.2 g/kg）<br>
+          ・2階 主寝室：室温 26.1℃ ｜ 相対湿度 49%（絶対湿度 10.5 g/kg）<br>
+          ・小屋裏冷気溜まり：室温 24.5℃<br>
+          重い冷気と除湿された乾燥空気が階段吹き抜けを通じて自然落下し、各居室を穏やかに包み込むパッシブ循環設計。エアコンの冷風が体に直接当たらず、標高1,000mの高原ホテルにいるような澄んだ爽快感を実現します。
+        </div>
+      </div>
+
+      <!-- 記事05: 床暖房の生涯コスト20年比較シミュレーション -->
+      <div class="lp-badge-card" style="text-align: left; padding: 2.2rem; margin-bottom: 2rem; border-left: 5px solid #059669;">
+        <span style="background: #ecfdf5; color: #059669; font-size: 0.82rem; font-weight: 800; padding: 3px 10px; border-radius: 4px;">実証05 ｜ ライフサイクルコスト</span>
+        <h3 style="margin: 0.8rem 0 0.5rem; color: #0f172a; font-size: 1.4rem;">
+          床暖房の生涯コスト20年シミュレーション（初期費用・ランニング・更新費）
+        </h3>
+        <p style="font-size: 0.95rem; color: #475569; line-height: 1.8; margin-bottom: 1.4rem;">
+          「高気密住宅に床暖房は贅沢で維持費が高い」という誤解を解くために、20年間の累積トータルライフサイクルコストを詳細に試算しました。
+        </p>
+
+        <div style="overflow-x: auto; margin-bottom: 1.4rem;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px;">
+            <thead>
+              <tr style="background: #f8fafc; border-bottom: 2px solid #cbd5e1; text-align: left;">
+                <th style="padding: 12px;">コスト内訳（20年間累計試算）</th>
+                <th style="padding: 12px; color: #475569;">一般住宅 ＋ ガス温水床暖房</th>
+                <th style="padding: 12px; color: #0284c7; background: #eff6ff;">住ま居る超高断熱 ＋ ヒートポンプ低温水床暖房</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 12px; font-weight: 700;">初期設備導入費用</td>
+                <td style="padding: 12px;">約 120 万円</td>
+                <td style="padding: 12px; background: #eff6ff;">約 145 万円（+25万円）</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 12px; font-weight: 700;">20年間の累積暖房光熱費</td>
+                <td style="padding: 12px; color: #dc2626; font-weight: 700;">約 360 万円（年18万円×20年）</td>
+                <td style="padding: 12px; color: #0284c7; font-weight: 800; background: #eff6ff;">約 110 万円（年5.5万円×20年）</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 12px; font-weight: 700;">10〜15年目の熱源機更新費用</td>
+                <td style="padding: 12px;">約 55 万円（過負荷で10年目更新）</td>
+                <td style="padding: 12px; background: #eff6ff;">約 45 万円（低負荷運転で長寿命・15年目更新）</td>
+              </tr>
+              <tr style="background: #f0fdf4;">
+                <td style="padding: 12px; font-weight: 900; color: #065f46;">20年間の総ライフサイクル費用</td>
+                <td style="padding: 12px; font-weight: 900; color: #dc2626; font-size: 1.15rem;">約 535 万円</td>
+                <td style="padding: 12px; font-weight: 900; color: #059669; font-size: 1.25rem;">約 300 万円（235万円の節約！）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">
+          超高断熱躯体においては、熱源機が常に最小出力の省エネ領域で静かに稼働するため、機械への熱的・電気的負荷が最小化され、機器寿命そのものが大幅に延伸します。<br>
+          エアコンと同等の低燃費で、風のない極上の輻射熱暖房を手に入れることができます。
+        </p>
+      </div>
+
+      <!-- 実証モデルハウス・見学・家カルテ案内ブロック -->
+      <div class="lp-highlight-box" style="margin-top: 3rem; background: linear-gradient(135deg, #064e3b 0%, #065f46 100%); color: #ffffff; border: none; padding: 2.2rem; border-radius: 16px;">
+        <h3 style="margin-top: 0; color: #ffffff; font-size: 1.35rem; font-weight: 900;">
+          🏢 この物理データは、すべて埼玉県西部の実証モデルハウスでご体感いただけます
+        </h3>
+        <p style="margin: 0.6rem 0 1.4rem; color: #ecfdf5; font-size: 0.95rem; line-height: 1.8;">
+          数字やグラフだけでは伝えきれない「無垢床のじんわりとした温もり」「からっ風の中でも潤う空気」「音のない静寂」。<br>
+          鶴ヶ島本社より車で約10分、毛呂山町に実在する生モデルハウス（完全予約制・水日曜も事前予約で案内可能）でぜひ直接お確かめください。
+        </p>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <a href="/#scent-experience" class="btn" style="background: #ffffff; color: #065f46; font-weight: 900; padding: 0.8rem 1.8rem; border-radius: 30px; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            🌿 モデルハウス体感見学を予約する →
+          </a>
+          <a href="/index.html#floorplan-studio" class="btn" style="background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.4); color: #ffffff; font-weight: 800; padding: 0.8rem 1.8rem; border-radius: 30px; text-decoration: none;">
+            📐 323実例プランと概算価格を見る →
+          </a>
+          <a href="tel:0492712350" class="btn" style="background: #38bdf8; color: #0f172a; font-weight: 900; padding: 0.8rem 1.8rem; border-radius: 30px; text-decoration: none;">
+            📞 お電話: 049-271-2350
+          </a>
+        </div>
       </div>
     
     </article>
@@ -356,6 +586,7 @@
         登録不要のAI間取りシミュレーター、フォトリアルパース生成、埼玉の気候を知り尽くした24h温熱換気AI相談室を完全無料開放しています。
       </p>
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
+        <a href="/schedule/" class="lp-cta-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); font-weight: 800;">📅 家づくりスケジュール進捗シート ➜</a>
         <a href="/#floorplan-studio" class="lp-cta-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); font-weight: 800;">📐 間取りプラン選別・実例検索 ➜</a>
         <a href="/madori-consultation/" class="lp-cta-btn" style="background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: #fff; font-weight: 800;">💬 夫婦の家づくりカルテ ➜</a>
         <a href="/#thermal-consultation" class="lp-cta-btn" style="background: linear-gradient(135deg, #059669, #10b981); font-weight: 800;">🌡️ 24h温熱換気AI相談 ➜</a>
@@ -369,18 +600,40 @@
       株式会社住ま居る（埼玉県鶴ヶ島市）
     </p>
     <p style="margin: 0 0 1rem 0; font-size: 0.82rem; color: #64748b;">
-      埼玉県知事許可（般－8）第60650号 ｜ 二級建築設計事務所 埼玉県知事（5）第10268号 ｜ 創業1994年・施工実績800棟以上
+      埼玉県知事許可（般－8）第60650号 ｜ 二級建築設計事務所 埼玉県知事（5）第10278号 ｜ 創業1994年・施工実績800棟以上
     </p>
     <p style="margin: 0; font-size: 0.78rem;">
-      <a href="/">トップページ</a> ｜ <a href="/madori-consultation/">間取り相談＆カルテ</a> ｜ <a href="/flow/">家づくりの流れ・15万円設計申込特典</a> ｜ <a href="/about/">会社概要・信用の証明</a> ｜ <a href="/performance/">温熱・構造性能</a> ｜ <a href="/evidence/">光熱費実証録</a> ｜ <a href="/knowledge/thermal/">温熱知見200選</a>
+      <a href="/">トップページ</a> ｜ <a href="/schedule/">家づくりスケジュール</a> ｜ <a href="/jfd-survey/">3D点群測量と敷地調査</a> ｜ <a href="/madori-consultation/">間取り相談＆カルテ</a> ｜ <a href="/flow/">家づくりの流れ・15万円設計申込特典</a> ｜ <a href="/about/">会社概要・信用の証明</a> ｜ <a href="/performance/">温熱・構造性能</a> ｜ <a href="/evidence/">光熱費実証録</a> ｜ <a href="/knowledge/thermal/">温熱知見200選</a>
     </p>
     <p style="margin-top: 1.5rem; font-size: 0.75rem; color: #475569;">
-      &copy; 株式会社住ま居る (Sumaile Co., Ltd.) All Rights Reserved.
+      &copy; 株式会社住ま居る (Sumairu) All Rights Reserved.
     </p>
   </footer>
 
-  <script src="/js/app.js" defer></script>
-  <script src="/js/manga-viewer.js" defer></script>
+  <!-- 全頁共通: TOPへ戻る△ボタン -->
+  <button type="button" id="back-to-top-btn" class="back-to-top-btn" aria-label="トップへ戻る" title="ページの先頭へ戻る">
+    <span>▲</span>
+  </button>
+
+  <script src="/js/app.min.js" defer></script>
+  <script src="/js/manga-viewer.min.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('back-to-top-btn');
+      if (btn) {
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 300) {
+            btn.classList.add('is-visible');
+          } else {
+            btn.classList.remove('is-visible');
+          }
+        }, { passive: true });
+        btn.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+    });
+  </script>
   
 </body>
 </html>

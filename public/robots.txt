@@ -1,4 +1,34 @@
+# robots.txt for https://t-smile.co.jp/
 User-agent: *
 Allow: /
 
+# AI Crawlers & Agents (AIO / GEO Optimization)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Disallow internal data / temporary preview endpoints
+Disallow: /api/
+Disallow: /cases_drawings/
+Disallow: /scratch/
+
+# Sitemap & LLMs Index
 Sitemap: https://t-smile.co.jp/sitemap.xml
+Sitemap: https://t-smile.co.jp/sitemap-index.xml
+Sitemap: https://t-smile.co.jp/sitemap-pages.xml
+Sitemap: https://t-smile.co.jp/sitemap-knowledge.xml
+Sitemap: https://t-smile.co.jp/sitemap-plans.xml
+# LLMs.txt for Generative AI search engines
+# See: https://t-smile.co.jp/llms.txt
+# Full Knowledge Dump for LLMs: https://t-smile.co.jp/llms-full.txt

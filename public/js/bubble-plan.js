@@ -457,6 +457,33 @@ class BubblePlanStudio {
       const maxSqm = +(this.siteData.maxBuildingAreaTsubo * 3.30578).toFixed(1);
       resMaxBuild.textContent = `${this.siteData.maxBuildingAreaTsubo} 坪 (${maxSqm}㎡)`;
     }
+
+    const resSubsidy = document.getElementById('gate-res-subsidy');
+    const resSubsidyDetail = document.getElementById('gate-res-subsidy-details');
+    if (resSubsidy && resSubsidyDetail) {
+      if (addrStr.includes('鶴ヶ島')) {
+        resSubsidy.textContent = '最大 244 万円';
+        resSubsidyDetail.textContent = '(国みらいエコ最大110万 + 鶴ヶ島市ちかづく住まい応援金最大100万 + 埼玉県産木材34万 併用可)';
+      } else if (addrStr.includes('坂戸')) {
+        resSubsidy.textContent = '最大 224 万円';
+        resSubsidyDetail.textContent = '(国みらいエコ最大110万 + 坂戸市多世代近居最大80万 + 埼玉県産木材34万 併用可)';
+      } else if (addrStr.includes('川越')) {
+        resSubsidy.textContent = '最大 154 万円';
+        resSubsidyDetail.textContent = '(国みらいエコ最大110万 + 埼玉県産木材34万 + 川越市省エネ設備助成最大10万 併用可)';
+      } else if (addrStr.includes('東松山')) {
+        resSubsidy.textContent = '最大 154 万円';
+        resSubsidyDetail.textContent = '(国みらいエコ最大110万 + 埼玉県産木材34万 + 東松山市省エネ助成約10万 併用可)';
+      } else if (addrStr.includes('さいたま')) {
+        resSubsidy.textContent = '最大 174 万円';
+        resSubsidyDetail.textContent = '(国みらいエコ最大110万 + さいたま市省エネ断熱30万 + 埼玉県産木材34万 併用可)';
+      } else if (addrStr.includes('東京')) {
+        resSubsidy.textContent = '最大 360 万円';
+        resSubsidyDetail.textContent = '(東京ゼロエミ水準A最大240万 + 太陽光蓄電池加算120万 併用可)';
+      } else {
+        resSubsidy.textContent = '最大 144 万円〜';
+        resSubsidyDetail.textContent = '(国みらいエコ最大110万 + 埼玉県産木材34万 + 各自治体加算)';
+      }
+    }
   }
 
   // Geminiヒアリング対話チャット
@@ -936,6 +963,11 @@ class BubblePlanStudio {
   }
 
   calculateCarDimensions(car) {
+    if (window.BubbleSiteGeometry) {
+      const pxPerMm = (this.baseBuildingBox && this.baseBuildingBox.pxPerMm) ? this.baseBuildingBox.pxPerMm : 0.03;
+      window.BubbleSiteGeometry.calculateCarDimensions(car, pxPerMm);
+      return;
+    }
     const pxPerMm = this.baseBuildingBox.pxPerMm || 0.03;
     const effW = car.isVertical ? car.wMm : car.hMm;
     const effH = car.isVertical ? car.hMm : car.wMm;
@@ -2646,6 +2678,10 @@ class BubblePlanStudio {
 
   updatePhysics() {
     const activeNodes = this.nodes.filter(n => n.floor === this.currentFloor);
+    if (window.BubblePhysicsEngine && this.baseBuildingBox) {
+      window.BubblePhysicsEngine.update(activeNodes, this.baseBuildingBox, this.carNodes, this.renderMode, this.draggedItem);
+      return;
+    }
     const { minX, maxX, minY, maxY } = this.baseBuildingBox;
 
     // 1. 部屋同士の反発（バブルモード時は重なり・凸凹形状を許容！矩形モード時のみ軽微に反発）
@@ -3608,6 +3644,9 @@ class BubblePlanStudio {
   // 9. 住宅設備機器（大手メーカー規格寸法）プリセット制御
   // ==========================================
   getEquipmentPresets(node) {
+    if (node && window.BubbleEquipmentPresets) {
+      return window.BubbleEquipmentPresets.getForNode(node, this.isStairs(node));
+    }
     if (!node) return null;
     const name = node.name || '';
     const cat = node.category || '';
@@ -4719,326 +4758,19 @@ class BubblePlanStudio {
   }
 
 
-  // ==========================================
-  // 12. 住宅設備機器パレット（大手メーカー規格寸法で直接配置）
-  // ==========================================
-  getEquipmentPresets() {
-    return {
-      i2550: {
-        type: 'kitchen',
-        name: 'キッチン I型2550',
-        wMm: 2550,
-        hMm: 650,
-        tatami: 1.0,
-        color: '#f59e0b',
-        spec: '間口2550×奥行650mm（パナソニック ラクシーナ / クリナップ ステディア同等）'
-      },
-      l2550: {
-        type: 'kitchen',
-        name: 'キッチン L型',
-        wMm: 2550,
-        hMm: 1800,
-        tatami: 2.8,
-        color: '#f59e0b',
-        spec: '2550×1800mm（コーナー作業スペース広々・LIXIL シエラS同等）'
-      },
-      ub1616: {
-        type: 'bath',
-        name: 'システムバス 1616(1坪)',
-        wMm: 1820,
-        hMm: 1820,
-        tatami: 2.0,
-        color: '#06b6d4',
-        spec: '1820×1820mm（内寸1600×1600mm・TOTO サザナ / LIXIL リデア同等）'
-      },
-      ub1620: {
-        type: 'bath',
-        name: 'システムバス 1620(1.25坪)',
-        wMm: 1820,
-        hMm: 2275,
-        tatami: 2.5,
-        color: '#06b6d4',
-        spec: '1820×2275mm（洗い場ゆったり・TOTO サザナ 1620同等）'
-      },
-      w750: {
-        type: 'washroom',
-        name: '洗面化粧台 W750',
-        wMm: 750,
-        hMm: 550,
-        tatami: 0.3,
-        color: '#2dd4bf',
-        spec: '間口750×奥行550mm（1ボウル・TOTO サクア / Panasonic シーライン同等）'
-      },
-      w1600: {
-        type: 'washroom',
-        name: '洗面カウンター W1600',
-        wMm: 1600,
-        hMm: 550,
-        tatami: 0.5,
-        color: '#2dd4bf',
-        spec: '間口1600×奥行550mm（2ボウルまたはワイドカウンター・Panasonic ウツクシーズ同等）'
-      },
-            bio_fireplace: {
-        type: 'equipment',
-        name: 'バイオエタノール暖炉',
-        wMm: 910,
-        hMm: 455,
-        tatami: 0.25,
-        color: '#f97316',
-        spec: '煙突不要・煤ゼロの環境配慮型バイオエタノール暖炉 (離隔500mm不燃仕上げ)'
-      },
-      tankless: {
-        type: 'toilet',
-        name: 'タンクレストイレ',
-        wMm: 800,
-        hMm: 1200,
-        tatami: 0.6,
-        color: '#a855f7',
-        spec: '幅800×奥行1200mm（TOTO ネオレスト / LIXIL サティス同等）'
-      },
-      tankless_std: {
-        type: 'toilet',
-        name: 'タンクレストイレ (標準)',
-        wMm: 800,
-        hMm: 1200,
-        tatami: 0.6,
-        color: '#a855f7',
-        spec: '幅800×奥行1200mm（TOTO ネオレスト / LIXIL サティス同等）'
-      },
-      tankless_compact: {
-        type: 'toilet',
-        name: 'タンクレストイレ (コンパクト手洗い付)',
-        wMm: 800,
-        hMm: 1000,
-        tatami: 0.5,
-        color: '#a855f7',
-        spec: '幅800×奥行1000mm（省スペース設置型）'
-      },
-      counter: {
-        type: 'toilet',
-        name: 'トイレ手洗いカウンター',
-        wMm: 450,
-        hMm: 250,
-        tatami: 0.1,
-        color: '#a855f7',
-        spec: '間口450×奥行250mm（埋込・壁付手洗いキャビネット）'
-      }
-    };
-  }
-
-  placeEquipment(type, presetKey) {
-    const presets = this.getEquipmentPresets();
-    const preset = presets[presetKey];
-    if (!preset) return;
-
-    const id = 'eq_' + Date.now() + '_' + Math.floor(Math.random() * 100);
-    const cx = (this.baseBuildingBox.minX + this.baseBuildingBox.maxX) / 2 + (Math.random() * 40 - 20);
-    const cy = (this.baseBuildingBox.minY + this.baseBuildingBox.maxY) / 2 + (Math.random() * 40 - 20);
-
-    const node = {
-      id,
-      name: preset.name,
-      floor: this.currentFloor,
-      tatami: preset.tatami,
-      category: 'equipment',
-      color: preset.color,
-      wMm: preset.wMm,
-      hMm: preset.hMm,
-      equipmentType: type,
-      isEquipment: true,
-      spec: preset.spec,
-      x: cx,
-      y: cy,
-      vx: 0,
-      vy: 0,
-      isFixed: false
-    };
-
-    this.calculateRectDimensions(node);
-    this.nodes.push(node);
-    this.clampNodesToBuildingBox();
-    this.selectedItem = node;
-    this.selectedType = 'node';
-    this.updateNodeInspectPanel(node);
-    this.updateMetrics();
-    this.autoSaveDebounced();
-
-    // 通知メッセージの表示
-    const badge = document.querySelector('#bubble-plan-canvas-wrap div');
-    if (badge) {
-      const origText = badge.innerHTML;
-      badge.innerHTML = `🛁 <b>${preset.name}（${preset.wMm}×${preset.hMm}mm）を配置しました！</b>`;
-      badge.style.background = 'rgba(16, 185, 129, 0.95)';
-      badge.style.color = '#ffffff';
-      setTimeout(() => {
-        badge.innerHTML = origText;
-        badge.style.background = 'rgba(15, 23, 42, 0.88)';
-        badge.style.color = '#38bdf8';
-      }, 2500);
-    }
-  }
-
-  updateEquipmentPresetsUI(node) {
-    // インスペクター用のプリセット表示があれば更新
-  }
-
-  // ==========================================
-  // 13. WIC (ウォークインクローゼット) 追加 ＆ 親室への内包
-  // ==========================================
-  addWicRoom(type, name, tatami, color, wMm = 1820, hMm = 1820) {
-    const id = 'wic_' + Date.now() + '_' + Math.floor(Math.random() * 100);
-    // 現在フロアの主寝室または個室を探す
-    const bedNode = this.nodes.find(n => n.floor === this.currentFloor && (n.category === 'private' || n.name.includes('寝室') || n.name.includes('洋室')));
-    let cx, cy;
-    if (bedNode) {
-      cx = bedNode.x + Math.min(bedNode.w / 4, 30);
-      cy = bedNode.y + Math.min(bedNode.h / 4, 30);
-    } else {
-      cx = (this.baseBuildingBox.minX + this.baseBuildingBox.maxX) / 2;
-      cy = (this.baseBuildingBox.minY + this.baseBuildingBox.maxY) / 2;
-    }
-
-    const node = {
-      id,
-      name,
-      floor: this.currentFloor,
-      tatami,
-      category: 'storage',
-      isWic: true,
-      color: color || '#94a3b8',
-      x: cx,
-      y: cy,
-      vx: 0,
-      vy: 0,
-      wMm,
-      hMm,
-      isFixed: false
-    };
-
-    this.calculateRectDimensions(node);
-    this.nodes.push(node);
-    this.selectedItem = node;
-    this.selectedType = 'node';
-    this.detectInnerCornersAndMerged();
-    this.updateNodeInspectPanel(node);
-    this.updateMetrics();
-    this.autoSaveDebounced();
-  }
-
-  // ==========================================
-  // 14. 途中保存 ＆ 続きを復元（翌日以降も続けられる機能）
-  // ==========================================
-  savePlanProgress(silent = false) {
-    try {
-      const state = {
-        nodes: this.nodes,
-        links: this.links,
-        carNodes: this.carNodes,
-        siteData: this.siteData,
-        currentTier: this.currentTier,
-        buildingType: this.buildingType,
-        currentFloor: this.currentFloor,
-        renderMode: this.renderMode,
-        savedAt: new Date().toISOString()
-      };
-      localStorage.setItem('smile_bubble_plan_saved_state', JSON.stringify(state));
-
-      const indicator = document.getElementById('bubble-autosave-indicator');
-      const now = new Date();
-      const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
-      if (indicator) {
-        indicator.innerHTML = `💾 保存完了 (${timeStr})`;
-        indicator.style.color = '#4ade80';
-      }
-
-      if (!silent) {
-        alert(`💾 現在の間取り検討状況を保存しました！\nブラウザを閉じても、明日以降「📂 続きを復元」からいつでも再開できます。（保存時刻: ${timeStr}）`);
-      }
-    } catch (e) {
-      console.error('途中保存エラー:', e);
-      if (!silent) alert('保存中にエラーが発生しました。');
-    }
-  }
-
-  restorePlanProgress() {
-    try {
-      const raw = localStorage.getItem('smile_bubble_plan_saved_state');
-      if (!raw) {
-        alert('📂 保存されている途中データが見つかりませんでした。');
-        return;
-      }
-      const state = JSON.parse(raw);
-      if (state.nodes) this.nodes = state.nodes;
-      if (state.links) this.links = state.links;
-      if (state.carNodes) this.carNodes = state.carNodes;
-      if (state.siteData) Object.assign(this.siteData, state.siteData);
-      if (state.currentTier) this.setInsulationTier(state.currentTier);
-      if (state.buildingType) this.buildingType = state.buildingType;
-      if (state.renderMode) this.setRenderMode(state.renderMode);
-      if (state.currentFloor) this.setFloor(state.currentFloor);
-
-      // バナーを隠す
-      const banner = document.getElementById('bubble-saved-progress-banner');
-      if (banner) banner.style.display = 'none';
-
-      // 寸法再計算とクランプ
-      for (const n of this.nodes) {
-        this.calculateRectDimensions(n);
-      }
-      this.clampNodesToBuildingBox();
-      this.detectInnerCornersAndMerged();
-
-      this.selectedItem = this.nodes.find(n => n.floor === this.currentFloor) || null;
-      this.selectedType = this.selectedItem ? 'node' : 'none';
-      this.updateNodeInspectPanel(this.selectedItem);
-      this.updateMetrics();
-
-      const d = new Date(state.savedAt);
-      const dateStr = isNaN(d) ? '' : `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${d.getMinutes().toString().padStart(2, '0')}`;
-      alert(`📂 前回の続き（${dateStr} 保存データ）を復元しました！\n引き続き間取りづくりをお楽しみください。`);
-    } catch (e) {
-      console.error('復元エラー:', e);
-      alert('復元に失敗しました。');
-    }
-  }
-
-  checkSavedProgressOnStartup() {
-    try {
-      const raw = localStorage.getItem('smile_bubble_plan_saved_state');
-      if (!raw) return;
-      const state = JSON.parse(raw);
-      if (!state || !state.savedAt) return;
-
-      const banner = document.getElementById('bubble-saved-progress-banner');
-      const timeEl = document.getElementById('saved-progress-time-text');
-      if (banner && timeEl) {
-        const d = new Date(state.savedAt);
-        const timeStr = `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
-        timeEl.textContent = timeStr;
-        banner.style.display = 'flex';
-      }
-    } catch (e) {
-      console.warn('保存データ確認エラー:', e);
-    }
-  }
-
-  autoSaveDebounced() {
-    if (this._autoSaveTimer) clearTimeout(this._autoSaveTimer);
-    this._autoSaveTimer = setTimeout(() => {
-      this.savePlanProgress(true);
-    }, 1200);
-  }
 
   async updateCarteBadge() {
-    const list = this.getCarteList();
-    const localFiles = await this.getAllFilesFromDB();
-    const total = list.length + localFiles.length;
+    if (window.BubbleCarteStorage) {
+      const list = BubbleCarteStorage.getCarteList();
+      const localFiles = await BubbleCarteStorage.getAllFilesFromDB();
+      const total = list.length + localFiles.length;
 
-    const badge = document.getElementById('carte-badge-count');
-    if (badge) badge.textContent = total;
+      const badge = document.getElementById('carte-badge-count');
+      if (badge) badge.textContent = total;
 
-    const topBadge = document.getElementById('my-carte-badge-count');
-    if (topBadge) topBadge.textContent = total;
+      const topBadge = document.getElementById('my-carte-badge-count');
+      if (topBadge) topBadge.textContent = total;
+    }
   }
 }
 

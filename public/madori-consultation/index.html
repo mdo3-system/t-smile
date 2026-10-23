@@ -24,13 +24,13 @@
 
   <!-- JSON-LD Breadcrumbs -->
   <script type="application/ld+json">
-  {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "🏠 ホーム", "item": "https://t-smile.co.jp/"}, {"@type": "ListItem", "position": 2, "name": "🤖 間取りなんでも相談＆家づくりカルテ", "item": "https://t-smile.co.jp/madori-consultation/"}]}
+  {"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://t-smile.co.jp/"}, {"@type": "ListItem", "position": 2, "name": "間取りなんでも相談＆家づくりカルテ", "item": "https://t-smile.co.jp/madori-consultation/"}]}, {"@type": "HomeAndConstructionBusiness", "@id": "https://t-smile.co.jp/#organization", "name": "株式会社住ま居る", "url": "https://t-smile.co.jp/", "logo": "https://t-smile.co.jp/images/hero_kaguya_house.jpg", "telephone": "049-271-2350", "address": {"@type": "PostalAddress", "postalCode": "350-2224", "addressRegion": "埼玉県", "addressLocality": "鶴ヶ島市", "streetAddress": "町屋176番地5", "addressCountry": "JP"}, "geo": {"@type": "GeoCoordinates", "latitude": 35.93244, "longitude": 139.39082}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Thursday", "Friday", "Saturday"], "opens": "09:00", "closes": "18:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Wednesday", "Sunday"], "description": "定休日（※事前予約によりモデルハウスのご見学・ご案内は承っております）"}], "areaServed": "埼玉県全域", "hasCredential": [{"@type": "EducationalOccupationalCredential", "credentialCategory": "建設業許可", "name": "埼玉県知事許可（般－8）第60650号"}, {"@type": "EducationalOccupationalCredential", "credentialCategory": "建築設計事務所登録", "name": "二級建築設計事務所 埼玉県知事（5）第10278号"}]}]}
   </script>
 
   <!-- Google Fonts & Stylesheets -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800&family=Noto+Sans+JP:wght@400;700&family=Inter:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css" />
   
   <link rel="stylesheet" href="/css/madori-bot.css" />
@@ -279,12 +279,14 @@
           <span style="background: #f59e0b; color: #0f172a; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px;">by 住ま居る</span>
         </a>
         <span style="font-size: 0.72rem; color: #94a3b8; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);">
-          埼玉・鶴ヶ島IC 1h圏内｜創業30年・累計800棟
+          施工エリア：埼玉県全域・一部東京都｜創業30年・累計800棟
         </span>
       </div>
       <nav>
         <ul class="lp-nav-links">
           <li><a href="/">🏠 ホーム</a></li>
+          <li><a href="/schedule/" class="" style="background: rgba(2, 132, 199, 0.25); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.35);">📅 家づくり工程</a></li>
+          <li><a href="/jfd-survey/" class="" style="background: rgba(13, 148, 136, 0.25); color: #5eead4; border: 1px solid rgba(45, 212, 191, 0.35);">🛰️ 3D点群測量</a></li>
           <li><a href="/madori-consultation/" class="active" style="background: rgba(124, 58, 237, 0.25); color: #c4b5fd; border: 1px solid rgba(167, 139, 250, 0.3);">🤖 間取り相談＆カルテ</a></li>
           <li><a href="/flow/" class="" style="background: rgba(2, 132, 199, 0.2); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.3);">📐 家づくりの流れ・15万特典</a></li>
           <li><a href="/about/" class="">🛡️ 会社・信用 (CredLayer)</a></li>
@@ -292,6 +294,7 @@
           <li><a href="/evidence/" class="">📊 実測データ実証録</a></li>
           <li><a href="/ai-studio/" class="">🎨 AIパース工房</a></li>
           <li><a href="/knowledge/thermal/" class="">💬 温熱知見200選</a></li>
+          <li><a href="/catalog/" class="" style="background: rgba(5, 150, 105, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);">📘 工学カタログ (PDF)</a></li>
         </ul>
       </nav>
     </div>
@@ -318,6 +321,21 @@
         夫は夫のスマホで、妻は妻のスマホで直感タップ。LINEで送って合体するだけで、<strong>妥協ではなく「両者のいいとこ取り」をするAI融合プラン＆家づくりカルテ</strong>を即時無料で自動生成します。
       </p>
 
+      <!-- 問い合わせハードル低減: 電話サポートバナー -->
+      <div style="background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%); border: 2px solid #38bdf8; border-radius: 14px; padding: 1.1rem 1.6rem; margin: 1.8rem 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.08);">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.8rem;">📞</span>
+          <div>
+            <div style="font-weight: 800; color: #0369a1; font-size: 1rem;">操作や家づくりのご質問もお気軽に</div>
+            <div style="font-size: 0.82rem; color: #64748b;">専任スタッフが丁寧にお答えします（しつこい営業電話等は一切ありません）</div>
+          </div>
+        </div>
+        <a href="tel:0492712350" style="background: #0284c7; color: #ffffff; padding: 10px 22px; border-radius: 30px; font-weight: 800; font-size: 1.05rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); transition: transform 0.2s;">
+          <span>📞</span> 049-271-2350
+          <span style="font-size: 0.8rem; opacity: 0.9; font-weight: 700;">（9:00〜18:00・水日曜定休）</span>
+        </a>
+      </div>
+
       <!-- 誰でも使える無料3大ツール vs 申込後プレミアム使い分けマップ -->
       <div style="background: #ffffff; border: 2px solid #0284c7; border-radius: 16px; padding: 1.8rem; margin: 2rem 0; box-shadow: 0 4px 20px rgba(2, 132, 199, 0.08);">
         <div style="text-align: center; margin-bottom: 1.2rem;">
@@ -341,7 +359,7 @@
             </div>
             <h3 style="color: #14532d; font-size: 1.1rem; margin: 0 0 0.6rem; font-weight: 800;">【完全無料】3大AIシミュレーター</h3>
             <ul style="padding-left: 1.2rem; margin: 0; line-height: 1.8; font-size: 0.88rem; color: #166534;">
-              <li><strong>🔍 間取りプラン検索（約100選）:</strong> 坪数・予算・平屋等の実例を瞬時絞り込み・比較</li>
+              <li><strong>🔍 間取りプラン検索（323選）:</strong> 坪数・予算・平屋等の実例を瞬時絞り込み・比較</li>
               <li><strong>💬 家づくりカルテ（本ページ）:</strong> 夫婦それぞれのスマホで本音を回答、AIが中立カルテ作成</li>
               <li><strong>🌡️ 温熱環境・断熱シミュレーション:</strong> 埼玉エリア特化、HEAT20 G2/G3・光熱費試算</li>
             </ul>
@@ -720,8 +738,8 @@
         <h3 style="color: #065f46; margin-top: 0; font-size: 1.25rem;">営業マンゼロ。国家資格と工学データで建てる地域工務店</h3>
         <p style="color: #334155; line-height: 1.85; font-size: 0.95rem;">
           私たちは、派手な営業マンやアットホームな家族経営の情緒だけを売りにする工務店ではありません。<br>
-          設計は、<strong>全国から年間150件の許容応力度構造計算審査を受託する二級建築士・菅原代表</strong>が責任を持って直接担当。<br>
-          施工は、<strong>2級建築施工管理技士および第二種電気工事士の資格を持つ現場監督（弟）</strong>が徹底監理。<br>
+          設計は、<strong>全国から年間150件の許容応力度構造計算審査を受託する建築士・菅原代表</strong>が責任を持って直接担当。<br>
+          施工は、<strong>2級建築施工管理技士の資格を持つ現場監督（弟）</strong>が徹底監理。<br>
           法務・資金計画は、<strong>宅地建物取引士（妻）</strong>が確かな専門知識でサポートいたします。<br>
           モデルハウスには営業経験の長いベテラン女性スタッフ2名が温かくお迎えし、押し売りや無理な営業は一切ありませんので、どうぞ安心してお立ち寄りください。
         </p>
@@ -748,6 +766,7 @@
         登録不要のAI間取りシミュレーター、フォトリアルパース生成、埼玉の気候を知り尽くした24h温熱換気AI相談室を完全無料開放しています。
       </p>
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
+        <a href="/schedule/" class="lp-cta-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); font-weight: 800;">📅 家づくりスケジュール進捗シート ➜</a>
         <a href="/#floorplan-studio" class="lp-cta-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); font-weight: 800;">📐 間取りプラン選別・実例検索 ➜</a>
         <a href="/madori-consultation/" class="lp-cta-btn" style="background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: #fff; font-weight: 800;">💬 夫婦の家づくりカルテ ➜</a>
         <a href="/#thermal-consultation" class="lp-cta-btn" style="background: linear-gradient(135deg, #059669, #10b981); font-weight: 800;">🌡️ 24h温熱換気AI相談 ➜</a>
@@ -761,20 +780,42 @@
       株式会社住ま居る（埼玉県鶴ヶ島市）
     </p>
     <p style="margin: 0 0 1rem 0; font-size: 0.82rem; color: #64748b;">
-      埼玉県知事許可（般－8）第60650号 ｜ 二級建築設計事務所 埼玉県知事（5）第10268号 ｜ 創業1994年・施工実績800棟以上
+      埼玉県知事許可（般－8）第60650号 ｜ 二級建築設計事務所 埼玉県知事（5）第10278号 ｜ 創業1994年・施工実績800棟以上
     </p>
     <p style="margin: 0; font-size: 0.78rem;">
-      <a href="/">トップページ</a> ｜ <a href="/madori-consultation/">間取り相談＆カルテ</a> ｜ <a href="/flow/">家づくりの流れ・15万円設計申込特典</a> ｜ <a href="/about/">会社概要・信用の証明</a> ｜ <a href="/performance/">温熱・構造性能</a> ｜ <a href="/evidence/">光熱費実証録</a> ｜ <a href="/knowledge/thermal/">温熱知見200選</a>
+      <a href="/">トップページ</a> ｜ <a href="/schedule/">家づくりスケジュール</a> ｜ <a href="/jfd-survey/">3D点群測量と敷地調査</a> ｜ <a href="/madori-consultation/">間取り相談＆カルテ</a> ｜ <a href="/flow/">家づくりの流れ・15万円設計申込特典</a> ｜ <a href="/about/">会社概要・信用の証明</a> ｜ <a href="/performance/">温熱・構造性能</a> ｜ <a href="/evidence/">光熱費実証録</a> ｜ <a href="/knowledge/thermal/">温熱知見200選</a>
     </p>
     <p style="margin-top: 1.5rem; font-size: 0.75rem; color: #475569;">
-      &copy; 株式会社住ま居る (Sumaile Co., Ltd.) All Rights Reserved.
+      &copy; 株式会社住ま居る (Sumairu) All Rights Reserved.
     </p>
   </footer>
 
-  <script src="/js/app.js" defer></script>
-  <script src="/js/manga-viewer.js" defer></script>
+  <!-- 全頁共通: TOPへ戻る△ボタン -->
+  <button type="button" id="back-to-top-btn" class="back-to-top-btn" aria-label="トップへ戻る" title="ページの先頭へ戻る">
+    <span>▲</span>
+  </button>
+
+  <script src="/js/app.min.js" defer></script>
+  <script src="/js/manga-viewer.min.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('back-to-top-btn');
+      if (btn) {
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 300) {
+            btn.classList.add('is-visible');
+          } else {
+            btn.classList.remove('is-visible');
+          }
+        }, { passive: true });
+        btn.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+    });
+  </script>
   
-  <script src="/js/lifestyle-bot.js" defer></script>
+  <script src="/js/lifestyle-bot.min.js" defer></script>
 
 </body>
 </html>

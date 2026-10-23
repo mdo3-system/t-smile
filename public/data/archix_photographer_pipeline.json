@@ -1,0 +1,564 @@
+{
+  "timestamp": "2026-10-15 08:20:26",
+  "raw_cases_dir": "D:\\Dropbox\\■住ま居る\\■住ま居る共有\\ﾒﾀﾊﾞｰｽ展示場\\Antigravity\\raw_source_cases",
+  "master_settings": {
+    "facade": {
+      "name": "外観（ファサード・街並み）",
+      "lens": "24mm〜35mm（建築アオリ補正・2点透視）",
+      "eye_level": "1,500mm（水平垂直完全平行・歪みゼロ）",
+      "lighting": "夕景トワイライト（マジックアワー薄暮＋室内3000K温白色の漏れ光）",
+      "sd_prompt": "award-winning architectural photography of a modern Japanese custom house facade, vertical standing seam metal cladding, natural cedar wood accent, tilt-shift lens, two-point perspective, perfectly parallel vertical lines, dramatic twilight blue hour sky, warm 3000k interior light glowing through triple-pane large windows, manicured gravel landscape, 8k resolution, ultra-detailed, photorealistic, ArchDaily feature, Hasselblad H6D-100c --ar 16:9",
+      "sd_negative": "blurry, distorted vertical lines, oversaturated colors, cartoon, flat daytime lighting, unrealistic CGI texture, lowres",
+      "controlnet": {
+        "primary": "ControlNet Depth (Weight: 1.0, Preprocessor: depth_anything)",
+        "secondary": "ControlNet MLSD / Lineart (Weight: 0.8, Preprocessor: mlsd)",
+        "sampler": "DPM++ 2M Karras",
+        "steps": 35,
+        "cfg_scale": 7.5
+      }
+    },
+    "ldk": {
+      "name": "LDK（リビング・ダイニング・キッチン大空間）",
+      "lens": "14mm〜24mm 超広角（Nikon 14-24mm F2.8G / 16-35mm F4G相当）",
+      "eye_level": "1,150mm（着座と立位の中間黄金比、天井梁と無垢床の抜け感）",
+      "lighting": "南面掃き出し窓からの柔らかな自然光、3000K折り上げ天井間接照明、温もりのグラデーション",
+      "sd_prompt": "professional interior architectural photography of an expansive Japanese LDK, 16mm-24mm ultra-wide rectilinear lens, eye level 1150mm, perfectly straight vertical lines, high ceiling with exposed solid cedar timber beams, natural solid wood plank floor, artisan hand-plastered diatomaceous earth walls, open island kitchen, soft diffused natural daylight pouring through floor-to-ceiling glass doors, warm indirect cove lighting 3000k, balanced HDR exposure, Architectural Digest style, 8k, photorealistic, razor-sharp focus --ar 16:9",
+      "sd_negative": "warped walls, fish-eye distortion, blown out window highlights, plastic artificial wood, dark gloomy shadows, messy, cartoon",
+      "controlnet": {
+        "primary": "ControlNet Depth (Weight: 1.0, Preprocessor: depth_anything)",
+        "secondary": "ControlNet Canny (Weight: 0.65, Preprocessor: canny)",
+        "sampler": "DPM++ 2M Karras",
+        "steps": 32,
+        "cfg_scale": 7.5
+      }
+    },
+    "water": {
+      "name": "水回り（造作洗面・十和田石浴室・トイレ）",
+      "lens": "20mm〜28mm 広角（歪みを抑えた清潔感のある構図）",
+      "eye_level": "1,050mm（洗面天板とミラー反射の整列視線）",
+      "lighting": "サイドスリット自然光、3000K温白色ダウンライト、十和田石・タイルの瑞々しい濡れ色",
+      "sd_prompt": "luxury Japanese custom bathroom and powder room photography, 20mm-24mm lens, handcrafted Towada green stone bathtub and cedar wood accents, artisan wash basin counter with custom mirror reflection, soft morning sidelight through frosted glass, spa-like tranquil atmosphere, subtle water caustics, warm 3000k ambient light, high-end hospitality resort interior, 8k, photorealistic, pristine clean aesthetic --ar 16:9",
+      "sd_negative": "dirty tiles, cluttered cosmetics, harsh fluorescent lighting, distorted mirror reflection, cheap prefabricated plastic unit",
+      "controlnet": {
+        "primary": "ControlNet Depth (Weight: 0.9, Preprocessor: depth_anything)",
+        "secondary": "ControlNet Lineart (Weight: 0.7, Preprocessor: lineart)",
+        "sampler": "DPM++ 2M Karras",
+        "steps": 30,
+        "cfg_scale": 7.0
+      }
+    },
+    "bedroom_japanese": {
+      "name": "個室・和室（雪見障子和室・主寝室・ロフト書斎）",
+      "lens": "28mm〜50mm（落ち着きと静謐の標準画角）",
+      "eye_level": "850mm（和室座視線・畳目線）〜 1,000mm",
+      "lighting": "障子越しに漉された柔らかな拡散光、陰影礼賛（和の静寂）、包み込む間接照明",
+      "sd_prompt": "serene modern Japanese tatami room and master suite photography, 35mm lens, low perspective (850mm eye level), traditional handmade washi paper shoji screens casting soft diffused shadows, natural rush tatami mats, solid wood headboard, concealed warm linear LED cove lighting, tranquil zen ambiance, balanced natural shadows, minimal aesthetic, 8k resolution, authentic Japanese craftsmanship --ar 16:9",
+      "sd_negative": "bright harsh daylight, modern chrome metals, glossy vinyl floor, colorful loud decorations, poorly rendered textures",
+      "controlnet": {
+        "primary": "ControlNet Depth (Weight: 0.85, Preprocessor: depth_anything)",
+        "secondary": "ControlNet Canny (Weight: 0.6, Preprocessor: canny)",
+        "sampler": "DPM++ SDE Karras",
+        "steps": 32,
+        "cfg_scale": 7.5
+      }
+    },
+    "others": {
+      "name": "その他（玄関土間・木格子・中庭テラス・ガレージ）",
+      "lens": "16mm〜28mm（抜け感と屋外への連続性）",
+      "eye_level": "1,200mm",
+      "lighting": "格子から漏れる木漏れ日（komorebi）、ドラマチックな陰影対比",
+      "sd_prompt": "exceptional architectural detail photograph of an indoor-outdoor Japanese home, handcrafted vertical wooden slatted entrance screen, smooth mortar floor, view seamlessly extending to a private courtyard terrace with deep wooden deck eaves, sunbeams filtering through leaves (komorebi), high contrast sculptural lighting, 8k, photorealistic --ar 16:9",
+      "sd_negative": "overly busy, blurry, plastic, unrealistic greenery, flat lighting",
+      "controlnet": {
+        "primary": "ControlNet Depth (Weight: 1.0, Preprocessor: depth_anything)",
+        "secondary": "ControlNet Lineart (Weight: 0.6, Preprocessor: lineart)",
+        "sampler": "DPM++ 2M Karras",
+        "steps": 30,
+        "cfg_scale": 7.5
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "ときがわ町 K様邸",
+      "name": "ときがわ町 K様邸",
+      "city": "ときがわ町",
+      "feature": "吉野杉8寸角大黒柱×吹き抜け見上げ×大谷石薪ストーブ・自然共生邸",
+      "camera_note": "Nikon D700 + AF-S NIKKOR 16-35mm F4G ED VR (F16.0 パンフォーカス)",
+      "highlight": "吹き抜けにそびえる吉野杉大黒柱と大谷石炉壁に佇む鋳物薪ストーブ。ときがわの豊かな自然を借景にする大開口。",
+      "primary_category": "ldk",
+      "folder": "ときがわ町 K様邸",
+      "total_photos": 160,
+      "sample_photo_rel": "おすすめデータ/DSC_8715.jpg",
+      "photo_url": "/raw_case_photo/%E3%81%A8%E3%81%8D%E3%81%8C%E3%82%8F%E7%94%BA%20K%E6%A7%98%E9%82%B8/%E3%81%8A%E3%81%99%E3%81%99%E3%82%81%E3%83%87%E3%83%BC%E3%82%BF/DSC_8715.jpg",
+      "category_counts": {
+        "recommended": 42,
+        "facade": 38,
+        "ldk": 26,
+        "water": 17,
+        "bedroom_japanese": 14,
+        "others": 65
+      },
+      "has_3d": false,
+      "model_files": [],
+      "photographer_specs": {
+        "lens": "14mm〜24mm 超広角（Nikon 14-24mm F2.8G / 16-35mm F4G相当）",
+        "eye_level": "1,150mm（着座と立位の中間黄金比、天井梁と無垢床の抜け感）",
+        "lighting": "南面掃き出し窓からの柔らかな自然光、3000K折り上げ天井間接照明、温もりのグラデーション",
+        "sd_prompt": "professional interior architectural photography of an expansive Japanese LDK, 16mm-24mm ultra-wide rectilinear lens, eye level 1150mm, perfectly straight vertical lines, high ceiling with exposed solid cedar timber beams, natural solid wood plank floor, artisan hand-plastered diatomaceous earth walls, open island kitchen, soft diffused natural daylight pouring through floor-to-ceiling glass doors, warm indirect cove lighting 3000k, balanced HDR exposure, Architectural Digest style, 8k, photorealistic, razor-sharp focus --ar 16:9",
+        "sd_negative": "warped walls, fish-eye distortion, blown out window highlights, plastic artificial wood, dark gloomy shadows, messy, cartoon",
+        "controlnet": {
+          "primary": "ControlNet Depth (Weight: 1.0, Preprocessor: depth_anything)",
+          "secondary": "ControlNet Canny (Weight: 0.65, Preprocessor: canny)",
+          "sampler": "DPM++ 2M Karras",
+          "steps": 32,
+          "cfg_scale": 7.5
+        }
+      }
+    },
+    {
+      "id": "吉見町 O様邸",
+      "name": "吉見町 O様邸",
+      "city": "吉見町",
+      "feature": "家族の絆を育む自然素材の家・無垢杉フロアと降り注ぐ陽光",
+      "camera_note": "Nikon D40X (23-24mm, F13.0)",
+      "highlight": "素足で心地よい無垢杉床と、家族が自然と集う明るい大空間リビング。",
+      "primary_category": "ldk",
+      "folder": "吉見町 O様邸",
+      "total_photos": 88,
+      "sample_photo_rel": "DSC_0556.JPG",
+      "photo_url": "/raw_case_photo/%E5%90%89%E8%A6%8B%E7%94%BA%20O%E6%A7%98%E9%82%B8/DSC_0556.JPG",
+      "category_counts": {
+        "recommended": 0,
+        "facade": 0,
+        "ldk": 0,
+        "water": 0,
+        "bedroom_japanese": 0,
+        "others": 88
+      },
+      "has_3d": false,
+      "model_files": [],
+      "photographer_specs": {
+        "lens": "14mm〜24mm 超広角（Nikon 14-24mm F2.8G / 16-35mm F4G相当）",
+        "eye_level": "1,150mm（着座と立位の中間黄金比、天井梁と無垢床の抜け感）",
+        "lighting": "南面掃き出し窓からの柔らかな自然光、3000K折り上げ天井間接照明、温もりのグラデーション",
+        "sd_prompt": "professional interior architectural photography of an expansive Japanese LDK, 16mm-24mm ultra-wide rectilinear lens, eye level 1150mm, perfectly straight vertical lines, high ceiling with exposed solid cedar timber beams, natural solid wood plank floor, artisan hand-plastered diatomaceous earth walls, open island kitchen, soft diffused natural daylight pouring through floor-to-ceiling glass doors, warm indirect cove lighting 3000k, balanced HDR exposure, Architectural Digest style, 8k, photorealistic, razor-sharp focus --ar 16:9",
+        "sd_negative": "warped walls, fish-eye distortion, blown out window highlights, plastic artificial wood, dark gloomy shadows, messy, cartoon",
+        "controlnet": {
+          "primary": "ControlNet Depth (Weight: 1.0, Preprocessor: depth_anything)",
+          "secondary": "ControlNet Canny (Weight: 0.65, Preprocessor: canny)",
+          "sampler": "DPM++ 2M Karras",
+          "steps": 32,
+          "cfg_scale": 7.5
+        }
+      }
+    },
+    {
+      "id": "川越市 Y様邸",
+      "name": "川越市 Y様邸",
+      "city": "川越市",
+      "feature": "30帖白タイル床×ピットリビング×鉄骨スケルトン階段・ラグジュアリーモダン",
+      "camera_note": "Caplio GX100 (広角スナップ, F3.6-F8)",
+      "highlight": "白光沢タイルに一段沈み込んだピットリビングと、開放感を極めたストリップ階段。",
+      "primary_category": "ldk",
+      "folder": "川越市 Y様邸",
+      "total_photos": 17,
+      "sample_photo_rel": "R0037347.JPG",
+      "photo_url": "/raw_case_photo/%E5%B7%9D%E8%B6%8A%E5%B8%82%20Y%E6%A7%98%E9%82%B8/R0037347.JPG",
+      "category_counts": {
+        "recommended": 0,
+        "facade": 0,
+        "ldk": 0,
+        "water": 0,
+        "bedroom_japanese": 0,
+        "others": 17
+      },
+      "has_3d": false,
+      "model_files": [],
+      "photographer_specs": {
+        "lens": "14mm〜24mm 超広角（Nikon 14-24mm F2.8G / 16-35mm F4G相当）",
+        "eye_level": "1,150mm（着座と立位の中間黄金比、天井梁と無垢床の抜け感）",
+        "lighting": "南面掃き出し窓からの柔らかな自然光、3000K折り上げ天井間接照明、温もりのグラデーション",
+        "sd_prompt": "professional interior architectural photography of an expansive Japanese LDK, 16mm-24mm ultra-wide rectilinear lens, eye level 1150mm, perfectly straight vertical lines, high ceiling with exposed solid cedar timber beams, natural solid wood plank floor, artisan hand-plastered diatomaceous earth walls, open island kitchen, soft diffused natural daylight pouring through floor-to-ceiling glass doors, warm indirect cove lighting 3000k, balanced HDR exposure, Architectural Digest style, 8k, photorealistic, razor-sharp focus --ar 16:9",
+        "sd_negative": "warped walls, fish-eye distortion, blown out window highlights, plastic artificial wood, dark gloomy shadows, messy, cartoon",
+        "controlnet": {
+          "primary": "ControlNet Depth (Weight: 1.0, Preprocessor: depth_anything)",
+          "secondary": "ControlNet Canny (Weight: 0.65, Preprocessor: canny)",
+          "sampler": "DPM++ 2M Karras",
+          "steps": 32,
+          "cfg_scale": 7.5
+        }
+      }
+    },
+    {
+      "id": "日高市 I様邸",
+      "name": "日高市 I様邸",
+      "city": "日高市",
+      "feature": "勾配天井ロフト×力強い化粧梁×民芸調和空間（神レンズ14mm撮影）",
+      "camera_note": "Nikon D4S + AF-S NIKKOR 14-24mm F2.8G ED (14-15mm超広角, F11.0)",
+      "highlight": "建築写真家が14mm神レンズで捉えた、豪快な化粧梁と勾配天井が織りなす民芸調の美しい陰影。",
+      "primary_category": "bedroom_japanese",
+      "folder": "日高市 I様邸",
+      "total_photos": 28,
+      "sample_photo_rel": "撮影データ.JPG/DSC_8924_edit01.jpg",
+      "photo_url": "/raw_case_photo/%E6%97%A5%E9%AB%98%E5%B8%82%20I%E6%A7%98%E9%82%B8/%E6%92%AE%E5%BD%B1%E3%83%87%E3%83%BC%E3%82%BF.JPG/DSC_8924_edit01.jpg",
+      "category_counts": {
+        "recommended": 1,
+        "facade": 0,
+        "ldk": 0,
+        "water": 0,
+        "bedroom_japanese": 0,
+        "others": 28
+      },
+      "has_3d": false,
+      "model_files": [],
+      "photographer_specs": {
+        "lens": "28mm〜50mm（落ち着きと静謐の標準画角）",
+        "eye_level": "850mm（和室座視線・畳目線）〜 1,000mm",
+        "lighting": "障子越しに漉された柔らかな拡散光、陰影礼賛（和の静寂）、包み込む間接照明",
+        "sd_prompt": "serene modern Japanese tatami room and master suite photography, 35mm lens, low perspective (850mm eye level), traditional handmade washi paper shoji screens casting soft diffused shadows, natural rush tatami mats, solid wood headboard, concealed warm linear LED cove lighting, tranquil zen ambiance, balanced natural shadows, minimal aesthetic, 8k resolution, authentic Japanese craftsmanship --ar 16:9",
+        "sd_negative": "bright harsh daylight, modern chrome metals, glossy vinyl floor, colorful loud decorations, poorly rendered textures",
+        "controlnet": {
+          "primary": "ControlNet Depth (Weight: 0.85, Preprocessor: depth_anything)",
+          "secondary": "ControlNet Canny (Weight: 0.6, Preprocessor: canny)",
+          "sampler": "DPM++ SDE Karras",
+          "steps": 32,
+          "cfg_scale": 7.5
+        }
+      }
+    },
+    {
+      "id": "東松山市 K様邸",
+      "name": "東松山市 K様邸",
+      "city": "東松山市",
+      "feature": "職人手刻み木組み×高気密高断熱×光と風が抜けるパッシブ設計",
+      "camera_note": "プロ一眼撮影 (広角24mm相当)",
+      "highlight": "木の温もりに包まれる高気密高断熱住宅。職人の丁寧な造作と自然素材の調和。",
+      "primary_category": "ldk",
+      "folder": "東松山市 K様邸",
+      "total_photos": 58,
+      "sample_photo_rel": "20150923_000.jpg",
+      "photo_url": "/raw_case_photo/%E6%9D%B1%E6%9D%BE%E5%B1%B1%E5%B8%82%20K%E6%A7%98%E9%82%B8/20150923_000.jpg",
+      "category_counts": {
+        "recommended": 0,
+        "facade": 0,
+        "ldk": 0,
+        "water": 0,
+        "bedroom_japanese": 0,
+        "others": 58
+      },
+      "has_3d": false,
+      "model_files": [],
+      "photographer_specs": {
+        "lens": "14mm〜24mm 超広角（Nikon 14-24mm F2.8G / 16-35mm F4G相当）",
+        "eye_level": "1,150mm（着座と立位の中間黄金比、天井梁と無垢床の抜け感）",
+        "lighting": "南面掃き出し窓からの柔らかな自然光、3000K折り上げ天井間接照明、温もりのグラデーション",
+        "sd_prompt": "professional interior architectural photography of an expansive Japanese LDK, 16mm-24mm ultra-wide rectilinear lens, eye level 1150mm, perfectly straight vertical lines, high ceiling with exposed solid cedar timber beams, natural solid wood plank floor, artisan hand-plastered diatomaceous earth walls, open island kitchen, soft diffused natural daylight pouring through floor-to-ceiling glass doors, warm indirect cove lighting 3000k, balanced HDR exposure, Architectural Digest style, 8k, photorealistic, razor-sharp focus --ar 16:9",
+        "sd_negative": "warped walls, fish-eye distortion, blown out window highlights, plastic artificial wood, dark gloomy shadows, messy, cartoon",
+        "controlnet": {
+          "primary": "ControlNet Depth (Weight: 1.0, Preprocessor: depth_anything)",
+          "secondary": "ControlNet Canny (Weight: 0.65, Preprocessor: canny)",
+          "sampler": "DPM++ 2M Karras",
+          "steps": 32,
+          "cfg_scale": 7.5
+        }
+      }
+    },
+    {
+      "id": "行田市 H様邸",
+      "name": "行田市 H様邸",
+      "city": "行田市",
+      "feature": "ビルトインガレージ×ネイビーガルバ×手刻み格子スクリーン（神レンズ14mm撮影）",
+      "camera_note": "Nikon D4S + AF-S NIKKOR 14-24mm F2.8G ED (14mm超広角, F11.0)",
+      "highlight": "建築写真最高峰の14mm画角。精緻なネイビー縦ハゼ外観と職人手刻み格子の陰影美。",
+      "primary_category": "facade",
+      "folder": "行田市 H様邸",
+      "total_photos": 10,
+      "sample_photo_rel": "おすすめ/DSC_3218.jpg",
+      "photo_url": "/raw_case_photo/%E8%A1%8C%E7%94%B0%E5%B8%82%20H%E6%A7%98%E9%82%B8/%E3%81%8A%E3%81%99%E3%81%99%E3%82%81/DSC_3218.jpg",
+      "category_counts": {
+        "recommended": 10,
+        "facade": 0,
+        "ldk": 0,
+        "water": 0,
+        "bedroom_japanese": 0,
+        "others": 10
+      },
+      "has_3d": false,
+      "model_files": [],
+      "photographer_specs": {
+        "lens": "24mm〜35mm（建築アオリ補正・2点透視）",
+        "eye_level": "1,500mm（水平垂直完全平行・歪みゼロ）",
+        "lighting": "夕景トワイライト（マジックアワー薄暮＋室内3000K温白色の漏れ光）",
+        "sd_prompt": "award-winning architectural photography of a modern Japanese custom house facade, vertical standing seam metal cladding, natural cedar wood accent, tilt-shift lens, two-point perspective, perfectly parallel vertical lines, dramatic twilight blue hour sky, warm 3000k interior light glowing through triple-pane large windows, manicured gravel landscape, 8k resolution, ultra-detailed, photorealistic, ArchDaily feature, Hasselblad H6D-100c --ar 16:9",
+        "sd_negative": "blurry, distorted vertical lines, oversaturated colors, cartoon, flat daytime lighting, unrealistic CGI texture, lowres",
+        "controlnet": {
+          "primary": "ControlNet Depth (Weight: 1.0, Preprocessor: depth_anything)",
+          "secondary": "ControlNet MLSD / Lineart (Weight: 0.8, Preprocessor: mlsd)",
+          "sampler": "DPM++ 2M Karras",
+          "steps": 35,
+          "cfg_scale": 7.5
+        }
+      }
+    },
+    {
+      "id": "鳩山町 T様邸",
+      "name": "鳩山町 T様邸",
+      "city": "鳩山町",
+      "feature": "緑の丘陵に調和する平屋調フォルム×高断熱自然素材住宅",
+      "camera_note": "プロ一眼撮影 (広角24mm相当)",
+      "highlight": "豊かな緑に囲まれた敷地に溶け込む、落ち着きある佇まいと職人技。",
+      "primary_category": "facade",
+      "folder": "鳩山町 T様邸",
+      "total_photos": 13,
+      "sample_photo_rel": "IMG_0036.jpg",
+      "photo_url": "/raw_case_photo/%E9%B3%A9%E5%B1%B1%E7%94%BA%20T%E6%A7%98%E9%82%B8/IMG_0036.jpg",
+      "category_counts": {
+        "recommended": 0,
+        "facade": 0,
+        "ldk": 0,
+        "water": 0,
+        "bedroom_japanese": 0,
+        "others": 13
+      },
+      "has_3d": false,
+      "model_files": [],
+      "photographer_specs": {
+        "lens": "24mm〜35mm（建築アオリ補正・2点透視）",
+        "eye_level": "1,500mm（水平垂直完全平行・歪みゼロ）",
+        "lighting": "夕景トワイライト（マジックアワー薄暮＋室内3000K温白色の漏れ光）",
+        "sd_prompt": "award-winning architectural photography of a modern Japanese custom house facade, vertical standing seam metal cladding, natural cedar wood accent, tilt-shift lens, two-point perspective, perfectly parallel vertical lines, dramatic twilight blue hour sky, warm 3000k interior light glowing through triple-pane large windows, manicured gravel landscape, 8k resolution, ultra-detailed, photorealistic, ArchDaily feature, Hasselblad H6D-100c --ar 16:9",
+        "sd_negative": "blurry, distorted vertical lines, oversaturated colors, cartoon, flat daytime lighting, unrealistic CGI texture, lowres",
+        "controlnet": {
+          "primary": "ControlNet Depth (Weight: 1.0, Preprocessor: depth_anything)",
+          "secondary": "ControlNet MLSD / Lineart (Weight: 0.8, Preprocessor: mlsd)",
+          "sampler": "DPM++ 2M Karras",
+          "steps": 35,
+          "cfg_scale": 7.5
+        }
+      }
+    },
+    {
+      "id": "鶴ヶ島市 A様邸",
+      "name": "鶴ヶ島市 A様邸",
+      "city": "鶴ヶ島市",
+      "feature": "アイランドキッチン回遊動線×中庭プライベートテラス×木製格子ルーバー",
+      "camera_note": "Nikon D700 + AF-S NIKKOR 16-35mm F4G ED VR (16-35mm, F10.0)",
+      "highlight": "洗練されたアイランドキッチンから中庭テラスへと視線が抜ける回遊動線。格子ルーバーの陰影。",
+      "primary_category": "ldk",
+      "folder": "鶴ヶ島市 A様邸",
+      "total_photos": 211,
+      "sample_photo_rel": "お勧めフォルダー/_DSC8468.jpg",
+      "photo_url": "/raw_case_photo/%E9%B6%B4%E3%83%B6%E5%B3%B6%E5%B8%82%20A%E6%A7%98%E9%82%B8/%E3%81%8A%E5%8B%A7%E3%82%81%E3%83%95%E3%82%A9%E3%83%AB%E3%83%80%E3%83%BC/_DSC8468.jpg",
+      "category_counts": {
+        "recommended": 11,
+        "facade": 19,
+        "ldk": 23,
+        "water": 7,
+        "bedroom_japanese": 22,
+        "others": 140
+      },
+      "has_3d": false,
+      "model_files": [],
+      "photographer_specs": {
+        "lens": "14mm〜24mm 超広角（Nikon 14-24mm F2.8G / 16-35mm F4G相当）",
+        "eye_level": "1,150mm（着座と立位の中間黄金比、天井梁と無垢床の抜け感）",
+        "lighting": "南面掃き出し窓からの柔らかな自然光、3000K折り上げ天井間接照明、温もりのグラデーション",
+        "sd_prompt": "professional interior architectural photography of an expansive Japanese LDK, 16mm-24mm ultra-wide rectilinear lens, eye level 1150mm, perfectly straight vertical lines, high ceiling with exposed solid cedar timber beams, natural solid wood plank floor, artisan hand-plastered diatomaceous earth walls, open island kitchen, soft diffused natural daylight pouring through floor-to-ceiling glass doors, warm indirect cove lighting 3000k, balanced HDR exposure, Architectural Digest style, 8k, photorealistic, razor-sharp focus --ar 16:9",
+        "sd_negative": "warped walls, fish-eye distortion, blown out window highlights, plastic artificial wood, dark gloomy shadows, messy, cartoon",
+        "controlnet": {
+          "primary": "ControlNet Depth (Weight: 1.0, Preprocessor: depth_anything)",
+          "secondary": "ControlNet Canny (Weight: 0.65, Preprocessor: canny)",
+          "sampler": "DPM++ 2M Karras",
+          "steps": 32,
+          "cfg_scale": 7.5
+        }
+      }
+    },
+    {
+      "id": "鶴ヶ島市 KB様邸",
+      "name": "鶴ヶ島市 KB様邸",
+      "city": "鶴ヶ島市",
+      "feature": "格調高いファサード×無垢杉リビング×雪見障子の上質和室",
+      "camera_note": "Nikon D700 + AF-S NIKKOR 16-35mm F4G ED VR (16-25mm, F16.0)",
+      "highlight": "端正な外観から続く無垢床リビングと、職人手塗りの珪藻土、雪見障子が映える和室空間。",
+      "primary_category": "facade",
+      "folder": "鶴ヶ島市 KB様邸",
+      "total_photos": 171,
+      "sample_photo_rel": "お勧めフォルダー/DSC_8595.jpg",
+      "photo_url": "/raw_case_photo/%E9%B6%B4%E3%83%B6%E5%B3%B6%E5%B8%82%20KB%E6%A7%98%E9%82%B8/%E3%81%8A%E5%8B%A7%E3%82%81%E3%83%95%E3%82%A9%E3%83%AB%E3%83%80%E3%83%BC/DSC_8595.jpg",
+      "category_counts": {
+        "recommended": 21,
+        "facade": 28,
+        "ldk": 16,
+        "water": 3,
+        "bedroom_japanese": 13,
+        "others": 111
+      },
+      "has_3d": false,
+      "model_files": [],
+      "photographer_specs": {
+        "lens": "24mm〜35mm（建築アオリ補正・2点透視）",
+        "eye_level": "1,500mm（水平垂直完全平行・歪みゼロ）",
+        "lighting": "夕景トワイライト（マジックアワー薄暮＋室内3000K温白色の漏れ光）",
+        "sd_prompt": "award-winning architectural photography of a modern Japanese custom house facade, vertical standing seam metal cladding, natural cedar wood accent, tilt-shift lens, two-point perspective, perfectly parallel vertical lines, dramatic twilight blue hour sky, warm 3000k interior light glowing through triple-pane large windows, manicured gravel landscape, 8k resolution, ultra-detailed, photorealistic, ArchDaily feature, Hasselblad H6D-100c --ar 16:9",
+        "sd_negative": "blurry, distorted vertical lines, oversaturated colors, cartoon, flat daytime lighting, unrealistic CGI texture, lowres",
+        "controlnet": {
+          "primary": "ControlNet Depth (Weight: 1.0, Preprocessor: depth_anything)",
+          "secondary": "ControlNet MLSD / Lineart (Weight: 0.8, Preprocessor: mlsd)",
+          "sampler": "DPM++ 2M Karras",
+          "steps": 35,
+          "cfg_scale": 7.5
+        }
+      }
+    },
+    {
+      "id": "鶴ヶ島市 K様邸",
+      "name": "鶴ヶ島市 K様邸",
+      "city": "鶴ヶ島市",
+      "feature": "職人手塗り珪藻土壁×木格子の陰影×落ち着きある和モダンリビング",
+      "camera_note": "Nikon D700 + AF-S NIKKOR 16-35mm F4G ED VR (16-23mm, F10.0)",
+      "highlight": "珪藻土の陰影と無垢木の温もり。目線を低く保つ落ち着いた和モダンリビング空間。",
+      "primary_category": "ldk",
+      "folder": "鶴ヶ島市 K様邸",
+      "total_photos": 135,
+      "sample_photo_rel": "お勧めフォルダー/_DSC8401.jpg",
+      "photo_url": "/raw_case_photo/%E9%B6%B4%E3%83%B6%E5%B3%B6%E5%B8%82%20K%E6%A7%98%E9%82%B8/%E3%81%8A%E5%8B%A7%E3%82%81%E3%83%95%E3%82%A9%E3%83%AB%E3%83%80%E3%83%BC/_DSC8401.jpg",
+      "category_counts": {
+        "recommended": 15,
+        "facade": 16,
+        "ldk": 19,
+        "water": 0,
+        "bedroom_japanese": 9,
+        "others": 91
+      },
+      "has_3d": false,
+      "model_files": [],
+      "photographer_specs": {
+        "lens": "14mm〜24mm 超広角（Nikon 14-24mm F2.8G / 16-35mm F4G相当）",
+        "eye_level": "1,150mm（着座と立位の中間黄金比、天井梁と無垢床の抜け感）",
+        "lighting": "南面掃き出し窓からの柔らかな自然光、3000K折り上げ天井間接照明、温もりのグラデーション",
+        "sd_prompt": "professional interior architectural photography of an expansive Japanese LDK, 16mm-24mm ultra-wide rectilinear lens, eye level 1150mm, perfectly straight vertical lines, high ceiling with exposed solid cedar timber beams, natural solid wood plank floor, artisan hand-plastered diatomaceous earth walls, open island kitchen, soft diffused natural daylight pouring through floor-to-ceiling glass doors, warm indirect cove lighting 3000k, balanced HDR exposure, Architectural Digest style, 8k, photorealistic, razor-sharp focus --ar 16:9",
+        "sd_negative": "warped walls, fish-eye distortion, blown out window highlights, plastic artificial wood, dark gloomy shadows, messy, cartoon",
+        "controlnet": {
+          "primary": "ControlNet Depth (Weight: 1.0, Preprocessor: depth_anything)",
+          "secondary": "ControlNet Canny (Weight: 0.65, Preprocessor: canny)",
+          "sampler": "DPM++ 2M Karras",
+          "steps": 32,
+          "cfg_scale": 7.5
+        }
+      }
+    },
+    {
+      "id": "鶴ヶ島市 S様邸",
+      "name": "鶴ヶ島市 S様邸",
+      "city": "鶴ヶ島市",
+      "feature": "天井高2.8m大空間LDK×無垢杉フロア×造作カウンター（中出カメラマン216枚撮影）",
+      "camera_note": "Nikon D7000 + 17-50mm F2.8 (中出カメラマン撮影, 17mm-19mm, F11.0)",
+      "highlight": "中出カメラマンが捉えた開放的な天井高2.8m大空間。無垢杉フロアに降り注ぐ朝の自然光。",
+      "primary_category": "ldk",
+      "folder": "鶴ヶ島市 S様邸",
+      "total_photos": 216,
+      "sample_photo_rel": "おすすめ/nakade-3539.jpg",
+      "photo_url": "/raw_case_photo/%E9%B6%B4%E3%83%B6%E5%B3%B6%E5%B8%82%20S%E6%A7%98%E9%82%B8/%E3%81%8A%E3%81%99%E3%81%99%E3%82%81/nakade-3539.jpg",
+      "category_counts": {
+        "recommended": 16,
+        "facade": 37,
+        "ldk": 64,
+        "water": 0,
+        "bedroom_japanese": 97,
+        "others": 18
+      },
+      "has_3d": false,
+      "model_files": [],
+      "photographer_specs": {
+        "lens": "14mm〜24mm 超広角（Nikon 14-24mm F2.8G / 16-35mm F4G相当）",
+        "eye_level": "1,150mm（着座と立位の中間黄金比、天井梁と無垢床の抜け感）",
+        "lighting": "南面掃き出し窓からの柔らかな自然光、3000K折り上げ天井間接照明、温もりのグラデーション",
+        "sd_prompt": "professional interior architectural photography of an expansive Japanese LDK, 16mm-24mm ultra-wide rectilinear lens, eye level 1150mm, perfectly straight vertical lines, high ceiling with exposed solid cedar timber beams, natural solid wood plank floor, artisan hand-plastered diatomaceous earth walls, open island kitchen, soft diffused natural daylight pouring through floor-to-ceiling glass doors, warm indirect cove lighting 3000k, balanced HDR exposure, Architectural Digest style, 8k, photorealistic, razor-sharp focus --ar 16:9",
+        "sd_negative": "warped walls, fish-eye distortion, blown out window highlights, plastic artificial wood, dark gloomy shadows, messy, cartoon",
+        "controlnet": {
+          "primary": "ControlNet Depth (Weight: 1.0, Preprocessor: depth_anything)",
+          "secondary": "ControlNet Canny (Weight: 0.65, Preprocessor: canny)",
+          "sampler": "DPM++ 2M Karras",
+          "steps": 32,
+          "cfg_scale": 7.5
+        }
+      }
+    },
+    {
+      "id": "鶴ヶ島市 T様邸",
+      "name": "鶴ヶ島市 T様邸",
+      "city": "鶴ヶ島市",
+      "feature": "キヤノンLレンズ17mm撮影・吹き抜けリビング×造作水回りの美邸",
+      "camera_note": "Canon EOS 5D Mark II + EF17-40mm F4L USM (17mm超広角, F4.0)",
+      "highlight": "フルサイズ超広角17mmで捉えた、吹き抜けから光が巡るダイナミックなリビングと職人造作空間。",
+      "primary_category": "ldk",
+      "folder": "鶴ヶ島市 T様邸",
+      "total_photos": 113,
+      "sample_photo_rel": "★おすすめ/IMG_9219.jpg",
+      "photo_url": "/raw_case_photo/%E9%B6%B4%E3%83%B6%E5%B3%B6%E5%B8%82%20T%E6%A7%98%E9%82%B8/%E2%98%85%E3%81%8A%E3%81%99%E3%81%99%E3%82%81/IMG_9219.jpg",
+      "category_counts": {
+        "recommended": 18,
+        "facade": 16,
+        "ldk": 34,
+        "water": 9,
+        "bedroom_japanese": 29,
+        "others": 25
+      },
+      "has_3d": false,
+      "model_files": [],
+      "photographer_specs": {
+        "lens": "14mm〜24mm 超広角（Nikon 14-24mm F2.8G / 16-35mm F4G相当）",
+        "eye_level": "1,150mm（着座と立位の中間黄金比、天井梁と無垢床の抜け感）",
+        "lighting": "南面掃き出し窓からの柔らかな自然光、3000K折り上げ天井間接照明、温もりのグラデーション",
+        "sd_prompt": "professional interior architectural photography of an expansive Japanese LDK, 16mm-24mm ultra-wide rectilinear lens, eye level 1150mm, perfectly straight vertical lines, high ceiling with exposed solid cedar timber beams, natural solid wood plank floor, artisan hand-plastered diatomaceous earth walls, open island kitchen, soft diffused natural daylight pouring through floor-to-ceiling glass doors, warm indirect cove lighting 3000k, balanced HDR exposure, Architectural Digest style, 8k, photorealistic, razor-sharp focus --ar 16:9",
+        "sd_negative": "warped walls, fish-eye distortion, blown out window highlights, plastic artificial wood, dark gloomy shadows, messy, cartoon",
+        "controlnet": {
+          "primary": "ControlNet Depth (Weight: 1.0, Preprocessor: depth_anything)",
+          "secondary": "ControlNet Canny (Weight: 0.65, Preprocessor: canny)",
+          "sampler": "DPM++ 2M Karras",
+          "steps": 32,
+          "cfg_scale": 7.5
+        }
+      }
+    },
+    {
+      "id": "case_special_toda_H",
+      "name": "特別邸. 埼玉県H様邸（環境住宅賞受賞実邸）",
+      "city": "埼玉県",
+      "feature": "実測C値0.1・空気が廻る家・薪ストーブと大谷石カウンターW断熱",
+      "camera_note": "埼玉県環境住宅賞 公式受賞撮影パネル (実測C値0.1)",
+      "highlight": "埼玉県環境住宅賞を受賞した環境共生住宅。薪ストーブと大谷石、空気が廻るダブル断熱設計。",
+      "primary_category": "ldk",
+      "folder": "埼玉県H様邸",
+      "total_photos": 5,
+      "sample_photo_rel": "photo_facade_kuki.webp",
+      "photo_url": "/images/cases_real/hagiwara/photo_facade_kuki.webp",
+      "category_counts": {
+        "recommended": 1,
+        "facade": 2,
+        "ldk": 2,
+        "water": 0,
+        "bedroom_japanese": 0,
+        "others": 0
+      },
+      "has_3d": false,
+      "model_files": [],
+      "photographer_specs": {
+        "lens": "24mm 広角 (アイレベル 1,150mm)",
+        "eye_level": "1,150mm",
+        "lighting": "パッシブ自然光グラデーション＋薪ストーブの温もり",
+        "sd_prompt": "award-winning Japanese eco-house interior (Saitama Environmental Housing Award), wood stove set against genuine porous greenish Oya stone counter and wall, double insulation timber frame, skip-floor open plan layout, warm diffused passive solar daylight, natural air circulation design, ultra-airtight C-value 0.1 craftsmanship, authentic architectural photograph, 8k, photorealistic --ar 16:9",
+        "sd_negative": "blurry, CGI, bad architecture, modern fake plastics, flat lighting",
+        "controlnet": {
+          "primary": "ControlNet Depth (Weight: 1.0, Preprocessor: depth_anything)",
+          "secondary": "ControlNet Canny (Weight: 0.65, Preprocessor: canny)",
+          "sampler": "DPM++ 2M Karras",
+          "steps": 32,
+          "cfg_scale": 7.5
+        }
+      }
+    }
+  ]
+}

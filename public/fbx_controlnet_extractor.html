@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FBX ControlNet 幾何・深度抽出スタジオ | 住ま居る</title>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: #0f172a;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #fff;
+  }
+  #canvas-container {
+    width: 100vw;
+    height: 100vh;
+  }
+  #control-panel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(15, 23, 42, 0.95);
+    padding: 16px 20px;
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    max-width: 440px;
+    z-index: 10;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  }
+  h1 {
+    font-size: 15px;
+    margin: 0 0 6px;
+    color: #38bdf8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .badge {
+    background: #0284c7;
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  p {
+    font-size: 12px;
+    margin: 0 0 10px;
+    color: #94a3b8;
+    line-height: 1.4;
+  }
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #f59e0b;
+    margin: 8px 0 4px;
+    text-transform: uppercase;
+  }
+  .btn-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  button {
+    background: #334155;
+    color: #f8fafc;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  button:hover { background: #475569; transform: translateY(-1px); }
+  button.active {
+    background: #0284c7;
+    color: #fff;
+    border-color: #38bdf8;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+  }
+  button.action-btn {
+    background: #059669;
+    width: 100%;
+    padding: 9px;
+    font-size: 13px;
+    border: none;
+    margin-top: 6px;
+  }
+  button.action-btn:hover { background: #047857; }
+  #status-box {
+    font-size: 11px;
+    color: #fbbf24;
+    background: rgba(0,0,0,0.3);
+    padding: 8px 10px;
+    border-radius: 6px;
+    margin-top: 10px;
+    max-height: 120px;
+    overflow-y: auto;
+    font-family: monospace;
+    line-height: 1.4;
+  }
+  #coords {
+    font-size: 10px;
+    color: #38bdf8;
+    margin-top: 4px;
+    font-family: monospace;
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/fflate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+
+<div id="control-panel">
+  <div style="display: flex; gap: 6px; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 8px; align-items: center;">
+    <button id="tab-3d-btn" class="active" style="flex: 1; padding: 6px 4px; font-size: 11px;">📐 3D抽出・カメラ調整</button>
+    <button id="tab-gallery-btn" style="flex: 1; padding: 6px 4px; font-size: 11px; background: #047857;">✨ 生成パース実機検証</button>
+    <a href="https://vrmodelhouse.com/vrh005/cdnvr/" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; font-size: 10px; text-decoration: none; display: flex; align-items: center; gap: 3px; background: rgba(56, 189, 248, 0.15); padding: 5px 8px; border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.3); font-weight: bold; white-space: nowrap;">🌐 展示場 ↗</a>
+  </div>
+
+  <div id="tab-3d-content">
+    <h1>FBX 実写真マッチング・ControlNet抽出スタジオ <span class="badge">実機検証済</span></h1>
+    <div style="background: rgba(2, 132, 199, 0.15); border: 1px solid #0284c7; border-radius: 6px; padding: 7px 10px; margin-bottom: 10px; font-size: 10.5px; color: #bae6fd; line-height: 1.45;">
+      💡 <strong>操作手順:</strong><br>
+      ① スライダーで窓・開口部・屋根の輪郭をピクセル単位で合わせます（【🎯 推奨画角にスナップ】で最適値へ一発復帰）<br>
+      ② 重なりを確認後、【現在の画角で3パスを保存】を押すと輪郭線画・深度マップが抽出され、AI補完生成されます。
+    </div>
+
+    <div class="section-title" style="color: #38bdf8;">0. 実案件FBX選択（ARCHITREND ZERO）</div>
+    <div style="margin-bottom: 8px;">
+      <select id="sel-case" style="width: 100%; background: #1e293b; color: #fff; border: 1px solid #0284c7; border-radius: 6px; padding: 6px 8px; font-size: 11.5px; font-weight: bold;">
+        <option value="tsurugashima_s">🏛️ 鶴ヶ島市 S様邸（認定低炭素旗艦邸・大空間LDK）</option>
+        <option value="tsurugashima_a">🌲 鶴ヶ島市 A様邸（無垢材モダン邸・開放LDK）</option>
+        <option value="yoshimi_o">🏡 吉見町 O様邸（ワイドオープン郊外邸）</option>
+        <option value="tokigawa_k">✨ ときがわ町 K様邸（吹抜光融合邸）</option>
+        <option value="tsurugashima_t">🪵 鶴ヶ島市 T様邸（自然素材再生・現し梁邸）</option>
+        <option value="higashimatsuyama_k">📐 東松山市 K様邸（端正モダン邸）</option>
+        <option value="kawagoe_y">⛩️ 川越市 Y様邸（現代和風邸）</option>
+        <option value="hidaka_i">🌿 日高市 I様邸（高天井ゆとり邸）</option>
+        <option value="tsurugashima_k">🏡 鶴ヶ島市 K様邸（オープンハウス邸）</option>
+        <option value="gyoda_h">🏘️ 行田市 H様邸（新築住宅）</option>
+        <option value="hatoyama_t">🌾 鳩山町 T様邸（新築住宅）</option>
+      </select>
+    </div>
+
+    <div class="section-title">1. 対象アングル選択</div>
+    <div class="btn-group">
+      <button id="btn-cam-exterior" class="active">🏡 ① 外観</button>
+      <button id="btn-cam-ldk">🛋️ ② 室内・LDK</button>
+      <button id="btn-cam-snap" style="background: #0284c7; font-weight: bold;">🎯 推奨画角にスナップ</button>
+      <button id="btn-cam-reset">🔄 リセット</button>
+    </div>
+
+  <div class="section-title">2. 実写真オニオンスキン比較（半透明重ね合わせ）</div>
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+    <label style="font-size: 11px; color: #cbd5e1;">写真透明度:</label>
+    <input type="range" id="slider-overlay-opacity" min="0" max="100" value="45" style="flex: 1;">
+    <span id="opacity-val" style="font-size: 11px; width: 35px;">45%</span>
+  </div>
+
+  <div class="section-title">3. レンダリング・パス（ControlNet入力）</div>
+  <div class="btn-group" style="display: flex; flex-wrap: wrap; gap: 4px;">
+    <button id="btn-pass-whiteclay" class="active" style="flex: 1 1 45%; background: #0284c7; font-weight: bold;">🏛️ 建築ホワイトモデル (White Clay)</button>
+    <button id="btn-pass-normal" style="flex: 1 1 45%;">🪵 自然素材プレシェード</button>
+    <button id="btn-pass-depth" style="flex: 1 1 45%;">⬛ 深度マップ (Depth)</button>
+    <button id="btn-pass-lineart" style="flex: 1 1 45%;">📐 エッジ線画 (Lineart)</button>
+  </div>
+
+  <div class="section-title">4. カメラ位置・アングル微調整 (Nikon 21mm 光学FOV: 59.5°)</div>
+  <div style="font-size: 11px; display: grid; grid-template-columns: 50px 1fr 50px; gap: 4px; align-items: center; margin-bottom: 4px;">
+    <label>Cam X:</label>
+    <input type="range" id="slider-cam-x" min="-2500" max="2500" value="-964">
+    <span id="cam-x-val">-964</span>
+  </div>
+  <div style="font-size: 11px; display: grid; grid-template-columns: 50px 1fr 50px; gap: 4px; align-items: center; margin-bottom: 4px;">
+    <label>Cam Y:</label>
+    <input type="range" id="slider-cam-y" min="-100" max="1500" value="180">
+    <span id="cam-y-val">180</span>
+  </div>
+  <div style="font-size: 11px; display: grid; grid-template-columns: 50px 1fr 50px; gap: 4px; align-items: center; margin-bottom: 4px;">
+    <label>Cam Z:</label>
+    <input type="range" id="slider-cam-z" min="-2500" max="2500" value="-1149">
+    <span id="cam-z-val">-1149</span>
+  </div>
+  <div style="font-size: 11px; display: grid; grid-template-columns: 50px 1fr 50px; gap: 4px; align-items: center; margin-bottom: 4px;">
+    <label>Tgt X:</label>
+    <input type="range" id="slider-tgt-x" min="-1000" max="1000" value="0">
+    <span id="tgt-x-val">0</span>
+  </div>
+  <div style="font-size: 11px; display: grid; grid-template-columns: 50px 1fr 50px; gap: 4px; align-items: center; margin-bottom: 4px;">
+    <label>Tgt Y:</label>
+    <input type="range" id="slider-tgt-y" min="0" max="1500" value="400">
+    <span id="tgt-y-val">400</span>
+  </div>
+  <div style="font-size: 11px; display: grid; grid-template-columns: 50px 1fr 50px; gap: 4px; align-items: center; margin-bottom: 4px;">
+    <label>Tgt Z:</label>
+    <input type="range" id="slider-tgt-z" min="-1000" max="1000" value="0">
+    <span id="tgt-z-val">0</span>
+  </div>
+  <div style="font-size: 11px; display: flex; justify-content: space-between; align-items: center; margin-top: 6px; margin-bottom: 6px;">
+    <div>FOV: <input type="number" id="input-fov" value="59.5" step="0.5" style="width: 55px; background:#1e293b; color:#fff; border:1px solid #475569; border-radius:4px; padding:2px 4px;"> deg</div>
+    <button id="btn-save-as-preset" style="padding: 4px 8px; font-size: 10px; background: #0284c7;">📌 現アングルをプリセット保存</button>
+  </div>
+
+  <div class="section-title" style="color: #34d399;">5. 3D幾何補正（CAD自動生成フタ削除 ＆ コンロ前壁追加）</div>
+  <div style="background: rgba(16, 185, 129, 0.12); border: 1px solid #10b981; border-radius: 6px; padding: 7px 10px; margin-bottom: 8px; font-size: 11px;">
+    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; margin-bottom: 5px;">
+      <input type="checkbox" id="chk-remove-void-ceiling" checked>
+      <span style="color: #6ee7b7; font-weight: 600;">🪟 吹抜開口の貫通（自動生成天井・床板を削除）</span>
+    </label>
+    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+      <input type="checkbox" id="chk-add-kitchen-wall" checked>
+      <span style="color: #6ee7b7; font-weight: 600;">🧱 コンロ前袖壁の復元（厚12cm×高240cm×奥65cm）</span>
+    </label>
+  </div>
+
+  <div class="section-title">6. キャプチャ・保存</div>
+  <button id="btn-capture-current" class="action-btn">📸 現在のアングルで3パス（通常・深度・線画）を保存</button>
+  <button id="btn-turntable-scan" style="margin-top: 6px; width: 100%; padding: 7px; font-size: 11px; background: #6366f1; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">🔄 360°全周スキャン（12アングル撮影して正面特定）</button>
+  <button id="btn-fine-scan" style="margin-top: 4px; width: 100%; padding: 7px; font-size: 11px; background: #0284c7; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">🎯 正面ファインスキャン（105°〜135°精密撮影）</button>
+  <button id="btn-batch-all" style="margin-top: 6px; width: 100%; padding: 8px; font-size: 11px; background: #059669; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">⚡ 4案件全自動バッチ抽出（外観＆LDK素材プレシェード）</button>
+
+  <div id="coords">CAM: [X: 0, Y: 0, Z: 0] TGT: [X: 0, Y: 0, Z: 0]</div>
+  <div id="status-box">FBXモデル読み込み準備中...</div>
+
+  </div><!-- /#tab-3d-content -->
+
+  <!-- Tab 2: Multi-case Median Gallery & Quality Verification -->
+  <div id="tab-gallery-content" style="display: none;">
+    <h1 style="color: #34d399;">📊 4大案件展開・中央値ロバスト検証ギャラリー <span class="badge" style="background:#059669;">他案件実証済</span></h1>
+    <p>小峯様邸1邸への固執を完全脱却し、4案件の実機FBX（鶴ヶ島市S様邸・A様邸、吉見町O様邸、ときがわ町K様邸）に普遍適用できる「黄金中央値パラメータ」の比較検証です。</p>
+
+    <div class="section-title">検証ビュー切り替え</div>
+    <div style="font-size: 11px; color: #94a3b8; margin-bottom: 4px;">【第1階層：4大案件 中央値ベンチマーク検証】</div>
+    <div class="btn-group" style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">
+      <button class="gallery-sel-btn active" data-target="gal-matrix-ldk" style="background:#059669; font-weight:bold; flex: 1 1 45%;">📊 ① 4案件 LDK比較マトリクス</button>
+      <button class="gallery-sel-btn" data-target="gal-matrix-ext" style="background:#0284c7; font-weight:bold; flex: 1 1 45%;">📊 ② 4案件 外観比較マトリクス</button>
+      <button class="gallery-sel-btn" data-target="gal-case-s" style="flex: 1 1 22%;">🏛️ S様邸 (旗艦)</button>
+      <button class="gallery-sel-btn" data-target="gal-case-a" style="flex: 1 1 22%;">🌲 A様邸 (モダン)</button>
+      <button class="gallery-sel-btn" data-target="gal-case-o" style="flex: 1 1 22%;">🏡 O様邸 (郊外)</button>
+      <button class="gallery-sel-btn" data-target="gal-case-k" style="flex: 1 1 22%;">✨ K様邸 (吹抜)</button>
+    </div>
+
+    <div style="font-size: 11px; color: #94a3b8; margin-bottom: 4px;">【第2階層：バーチャルステージング＆昼夜バリエーション展開】</div>
+    <div class="btn-group" style="display: flex; flex-wrap: wrap; gap: 4px;">
+      <button class="gallery-sel-btn" data-target="gal-stage-japandi" style="background:#334155; flex: 1 1 45%;">🛋️ 家具配置：ジャパンディ</button>
+      <button class="gallery-sel-btn" data-target="gal-stage-evening" style="background:#334155; flex: 1 1 45%;">🌙 家具配置：夕景ラグジュアリー</button>
+      <button class="gallery-sel-btn" data-target="gal-k-evening" style="background:#1e293b; flex: 1 1 45%;">✨ 🌙 空室夕景・間接照明</button>
+      <button class="gallery-sel-btn" data-target="gal-k-ext-twilight" style="background:#1e293b; flex: 1 1 45%;">🏡 🌙 外観夕景サッシ漏れ光</button>
+    </div>
+
+    <!-- Active Gallery Cards Container -->
+    <div id="gallery-card-display" style="margin-top: 10px;">
+      <!-- Dynamic populated -->
+    </div>
+  </div><!-- /#tab-gallery-content -->
+</div>
+
+<!-- Viewport matching exactly Nikon D700 3:2 aspect ratio -->
+<div id="stage-wrapper" style="position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; background: #020617;">
+  <div id="viewport-box" style="position: relative; overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1);">
+    <div id="photo-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; opacity: 0.45; background-position: center; background-repeat: no-repeat; background-size: 100% 100%;"></div>
+    <div id="canvas-container" style="width: 100%; height: 100%;"></div>
+  </div>
+</div>
+
+<script>
+  window.addEventListener('error', function(e) {
+    const box = document.getElementById('status-box');
+    if (box) box.innerHTML += `<div style="color: #ef4444;">❌ エラー: ${e.message} (${e.filename}:${e.lineno})</div>`;
+  });
+  window.addEventListener('unhandledrejection', function(e) {
+    const box = document.getElementById('status-box');
+    if (box) box.innerHTML += `<div style="color: #ef4444;">❌ 未捕捉Promise: ${e.reason}</div>`;
+  });
+
+  const statusBox = document.getElementById('status-box');
+  const coordsEl = document.getElementById('coords');
+  const viewportBox = document.getElementById('viewport-box');
+  const container = document.getElementById('canvas-container');
+  const overlayEl = document.getElementById('photo-overlay');
+
+  function log(msg) {
+    console.log(msg);
+    statusBox.innerHTML += `<div>${msg}</div>`;
+    statusBox.scrollTop = statusBox.scrollHeight;
+  }
+
+  // Exact Nikon D700 Full-Frame DSLR 3:2 Ratio
+  const PHOTO_ASPECT = 4256 / 2832; // ~1.5028
+
+  function resizeStage() {
+    const winW = window.innerWidth;
+    const winH = window.innerHeight;
+    let w = winW;
+    let h = winW / PHOTO_ASPECT;
+    if (h > winH) {
+      h = winH;
+      w = winH * PHOTO_ASPECT;
+    }
+    viewportBox.style.width = Math.round(w) + 'px';
+    viewportBox.style.height = Math.round(h) + 'px';
+    return { w: Math.round(w), h: Math.round(h) };
+  }
+
+  const stageSize = resizeStage();
+
+  // 1. Three.js Scene Setup (Aspect 3:2 to match Nikon D700 Full-frame DSLR)
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xf1f5f9);
+
+  // Optical FOV for 21.0mm focal length on Full-Frame (36x24mm):
+  // vFOV = 2 * atan(12 / 21) = 59.49 deg
+  const camera = new THREE.PerspectiveCamera(59.5, PHOTO_ASPECT, 10, 100000);
+  camera.position.set(-380, 210, -995);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+  renderer.setSize(stageSize.w, stageSize.h);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  container.appendChild(renderer.domElement);
+
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.target.set(40, 390, 20);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.05;
+  controls.update();
+
+  // Lights for Normal pass with clear architectural contrast
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+  scene.add(ambientLight);
+  const dirLight = new THREE.DirectionalLight(0xfff8ee, 1.2);
+  dirLight.position.set(-3000, 6000, -2500);
+  scene.add(dirLight);
+  const hemiLight = new THREE.HemisphereLight(0xffffff, 0x64748b, 0.6);
+  scene.add(hemiLight);
+
+  // カメラ追従ヘッドライト（室内奥まで自然光を届かせる）
+  const cameraLight = new THREE.PointLight(0xfff5ea, 0.9, 4000);
+  camera.add(cameraLight);
+  scene.add(camera);
+
+  // 建築パース専用カスタム深度シェーダー（手前が白、奥が黒の滑らかな階調）
+  const customDepthMaterial = new THREE.ShaderMaterial({
+    vertexShader: `
+      varying float vDepth;
+      void main() {
+        vec4 viewPos = modelViewMatrix * vec4(position, 1.0);
+        vDepth = -viewPos.z;
+        gl_Position = projectionMatrix * viewPos;
+      }
+    `,
+    fragmentShader: `
+      uniform float uNear;
+      uniform float uFar;
+      varying float vDepth;
+      void main() {
+        float d = clamp((vDepth - uNear) / (uFar - uNear), 0.0, 1.0);
+        float lum = 1.0 - d;
+        gl_FragColor = vec4(vec3(lum), 1.0);
+      }
+    `,
+    uniforms: {
+      uNear: { value: 10.0 },
+      uFar: { value: 650.0 }
+    }
+  });
+
+  // 住ま居る自然素材プレシェーディング (Craft Shaded Material)
+  // CAD無地ポリゴンを自動解析し、無垢材床・塗り壁・屋根瓦・自然陰影・反射光を付与
+  const craftMaterial = new THREE.ShaderMaterial({
+    vertexShader: `
+      varying vec3 vWorldNormal;
+      varying vec3 vWorldPosition;
+      void main() {
+        vWorldNormal = normalize((modelMatrix * vec4(normal, 0.0)).xyz);
+        vec4 wp = modelMatrix * vec4(position, 1.0);
+        vWorldPosition = wp.xyz;
+        gl_Position = projectionMatrix * viewMatrix * wp;
+      }
+    `,
+    fragmentShader: `
+      varying vec3 vWorldNormal;
+      varying vec3 vWorldPosition;
+      uniform int uIsInterior;
+
+      void main() {
+        vec3 norm = normalize(vWorldNormal);
+
+        // 朝の自然光（南東上空からの太陽光 ＋ 天空光）
+        vec3 sunDir = normalize(vec3(-0.55, 0.82, -0.42));
+        float sunDiff = max(dot(norm, sunDir), 0.0);
+        float skyDiff = 0.5 + 0.5 * norm.y;
+        float lightFactor = sunDiff * 0.70 + skyDiff * 0.40;
+
+        // 住ま居る自然素材の基本色
+        vec3 baseColor = vec3(0.93, 0.91, 0.87); // 珪藻土・漆喰オフホワイト壁
+
+        if (uIsInterior == 1) {
+          // 【室内・LDK】
+          if (norm.y > 0.65 && vWorldPosition.y < 55.0) {
+            // 1F無垢檜・吉野杉フローリング（温もりのあるゴールデンアンバー）
+            baseColor = vec3(0.86, 0.68, 0.48);
+          } else if (norm.y < -0.65 && vWorldPosition.y > 170.0) {
+            // 現し梁・化粧天井（柔らかなスギ木肌）
+            baseColor = vec3(0.89, 0.79, 0.66);
+          } else if (abs(norm.y) < 0.28) {
+            // 手漉き珪藻土塗り壁（自然な温かみのある白）
+            baseColor = vec3(0.94, 0.92, 0.88);
+          }
+        } else {
+          // 【外観】
+          if (norm.y > 0.20 && vWorldPosition.y > 230.0) {
+            // 屋根（高品位ダークスレート瓦）
+            baseColor = vec3(0.24, 0.27, 0.32);
+          } else if (norm.y > 0.75 && vWorldPosition.y <= 20.0) {
+            // アプローチ・犬走り（自然石・コンクリート土間）
+            baseColor = vec3(0.78, 0.80, 0.82);
+          } else if (abs(norm.y) < 0.35) {
+            // ジョリパット左官壁（サンドベージュ）
+            baseColor = vec3(0.92, 0.90, 0.86);
+          }
+        }
+
+        // 床からの温もり反射光 (2700K Warm Floor Ambient Bounce)
+        vec3 ambientBounce = (uIsInterior == 1) ? vec3(0.12, 0.09, 0.06) : vec3(0.04, 0.05, 0.06);
+        vec3 finalCol = baseColor * lightFactor + ambientBounce;
+        finalCol = pow(finalCol, vec3(0.96)); // 自然なトーンカーブ補正
+        gl_FragColor = vec4(finalCol, 1.0);
+      }
+    `,
+    uniforms: {
+      uIsInterior: { value: 0 }
+    },
+    side: THREE.DoubleSide
+  });
+
+  const normalMapMaterial = new THREE.MeshNormalMaterial();
+  const edgesGroup = new THREE.Group();
+  scene.add(edgesGroup);
+
+  // 🏛️ 建築ホワイトモデル（White Clay）専用ソリッドマテリアル＆エッジマテリアル
+  const whiteClayMaterial = new THREE.MeshStandardMaterial({
+    color: 0xf3f4f6,
+    roughness: 0.88,
+    metalness: 0.02,
+    side: THREE.DoubleSide,
+    polygonOffset: true,
+    polygonOffsetFactor: 1.0,
+    polygonOffsetUnits: 1.0
+  });
+  const blackLineMat = new THREE.LineBasicMaterial({ color: 0x1e293b, linewidth: 1.5 });
+  const whiteLineMat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 1.2 });
+
+  let houseModel = null;
+  let originalMaterials = new Map();
+  let kitchenWallMesh = null;
+  let kitchenWallEdges = null;
+  let voidCoverMeshes = [];
+  let wallMat = null;
+  let bBox = null;
+  let bCenter = new THREE.Vector3();
+  let bSize = new THREE.Vector3();
+
+  let currentPass = 'normal';
+  let currentAngle = 'exterior';
+
+  // 全11案件 FBX・実写真・カメラレジストリ
+  const CASE_REGISTRY = {
+    'tsurugashima_s': {
+      name: '鶴ヶ島市 S様邸',
+      title: '🏛️ 鶴ヶ島市 S様邸（認定低炭素旗艦邸・大空間LDK）',
+      fbxPath: '鶴ヶ島市 S様邸/佐藤幸男様邸新築工事-認定低炭素レベル.fbx',
+      photos: {
+        exterior: '/raw_case_photo/' + encodeURIComponent('鶴ヶ島市 S様邸/外観/nakade-3737.jpg'),
+        ldk: '/raw_case_photo/' + encodeURIComponent('鶴ヶ島市 S様邸/おすすめ/nakade-3539.jpg')
+      },
+      defaultExtCam: { cam: [-950, 220, 950], tgt: [0, 180, 0], fov: 55 },
+      defaultLdkCam: { cam: [0, 115, -120], tgt: [0, 130, 200], fov: 65 }
+    },
+    'tsurugashima_a': {
+      name: '鶴ヶ島市 A様邸',
+      title: '🌲 鶴ヶ島市 A様邸（無垢材モダン邸・開放LDK）',
+      fbxPath: '鶴ヶ島市 A様邸/新井様邸新築工事.fbx',
+      photos: {
+        exterior: '/raw_case_photo/' + encodeURIComponent('鶴ヶ島市 A様邸/お勧めフォルダー/_DSC8468.jpg'),
+        ldk: '/raw_case_photo/' + encodeURIComponent('鶴ヶ島市 A様邸/お勧めフォルダー/_DSC8499.jpg')
+      },
+      defaultExtCam: { cam: [1000, 260, 1000], tgt: [0, 180, 0], fov: 55 },
+      defaultLdkCam: { cam: [-50, 115, -80], tgt: [120, 125, 150], fov: 68 }
+    },
+    'yoshimi_o': {
+      name: '吉見町 O様邸',
+      title: '🏡 吉見町 O様邸（ワイドオープン郊外邸）',
+      fbxPath: '吉見町 O様邸/小川広太様邸1-4.fbx',
+      photos: {
+        exterior: '/raw_case_photo/' + encodeURIComponent('吉見町 O様邸/DSC_0556.JPG'),
+        ldk: '/raw_case_photo/' + encodeURIComponent('吉見町 O様邸/家族写真/DSC_0613.JPG')
+      },
+      defaultExtCam: { cam: [0, 220, 1150], tgt: [0, 180, 0], fov: 55 },
+      defaultLdkCam: { cam: [-60, 115, -120], tgt: [80, 120, 160], fov: 68 }
+    },
+    'tokigawa_k': {
+      name: 'ときがわ町 K様邸',
+      title: '✨ ときがわ町 K様邸（吹抜光融合邸）',
+      fbxPath: 'ときがわ町 K様邸/小峯優様邸新築工事.fbx',
+      photos: {
+        exterior: '/raw_case_photo/' + encodeURIComponent('ときがわ町 K様邸/外観/DSC_8715.jpg'),
+        ldk: '/raw_case_photo/' + encodeURIComponent('ときがわ町 K様邸/リビング/DSC_8769.jpg')
+      },
+      defaultExtCam: { cam: [1005, 160, -750], tgt: [20, 380, 20], fov: 59.5 },
+      defaultLdkCam: { cam: [210, 115, 155], tgt: [-380, 125, 155], fov: 73.74 }
+    },
+    'tsurugashima_t': {
+      name: '鶴ヶ島市 T様邸',
+      title: '🪵 鶴ヶ島市 T様邸（自然素材再生・現し梁邸）',
+      fbxPath: '鶴ヶ島市 T様邸/田口様邸新築工事.fbx',
+      photos: {
+        exterior: '/raw_case_photo/' + encodeURIComponent('鶴ヶ島市 T様邸/外観/IMG_9195.jpg'),
+        ldk: '/raw_case_photo/' + encodeURIComponent('鶴ヶ島市 T様邸/★おすすめ/IMG_9237.jpg')
+      },
+      defaultExtCam: { cam: [1080, 135, 190], tgt: [0, 135, 0], fov: 48 },
+      defaultLdkCam: { cam: [80, 115, 120], tgt: [-80, 160, -80], fov: 65 }
+    },
+    'higashimatsuyama_k': {
+      name: '東松山市 K様邸',
+      title: '📐 東松山市 K様邸（端正モダン邸）',
+      fbxPath: '東松山市 K様邸/小松泰一様邸新築工事.fbx',
+      photos: {
+        exterior: '/raw_case_photo/' + encodeURIComponent('東松山市 K様邸/DSC00847.JPG'),
+        ldk: '/raw_case_photo/' + encodeURIComponent('東松山市 K様邸/20150923_010.jpg')
+      },
+      defaultExtCam: { cam: [1050, 320, -1050], tgt: [0, 210, 0], fov: 55 },
+      defaultLdkCam: { cam: [-120, 125, -250], tgt: [50, 120, 160], fov: 65 }
+    },
+    'kawagoe_y': {
+      name: '川越市 Y様邸',
+      title: '⛩️ 川越市 Y様邸（現代和風邸）',
+      fbxPath: '川越市 Y様邸/山口　様邸新築工事.fbx',
+      photos: {},
+      defaultExtCam: { cam: [950, 280, -950], tgt: [0, 190, 0], fov: 55 },
+      defaultLdkCam: { cam: [-100, 120, -220], tgt: [40, 120, 140], fov: 65 }
+    },
+    'hidaka_i': {
+      name: '日高市 I様邸',
+      title: '🌿 日高市 I様邸（高天井ゆとり邸）',
+      fbxPath: '日高市 I様邸/飯塚宗紀様邸新築工事.fbx',
+      photos: {},
+      defaultExtCam: { cam: [1100, 330, -1100], tgt: [0, 220, 0], fov: 55 },
+      defaultLdkCam: { cam: [-130, 125, -260], tgt: [50, 120, 160], fov: 65 }
+    },
+    'tsurugashima_k': {
+      name: '鶴ヶ島市 K様邸',
+      title: '🏡 鶴ヶ島市 K様邸（オープンハウス邸）',
+      fbxPath: '鶴ヶ島市 K様邸/鴨下　三夫様邸オープンハウス用.fbx',
+      photos: {},
+      defaultExtCam: { cam: [1200, 350, -1200], tgt: [0, 240, 0], fov: 55 },
+      defaultLdkCam: { cam: [-140, 125, -270], tgt: [50, 120, 170], fov: 65 }
+    },
+    'gyoda_h': {
+      name: '行田市 H様邸',
+      title: '🏘️ 行田市 H様邸（新築住宅）',
+      fbxPath: '行田市 H様邸/平野信司様邸新築住宅.fbx',
+      photos: {},
+      defaultExtCam: { cam: [1250, 380, -1250], tgt: [0, 250, 0], fov: 55 },
+      defaultLdkCam: { cam: [-150, 130, -290], tgt: [50, 120, 180], fov: 65 }
+    },
+    'hatoyama_t': {
+      name: '鳩山町 T様邸',
+      title: '🌾 鳩山町 T様邸（新築住宅）',
+      fbxPath: '鳩山町 T様邸/戸口様邸新築工事.fbx',
+      photos: {},
+      defaultExtCam: { cam: [1150, 350, -1150], tgt: [0, 230, 0], fov: 55 },
+      defaultLdkCam: { cam: [-130, 125, -270], tgt: [50, 120, 170], fov: 65 }
+    }
+  };
+
+  const urlParams = new URLSearchParams(window.location.search);
+  let currentCaseKey = urlParams.get('case') || 'tsurugashima_s';
+  if (!CASE_REGISTRY[currentCaseKey]) currentCaseKey = 'tsurugashima_s';
+
+  const selCaseEl = document.getElementById('sel-case');
+  if (selCaseEl) {
+    selCaseEl.value = currentCaseKey;
+    selCaseEl.addEventListener('change', e => {
+      loadCase(e.target.value);
+    });
+  }
+
+  const opacitySlider = document.getElementById('slider-overlay-opacity');
+  const opacityVal = document.getElementById('opacity-val');
+  const inputFov = document.getElementById('input-fov');
+
+  opacitySlider.addEventListener('input', e => {
+    const val = e.target.value;
+    overlayEl.style.opacity = val / 100;
+    opacityVal.textContent = val + '%';
+  });
+
+  inputFov.addEventListener('change', e => {
+    camera.fov = parseFloat(e.target.value);
+    camera.updateProjectionMatrix();
+  });
+
+  let buildingBox = new THREE.Box3();
+  let buildingCenter = new THREE.Vector3();
+  let buildingSize = new THREE.Vector3();
+
+  function updateOverlay(angle) {
+    const caseInfo = CASE_REGISTRY[currentCaseKey];
+    if (caseInfo && caseInfo.photos && caseInfo.photos[angle]) {
+      overlayEl.style.backgroundImage = `url("${caseInfo.photos[angle]}")`;
+      overlayEl.style.display = 'block';
+    } else {
+      overlayEl.style.display = 'none';
+    }
+  }
+
+  const loader = new THREE.FBXLoader();
+
+  function loadCase(caseKey) {
+    return new Promise((resolve, reject) => {
+      if (!CASE_REGISTRY[caseKey]) caseKey = 'tsurugashima_s';
+      currentCaseKey = caseKey;
+      if (selCaseEl) selCaseEl.value = caseKey;
+      const caseInfo = CASE_REGISTRY[caseKey];
+
+    // 前のモデル・エッジをクリア
+    if (houseModel) {
+      scene.remove(houseModel);
+      houseModel = null;
+    }
+    while (edgesGroup.children.length > 0) {
+      edgesGroup.remove(edgesGroup.children[0]);
+    }
+    if (kitchenWallMesh) {
+      scene.remove(kitchenWallMesh);
+      kitchenWallMesh = null;
+    }
+    if (kitchenWallEdges) {
+      scene.remove(kitchenWallEdges);
+      kitchenWallEdges = null;
+    }
+    voidCoverMeshes = [];
+    originalMaterials.clear();
+
+    const fbxUrl = '/raw_case_model/' + encodeURIComponent(caseInfo.fbxPath);
+    log(`📂 案件モデル読込中: [${caseInfo.name}] ${caseInfo.fbxPath}`);
+
+    loader.load(
+      fbxUrl,
+      function(object) {
+        houseModel = object;
+
+        // 地面メッシュの除外と建物本体バウンディングボックスの精密算出
+        buildingBox.makeEmpty();
+        object.traverse(child => {
+          if (child.isMesh) {
+            originalMaterials.set(child, child.material);
+            if (child.material) {
+              child.material.side = THREE.DoubleSide;
+            }
+            const mBox = new THREE.Box3().setFromObject(child);
+            const mSize = new THREE.Vector3();
+            mBox.getSize(mSize);
+            
+            // 敷地境界・広大な地面板を除外
+            if (mSize.y < 35 && (mSize.x > 1200 || mSize.z > 1200)) {
+              child.visible = false;
+            } else if (mSize.y > 50) {
+              buildingBox.union(mBox);
+            }
+          }
+        });
+
+        // 建物主構造（2F・屋根・柱壁: Y > 220または高さ180以上の建築部位）の精密重心検出
+        const coreHouseBox = new THREE.Box3();
+        let coreMeshCount = 0;
+        object.traverse(child => {
+          if (child.isMesh) {
+            const mBox = new THREE.Box3().setFromObject(child);
+            const mSize = new THREE.Vector3();
+            mBox.getSize(mSize);
+            // 敷地外周フェンスや広大敷地板を除外（主構造体のみ抽出）
+            if (mBox.max.y > 220 || (mSize.y > 180 && mSize.x < 1200 && mSize.z < 1200)) {
+              coreHouseBox.union(mBox);
+              coreMeshCount++;
+            }
+          }
+        });
+
+        if (coreMeshCount > 0 && !coreHouseBox.isEmpty()) {
+          coreHouseBox.getCenter(buildingCenter);
+          coreHouseBox.getSize(buildingSize);
+          buildingBox.copy(coreHouseBox);
+        } else {
+          buildingBox.getSize(buildingSize);
+          buildingBox.getCenter(buildingCenter);
+        }
+
+        log(`✅ [${caseInfo.name}] 主構造検知: W:${Math.round(buildingSize.x)} H:${Math.round(buildingSize.y)} D:${Math.round(buildingSize.z)}`);
+
+        // 建物を原点中心 (0, 0, 0) にセンタリング（1F床レベル = 0）
+        object.position.x -= buildingCenter.x;
+        object.position.y -= buildingBox.min.y;
+        object.position.z -= buildingCenter.z;
+        object.updateMatrixWorld(true);
+
+        scene.add(object);
+
+        // 建築輪郭線（EdgesGeometry: 20°法線変化のみ抽出）
+        buildArchitecturalEdges(object);
+
+        // ときがわ町K様邸専用の吹抜・袖壁補正オプション
+        if (currentCaseKey === 'tokigawa_k') {
+          voidCoverMeshes = [];
+          object.traverse(child => {
+            if (child.isMesh) {
+              const worldBox = new THREE.Box3().setFromObject(child);
+              const wCenter = new THREE.Vector3();
+              const wSize = new THREE.Vector3();
+              worldBox.getCenter(wCenter);
+              worldBox.getSize(wSize);
+              if (wSize.y < 35 && wCenter.y >= 210 && wCenter.y <= 280) {
+                if (wCenter.x >= -200 && wCenter.x <= 180 && wCenter.z >= 50 && wCenter.z <= 260) {
+                  voidCoverMeshes.push(child);
+                }
+              }
+            }
+          });
+          const wallGeom = new THREE.BoxGeometry(12, 240, 65);
+          wallMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.9, side: THREE.DoubleSide });
+          kitchenWallMesh = new THREE.Mesh(wallGeom, wallMat);
+          kitchenWallMesh.position.set(-153.2, 120, 218);
+          scene.add(kitchenWallMesh);
+
+          const wallEdgeGeom = new THREE.EdgesGeometry(wallGeom, 20);
+          const wallLineMat = new THREE.LineBasicMaterial({ color: 0xffffff });
+          kitchenWallEdges = new THREE.LineSegments(wallEdgeGeom, wallLineMat);
+          kitchenWallEdges.position.copy(kitchenWallMesh.position);
+          scene.add(kitchenWallEdges);
+          kitchenWallEdges.visible = false;
+        }
+
+        // カメラ画角をアングルまたはURLパラメータに合わせて設定
+        const urlAngle = new URLSearchParams(window.location.search).get('angle');
+        if (urlAngle === 'ldk') {
+          document.querySelectorAll('.btn-group button').forEach(b => b.classList.remove('active'));
+          document.getElementById('btn-cam-ldk').classList.add('active');
+          setLdkAngle();
+        } else {
+          setExteriorAngle();
+        }
+
+        if (new URLSearchParams(window.location.search).has('autoCapture')) {
+          setTimeout(() => captureCurrentAnglePasses(), 1800);
+        }
+
+        resolve(object);
+      },
+      function(xhr) {
+        if (xhr.lengthComputable) {
+          const percent = Math.round((xhr.loaded / xhr.total) * 100);
+          statusBox.textContent = `[${caseInfo.name}] 読込中: ${percent}% (${(xhr.loaded/1024/1024).toFixed(1)}MB / ${(xhr.total/1024/1024).toFixed(1)}MB)`;
+        }
+      },
+      function(err) {
+        log(`⚠️ FBX読込エラー: ${err.message}`);
+        reject(err);
+      }
+    );
+    });
+  }
+
+  // カメラプリセット設定（外観）
+  function setExteriorAngle() {
+    currentAngle = 'exterior';
+    const caseInfo = CASE_REGISTRY[currentCaseKey];
+    updateOverlay('exterior');
+
+    const def = (caseInfo && caseInfo.defaultExtCam) ? caseInfo.defaultExtCam : {
+      cam: [Math.round(buildingSize.x * 1.15), Math.round(buildingSize.y * 0.45), Math.round(-buildingSize.z * 1.15)],
+      tgt: [0, Math.round(buildingSize.y * 0.35), 0],
+      fov: 55
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const camX = params.has('camX') ? parseFloat(params.get('camX')) : def.cam[0];
+    const camY = params.has('camY') ? parseFloat(params.get('camY')) : def.cam[1];
+    const camZ = params.has('camZ') ? parseFloat(params.get('camZ')) : def.cam[2];
+    const tgtX = params.has('tgtX') ? parseFloat(params.get('tgtX')) : def.tgt[0];
+    const tgtY = params.has('tgtY') ? parseFloat(params.get('tgtY')) : def.tgt[1];
+    const tgtZ = params.has('tgtZ') ? parseFloat(params.get('tgtZ')) : def.tgt[2];
+    const fov = params.has('fov') ? parseFloat(params.get('fov')) : def.fov;
+
+    camera.fov = fov;
+    inputFov.value = fov;
+    camera.updateProjectionMatrix();
+
+    camera.position.set(camX, camY, camZ);
+    controls.target.set(tgtX, tgtY, tgtZ);
+    controls.update();
+    syncSlidersFromCamera();
+
+    log(`📷 外観アングル: [${caseInfo.name}] CAM:[${Math.round(camX)},${Math.round(camY)},${Math.round(camZ)}] TGT:[${Math.round(tgtX)},${Math.round(tgtY)},${Math.round(tgtZ)}] FOV:${fov}`);
+  }
+
+  // カメラプリセット設定（室内・LDK）
+  function setLdkAngle() {
+    currentAngle = 'ldk';
+    const caseInfo = CASE_REGISTRY[currentCaseKey];
+    updateOverlay('ldk');
+
+    const def = (caseInfo && caseInfo.defaultLdkCam) ? caseInfo.defaultLdkCam : {
+      cam: [-120, 125, -260],
+      tgt: [50, 120, 160],
+      fov: 65
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const camX = params.has('camX') ? parseFloat(params.get('camX')) : def.cam[0];
+    const camY = params.has('camY') ? parseFloat(params.get('camY')) : def.cam[1];
+    const camZ = params.has('camZ') ? parseFloat(params.get('camZ')) : def.cam[2];
+    const tgtX = params.has('tgtX') ? parseFloat(params.get('tgtX')) : def.tgt[0];
+    const tgtY = params.has('tgtY') ? parseFloat(params.get('tgtY')) : def.tgt[1];
+    const tgtZ = params.has('tgtZ') ? parseFloat(params.get('tgtZ')) : def.tgt[2];
+    const fov = params.has('fov') ? parseFloat(params.get('fov')) : def.fov;
+
+    camera.fov = fov;
+    inputFov.value = fov;
+    camera.updateProjectionMatrix();
+
+    camera.position.set(camX, camY, camZ);
+    controls.target.set(tgtX, tgtY, tgtZ);
+    controls.update();
+    syncSlidersFromCamera();
+
+    log(`📷 室内LDKアングル: [${caseInfo.name}] CAM:[${Math.round(camX)},${Math.round(camY)},${Math.round(camZ)}] TGT:[${Math.round(tgtX)},${Math.round(tgtY)},${Math.round(tgtZ)}] FOV:${fov}`);
+  }
+
+  // 建築輪郭線（EdgesGeometry: 26度法線変化・不要構造部材フィルタリング）
+  function buildArchitecturalEdges(model) {
+    while (edgesGroup.children.length > 0) {
+      edgesGroup.remove(edgesGroup.children[0]);
+    }
+    edgesGroup.position.set(0, 0, 0);
+    edgesGroup.rotation.set(0, 0, 0);
+    edgesGroup.scale.set(1, 1, 1);
+    edgesGroup.updateMatrixWorld(true);
+
+    model.updateMatrixWorld(true);
+
+    model.traverse(child => {
+      if (child.isMesh && child.geometry && child.visible) {
+        // 地盤下の束石・基礎下部材のノイズ線を除外
+        const meshBox = new THREE.Box3().setFromObject(child);
+        if (meshBox.max.y < -15.0) return; // 地下・基礎下部はスキップ
+
+        try {
+          const edgesGeom = new THREE.EdgesGeometry(child.geometry, 26);
+          edgesGeom.applyMatrix4(child.matrixWorld);
+          const line = new THREE.LineSegments(edgesGeom, whiteLineMat);
+          edgesGroup.add(line);
+        } catch (e) {
+          console.warn("EdgesGeometry error:", e);
+        }
+      }
+    });
+    edgesGroup.visible = false;
+    log(`📐 精密建築輪郭線（Lineart/WhiteModel）構築完了: ${edgesGroup.children.length} 部品エッジ固定 (ワールド座標系)`);
+  }
+
+  // パス切り替え
+  function setPass(passName) {
+    if (!houseModel) return;
+    currentPass = passName;
+
+    const chkWallEl = document.getElementById('chk-add-kitchen-wall');
+    const wallActive = chkWallEl ? chkWallEl.checked : true;
+
+    if (passName === 'white_clay') {
+      // 🏛️ 建築ホワイトモデル（純白ソリッド遮蔽＋黒エッジ輪郭線＋立体陰影）
+      camera.near = 10;
+      camera.far = 100000;
+      camera.updateProjectionMatrix();
+      scene.background = new THREE.Color(0xffffff); // 背景純白
+      houseModel.visible = true;
+      houseModel.traverse(child => {
+        if (child.isMesh) {
+          child.material = whiteClayMaterial;
+        }
+      });
+      if (kitchenWallMesh) {
+        kitchenWallMesh.material = whiteClayMaterial;
+        kitchenWallMesh.visible = wallActive;
+      }
+      if (kitchenWallEdges) {
+        kitchenWallEdges.visible = false;
+      }
+      edgesGroup.visible = true;
+      edgesGroup.traverse(child => {
+        if (child.isLineSegments) {
+          child.material = blackLineMat; // 黒色輪郭線
+        }
+      });
+      ambientLight.visible = true;
+      ambientLight.color.set(0xffffff);
+      ambientLight.intensity = 0.85;
+      dirLight.visible = true;
+      dirLight.color.set(0xffffff);
+      dirLight.intensity = 0.65;
+      dirLight.position.set(-2000, 4500, 2500);
+      hemiLight.visible = true;
+      hemiLight.intensity = 0.35;
+      cameraLight.visible = false;
+    } else if (passName === 'normal') {
+      camera.near = 10;
+      camera.far = 100000;
+      camera.updateProjectionMatrix();
+      scene.background = new THREE.Color(currentAngle === 'ldk' ? 0xf8fafc : 0x7eb3e6);
+      houseModel.visible = true;
+      edgesGroup.visible = false;
+      craftMaterial.uniforms.uIsInterior.value = (currentAngle === 'ldk' ? 1 : 0);
+      houseModel.traverse(child => {
+        if (child.isMesh) {
+          child.material = craftMaterial;
+        }
+      });
+      if (kitchenWallMesh) {
+        kitchenWallMesh.material = craftMaterial;
+        kitchenWallMesh.visible = wallActive;
+      }
+      if (kitchenWallEdges) {
+        kitchenWallEdges.visible = false;
+      }
+      ambientLight.visible = false;
+      dirLight.visible = false;
+      hemiLight.visible = false;
+      cameraLight.visible = false;
+    } else if (passName === 'depth') {
+      const nearVal = currentAngle === 'ldk' ? 10 : 50;
+      const diag = (buildingSize && buildingSize.length() > 100) ? buildingSize.length() : 1500;
+      const farVal = currentAngle === 'ldk' ? Math.max(1200, diag * 0.9) : Math.max(2500, diag * 2.2);
+      camera.near = nearVal;
+      camera.far = farVal;
+      camera.updateProjectionMatrix();
+      customDepthMaterial.uniforms.uNear.value = nearVal;
+      customDepthMaterial.uniforms.uFar.value = farVal;
+      scene.background = new THREE.Color(0x000000);
+      houseModel.visible = true;
+      edgesGroup.visible = false;
+      houseModel.traverse(child => {
+        if (child.isMesh) {
+          child.material = customDepthMaterial;
+        }
+      });
+      if (kitchenWallMesh) {
+        kitchenWallMesh.material = customDepthMaterial;
+        kitchenWallMesh.visible = wallActive;
+      }
+      if (kitchenWallEdges) {
+        kitchenWallEdges.visible = false;
+      }
+      ambientLight.visible = false;
+      dirLight.visible = false;
+      hemiLight.visible = false;
+      cameraLight.visible = false;
+    } else if (passName === 'lineart') {
+      camera.near = 10;
+      camera.far = 100000;
+      camera.updateProjectionMatrix();
+      scene.background = new THREE.Color(0x000000);
+      
+      // ソリッドな黒色オクルージョンメッシュで奥の隠面・床下束石を遮蔽
+      const occludeMat = new THREE.MeshBasicMaterial({
+        color: 0x000000,
+        polygonOffset: true,
+        polygonOffsetFactor: 1.0,
+        polygonOffsetUnits: 1.0,
+        side: THREE.DoubleSide
+      });
+      houseModel.visible = true;
+      houseModel.traverse(child => {
+        if (child.isMesh) {
+          child.material = occludeMat;
+        }
+      });
+      edgesGroup.visible = true;
+      edgesGroup.traverse(child => {
+        if (child.isLineSegments) {
+          child.material = whiteLineMat; // 白色輪郭線
+        }
+      });
+      if (kitchenWallMesh) {
+        kitchenWallMesh.material = occludeMat;
+        kitchenWallMesh.visible = wallActive;
+      }
+      if (kitchenWallEdges) {
+        kitchenWallEdges.visible = wallActive;
+      }
+      ambientLight.visible = false;
+      dirLight.visible = false;
+      hemiLight.visible = false;
+    }
+    log(`🎨 パス切り替え: ${passName}`);
+  }
+
+  // 画像保存API呼び出し (3:2 Nikon D700一眼レフ完全一致解像度: 1536 x 1024)
+  async function saveSnapshot(angle, passType) {
+    setPass(passType);
+
+    // 一時的に 1536 x 1024 にリサイズしてキャプチャ
+    const origW = window.innerWidth;
+    const origH = window.innerHeight;
+    const targetW = 1536;
+    const targetH = 1024;
+
+    camera.aspect = targetW / targetH;
+    camera.updateProjectionMatrix();
+    renderer.setSize(targetW, targetH);
+    renderer.render(scene, camera);
+
+    const dataUrl = renderer.domElement.toDataURL('image/png');
+
+    // ウィンドウサイズに戻す
+    camera.aspect = origW / origH;
+    camera.updateProjectionMatrix();
+    renderer.setSize(origW, origH);
+    renderer.render(scene, camera);
+
+    try {
+      const caseInfo = CASE_REGISTRY[currentCaseKey];
+      const res = await fetch('/api/save-controlnet-source', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          caseId: caseInfo.name,
+          angle: angle,
+          type: passType,
+          image: dataUrl
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        log(`💾 保存完了 [1536x1024]: [${caseInfo.name}] ${angle}_${passType}.png`);
+        return data;
+      }
+    } catch (e) {
+      log(`⚠️ 保存エラー: ${e.message}`);
+    }
+    return null;
+  }
+
+  // 現在アングルでの4パス保存（ホワイトモデル・通常・深度・線画）
+  async function captureCurrentAnglePasses() {
+    log(`📸 [${currentAngle}] 4パス（ホワイトモデル・通常・深度・線画）キャプチャ開始...`);
+    const btn = document.getElementById('btn-capture-current');
+    btn.disabled = true;
+    btn.textContent = '⏳ キャプチャ中...';
+
+    // 一時的にオーバーレイを隠してクリアに撮影
+    const prevOverlayDisplay = overlayEl.style.display;
+    overlayEl.style.display = 'none';
+
+    await saveSnapshot(currentAngle, 'white_clay');
+    await new Promise(r => setTimeout(r, 120));
+    await saveSnapshot(currentAngle, 'normal');
+    await new Promise(r => setTimeout(r, 120));
+    await saveSnapshot(currentAngle, 'depth');
+    await new Promise(r => setTimeout(r, 120));
+    await saveSnapshot(currentAngle, 'lineart');
+    await new Promise(r => setTimeout(r, 120));
+
+    // 戻す
+    overlayEl.style.display = prevOverlayDisplay;
+    setPass('white_clay');
+
+    btn.disabled = false;
+    btn.textContent = '✅ 現在アングル4パス保存完了！';
+    log(`🎉 [${currentAngle}] 建築ホワイトモデル・通常・深度・線画の4パスを保存しました！`);
+  }
+
+  // 360度全周スキャン（12アングル撮影して正面特定）
+  window.turntableScan = async function() {
+    log('🔄 360度ターンテーブル全周スキャン（12アングル）開始...');
+    const btn = document.getElementById('btn-turntable-scan');
+    btn.disabled = true;
+    btn.textContent = '⏳ スキャン中...';
+
+    const prevOverlayDisplay = overlayEl.style.display;
+    overlayEl.style.display = 'none';
+    setPass('normal');
+
+    const origCamPos = camera.position.clone();
+    const origTgt = controls.target.clone();
+    const origFov = camera.fov;
+
+    const R = 1150;
+    const camY = 220;
+    const tgtX = 0;
+    const tgtY = 320;
+    const tgtZ = 0;
+    camera.fov = 55;
+    camera.updateProjectionMatrix();
+
+    for (let deg = 0; deg < 360; deg += 30) {
+      const rad = (deg * Math.PI) / 180;
+      const x = R * Math.sin(rad);
+      const z = R * Math.cos(rad);
+
+      camera.position.set(x, camY, z);
+      controls.target.set(tgtX, tgtY, tgtZ);
+      controls.update();
+
+      const degStr = String(deg).padStart(3, '0');
+      log(`📸 スキャン中: ${deg}° (X:${Math.round(x)}, Z:${Math.round(z)})`);
+      await saveSnapshot(`turntable_${degStr}`, 'normal');
+      await new Promise(r => setTimeout(r, 200));
+    }
+
+    // 元のカメラ位置に戻す
+    camera.position.copy(origCamPos);
+    controls.target.copy(origTgt);
+    camera.fov = origFov;
+    camera.updateProjectionMatrix();
+    controls.update();
+    overlayEl.style.display = prevOverlayDisplay;
+    syncSlidersFromCamera();
+
+    btn.disabled = false;
+    btn.textContent = '✅ 360°全周スキャン完了！';
+    log('🎉 360度全周スキャン（12アングル）が完了しました！');
+  };
+
+  document.getElementById('btn-turntable-scan').addEventListener('click', () => {
+    window.turntableScan();
+  });
+
+  // 正面ファインスキャン（105°〜135°精密特定）
+  window.fineScan = async function() {
+    log('🎯 正面ファインスキャン（105°〜135° 精密特定）開始...');
+    const prevOverlayDisplay = overlayEl.style.display;
+    overlayEl.style.display = 'none';
+    setPass('normal');
+
+    const R = 1100;
+    const camY = 190;
+    const tgtX = 0;
+    const tgtY = 310;
+    const tgtZ = 0;
+    camera.fov = 59.5; // Nikon 21mm 光学FOV
+    camera.updateProjectionMatrix();
+
+    for (let deg = 105; deg <= 135; deg += 3) {
+      const rad = (deg * Math.PI) / 180;
+      const x = R * Math.sin(rad);
+      const z = R * Math.cos(rad);
+
+      camera.position.set(x, camY, z);
+      controls.target.set(tgtX, tgtY, tgtZ);
+      controls.update();
+
+      const degStr = String(deg).padStart(3, '0');
+      log(`🎯 ファインスキャン: ${deg}° (X:${Math.round(x)}, Z:${Math.round(z)})`);
+      await saveSnapshot(`fine_${degStr}`, 'normal');
+      await new Promise(r => setTimeout(r, 200));
+    }
+
+    overlayEl.style.display = prevOverlayDisplay;
+    log('🎉 正面ファインスキャン完了！');
+  };
+
+  document.getElementById('btn-fine-scan').addEventListener('click', () => {
+    window.fineScan();
+  });
+
+  // 超精密アライメント探索（角度126-130°, 距離960-1080, 高さ140-170）
+  window.ultraPrecisionSweep = async function() {
+    log('🔬 超精密アライメント探索（18パターン）開始...');
+    const prevOverlayDisplay = overlayEl.style.display;
+    overlayEl.style.display = 'none';
+    setPass('normal');
+
+    const fov = 59.5;
+    camera.fov = fov;
+    camera.updateProjectionMatrix();
+
+    const degs = [126, 128, 130];
+    const dists = [960, 1020, 1080];
+    const heights = [140, 170];
+    const tgtX = 40;
+    const tgtY = 330;
+    const tgtZ = 20;
+
+    for (const deg of degs) {
+      for (const R of dists) {
+        for (const camY of heights) {
+          const rad = (deg * Math.PI) / 180;
+          const x = R * Math.sin(rad) + tgtX;
+          const z = R * Math.cos(rad) + tgtZ;
+
+          camera.position.set(x, camY, z);
+          controls.target.set(tgtX, tgtY, tgtZ);
+          controls.update();
+
+          const tag = `ultra_d${deg}_r${R}_y${camY}`;
+          log(`🔬 撮影: ${tag} (Cam:[${Math.round(x)},${camY},${Math.round(z)}])`);
+          await saveSnapshot(tag, 'normal');
+          await new Promise(r => setTimeout(r, 200));
+        }
+      }
+    }
+
+    overlayEl.style.display = prevOverlayDisplay;
+    log('🎉 超精密アライメント探索完了！');
+  };
+
+  // LDK精密アライメント探索 (キッチン方向を見渡すLiving視点: X: 180〜260, Z: 120〜180, Y: 105〜125)
+  window.ldkPrecisionSweep = async function() {
+    log('🔬 LDK精密アライメント探索（18パターン）開始...');
+    setLdkAngle();
+    const prevOverlayDisplay = overlayEl.style.display;
+    overlayEl.style.display = 'none';
+    setPass('normal');
+
+    const camXs = [180, 220, 260];
+    const camZs = [120, 150, 180];
+    const camYs = [110, 120];
+    const tgtX = -400;
+    const tgtZ = 150;
+    const tgtY = 120;
+
+    for (const cx of camXs) {
+      for (const cz of camZs) {
+        for (const cy of camYs) {
+          camera.position.set(cx, cy, cz);
+          controls.target.set(tgtX, tgtY, tgtZ);
+          controls.update();
+
+          const tag = `ldk_sweep_x${cx}_z${cz}_y${cy}`;
+          log(`🔬 撮影: ${tag} (Cam:[${cx},${cy},${cz}])`);
+          await saveSnapshot(tag, 'normal');
+          await new Promise(r => setTimeout(r, 200));
+        }
+      }
+    }
+
+    overlayEl.style.display = prevOverlayDisplay;
+  };
+
+  // 全4案件バッチ自動抽出（外観・LDKの両方を一括実行）
+  window.extractSingleCase = async function(cKey) {
+    log(`▶ 単体案件抽出開始: ${cKey}`);
+    await loadCase(cKey);
+    setExteriorAngle();
+    await new Promise(r => setTimeout(r, 1500));
+    await captureCurrentAnglePasses();
+    log(`✅ 外観3パス撮影完了: ${cKey}`);
+    setLdkAngle();
+    await new Promise(r => setTimeout(r, 1500));
+    await captureCurrentAnglePasses();
+    log(`✅ LDK3パス撮影完了: ${cKey}`);
+    log(`🎉 【単体案件抽出完了】${cKey} の3パス（外観＆LDK）が保存されました！`);
+  };
+
+  window.batchExtractAllCases = async function() {
+    const cases = ['tsurugashima_s', 'tsurugashima_a', 'yoshimi_o', 'tokigawa_k', 'tsurugashima_t'];
+    log('🚀 【全5案件バッチ抽出開始】自然素材プレシェード・深度・線画を全自動キャプチャします...');
+    const btn = document.getElementById('btn-batch-all');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = '⏳ バッチ抽出進行中...';
+    }
+
+    for (const cKey of cases) {
+      log(`▶ 案件読込開始: ${cKey}`);
+      try {
+        await loadCase(cKey);
+        log(`✅ モデル読込完了: ${cKey}。外観撮影準備...`);
+
+        setExteriorAngle();
+        await new Promise(r => setTimeout(r, 1500));
+        await captureCurrentAnglePasses();
+        log(`✅ 外観3パス撮影完了: ${cKey}`);
+
+        setLdkAngle();
+        await new Promise(r => setTimeout(r, 1500));
+        await captureCurrentAnglePasses();
+        log(`✅ LDK3パス撮影完了: ${cKey}`);
+      } catch (e) {
+        log(`⚠️ エラー発生 (${cKey}): ${e.message}`);
+      }
+    }
+
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = '✅ 全4案件バッチ抽出完了！';
+    }
+    log('🎉 【全4案件バッチ抽出完了】すべての3パス（外観＆LDK）が素材プレシェードで保存されました！');
+  };
+
+  // 案件の360°外観（12角度）および1F室内パノラマ（8角度）自動探索スキャン
+  window.scanCaseViews = async function(cKey) {
+    log(`🔍 【アライメント探索開始】案件: ${cKey}`);
+    await loadCase(cKey);
+    const prevOverlayDisplay = overlayEl.style.display;
+    overlayEl.style.display = 'none';
+
+    // 1. 外観12アングル
+    setPass('normal');
+    currentAngle = 'exterior';
+    const diag = (buildingSize && buildingSize.length() > 100) ? buildingSize.length() : 1500;
+    const R = Math.max(1050, diag * 0.95);
+    const extCamY = Math.max(180, buildingSize.y * 0.35);
+    const extTgtY = Math.max(160, buildingSize.y * 0.30);
+    camera.fov = 55;
+    camera.updateProjectionMatrix();
+
+    for (let deg = 0; deg < 360; deg += 30) {
+      const rad = (deg * Math.PI) / 180;
+      const x = R * Math.sin(rad);
+      const z = R * Math.cos(rad);
+      camera.position.set(x, extCamY, z);
+      controls.target.set(0, extTgtY, 0);
+      controls.update();
+
+      const degStr = String(deg).padStart(3, '0');
+      log(`📸 外観探索: ${deg}° (X:${Math.round(x)}, Z:${Math.round(z)})`);
+      await saveSnapshot(`ext_scan_${degStr}`, 'normal');
+      await new Promise(r => setTimeout(r, 180));
+    }
+
+    // 2. 室内1F 8アングルパノラマ (中央・東西南北)
+    currentAngle = 'ldk';
+    craftMaterial.uniforms.uIsInterior.value = 1;
+    scene.background = new THREE.Color(0xf8fafc);
+    const intCamY = 115;
+    camera.fov = 68;
+    camera.updateProjectionMatrix();
+
+    // 1Fの代表的撮影ポイント3箇所（中央、少し南、少し北）×各4〜8方向
+    const viewpoints = [
+      { name: 'center', pos: [0, intCamY, 0] },
+      { name: 'south', pos: [0, intCamY, Math.min(150, buildingSize.z * 0.25)] },
+      { name: 'north', pos: [0, intCamY, -Math.min(150, buildingSize.z * 0.25)] }
+    ];
+
+    for (const vp of viewpoints) {
+      camera.position.set(vp.pos[0], vp.pos[1], vp.pos[2]);
+      for (let deg = 0; deg < 360; deg += 45) {
+        const rad = (deg * Math.PI) / 180;
+        const tgtX = vp.pos[0] + 300 * Math.sin(rad);
+        const tgtZ = vp.pos[2] + 300 * Math.cos(rad);
+        controls.target.set(tgtX, intCamY, tgtZ);
+        controls.update();
+
+        const degStr = String(deg).padStart(3, '0');
+        await saveSnapshot(`int_scan_${vp.name}_${degStr}`, 'normal');
+        await new Promise(r => setTimeout(r, 150));
+      }
+    }
+
+    overlayEl.style.display = prevOverlayDisplay;
+    log(`🎉 【アライメント探索完了】案件: ${cKey}（外観12角 ＋ 室内24角が保存されました）`);
+  };
+
+  // 保留3案件（S様邸、A様邸、O様邸）の全自動探索バッチ
+  window.scanAllPendingCases = async function() {
+    const list = ['tsurugashima_s', 'tsurugashima_a', 'yoshimi_o'];
+    for (const k of list) {
+      await window.scanCaseViews(k);
+    }
+    log('🏆 全保留案件の全周・室内スキャンが完了しました！');
+  };
+
+  document.getElementById('btn-batch-all').addEventListener('click', () => {
+    window.batchExtractAllCases();
+  });
+
+  // Event Listeners
+  document.getElementById('btn-cam-exterior').addEventListener('click', e => {
+    document.querySelectorAll('.btn-group button').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    setExteriorAngle();
+  });
+  document.getElementById('btn-cam-ldk').addEventListener('click', e => {
+    document.querySelectorAll('.btn-group button').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    setLdkAngle();
+  });
+
+  document.getElementById('btn-cam-snap').addEventListener('click', () => {
+    if (currentAngle === 'exterior') {
+      camera.position.set(1005, 160, -750);
+      controls.target.set(20, 340, 20);
+      camera.fov = 59.5;
+    } else {
+      camera.position.set(255, 110, 148);
+      controls.target.set(-400, 120, 150);
+      camera.fov = 73.74;
+    }
+    inputFov.value = camera.fov;
+    camera.updateProjectionMatrix();
+    controls.update();
+    syncSlidersFromCamera();
+    log(`🎯 [${currentAngle}] 最適アライメントにスナップしました！`);
+  });
+
+  document.getElementById('btn-cam-reset').addEventListener('click', e => {
+    if (currentAngle === 'exterior') setExteriorAngle();
+    else setLdkAngle();
+  });
+
+  document.getElementById('btn-pass-whiteclay').addEventListener('click', e => {
+    document.querySelectorAll('#btn-pass-whiteclay, #btn-pass-normal, #btn-pass-depth, #btn-pass-lineart').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    setPass('white_clay');
+  });
+  document.getElementById('btn-pass-normal').addEventListener('click', e => {
+    document.querySelectorAll('#btn-pass-whiteclay, #btn-pass-normal, #btn-pass-depth, #btn-pass-lineart').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    setPass('normal');
+  });
+  document.getElementById('btn-pass-depth').addEventListener('click', e => {
+    document.querySelectorAll('#btn-pass-whiteclay, #btn-pass-normal, #btn-pass-depth, #btn-pass-lineart').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    setPass('depth');
+  });
+  document.getElementById('btn-pass-lineart').addEventListener('click', e => {
+    document.querySelectorAll('#btn-pass-whiteclay, #btn-pass-normal, #btn-pass-depth, #btn-pass-lineart').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    setPass('lineart');
+  });
+
+  document.getElementById('btn-capture-current').addEventListener('click', captureCurrentAnglePasses);
+
+  // スライダー関連 (Cam/Tgt XYZ)
+  const sliderCamX = document.getElementById('slider-cam-x');
+  const camXVal = document.getElementById('cam-x-val');
+  const sliderCamY = document.getElementById('slider-cam-y');
+  const camYVal = document.getElementById('cam-y-val');
+  const sliderCamZ = document.getElementById('slider-cam-z');
+  const camZVal = document.getElementById('cam-z-val');
+
+  const sliderTgtX = document.getElementById('slider-tgt-x');
+  const tgtXVal = document.getElementById('tgt-x-val');
+  const sliderTgtY = document.getElementById('slider-tgt-y');
+  const tgtYVal = document.getElementById('tgt-y-val');
+  const sliderTgtZ = document.getElementById('slider-tgt-z');
+  const tgtZVal = document.getElementById('tgt-z-val');
+
+  function updateCameraFromSliders() {
+    camera.position.x = parseFloat(sliderCamX.value);
+    camera.position.y = parseFloat(sliderCamY.value);
+    camera.position.z = parseFloat(sliderCamZ.value);
+
+    controls.target.set(
+      parseFloat(sliderTgtX.value),
+      parseFloat(sliderTgtY.value),
+      parseFloat(sliderTgtZ.value)
+    );
+    controls.update();
+  }
+
+  function syncSlidersFromCamera() {
+    sliderCamX.value = Math.round(camera.position.x);
+    camXVal.textContent = Math.round(camera.position.x);
+    sliderCamY.value = Math.round(camera.position.y);
+    camYVal.textContent = Math.round(camera.position.y);
+    sliderCamZ.value = Math.round(camera.position.z);
+    camZVal.textContent = Math.round(camera.position.z);
+
+    sliderTgtX.value = Math.round(controls.target.x);
+    tgtXVal.textContent = Math.round(controls.target.x);
+    sliderTgtY.value = Math.round(controls.target.y);
+    tgtYVal.textContent = Math.round(controls.target.y);
+    sliderTgtZ.value = Math.round(controls.target.z);
+    tgtZVal.textContent = Math.round(controls.target.z);
+  }
+
+  [sliderCamX, sliderCamY, sliderCamZ, sliderTgtX, sliderTgtY, sliderTgtZ].forEach(slider => {
+    slider.addEventListener('input', () => {
+      camXVal.textContent = sliderCamX.value;
+      camYVal.textContent = sliderCamY.value;
+      camZVal.textContent = sliderCamZ.value;
+      tgtXVal.textContent = sliderTgtX.value;
+      tgtYVal.textContent = sliderTgtY.value;
+      tgtZVal.textContent = sliderTgtZ.value;
+      updateCameraFromSliders();
+    });
+  });
+
+  controls.addEventListener('change', () => {
+    syncSlidersFromCamera();
+  });
+
+  const btnSavePreset = document.getElementById('btn-save-as-preset');
+  if (btnSavePreset) {
+    btnSavePreset.addEventListener('click', () => {
+      const preset = {
+        cam: [Math.round(camera.position.x), Math.round(camera.position.y), Math.round(camera.position.z)],
+        tgt: [Math.round(controls.target.x), Math.round(controls.target.y), Math.round(controls.target.z)],
+        fov: camera.fov
+      };
+      log(`💾 プリセット記録: CAM: [${preset.cam.join(', ')}], TGT: [${preset.tgt.join(', ')}], FOV: ${preset.fov}`);
+      navigator.clipboard?.writeText(JSON.stringify(preset));
+    });
+  }
+
+  // 360°探索スキャン (要素が存在する場合のみ安全にバインド)
+  const scanBtn = document.getElementById('btn-scan-360');
+  const scanResults = document.getElementById('scan-results');
+  const scanThumbs = document.getElementById('scan-thumbs');
+
+  if (scanBtn) {
+    async function scan360() {
+      if (!houseModel) return;
+      scanBtn.disabled = true;
+      scanBtn.textContent = '⏳ スキャン中...';
+      if (scanResults) scanResults.style.display = 'block';
+      if (scanThumbs) scanThumbs.innerHTML = '';
+
+      const dist = 1800;
+      const camY = 250;
+      const tgtY = 350;
+
+      const angles = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
+      for (const deg of angles) {
+        const rad = (deg * Math.PI) / 180;
+        camera.position.set(Math.sin(rad) * dist, camY, Math.cos(rad) * dist);
+        controls.target.set(0, tgtY, 0);
+        controls.update();
+        renderer.render(scene, camera);
+
+        const thumbUrl = renderer.domElement.toDataURL('image/jpeg', 0.6);
+        const thumbBox = document.createElement('div');
+        thumbBox.style.cssText = 'text-align: center; cursor: pointer; border: 1px solid #475569; border-radius: 4px; padding: 2px; background: #1e293b;';
+        thumbBox.innerHTML = `
+          <img src="${thumbUrl}" style="width: 100%; height: auto; border-radius: 2px; display: block;">
+          <div style="font-size: 10px; color: #38bdf8; margin-top: 2px;">${deg}°</div>
+        `;
+        if (scanThumbs) scanThumbs.appendChild(thumbBox);
+      }
+
+      scanBtn.disabled = false;
+      scanBtn.textContent = '🔄 360°探索スキャン';
+      log('🎉 360度12アングルのサムネイル生成完了！');
+    }
+    scanBtn.addEventListener('click', scan360);
+  }
+
+  // タブ切り替えロジック
+  const tab3dBtn = document.getElementById('tab-3d-btn');
+  const tabGalBtn = document.getElementById('tab-gallery-btn');
+  const tab3dContent = document.getElementById('tab-3d-content');
+  const tabGalContent = document.getElementById('tab-gallery-content');
+  const galleryDisplay = document.getElementById('gallery-card-display') || document.getElementById('gallery-display');
+
+  const galleryData = {
+    'gal-matrix-ldk': {
+      type: 'matrix',
+      title: '📊 【他案件展開・室内LDK検証マトリクス】4案件×3設定×プロ実写真 5列比較',
+      gridImg: '/renders/multicase_median_benchmark/multicase_ldk_comparison_grid.jpg',
+      desc: '【小峯様邸への固執を完全脱却・中央値パラメータ実証】<br>' +
+            '4案件（鶴ヶ島市S様邸、鶴ヶ島市A様邸、吉見町O様邸、ときがわ町K様邸）の実機FBXから生成。<br>' +
+            '<strong>★黄金中央値 (Denoise 0.68 / Depth 0.80 / Canny 0.42 / Guidance End 0.85)</strong>：<br>' +
+            '事前陰影（檜・杉無垢床＋珪藻土壁＋2700K朝光反射）により、プラスチック白ポリゴン感を完全追放。無垢材の木目・節、柔らかな塗り壁の陰影、床の反射光がすべての案件で美しく融合。家具や階段の誤生成ゼロ、CAD幾何形状（壁・窓・柱）を100%保持。'
+    },
+    'gal-matrix-ext': {
+      type: 'matrix',
+      title: '📊 【他案件展開・外観パース検証マトリクス】4案件×3設定×プロ実写真 5列比較',
+      gridImg: '/renders/multicase_median_benchmark/multicase_exterior_comparison_grid.jpg',
+      desc: '【ARCHITREND ZERO 3Dエッジと実写外観の融合】<br>' +
+            '4邸それぞれの屋根勾配・サイディング目地・APW430サッシ・アプローチ境界をミリ単位で拘束。<br>' +
+            '外観における中央値設定（Denoise 0.65〜0.68）の直進性と自然光の立体感を4案件横断で検証。'
+    },
+    'gal-case-s': {
+      type: 'compare',
+      title: '🏛️ CASE 1: 鶴ヶ島市 S様邸（認定低炭素旗艦邸・大空間LDK）',
+      lineart: '/renders/controlnet_extracted/鶴ヶ島市 S様邸/ldk_lineart.png',
+      generated: '/renders/multicase_median_benchmark/tsurugashima_s_ldk_median_b_denoise68.jpg',
+      real: '/raw_case_photo/' + encodeURIComponent('鶴ヶ島市 S様邸/1階/nakade-3516.jpg'),
+      desc: '【大空間・現し柱・無垢杉床】認定低炭素住宅の開放的なLDK。黄金中央値（Denoise 0.68）により、床一面に広がる無垢檜の温もりと朝の光の差し込み、天井の現し化粧梁を完全空室状態で忠実再現。'
+    },
+    'gal-case-a': {
+      type: 'compare',
+      title: '🌲 CASE 2: 鶴ヶ島市 A様邸（無垢材モダン邸・開放LDK）',
+      lineart: '/renders/controlnet_extracted/鶴ヶ島市 A様邸/ldk_lineart.png',
+      generated: '/renders/multicase_median_benchmark/tsurugashima_a_ldk_median_b_denoise68.jpg',
+      real: '/raw_case_photo/' + encodeURIComponent('鶴ヶ島市 A様邸/お勧めフォルダー/_DSC8499.jpg'),
+      desc: '【無垢材モダン・木製建具】奥の引き戸建具の枠線や天井勾配をCAD線画で完全固定しつつ、無垢フローリングの美しい木目とダウンライトの温かい光彩を表現。'
+    },
+    'gal-case-o': {
+      type: 'compare',
+      title: '🏡 CASE 3: 吉見町 O様邸（ワイドオープン郊外邸・外観）',
+      lineart: '/renders/controlnet_extracted/吉見町 O様邸/exterior_lineart.png',
+      generated: '/renders/multicase_median_benchmark/yoshimi_o_exterior_median_b_denoise68.jpg',
+      real: '/raw_case_photo/' + encodeURIComponent('吉見町 O様邸/DSC_0556.JPG'),
+      desc: '【敷地フェンス分離・本体中心配置】広大な敷地境界線をフィルタリングし、建物本体を中央に配置。外壁サイディングの質感と切妻屋根の破風・軒天木目をシャープに再現。'
+    },
+    'gal-case-k': {
+      type: 'compare',
+      title: '✨ CASE 4: ときがわ町 K様邸（吹抜光融合邸・吹抜けVoid完全再現）',
+      lineart: '/renders/controlnet_extracted/ときがわ町 K様邸/ldk_lineart.png',
+      generated: '/renders/multicase_median_benchmark/tokigawa_k_ldk_median_b_denoise68.jpg',
+      real: '/raw_case_photo/' + encodeURIComponent('ときがわ町 K様邸/リビング/DSC_8769.jpg'),
+      desc: '【吹抜Void＆袖壁復元】Denoise 0.55/0.62の白ポリゴン感を脱却し、Denoise 0.68＋事前陰影で自然な無垢床の艶と青空光を融合。キッチン左袖壁と吹抜けの抜け感を両立。'
+    },
+    'gal-stage-japandi': {
+      type: 'compare',
+      title: '🛋️ 【ステージング展開】ジャパンディ（北欧×和モダン）家具配置',
+      lineart: '/renders/controlnet_extracted/ときがわ町 K様邸/genspark_pure_fbx/ultimate_unfurnished_denoise55.jpg',
+      generated: '/renders/controlnet_extracted/ときがわ町 K様邸/genspark_pure_fbx/step2_staged_japandi_modern.jpg',
+      real: '/raw_case_photo/' + encodeURIComponent('ときがわ町 K様邸/リビング/DSC_8769.jpg'),
+      desc: '【家具・インテリア提案】黄金中央値の空室パースをベースに、建築骨格（壁・窓・床・キッチン）をControlNetで固定したまま、上質なローソファ・北欧チェア・観葉植物・ウールラグを配置。お施主様の好みに合わせて自在にインテリア提案が可能です。'
+    },
+    'gal-stage-evening': {
+      type: 'compare',
+      title: '🌙 【ステージング展開】夕景コージー・ラグジュアリー家具配置',
+      lineart: '/renders/controlnet_extracted/ときがわ町 K様邸/genspark_pure_fbx/ultimate_unfurnished_denoise55.jpg',
+      generated: '/renders/controlnet_extracted/ときがわ町 K様邸/genspark_pure_fbx/step2_staged_evening_cozy_luxury.jpg',
+      real: '/raw_case_photo/' + encodeURIComponent('ときがわ町 K様邸/リビング/DSC_8769.jpg'),
+      desc: '【夕暮れくつろぎ空間】暖色系間接照明とスポットライトが灯るリビングに、上質なファブリックソファとアクセントテーブルをスタイリング。'
+    },
+    'gal-k-evening': {
+      type: 'compare',
+      title: '✨ 🌙 【空間演出】空室LDK（新築竣工夕景・2800Kコーブ照明）',
+      lineart: '/renders/controlnet_extracted/ときがわ町 K様邸/genspark_pure_fbx/ultimate_ldk_edges.png',
+      generated: '/renders/controlnet_extracted/ときがわ町 K様邸/genspark_pure_fbx/step1_pure_fbx_unfurnished_evening_img2img.jpg',
+      real: '/raw_case_photo/' + encodeURIComponent('ときがわ町 K様邸/リビング/DSC_8769.jpg'),
+      desc: '【夕暮れトワイライト】吹抜けから注ぐ夕陽の美しい光の筋と、2800K温白色間接照明のラグジュアリーな陰影。対面キッチンと背面収納、吉野杉板壁が夕暮れの陰影の中で艶やかに際立つ家具なし決定版パース。'
+    },
+    'gal-k-ext-twilight': {
+      type: 'compare',
+      title: '🏡 🌙 【外観演出】外観（トワイライト夕景・APW430サッシ漏れ光）',
+      lineart: '/renders/controlnet_extracted/ときがわ町 K様邸/exterior_clean_edges.png',
+      generated: '/renders/controlnet_extracted/ときがわ町 K様邸/generated_exterior_twilight.jpg',
+      real: '/raw_case_photo/' + encodeURIComponent('ときがわ町 K様邸/外観/DSC_8715.jpg'),
+      desc: 'FBXから抽出したクリーンエッジ線画を拘束条件に使用。サッシ枠の欠落をAPW430樹脂サッシ＋3000K温白色室内漏れ光で補完。アーチ開口縁のアンティークレンガと木製断熱ドアを再現。'
+    }
+  };
+
+  function renderGallery(key) {
+    if (!galleryDisplay) return;
+    const item = galleryData[key];
+    if (!item) return;
+
+    const cacheBuster = '?v=' + Date.now();
+
+    if (item.type === 'matrix') {
+      galleryDisplay.innerHTML = `
+        <div style="background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; margin-bottom: 8px;">
+          <div style="font-size: 13px; font-weight: bold; color: #38bdf8; margin-bottom: 4px;">${item.title}</div>
+          <div style="font-size: 11px; color: #cbd5e1; line-height: 1.5; margin-bottom: 10px;">${item.desc}</div>
+          <div style="font-size: 11px; font-weight: bold; color: #fbbf24; margin-bottom: 6px;">
+            🔍 5列検証マトリクス [①3D生線画] | [②Denoise 0.65] | [③Denoise 0.68★黄金中央値] | [④Denoise 0.72] | [⑤実機写真]
+          </div>
+          <a href="${item.gridImg + cacheBuster}" target="_blank" title="クリックで原寸高解像度表示" style="display: block; position: relative;">
+            <img src="${item.gridImg + cacheBuster}" style="width: 100%; border-radius: 6px; border: 2px solid #059669; display: block; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+            <div style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.7); color: #38bdf8; padding: 4px 8px; border-radius: 4px; font-size: 10px;">🔍 クリックで高解像度原寸表示 ↗</div>
+          </a>
+        </div>
+      `;
+    } else {
+      galleryDisplay.innerHTML = `
+        <div style="background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; margin-bottom: 8px;">
+          <div style="font-size: 13px; font-weight: bold; color: #38bdf8; margin-bottom: 4px;">${item.title}</div>
+          <div style="font-size: 11px; color: #cbd5e1; line-height: 1.4; margin-bottom: 10px;">${item.desc}</div>
+
+          <div style="font-size: 11px; font-weight: bold; color: #fbbf24; margin-bottom: 4px;">✨ ① 生FBX線画 ➜ ② 黄金中央値パース (Denoise 0.68) ➜ ③ プロ実写真 の比較</div>
+          <div style="display: grid; grid-template-columns: 1fr; gap: 8px;">
+            <div>
+              <div style="font-size: 10px; color: #94a3b8; margin-bottom: 2px;">【① 生FBXから抽出した線画 (Lineart拘束条件)】</div>
+              <img src="${item.lineart + cacheBuster}" style="width: 100%; border-radius: 6px; border: 1px solid #475569; display: block;">
+            </div>
+            <div>
+              <div style="font-size: 10px; color: #34d399; font-weight: bold; margin-bottom: 2px;">【② 黄金中央値 AI補完生成パース (Denoise 0.68)】</div>
+              <img src="${item.generated + cacheBuster}" style="width: 100%; border-radius: 6px; border: 2px solid #059669; display: block; box-shadow: 0 4px 15px rgba(5,150,105,0.4);">
+            </div>
+            <div>
+              <div style="font-size: 10px; color: #38bdf8; margin-bottom: 2px;">【③ プロ建築カメラマン実写真 (目標基準)】</div>
+              <img src="${item.real}" style="width: 100%; border-radius: 6px; border: 1px solid #475569; display: block;">
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  if (tab3dBtn && tabGalBtn && tab3dContent && tabGalContent) {
+    tab3dBtn.addEventListener('click', () => {
+      tab3dBtn.classList.add('active');
+      tabGalBtn.classList.remove('active');
+      tab3dContent.style.display = 'block';
+      tabGalContent.style.display = 'none';
+    });
+
+    tabGalBtn.addEventListener('click', () => {
+      tabGalBtn.classList.add('active');
+      tab3dBtn.classList.remove('active');
+      tab3dContent.style.display = 'none';
+      tabGalContent.style.display = 'block';
+      renderGallery('gal-matrix-ldk');
+    });
+  }
+
+  document.querySelectorAll('.gallery-sel-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      document.querySelectorAll('.gallery-sel-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      const targetKey = e.target.getAttribute('data-target');
+      renderGallery(targetKey);
+      if (targetKey === 'gal-case-s') {
+        loadCase('tsurugashima_s').then(() => setLdkAngle());
+      } else if (targetKey === 'gal-case-a') {
+        loadCase('tsurugashima_a').then(() => setLdkAngle());
+      } else if (targetKey === 'gal-case-o') {
+        loadCase('yoshimi_o').then(() => setExteriorAngle());
+      } else if (targetKey === 'gal-case-k' || targetKey.startsWith('gal-stage') || targetKey === 'gal-k-evening') {
+        loadCase('tokigawa_k').then(() => setLdkAngle());
+      } else if (targetKey === 'gal-k-ext-twilight') {
+        loadCase('tokigawa_k').then(() => setExteriorAngle());
+      }
+    });
+  });
+
+
+  // URLパラメータ自動処理 (外部スクリプト・セルフテスト用)
+  function initAutoProcess() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('extractCase')) {
+      const c = params.get('extractCase');
+      setTimeout(() => window.extractSingleCase(c), 600);
+      return;
+    }
+    if (params.has('batchAll')) {
+      setTimeout(() => window.batchExtractAllCases(), 600);
+      return;
+    }
+    if (params.has('scanPending')) {
+      setTimeout(() => window.scanAllPendingCases(), 600);
+      return;
+    }
+
+    loadCase(currentCaseKey);
+    let hasParams = false;
+    if (params.has('camX')) { camera.position.x = parseFloat(params.get('camX')); hasParams = true; }
+    if (params.has('camY')) { camera.position.y = parseFloat(params.get('camY')); hasParams = true; }
+    if (params.has('camZ')) { camera.position.z = parseFloat(params.get('camZ')); hasParams = true; }
+    if (params.has('tgtX')) { controls.target.x = parseFloat(params.get('tgtX')); hasParams = true; }
+    if (params.has('tgtY')) { controls.target.y = parseFloat(params.get('tgtY')); hasParams = true; }
+    if (params.has('tgtZ')) { controls.target.z = parseFloat(params.get('tgtZ')); hasParams = true; }
+    if (params.has('fov')) {
+      camera.fov = parseFloat(params.get('fov'));
+      inputFov.value = params.get('fov');
+      camera.updateProjectionMatrix();
+      hasParams = true;
+    }
+    if (hasParams) {
+      controls.update();
+      syncSlidersFromCamera();
+    }
+
+    if (params.get('autocapture')) {
+      currentAngle = params.get('autocapture');
+      setTimeout(() => {
+        captureCurrentAnglePasses();
+      }, 2500);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', initAutoProcess);
+  } else {
+    initAutoProcess();
+  }
+
+  // Render Loop
+  function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+    coordsEl.textContent = `CAM: [X:${Math.round(camera.position.x)}, Y:${Math.round(camera.position.y)}, Z:${Math.round(camera.position.z)}] TGT: [X:${Math.round(controls.target.x)}, Y:${Math.round(controls.target.y)}, Z:${Math.round(controls.target.z)}]`;
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    const s = resizeStage();
+    camera.aspect = PHOTO_ASPECT;
+    camera.updateProjectionMatrix();
+    renderer.setSize(s.w, s.h);
+  });
+</script>
+</body>
+</html>

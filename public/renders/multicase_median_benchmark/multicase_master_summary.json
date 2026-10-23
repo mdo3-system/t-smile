@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-10-16 17:18:49",
+  "median_recommendation": {
+    "optimal_denoise": 0.68,
+    "depth_weight": 0.8,
+    "depth_guidance_end": 0.85,
+    "canny_weight": 0.42,
+    "canny_guidance_end": 0.8,
+    "rationale": "事前陰影（craftMaterial）とガイダンス切り上げ（Depth 0.85 / Canny 0.80）により、CADの正確な壁・窓・柱の幾何を強固に拘束しつつ、後半ステップで無垢檜・杉床の柔らかな木目・珪藻土塗り壁の陰影・2700K自然光の照り返しを完全融合生成できる。"
+  },
+  "exterior_cases": 4,
+  "interior_cases": 4
+}

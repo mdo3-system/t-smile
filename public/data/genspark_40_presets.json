@@ -1,0 +1,287 @@
+{
+  "version": "1.0",
+  "description": "Genspark推奨 ARCHITREND FBX連携 建築パース生成 40プリセット",
+  "common_negative": "blurry, low quality, distorted proportions, warped walls, curved lines, fisheye, cartoon, anime, painting, illustration, oversaturated, watermark, text, logo, people, humans, extra windows, floating objects, deformed furniture",
+  "presets": [
+    {
+      "id": 1,
+      "category": "exterior",
+      "scene": "外観・朝・正面",
+      "prompt": "写実的な住宅外観、朝の柔らかい光、long shadows, clear sky, modern japanese house, photorealistic, 8k, eye-level front view",
+      "controlnet": { "depth": [0.65, 0.8], "canny": [0.5, 0.75], "seg": [0.4, 0.7] }
+    },
+    {
+      "id": 2,
+      "category": "exterior",
+      "scene": "外観・昼・正面",
+      "prompt": "写実的な住宅外観、正午の直射日光、blue sky, sharp shadows, crisp reflections, photorealistic exterior photograph",
+      "controlnet": { "depth": [0.65, 0.8], "canny": [0.5, 0.75], "seg": [0.4, 0.7] }
+    },
+    {
+      "id": 3,
+      "category": "exterior",
+      "scene": "外観・昼・鳥瞰",
+      "prompt": "aerial drone view of a house and garden, daytime, roof visible, lush yard, photorealistic, wide angle",
+      "controlnet": { "depth": [0.7, 0.85], "seg": [0.45, 0.7] }
+    },
+    {
+      "id": 4,
+      "category": "exterior",
+      "scene": "外観・夕方",
+      "prompt": "住宅の夕景、golden hour, warm orange backlight, long shadows, lens flare, photorealistic",
+      "controlnet": { "depth": [0.6, 0.8], "canny": [0.45, 0.75] }
+    },
+    {
+      "id": 5,
+      "category": "exterior",
+      "scene": "外観・夜・電灯",
+      "prompt": "住宅の夜景、warm interior lights glowing through windows, porch light, dark blue sky, photorealistic night photography",
+      "controlnet": { "depth": [0.6, 0.75], "canny": [0.5, 0.75] }
+    },
+    {
+      "id": 6,
+      "category": "exterior",
+      "scene": "外観・薄暮",
+      "prompt": "twilight blue hour, house exterior with softly lit windows, gradient sky, serene mood, photorealistic",
+      "controlnet": { "depth": [0.6, 0.75], "canny": [0.45, 0.7] }
+    },
+    {
+      "id": 7,
+      "category": "exterior",
+      "scene": "外観・雨天",
+      "prompt": "rainy day exterior, wet reflective driveway, overcast grey sky, soft diffused light, photorealistic",
+      "controlnet": { "depth": [0.65, 0.8], "canny": [0.55, 0.8] }
+    },
+    {
+      "id": 8,
+      "category": "exterior",
+      "scene": "外観・雪",
+      "prompt": "snowy winter exterior, snow on roof and ground, cold ambient light, warm window glow, photorealistic",
+      "controlnet": { "depth": [0.65, 0.8], "seg": [0.45, 0.7] }
+    },
+    {
+      "id": 9,
+      "category": "exterior",
+      "scene": "外観・庭込み",
+      "prompt": "house exterior with landscaped garden, trees and shrubs, stone path, daytime, photorealistic landscape photography",
+      "controlnet": { "depth": [0.6, 0.8], "seg": [0.5, 0.75] }
+    },
+    {
+      "id": 10,
+      "category": "exterior",
+      "scene": "外観・アプローチ",
+      "prompt": "street view approach to a house, driveway, gate, eye-level from road, daytime, photorealistic",
+      "controlnet": { "depth": [0.6, 0.8], "canny": [0.5, 0.75] }
+    },
+    {
+      "id": 11,
+      "category": "ldk",
+      "scene": "LDK・昼・南窓（家具なし空室）",
+      "prompt": "modern Japanese LDK interior, large south-facing windows, bright natural sunlight, solid wood floor, minimalist, empty room, unfurnished, architectural photography, 8k",
+      "controlnet": { "depth": [0.6, 0.8], "canny": [0.45, 0.7] }
+    },
+    {
+      "id": 12,
+      "category": "ldk",
+      "scene": "LDK・昼・対角",
+      "prompt": "living dining kitchen interior, wide diagonal view, natural daylight, wood flooring, photorealistic interior photography",
+      "controlnet": { "depth": [0.65, 0.8], "normal": [0.3, 0.6], "canny": [0.4, 0.7] }
+    },
+    {
+      "id": 13,
+      "category": "ldk",
+      "scene": "LDK・夕方",
+      "prompt": "LDK at dusk, warm pendant lights on, sunset glow from windows, cozy atmosphere, photorealistic",
+      "controlnet": { "depth": [0.6, 0.75], "canny": [0.45, 0.7] }
+    },
+    {
+      "id": 14,
+      "category": "ldk",
+      "scene": "LDK・夜",
+      "prompt": "LDK at night, warm downlights and indirect lighting, dark outside windows, photorealistic night interior",
+      "controlnet": { "depth": [0.6, 0.75], "canny": [0.5, 0.7] }
+    },
+    {
+      "id": 15,
+      "category": "kitchen",
+      "scene": "キッチン・アイランド",
+      "prompt": "modern kitchen with island, natural daylight, white countertop, handleless cabinets, photorealistic interior",
+      "controlnet": { "depth": [0.6, 0.8], "canny": [0.5, 0.75], "mlsd": [0.35, 0.6] }
+    },
+    {
+      "id": 16,
+      "category": "kitchen",
+      "scene": "キッチン・I型・夜",
+      "prompt": "compact I-shaped kitchen at night, under-cabinet lighting, warm light, photorealistic",
+      "controlnet": { "depth": [0.6, 0.75], "mlsd": [0.4, 0.65] }
+    },
+    {
+      "id": 17,
+      "category": "bedroom",
+      "scene": "主寝室・朝",
+      "prompt": "master bedroom, soft morning light through sheer curtains, calm neutral tones, solid timber floor, photorealistic",
+      "controlnet": { "depth": [0.55, 0.75], "canny": [0.4, 0.7] }
+    },
+    {
+      "id": 18,
+      "category": "bedroom",
+      "scene": "子供部屋・昼",
+      "prompt": "children's bedroom, bright daylight, study desk, clean minimal space, photorealistic interior",
+      "controlnet": { "depth": [0.55, 0.75], "canny": [0.4, 0.7] }
+    },
+    {
+      "id": 19,
+      "category": "bedroom",
+      "scene": "客間・昼",
+      "prompt": "guest bedroom, clean and airy, daylight, simple minimal interior, photorealistic",
+      "controlnet": { "depth": [0.55, 0.75], "canny": [0.4, 0.7] }
+    },
+    {
+      "id": 20,
+      "category": "washitsu",
+      "scene": "和室・昼",
+      "prompt": "traditional Japanese tatami room, shoji paper doors, tokonoma alcove, soft diffused daylight, photorealistic",
+      "controlnet": { "depth": [0.6, 0.8], "seg": [0.4, 0.7] }
+    },
+    {
+      "id": 21,
+      "category": "washitsu",
+      "scene": "和室・夜",
+      "prompt": "tatami room at night, warm paper lantern glow, tranquil mood, photorealistic",
+      "controlnet": { "depth": [0.6, 0.75], "canny": [0.45, 0.7] }
+    },
+    {
+      "id": 22,
+      "category": "bath",
+      "scene": "浴室・昼",
+      "prompt": "modern Japanese bathroom, hinoki wood accents, bathtub, frosted window daylight, clean tiles, photorealistic",
+      "controlnet": { "depth": [0.65, 0.8], "canny": [0.5, 0.75] }
+    },
+    {
+      "id": 23,
+      "category": "bath",
+      "scene": "浴室・夜",
+      "prompt": "bathroom at night, warm ambient lighting, steam-free clean surfaces, photorealistic",
+      "controlnet": { "depth": [0.65, 0.75], "canny": [0.5, 0.75] }
+    },
+    {
+      "id": 24,
+      "category": "washroom",
+      "scene": "洗面所",
+      "prompt": "washstand area, mirror with soft lighting, daylight from side window, photorealistic",
+      "controlnet": { "depth": [0.6, 0.75], "canny": [0.45, 0.7] }
+    },
+    {
+      "id": 25,
+      "category": "toilet",
+      "scene": "トイレ",
+      "prompt": "compact toilet room, clean design, soft lighting, photorealistic",
+      "controlnet": { "depth": [0.6, 0.75], "canny": [0.45, 0.7] }
+    },
+    {
+      "id": 26,
+      "category": "entrance",
+      "scene": "玄関・内観・昼",
+      "prompt": "entryway interior, front door with side light, shoe cabinet, soft daylight, photorealistic",
+      "controlnet": { "depth": [0.6, 0.8], "canny": [0.5, 0.75] }
+    },
+    {
+      "id": 27,
+      "category": "entrance",
+      "scene": "玄関ホール・夜",
+      "prompt": "entrance hall at night, warm ceiling light, wood staircase visible, photorealistic",
+      "controlnet": { "depth": [0.6, 0.75], "canny": [0.45, 0.7] }
+    },
+    {
+      "id": 28,
+      "category": "other",
+      "scene": "書斎・昼",
+      "prompt": "home office study, bookshelf, desk by window, natural daylight, photorealistic",
+      "controlnet": { "depth": [0.6, 0.8], "canny": [0.45, 0.7] }
+    },
+    {
+      "id": 29,
+      "category": "other",
+      "scene": "書斎・夜",
+      "prompt": "study at night, desk lamp glow, warm dim atmosphere, photorealistic",
+      "controlnet": { "depth": [0.6, 0.75], "canny": [0.45, 0.7] }
+    },
+    {
+      "id": 30,
+      "category": "other",
+      "scene": "階段",
+      "prompt": "modern staircase interior, daylight from stairwell window, wood steps, photorealistic",
+      "controlnet": { "depth": [0.65, 0.8], "mlsd": [0.4, 0.65] }
+    },
+    {
+      "id": 31,
+      "category": "other",
+      "scene": "吹き抜け",
+      "prompt": "double-height living space, atrium, clerestory windows, bright daylight, photorealistic",
+      "controlnet": { "depth": [0.7, 0.85], "canny": [0.45, 0.7] }
+    },
+    {
+      "id": 32,
+      "category": "other",
+      "scene": "廊下",
+      "prompt": "hallway interior, one-point perspective, daylight from end window, photorealistic",
+      "controlnet": { "depth": [0.65, 0.8], "mlsd": [0.4, 0.65] }
+    },
+    {
+      "id": 33,
+      "category": "other",
+      "scene": "2Fホール",
+      "prompt": "second floor hall, open railing overlooking atrium, daylight, photorealistic",
+      "controlnet": { "depth": [0.65, 0.8], "canny": [0.45, 0.7] }
+    },
+    {
+      "id": 34,
+      "category": "other",
+      "scene": "バルコニー/ウッドデッキ",
+      "prompt": "wooden deck terrace attached to house, outdoor furniture, sunny day, photorealistic",
+      "controlnet": { "depth": [0.6, 0.8], "seg": [0.45, 0.7] }
+    },
+    {
+      "id": 35,
+      "category": "other",
+      "scene": "WIC/クローゼット",
+      "prompt": "walk-in closet interior, organized shelves and hanging space, soft lighting, photorealistic",
+      "controlnet": { "depth": [0.6, 0.75], "canny": [0.5, 0.75] }
+    },
+    {
+      "id": 36,
+      "category": "other",
+      "scene": "パントリー",
+      "prompt": "pantry storage room, shelves with containers, bright even lighting, photorealistic",
+      "controlnet": { "depth": [0.6, 0.75], "canny": [0.5, 0.75] }
+    },
+    {
+      "id": 37,
+      "category": "other",
+      "scene": "納戸/地下室",
+      "prompt": "utility storage room, artificial fluorescent-like lighting, plain walls, photorealistic",
+      "controlnet": { "depth": [0.6, 0.75], "canny": [0.45, 0.7] }
+    },
+    {
+      "id": 38,
+      "category": "other",
+      "scene": "土間/ガレージ",
+      "prompt": "earthen floor garage with car space, large sliding door, daylight, photorealistic",
+      "controlnet": { "depth": [0.65, 0.8], "seg": [0.45, 0.7], "mlsd": [0.35, 0.6] }
+    },
+    {
+      "id": 39,
+      "category": "other",
+      "scene": "屋上/テラス・夕",
+      "prompt": "rooftop terrace at sunset, city view, railing, warm light, photorealistic",
+      "controlnet": { "depth": [0.6, 0.8], "canny": [0.45, 0.7] }
+    },
+    {
+      "id": 40,
+      "category": "other",
+      "scene": "窓回りディテール",
+      "prompt": "close-up detail of window frame and sill, wall texture, natural light, architectural photography",
+      "controlnet": { "depth": [0.55, 0.75], "canny": [0.55, 0.8] }
+    }
+  ]
+}

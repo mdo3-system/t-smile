@@ -1,0 +1,3070 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SpeedPlanner Touch & Pen - 建築ホワイトモデル・3D間取りスケッチCAD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Noto Sans JP', 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        #canvas2d, #canvas3d {
+            touch-action: none;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .mono-num {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.4);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.6);
+            border-radius: 4px;
+        }
+        .tool-btn {
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tool-btn.active {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.45);
+            border-color: #60a5fa;
+        }
+        .sub-chip.active {
+            background-color: #3b82f6;
+            color: #ffffff;
+            border-color: #93c5fd;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.90);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen w-screen overflow-hidden select-none">
+
+    <!-- TOP HEADER BAR -->
+    <header class="h-14 glass-panel border-b border-slate-700/80 px-2.5 sm:px-3 flex items-center justify-between z-30 shrink-0 gap-1">
+        <!-- Brand & Floor / Grid Settings -->
+        <div class="flex items-center gap-1.5 sm:gap-2.5 overflow-x-auto py-1">
+            <div class="flex items-center gap-2 bg-blue-600/20 border border-blue-500/40 px-2.5 py-1.5 rounded-lg shrink-0">
+                <i class="fa-solid fa-pen-ruler text-blue-400 text-sm"></i>
+                <div>
+                    <div class="font-bold text-xs sm:text-sm tracking-tight leading-none text-white">SpeedPlanner <span class="text-sky-300 font-semibold">White3D</span></div>
+                    <div class="text-[9px] text-slate-400 leading-none mt-0.5 hidden xl:block">建築ホワイトモデル・間取りCAD</div>
+                </div>
+            </div>
+
+            <!-- Floor Switcher (1F / 2F / 3F) + Onion Skin -->
+            <div class="flex items-center bg-slate-800/90 p-1 rounded-lg border border-slate-700 shrink-0">
+                <button id="btnFloor1" onclick="setFloor(1)" class="px-2.5 py-1 rounded-md text-xs font-bold bg-blue-600 text-white shadow transition">1F</button>
+                <button id="btnFloor2" onclick="setFloor(2)" class="px-2.5 py-1 rounded-md text-xs font-bold text-slate-300 hover:text-white transition">2F</button>
+                <button id="btnFloor3" onclick="setFloor(3)" class="px-2.5 py-1 rounded-md text-xs font-bold text-slate-300 hover:text-white transition">3F</button>
+                <button id="btnOnion" onclick="toggleOnionSkin()" title="下階トレース表示 (Onion Skin)" class="ml-1 px-2 py-1 rounded-md text-xs font-medium bg-sky-500/20 text-sky-300 border border-sky-500/40 flex items-center gap-1">
+                    <i class="fa-solid fa-layer-group text-[11px]"></i>
+                    <span class="hidden md:inline">下階透視</span>
+                </button>
+            </div>
+
+            <!-- Module Pitch & 1-6 Grid Subdivisions -->
+            <div class="flex items-center bg-slate-800/90 p-1 rounded-lg border border-slate-700 text-xs shrink-0">
+                <button id="btnMod910" onclick="setModulePitch(910)" class="px-2 py-1 rounded bg-slate-700 text-amber-300 font-semibold">910</button>
+                <button id="btnMod1000" onclick="setModulePitch(1000)" class="px-2 py-1 rounded text-slate-400 hover:text-white">1000</button>
+                <span class="mx-1 text-slate-600">|</span>
+                <span class="text-[10px] text-slate-400 mr-1 hidden sm:inline">分割:</span>
+                <select id="snapSelect" onchange="setGridDivision(this.value)" class="bg-slate-900 text-slate-100 px-2 py-1 rounded border border-slate-700 text-xs font-semibold focus:outline-none">
+                    <option value="1">1分割 (910mm)</option>
+                    <option value="2" selected>2分割 (455mm)</option>
+                    <option value="3">3分割 (303mm)</option>
+                    <option value="4">4分割 (227.5mm)</option>
+                    <option value="5">5分割 (182mm)</option>
+                    <option value="6">6分割 (151.7mm)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Center View Mode Switcher (2D / Split / 3D) -->
+        <div class="flex items-center bg-slate-800 p-1 rounded-xl border border-slate-700 shadow-inner shrink-0">
+            <button id="viewBtn2D" onclick="setViewMode('2d')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white flex items-center gap-1 transition">
+                <i class="fa-solid fa-vector-square"></i><span class="hidden sm:inline">2D作図</span>
+            </button>
+            <button id="viewBtnSplit" onclick="setViewMode('split')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow flex items-center gap-1 transition">
+                <i class="fa-solid fa-columns"></i><span class="hidden sm:inline">2D+3D</span>
+            </button>
+            <button id="viewBtn3D" onclick="setViewMode('3d')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white flex items-center gap-1 transition">
+                <i class="fa-solid fa-cube"></i><span class="hidden sm:inline">3D模型</span>
+            </button>
+        </div>
+
+        <!-- Right Stylus Mode, Undo/Redo, Export -->
+        <div class="flex items-center gap-1.5 shrink-0">
+            <button id="btnStylusMode" onclick="toggleStylusMode()" class="px-2 py-1.5 rounded-lg text-xs font-semibold border border-emerald-500/40 bg-emerald-500/15 text-emerald-300 flex items-center gap-1 transition" title="ペン専用描画モード切替（ON時は指タッチで画面移動・ペンで描画）">
+                <i id="stylusIcon" class="fa-solid fa-pen-fancy"></i>
+                <span id="stylusText" class="hidden lg:inline">ペン＋指</span>
+            </button>
+
+            <div class="flex items-center bg-slate-800 rounded-lg border border-slate-700">
+                <button onclick="undo()" title="元に戻す (Undo)" class="p-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-l-lg active:scale-95">
+                    <i class="fa-solid fa-rotate-left text-xs"></i>
+                </button>
+                <button onclick="redo()" title="やり直し (Redo)" class="p-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-r-lg border-l border-slate-700 active:scale-95">
+                    <i class="fa-solid fa-rotate-right text-xs"></i>
+                </button>
+            </div>
+
+            <button onclick="openPresetModal()" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1">
+                <i class="fa-solid fa-house-chimney text-amber-400"></i>
+                <span class="hidden md:inline">サンプル</span>
+            </button>
+
+            <button onclick="exportDXF()" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 shadow-md flex items-center gap-1 active:scale-95 transition">
+                <i class="fa-solid fa-file-export"></i>
+                <span class="hidden md:inline">DXF</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN WORKSPACE AREA -->
+    <div class="flex-1 flex relative overflow-hidden">
+
+        <!-- LEFT FLOATING CAD & PEN TOOLBAR -->
+        <aside class="w-16 sm:w-20 glass-panel border-r border-slate-700/80 flex flex-col items-center py-2.5 gap-2 z-20 shrink-0 overflow-y-auto">
+            <button onclick="selectTool('room')" id="tool_room" class="tool-btn active w-12 sm:w-16 py-2 rounded-xl border border-slate-700/80 bg-slate-800/70 flex flex-col items-center gap-1 text-slate-300">
+                <i class="fa-solid fa-vector-square text-base"></i>
+                <span class="text-[10px] font-bold leading-none">部屋ペン</span>
+            </button>
+
+            <button onclick="selectTool('wall')" id="tool_wall" class="tool-btn w-12 sm:w-16 py-2 rounded-xl border border-slate-700/80 bg-slate-800/70 flex flex-col items-center gap-1 text-slate-300">
+                <i class="fa-solid fa-grip-lines-vertical text-base"></i>
+                <span class="text-[10px] font-bold leading-none">壁・独立柱</span>
+            </button>
+
+            <button onclick="selectTool('opening')" id="tool_opening" class="tool-btn w-12 sm:w-16 py-2 rounded-xl border border-slate-700/80 bg-slate-800/70 flex flex-col items-center gap-1 text-slate-300">
+                <i class="fa-solid fa-door-open text-base"></i>
+                <span class="text-[10px] font-bold leading-none">建具・窓</span>
+            </button>
+
+            <button onclick="selectTool('fixture')" id="tool_fixture" class="tool-btn w-12 sm:w-16 py-2 rounded-xl border border-slate-700/80 bg-slate-800/70 flex flex-col items-center gap-1 text-slate-300">
+                <i class="fa-solid fa-sink text-base"></i>
+                <span class="text-[10px] font-bold leading-none">設備配置</span>
+            </button>
+
+            <button onclick="selectTool('select')" id="tool_select" class="tool-btn w-12 sm:w-16 py-2 rounded-xl border border-slate-700/80 bg-slate-800/70 flex flex-col items-center gap-1 text-slate-300">
+                <i class="fa-solid fa-arrows-up-down-left-right text-base text-sky-400"></i>
+                <span class="text-[10px] font-bold leading-none">選択・寸法</span>
+            </button>
+
+            <button onclick="selectTool('pen')" id="tool_pen" class="tool-btn w-12 sm:w-16 py-2 rounded-xl border border-slate-700/80 bg-slate-800/70 flex flex-col items-center gap-1 text-slate-300">
+                <i class="fa-solid fa-signature text-base text-rose-400"></i>
+                <span class="text-[10px] font-bold leading-none">赤ペン注釈</span>
+            </button>
+
+            <button onclick="selectTool('eraser')" id="tool_eraser" class="tool-btn w-12 sm:w-16 py-2 rounded-xl border border-slate-700/80 bg-slate-800/70 flex flex-col items-center gap-1 text-slate-300">
+                <i class="fa-solid fa-eraser text-base text-amber-400"></i>
+                <span class="text-[10px] font-bold leading-none">消しゴム</span>
+            </button>
+
+            <button onclick="selectTool('pan')" id="tool_pan" class="tool-btn w-12 sm:w-16 py-2 rounded-xl border border-slate-700/80 bg-slate-800/70 flex flex-col items-center gap-1 text-slate-300">
+                <i class="fa-solid fa-hand text-base"></i>
+                <span class="text-[10px] font-bold leading-none">画面移動</span>
+            </button>
+
+            <div class="w-10 border-t border-slate-700 my-1"></div>
+
+            <button onclick="zoom2D(1.2)" title="拡大" class="w-11 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex justify-center">
+                <i class="fa-solid fa-magnifying-glass-plus text-xs"></i>
+            </button>
+            <button onclick="zoom2D(0.83)" title="縮小" class="w-11 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex justify-center">
+                <i class="fa-solid fa-magnifying-glass-minus text-xs"></i>
+            </button>
+            <button onclick="reset2DCamera()" title="全体表示" class="w-11 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[10px] font-bold">
+                FIT
+            </button>
+        </aside>
+
+        <!-- SUB-TOOL CONTEXTUAL BAR (Top Floating inside Workspace) -->
+        <div id="subToolbar" class="absolute top-3 left-20 sm:left-24 right-4 z-20 pointer-events-none flex flex-wrap items-center gap-2">
+            <div id="subToolbarContent" class="glass-panel px-3 py-2 rounded-xl shadow-xl pointer-events-auto flex items-center gap-1.5 overflow-x-auto max-w-full">
+                <!-- Populated dynamically by JS -->
+            </div>
+        </div>
+
+        <!-- FLOATING PROPERTY INSPECTOR FOR SELECTED ITEM (OPENING / FIXTURE / ROOM / PILLAR) -->
+        <div id="propertyInspector" class="hidden absolute bottom-14 left-20 sm:left-24 z-30 glass-panel p-3.5 rounded-2xl shadow-2xl border border-blue-500/40 w-80 sm:w-96 max-w-[calc(100vw-6rem)]">
+            <!-- Populated dynamically when an item is selected -->
+        </div>
+
+        <!-- SPLIT CONTAINER FOR 2D & 3D CANVASES -->
+        <div id="workspaceContainer" class="flex-1 flex h-full w-full relative overflow-hidden">
+
+            <!-- 2D ARCHITECTURAL SKETCH CANVAS PANE -->
+            <div id="pane2d" class="w-1/2 h-full relative bg-slate-950 border-r border-slate-800 overflow-hidden">
+                <canvas id="canvas2d"></canvas>
+
+                <!-- Pointer / Stylus Status Pill (Bottom Left) -->
+                <div class="absolute bottom-3 left-3 z-10 pointer-events-none flex flex-wrap items-center gap-2">
+                    <div class="glass-panel px-3 py-1.5 rounded-lg text-xs flex items-center gap-2 shadow">
+                        <span id="pointerBadge" class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+                        <span id="pointerStatusText" class="text-slate-300 font-medium">入力待機中</span>
+                    </div>
+                    <div id="chokkaritsuBadge" class="glass-panel px-3 py-1.5 rounded-lg text-xs flex items-center gap-2 shadow border border-sky-500/30">
+                        <i class="fa-solid fa-building-shield text-sky-400"></i>
+                        <span class="text-slate-300">壁直下率: <strong id="chokkaritsuVal" class="mono-num text-emerald-400">85%</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3D WHITE ARCHITECTURAL MODEL VIEWER PANE -->
+            <div id="pane3d" class="w-1/2 h-full relative bg-gradient-to-b from-slate-200 via-slate-100 to-slate-300 overflow-hidden">
+                <canvas id="canvas3d"></canvas>
+
+                <!-- 3D Camera & White Model Floor Mode Controls -->
+                <div class="absolute top-16 right-3 z-10 flex flex-col gap-2">
+                    <div class="glass-panel p-2.5 rounded-xl shadow-xl flex flex-col gap-1.5 w-48">
+                        <div class="flex items-center justify-between px-1">
+                            <span class="text-[10px] font-bold text-slate-300 uppercase tracking-wider">ホワイトモデル表示階</span>
+                            <i class="fa-solid fa-layer-group text-sky-400 text-xs"></i>
+                        </div>
+                        <div class="grid grid-cols-2 gap-1 bg-slate-900/90 p-1 rounded-lg border border-slate-700">
+                            <button id="btn3DMode_all" onclick="set3DFloorDisplay('all')" class="px-2 py-1 rounded text-[11px] font-bold bg-blue-600 text-white transition">全て表示</button>
+                            <button id="btn3DMode_1f" onclick="set3DFloorDisplay('1f')" class="px-2 py-1 rounded text-[11px] font-bold text-slate-300 hover:text-white transition">1階のみ</button>
+                            <button id="btn3DMode_2f" onclick="set3DFloorDisplay('2f')" class="px-2 py-1 rounded text-[11px] font-bold text-slate-300 hover:text-white transition">2階のみ</button>
+                            <button id="btn3DMode_3f" onclick="set3DFloorDisplay('3f')" class="px-2 py-1 rounded text-[11px] font-bold text-slate-300 hover:text-white transition">3階のみ</button>
+                        </div>
+
+                        <div class="border-t border-slate-700/80 my-1"></div>
+                        <div class="text-[10px] font-bold text-slate-400 px-1 uppercase tracking-wider">3Dカメラ視点</div>
+                        <div class="grid grid-cols-3 gap-1">
+                            <button onclick="set3DCameraPreset('bird')" class="px-1.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-blue-600 text-[11px] font-semibold text-center transition">
+                                <i class="fa-solid fa-helicopter text-sky-400 block mb-0.5"></i>鳥瞰
+                            </button>
+                            <button onclick="set3DCameraPreset('exterior')" class="px-1.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-blue-600 text-[11px] font-semibold text-center transition">
+                                <i class="fa-solid fa-house text-emerald-400 block mb-0.5"></i>外観
+                            </button>
+                            <button onclick="set3DCameraPreset('interior')" class="px-1.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-blue-600 text-[11px] font-semibold text-center transition">
+                                <i class="fa-solid fa-street-view text-amber-400 block mb-0.5"></i>内観
+                            </button>
+                        </div>
+
+                        <button id="btn3DRoof" onclick="toggle3DRoof()" class="mt-0.5 px-2.5 py-1.5 rounded-lg bg-slate-800/90 text-xs font-semibold text-left flex items-center justify-between border border-slate-700">
+                            <span>屋根表示:</span>
+                            <strong id="lbl3DRoof" class="text-slate-400">OFF (内部確認)</strong>
+                        </button>
+
+                        <div class="border-t border-slate-700/80 my-0.5"></div>
+                        <div class="px-1">
+                            <div class="flex justify-between text-[10px] text-slate-300 mb-0.5">
+                                <span><i class="fa-solid fa-sun text-amber-400 mr-1"></i>日照角度</span>
+                                <span id="sunTimeLabel" class="mono-num">14:00</span>
+                            </div>
+                            <input type="range" id="sunSlider" min="7" max="18" step="0.5" value="14" oninput="updateSunLight(this.value)" class="w-full accent-amber-400 cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real-Time Area Summary Floating Panel (Bottom Right) -->
+                <div class="absolute bottom-3 right-3 z-10">
+                    <div class="glass-panel px-3 py-2.5 rounded-xl shadow-xl border border-slate-700/80 min-w-[265px]">
+                        <div class="flex items-center justify-between border-b border-slate-700/80 pb-1.5 mb-2">
+                            <span class="text-[11px] font-bold text-slate-200 flex items-center gap-1.5">
+                                <i class="fa-solid fa-calculator text-blue-400"></i>リアルタイム面積集計
+                            </span>
+                            <span id="pitchBadge" class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-amber-300 mono-num">P=910</span>
+                        </div>
+                        <div class="grid grid-cols-4 gap-1.5 text-center">
+                            <div class="bg-slate-900/80 p-1.5 rounded-lg border border-slate-800">
+                                <div class="text-[9px] text-slate-400">1F 床面積</div>
+                                <div id="area1F_m2" class="text-[11px] font-bold text-white mono-num">0.0㎡</div>
+                                <div id="area1F_tsubo" class="text-[9px] text-sky-400 mono-num">0.0坪</div>
+                            </div>
+                            <div class="bg-slate-900/80 p-1.5 rounded-lg border border-slate-800">
+                                <div class="text-[9px] text-slate-400">2F 床面積</div>
+                                <div id="area2F_m2" class="text-[11px] font-bold text-white mono-num">0.0㎡</div>
+                                <div id="area2F_tsubo" class="text-[9px] text-sky-400 mono-num">0.0坪</div>
+                            </div>
+                            <div class="bg-slate-900/80 p-1.5 rounded-lg border border-slate-800">
+                                <div class="text-[9px] text-slate-400">3F 床面積</div>
+                                <div id="area3F_m2" class="text-[11px] font-bold text-white mono-num">0.0㎡</div>
+                                <div id="area3F_tsubo" class="text-[9px] text-sky-400 mono-num">0.0坪</div>
+                            </div>
+                            <div class="bg-blue-950/60 p-1.5 rounded-lg border border-blue-500/40">
+                                <div class="text-[9px] text-blue-300 font-semibold">延床面積</div>
+                                <div id="areaTotal_m2" class="text-[11px] font-bold text-amber-300 mono-num">0.0㎡</div>
+                                <div id="areaTotal_tsubo" class="text-[10px] font-bold text-amber-400 mono-num">0.0坪</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PRESET / SAVE / LOAD MODAL -->
+    <div id="presetModal" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="glass-panel max-w-lg w-full rounded-2xl border border-slate-700 p-5 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-folder-open text-amber-400"></i>
+                    <span>プラン管理・サンプル読込</span>
+                </h3>
+                <button onclick="closePresetModal()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3">
+                <div class="text-xs text-slate-300">建築ホワイトモデル（1F〜3F対応）で即座に検証できるモデルプラン、または白紙から作図を開始できます。</div>
+
+                <button onclick="loadSampleHousePlan(); closePresetModal();" class="w-full p-3 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/40 flex items-center justify-between text-left transition">
+                    <div>
+                        <div class="text-sm font-bold text-white">都市型3階建てモデル：ビルトインガレージ＋3LDK＋ルーフバルコニー (1F/2F/3F)</div>
+                        <div class="text-xs text-slate-300 mt-0.5">ポーチ独立柱・2階LDK・3階居室＆バルコニー・全階階段・建具完備</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-blue-400"></i>
+                </button>
+
+                <button onclick="loadSample2StoryPlan(); closePresetModal();" class="w-full p-3 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 flex items-center justify-between text-left transition">
+                    <div>
+                        <div class="text-sm font-bold text-white">標準2階建てモデル：約32坪 4LDK＋玄関ポーチ柱 (1F/2F)</div>
+                        <div class="text-xs text-slate-300 mt-0.5">18帖LDK・和室・対面キッチン・UB1616・2階3洋室＋WIC</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-emerald-400"></i>
+                </button>
+
+                <button onclick="clearAllPlan(); closePresetModal();" class="w-full p-3 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 border border-rose-500/40 flex items-center justify-between text-left transition">
+                    <div>
+                        <div class="text-sm font-bold text-rose-200">白紙から新規作成 (1F〜3Fクリア)</div>
+                        <div class="text-xs text-slate-400 mt-0.5">すべての部屋・建具・設備・赤ペンメモを消去してゼロからスケッチします</div>
+                    </div>
+                    <i class="fa-solid fa-trash-can text-rose-400"></i>
+                </button>
+
+                <div class="border-t border-slate-700 pt-3 mt-3 flex items-center justify-between gap-2">
+                    <button onclick="exportJSON()" class="flex-1 py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-600 flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-download text-sky-400"></i><span>JSON保存</span>
+                    </button>
+                    <label class="flex-1 py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-600 flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-upload text-emerald-400"></i><span>JSON読込</span>
+                        <input type="file" accept=".json" onchange="importJSON(event)" class="hidden">
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toastBox" class="fixed bottom-16 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-opacity duration-300">
+        <div id="toastInner" class="bg-slate-900/95 border border-blue-500/50 text-white px-4 py-2 rounded-full shadow-2xl text-xs font-semibold flex items-center gap-2">
+            <i id="toastIcon" class="fa-solid fa-circle-check text-blue-400"></i>
+            <span id="toastMsg">メッセージ</span>
+        </div>
+    </div>
+
+<script>
+/**
+ * ============================================================================
+ * SpeedPlanner Touch & Pen Edition - Architectural White Model 2D/3D Engine
+ * ============================================================================
+ */
+
+// --- Architectural Room Definitions ---
+const ROOM_TYPES = {
+    LDK:     { label: 'LDK',       color2d: '#fef3c7', stroke2d: '#d97706', floorType: 'wood',    hasWall: true },
+    YOSHITSU:{ label: '洋室',      color2d: '#ffedd5', stroke2d: '#ea580c', floorType: 'wood',    hasWall: true },
+    WASHITSU:{ label: '和室',      color2d: '#dcfce7', stroke2d: '#16a34a', floorType: 'tatami',  hasWall: true },
+    GENKAN:  { label: '玄関',      color2d: '#e2e8f0', stroke2d: '#475569', floorType: 'tile',    hasWall: true },
+    PORCH:   { label: 'ポーチ',    color2d: '#cbd5e1', stroke2d: '#64748b', floorType: 'porch',   hasWall: false },
+    ROUKA:   { label: 'ホール・廊下', color2d: '#f3e8ff', stroke2d: '#9333ea', floorType: 'wood', hasWall: true },
+    SENMEN:  { label: '洗面脱衣',  color2d: '#e0f2fe', stroke2d: '#0284c7', floorType: 'tile',    hasWall: true },
+    UB:      { label: '浴室(UB)',  color2d: '#cffafe', stroke2d: '#0891b2', floorType: 'tile',    hasWall: true },
+    TOILET:  { label: 'トイレ',    color2d: '#fae8ff', stroke2d: '#c026d3', floorType: 'tile',    hasWall: true },
+    WIC:     { label: '収納・WIC', color2d: '#f1f5f9', stroke2d: '#64748b', floorType: 'wood',    hasWall: true },
+    BALCONY: { label: 'バルコニー', color2d: '#ecfccb', stroke2d: '#65a30d', floorType: 'balcony', hasWall: 'balcony' },
+    VOID:    { label: '吹抜',      color2d: '#1e293b', stroke2d: '#38bdf8', floorType: 'void',    hasWall: true }
+};
+
+const OPENING_TYPES = {
+    ENTRANCE_DOOR:{ label: '玄関ドア',   widthP: 1.0, heightMm: 2200, sillMm: 0,    color: '#f97316', isWin: false },
+    SWING_DOOR:   { label: '片開き戸',   widthP: 1.0, heightMm: 2000, sillMm: 0,    color: '#f59e0b', isWin: false },
+    SLIDING_DOOR: { label: '引き違い戸', widthP: 1.5, heightMm: 2000, sillMm: 0,    color: '#10b981', isWin: false },
+    FOLD_DOOR:    { label: '折れ戸(収納)',widthP: 1.0, heightMm: 2000, sillMm: 0,   color: '#a855f7', isWin: false },
+    WIN_SLIDE:    { label: '引き違い窓', widthP: 1.5, heightMm: 1100, sillMm: 900,  color: '#38bdf8', isWin: true },
+    WIN_FULL:     { label: '掃き出し窓', widthP: 2.0, heightMm: 2000, sillMm: 0,    color: '#0ea5e9', isWin: true },
+    WIN_HIGH:     { label: 'FIX・高窓',  widthP: 1.0, heightMm: 500,  sillMm: 1700, color: '#7dd3fc', isWin: true }
+};
+
+const FIXTURE_TYPES = {
+    KITCHEN_I:      { label: 'キッチン(I型)',     wP: 2.5, hP: 1.0, color: '#cbd5e1' },
+    KITCHEN_ISLAND: { label: 'アイランドキッチン', wP: 2.5, hP: 1.0, color: '#94a3b8' },
+    UB_1616:        { label: 'ユニットバス',       wP: 2.0, hP: 2.0, color: '#bae6fd' },
+    TOILET_FIX:     { label: 'トイレ便器',         wP: 0.5, hP: 1.0, color: '#f8fafc' },
+    VANITY:         { label: '洗面化粧台',         wP: 1.0, hP: 0.5, color: '#e2e8f0' },
+    STAIR_STRAIGHT: { label: '直階段',             wP: 1.0, hP: 3.5, color: '#fcd34d' },
+    STAIR_UTURN:    { label: '折返し階段',         wP: 2.0, hP: 2.0, color: '#fcd34d' },
+    CLOSET_UNIT:    { label: '収納・家具',         wP: 2.0, hP: 0.5, color: '#e2e8f0' },
+    STANDALONE_COL: { label: '独立柱(ポーチ・脚)', wP: 0.25, hP: 0.25, color: '#f8fafc' }
+};
+
+// --- Global App State ---
+const state = {
+    currentFloor: 1,         // 1, 2, or 3
+    onionSkin: true,         // Show lower floor trace
+    modulePitch: 910,        // 910mm or 1000mm
+    gridDivisions: 2,        // 1, 2, 3, 4, 5, 6 divisions per 1P
+    viewMode: 'split',       // '2d', 'split', '3d'
+    stylusOnlyMode: false,
+
+    activeTool: 'room',      // 'room', 'wall', 'opening', 'fixture', 'select', 'pen', 'eraser', 'pan'
+    subRoomType: 'LDK',
+    subWallType: 'exterior', // 'exterior', 'interior', 'pillar' (standalone column)
+    subOpeningType: 'SWING_DOOR',
+    subFixtureType: 'KITCHEN_I',
+    subPenColor: '#f43f5e',
+    subPenSize: 3,
+    subStampSymbol: null,
+
+    cam2d: {
+        x: 4.0,
+        y: 3.0,
+        zoom: 46
+    },
+
+    floorDisplay3D: 'all',   // 'all', '1f', '2f', '3f'
+    showRoof3D: false,
+    sunHour: 14,
+
+    // 3-Story Floor Plan Data Model
+    floors: {
+        1: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] },
+        2: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] },
+        3: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] }
+    },
+
+    history: [],
+    historyIndex: -1,
+
+    selectedItem: null,      // { kind: 'room'|'opening'|'fixture'|'pillar', id, floor }
+    dragAction: null
+};
+
+function uid() {
+    return 'id_' + Math.random().toString(36).substring(2, 9);
+}
+
+// --- Toast Helper ---
+let toastTimer = null;
+function showToast(msg, isWarning = false) {
+    const box = document.getElementById('toastBox');
+    const inner = document.getElementById('toastInner');
+    const icon = document.getElementById('toastIcon');
+    document.getElementById('toastMsg').textContent = msg;
+
+    if (isWarning) {
+        inner.className = 'bg-rose-950/95 border border-rose-500 text-rose-100 px-4 py-2 rounded-full shadow-2xl text-xs font-bold flex items-center gap-2';
+        icon.className = 'fa-solid fa-triangle-exclamation text-rose-400';
+    } else {
+        inner.className = 'bg-slate-900/95 border border-blue-500/50 text-white px-4 py-2 rounded-full shadow-2xl text-xs font-semibold flex items-center gap-2';
+        icon.className = 'fa-solid fa-circle-check text-blue-400';
+    }
+
+    box.classList.remove('opacity-0');
+    box.classList.add('opacity-100');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+        box.classList.remove('opacity-100');
+        box.classList.add('opacity-0');
+    }, 2600);
+}
+
+// --- Ensure floor data integrity ---
+function ensureFloorsStructure() {
+    [1, 2, 3].forEach(f => {
+        if (!state.floors[f]) {
+            state.floors[f] = { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] };
+        }
+        if (!state.floors[f].pillars) state.floors[f].pillars = [];
+        // Ensure every opening has explicit widthP, heightMm, sillMm
+        state.floors[f].openings.forEach(op => {
+            const def = OPENING_TYPES[op.type] || OPENING_TYPES.SWING_DOOR;
+            if (typeof op.widthP !== 'number') op.widthP = def.widthP;
+            if (typeof op.heightMm !== 'number') op.heightMm = def.heightMm;
+            if (typeof op.sillMm !== 'number') op.sillMm = def.sillMm;
+        });
+    });
+}
+
+// --- History Management (Undo / Redo) ---
+function saveHistorySnapshot() {
+    ensureFloorsStructure();
+    const snapshot = JSON.stringify(state.floors);
+    if (state.historyIndex >= 0 && state.history[state.historyIndex] === snapshot) {
+        updateAllMetricsAnd3D();
+        renderPropertyInspector();
+        return;
+    }
+    state.history = state.history.slice(0, state.historyIndex + 1);
+    state.history.push(snapshot);
+    if (state.history.length > 40) state.history.shift();
+    state.historyIndex = state.history.length - 1;
+    updateAllMetricsAnd3D();
+    renderPropertyInspector();
+}
+
+function undo() {
+    if (state.historyIndex > 0) {
+        state.historyIndex--;
+        state.floors = JSON.parse(state.history[state.historyIndex]);
+        ensureFloorsStructure();
+        state.selectedItem = null;
+        updateAllMetricsAnd3D();
+        renderPropertyInspector();
+        showToast('元に戻しました (Undo)');
+    }
+}
+
+function redo() {
+    if (state.historyIndex < state.history.length - 1) {
+        state.historyIndex++;
+        state.floors = JSON.parse(state.history[state.historyIndex]);
+        ensureFloorsStructure();
+        state.selectedItem = null;
+        updateAllMetricsAnd3D();
+        renderPropertyInspector();
+        showToast('やり直しました (Redo)');
+    }
+}
+
+// --- Sample Plan 1: 3-Story Urban House with Standalone Porch/Balcony Columns ---
+function loadSampleHousePlan() {
+    state.floors = {
+        1: {
+            rooms: [
+                { id: uid(), type: 'GENKAN',   x: 0, y: 3, w: 2, h: 2, customName: '玄関ホール' },
+                { id: uid(), type: 'PORCH',    x: 0, y: 5, w: 2, h: 1.5, customName: '玄関ポーチ' },
+                { id: uid(), type: 'YOSHITSU', x: 2, y: 3, w: 4, h: 3.5, customName: 'ビルトインガレージ' },
+                { id: uid(), type: 'YOSHITSU', x: 0, y: 0, w: 3, h: 3, customName: '洋室1 (書斎)' },
+                { id: uid(), type: 'SENMEN',   x: 3, y: 0, w: 1.5, h: 2, customName: '洗面室' },
+                { id: uid(), type: 'UB',       x: 4.5, y: 0, w: 1.5, h: 2, customName: 'UB1616' },
+                { id: uid(), type: 'TOILET',   x: 3, y: 2, w: 1.5, h: 1, customName: '1Fトイレ' },
+                { id: uid(), type: 'ROUKA',    x: 4.5, y: 2, w: 1.5, h: 1, customName: '廊下' }
+            ],
+            walls: [],
+            pillars: [
+                // ポーチのコーナーを支える独立柱と2Fバルコニー下の独立柱
+                { id: uid(), x: 0, y: 6.5, sizeMm: 150 },
+                { id: uid(), x: 2, y: 6.5, sizeMm: 150 }
+            ],
+            openings: [
+                { id: uid(), type: 'ENTRANCE_DOOR', x: 1.0, y: 5.0, orient: 'h', flip: false, widthP: 1.0, heightMm: 2200, sillMm: 0 },
+                { id: uid(), type: 'WIN_FULL',      x: 4.0, y: 6.5, orient: 'h', flip: false, widthP: 2.5, heightMm: 2100, sillMm: 0 },
+                { id: uid(), type: 'WIN_SLIDE',     x: 1.5, y: 0.0, orient: 'h', flip: false, widthP: 1.5, heightMm: 1100, sillMm: 900 },
+                { id: uid(), type: 'SWING_DOOR',    x: 1.5, y: 3.0, orient: 'h', flip: false, widthP: 1.0, heightMm: 2000, sillMm: 0 },
+                { id: uid(), type: 'SLIDING_DOOR',  x: 3.0, y: 1.0, orient: 'v', flip: false, widthP: 1.0, heightMm: 2000, sillMm: 0 }
+            ],
+            fixtures: [
+                { id: uid(), type: 'UB_1616',        x: 4.5, y: 0.0, w: 1.5, h: 2.0, rot: 0 },
+                { id: uid(), type: 'VANITY',         x: 3.0, y: 0.0, w: 1.0, h: 0.5, rot: 0 },
+                { id: uid(), type: 'TOILET_FIX',     x: 3.2, y: 2.0, w: 0.5, h: 0.8, rot: 0 },
+                { id: uid(), type: 'STAIR_STRAIGHT', x: 0.0, y: 3.0, w: 1.0, h: 2.0, rot: 0 }
+            ],
+            strokes: [],
+            stamps: [{ id: uid(), text: '北', x: 6.8, y: 0.6, color: '#38bdf8' }]
+        },
+        2: {
+            rooms: [
+                { id: uid(), type: 'LDK',     x: 0, y: 0, w: 6, h: 5, customName: '2F LDK' },
+                { id: uid(), type: 'TOILET',  x: 4.5, y: 5, w: 1.5, h: 1.5, customName: '2Fトイレ' },
+                { id: uid(), type: 'WIC',     x: 2, y: 5, w: 2.5, h: 1.5, customName: 'パントリー' },
+                { id: uid(), type: 'BALCONY', x: 0, y: 5, w: 2, h: 1.5, customName: '南バルコニー' }
+            ],
+            walls: [],
+            pillars: [],
+            openings: [
+                { id: uid(), type: 'WIN_FULL',     x: 1.0, y: 5.0, orient: 'h', flip: false, widthP: 1.5, heightMm: 2000, sillMm: 0 },
+                { id: uid(), type: 'WIN_SLIDE',    x: 2.0, y: 0.0, orient: 'h', flip: false, widthP: 2.0, heightMm: 1100, sillMm: 900 },
+                { id: uid(), type: 'WIN_SLIDE',    x: 6.0, y: 2.5, orient: 'v', flip: false, widthP: 1.5, heightMm: 1100, sillMm: 900 },
+                { id: uid(), type: 'FOLD_DOOR',    x: 3.2, y: 5.0, orient: 'h', flip: false, widthP: 1.5, heightMm: 2000, sillMm: 0 },
+                { id: uid(), type: 'SWING_DOOR',   x: 5.0, y: 5.0, orient: 'h', flip: false, widthP: 1.0, heightMm: 2000, sillMm: 0 }
+            ],
+            fixtures: [
+                { id: uid(), type: 'KITCHEN_ISLAND', x: 3.0, y: 1.0, w: 2.5, h: 1.0, rot: 0 },
+                { id: uid(), type: 'STAIR_STRAIGHT', x: 0.0, y: 3.0, w: 1.0, h: 2.0, rot: 0 },
+                { id: uid(), type: 'TOILET_FIX',     x: 5.0, y: 5.5, w: 0.5, h: 0.8, rot: 0 }
+            ],
+            strokes: [],
+            stamps: []
+        },
+        3: {
+            rooms: [
+                { id: uid(), type: 'YOSHITSU', x: 0, y: 0, w: 3.5, h: 3, customName: '主寝室' },
+                { id: uid(), type: 'WIC',      x: 3.5, y: 0, w: 2.5, h: 2, customName: 'WIC' },
+                { id: uid(), type: 'ROUKA',    x: 0, y: 3, w: 2.5, h: 2, customName: '3Fホール' },
+                { id: uid(), type: 'YOSHITSU', x: 2.5, y: 2, w: 3.5, h: 3, customName: '子供室' },
+                { id: uid(), type: 'BALCONY',  x: 0, y: 5, w: 6, h: 1.5, customName: 'ルーフバルコニー' }
+            ],
+            walls: [],
+            pillars: [],
+            openings: [
+                { id: uid(), type: 'WIN_FULL',   x: 4.2, y: 5.0, orient: 'h', flip: false, widthP: 2.0, heightMm: 2000, sillMm: 0 },
+                { id: uid(), type: 'WIN_SLIDE',  x: 1.7, y: 0.0, orient: 'h', flip: false, widthP: 1.5, heightMm: 1100, sillMm: 900 },
+                { id: uid(), type: 'SWING_DOOR', x: 1.8, y: 3.0, orient: 'h', flip: false, widthP: 1.0, heightMm: 2000, sillMm: 0 },
+                { id: uid(), type: 'SWING_DOOR', x: 2.5, y: 3.5, orient: 'v', flip: false, widthP: 1.0, heightMm: 2000, sillMm: 0 },
+                { id: uid(), type: 'FOLD_DOOR',  x: 3.5, y: 1.0, orient: 'v', flip: false, widthP: 1.0, heightMm: 2000, sillMm: 0 }
+            ],
+            fixtures: [
+                { id: uid(), type: 'STAIR_STRAIGHT', x: 0.0, y: 3.0, w: 1.0, h: 2.0, rot: 0 }
+            ],
+            strokes: [],
+            stamps: []
+        }
+    };
+    state.history = [];
+    state.historyIndex = -1;
+    saveHistorySnapshot();
+    reset2DCamera();
+    showToast('3階建てホワイトモデル（1F〜3F＋独立柱）を読み込みました');
+}
+
+function loadSample2StoryPlan() {
+    loadSampleHousePlan();
+    state.floors[3] = { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] };
+    if (state.currentFloor === 3) setFloor(1);
+    saveHistorySnapshot();
+    showToast('標準2階建てモデルを読み込みました');
+}
+
+function clearAllPlan() {
+    state.floors = {
+        1: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] },
+        2: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] },
+        3: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] }
+    };
+    state.selectedItem = null;
+    saveHistorySnapshot();
+    showToast('白紙キャンバスにリセットしました');
+}
+
+// ============================================================================
+// UI CONTROLS, SUB-TOOLBAR & FLOATING PROPERTY INSPECTOR
+// ============================================================================
+
+function selectTool(toolName) {
+    state.activeTool = toolName;
+    document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+    const activeBtn = document.getElementById('tool_' + toolName);
+    if (activeBtn) activeBtn.classList.add('active');
+    renderSubToolbar();
+    renderPropertyInspector();
+    request2DRedraw();
+}
+
+function renderSubToolbar() {
+    const container = document.getElementById('subToolbarContent');
+    container.innerHTML = '';
+
+    if (state.activeTool === 'room') {
+        const label = document.createElement('span');
+        label.className = 'text-[11px] font-bold text-slate-400 mr-1 shrink-0';
+        label.innerHTML = '<i class="fa-solid fa-pen-nib mr-1 text-blue-400"></i>部屋ペン:';
+        container.appendChild(label);
+
+        Object.keys(ROOM_TYPES).forEach(key => {
+            const rt = ROOM_TYPES[key];
+            const btn = document.createElement('button');
+            const isAct = state.subRoomType === key;
+            btn.className = `sub-chip px-2.5 py-1 rounded-lg text-xs font-bold border transition shrink-0 flex items-center gap-1.5 ${isAct ? 'active' : 'bg-slate-800/90 text-slate-300 border-slate-700 hover:text-white'}`;
+            btn.innerHTML = `<span class="w-2.5 h-2.5 rounded-sm border border-black/30" style="background:${rt.color2d}"></span><span>${rt.label}</span>`;
+            btn.onclick = () => {
+                state.subRoomType = key;
+                renderSubToolbar();
+            };
+            container.appendChild(btn);
+        });
+    } else if (state.activeTool === 'wall') {
+        container.innerHTML = `
+            <span class="text-[11px] font-bold text-slate-400 mr-1"><i class="fa-solid fa-grip-lines mr-1 text-blue-400"></i>壁・独立柱:</span>
+            <button onclick="state.subWallType='exterior';renderSubToolbar();" class="sub-chip px-2.5 py-1 rounded-lg text-xs font-bold border ${state.subWallType==='exterior'?'active':'bg-slate-800 text-slate-300 border-slate-700'}">外壁・耐力壁 (150mm)</button>
+            <button onclick="state.subWallType='interior';renderSubToolbar();" class="sub-chip px-2.5 py-1 rounded-lg text-xs font-bold border ${state.subWallType==='interior'?'active':'bg-slate-800 text-slate-300 border-slate-700'}">間仕切壁 (100mm)</button>
+            <button onclick="state.subWallType='pillar';renderSubToolbar();" class="sub-chip px-2.5 py-1 rounded-lg text-xs font-bold border ${state.subWallType==='pillar'?'active':'bg-slate-800 text-slate-300 border-slate-700'}"><i class="fa-solid fa-square mr-1 text-amber-300"></i>独立柱 (ポーチ・バルコニー脚)</button>
+            <span class="text-[11px] text-slate-400 ml-1 hidden md:inline">※壁は柱を表示せず一体壁で描画。独立柱のみ単独柱として3D表示します</span>
+        `;
+    } else if (state.activeTool === 'opening') {
+        const label = document.createElement('span');
+        label.className = 'text-[11px] font-bold text-slate-400 mr-1 shrink-0';
+        label.innerHTML = '<i class="fa-solid fa-door-open mr-1 text-amber-400"></i>建具配置 (重複防止付):';
+        container.appendChild(label);
+
+        Object.keys(OPENING_TYPES).forEach(key => {
+            const ot = OPENING_TYPES[key];
+            const btn = document.createElement('button');
+            const isAct = state.subOpeningType === key;
+            btn.className = `sub-chip px-2.5 py-1 rounded-lg text-xs font-bold border transition shrink-0 flex items-center gap-1.5 ${isAct ? 'active' : 'bg-slate-800/90 text-slate-300 border-slate-700'}`;
+            btn.innerHTML = `<span class="w-2 h-2 rounded-full" style="background:${ot.color}"></span><span>${ot.label}</span>`;
+            btn.onclick = () => { state.subOpeningType = key; renderSubToolbar(); };
+            container.appendChild(btn);
+        });
+    } else if (state.activeTool === 'fixture') {
+        const label = document.createElement('span');
+        label.className = 'text-[11px] font-bold text-slate-400 mr-1 shrink-0';
+        label.innerHTML = '<i class="fa-solid fa-sink mr-1 text-cyan-400"></i>設備配置:';
+        container.appendChild(label);
+
+        Object.keys(FIXTURE_TYPES).forEach(key => {
+            const ft = FIXTURE_TYPES[key];
+            const btn = document.createElement('button');
+            const isAct = state.subFixtureType === key;
+            btn.className = `sub-chip px-2.5 py-1 rounded-lg text-xs font-bold border transition shrink-0 ${isAct ? 'active' : 'bg-slate-800/90 text-slate-300 border-slate-700'}`;
+            btn.textContent = ft.label;
+            btn.onclick = () => { state.subFixtureType = key; renderSubToolbar(); };
+            container.appendChild(btn);
+        });
+    } else if (state.activeTool === 'select') {
+        container.innerHTML = `
+            <span class="text-xs font-bold text-sky-300"><i class="fa-solid fa-hand-pointer mr-1.5"></i>選択・移動・寸法変更モード:</span>
+            <span class="text-xs text-slate-300">キャンバス上の「建具・窓」「設備」「部屋」「独立柱」をタップすると、ドラッグ移動・ハンドル伸縮・詳細寸法/種別変更ができます</span>
+        `;
+    } else if (state.activeTool === 'pen') {
+        const colors = [
+            { hex: '#f43f5e', name: '赤ペン' },
+            { hex: '#38bdf8', name: '青ペン' },
+            { hex: '#facc15', name: '蛍光黄' },
+            { hex: '#22c55e', name: '緑ペン' }
+        ];
+        let html = `<span class="text-[11px] font-bold text-slate-400 mr-1"><i class="fa-solid fa-pen-clip mr-1 text-rose-400"></i>赤ペン・スタンプ:</span>`;
+        colors.forEach(c => {
+            const activeRing = (!state.subStampSymbol && state.subPenColor === c.hex) ? 'ring-2 ring-white scale-110' : 'opacity-75';
+            html += `<button onclick="state.subStampSymbol=null;state.subPenColor='${c.hex}';renderSubToolbar();" class="w-6 h-6 rounded-full ${activeRing} transition mx-0.5" style="background:${c.hex}" title="${c.name}"></button>`;
+        });
+        html += `<span class="mx-1 text-slate-600">|</span>`;
+        ['コンセント', '照明', 'スイッチ', '給水', '北'].forEach(st => {
+            const isAct = state.subStampSymbol === st;
+            html += `<button onclick="state.subStampSymbol='${st}';renderSubToolbar();" class="sub-chip px-2 py-1 rounded text-xs font-bold border ${isAct?'active':'bg-slate-800 text-slate-300 border-slate-700'}">⊕ ${st}</button>`;
+        });
+        html += `<button onclick="clearCurrentFloorStrokes()" class="ml-2 px-2.5 py-1 rounded text-xs font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/40"><i class="fa-solid fa-broom mr-1"></i>メモ消去</button>`;
+        container.innerHTML = html;
+    } else if (state.activeTool === 'eraser') {
+        container.innerHTML = `<span class="text-xs text-amber-300"><i class="fa-solid fa-eraser mr-1.5"></i>ペンでなぞるかタップした建具・設備・独立柱・部屋・メモを消去します</span>`;
+    } else if (state.activeTool === 'pan') {
+        container.innerHTML = `<span class="text-xs text-slate-300"><i class="fa-solid fa-hand mr-1.5 text-emerald-400"></i>ドラッグで2Dキャンバス移動、ホイールまたはボタンで拡大縮小</span>`;
+    }
+}
+
+// --- Floating Property Inspector for Post-Placement Editing (Openings, Fixtures, Rooms, Pillars) ---
+function renderPropertyInspector() {
+    const panel = document.getElementById('propertyInspector');
+    const obj = findSelectedObject();
+    if (!obj || state.selectedItem.floor !== state.currentFloor) {
+        panel.classList.add('hidden');
+        return;
+    }
+    panel.classList.remove('hidden');
+
+    const pitch = state.modulePitch;
+    const kind = state.selectedItem.kind;
+
+    if (kind === 'opening') {
+        const wMm = Math.round((obj.widthP || 1.0) * pitch);
+        const hMm = obj.heightMm || 2000;
+        const sillMm = obj.sillMm || 0;
+
+        let typeOptions = '';
+        Object.keys(OPENING_TYPES).forEach(k => {
+            const sel = obj.type === k ? 'selected' : '';
+            typeOptions += `<option value="${k}" ${sel}>${OPENING_TYPES[k].label}</option>`;
+        });
+
+        panel.innerHTML = `
+            <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-2.5">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                    <span class="text-xs font-bold text-white">建具・窓のプロパティ編集</span>
+                </div>
+                <div class="flex items-center gap-1">
+                    <button onclick="deleteSelectedItem()" class="px-2 py-1 rounded bg-rose-600/30 hover:bg-rose-600/50 text-[11px] text-rose-200 font-bold"><i class="fa-solid fa-trash mr-1"></i>削除</button>
+                    <button onclick="state.selectedItem=null;renderPropertyInspector();request2DRedraw();" class="text-slate-400 hover:text-white px-1.5"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <div class="space-y-2.5 text-xs">
+                <div class="flex items-center justify-between gap-2">
+                    <label class="text-slate-300 font-semibold shrink-0">建具種類:</label>
+                    <select onchange="changeSelectedOpeningType(this.value)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-white font-bold focus:outline-none">
+                        ${typeOptions}
+                    </select>
+                </div>
+                <div>
+                    <div class="flex justify-between text-slate-300 mb-1">
+                        <span>幅寸法 (W): <strong class="text-sky-300 mono-num">${wMm} mm</strong> (${(obj.widthP).toFixed(2)}P)</span>
+                    </div>
+                    <div class="grid grid-cols-5 gap-1 mb-1.5">
+                        <button onclick="setSelectedOpeningWidthP(0.5)" class="py-1 rounded bg-slate-800 hover:bg-blue-600 text-[10px] font-bold mono-num">${Math.round(0.5*pitch)}</button>
+                        <button onclick="setSelectedOpeningWidthP(0.75)" class="py-1 rounded bg-slate-800 hover:bg-blue-600 text-[10px] font-bold mono-num">${Math.round(0.75*pitch)}</button>
+                        <button onclick="setSelectedOpeningWidthP(1.0)" class="py-1 rounded bg-slate-800 hover:bg-blue-600 text-[10px] font-bold mono-num">${Math.round(1.0*pitch)}</button>
+                        <button onclick="setSelectedOpeningWidthP(1.5)" class="py-1 rounded bg-slate-800 hover:bg-blue-600 text-[10px] font-bold mono-num">${Math.round(1.5*pitch)}</button>
+                        <button onclick="setSelectedOpeningWidthP(2.0)" class="py-1 rounded bg-slate-800 hover:bg-blue-600 text-[10px] font-bold mono-num">${Math.round(2.0*pitch)}</button>
+                    </div>
+                    <input type="range" min="0.33" max="3.0" step="0.0833" value="${obj.widthP}" oninput="setSelectedOpeningWidthP(parseFloat(this.value))" class="w-full accent-sky-400">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-0.5">高さ H (mm)</label>
+                        <input type="number" step="100" min="300" max="2400" value="${hMm}" onchange="setSelectedOpeningHeight(this.value, null)" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white mono-num">
+                    </div>
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-0.5">取付腰高 (mm)</label>
+                        <input type="number" step="100" min="0" max="2000" value="${sillMm}" onchange="setSelectedOpeningHeight(null, this.value)" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white mono-num">
+                    </div>
+                </div>
+                <div class="flex items-center justify-between pt-1">
+                    <button onclick="flipLastOrSelectedOpening()" class="w-full py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold">
+                        <i class="fa-solid fa-repeat mr-1"></i>開閉向き反転 / 縦横切替
+                    </button>
+                </div>
+            </div>
+        `;
+    } else if (kind === 'fixture') {
+        const ft = FIXTURE_TYPES[obj.type] || FIXTURE_TYPES.KITCHEN_I;
+        const wMm = Math.round(obj.w * pitch);
+        const dMm = Math.round(obj.h * pitch);
+
+        let fxOptions = '';
+        Object.keys(FIXTURE_TYPES).forEach(k => {
+            const sel = obj.type === k ? 'selected' : '';
+            fxOptions += `<option value="${k}" ${sel}>${FIXTURE_TYPES[k].label}</option>`;
+        });
+
+        panel.innerHTML = `
+            <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-2.5">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+                    <span class="text-xs font-bold text-white">住宅設備のサイズ・回転編集</span>
+                </div>
+                <div class="flex items-center gap-1">
+                    <button onclick="deleteSelectedItem()" class="px-2 py-1 rounded bg-rose-600/30 hover:bg-rose-600/50 text-[11px] text-rose-200 font-bold"><i class="fa-solid fa-trash mr-1"></i>削除</button>
+                    <button onclick="state.selectedItem=null;renderPropertyInspector();request2DRedraw();" class="text-slate-400 hover:text-white px-1.5"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <div class="space-y-2.5 text-xs">
+                <div class="flex items-center justify-between gap-2">
+                    <label class="text-slate-300 font-semibold shrink-0">設備種別:</label>
+                    <select onchange="changeSelectedFixtureType(this.value)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-white font-bold focus:outline-none">
+                        ${fxOptions}
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="bg-slate-900/90 p-2 rounded-lg border border-slate-700">
+                        <div class="text-[10px] text-slate-400 mb-1">幅 W: <strong class="text-sky-300 mono-num">${wMm}mm</strong></div>
+                        <div class="flex items-center gap-1">
+                            <button onclick="resizeSelectedFixture(-1, 0)" class="flex-1 py-1 bg-slate-800 hover:bg-slate-700 rounded font-bold">-</button>
+                            <button onclick="resizeSelectedFixture(1, 0)" class="flex-1 py-1 bg-slate-800 hover:bg-slate-700 rounded font-bold">+</button>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/90 p-2 rounded-lg border border-slate-700">
+                        <div class="text-[10px] text-slate-400 mb-1">奥行 D: <strong class="text-sky-300 mono-num">${dMm}mm</strong></div>
+                        <div class="flex items-center gap-1">
+                            <button onclick="resizeSelectedFixture(0, -1)" class="flex-1 py-1 bg-slate-800 hover:bg-slate-700 rounded font-bold">-</button>
+                            <button onclick="resizeSelectedFixture(0, 1)" class="flex-1 py-1 bg-slate-800 hover:bg-slate-700 rounded font-bold">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="rotateSelectedFixture()" class="flex-1 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 font-bold">
+                        <i class="fa-solid fa-rotate-right mr-1"></i>90°回転 (縦横入替)
+                    </button>
+                </div>
+            </div>
+        `;
+    } else if (kind === 'room') {
+        const wMm = Math.round(obj.w * pitch);
+        const hMm = Math.round(obj.h * pitch);
+        const jyo = (obj.w * obj.h / 2).toFixed(1);
+
+        let rmOptions = '';
+        Object.keys(ROOM_TYPES).forEach(k => {
+            const sel = obj.type === k ? 'selected' : '';
+            rmOptions += `<option value="${k}" ${sel}>${ROOM_TYPES[k].label}</option>`;
+        });
+
+        panel.innerHTML = `
+            <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-2">
+                <span class="text-xs font-bold text-white"><i class="fa-solid fa-vector-square text-blue-400 mr-1.5"></i>部屋編集: ${obj.customName} (${jyo}帖)</span>
+                <div class="flex items-center gap-1">
+                    <button onclick="deleteSelectedItem()" class="px-2 py-1 rounded bg-rose-600/30 hover:bg-rose-600/50 text-[11px] text-rose-200 font-bold"><i class="fa-solid fa-trash mr-1"></i>削除</button>
+                    <button onclick="state.selectedItem=null;renderPropertyInspector();request2DRedraw();" class="text-slate-400 hover:text-white px-1.5"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <div class="space-y-2 text-xs">
+                <div class="flex items-center justify-between gap-2">
+                    <label class="text-slate-300">種別:</label>
+                    <select onchange="changeSelectedRoomType(this.value)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold">
+                        ${rmOptions}
+                    </select>
+                    <button onclick="renameSelectedRoom()" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white border border-slate-600">名称変更</button>
+                </div>
+                <div class="text-[11px] text-slate-400 mono-num">寸法: ${wMm}mm × ${hMm}mm (四隅の青ハンドルをドラッグで変形)</div>
+            </div>
+        `;
+    } else if (kind === 'pillar') {
+        panel.innerHTML = `
+            <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-2">
+                <span class="text-xs font-bold text-white"><i class="fa-solid fa-square text-amber-400 mr-1.5"></i>独立柱 (ポーチ・バルコニー脚)</span>
+                <div class="flex items-center gap-1">
+                    <button onclick="deleteSelectedItem()" class="px-2 py-1 rounded bg-rose-600/30 hover:bg-rose-600/50 text-[11px] text-rose-200 font-bold">削除</button>
+                    <button onclick="state.selectedItem=null;renderPropertyInspector();request2DRedraw();" class="text-slate-400 hover:text-white px-1.5"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <div class="text-xs text-slate-300">ドラッグして位置を移動できます。3Dホワイトモデルで単独柱として表示されます。</div>
+        `;
+    }
+}
+
+// --- Property Inspector Action Handlers ---
+function changeSelectedOpeningType(newType) {
+    const obj = findSelectedObject();
+    if (!obj || state.selectedItem.kind !== 'opening') return;
+    const def = OPENING_TYPES[newType];
+    obj.type = newType;
+    obj.heightMm = def.heightMm;
+    obj.sillMm = def.sillMm;
+    saveHistorySnapshot();
+    showToast(`建具種類を「${def.label}」に変更しました`);
+}
+
+function setSelectedOpeningWidthP(newWidthP) {
+    const obj = findSelectedObject();
+    if (!obj || state.selectedItem.kind !== 'opening') return;
+    const w = Math.max(0.25, Math.min(4.0, Math.round(newWidthP * 12) / 12));
+    if (checkOpeningOverlap(state.currentFloor, obj.x, obj.y, obj.orient, w, obj.id)) {
+        showToast('他の建具と重なるためこれ以上広げられません', true);
+        return;
+    }
+    obj.widthP = w;
+    saveHistorySnapshot();
+}
+
+function setSelectedOpeningHeight(hVal, sillVal) {
+    const obj = findSelectedObject();
+    if (!obj || state.selectedItem.kind !== 'opening') return;
+    if (hVal !== null) obj.heightMm = Math.max(300, Math.min(2500, parseInt(hVal) || 2000));
+    if (sillVal !== null) obj.sillMm = Math.max(0, Math.min(2100, parseInt(sillVal) || 0));
+    saveHistorySnapshot();
+}
+
+function changeSelectedFixtureType(newType) {
+    const obj = findSelectedObject();
+    if (!obj || state.selectedItem.kind !== 'fixture') return;
+    const def = FIXTURE_TYPES[newType];
+    obj.type = newType;
+    obj.w = def.wP;
+    obj.h = def.hP;
+    saveHistorySnapshot();
+    showToast(`設備を「${def.label}」に変更しました`);
+}
+
+function resizeSelectedFixture(dwStep, dhStep) {
+    const obj = findSelectedObject();
+    if (!obj || state.selectedItem.kind !== 'fixture') return;
+    const step = 1 / state.gridDivisions;
+    obj.w = Math.max(0.25, Math.round((obj.w + dwStep * step) * 12) / 12);
+    obj.h = Math.max(0.25, Math.round((obj.h + dhStep * step) * 12) / 12);
+    saveHistorySnapshot();
+}
+
+function rotateSelectedFixture() {
+    const obj = findSelectedObject();
+    if (!obj || state.selectedItem.kind !== 'fixture') return;
+    const tmp = obj.w;
+    obj.w = obj.h;
+    obj.h = tmp;
+    obj.rot = ((obj.rot || 0) + 90) % 360;
+    saveHistorySnapshot();
+    showToast('設備を90°回転しました');
+}
+
+function changeSelectedRoomType(newType) {
+    const obj = findSelectedObject();
+    if (!obj || state.selectedItem.kind !== 'room') return;
+    obj.type = newType;
+    obj.customName = ROOM_TYPES[newType].label;
+    saveHistorySnapshot();
+}
+
+// --- Floor & Grid Subdivision Controls ---
+function setFloor(fl) {
+    state.currentFloor = fl;
+    state.selectedItem = null;
+    [1, 2, 3].forEach(n => {
+        const btn = document.getElementById('btnFloor' + n);
+        if (n === fl) {
+            btn.className = 'px-2.5 py-1 rounded-md text-xs font-bold bg-blue-600 text-white shadow transition';
+        } else {
+            btn.className = 'px-2.5 py-1 rounded-md text-xs font-bold text-slate-300 hover:text-white transition';
+        }
+    });
+    renderPropertyInspector();
+    request2DRedraw();
+    rebuild3DScene();
+    showToast(`${fl}F (${fl}階) 編集モードに切り替えました`);
+}
+
+function toggleOnionSkin() {
+    state.onionSkin = !state.onionSkin;
+    const btn = document.getElementById('btnOnion');
+    btn.className = state.onionSkin
+        ? 'ml-1 px-2 py-1 rounded-md text-xs font-medium bg-sky-500/20 text-sky-300 border border-sky-500/40 flex items-center gap-1'
+        : 'ml-1 px-2 py-1 rounded-md text-xs font-medium bg-slate-800 text-slate-500 border border-slate-700 flex items-center gap-1';
+    request2DRedraw();
+}
+
+function setModulePitch(mm) {
+    state.modulePitch = mm;
+    document.getElementById('btnMod910').className = mm === 910
+        ? 'px-2 py-1 rounded bg-slate-700 text-amber-300 font-semibold'
+        : 'px-2 py-1 rounded text-slate-400 hover:text-white';
+    document.getElementById('btnMod1000').className = mm === 1000
+        ? 'px-2 py-1 rounded bg-slate-700 text-amber-300 font-semibold'
+        : 'px-2 py-1 rounded text-slate-400 hover:text-white';
+    document.getElementById('pitchBadge').textContent = `P=${mm}`;
+    updateSnapSelectLabels();
+    updateAllMetricsAnd3D();
+    renderPropertyInspector();
+    showToast(`建築モジュールを 1P = ${mm}mm に変更しました`);
+}
+
+function updateSnapSelectLabels() {
+    const sel = document.getElementById('snapSelect');
+    const p = state.modulePitch;
+    sel.options[0].text = `1分割 (${p}mm)`;
+    sel.options[1].text = `2分割 (${(p/2).toFixed(0)}mm)`;
+    sel.options[2].text = `3分割 (${(p/3).toFixed(1)}mm)`;
+    sel.options[3].text = `4分割 (${(p/4).toFixed(1)}mm)`;
+    sel.options[4].text = `5分割 (${(p/5).toFixed(0)}mm)`;
+    sel.options[5].text = `6分割 (${(p/6).toFixed(1)}mm)`;
+}
+
+function setGridDivision(divVal) {
+    state.gridDivisions = parseInt(divVal) || 2;
+    const mm = (state.modulePitch / state.gridDivisions).toFixed(1);
+    request2DRedraw();
+    showToast(`グリッドを ${state.gridDivisions}分割 (スナップ単位: 約${mm}mm) に変更しました`);
+}
+
+function toggleStylusMode() {
+    state.stylusOnlyMode = !state.stylusOnlyMode;
+    const btn = document.getElementById('btnStylusMode');
+    const txt = document.getElementById('stylusText');
+    if (state.stylusOnlyMode) {
+        btn.className = 'px-2 py-1.5 rounded-lg text-xs font-semibold border border-amber-500/50 bg-amber-500/20 text-amber-300 flex items-center gap-1 transition';
+        txt.textContent = 'ペン専用';
+        showToast('ペン専用モードON：スタイラスペンで描画、指タッチで画面パン移動します');
+    } else {
+        btn.className = 'px-2 py-1.5 rounded-lg text-xs font-semibold border border-emerald-500/40 bg-emerald-500/15 text-emerald-300 flex items-center gap-1 transition';
+        txt.textContent = 'ペン＋指';
+        showToast('ペン・指・マウス共通描画モードに切り替えました');
+    }
+}
+
+function setViewMode(mode) {
+    state.viewMode = mode;
+    const p2d = document.getElementById('pane2d');
+    const p3d = document.getElementById('pane3d');
+    const b2d = document.getElementById('viewBtn2D');
+    const bSp = document.getElementById('viewBtnSplit');
+    const b3d = document.getElementById('viewBtn3D');
+
+    [b2d, bSp, b3d].forEach(b => b.className = 'px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white flex items-center gap-1 transition');
+
+    if (mode === '2d') {
+        b2d.className = 'px-2.5 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow flex items-center gap-1 transition';
+        p2d.className = 'w-full h-full relative bg-slate-950 overflow-hidden';
+        p3d.className = 'hidden';
+    } else if (mode === 'split') {
+        bSp.className = 'px-2.5 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow flex items-center gap-1 transition';
+        p2d.className = 'w-1/2 h-full relative bg-slate-950 border-r border-slate-800 overflow-hidden';
+        p3d.className = 'w-1/2 h-full relative bg-gradient-to-b from-slate-200 via-slate-100 to-slate-300 overflow-hidden';
+    } else {
+        b3d.className = 'px-2.5 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow flex items-center gap-1 transition';
+        p2d.className = 'hidden';
+        p3d.className = 'w-full h-full relative bg-gradient-to-b from-slate-200 via-slate-100 to-slate-300 overflow-hidden';
+    }
+    handleResize();
+}
+
+// ============================================================================
+// 2D ARCHITECTURAL CANVAS RENDERER (WITH 1-6 SUB-GRID & UNIFIED WALLS)
+// ============================================================================
+
+const canvas2d = document.getElementById('canvas2d');
+const ctx = canvas2d.getContext('2d');
+
+function snapP(val) {
+    const div = state.gridDivisions || 2;
+    return Math.round(val * div) / div;
+}
+
+function screenToWorldP(sx, sy) {
+    const rect = canvas2d.getBoundingClientRect();
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    return {
+        x: state.cam2d.x + (sx - cx) / state.cam2d.zoom,
+        y: state.cam2d.y + (sy - cy) / state.cam2d.zoom
+    };
+}
+
+function worldPToScreen(wx, wy) {
+    const rect = canvas2d.getBoundingClientRect();
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    return {
+        x: cx + (wx - state.cam2d.x) * state.cam2d.zoom,
+        y: cy + (wy - state.cam2d.y) * state.cam2d.zoom
+    };
+}
+
+function zoom2D(factor) {
+    state.cam2d.zoom = Math.max(18, Math.min(120, state.cam2d.zoom * factor));
+    request2DRedraw();
+}
+
+function reset2DCamera() {
+    state.cam2d.x = 3.2;
+    state.cam2d.y = 3.2;
+    const rect = canvas2d.getBoundingClientRect();
+    state.cam2d.zoom = Math.min(rect.width, rect.height) / 10.5;
+    if (state.cam2d.zoom < 26) state.cam2d.zoom = 40;
+    request2DRedraw();
+}
+
+let needs2DRedraw = true;
+function request2DRedraw() {
+    needs2DRedraw = true;
+}
+
+function draw2DCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas2d.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return;
+
+    if (canvas2d.width !== Math.floor(rect.width * dpr) || canvas2d.height !== Math.floor(rect.height * dpr)) {
+        canvas2d.width = Math.floor(rect.width * dpr);
+        canvas2d.height = Math.floor(rect.height * dpr);
+    }
+
+    ctx.save();
+    ctx.scale(dpr, dpr);
+
+    const W = rect.width;
+    const H = rect.height;
+
+    // 1. Dark Blueprint Background
+    ctx.fillStyle = '#0b1120';
+    ctx.fillRect(0, 0, W, H);
+
+    // 2. Architectural Grid & 1..6 Subdivision Lines
+    drawGrid2D(W, H);
+
+    // 3. Lower Floor Onion Skin
+    if (state.onionSkin) {
+        const lowerFloorNum = state.currentFloor > 1 ? state.currentFloor - 1 : 2;
+        if (state.floors[lowerFloorNum]) {
+            drawFloorOnionSkin(state.floors[lowerFloorNum], lowerFloorNum);
+        }
+    }
+
+    const fl = state.floors[state.currentFloor];
+
+    // 4a. Rooms (Unified Walls without corner column protrusions)
+    fl.rooms.forEach(rm => drawRoom2D(rm));
+
+    // 4b. Custom Wall Segments
+    fl.walls.forEach(wl => drawWallSegment2D(wl));
+
+    // 4c. Standalone Pillars (独立柱)
+    fl.pillars.forEach(pl => drawStandalonePillar2D(pl));
+
+    // 4d. Fixtures (Kitchen, UB, Stairs, etc.)
+    fl.fixtures.forEach(fx => drawFixture2D(fx));
+
+    // 4e. Openings (Doors & Windows)
+    fl.openings.forEach(op => drawOpening2D(op));
+
+    // 4f. Automatic Exterior Dimensions
+    drawAutoDimensions2D(fl);
+
+    // 4g. Redline Pen & Stamps
+    fl.strokes.forEach(st => drawStroke2D(st));
+    fl.stamps.forEach(sp => drawStamp2D(sp));
+
+    // 5. Active Drag Preview
+    if (state.dragAction) {
+        drawDragPreview2D(state.dragAction);
+    }
+
+    // 6. Selection & Resize Handles for Selected Room / Fixture / Opening / Pillar
+    if (state.selectedItem && state.selectedItem.floor === state.currentFloor) {
+        drawSelectionHandles2D();
+    }
+
+    ctx.restore();
+}
+
+function drawGrid2D(W, H) {
+    const topLeft = screenToWorldP(0, 0);
+    const botRight = screenToWorldP(W, H);
+    const startX = Math.floor(topLeft.x) - 1;
+    const endX = Math.ceil(botRight.x) + 1;
+    const startY = Math.floor(topLeft.y) - 1;
+    const endY = Math.ceil(botRight.y) + 1;
+
+    const div = state.gridDivisions || 2;
+
+    // Draw Subdivision Grid Lines (2分割, 3分割, 4分割, 5分割, 6分割)
+    if (div > 1 && state.cam2d.zoom >= 24) {
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.18)';
+        ctx.lineWidth = 0.8;
+        ctx.setLineDash([2, 3]);
+        ctx.beginPath();
+        for (let x = startX; x <= endX; x++) {
+            for (let k = 1; k < div; k++) {
+                const sx = worldPToScreen(x + k / div, 0).x;
+                ctx.moveTo(sx, 0);
+                ctx.lineTo(sx, H);
+            }
+        }
+        for (let y = startY; y <= endY; y++) {
+            for (let k = 1; k < div; k++) {
+                const sy = worldPToScreen(0, y + k / div).y;
+                ctx.moveTo(0, sy);
+                ctx.lineTo(W, sy);
+            }
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    // Main 1P (910mm / 1000mm) Grid Lines
+    ctx.strokeStyle = 'rgba(71, 85, 105, 0.6)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let x = startX; x <= endX; x++) {
+        const sx = worldPToScreen(x, 0).x;
+        ctx.moveTo(sx, 0);
+        ctx.lineTo(sx, H);
+    }
+    for (let y = startY; y <= endY; y++) {
+        const sy = worldPToScreen(0, y).y;
+        ctx.moveTo(0, sy);
+        ctx.lineTo(W, sy);
+    }
+    ctx.stroke();
+
+    // Origin Axis Highlight
+    const orig = worldPToScreen(0, 0);
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(orig.x, 0); ctx.lineTo(orig.x, H);
+    ctx.moveTo(0, orig.y); ctx.lineTo(W, orig.y);
+    ctx.stroke();
+}
+
+function drawFloorOnionSkin(floorData, floorNum) {
+    ctx.save();
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+    ctx.fillStyle = 'rgba(14, 165, 233, 0.06)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
+
+    floorData.rooms.forEach(rm => {
+        const p1 = worldPToScreen(rm.x, rm.y);
+        const wPx = rm.w * state.cam2d.zoom;
+        const hPx = rm.h * state.cam2d.zoom;
+        ctx.fillRect(p1.x, p1.y, wPx, hPx);
+        ctx.strokeRect(p1.x, p1.y, wPx, hPx);
+
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.6)';
+        ctx.font = 'bold 10px "Noto Sans JP", sans-serif';
+        ctx.fillText(`${floorNum}F:${rm.customName || ROOM_TYPES[rm.type].label}`, p1.x + 6, p1.y + 14);
+        ctx.fillStyle = 'rgba(14, 165, 233, 0.06)';
+    });
+    ctx.restore();
+}
+
+function drawRoom2D(rm) {
+    const rt = ROOM_TYPES[rm.type] || ROOM_TYPES.LDK;
+    const p1 = worldPToScreen(rm.x, rm.y);
+    const wPx = rm.w * state.cam2d.zoom;
+    const hPx = rm.h * state.cam2d.zoom;
+
+    ctx.save();
+    ctx.fillStyle = rt.color2d;
+    ctx.globalAlpha = rm.type === 'VOID' ? 0.65 : 0.92;
+    ctx.fillRect(p1.x, p1.y, wPx, hPx);
+    ctx.globalAlpha = 1.0;
+
+    // Floor Pattern Details
+    if (rt.floorType === 'wood' && state.cam2d.zoom > 28) {
+        ctx.strokeStyle = 'rgba(180, 83, 9, 0.14)';
+        ctx.lineWidth = 1;
+        const stepPx = state.cam2d.zoom * 0.33;
+        ctx.beginPath();
+        for (let y = p1.y + stepPx; y < p1.y + hPx; y += stepPx) {
+            ctx.moveTo(p1.x, y);
+            ctx.lineTo(p1.x + wPx, y);
+        }
+        ctx.stroke();
+    } else if (rt.floorType === 'tatami') {
+        ctx.strokeStyle = 'rgba(22, 101, 52, 0.35)';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(p1.x + 4, p1.y + 4, wPx - 8, hPx - 8);
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y + hPx / 2);
+        ctx.lineTo(p1.x + wPx, p1.y + hPx / 2);
+        ctx.stroke();
+    } else if (rm.type === 'VOID') {
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y); ctx.lineTo(p1.x + wPx, p1.y + hPx);
+        ctx.moveTo(p1.x + wPx, p1.y); ctx.lineTo(p1.x, p1.y + hPx);
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    // Unified Continuous Wall Border (No separate corner column squares on walls)
+    if (rt.hasWall) {
+        const wallThickPx = Math.max(5, state.cam2d.zoom * 0.15);
+        ctx.strokeStyle = rm.type === 'BALCONY' ? '#475569' : '#1e293b';
+        ctx.lineWidth = wallThickPx;
+        ctx.lineJoin = 'miter';
+        ctx.strokeRect(p1.x, p1.y, wPx, hPx);
+
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 1.2;
+        ctx.strokeRect(p1.x, p1.y, wPx, hPx);
+    } else {
+        // Porch dashed perimeter
+        ctx.strokeStyle = '#64748b';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.strokeRect(p1.x, p1.y, wPx, hPx);
+        ctx.setLineDash([]);
+    }
+
+    // Room Name & Area Label
+    const areaM2 = (rm.w * state.modulePitch / 1000) * (rm.h * state.modulePitch / 1000);
+    const tatamiJyo = (rm.w * rm.h) / 2;
+
+    const centerX = p1.x + wPx / 2;
+    const centerY = p1.y + hPx / 2;
+
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    const title = rm.customName || rt.label;
+    ctx.fillStyle = rm.type === 'VOID' ? '#38bdf8' : '#0f172a';
+    ctx.font = `bold ${Math.max(10, Math.min(14, state.cam2d.zoom * 0.30))}px "Noto Sans JP", sans-serif`;
+    ctx.fillText(title, centerX, centerY - 7);
+
+    if (wPx > 42 && hPx > 32) {
+        ctx.fillStyle = rm.type === 'VOID' ? '#94a3b8' : '#334155';
+        ctx.font = `600 ${Math.max(8, Math.min(11, state.cam2d.zoom * 0.22))}px "JetBrains Mono", monospace`;
+        ctx.fillText(`${tatamiJyo.toFixed(1)}帖 (${areaM2.toFixed(1)}㎡)`, centerX, centerY + 8);
+    }
+
+    ctx.restore();
+}
+
+function drawWallSegment2D(wl) {
+    const p1 = worldPToScreen(wl.x1, wl.y1);
+    const p2 = worldPToScreen(wl.x2, wl.y2);
+    ctx.save();
+    ctx.strokeStyle = wl.wallType === 'exterior' ? '#f8fafc' : '#cbd5e1';
+    ctx.lineWidth = wl.wallType === 'exterior' ? Math.max(6, state.cam2d.zoom * 0.16) : Math.max(4, state.cam2d.zoom * 0.11);
+    ctx.lineCap = 'square';
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.stroke();
+    ctx.restore();
+}
+
+function drawStandalonePillar2D(pl) {
+    const p = worldPToScreen(pl.x, pl.y);
+    const sz = Math.max(8, state.cam2d.zoom * 0.22);
+    ctx.save();
+    ctx.fillStyle = '#f8fafc';
+    ctx.strokeStyle = '#0f172a';
+    ctx.lineWidth = 2;
+    ctx.fillRect(p.x - sz / 2, p.y - sz / 2, sz, sz);
+    ctx.strokeRect(p.x - sz / 2, p.y - sz / 2, sz, sz);
+    // Cross mark inside standalone pillar
+    ctx.beginPath();
+    ctx.moveTo(p.x - sz / 2, p.y - sz / 2); ctx.lineTo(p.x + sz / 2, p.y + sz / 2);
+    ctx.moveTo(p.x + sz / 2, p.y - sz / 2); ctx.lineTo(p.x - sz / 2, p.y + sz / 2);
+    ctx.stroke();
+    ctx.restore();
+}
+
+function drawFixture2D(fx) {
+    const ft = FIXTURE_TYPES[fx.type] || FIXTURE_TYPES.KITCHEN_I;
+    const p = worldPToScreen(fx.x, fx.y);
+    const wPx = fx.w * state.cam2d.zoom;
+    const hPx = fx.h * state.cam2d.zoom;
+
+    ctx.save();
+    ctx.fillStyle = ft.color;
+    ctx.strokeStyle = '#334155';
+    ctx.lineWidth = 1.5;
+    ctx.fillRect(p.x + 1, p.y + 1, wPx - 2, hPx - 2);
+    ctx.strokeRect(p.x + 1, p.y + 1, wPx - 2, hPx - 2);
+
+    if (fx.type.startsWith('STAIR')) {
+        const steps = 10;
+        ctx.beginPath();
+        if (fx.w <= fx.h) {
+            for (let i = 1; i < steps; i++) {
+                const sy = p.y + (hPx / steps) * i;
+                ctx.moveTo(p.x + 2, sy); ctx.lineTo(p.x + wPx - 2, sy);
+            }
+        } else {
+            for (let i = 1; i < steps; i++) {
+                const sx = p.x + (wPx / steps) * i;
+                ctx.moveTo(sx, p.y + 2); ctx.lineTo(sx, p.y + hPx - 2);
+            }
+        }
+        ctx.stroke();
+    } else if (fx.type.startsWith('KITCHEN')) {
+        ctx.strokeRect(p.x + 5, p.y + 5, wPx * 0.42, hPx - 10);
+        ctx.beginPath();
+        ctx.arc(p.x + wPx * 0.75, p.y + hPx * 0.5, Math.min(wPx, hPx) * 0.22, 0, Math.PI * 2);
+        ctx.stroke();
+    } else if (fx.type === 'UB_1616') {
+        ctx.fillStyle = '#e0f2fe';
+        ctx.fillRect(p.x + 5, p.y + 5, wPx * 0.45, hPx - 10);
+        ctx.strokeRect(p.x + 5, p.y + 5, wPx * 0.45, hPx - 10);
+    } else if (fx.type === 'TOILET_FIX') {
+        ctx.beginPath();
+        ctx.arc(p.x + wPx / 2, p.y + hPx / 2, Math.min(wPx, hPx) * 0.35, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    // Label
+    ctx.fillStyle = '#0f172a';
+    ctx.font = 'bold 9px "Noto Sans JP", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    if (wPx > 28 && hPx > 18) {
+        ctx.fillText(ft.label.split('(')[0], p.x + wPx / 2, p.y + hPx / 2);
+    }
+    ctx.restore();
+}
+
+function drawOpening2D(op) {
+    const ot = OPENING_TYPES[op.type] || OPENING_TYPES.SWING_DOOR;
+    const p = worldPToScreen(op.x, op.y);
+    const wP = op.widthP || ot.widthP;
+    const lenPx = wP * state.cam2d.zoom;
+
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    if (op.orient === 'v') {
+        ctx.rotate(Math.PI / 2);
+    }
+
+    // Clear wall behind opening
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(-lenPx / 2, -4, lenPx, 8);
+
+    ctx.strokeStyle = ot.color;
+    ctx.lineWidth = 2;
+
+    if (op.type === 'SWING_DOOR' || op.type === 'ENTRANCE_DOOR') {
+        const dir = op.flip ? -1 : 1;
+        ctx.beginPath();
+        ctx.moveTo(-lenPx / 2, 0);
+        ctx.lineTo(-lenPx / 2, lenPx * 0.85 * dir);
+        ctx.stroke();
+
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath();
+        ctx.arc(-lenPx / 2, 0, lenPx * 0.85, 0, (Math.PI / 2) * dir, dir < 0);
+        ctx.stroke();
+        ctx.setLineDash([]);
+    } else if (op.type === 'SLIDING_DOOR') {
+        ctx.beginPath();
+        ctx.moveTo(-lenPx / 2, -2); ctx.lineTo(lenPx * 0.05, -2);
+        ctx.moveTo(-lenPx * 0.05, 2); ctx.lineTo(lenPx / 2, 2);
+        ctx.stroke();
+    } else if (op.type === 'FOLD_DOOR') {
+        ctx.beginPath();
+        ctx.moveTo(-lenPx / 2, 0);
+        ctx.lineTo(-lenPx / 4, 8);
+        ctx.lineTo(0, 0);
+        ctx.lineTo(lenPx / 4, 8);
+        ctx.lineTo(lenPx / 2, 0);
+        ctx.stroke();
+    } else {
+        // Window symbol
+        ctx.strokeStyle = '#0284c7';
+        ctx.strokeRect(-lenPx / 2, -3.5, lenPx, 7);
+        ctx.beginPath();
+        ctx.moveTo(-lenPx / 2, 0);
+        ctx.lineTo(lenPx / 2, 0);
+        ctx.stroke();
+    }
+
+    ctx.restore();
+}
+
+function drawAutoDimensions2D(fl) {
+    if (fl.rooms.length === 0) return;
+
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    fl.rooms.forEach(r => {
+        if (r.x < minX) minX = r.x;
+        if (r.y < minY) minY = r.y;
+        if (r.x + r.w > maxX) maxX = r.x + r.w;
+        if (r.y + r.h > maxY) maxY = r.y + r.h;
+    });
+
+    const pTopLeft = worldPToScreen(minX, minY);
+    const pBotRight = worldPToScreen(maxX, maxY);
+
+    ctx.save();
+    ctx.strokeStyle = '#64748b';
+    ctx.fillStyle = '#94a3b8';
+    ctx.lineWidth = 1;
+    ctx.font = '600 11px "JetBrains Mono", monospace';
+    ctx.textAlign = 'center';
+
+    const dimY = pTopLeft.y - 24;
+    ctx.beginPath();
+    ctx.moveTo(pTopLeft.x, pTopLeft.y - 8); ctx.lineTo(pTopLeft.x, dimY - 5);
+    ctx.moveTo(pBotRight.x, pTopLeft.y - 8); ctx.lineTo(pBotRight.x, dimY - 5);
+    ctx.moveTo(pTopLeft.x, dimY); ctx.lineTo(pBotRight.x, dimY);
+    ctx.stroke();
+
+    [pTopLeft.x, pBotRight.x].forEach(tx => {
+        ctx.beginPath();
+        ctx.arc(tx, dimY, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    const totalW_P = +(maxX - minX).toFixed(2);
+    const totalW_mm = Math.round(totalW_P * state.modulePitch);
+    ctx.fillText(`${totalW_mm} mm (${totalW_P}P)`, (pTopLeft.x + pBotRight.x) / 2, dimY - 8);
+
+    const dimX = pTopLeft.x - 26;
+    ctx.beginPath();
+    ctx.moveTo(pTopLeft.x - 8, pTopLeft.y); ctx.lineTo(dimX - 5, pTopLeft.y);
+    ctx.moveTo(pTopLeft.x - 8, pBotRight.y); ctx.lineTo(dimX - 5, pBotRight.y);
+    ctx.moveTo(dimX, pTopLeft.y); ctx.lineTo(dimX, pBotRight.y);
+    ctx.stroke();
+
+    [pTopLeft.y, pBotRight.y].forEach(ty => {
+        ctx.beginPath();
+        ctx.arc(dimX, ty, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    const totalH_P = +(maxY - minY).toFixed(2);
+    const totalH_mm = Math.round(totalH_P * state.modulePitch);
+    ctx.save();
+    ctx.translate(dimX - 10, (pTopLeft.y + pBotRight.y) / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText(`${totalH_mm} mm (${totalH_P}P)`, 0, 0);
+    ctx.restore();
+
+    ctx.restore();
+}
+
+function drawStroke2D(st) {
+    if (!st.points || st.points.length < 2) return;
+    ctx.save();
+    ctx.strokeStyle = st.color || '#f43f5e';
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.globalAlpha = st.color === '#facc15' ? 0.55 : 0.95;
+
+    for (let i = 1; i < st.points.length; i++) {
+        const pt0 = worldPToScreen(st.points[i - 1].x, st.points[i - 1].y);
+        const pt1 = worldPToScreen(st.points[i].x, st.points[i].y);
+        const press = st.points[i].p || 0.5;
+        ctx.lineWidth = Math.max(1.5, (st.size || 3) * (0.6 + press * 1.1));
+        ctx.beginPath();
+        ctx.moveTo(pt0.x, pt0.y);
+        ctx.lineTo(pt1.x, pt1.y);
+        ctx.stroke();
+    }
+    ctx.restore();
+}
+
+function drawStamp2D(sp) {
+    const p = worldPToScreen(sp.x, sp.y);
+    ctx.save();
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+    ctx.strokeStyle = sp.color || '#f43f5e';
+    ctx.lineWidth = 1.5;
+    ctx.font = 'bold 11px "Noto Sans JP", sans-serif';
+    const w = ctx.measureText(sp.text).width + 12;
+    ctx.beginPath();
+    ctx.roundRect(p.x - w / 2, p.y - 11, w, 22, 6);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = sp.color || '#f43f5e';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(sp.text, p.x, p.y);
+    ctx.restore();
+}
+
+function drawDragPreview2D(drag) {
+    ctx.save();
+    if (drag.type === 'room') {
+        const x = Math.min(drag.startX, drag.curX);
+        const y = Math.min(drag.startY, drag.curY);
+        const w = Math.abs(drag.curX - drag.startX);
+        const h = Math.abs(drag.curY - drag.startY);
+        const p = worldPToScreen(x, y);
+        const wPx = w * state.cam2d.zoom;
+        const hPx = h * state.cam2d.zoom;
+
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.25)';
+        ctx.strokeStyle = '#60a5fa';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 3]);
+        ctx.fillRect(p.x, p.y, wPx, hPx);
+        ctx.strokeRect(p.x, p.y, wPx, hPx);
+        ctx.setLineDash([]);
+
+        const jyo = (w * h) / 2;
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 12px "JetBrains Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(`${ROOM_TYPES[state.subRoomType].label}: ${w.toFixed(2)}P×${h.toFixed(2)}P (${jyo.toFixed(1)}帖)`, p.x + wPx / 2, p.y + hPx / 2);
+    } else if (drag.type === 'wall') {
+        const p1 = worldPToScreen(drag.startX, drag.startY);
+        const p2 = worldPToScreen(drag.curX, drag.curY);
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+    }
+    ctx.restore();
+}
+
+function drawSelectionHandles2D() {
+    const obj = findSelectedObject();
+    if (!obj) return;
+    const kind = state.selectedItem.kind;
+
+    ctx.save();
+    if (kind === 'room' || kind === 'fixture') {
+        const p = worldPToScreen(obj.x, obj.y);
+        const wPx = obj.w * state.cam2d.zoom;
+        const hPx = obj.h * state.cam2d.zoom;
+
+        ctx.strokeStyle = kind === 'fixture' ? '#06b6d4' : '#3b82f6';
+        ctx.lineWidth = 2.5;
+        ctx.strokeRect(p.x - 2, p.y - 2, wPx + 4, hPx + 4);
+
+        const corners = [
+            [p.x, p.y],
+            [p.x + wPx, p.y],
+            [p.x, p.y + hPx],
+            [p.x + wPx, p.y + hPx]
+        ];
+        corners.forEach(([cx, cy]) => {
+            ctx.fillStyle = kind === 'fixture' ? '#0891b2' : '#2563eb';
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 7, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+        });
+    } else if (kind === 'opening') {
+        const p = worldPToScreen(obj.x, obj.y);
+        const halfLenPx = ((obj.widthP || 1.0) * state.cam2d.zoom) / 2;
+
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 2.5;
+        const ends = obj.orient === 'h'
+            ? [[p.x - halfLenPx, p.y], [p.x + halfLenPx, p.y]]
+            : [[p.x, p.y - halfLenPx], [p.x, p.y + halfLenPx]];
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#f59e0b';
+        ctx.fill();
+
+        ends.forEach(([ex, ey]) => {
+            ctx.fillStyle = '#ea580c';
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(ex, ey, 7, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+        });
+    } else if (kind === 'pillar') {
+        const p = worldPToScreen(obj.x, obj.y);
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 2.5;
+        ctx.strokeRect(p.x - 10, p.y - 10, 20, 20);
+    }
+    ctx.restore();
+}
+
+// ============================================================================
+// OVERLAP PREVENTION & SMART PLACEMENT FOR WINDOWS / DOORS
+// ============================================================================
+
+function checkOpeningOverlap(floorNum, x, y, orient, widthP, excludeId = null) {
+    const fl = state.floors[floorNum];
+    const halfW = widthP / 2;
+    const minA = (orient === 'h' ? x : y) - halfW;
+    const maxA = (orient === 'h' ? x : y) + halfW;
+    const fixedCoord = orient === 'h' ? y : x;
+
+    for (const op of fl.openings) {
+        if (op.id === excludeId) continue;
+        if (op.orient !== orient) continue;
+        const opFixed = op.orient === 'h' ? op.y : op.x;
+        if (Math.abs(opFixed - fixedCoord) > 0.15) continue;
+
+        const opW = op.widthP || OPENING_TYPES[op.type]?.widthP || 1.0;
+        const minB = (op.orient === 'h' ? op.x : op.y) - opW / 2;
+        const maxB = (op.orient === 'h' ? op.x : op.y) + opW / 2;
+
+        // Overlap with 0.02P tolerance
+        if (Math.max(minA, minB) < Math.min(maxA, maxB) - 0.02) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function snapPointToNearestWallEdge(wx, wy) {
+    const fl = state.floors[state.currentFloor];
+    let bestEdge = null;
+    let minDist = 0.85;
+
+    fl.rooms.forEach(rm => {
+        // Horizontal walls
+        [rm.y, rm.y + rm.h].forEach(wallY => {
+            if (wx >= rm.x - 0.2 && wx <= rm.x + rm.w + 0.2) {
+                const d = Math.abs(wy - wallY);
+                if (d < minDist) {
+                    minDist = d;
+                    bestEdge = { x: snapP(wx), y: wallY, orient: 'h' };
+                }
+            }
+        });
+        // Vertical walls
+        [rm.x, rm.x + rm.w].forEach(wallX => {
+            if (wy >= rm.y - 0.2 && wy <= rm.y + rm.h + 0.2) {
+                const d = Math.abs(wx - wallX);
+                if (d < minDist) {
+                    minDist = d;
+                    bestEdge = { x: wallX, y: snapP(wy), orient: 'v' };
+                }
+            }
+        });
+    });
+
+    return bestEdge || { x: snapP(wx), y: snapP(wy), orient: 'h' };
+}
+
+function placeOpeningAt(wx, wy) {
+    const fl = state.floors[state.currentFloor];
+    const target = snapPointToNearestWallEdge(wx, wy);
+    const def = OPENING_TYPES[state.subOpeningType];
+
+    // Check overlap before placing
+    if (checkOpeningOverlap(state.currentFloor, target.x, target.y, target.orient, def.widthP, null)) {
+        showToast('同じ壁面上の既存の建具・窓と重なるため配置できません（重複入力禁止）', true);
+        return;
+    }
+
+    const newOp = {
+        id: uid(),
+        type: state.subOpeningType,
+        x: target.x,
+        y: target.y,
+        orient: target.orient,
+        flip: false,
+        widthP: def.widthP,
+        heightMm: def.heightMm,
+        sillMm: def.sillMm
+    };
+    fl.openings.push(newOp);
+    state.selectedItem = { kind: 'opening', id: newOp.id, floor: state.currentFloor };
+    saveHistorySnapshot();
+    showToast(`${def.label} を配置しました（ドラッグで位置・サイズ変更可能）`);
+}
+
+function flipLastOrSelectedOpening() {
+    const fl = state.floors[state.currentFloor];
+    let op = null;
+    if (state.selectedItem && state.selectedItem.kind === 'opening') {
+        op = fl.openings.find(o => o.id === state.selectedItem.id);
+    } else if (fl.openings.length > 0) {
+        op = fl.openings[fl.openings.length - 1];
+    }
+    if (op) {
+        if (!op.flip) {
+            op.flip = true;
+        } else {
+            const nextOrient = op.orient === 'h' ? 'v' : 'h';
+            if (!checkOpeningOverlap(state.currentFloor, op.x, op.y, nextOrient, op.widthP, op.id)) {
+                op.flip = false;
+                op.orient = nextOrient;
+            } else {
+                op.flip = false;
+            }
+        }
+        saveHistorySnapshot();
+        showToast('建具の開閉方向・向きを切り替えました');
+    }
+}
+
+// ============================================================================
+// POINTER EVENTS (STYLUS PEN, TOUCH, SELECTION, MOVING & RESIZING)
+// ============================================================================
+
+function updatePointerStatusBadge(e) {
+    const badge = document.getElementById('pointerBadge');
+    const txt = document.getElementById('pointerStatusText');
+    const pType = e.pointerType || 'mouse';
+    const press = e.pressure ? e.pressure.toFixed(2) : '0.50';
+    if (pType === 'pen') {
+        badge.className = 'inline-block w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse';
+        txt.textContent = `ペン入力 (${state.gridDivisions}分割・筆圧:${press})`;
+    } else if (pType === 'touch') {
+        badge.className = 'inline-block w-2.5 h-2.5 rounded-full bg-sky-400';
+        txt.textContent = state.stylusOnlyMode ? '指タッチ: 画面移動' : `タッチ入力 (${state.gridDivisions}分割)`;
+    } else {
+        badge.className = 'inline-block w-2.5 h-2.5 rounded-full bg-emerald-400';
+        txt.textContent = `${state.gridDivisions}分割グリッド (${(state.modulePitch/state.gridDivisions).toFixed(0)}mm)`;
+    }
+}
+
+canvas2d.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    canvas2d.setPointerCapture(e.pointerId);
+    updatePointerStatusBadge(e);
+
+    const rect = canvas2d.getBoundingClientRect();
+    const sx = e.clientX - rect.left;
+    const sy = e.clientY - rect.top;
+    const worldPos = screenToWorldP(sx, sy);
+    const snappedX = snapP(worldPos.x);
+    const snappedY = snapP(worldPos.y);
+
+    const isTouchPan = (state.stylusOnlyMode && e.pointerType === 'touch') || state.activeTool === 'pan' || e.button === 1 || e.button === 2;
+
+    if (isTouchPan) {
+        state.dragAction = {
+            type: 'pan',
+            startSX: sx,
+            startSY: sy,
+            origCamX: state.cam2d.x,
+            origCamY: state.cam2d.y
+        };
+        return;
+    }
+
+    const fl = state.floors[state.currentFloor];
+    const minStep = 1 / state.gridDivisions;
+
+    // Even when in 'opening' or 'fixture' tool, if user taps an already-selected item's handle or body, let them move/resize it
+    if (state.activeTool === 'select' || state.activeTool === 'opening' || state.activeTool === 'fixture') {
+        if (tryStartSelectOrModifyInteraction(worldPos.x, worldPos.y, state.activeTool !== 'select')) {
+            return;
+        }
+    }
+
+    if (state.activeTool === 'room') {
+        state.dragAction = {
+            type: 'room',
+            startX: snappedX,
+            startY: snappedY,
+            curX: snappedX + minStep * 2,
+            curY: snappedY + minStep * 2
+        };
+        request2DRedraw();
+    } else if (state.activeTool === 'wall') {
+        if (state.subWallType === 'pillar') {
+            const newPillar = { id: uid(), x: snappedX, y: snappedY, sizeMm: 150 };
+            fl.pillars.push(newPillar);
+            state.selectedItem = { kind: 'pillar', id: newPillar.id, floor: state.currentFloor };
+            saveHistorySnapshot();
+            showToast('独立柱（ポーチ・バルコニー脚）を配置しました');
+        } else {
+            state.dragAction = {
+                type: 'wall',
+                startX: snappedX,
+                startY: snappedY,
+                curX: snappedX,
+                curY: snappedY
+            };
+            request2DRedraw();
+        }
+    } else if (state.activeTool === 'opening') {
+        placeOpeningAt(worldPos.x, worldPos.y);
+    } else if (state.activeTool === 'fixture') {
+        if (state.subFixtureType === 'STANDALONE_COL') {
+            const newPillar = { id: uid(), x: snappedX, y: snappedY, sizeMm: 150 };
+            fl.pillars.push(newPillar);
+            state.selectedItem = { kind: 'pillar', id: newPillar.id, floor: state.currentFloor };
+            saveHistorySnapshot();
+            showToast('独立柱を配置しました');
+            return;
+        }
+        const ft = FIXTURE_TYPES[state.subFixtureType];
+        const newFx = {
+            id: uid(),
+            type: state.subFixtureType,
+            x: snappedX,
+            y: snappedY,
+            w: ft.wP,
+            h: ft.hP,
+            rot: 0
+        };
+        fl.fixtures.push(newFx);
+        state.selectedItem = { kind: 'fixture', id: newFx.id, floor: state.currentFloor };
+        saveHistorySnapshot();
+        showToast(`${ft.label} を配置しました（角ドラッグでサイズ変更可能）`);
+    } else if (state.activeTool === 'pen') {
+        if (state.subStampSymbol) {
+            fl.stamps.push({
+                id: uid(),
+                text: state.subStampSymbol,
+                x: worldPos.x,
+                y: worldPos.y,
+                color: state.subPenColor
+            });
+            saveHistorySnapshot();
+        } else {
+            const newStroke = {
+                id: uid(),
+                color: state.subPenColor,
+                size: state.subPenSize,
+                points: [{ x: worldPos.x, y: worldPos.y, p: e.pressure || 0.5 }]
+            };
+            fl.strokes.push(newStroke);
+            state.dragAction = { type: 'pen', stroke: newStroke };
+            request2DRedraw();
+        }
+    } else if (state.activeTool === 'eraser') {
+        eraseAtPoint(worldPos.x, worldPos.y);
+        state.dragAction = { type: 'eraser' };
+    }
+});
+
+// --- Unified Hit-Test for Selecting, Moving, and Resizing Openings, Fixtures, Pillars, and Rooms ---
+function tryStartSelectOrModifyInteraction(wx, wy, onlyHitExistingOfSameToolType = false) {
+    const fl = state.floors[state.currentFloor];
+    const selObj = findSelectedObject();
+    const tol = 0.38;
+
+    // 1. Check active selection's resize handles first
+    if (selObj && state.selectedItem.floor === state.currentFloor) {
+        if (state.selectedItem.kind === 'room' || state.selectedItem.kind === 'fixture') {
+            const corners = [
+                { name: 'tl', cx: selObj.x, cy: selObj.y },
+                { name: 'tr', cx: selObj.x + selObj.w, cy: selObj.y },
+                { name: 'bl', cx: selObj.x, cy: selObj.y + selObj.h },
+                { name: 'br', cx: selObj.x + selObj.w, cy: selObj.y + selObj.h }
+            ];
+            for (const c of corners) {
+                if (Math.hypot(wx - c.cx, wy - c.cy) <= tol) {
+                    state.dragAction = { type: 'resize_box', target: selObj, corner: c.name };
+                    return true;
+                }
+            }
+        } else if (state.selectedItem.kind === 'opening') {
+            const halfW = (selObj.widthP || 1.0) / 2;
+            const ends = selObj.orient === 'h'
+                ? [{ x: selObj.x - halfW, y: selObj.y }, { x: selObj.x + halfW, y: selObj.y }]
+                : [{ x: selObj.x, y: selObj.y - halfW }, { x: selObj.x, y: selObj.y + halfW }];
+            for (const endPt of ends) {
+                if (Math.hypot(wx - endPt.x, wy - endPt.y) <= tol) {
+                    state.dragAction = { type: 'resize_opening', opening: selObj };
+                    return true;
+                }
+            }
+        }
+    }
+
+    // 2. Hit-test Openings (Windows & Doors)
+    if (!onlyHitExistingOfSameToolType || state.activeTool === 'opening') {
+        for (let i = fl.openings.length - 1; i >= 0; i--) {
+            const op = fl.openings[i];
+            const halfW = (op.widthP || 1.0) / 2;
+            const hit = op.orient === 'h'
+                ? (Math.abs(wx - op.x) <= halfW + 0.2 && Math.abs(wy - op.y) <= 0.35)
+                : (Math.abs(wy - op.y) <= halfW + 0.2 && Math.abs(wx - op.x) <= 0.35);
+            if (hit) {
+                state.selectedItem = { kind: 'opening', id: op.id, floor: state.currentFloor };
+                state.dragAction = { type: 'move_opening', opening: op };
+                renderPropertyInspector();
+                request2DRedraw();
+                return true;
+            }
+        }
+    }
+
+    // 3. Hit-test Fixtures (Equipment)
+    if (!onlyHitExistingOfSameToolType || state.activeTool === 'fixture') {
+        for (let i = fl.fixtures.length - 1; i >= 0; i--) {
+            const fx = fl.fixtures[i];
+            if (wx >= fx.x && wx <= fx.x + fx.w && wy >= fx.y && wy <= fx.y + fx.h) {
+                state.selectedItem = { kind: 'fixture', id: fx.id, floor: state.currentFloor };
+                state.dragAction = {
+                    type: 'move_box',
+                    target: fx,
+                    offsetX: wx - fx.x,
+                    offsetY: wy - fx.y
+                };
+                renderPropertyInspector();
+                request2DRedraw();
+                return true;
+            }
+        }
+    }
+
+    if (onlyHitExistingOfSameToolType) return false;
+
+    // 4. Hit-test Standalone Pillars
+    for (let i = fl.pillars.length - 1; i >= 0; i--) {
+        const pl = fl.pillars[i];
+        if (Math.hypot(wx - pl.x, wy - pl.y) <= 0.38) {
+            state.selectedItem = { kind: 'pillar', id: pl.id, floor: state.currentFloor };
+            state.dragAction = { type: 'move_pillar', pillar: pl };
+            renderPropertyInspector();
+            request2DRedraw();
+            return true;
+        }
+    }
+
+    // 5. Hit-test Rooms
+    for (let i = fl.rooms.length - 1; i >= 0; i--) {
+        const rm = fl.rooms[i];
+        if (wx >= rm.x && wx <= rm.x + rm.w && wy >= rm.y && wy <= rm.y + rm.h) {
+            state.selectedItem = { kind: 'room', id: rm.id, floor: state.currentFloor };
+            state.dragAction = {
+                type: 'move_box',
+                target: rm,
+                offsetX: wx - rm.x,
+                offsetY: wy - rm.y
+            };
+            renderPropertyInspector();
+            request2DRedraw();
+            return true;
+        }
+    }
+
+    state.selectedItem = null;
+    renderPropertyInspector();
+    request2DRedraw();
+    return false;
+}
+
+canvas2d.addEventListener('pointermove', (e) => {
+    if (!state.dragAction) return;
+    e.preventDefault();
+    updatePointerStatusBadge(e);
+
+    const rect = canvas2d.getBoundingClientRect();
+    const sx = e.clientX - rect.left;
+    const sy = e.clientY - rect.top;
+    const worldPos = screenToWorldP(sx, sy);
+    const snappedX = snapP(worldPos.x);
+    const snappedY = snapP(worldPos.y);
+    const minSize = Math.max(0.25, 1 / state.gridDivisions);
+
+    const drag = state.dragAction;
+
+    if (drag.type === 'pan') {
+        const dx = (sx - drag.startSX) / state.cam2d.zoom;
+        const dy = (sy - drag.startSY) / state.cam2d.zoom;
+        state.cam2d.x = drag.origCamX - dx;
+        state.cam2d.y = drag.origCamY - dy;
+        request2DRedraw();
+    } else if (drag.type === 'room') {
+        drag.curX = snappedX;
+        drag.curY = snappedY;
+        if (drag.curX === drag.startX) drag.curX += minSize;
+        if (drag.curY === drag.startY) drag.curY += minSize;
+        request2DRedraw();
+    } else if (drag.type === 'wall') {
+        const dx = Math.abs(snappedX - drag.startX);
+        const dy = Math.abs(snappedY - drag.startY);
+        if (dx >= dy) {
+            drag.curX = snappedX;
+            drag.curY = drag.startY;
+        } else {
+            drag.curX = drag.startX;
+            drag.curY = snappedY;
+        }
+        request2DRedraw();
+    } else if (drag.type === 'pen') {
+        drag.stroke.points.push({ x: worldPos.x, y: worldPos.y, p: e.pressure || 0.5 });
+        request2DRedraw();
+    } else if (drag.type === 'eraser') {
+        eraseAtPoint(worldPos.x, worldPos.y);
+    } else if (drag.type === 'move_box') {
+        const t = drag.target;
+        t.x = snapP(worldPos.x - drag.offsetX);
+        t.y = snapP(worldPos.y - drag.offsetY);
+        request2DRedraw();
+        rebuild3DScene();
+        renderPropertyInspector();
+    } else if (drag.type === 'resize_box') {
+        const t = drag.target;
+        if (drag.corner.includes('r')) {
+            t.w = Math.max(minSize, snappedX - t.x);
+        }
+        if (drag.corner.includes('b')) {
+            t.h = Math.max(minSize, snappedY - t.y);
+        }
+        if (drag.corner.includes('l')) {
+            const right = t.x + t.w;
+            const nx = Math.min(right - minSize, snappedX);
+            t.w = right - nx;
+            t.x = nx;
+        }
+        if (drag.corner.includes('t')) {
+            const bottom = t.y + t.h;
+            const ny = Math.min(bottom - minSize, snappedY);
+            t.h = bottom - ny;
+            t.y = ny;
+        }
+        request2DRedraw();
+        rebuild3DScene();
+        renderPropertyInspector();
+    } else if (drag.type === 'move_opening') {
+        const op = drag.opening;
+        const candidate = snapPointToNearestWallEdge(worldPos.x, worldPos.y);
+        if (!checkOpeningOverlap(state.currentFloor, candidate.x, candidate.y, candidate.orient, op.widthP, op.id)) {
+            op.x = candidate.x;
+            op.y = candidate.y;
+            op.orient = candidate.orient;
+            request2DRedraw();
+            rebuild3DScene();
+        }
+    } else if (drag.type === 'resize_opening') {
+        const op = drag.opening;
+        const distFromCenter = op.orient === 'h'
+            ? Math.abs(snappedX - op.x)
+            : Math.abs(snappedY - op.y);
+        const newW = Math.max(0.33, Math.min(4.0, snapP(distFromCenter * 2)));
+        if (!checkOpeningOverlap(state.currentFloor, op.x, op.y, op.orient, newW, op.id)) {
+            op.widthP = newW;
+            request2DRedraw();
+            rebuild3DScene();
+            renderPropertyInspector();
+        }
+    } else if (drag.type === 'move_pillar') {
+        drag.pillar.x = snappedX;
+        drag.pillar.y = snappedY;
+        request2DRedraw();
+        rebuild3DScene();
+    }
+});
+
+canvas2d.addEventListener('pointerup', () => {
+    if (!state.dragAction) return;
+    const drag = state.dragAction;
+    const fl = state.floors[state.currentFloor];
+
+    if (drag.type === 'room') {
+        const x = Math.min(drag.startX, drag.curX);
+        const y = Math.min(drag.startY, drag.curY);
+        const w = Math.abs(drag.curX - drag.startX);
+        const h = Math.abs(drag.curY - drag.startY);
+        if (w >= 0.25 && h >= 0.25) {
+            const newRoom = {
+                id: uid(),
+                type: state.subRoomType,
+                x, y, w, h,
+                customName: ROOM_TYPES[state.subRoomType].label
+            };
+            fl.rooms.push(newRoom);
+            state.selectedItem = { kind: 'room', id: newRoom.id, floor: state.currentFloor };
+            saveHistorySnapshot();
+            showToast(`${newRoom.customName} (${(w * h / 2).toFixed(1)}帖) を作成しました`);
+        }
+    } else if (drag.type === 'wall') {
+        if (drag.startX !== drag.curX || drag.startY !== drag.curY) {
+            fl.walls.push({
+                id: uid(),
+                x1: drag.startX,
+                y1: drag.startY,
+                x2: drag.curX,
+                y2: drag.curY,
+                wallType: state.subWallType
+            });
+            saveHistorySnapshot();
+        }
+    } else if (drag.type !== 'pan') {
+        saveHistorySnapshot();
+    }
+
+    state.dragAction = null;
+    renderSubToolbar();
+    renderPropertyInspector();
+    request2DRedraw();
+});
+
+canvas2d.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    zoom2D(e.deltaY < 0 ? 1.1 : 0.9);
+}, { passive: false });
+
+// --- Selection & Eraser Helpers ---
+function findSelectedObject() {
+    if (!state.selectedItem) return null;
+    const fl = state.floors[state.selectedItem.floor];
+    if (!fl) return null;
+    const id = state.selectedItem.id;
+    if (state.selectedItem.kind === 'room') return fl.rooms.find(r => r.id === id);
+    if (state.selectedItem.kind === 'opening') return fl.openings.find(o => o.id === id);
+    if (state.selectedItem.kind === 'fixture') return fl.fixtures.find(f => f.id === id);
+    if (state.selectedItem.kind === 'pillar') return fl.pillars.find(p => p.id === id);
+    return null;
+}
+
+function renameSelectedRoom() {
+    const rm = findSelectedObject();
+    if (!rm) return;
+    const presets = ['LDK', '主寝室', '洋室A', '洋室B', '子供室', '書斎', '和室', 'パントリー', 'WIC', '玄関ホール', '玄関ポーチ', 'ビルトインガレージ', '吹抜'];
+    const idx = presets.indexOf(rm.customName);
+    rm.customName = presets[(idx + 1) % presets.length];
+    saveHistorySnapshot();
+    showToast(`部屋名を「${rm.customName}」に変更しました`);
+}
+
+function deleteSelectedItem() {
+    if (!state.selectedItem) return;
+    const fl = state.floors[state.selectedItem.floor];
+    const id = state.selectedItem.id;
+    const kind = state.selectedItem.kind;
+    if (kind === 'room') fl.rooms = fl.rooms.filter(r => r.id !== id);
+    else if (kind === 'opening') fl.openings = fl.openings.filter(o => o.id !== id);
+    else if (kind === 'fixture') fl.fixtures = fl.fixtures.filter(f => f.id !== id);
+    else if (kind === 'pillar') fl.pillars = fl.pillars.filter(p => p.id !== id);
+
+    state.selectedItem = null;
+    saveHistorySnapshot();
+    showToast('選択した要素を削除しました');
+}
+
+function eraseAtPoint(wx, wy) {
+    const fl = state.floors[state.currentFloor];
+    let erased = false;
+
+    const beforeStamps = fl.stamps.length;
+    fl.stamps = fl.stamps.filter(sp => Math.hypot(wx - sp.x, wy - sp.y) > 0.5);
+    if (fl.stamps.length !== beforeStamps) erased = true;
+
+    const beforeStrokes = fl.strokes.length;
+    fl.strokes = fl.strokes.filter(st => !st.points.some(pt => Math.hypot(wx - pt.x, wy - pt.y) < 0.4));
+    if (fl.strokes.length !== beforeStrokes) erased = true;
+
+    const beforeOps = fl.openings.length;
+    fl.openings = fl.openings.filter(op => Math.hypot(wx - op.x, wy - op.y) > 0.5);
+    if (fl.openings.length !== beforeOps) erased = true;
+
+    const beforePillars = fl.pillars.length;
+    fl.pillars = fl.pillars.filter(pl => Math.hypot(wx - pl.x, wy - pl.y) > 0.45);
+    if (fl.pillars.length !== beforePillars) erased = true;
+
+    const beforeFix = fl.fixtures.length;
+    fl.fixtures = fl.fixtures.filter(fx => !(wx >= fx.x && wx <= fx.x + fx.w && wy >= fx.y && wy <= fx.y + fx.h));
+    if (fl.fixtures.length !== beforeFix) erased = true;
+
+    const beforeWalls = fl.walls.length;
+    fl.walls = fl.walls.filter(wl => {
+        const mx = (wl.x1 + wl.x2) / 2;
+        const my = (wl.y1 + wl.y2) / 2;
+        return Math.hypot(wx - mx, wy - my) > 0.6;
+    });
+    if (fl.walls.length !== beforeWalls) erased = true;
+
+    if (!erased) {
+        for (let i = fl.rooms.length - 1; i >= 0; i--) {
+            const rm = fl.rooms[i];
+            if (wx >= rm.x && wx <= rm.x + rm.w && wy >= rm.y && wy <= rm.y + rm.h) {
+                fl.rooms.splice(i, 1);
+                erased = true;
+                break;
+            }
+        }
+    }
+
+    if (erased) {
+        state.selectedItem = null;
+        renderPropertyInspector();
+        request2DRedraw();
+        rebuild3DScene();
+    }
+}
+
+function clearCurrentFloorStrokes() {
+    const fl = state.floors[state.currentFloor];
+    fl.strokes = [];
+    fl.stamps = [];
+    saveHistorySnapshot();
+    showToast(`${state.currentFloor}F の手書き赤ペン・スタンプを消去しました`);
+}
+
+// ============================================================================
+// REAL-TIME AREA (1F / 2F / 3F) & WALL ALIGNMENT CALCULATIONS
+// ============================================================================
+
+function updateAllMetricsAnd3D() {
+    ensureFloorsStructure();
+    const pitchM = state.modulePitch / 1000;
+    const calcFloorAreaM2 = (flNum) => {
+        let sum = 0;
+        state.floors[flNum].rooms.forEach(rm => {
+            if (rm.type !== 'VOID' && rm.type !== 'BALCONY' && rm.type !== 'PORCH') {
+                sum += (rm.w * pitchM) * (rm.h * pitchM);
+            }
+        });
+        return sum;
+    };
+
+    const a1 = calcFloorAreaM2(1);
+    const a2 = calcFloorAreaM2(2);
+    const a3 = calcFloorAreaM2(3);
+    const total = a1 + a2 + a3;
+    const toTsubo = (m2) => m2 / 3.305785;
+
+    document.getElementById('area1F_m2').textContent = `${a1.toFixed(1)}㎡`;
+    document.getElementById('area1F_tsubo').textContent = `${toTsubo(a1).toFixed(1)}坪`;
+    document.getElementById('area2F_m2').textContent = `${a2.toFixed(1)}㎡`;
+    document.getElementById('area2F_tsubo').textContent = `${toTsubo(a2).toFixed(1)}坪`;
+    document.getElementById('area3F_m2').textContent = `${a3.toFixed(1)}㎡`;
+    document.getElementById('area3F_tsubo').textContent = `${toTsubo(a3).toFixed(1)}坪`;
+    document.getElementById('areaTotal_m2').textContent = `${total.toFixed(1)}㎡`;
+    document.getElementById('areaTotal_tsubo').textContent = `${toTsubo(total).toFixed(1)}坪`;
+
+    const ratio = computeWallAlignmentRatio();
+    const elChokka = document.getElementById('chokkaritsuVal');
+    elChokka.textContent = `${ratio}%`;
+    elChokka.className = ratio >= 60 ? 'mono-num text-emerald-400' : 'mono-num text-amber-400';
+
+    request2DRedraw();
+    rebuild3DScene();
+}
+
+function extractUnitWallSegments(flNum) {
+    const set = new Set();
+    const fl = state.floors[flNum];
+    fl.rooms.forEach(rm => {
+        if (rm.type === 'VOID' || rm.type === 'PORCH') return;
+        const stepsW = Math.max(1, Math.round(rm.w * 2));
+        const stepsH = Math.max(1, Math.round(rm.h * 2));
+        for (let i = 0; i < stepsW; i++) {
+            const x1 = (rm.x + i * 0.5).toFixed(1);
+            const x2 = (rm.x + (i + 1) * 0.5).toFixed(1);
+            set.add(`H:${x1},${x2}@${rm.y.toFixed(1)}`);
+            set.add(`H:${x1},${x2}@${(rm.y + rm.h).toFixed(1)}`);
+        }
+        for (let j = 0; j < stepsH; j++) {
+            const y1 = (rm.y + j * 0.5).toFixed(1);
+            const y2 = (rm.y + (j + 1) * 0.5).toFixed(1);
+            set.add(`V:${y1},${y2}@${rm.x.toFixed(1)}`);
+            set.add(`V:${y1},${y2}@${(rm.x + rm.w).toFixed(1)}`);
+        }
+    });
+    return set;
+}
+
+function computeWallAlignmentRatio() {
+    const seg1 = extractUnitWallSegments(1);
+    const seg2 = extractUnitWallSegments(2);
+    if (seg2.size === 0) return 100;
+    let matched = 0;
+    seg2.forEach(s => { if (seg1.has(s)) matched++; });
+    return Math.round((matched / seg2.size) * 100);
+}
+
+// ============================================================================
+// 3D WHITE ARCHITECTURAL MODEL ENGINE (THREE.JS WITH OPENING CUTOUTS & NO WALL PILLARS)
+// ============================================================================
+
+const canvas3d = document.getElementById('canvas3d');
+let scene3d, camera3d, renderer3d, buildingGroup, sunLight, ambientLight, hemiLight;
+
+const orbit = {
+    theta: Math.PI * 0.22,
+    phi: Math.PI * 0.30,
+    radius: 17.5,
+    target: new THREE.Vector3(3.0, 2.5, 3.0),
+    isDown: false,
+    mode: 'orbit',
+    lastX: 0,
+    lastY: 0,
+    pinchDist: 0
+};
+
+function init3DEngine() {
+    scene3d = new THREE.Scene();
+
+    camera3d = new THREE.PerspectiveCamera(42, 1, 0.1, 220);
+    renderer3d = new THREE.WebGLRenderer({ canvas: canvas3d, antialias: true, alpha: true });
+    renderer3d.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer3d.shadowMap.enabled = true;
+    renderer3d.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    // Clean Studio White Model Lighting
+    ambientLight = new THREE.AmbientLight(0xffffff, 0.58);
+    scene3d.add(ambientLight);
+
+    hemiLight = new THREE.HemisphereLight(0xffffff, 0xcbd5e1, 0.35);
+    hemiLight.position.set(0, 30, 0);
+    scene3d.add(hemiLight);
+
+    sunLight = new THREE.DirectionalLight(0xffffff, 0.78);
+    sunLight.position.set(14, 26, 16);
+    sunLight.castShadow = true;
+    sunLight.shadow.mapSize.width = 2048;
+    sunLight.shadow.mapSize.height = 2048;
+    sunLight.shadow.camera.near = 0.5;
+    sunLight.shadow.camera.far = 65;
+    const d = 16;
+    sunLight.shadow.camera.left = -d;
+    sunLight.shadow.camera.right = d;
+    sunLight.shadow.camera.top = d;
+    sunLight.shadow.camera.bottom = -d;
+    sunLight.shadow.bias = -0.0005;
+    scene3d.add(sunLight);
+
+    // Architectural Presentation Baseboard (Clean Light Gray)
+    const groundGeo = new THREE.PlaneGeometry(70, 70);
+    const groundMat = new THREE.MeshLambertMaterial({ color: 0xe2e8f0 });
+    const groundMesh = new THREE.Mesh(groundGeo, groundMat);
+    groundMesh.rotation.x = -Math.PI / 2;
+    groundMesh.position.y = -0.08;
+    groundMesh.receiveShadow = true;
+    scene3d.add(groundMesh);
+
+    const gridHelper = new THREE.GridHelper(32, 32, 0x94a3b8, 0xcbd5e1);
+    gridHelper.position.set(3, -0.06, 3);
+    scene3d.add(gridHelper);
+
+    buildingGroup = new THREE.Group();
+    scene3d.add(buildingGroup);
+
+    setup3DPointerControls();
+    update3DCameraTransform();
+}
+
+function update3DCameraTransform() {
+    if (!camera3d) return;
+    orbit.phi = Math.max(0.08, Math.min(Math.PI * 0.48, orbit.phi));
+    orbit.radius = Math.max(1.5, Math.min(48, orbit.radius));
+
+    const x = orbit.target.x + orbit.radius * Math.sin(orbit.phi) * Math.sin(orbit.theta);
+    const y = orbit.target.y + orbit.radius * Math.cos(orbit.phi);
+    const z = orbit.target.z + orbit.radius * Math.sin(orbit.phi) * Math.cos(orbit.theta);
+
+    camera3d.position.set(x, y, z);
+    camera3d.lookAt(orbit.target);
+}
+
+function setup3DPointerControls() {
+    const activePointers = new Map();
+
+    canvas3d.addEventListener('pointerdown', (e) => {
+        canvas3d.setPointerCapture(e.pointerId);
+        activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        orbit.isDown = true;
+        orbit.lastX = e.clientX;
+        orbit.lastY = e.clientY;
+        orbit.mode = (e.button === 2 || e.button === 1 || activePointers.size >= 2) ? 'pan' : 'orbit';
+
+        if (activePointers.size === 2) {
+            const pts = Array.from(activePointers.values());
+            orbit.pinchDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+        }
+    });
+
+    canvas3d.addEventListener('pointermove', (e) => {
+        if (!activePointers.has(e.pointerId)) return;
+        activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+        if (activePointers.size === 2) {
+            const pts = Array.from(activePointers.values());
+            const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+            if (orbit.pinchDist > 0) {
+                orbit.radius += (orbit.pinchDist - dist) * 0.04;
+                update3DCameraTransform();
+            }
+            orbit.pinchDist = dist;
+            return;
+        }
+
+        if (!orbit.isDown) return;
+        const dx = e.clientX - orbit.lastX;
+        const dy = e.clientY - orbit.lastY;
+        orbit.lastX = e.clientX;
+        orbit.lastY = e.clientY;
+
+        if (orbit.mode === 'orbit') {
+            orbit.theta -= dx * 0.007;
+            orbit.phi -= dy * 0.007;
+        } else {
+            const panScale = orbit.radius * 0.0018;
+            orbit.target.x -= dx * Math.cos(orbit.theta) * panScale;
+            orbit.target.z += dx * Math.sin(orbit.theta) * panScale;
+            orbit.target.y += dy * panScale;
+        }
+        update3DCameraTransform();
+    });
+
+    const endPointer = (e) => {
+        activePointers.delete(e.pointerId);
+        if (activePointers.size === 0) orbit.isDown = false;
+    };
+    canvas3d.addEventListener('pointerup', endPointer);
+    canvas3d.addEventListener('pointercancel', endPointer);
+    canvas3d.addEventListener('contextmenu', e => e.preventDefault());
+
+    canvas3d.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        orbit.radius *= (e.deltaY > 0 ? 1.1 : 0.9);
+        update3DCameraTransform();
+    }, { passive: false });
+}
+
+function set3DCameraPreset(preset) {
+    if (preset === 'bird') {
+        orbit.target.set(3.0, 2.2, 3.0);
+        orbit.theta = Math.PI * 0.22;
+        orbit.phi = Math.PI * 0.28;
+        orbit.radius = 17.5;
+    } else if (preset === 'exterior') {
+        orbit.target.set(3.0, 2.8, 3.0);
+        orbit.theta = Math.PI * 0.14;
+        orbit.phi = Math.PI * 0.45;
+        orbit.radius = 16.0;
+    } else if (preset === 'interior') {
+        const focusFloorY = state.floorDisplay3D === '2f' ? 3.8 : (state.floorDisplay3D === '3f' ? 6.4 : 1.4);
+        orbit.target.set(2.8, focusFloorY, 2.5);
+        orbit.theta = -Math.PI * 0.35;
+        orbit.phi = Math.PI * 0.46;
+        orbit.radius = 3.0;
+    }
+    update3DCameraTransform();
+}
+
+function set3DFloorDisplay(mode) {
+    state.floorDisplay3D = mode;
+    ['all', '1f', '2f', '3f'].forEach(m => {
+        const btn = document.getElementById('btn3DMode_' + m);
+        if (btn) {
+            btn.className = (m === mode)
+                ? 'px-2 py-1 rounded text-[11px] font-bold bg-blue-600 text-white shadow transition'
+                : 'px-2 py-1 rounded text-[11px] font-bold text-slate-300 hover:text-white transition';
+        }
+    });
+    rebuild3DScene();
+    const names = { 'all': '全て表示 (1F〜3F)', '1f': '1階のみ', '2f': '2階のみ', '3f': '3階のみ' };
+    showToast(`3Dホワイトモデル表示を「${names[mode]}」に切り替えました`);
+}
+
+function toggle3DRoof() {
+    state.showRoof3D = !state.showRoof3D;
+    const lbl = document.getElementById('lbl3DRoof');
+    lbl.textContent = state.showRoof3D ? 'ON (ホワイト屋根)' : 'OFF (内部確認)';
+    lbl.className = state.showRoof3D ? 'text-sky-400' : 'text-slate-400';
+    rebuild3DScene();
+}
+
+function updateSunLight(val) {
+    state.sunHour = parseFloat(val);
+    const hrs = Math.floor(state.sunHour);
+    const mins = (state.sunHour % 1) === 0.5 ? '30' : '00';
+    document.getElementById('sunTimeLabel').textContent = `${hrs}:${mins}`;
+
+    const norm = (state.sunHour - 7) / 11;
+    const angle = norm * Math.PI * 0.85 + 0.15;
+    const r = 26;
+    sunLight.position.set(Math.cos(angle) * r, Math.max(5, Math.sin(angle) * r), 15);
+}
+
+// Helper: Add clean architectural white model mesh with subtle edge lines
+function addWhiteModelMesh(geo, mat, x, y, z, addEdges = true) {
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(x, y, z);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+
+    if (addEdges) {
+        const edges = new THREE.EdgesGeometry(geo);
+        const lineMat = new THREE.LineBasicMaterial({ color: 0xcbd5e1, transparent: true, opacity: 0.65 });
+        const wire = new THREE.LineSegments(edges, lineMat);
+        mesh.add(wire);
+    }
+    buildingGroup.add(mesh);
+    return mesh;
+}
+
+// Build a wall segment with exact cutouts for any doors or windows on that wall line
+function buildWallWithOpeningCutouts3D(orient, fixedCoordP, startP, endP, baseY, wallHeight, wallThick, floorOpenings, scaleP, matWall) {
+    const relevantOps = floorOpenings.filter(op => {
+        if (op.orient !== orient) return false;
+        const opFixed = orient === 'h' ? op.y : op.x;
+        if (Math.abs(opFixed - fixedCoordP) > 0.12) return false;
+        const opCenter = orient === 'h' ? op.x : op.y;
+        return opCenter > startP + 0.05 && opCenter < endP - 0.05;
+    }).sort((a, b) => (orient === 'h' ? a.x - b.x : a.y - b.y));
+
+    let cursorP = startP;
+
+    const addSolidSegment = (pA, pB, yBottom, hSeg) => {
+        const lenP = pB - pA;
+        if (lenP <= 0.02 || hSeg <= 0.02) return;
+        const lenM = lenP * scaleP;
+        const midM = ((pA + pB) / 2) * scaleP;
+        const fixedM = fixedCoordP * scaleP;
+
+        if (orient === 'h') {
+            const geo = new THREE.BoxGeometry(lenM + wallThick, hSeg, wallThick);
+            addWhiteModelMesh(geo, matWall, midM, yBottom + hSeg / 2, fixedM, true);
+        } else {
+            const geo = new THREE.BoxGeometry(wallThick, hSeg, lenM + wallThick);
+            addWhiteModelMesh(geo, matWall, fixedM, yBottom + hSeg / 2, midM, true);
+        }
+    };
+
+    relevantOps.forEach(op => {
+        const opCenter = orient === 'h' ? op.x : op.y;
+        const wP = op.widthP || 1.0;
+        const opStart = Math.max(startP, opCenter - wP / 2);
+        const opEnd = Math.min(endP, opCenter + wP / 2);
+
+        // Full-height wall before opening
+        if (opStart > cursorP) {
+            addSolidSegment(cursorP, opStart, baseY, wallHeight);
+        }
+
+        // Sill wall below window (腰壁)
+        const sillM = (op.sillMm || 0) / 1000;
+        const hM = (op.heightMm || 2000) / 1000;
+        if (sillM > 0.02 && wallHeight > sillM) {
+            addSolidSegment(opStart, opEnd, baseY, Math.min(sillM, wallHeight));
+        }
+
+        // Header wall above opening (垂れ壁・まぐさ)
+        const topStart = sillM + hM;
+        if (wallHeight > topStart + 0.02) {
+            addSolidSegment(opStart, opEnd, baseY + topStart, wallHeight - topStart);
+        }
+
+        cursorP = opEnd;
+    });
+
+    // Remaining full-height wall after last opening
+    if (cursorP < endP) {
+        addSolidSegment(cursorP, endP, baseY, wallHeight);
+    }
+}
+
+function rebuild3DScene() {
+    if (!buildingGroup) return;
+    ensureFloorsStructure();
+
+    while (buildingGroup.children.length > 0) {
+        buildingGroup.remove(buildingGroup.children[0]);
+    }
+
+    const scaleP = state.modulePitch / 1000;
+    const wallHeight = 2.55;
+    const slabHeight = 0.18;
+    const wallThick = 0.14;
+
+    // Pure Architectural White Model Materials
+    const matWhiteWall = new THREE.MeshLambertMaterial({ color: 0xffffff });
+    const matWhiteSlab = new THREE.MeshLambertMaterial({ color: 0xf8fafc });
+    const matPorchSlab = new THREE.MeshLambertMaterial({ color: 0xe2e8f0 });
+    const matWhiteFixture = new THREE.MeshLambertMaterial({ color: 0xf1f5f9 });
+    const matGlass = new THREE.MeshLambertMaterial({ color: 0xe0f2fe, transparent: true, opacity: 0.42 });
+    const matDoorPanel = new THREE.MeshLambertMaterial({ color: 0xf8fafc });
+
+    const floorsToBuild = [];
+    if (state.floorDisplay3D === 'all') floorsToBuild.push(1, 2, 3);
+    else if (state.floorDisplay3D === '1f') floorsToBuild.push(1);
+    else if (state.floorDisplay3D === '2f') floorsToBuild.push(2);
+    else if (state.floorDisplay3D === '3f') floorsToBuild.push(3);
+
+    floorsToBuild.forEach(flNum => {
+        const flData = state.floors[flNum];
+        if (!flData) return;
+        const baseY = (flNum - 1) * (wallHeight + slabHeight);
+
+        // 1. Rooms: Unified White Slabs & Continuous White Walls (NO corner columns on walls)
+        flData.rooms.forEach(rm => {
+            const rt = ROOM_TYPES[rm.type] || ROOM_TYPES.LDK;
+            const wM = rm.w * scaleP;
+            const hM = rm.h * scaleP;
+            const cx = (rm.x + rm.w / 2) * scaleP;
+            const cz = (rm.y + rm.h / 2) * scaleP;
+
+            // Floor Slab
+            if (rm.type !== 'VOID') {
+                const slabGeo = new THREE.BoxGeometry(wM, slabHeight, hM);
+                const sMat = rm.type === 'PORCH' ? matPorchSlab : matWhiteSlab;
+                addWhiteModelMesh(slabGeo, sMat, cx, baseY + slabHeight / 2, cz, true);
+            }
+
+            // Continuous Walls with Opening Cutouts (Skip walls for PORCH)
+            if (rt.hasWall) {
+                const hWall = rm.type === 'BALCONY' ? 1.15 : wallHeight;
+                const wY = baseY + slabHeight;
+
+                // North wall (y = rm.y)
+                buildWallWithOpeningCutouts3D('h', rm.y, rm.x, rm.x + rm.w, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall);
+                // South wall (y = rm.y + rm.h)
+                buildWallWithOpeningCutouts3D('h', rm.y + rm.h, rm.x, rm.x + rm.w, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall);
+                // West wall (x = rm.x)
+                buildWallWithOpeningCutouts3D('v', rm.x, rm.y, rm.y + rm.h, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall);
+                // East wall (x = rm.x + rm.w)
+                buildWallWithOpeningCutouts3D('v', rm.x + rm.w, rm.y, rm.y + rm.h, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall);
+            }
+        });
+
+        // 2. Custom Wall Segments
+        flData.walls.forEach(wl => {
+            const dx = (wl.x2 - wl.x1) * scaleP;
+            const dz = (wl.y2 - wl.y1) * scaleP;
+            const len = Math.hypot(dx, dz);
+            if (len < 0.08) return;
+            const wGeo = new THREE.BoxGeometry(Math.abs(dx) || wallThick, wallHeight, Math.abs(dz) || wallThick);
+            addWhiteModelMesh(
+                wGeo,
+                matWhiteWall,
+                ((wl.x1 + wl.x2) / 2) * scaleP,
+                baseY + slabHeight + wallHeight / 2,
+                ((wl.y1 + wl.y2) / 2) * scaleP,
+                true
+            );
+        });
+
+        // 3. Standalone Columns (独立柱: ポーチやバルコニーの脚など単独配置された柱のみ表現)
+        flData.pillars.forEach(pl => {
+            const colSize = (pl.sizeMm || 150) / 1000;
+            const colGeo = new THREE.BoxGeometry(colSize, wallHeight + slabHeight, colSize);
+            addWhiteModelMesh(
+                colGeo,
+                matWhiteWall,
+                pl.x * scaleP,
+                baseY + (wallHeight + slabHeight) / 2,
+                pl.y * scaleP,
+                true
+            );
+        });
+
+        // 4. 3D Doors & Windows Frames inside the Wall Cutouts
+        flData.openings.forEach(op => {
+            const ot = OPENING_TYPES[op.type] || OPENING_TYPES.SWING_DOOR;
+            const wM = (op.widthP || ot.widthP) * scaleP;
+            const hM = (op.heightMm || ot.heightMm) / 1000;
+            const sillM = (op.sillMm || 0) / 1000;
+
+            const isWin = ot.isWin;
+            const boxW = op.orient === 'h' ? wM : 0.06;
+            const boxD = op.orient === 'h' ? 0.06 : wM;
+            const opGeo = new THREE.BoxGeometry(boxW, hM, boxD);
+            addWhiteModelMesh(
+                opGeo,
+                isWin ? matGlass : matDoorPanel,
+                op.x * scaleP,
+                baseY + slabHeight + sillM + hM / 2,
+                op.y * scaleP,
+                true
+            );
+        });
+
+        // 5. Clean White Model 3D Fixtures
+        flData.fixtures.forEach(fx => {
+            const wM = fx.w * scaleP;
+            const dM = fx.h * scaleP;
+            const cx = (fx.x + fx.w / 2) * scaleP;
+            const cz = (fx.y + fx.h / 2) * scaleP;
+            const floorTopY = baseY + slabHeight;
+
+            if (fx.type.startsWith('KITCHEN')) {
+                const kGeo = new THREE.BoxGeometry(wM, 0.85, dM);
+                addWhiteModelMesh(kGeo, matWhiteFixture, cx, floorTopY + 0.425, cz, true);
+            } else if (fx.type.startsWith('STAIR')) {
+                const steps = 12;
+                for (let i = 0; i < steps; i++) {
+                    if (fx.w <= fx.h) {
+                        const sGeo = new THREE.BoxGeometry(wM * 0.92, 0.10, dM / steps);
+                        addWhiteModelMesh(
+                            sGeo,
+                            matWhiteFixture,
+                            cx,
+                            floorTopY + ((i + 0.5) / steps) * (wallHeight + slabHeight),
+                            fx.y * scaleP + ((i + 0.5) / steps) * dM,
+                            true
+                        );
+                    } else {
+                        const sGeo = new THREE.BoxGeometry(wM / steps, 0.10, dM * 0.92);
+                        addWhiteModelMesh(
+                            sGeo,
+                            matWhiteFixture,
+                            fx.x * scaleP + ((i + 0.5) / steps) * wM,
+                            floorTopY + ((i + 0.5) / steps) * (wallHeight + slabHeight),
+                            cz,
+                            true
+                        );
+                    }
+                }
+            } else if (fx.type === 'UB_1616') {
+                const bGeo = new THREE.BoxGeometry(wM * 0.46, 0.55, dM * 0.86);
+                addWhiteModelMesh(bGeo, matWhiteFixture, cx - wM * 0.2, floorTopY + 0.275, cz, true);
+            } else {
+                const tGeo = new THREE.BoxGeometry(wM * 0.75, 0.72, dM * 0.75);
+                addWhiteModelMesh(tGeo, matWhiteFixture, cx, floorTopY + 0.36, cz, true);
+            }
+        });
+    });
+
+    // 6. Optional White Model Roof
+    if (state.showRoof3D) {
+        const topFl = state.floors[3].rooms.length > 0 ? 3 : (state.floors[2].rooms.length > 0 ? 2 : 1);
+        const fl = state.floors[topFl];
+        if (fl && fl.rooms.length > 0) {
+            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+            fl.rooms.forEach(r => {
+                if (r.type === 'BALCONY' || r.type === 'PORCH') return;
+                if (r.x < minX) minX = r.x;
+                if (r.y < minY) minY = r.y;
+                if (r.x + r.w > maxX) maxX = r.x + r.w;
+                if (r.y + r.h > maxY) maxY = r.y + r.h;
+            });
+            if (minX < Infinity) {
+                const roofBaseY = topFl * (wallHeight + slabHeight);
+                const rw = (maxX - minX) * scaleP + 0.7;
+                const rd = (maxY - minY) * scaleP + 0.7;
+                const rcx = ((minX + maxX) / 2) * scaleP;
+                const rcz = ((minY + maxY) / 2) * scaleP;
+
+                const roofGeo = new THREE.ConeGeometry(Math.max(rw, rd) * 0.75, 1.6, 4);
+                const roofMesh = new THREE.Mesh(roofGeo, matWhiteWall);
+                roofMesh.position.set(rcx, roofBaseY + 0.8, rcz);
+                roofMesh.rotation.y = Math.PI / 4;
+                roofMesh.scale.set(rw / Math.max(rw, rd), 1, rd / Math.max(rw, rd));
+                roofMesh.castShadow = true;
+                buildingGroup.add(roofMesh);
+            }
+        }
+    }
+}
+
+// ============================================================================
+// STANDARD AUTOCAD / JW_CAD COMPATIBLE 2D DXF EXPORT (.dxf)
+// ============================================================================
+
+function exportDXF() {
+    const fl = state.floors[state.currentFloor];
+    const pitch = state.modulePitch;
+    let dxf = [];
+
+    const pushCode = (code, val) => {
+        dxf.push(String(code));
+        dxf.push(String(val));
+    };
+
+    pushCode(0, 'SECTION');
+    pushCode(2, 'ENTITIES');
+
+    const addLine = (layer, x1, y1, x2, y2) => {
+        pushCode(0, 'LINE');
+        pushCode(8, layer);
+        pushCode(10, (x1 * pitch).toFixed(2));
+        pushCode(20, (-y1 * pitch).toFixed(2));
+        pushCode(30, '0.0');
+        pushCode(11, (x2 * pitch).toFixed(2));
+        pushCode(21, (-y2 * pitch).toFixed(2));
+        pushCode(31, '0.0');
+    };
+
+    const addText = (layer, x, y, height, textStr) => {
+        pushCode(0, 'TEXT');
+        pushCode(8, layer);
+        pushCode(10, (x * pitch).toFixed(2));
+        pushCode(20, (-y * pitch).toFixed(2));
+        pushCode(30, '0.0');
+        pushCode(40, height.toFixed(1));
+        pushCode(1, textStr);
+    };
+
+    fl.rooms.forEach(rm => {
+        addLine('WALL', rm.x, rm.y, rm.x + rm.w, rm.y);
+        addLine('WALL', rm.x + rm.w, rm.y, rm.x + rm.w, rm.y + rm.h);
+        addLine('WALL', rm.x + rm.w, rm.y + rm.h, rm.x, rm.y + rm.h);
+        addLine('WALL', rm.x, rm.y + rm.h, rm.x, rm.y);
+
+        const title = rm.customName || ROOM_TYPES[rm.type].label;
+        const jyo = ((rm.w * rm.h) / 2).toFixed(1);
+        addText('ROOM_TEXT', rm.x + rm.w * 0.25, rm.y + rm.h * 0.5, 180, `${title} (${jyo}J)`);
+    });
+
+    fl.walls.forEach(wl => {
+        addLine('WALL', wl.x1, wl.y1, wl.x2, wl.y2);
+    });
+
+    fl.openings.forEach(op => {
+        const wP = (op.widthP || 1.0) / 2;
+        if (op.orient === 'h') {
+            addLine('DOOR_WIN', op.x - wP, op.y, op.x + wP, op.y);
+        } else {
+            addLine('DOOR_WIN', op.x, op.y - wP, op.x, op.y + wP);
+        }
+    });
+
+    pushCode(0, 'ENDSEC');
+    pushCode(0, 'EOF');
+
+    const blob = new Blob([dxf.join('\r\n')], { type: 'application/dxf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `SpeedPlanner_${state.currentFloor}F_${state.modulePitch}mm.dxf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showToast(`${state.currentFloor}F 平面図を DXF形式 (実寸mm座標) で出力しました`);
+}
+
+// --- JSON Save & Load ---
+function exportJSON() {
+    const data = JSON.stringify({ modulePitch: state.modulePitch, gridDivisions: state.gridDivisions, floors: state.floors }, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'speedplanner_white3d.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('プロジェクトJSONを保存しました');
+}
+
+function importJSON(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        try {
+            const parsed = JSON.parse(ev.target.result);
+            if (parsed.floors) {
+                state.floors = parsed.floors;
+                ensureFloorsStructure();
+                if (parsed.modulePitch) setModulePitch(parsed.modulePitch);
+                if (parsed.gridDivisions) setGridDivision(parsed.gridDivisions);
+                saveHistorySnapshot();
+                closePresetModal();
+                showToast('プロジェクトJSONを読み込みました');
+            }
+        } catch (err) {
+            showToast('JSONファイルの形式が正しくありません', true);
+        }
+    };
+    reader.readAsText(file);
+}
+
+// --- Modal Controls ---
+function openPresetModal() {
+    const m = document.getElementById('presetModal');
+    m.classList.remove('hidden');
+    m.classList.add('flex');
+}
+function closePresetModal() {
+    const m = document.getElementById('presetModal');
+    m.classList.add('hidden');
+    m.classList.remove('flex');
+}
+
+// --- Window Resize & Render Loop ---
+function handleResize() {
+    request2DRedraw();
+    if (renderer3d && camera3d) {
+        const rect3d = canvas3d.getBoundingClientRect();
+        if (rect3d.width > 0 && rect3d.height > 0) {
+            renderer3d.setSize(rect3d.width, rect3d.height, false);
+            camera3d.aspect = rect3d.width / rect3d.height;
+            camera3d.updateProjectionMatrix();
+        }
+    }
+}
+
+window.addEventListener('resize', handleResize);
+
+function animateLoop() {
+    requestAnimationFrame(animateLoop);
+    if (needs2DRedraw && state.viewMode !== '3d') {
+        draw2DCanvas();
+        needs2DRedraw = false;
+    }
+    if (renderer3d && scene3d && camera3d && state.viewMode !== '2d') {
+        renderer3d.render(scene3d, camera3d);
+    }
+}
+
+window.onload = function () {
+    init3DEngine();
+    updateSnapSelectLabels();
+    renderSubToolbar();
+    loadSampleHousePlan();
+    handleResize();
+    animateLoop();
+};
+</script>
+</body>
+</html>

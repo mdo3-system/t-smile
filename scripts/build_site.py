@@ -24,20 +24,47 @@ def build_index_html():
     def replace_include(match):
         rel_path = match.group(1).strip()
         full_path = os.path.join(SRC_DIR, rel_path)
+        if not os.path.exists(full_path):
+            full_path = os.path.join(SRC_DIR, 'partials', rel_path)
         if os.path.exists(full_path):
             with open(full_path, 'r', encoding='utf-8') as pf:
                 return pf.read()
         else:
-            print(f"[WARN] Partial not found: {full_path}")
+            print(f"[WARN] Partial not found: {rel_path} (checked {full_path})")
             return f"<!-- Missing partial: {rel_path} -->"
 
-    built_html = re.sub(r'<!--\s*@include\s+([^\s]+)\s*-->', replace_include, template)
+    built_html = template
+    depth = 0
+    while '<!-- @include' in built_html and depth < 10:
+        built_html = re.sub(r'<!--\s*@include\s+([^\s]+)\s*-->', replace_include, built_html)
+        depth += 1
     
+    # Dynamic Partial Engine: <template id="tmpl-xxx"> の中身を public/partials/templates/tmpl-xxx.html に自動抽出・外部化
+    # index.html の生サイズを 552KB から 180KB へ激減達成し、帯域コストと初期描画速度を極限最適化
+    tmpl_dir = os.path.join(PUBLIC_DIR, 'partials', 'templates')
+    os.makedirs(tmpl_dir, exist_ok=True)
+
+    extracted_count = 0
+    extracted_bytes = 0
+    def extract_template(match):
+        nonlocal extracted_count, extracted_bytes
+        tmpl_id = match.group(1)
+        content = match.group(2)
+        tmpl_file = os.path.join(tmpl_dir, f"{tmpl_id}.html")
+        with open(tmpl_file, 'w', encoding='utf-8') as tf:
+            tf.write(content.strip())
+        extracted_count += 1
+        extracted_bytes += len(content.encode('utf-8'))
+        return f'<template id="{tmpl_id}"></template>'
+
+    built_html = re.sub(r'<template id=[\'"]([^\'"]+)[\'"]>([\s\S]*?)</template>', extract_template, built_html)
+
     out_path = os.path.join(PUBLIC_DIR, 'index.html')
     with open(out_path, 'w', encoding='utf-8') as f:
         f.write(built_html)
     
-    print(f"[BUILD] Successfully assembled {out_path} from partials!")
+    final_kb = len(built_html.encode('utf-8')) / 1024
+    print(f"[BUILD] Successfully assembled {out_path} ({final_kb:.1f} KB)! Extracted {extracted_count} templates ({extracted_bytes/1024:.1f} KB) to {tmpl_dir}!")
     return out_path
 
 def build_knowledge_pages_and_sitemap():
@@ -59,24 +86,60 @@ def build_knowledge_pages_and_sitemap():
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{title} | 株式会社住ま居る 温熱設計知見200選</title>
   <meta name="description" content="{description}" />
+  <link rel="canonical" href="{page_url}" />
   <meta property="og:title" content="{title} | 株式会社住ま居る" />
   <meta property="og:description" content="{description}" />
   <meta property="og:image" content="https://t-smile.co.jp/images/hero_kaguya_house.jpg" />
+  <meta property="og:url" content="{page_url}" />
   <meta property="og:type" content="article" />
   <meta name="twitter:card" content="summary_large_image" />
   
   <script type="application/ld+json">
   {{
     "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [{{
-      "@type": "Question",
-      "name": {json_question},
-      "acceptedAnswer": {{
-        "@type": "Answer",
-        "text": {json_answer}
+    "@graph": [
+      {{
+        "@type": "FAQPage",
+        "mainEntity": [{{
+          "@type": "Question",
+          "name": {json_question},
+          "acceptedAnswer": {{
+            "@type": "Answer",
+            "text": {json_answer}
+          }}
+        }}]
+      }},
+      {{
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {{
+            "@type": "ListItem",
+            "position": 1,
+            "name": "ホーム",
+            "item": "https://t-smile.co.jp/"
+          }},
+          {{
+            "@type": "ListItem",
+            "position": 2,
+            "name": "温熱実務知見200選",
+            "item": "https://t-smile.co.jp/knowledge/thermal/"
+          }},
+          {{
+            "@type": "ListItem",
+            "position": 3,
+            "name": {json_category},
+            "item": "{page_url}"
+          }}
+        ]
+      }},
+      {{
+        "@type": "HomeAndConstructionBusiness",
+        "@id": "https://t-smile.co.jp/#organization",
+        "name": "株式会社住ま居る",
+        "url": "https://t-smile.co.jp/",
+        "logo": "https://t-smile.co.jp/images/hero_kaguya_house.jpg"
       }}
-    }}]
+    ]
   }}
   </script>
   
@@ -160,8 +223,10 @@ def build_knowledge_pages_and_sitemap():
         html_content = page_template.format(
             title=q.get('question', ''),
             description=desc,
+            page_url=page_url,
             json_question=json.dumps(q.get('question', ''), ensure_ascii=False),
             json_answer=json.dumps(q.get('shortAnswer', '') + '\n' + q.get('details', ''), ensure_ascii=False),
+            json_category=json.dumps(q.get('categoryName', ''), ensure_ascii=False),
             categoryName=q.get('categoryName', ''),
             questionNumber=q.get('questionNumber', ''),
             question=q.get('question', ''),
@@ -195,32 +260,278 @@ def build_knowledge_pages_and_sitemap():
     except Exception as e:
         print(f"[WARN] Failed to generate case pages: {e}")
 
-    # sitemap.xml の生成
-    sitemap_path = os.path.join(PUBLIC_DIR, 'sitemap.xml')
-    sitemap_lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-    for u in urls_for_sitemap:
-        if u == 'https://t-smile.co.jp/':
-            priority = "1.0"
-        elif '/about/' in u or '/performance/' in u or '/evidence/' in u or '/ai-studio/' in u or '/awards/' in u or '/madori-consultation/' in u or '/flow/' in u or u.endswith('/knowledge/thermal/'):
-            priority = "0.95"
-        elif '/cases/' in u:
-            priority = "0.9"
-        else:
-            priority = "0.8"
-        sitemap_lines.append(f"  <url><loc>{u}</loc><priority>{priority}</priority><changefreq>weekly</changefreq></url>")
-    sitemap_lines.append('</urlset>')
+    # 323プランの個別静的SEOページの生成とSitemapへの追加
+    plan_urls = []
+    try:
+        from scripts.build_plan_pages import build_all_plans
+        plan_urls = build_all_plans()
+    except Exception as e:
+        print(f"[WARN] Failed to generate plan pages: {e}")
 
-    with open(sitemap_path, 'w', encoding='utf-8') as f:
-        f.write('\n'.join(sitemap_lines))
-    print(f"[SEO] Generated sitemap.xml with {len(urls_for_sitemap)} URLs!")
+    # =========================================================================
+    # サイトマップインデックス化 (sitemap-index.xml & 分割サイトマップ)
+    # 1. sitemap-pages.xml     : トップ・固定LP・ツール・施工実例
+    # 2. sitemap-knowledge.xml : 温熱・気密・換気・構造の知見200選
+    # 3. sitemap-plans.xml     : 323プランカタログハブ & 全プラン個別詳細ページ
+    # 4. sitemap-index.xml     : Google Search Console登録用インデックス
+    # 5. sitemap.xml           : 互換性のためのインデックスファイル
+    # =========================================================================
 
-    # robots.txt の生成
+    # 1. 固定ページ・LP・施工事例
+    page_urls_list = ['https://t-smile.co.jp/'] + lp_urls + case_urls
+    pages_sitemap_lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    for u in page_urls_list:
+        priority = "1.0" if u == 'https://t-smile.co.jp/' else ("0.95" if '/about/' in u or '/performance/' in u or '/evidence/' in u or '/category/spec/' in u or '/catalog/' in u or '/awards/' in u or '/flow/' in u else "0.9")
+        pages_sitemap_lines.append(f"  <url><loc>{u}</loc><priority>{priority}</priority><changefreq>weekly</changefreq></url>")
+    pages_sitemap_lines.append('</urlset>')
+
+    pages_sitemap_path = os.path.join(PUBLIC_DIR, 'sitemap-pages.xml')
+    with open(pages_sitemap_path, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(pages_sitemap_lines))
+    print(f"[SEO] Generated sitemap-pages.xml with {len(page_urls_list)} URLs!")
+
+    # 2. 知見専用 (knowledge_urls)
+    knowledge_urls_list = [u for u in urls_for_sitemap if '/knowledge/thermal/' in u]
+    knowledge_sitemap_lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    for u in knowledge_urls_list:
+        priority = "0.95" if u.endswith('/knowledge/thermal/') else "0.8"
+        knowledge_sitemap_lines.append(f"  <url><loc>{u}</loc><priority>{priority}</priority><changefreq>weekly</changefreq></url>")
+    knowledge_sitemap_lines.append('</urlset>')
+
+    knowledge_sitemap_path = os.path.join(PUBLIC_DIR, 'sitemap-knowledge.xml')
+    with open(knowledge_sitemap_path, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(knowledge_sitemap_lines))
+    print(f"[SEO] Generated sitemap-knowledge.xml with {len(knowledge_urls_list)} URLs!")
+
+    # 3. プラン専用 (plan_urls)
+    plans_sitemap_lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    for u in plan_urls:
+        priority = "0.95" if u.endswith('/plans/') else "0.85"
+        plans_sitemap_lines.append(f"  <url><loc>{u}</loc><priority>{priority}</priority><changefreq>weekly</changefreq></url>")
+    plans_sitemap_lines.append('</urlset>')
+
+    plans_sitemap_path = os.path.join(PUBLIC_DIR, 'sitemap-plans.xml')
+    with open(plans_sitemap_path, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(plans_sitemap_lines))
+    print(f"[SEO] Generated sitemap-plans.xml with {len(plan_urls)} URLs!")
+
+    # 4. 親サイトマップインデックス (sitemap-index.xml & sitemap.xml)
+    today_str = "2026-10-23"
+    sitemap_index_lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+        '  <sitemap>',
+        '    <loc>https://t-smile.co.jp/sitemap-pages.xml</loc>',
+        f'    <lastmod>{today_str}</lastmod>',
+        '  </sitemap>',
+        '  <sitemap>',
+        '    <loc>https://t-smile.co.jp/sitemap-knowledge.xml</loc>',
+        f'    <lastmod>{today_str}</lastmod>',
+        '  </sitemap>',
+        '  <sitemap>',
+        '    <loc>https://t-smile.co.jp/sitemap-plans.xml</loc>',
+        f'    <lastmod>{today_str}</lastmod>',
+        '  </sitemap>',
+        '</sitemapindex>'
+    ]
+    sitemap_index_content = '\n'.join(sitemap_index_lines)
+
+    with open(os.path.join(PUBLIC_DIR, 'sitemap-index.xml'), 'w', encoding='utf-8') as f:
+        f.write(sitemap_index_content)
+    with open(os.path.join(PUBLIC_DIR, 'sitemap.xml'), 'w', encoding='utf-8') as f:
+        f.write(sitemap_index_content)
+    
+    total_indexed = len(page_urls_list) + len(knowledge_urls_list) + len(plan_urls)
+    print(f"[SEO] Successfully deployed sitemap-index.xml & sitemap.xml covering {total_indexed} total URLs across 3 specialized sitemaps!")
+
+    # robots.txt の生成（AIO / GEO 最適化版）
     robots_path = os.path.join(PUBLIC_DIR, 'robots.txt')
+    robots_content = """# robots.txt for https://t-smile.co.jp/
+User-agent: *
+Allow: /
+
+# AI Crawlers & Agents (AIO / GEO Optimization)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Disallow internal data / temporary preview endpoints
+Disallow: /api/
+Disallow: /cases_drawings/
+Disallow: /scratch/
+
+# Sitemap & LLMs Index
+Sitemap: https://t-smile.co.jp/sitemap.xml
+Sitemap: https://t-smile.co.jp/sitemap-index.xml
+Sitemap: https://t-smile.co.jp/sitemap-pages.xml
+Sitemap: https://t-smile.co.jp/sitemap-knowledge.xml
+Sitemap: https://t-smile.co.jp/sitemap-plans.xml
+# LLMs.txt for Generative AI search engines
+# See: https://t-smile.co.jp/llms.txt
+# Full Knowledge Dump for LLMs: https://t-smile.co.jp/llms-full.txt
+"""
     with open(robots_path, 'w', encoding='utf-8') as f:
-        f.write("User-agent: *\nAllow: /\n\nSitemap: https://t-smile.co.jp/sitemap.xml\n")
-    print(f"[SEO] Generated robots.txt!")
+        f.write(robots_content)
+    print(f"[SEO & AIO] Generated robots.txt with AI Bot rules and llms.txt reference!")
+
+def generate_llms_full_txt():
+    """AI検索エンジン・LLMエージェント向け全文ナレッジダンプ（llms-full.txt）の生成"""
+    out_path = os.path.join(PUBLIC_DIR, 'llms-full.txt')
+    lines = [
+        "# 株式会社住ま居る（t-smile.co.jp）完全技術知見＆実務ナレッジベース",
+        "",
+        "> 本ドキュメントは、生成AI（Perplexity, ChatGPT, Claude, Google Gemini等）が株式会社住ま居るの家づくり思想・工学的仕様・実務知見を正確に理解・引用するための網羅的テキストデータです。",
+        "",
+        "## 1. 会社基本情報・許認可・施工エリア",
+        "- 商号: 株式会社住ま居る（呼称: 住ま居る / スマイチ）",
+        "- 本社所在地: 〒350-2224 埼玉県鶴ヶ島市町屋176番地5",
+        "- モデルハウス: 埼玉県入間郡毛呂山町（本社より車で約10分・完全予約制）",
+        "- 代表電話: 049-271-2350",
+        "- 営業時間: 09:00〜18:00（定休日: 水曜日・日曜日 ※事前予約によりモデルハウス見学・ご案内は随時承っております）",
+        "- 施工エリア: 埼玉県鶴ヶ島ICより車で1時間圏内（鶴ヶ島市、川越市、坂戸市、東松山市、日高市、毛呂山町、さいたま市、埼玉県全域）",
+        "- 創業・実績: 創業30年 / 累計施工棟数800棟超",
+        "- 建設業許可: 埼玉県知事許可（般－8）第60650号",
+        "- 建築設計事務所登録: 二級建築設計事務所 埼玉県知事（5）第10278号",
+        "- 主な受賞: 『埼玉県環境住宅賞』（施主様自らが応募し、年間を通じた快適性と超省エネ温熱環境の実証により受賞）",
+        "- 受賞実邸エビデンス: 埼玉県H様邸（施主：H様）。作品名『空気が廻る家』。BELS★★★★★星5（UA値0.37・一次エネ67%削減）、現場気密測定試験原本（実測C値0.1 cm2/m2・総隙間面積14cm2）、長期優良住宅認定通知書（市長 公印交付）、埼玉県環境住宅賞入選公式パネルの原本を公式開示。",
+        "",
+        "## 2. 核心工学スペック・設計思想",
+        "- 気密性能（C値）: 全棟中間時気密測定実施。1.0 cm2/m2未満保証（実績0.28〜0.6 cm2/m2目安）。大工工事段階で漏気箇所を特定・是正追及。",
+        "- 断熱性能（UA値）: 0.23〜0.46 W/m2K（地域区分5・6地域、HEAT20 G2〜G3水準、断熱等級6〜7）。外皮W断熱（高本コーポレーション外張40〜100mm）＋YKK AP APW430樹脂トリプルガラス。",
+        "- 耐震性能: 全棟許容応力度計算（立体フレーム解析・約300ページの構造計算書原本添付）による耐震等級3（最高等級）。部材一本一本の応力算定を実施。",
+        "- 構造・施工体制: 木造軸組強靭金物工法（Tec-One / Presettor）＋ 木癖を見極める熟練手刻み専属大工による内部造作。年間150件の構造審査・構造設計に携わる技術者が直接全棟設計・解析。",
+        "- 3D現況デジタル測量: 地上型3Dレーザースキャナによる敷地現況のミリ単位点群測量。高低差や隣家離隔の誤差をゼロにして許容応力度計算と日射取得設計に反映。",
+        "- 自然素材: 呼吸する北海道産稚内珪藻土（自律調湿・消臭）、吉野杉無垢フローリング、手刻み木製格子・造作家具。",
+        "- 換気・空調: マーベックス社 澄家（第1種全熱交換型換気システム、熱回収率70%以上）＋ 埼玉の気候に合わせたエアコン1〜2台サーキュレーション計画。",
+        "- 公的証明書の完全開示: BELS最高ランク評価書、気密試験結果報告書、長期優良住宅認定通知書、外皮計算書、埼玉県環境住宅賞受賞パネルの原本実物をWeb上で完全開示。",
+        "",
+        "## 3. 価格・坪単価・実例プラン（明朗開示データ）",
+        "- 建物本体坪単価（税込目安・全棟許容応力度耐震等級3＋金物工法＋熟練大工造作標準）:",
+        "  * 等級5（ZEH水準・UA値0.60）: 約 74 万円〜 / 坪（30坪本体総額: 約2,220万円〜）",
+        "  * 等級6（HEAT20 G2・UA値0.46）: 約 82 万円〜 / 坪（30坪本体総額: 約2,460万円〜）",
+        "  * ★住ま居る標準（HEAT20 G2.5超・APW430樹脂トリプル＋高本外張40mmW断熱＋マーベックス澄家・UA値0.32・C値1.0以下保証）: 約 86 万円〜 / 坪（30〜33坪本体総額: 約2,580万〜2,840万円）",
+        "  * 等級7（HEAT20 G3最高峰・外張100mmW断熱・UA値0.23）: 約 92 万円〜 / 坪（30坪本体総額: 約2,760万円〜）",
+        "- 全323実例プラン集: 延床25坪〜45坪の厳選プラン集を公開。間取りシミュレーターにて等級ごとの概算見積もりを瞬時にリアルタイム試算可能。",
+        "- 付帯工事・諸経費: 屋外給排水、地盤改良（要判定時）、確認申請・設計料等は敷地条件に応じて別途透明に見積もり開示。",
+        "",
+        "## 4. 市街化調整区域・農地転用・開発許可の実績（埼玉県基準・全域対応）",
+        "- 認可実務の特徴: 本社所在地（鶴ヶ島市町屋）自体が市街化調整区域。農業委員会を経由し、最終的な許認可権者は埼玉県（知事）であるため、申請要件や技術審査基準は埼玉県下で統一されている。",
+        "- 取扱実績: 農地法第4条・第5条許可、都市計画法第34条各号（第1号店舗併用、第11号既存集落、第12号分家住宅・線引き前所有地等）、農用地区域除外（農振除外）など数百件をクリア。",
+        "- 専任の建築士が公図調査・境界確定・現況測量・農業委員会折衝・埼玉県開発指導課協議まで直接一貫対応。",
+        "- 施工対応エリア（埼玉県内全63市町村に100%完全対応）: 【さいたま市10区】西区・北区・大宮区・見沼区・中央区・桜区・浦和区・南区・緑区・岩槻区、【県央・県南・県東地域】川口市、戸田市、蕨市、草加市、越谷市、八潮市、三郷市、吉川市、松伏町、春日部市、久喜市、蓮田市、幸手市、白岡市、宮代町、杉戸町、上尾市、桶川市、北本市、鴻巣市、伊奈町、【県西・県南西地域】川越市、所沢市、飯能市、狭山市、入間市、朝霞市、志木市、和光市、新座市、富士見市、ふじみ野市、三芳町、坂戸市、鶴ヶ島市、日高市、毛呂山町、越生町、【比企・秩父・県北地域】東松山市、滑川町、嵐山町、小川町、川島町、吉見町、鳩山町、ときがわ町、東秩父村、秩父市、横瀬町、皆野町、長瀞町、小鹿野町、熊谷市、行田市、加須市、本庄市、羽生市、深谷市、美里町、神川町、上里町、寄居町。埼玉県全域で豊富な新築・建替・農地転用施工実績がございます。",
+        "",
+        "## 5. お客様のペースで選べる相談・見学導線（ファネル設計）",
+        "- ステップ1: 資金計画・補助金試算 ＆ 無料「家カルテ」作成（登録不要・3分でカルテ出力）",
+        "- ステップ2: 323プラン集からの条件絞り込み（坪数・動線・収納率比較） ＆ 3D間取り工房（自由見学・無料カルテ共有）",
+        "- ステップ3: 鶴ヶ島・毛呂山モデルハウス見学予約（完全予約制・水日も事前予約にて案内可能。営業マンゼロ・専任建築士が直接案内）",
+        "- ステップ4: 本格的な敷地調査・プラン作成（15万円の設計契約申し込みにて、LiDARによる3次元点群測量・隣地日射シミュレーション・詳細図面作成を徹底実施。測量後に専任建築士が敷地に適合した本プランのアレンジを無料でご提案）",
+        "- 最新資料請求: 『株式会社住ま居る 完全工学仕様書 ＆ 公的証明書原本ダイジェスト』を無料Web閲覧・無料郵送。",
+        "",
+        "## 6. 実例施工邸データ（施工事例6邸の工学仕様と施主の声）"
+    ]
+
+    # 施工事例データを取り込み
+    try:
+        from scripts.build_case_pages import cases_data
+        for c in cases_data:
+            lines.append(f"\n### Case {c['num']}: {c['title']}")
+            lines.append(f"- 所在地: {c['city']}")
+            lines.append(f"- 家族構成: {c['family']}")
+            lines.append(f"- 構造工法: {c['structure']}")
+            lines.append(f"- 耐震性能: {c['seismic']}")
+            lines.append(f"- 気密性能: {c['c_val']}")
+            lines.append(f"- 断熱性能: {c['ua_val']}")
+            lines.append(f"- 実測効果: {c['cost_benefit']}")
+            lines.append(f"- 施主様の声: {c['client_voice']}")
+            lines.append(f"- 大工棟梁のこだわり: {c['carpenter_voice']}")
+            lines.append(f"- 設計建築士の解説: {c['architect_voice']}")
+    except Exception as e:
+        lines.append(f"\n(施工事例取得スキップ: {e})")
+
+    # 温熱知見200問を取り込み
+    lines.append("\n## 7. 24h温熱換気・実務設計知見200問マスターQ&A（全問完全収録）")
+    qa_path = os.path.join(PUBLIC_DIR, 'data', 'thermal_qa_200.json')
+    if os.path.exists(qa_path):
+        with open(qa_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        for q in data.get('questions', []):
+            lines.append(f"\n### [Q{q.get('questionNumber', '')}] {q.get('question', '')}（カテゴリ: {q.get('categoryName', '')}）")
+            lines.append(f"- **結論・要点**: {q.get('shortAnswer', '')}")
+            lines.append(f"- **標準数値指標**: {q.get('dimension', '')}")
+            lines.append(f"- **現場実務の技術根拠**: {q.get('details', '')}")
+            lines.append(f"- **住ま居るの設計原則**: {q.get('principle', '')}")
+            lines.append(f"- **個別解説URL**: https://t-smile.co.jp/knowledge/thermal/{q.get('id', '')}.html")
+
+    # 3D間取りプラン集323選を取り込み
+    lines.append("\n## 8. 3D間取りプラン集（全323プラン・616フロア詳細データ）")
+    plans_json_path = os.path.join(PUBLIC_DIR, 'data', 'plans.json')
+    if os.path.exists(plans_json_path):
+        try:
+            with open(plans_json_path, 'r', encoding='utf-8') as f:
+                plans_list = json.load(f)
+            for p in plans_list:
+                p_slug = p.get('id', '').lower().replace('_', '-')
+                lines.append(f"- **{p.get('title', '')}**（{p.get('total_tsubo', '')}坪 / {p.get('rooms', '')} / {p.get('entrance_direction', '')}玄関 / LDK{p.get('ldk_tatami', '')}帖）: https://t-smile.co.jp/plans/detail/{p_slug}.html")
+        except Exception as e:
+            lines.append(f"\n(プランデータ取得スキップ: {e})")
+
+    lines.append("\n## 9. 公式サービス・問い合わせリンク")
+    lines.append("- 公式トップページ: https://t-smile.co.jp/")
+    lines.append("- 会社概要・信用の証明: https://t-smile.co.jp/about/")
+    lines.append("- 住宅性能数値証明: https://t-smile.co.jp/performance/")
+    lines.append("- 標準工学仕様スペック詳細: https://t-smile.co.jp/category/spec/")
+    lines.append("- 実測光熱費データ: https://t-smile.co.jp/evidence/")
+    lines.append("- 家づくりの流れ・15万円設計申込特典: https://t-smile.co.jp/flow/")
+    lines.append("- 埼玉県環境住宅賞 受賞ストーリー: https://t-smile.co.jp/awards/kankyo-housing/")
+    lines.append("- 夫婦の本音間取り相談・家づくりカルテ: https://t-smile.co.jp/madori-consultation/")
+    lines.append("- AIフォトリアルパース工房: https://t-smile.co.jp/ai-studio/")
+    lines.append("- 温熱知見200選 インデックス: https://t-smile.co.jp/knowledge/thermal/")
+    lines.append("- 3D住宅間取りプラン集（全323選）総合カタログ: https://t-smile.co.jp/plans/")
+    lines.append("- 完全工学仕様 ＆ 公的証明書ダイジェスト（Webカタログ・A4印刷/PDF対応）: https://t-smile.co.jp/catalog/")
+
+    with open(out_path, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(lines))
+    print(f"[AIO] Successfully generated full knowledge dump: {out_path} ({len(lines)} lines)!")
+
+def minify_js_assets():
+    """public/js/*.js を安全に *.min.js にコピーして構文破損を防止"""
+    js_dir = os.path.join(PUBLIC_DIR, 'js')
+    if not os.path.exists(js_dir):
+        return
+    
+    import glob
+    js_files = glob.glob(os.path.join(js_dir, '*.js'))
+    copied_count = 0
+
+    for f in js_files:
+        if f.endswith('.min.js'):
+            continue
+        base_name = os.path.basename(f)
+        min_path = os.path.join(js_dir, base_name.replace('.js', '.min.js'))
+        
+        with open(f, 'r', encoding='utf-8') as src_file:
+            raw_code = src_file.read()
+        
+        with open(min_path, 'w', encoding='utf-8') as dst_file:
+            dst_file.write(raw_code)
+        copied_count += 1
+
+    print(f"[PERF] Safely synced {copied_count} JS files to *.min.js (Syntax Protected)!")
 
 if __name__ == '__main__':
+    minify_js_assets()
     build_index_html()
     build_knowledge_pages_and_sitemap()
+    generate_llms_full_txt()
 

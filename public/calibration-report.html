@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>住ま居る AIパース工房 | 全施工例 (case01〜06) 実証キャリブレーション検証</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --card: #181b22;
+    --border: #2b303c;
+    --accent: #2563eb;
+    --text: #f3f4f6;
+    --muted: #9ca3af;
+  }
+  body {
+    margin: 0;
+    padding: 30px 20px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  .header {
+    max-width: 1400px;
+    margin: 0 auto 30px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 20px;
+  }
+  h1 { margin: 0 0 10px; font-size: 24px; color: #fff; }
+  .badge {
+    display: inline-block;
+    background: #059669;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(640px, 1fr));
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 16px;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .pair-box {
+    position: relative;
+  }
+  .pair-box img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    display: block;
+  }
+  .tag {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background: rgba(0,0,0,0.75);
+    color: #fff;
+    padding: 3px 8px;
+    font-size: 11px;
+    border-radius: 3px;
+    backdrop-filter: blur(4px);
+  }
+  .tag.ai { background: rgba(37,99,235,0.85); }
+  .speed { font-size: 11px; color: #10b981; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="badge">Dell Precision 3680 (RTX 4060 Ti) 実機連携検証</span>
+  <h1>全施工例 (case01〜06) 実写真 vs AI高精度パース検証レポート</h1>
+  <p style="color:var(--muted); font-size:13px; margin:0;">
+    実生活・設計打ち合わせ基準（日中の自然光・本当の明るさ・天井高・間取り固定）
+  </p>
+</div>
+
+<div class="grid">
+
+  <div class="card">
+    <div class="card-title">
+      <span>★小峯様邸【決定版 昼景】CH2,500平天井 × 2帖木枠吹抜け開口 × 吉野杉板壁</span>
+      <span class="speed">⚡ 6.3 秒生成</span>
+    </div>
+    <div class="pair">
+      <div class="pair-box">
+        <img src="/images/cases_real/case2/photo_04.jpg" alt="実写真">
+        <span class="tag">実物写真（基準アングル）</span>
+      </div>
+      <div class="pair-box">
+        <img src="/renders/selftest_presets/photo04_archix_quality.png" alt="AIパース">
+        <span class="tag ai">住ま居る AIパース（Precision生成）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <span>Case01 外観（青空・自然光・外構植栽）</span>
+      <span class="speed">⚡ 3.9 秒生成</span>
+    </div>
+    <div class="pair">
+      <div class="pair-box">
+        <img src="/images/cases_real/case1/photo_01.jpg" alt="実写真">
+        <span class="tag">実物写真（基準アングル）</span>
+      </div>
+      <div class="pair-box">
+        <img src="/renders/calibrated_cases/case01_exterior_1791883130.png" alt="AIパース">
+        <span class="tag ai">住ま居る AIパース（Precision生成）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <span>【修正完了】Case01 LDK（手前ソファ・ダイニング・勾配天井登り梁）</span>
+      <span class="speed">⚡ 3.9 秒生成</span>
+    </div>
+    <div class="pair">
+      <div class="pair-box">
+        <img src="/images/cases_real/case1/photo_03.jpg" alt="実写真">
+        <span class="tag">実物写真（基準アングル）</span>
+      </div>
+      <div class="pair-box">
+        <img src="/renders/calibrated_cases/case01_ldk_correct.png" alt="AIパース">
+        <span class="tag ai">住ま居る AIパース（Precision生成）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <span>Case02 外観（南欧モダンアーチ・白壁・切妻）</span>
+      <span class="speed">⚡ 3.5 秒生成</span>
+    </div>
+    <div class="pair">
+      <div class="pair-box">
+        <img src="/images/cases_real/case2/photo_01.jpg" alt="実写真">
+        <span class="tag">実物写真（基準アングル）</span>
+      </div>
+      <div class="pair-box">
+        <img src="/renders/calibrated_cases/case02_exterior_1791883137.png" alt="AIパース">
+        <span class="tag ai">住ま居る AIパース（Precision生成）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <span>Case03 外観（和モダン・深い軒・木製格子）</span>
+      <span class="speed">⚡ 3.6 秒生成</span>
+    </div>
+    <div class="pair">
+      <div class="pair-box">
+        <img src="/images/cases_real/case3/photo_01.jpg" alt="実写真">
+        <span class="tag">実物写真（基準アングル）</span>
+      </div>
+      <div class="pair-box">
+        <img src="/renders/calibrated_cases/case03_exterior_1791883141.png" alt="AIパース">
+        <span class="tag ai">住ま居る AIパース（Precision生成）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <span>Case03 LDK（吉野杉大黒柱・梁現し・自然光）</span>
+      <span class="speed">⚡ 4.0 秒生成</span>
+    </div>
+    <div class="pair">
+      <div class="pair-box">
+        <img src="/images/cases_real/case3/photo_04.jpg" alt="実写真">
+        <span class="tag">実物写真（基準アングル）</span>
+      </div>
+      <div class="pair-box">
+        <img src="/renders/calibrated_cases/case03_ldk_1791883145.png" alt="AIパース">
+        <span class="tag ai">住ま居る AIパース（Precision生成）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <span>Case04 外観（シンプルモダン・南面大開口サッシ）</span>
+      <span class="speed">⚡ 3.7 秒生成</span>
+    </div>
+    <div class="pair">
+      <div class="pair-box">
+        <img src="/images/cases_real/case4/photo_01.jpg" alt="実写真">
+        <span class="tag">実物写真（基準アングル）</span>
+      </div>
+      <div class="pair-box">
+        <img src="/renders/calibrated_cases/case04_exterior_1791883149.png" alt="AIパース">
+        <span class="tag ai">住ま居る AIパース（Precision生成）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <span>Case04 水回り（造作洗面台・モザイクタイル・清潔な光）</span>
+      <span class="speed">⚡ 3.9 秒生成</span>
+    </div>
+    <div class="pair">
+      <div class="pair-box">
+        <img src="/images/cases_real/case4/photo_03.jpg" alt="実写真">
+        <span class="tag">実物写真（基準アングル）</span>
+      </div>
+      <div class="pair-box">
+        <img src="/renders/calibrated_cases/case04_water_1791883153.png" alt="AIパース">
+        <span class="tag ai">住ま居る AIパース（Precision生成）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <span>Case05 外観（白漆喰壁・端正な寄棟・落ち着いた佇まい）</span>
+      <span class="speed">⚡ 3.8 秒生成</span>
+    </div>
+    <div class="pair">
+      <div class="pair-box">
+        <img src="/images/cases_real/case5/photo_01.jpg" alt="実写真">
+        <span class="tag">実物写真（基準アングル）</span>
+      </div>
+      <div class="pair-box">
+        <img src="/renders/calibrated_cases/case05_exterior_1791883157.png" alt="AIパース">
+        <span class="tag ai">住ま居る AIパース（Precision生成）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <span>Case05 小上がり和室（琉球畳・障子・間接照明）</span>
+      <span class="speed">⚡ 3.9 秒生成</span>
+    </div>
+    <div class="pair">
+      <div class="pair-box">
+        <img src="/images/cases_real/case5/photo_03.jpg" alt="実写真">
+        <span class="tag">実物写真（基準アングル）</span>
+      </div>
+      <div class="pair-box">
+        <img src="/renders/calibrated_cases/case05_tatami_1791883161.png" alt="AIパース">
+        <span class="tag ai">住ま居る AIパース（Precision生成）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <span>Case06 外観（重厚な和モダンファサード・木製ルーバー）</span>
+      <span class="speed">⚡ 3.7 秒生成</span>
+    </div>
+    <div class="pair">
+      <div class="pair-box">
+        <img src="/images/cases_real/case6/photo_01.jpg" alt="実写真">
+        <span class="tag">実物写真（基準アングル）</span>
+      </div>
+      <div class="pair-box">
+        <img src="/renders/calibrated_cases/case06_exterior_1791883164.png" alt="AIパース">
+        <span class="tag ai">住ま居る AIパース（Precision生成）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <span>Case06 玄関土間（洗い出し土間・式台・間接照明）</span>
+      <span class="speed">⚡ 3.9 秒生成</span>
+    </div>
+    <div class="pair">
+      <div class="pair-box">
+        <img src="/images/cases_real/case6/photo_03.jpg" alt="実写真">
+        <span class="tag">実物写真（基準アングル）</span>
+      </div>
+      <div class="pair-box">
+        <img src="/renders/calibrated_cases/case06_entrance_1791883168.png" alt="AIパース">
+        <span class="tag ai">住ま居る AIパース（Precision生成）</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

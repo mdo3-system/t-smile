@@ -1,0 +1,78 @@
+# ==============================================================================
+# 株式会社住ま居る（t-smile.co.jp）Xserver Apache 最適化設定
+# 高速化（Gzip圧縮・ブラウザキャッシュ）、常時SSL化、セキュリティヘッダー
+# ==============================================================================
+
+# 1. 常時SSL化（HTTP -> HTTPS 301リダイレクト）
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# 2. Gzip圧縮（mod_deflate）による転送量70〜80%削減
+<IfModule mod_deflate.c>
+  SetOutputFilter DEFLATE
+  
+  # 圧縮対象MIMEタイプ
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/xml
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE text/javascript
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE application/xhtml+xml
+  AddOutputFilterByType DEFLATE application/rss+xml
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/x-javascript
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE application/ld+json
+  AddOutputFilterByType DEFLATE image/svg+xml
+  
+  # 画像や圧縮済みファイルは除外
+  SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|webp|avif|zip|gz|tgz|bz2|pdf)$ no-gzip dont-vary
+  
+  # プロキシキャッシュ対策
+  Header append Vary User-Agent env=!dont-vary
+</IfModule>
+
+# 3. ブラウザキャッシュ（mod_expires / Cache-Control）による再訪時ゼロ秒表示
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 month"
+  
+  # HTML・JSON（更新性を重視して短めまたは都度再検証）
+  ExpiresByType text/html "access plus 1 hour"
+  ExpiresByType application/json "access plus 1 hour"
+  ExpiresByType application/ld+json "access plus 1 hour"
+  ExpiresByType text/plain "access plus 1 hour"
+  
+  # CSS・JavaScript（1ヶ月キャッシュ）
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType text/javascript "access plus 1 month"
+  
+  # 画像・WebP・SVG（1年間長期キャッシュ）
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+  
+  # Webフォント（1年間長期キャッシュ）
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType font/woff "access plus 1 year"
+  ExpiresByType font/ttf "access plus 1 year"
+</IfModule>
+
+# 4. セキュリティヘッダー
+<IfModule mod_headers.c>
+  # MIMEタイプ不正解釈防止
+  Header set X-Content-Type-Options "nosniff"
+  # クリックジャッキング対策
+  Header set X-Frame-Options "SAMEORIGIN"
+  # XSS防御
+  Header set X-XSS-Protection "1; mode=block"
+  # リファラーポリシー
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

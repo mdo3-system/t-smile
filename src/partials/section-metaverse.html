@@ -1,12 +1,13 @@
-    <section id="metaverse" class="page-section">
+    <section id="metaverse" class="page-section" data-deferred-template="tmpl-metaverse"></section>
+    <template id="tmpl-metaverse">
       <div class="hero" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 45%, #ffffff 100%); border: 2px solid #bae6fd; border-radius: 16px; padding: 2.5rem 2rem 2.2rem; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(2, 132, 199, 0.08); text-align: center;">
         <span class="hero-tag" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: #0369a1; font-weight: 800; font-size: 0.88rem; padding: 6px 18px; border-radius: 20px; display: inline-block; margin-bottom: 1rem;">
           🌐 3D WebGL / VR空間体感 ｜ 登録不要・完全無料
         </span>
-        <h1 class="hero-title" style="color: #0f172a; font-size: 2.2rem; font-weight: 900; line-height: 1.35; margin-bottom: 0.8rem;">
+        <h2 class="hero-title" style="color: #0f172a; font-size: 2.2rem; font-weight: 900; line-height: 1.35; margin-bottom: 0.8rem;">
           バーチャル展示場・メタバース住宅展示場<br>
           <span style="color: #0284c7; font-size: 1.55rem; font-weight: 800; display: inline-block; margin-top: 0.3rem;">「バーチャルモデルハウス」で立体空間を歩く。</span>
-        </h1>
+        </h2>
         <p class="hero-subtitle" style="color: #334155; font-size: 1.05rem; line-height: 1.85; max-width: 900px; margin: 0 auto; font-weight: 500;">
           パースで描いた理想の住まいを、今度は3Dバーチャルモデルハウスの中で体験。<br>
           部屋の広さ感、天井の高さ、日差しと影の移ろいをスマホやPCから自由にご体感いただけます。
@@ -19,7 +20,7 @@
             <span style="background: var(--accent-gold); color: #000; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; position: absolute; top: 12px; right: 12px;">3D WebGL / VR</span>
             <h3 style="font-size: 1.6rem; margin-top: 1rem; color: #38bdf8;">🌐 「芳彩-かぐや-」バーチャルモデルハウス</h3>
             <p style="color: #94a3b8; margin: 1rem 0;">吹抜けLDK、十和田石造作風呂、インナーガレージを再現した3D空間</p>
-            <a href="https://zumenpers.com/vr/uploads/7_project/index.html" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-weight: 800; width: 100%; justify-content: center; padding: 0.9rem 1.5rem;">🌐 バーチャルモデルハウスへ入場する（別タブで開く） →</a>
+            <a href="https://vrmodelhouse.com/vrh005/cdnvr/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-weight: 800; width: 100%; justify-content: center; padding: 0.9rem 1.5rem;">🌐 バーチャルモデルハウスへ入場する（別タブで開く） →</a>
           </div>
           <h3 class="card-title">バーチャルで確認できる3つのポイント</h3>
           <ul style="margin-left: 1.2rem; color: var(--text-muted); line-height: 2;">
@@ -258,7 +259,7 @@
             <!-- Shot 1: 外観 ＆ インナーガレージ -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.8rem; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem;">
               <div>
-                <img src="/images/vr/vr_exterior_overview.png" alt="バーチャルモデルハウス 外観とガレージ" style="width: 100%; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.1); border: 1px solid #cbd5e1;" />
+                <img src="/images/vr/vr_exterior_overview.webp" alt="バーチャルモデルハウス 外観とガレージ" style="width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.1); border: 1px solid #cbd5e1;" loading="lazy" decoding="async" width="2216" height="1129" />
               </div>
               <div>
                 <span style="background: #0284c7; color: #fff; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 6px;">SCENE 01</span>
@@ -275,7 +276,7 @@
             <!-- Shot 2: 開放的吹き抜けLDK ＆ 床材変更 -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.8rem; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem;">
               <div style="order: 2;">
-                <img src="/images/vr/vr_living_room_change.png" alt="開放的吹き抜けLDKと床材変更機能" style="width: 100%; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.1); border: 1px solid #cbd5e1;" />
+                <img src="/images/vr/vr_living_room_change.webp" alt="開放的吹き抜けLDKと床材変更機能" style="width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.1); border: 1px solid #cbd5e1;" loading="lazy" decoding="async" width="2335" height="1190" />
               </div>
               <div style="order: 1;">
                 <span style="background: #d97706; color: #fff; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 6px;">SCENE 02</span>
@@ -292,7 +293,7 @@
             <!-- Shot 3: キッチン・ダイニング -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.8rem; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem;">
               <div>
-                <img src="/images/vr/vr_kitchen_dining.png" alt="造作キッチンとダイニングの連続性" style="width: 100%; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.1); border: 1px solid #cbd5e1;" />
+                <img src="/images/vr/vr_kitchen_dining.webp" alt="造作キッチンとダイニングの連続性" style="width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.1); border: 1px solid #cbd5e1;" loading="lazy" decoding="async" width="2536" height="1293" />
               </div>
               <div>
                 <span style="background: #059669; color: #fff; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 6px;">SCENE 03</span>
@@ -309,7 +310,7 @@
             <!-- Shot 4: 主寝室・格子戸・珪藻土塗り壁 -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.8rem; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem;">
               <div style="order: 2;">
-                <img src="/images/vr/vr_bedroom_detail.png" alt="主寝室と格子引き戸のディテール" style="width: 100%; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.1); border: 1px solid #cbd5e1;" />
+                <img src="/images/vr/vr_bedroom_detail.webp" alt="主寝室と格子引き戸のディテール" style="width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.1); border: 1px solid #cbd5e1;" loading="lazy" decoding="async" width="2019" height="1029" />
               </div>
               <div style="order: 1;">
                 <span style="background: #7c3aed; color: #fff; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 6px;">SCENE 04</span>
@@ -326,7 +327,7 @@
             <!-- Shot 5: ドールハウス・鳥瞰平面図 -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.8rem; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem;">
               <div>
-                <img src="/images/vr/vr_topview_dollhouse.png" alt="ドールハウス鳥瞰立体平面図" style="width: 100%; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.1); border: 1px solid #cbd5e1;" />
+                <img src="/images/vr/vr_topview_dollhouse.webp" alt="ドールハウス鳥瞰立体平面図" style="width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.1); border: 1px solid #cbd5e1;" loading="lazy" decoding="async" width="2025" height="1032" />
               </div>
               <div>
                 <span style="background: #0f172a; color: #fff; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 6px;">SCENE 05</span>
@@ -369,7 +370,7 @@
             </div>
           </div>
 
-          <a href="https://zumenpers.com/vr/uploads/7_project/index.html" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-size: 1.25rem; font-weight: 800; padding: 1.2rem 3rem; border-radius: 50px; box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4); display: inline-flex; align-items: center; gap: 10px; transition: transform 0.2s;">
+          <a href="https://vrmodelhouse.com/vrh005/cdnvr/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-size: 1.25rem; font-weight: 800; padding: 1.2rem 3rem; border-radius: 50px; box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4); display: inline-flex; align-items: center; gap: 10px; transition: transform 0.2s;">
             <span>🌐 実機バーチャルモデルハウスを起動する（全画面）</span>
             <span style="font-size: 1.4rem;">→</span>
           </a>
@@ -379,6 +380,7 @@
         </div>
 
       </div>
-    </section>
+    </template>
 
     <!-- PAGE 5: SCENT & AIR COMFORT EXPERIENCE & REAL MODELHOUSE BOOKING -->
+

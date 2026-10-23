@@ -1,0 +1,3295 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI補助金ナビ・自動受給判定ボット | 株式会社住ま居る（埼玉県・東京都）</title>
+  <meta name="description" content="埼玉県内全63市町村（40市・22町・1村）および東京都の新築・リノベーション補助金を完全網羅＆一括AI判定。住宅省エネ2026、みらいエコ、窓リノベ、東京ゼロエミ、市町村独自助成金の受給目安額と残高を即時算出。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --accent: #d97706;
+      --accent-light: #fef3c7;
+      --success: #059669;
+      --bg-slate: #f8fafc;
+      --text-main: #0f172a;
+      --text-sub: #475569;
+      --border: #e2e8f0;
+      --font-jp: 'Noto Sans JP', sans-serif;
+      --font-en: 'Outfit', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-jp);
+      color: var(--text-main);
+      background-color: var(--bg-slate);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header */
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+    .brand-logo {
+      font-family: var(--font-en);
+      font-weight: 900;
+      font-size: 1.3rem;
+      background: linear-gradient(135deg, #0284c7, #059669);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .header-links {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .btn-nav {
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-nav-outline {
+      border: 1.5px solid #0284c7;
+      color: #0284c7;
+      background: #f0f9ff;
+    }
+    .btn-nav-outline:hover {
+      background: #0284c7;
+      color: #fff;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1050px;
+      margin: 2rem auto;
+      padding: 0 1.2rem;
+    }
+
+    /* Hero Banner */
+    .hero-card {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #ffffff;
+      border-radius: 16px;
+      padding: 2.2rem;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    .hero-card::after {
+      content: '💰';
+      position: absolute;
+      right: 20px;
+      bottom: -20px;
+      font-size: 8rem;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+    .update-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(56, 189, 248, 0.2);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    .hero-title {
+      font-size: 1.85rem;
+      font-weight: 900;
+      line-height: 1.35;
+      margin-bottom: 10px;
+    }
+    .hero-desc {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      max-width: 780px;
+      line-height: 1.7;
+    }
+
+    /* City Quick Chips */
+    .quick-chips-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 1.2rem;
+    }
+    .city-chip {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .city-chip:hover, .city-chip.active {
+      background: #0284c7;
+      border-color: #38bdf8;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+    }
+
+    /* Search Box */
+    .search-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 1.6rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border: 1.5px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    .search-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.9rem 1.2rem;
+      font-size: 1rem;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input:focus {
+      border-color: var(--primary);
+    }
+    .btn-search {
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 0.9rem 1.8rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    .btn-search:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Results Card */
+    .result-banner {
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border: 2px solid #10b981;
+      border-radius: 14px;
+      padding: 1.6rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+    }
+    .result-total-label {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #065f46;
+      margin-bottom: 4px;
+    }
+    .result-total-amount {
+      font-size: 2.4rem;
+      font-weight: 900;
+      font-family: var(--font-en);
+      color: #047857;
+      line-height: 1;
+    }
+    .result-total-note {
+      font-size: 0.8rem;
+      color: #047857;
+      margin-top: 4px;
+    }
+
+    /* Subsidies Grid */
+    .subsidy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .subsidy-card {
+      background: #ffffff;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .subsidy-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+    .card-tier-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+    .tier-national { background: #fee2e2; color: #991b1b; }
+    .tier-prefecture { background: #fef3c7; color: #92400e; }
+    .tier-city { background: #e0f2fe; color: #075985; }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .card-amount-wrap {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .card-amount-label {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      font-weight: 600;
+    }
+    .card-amount-val {
+      font-size: 1.5rem;
+      font-weight: 900;
+      font-family: var(--font-en);
+      color: #dc2626;
+    }
+    .card-meta-list {
+      font-size: 0.82rem;
+      color: #334155;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .card-meta-item {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .status-meter-wrap {
+      background: #f1f5f9;
+      border-radius: 6px;
+      height: 8px;
+      overflow: hidden;
+      margin: 6px 0 4px;
+    }
+    .status-meter-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #f59e0b);
+      border-radius: 6px;
+    }
+    .status-meter-text {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: #64748b;
+      font-weight: 700;
+    }
+
+    /* Combination Rules Alert */
+    .rules-card {
+      background: #eff6ff;
+      border: 1.5px solid #93c5fd;
+      border-radius: 12px;
+      padding: 1.4rem;
+      margin-bottom: 2rem;
+    }
+    .rules-title {
+      font-weight: 800;
+      color: #1e40af;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .rules-list {
+      font-size: 0.85rem;
+      color: #1e3a8a;
+      line-height: 1.7;
+      padding-left: 1.2rem;
+    }
+
+    /* Itemized Breakdown Table */
+    .breakdown-table-wrap {
+      overflow-x: auto;
+      margin-top: 0.8rem;
+    }
+    .breakdown-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+      background: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .breakdown-table th {
+      background: #065f46;
+      color: #ffffff;
+      padding: 9px 12px;
+      font-weight: 800;
+      text-align: left;
+      font-size: 0.8rem;
+    }
+    .breakdown-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #1e293b;
+      vertical-align: middle;
+    }
+    .breakdown-table tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+    .breakdown-table .row-amount {
+      font-weight: 900;
+      color: #dc2626;
+      font-family: var(--font-en);
+      font-size: 1.05rem;
+      white-space: nowrap;
+    }
+
+    /* Discovery & Web Portal Section */
+    .discovery-portal-section {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      border-radius: 16px;
+      padding: 2.2rem;
+      margin: 2.5rem 0;
+      color: #ffffff;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+    }
+    .portal-section-header {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 2rem;
+    }
+    .portal-tag {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.2);
+      border: 1px solid #38bdf8;
+      color: #38bdf8;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+    .portal-title {
+      font-size: 1.55rem;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+    .portal-desc {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+    .portal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.2rem;
+    }
+    .portal-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .portal-card:hover {
+      transform: translateY(-4px);
+      border-color: #38bdf8;
+    }
+    .portal-card-thumb {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .portal-card-body {
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+    }
+    .portal-card-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #fde68a;
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+    .portal-card-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+      line-height: 1.35;
+    }
+    .portal-card-text {
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+    .portal-card-btn {
+      display: inline-block;
+      text-align: center;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    /* SEO / AIO Guide */
+    .seo-guide-section {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem;
+      margin: 2.5rem 0;
+    }
+
+    /* Disclaimer */
+    .disclaimer-card {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      padding: 1rem 1.4rem;
+      margin-top: 2rem;
+      font-size: 0.78rem;
+      color: #92400e;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 640px) {
+      .hero-title { font-size: 1.4rem; }
+      .search-grid { grid-template-columns: 1fr; }
+      .btn-search { width: 100%; justify-content: center; }
+      .result-banner { flex-direction: column; align-items: flex-start; }
+      .portal-title { font-size: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header style="background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.15); padding: 0.6rem 1.2rem; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.25);">
+  <div style="max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.5rem;">
+    <!-- Tier 1: Brand & AI Services -->
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;">
+        <a href="/index.html" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #ffffff;">
+          <span style="font-size: 1.3rem; font-weight: 900; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">家づくりAIラボ</span>
+          <span style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 6px; border-radius: 4px; font-weight: 800;">by 住ま居る</span>
+        </a>
+        <div style="display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.72rem; color: #cbd5e1; background: rgba(0, 0, 0, 0.28); border: 1px solid rgba(255, 255, 255, 0.15); padding: 2px 8px; border-radius: 4px;">
+          <span style="color: #38bdf8; font-weight: 700;">施工エリア：埼玉県全域・一部東京都</span>
+          <span style="opacity: 0.3;">|</span>
+          <span>創業30年・累計800棟</span>
+          <span style="opacity: 0.3;">|</span>
+          <span style="color: #6ee7b7;">般-8 第60650号</span>
+        </div>
+      </div>
+
+      <!-- AI Suite Quick Links -->
+      <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+        <span style="color: #fde68a; font-size: 0.75rem; font-weight: 700; margin-right: 2px;">🏡 AI体験:</span>
+        <a href="/index.html#floorplan-studio" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3);">📐 AI 3Dプラン検索</a>
+        <a href="/smilestudio.html" target="_blank" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; box-shadow: 0 2px 8px rgba(245,158,11,0.4);">🎨 AI 3Dパース工房 ↗</a>
+        <a href="/index.html#thermal-consultation" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">💬 AI温熱換気相談</a>
+        <a href="/subsidy/index.html" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #047857, #10b981); color: #ffffff; box-shadow: 0 2px 8px rgba(16,185,129,0.3); border: 1.5px solid #34d399;">💰 AI補助金ナビ (現在地)</a>
+        <a href="/mortgage/index.html" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; box-shadow: 0 2px 8px rgba(56,189,248,0.3);">🏦 AI住宅ローン診断 ↗</a>
+      </div>
+    </div>
+
+    <!-- Tier 2: Main Links -->
+    <div style="display: flex; align-items: center; gap: 14px; overflow-x: auto; padding-top: 4px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.78rem; font-weight: 700; white-space: nowrap;">
+      <a href="/index.html" style="color: #cbd5e1; text-decoration: none;">🏠 ホーム</a>
+      <a href="/index.html#our-philosophy" style="color: #cbd5e1; text-decoration: none;">🏛️ こだわり（芳彩・かぐや）</a>
+      <a href="/index.html#craftsmanship" style="color: #cbd5e1; text-decoration: none;">🔨 施工実例（大工手刻み×800棟）</a>
+      <a href="/about/" style="color: #34d399; text-decoration: none; font-weight: 800;">🛡️ 信用実証 (CredLayer)</a>
+      <a href="/awards/kankyo-housing/" style="color: #fde68a; text-decoration: none; font-weight: 800;">🏆 埼玉県環境住宅賞</a>
+      <a href="/catalog/" style="color: #6ee7b7; text-decoration: none; font-weight: 800;">📘 工学カタログ</a>
+      <a href="/index.html#article-feature" style="color: #f59e0b; text-decoration: none; font-weight: 800;">📖 解体新書 (10章)</a>
+      <a href="/index.html#metaverse" style="color: #cbd5e1; text-decoration: none;">🌐 メタバース展示場</a>
+      <a href="/index.html#scent-experience" style="color: #fde68a; text-decoration: none; font-weight: 800;">👣 モデルハウス見学予約</a>
+      <a href="/index.html#dashboard" style="color: #38bdf8; text-decoration: none; font-weight: 800;">👤 家カルテ</a>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <!-- 問い合わせハードル低減: 電話サポートバナー -->
+  <div style="background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%); border: 2px solid #38bdf8; border-radius: 14px; padding: 1rem 1.6rem; margin-bottom: 1.8rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.08);">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span style="font-size: 1.6rem;">📞</span>
+      <div>
+        <div style="font-weight: 800; color: #0369a1; font-size: 0.95rem;">操作や家づくりのご質問もお気軽に</div>
+        <div style="font-size: 0.8rem; color: #64748b;">専任スタッフが丁寧にお答えします（しつこい営業電話等は一切ありません）</div>
+      </div>
+    </div>
+    <a href="tel:0492712350" style="background: #0284c7; color: #ffffff; padding: 9px 20px; border-radius: 30px; font-weight: 800; font-size: 1rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 3px 10px rgba(2, 132, 199, 0.3); transition: transform 0.2s;">
+      <span>📞</span> 049-271-2350
+      <span style="font-size: 0.78rem; opacity: 0.9; font-weight: 700;">（9:00〜18:00・水日曜定休）</span>
+    </a>
+  </div>
+
+  <!-- Hero Card -->
+  <div class="hero-card">
+    <div class="update-badge">
+      <span>🏆</span> 埼玉県内全63市町村（40市22町1村）新築・省エネ助成金を完全網羅 ｜ 最終巡回: 2026年10月最新
+    </div>
+    <h1 class="hero-title">
+      住所入力で即判定！<br>
+      受給できる最新補助金・助成金一覧ナビ
+    </h1>
+    <p class="hero-desc">
+      国の「住宅省エネ2026キャンペーン（みらいエコ・窓リノベ・給湯）」から、東京都ゼロエミ、埼玉県産木材、各市町村（鶴ヶ島市、坂戸市、川越市など）の独自支援制度まで。あなたの計画地で<strong>併用受給できる最大総額と内訳明細</strong>をAIが即時計算します。
+    </p>
+
+    <!-- Quick City Buttons -->
+    <div class="quick-chips-wrap">
+      <span style="color: #94a3b8; font-size: 0.8rem; align-self: center; margin-right: 4px;">クイック指定:</span>
+      <button type="button" class="city-chip active" data-city="埼玉県鶴ヶ島市">📍 鶴ヶ島市 (最大244万)</button>
+      <button type="button" class="city-chip" data-city="埼玉県坂戸市">📍 坂戸市 (最大224万)</button>
+      <button type="button" class="city-chip" data-city="埼玉県川越市">📍 川越市 (最大154万)</button>
+      <button type="button" class="city-chip" data-city="埼玉県東松山市">📍 東松山市 (最大154万)</button>
+      <button type="button" class="city-chip" data-city="埼玉県さいたま市">📍 さいたま市 (最大174万)</button>
+      <button type="button" class="city-chip" data-city="東京都練馬区">📍 東京都内 (最大360万)</button>
+  </div>
+
+  <!-- 3Dプラン連携 ＆ 住宅ローン診断直結バナー -->
+  <div id="plan-integration-bar" style="display: none; background: linear-gradient(135deg, #064e3b 0%, #0f172a 100%); border: 1.5px solid #34d399; border-radius: 14px; padding: 1.2rem 1.5rem; margin-bottom: 2rem; color: #ffffff; box-shadow: 0 6px 20px rgba(6, 78, 59, 0.25);">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <span style="font-size: 0.75rem; background: rgba(52, 211, 153, 0.2); color: #34d399; padding: 2px 8px; border-radius: 4px; font-weight: 800; border: 1px solid rgba(52, 211, 153, 0.4);">📐 3D間取りプラン連携中</span>
+        <div id="plan-integration-title" style="font-size: 1.05rem; font-weight: 800; margin-top: 4px; color: #ffffff;">プラン連携中</div>
+        <div id="plan-integration-sub" style="font-size: 0.82rem; color: #cbd5e1; margin-top: 2px;">国・埼玉県の補助金判定と、住宅ローン月々返済額のシミュレーションが連動しています。</div>
+      </div>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <a id="btn-goto-mortgage" href="/mortgage/index.html" class="btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; font-weight: 800; font-size: 0.85rem; padding: 9px 16px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);">
+          <span>🏦</span> このプランの住宅ローンを診断 ↗
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Input Box -->
+  <div class="search-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
+      <label for="city-input" style="font-weight: 800; font-size: 0.95rem; color: #1e293b; margin: 0;">
+        🔍 建設予定地（市区町村）を入力 または 一覧から選択
+      </label>
+      <span style="font-size: 0.75rem; background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 4px; font-weight: 800;">
+        埼玉県内全63市町村 100%網羅
+      </span>
+    </div>
+
+    <!-- Search Input Grid -->
+    <div class="search-grid" style="margin-bottom: 0.8rem;">
+      <input type="text" id="city-input" class="search-input" value="埼玉県鶴ヶ島市" list="saitama-city-list" placeholder="例: 鶴ヶ島市、坂戸市、川越市、ときがわ町、練馬区..." autocomplete="off" />
+      <button type="button" id="btn-search-subsidy" class="btn-search">
+        <span>🤖</span> 受給可能額をAI判定
+      </button>
+    </div>
+    <datalist id="saitama-city-list">
+      <option value="埼玉県鶴ヶ島市">鶴ヶ島市（最大 100 万円）</option>
+      <option value="埼玉県坂戸市">坂戸市（最大 80 万円）</option>
+      <option value="埼玉県川越市">川越市（最大 約10 万円）</option>
+      <option value="埼玉県東松山市">東松山市（最大 約10 万円）</option>
+      <option value="埼玉県さいたま市">さいたま市（最大 30 万円）</option>
+      <option value="埼玉県ときがわ町">ときがわ町（最大 80 万円）</option>
+      <option value="埼玉県鳩山町">鳩山町（最大 30 万円）</option>
+      <option value="埼玉県毛呂山町">毛呂山町（最大 40 万円）</option>
+      <option value="埼玉県越生町">越生町（最大 30 万円）</option>
+      <option value="埼玉県滑川町">滑川町（最大 30 万円）</option>
+      <option value="埼玉県嵐山町">嵐山町（最大 30 万円）</option>
+      <option value="埼玉県小川町">小川町（最大 40 万円）</option>
+      <option value="埼玉県川島町">川島町（最大 30 万円）</option>
+      <option value="埼玉県吉見町">吉見町（最大 約10 万円）</option>
+      <option value="埼玉県日高市">日高市（最大 約10 万円）</option>
+      <option value="埼玉県飯能市">飯能市（最大 50 万円）</option>
+      <option value="埼玉県秩父市">秩父市（最大 100 万円）</option>
+      <option value="埼玉県所沢市">所沢市（最大 15 万円）</option>
+      <option value="埼玉県狭山市">狭山市（最大 約10 万円）</option>
+      <option value="埼玉県入間市">入間市（最大 30 万円）</option>
+      <option value="埼玉県朝霞市">朝霞市（最大 約10 万円）</option>
+      <option value="埼玉県志木市">志木市（最大 約10 万円）</option>
+      <option value="埼玉県和光市">和光市（最大 約10 万円）</option>
+      <option value="埼玉県新座市">新座市（最大 約10 万円）</option>
+      <option value="埼玉県富士見市">富士見市（最大 約10 万円）</option>
+      <option value="埼玉県ふじみ野市">ふじみ野市（最大 約10 万円）</option>
+      <option value="埼玉県三芳町">三芳町（最大 約10 万円）</option>
+      <option value="埼玉県熊谷市">熊谷市（最大 約10 万円）</option>
+      <option value="埼玉県行田市">行田市（最大 30 万円）</option>
+      <option value="埼玉県加須市">加須市（最大 30 万円）</option>
+      <option value="埼玉県本庄市">本庄市（最大 30 万円）</option>
+      <option value="埼玉県羽生市">羽生市（最大 30 万円）</option>
+      <option value="埼玉県鴻巣市">鴻巣市（最大 約10 万円）</option>
+      <option value="埼玉県深谷市">深谷市（最大 30 万円）</option>
+      <option value="埼玉県上尾市">上尾市（最大 約10 万円）</option>
+      <option value="埼玉県草加市">草加市（最大 約10 万円）</option>
+      <option value="埼玉県越谷市">越谷市（最大 約10 万円）</option>
+      <option value="埼玉県蕨市">蕨市（最大 約10 万円）</option>
+      <option value="埼玉県戸田市">戸田市（最大 約10 万円）</option>
+      <option value="埼玉県川口市">川口市（最大 約10 万円）</option>
+      <option value="埼玉県桶川市">桶川市（最大 約10 万円）</option>
+      <option value="埼玉県久喜市">久喜市（最大 30 万円）</option>
+      <option value="埼玉県北本市">北本市（最大 30 万円）</option>
+      <option value="埼玉県八潮市">八潮市（最大 約10 万円）</option>
+      <option value="埼玉県春日部市">春日部市（最大 約10 万円）</option>
+      <option value="埼玉県三郷市">三郷市（最大 約10 万円）</option>
+      <option value="埼玉県蓮田市">蓮田市（最大 約10 万円）</option>
+      <option value="埼玉県幸手市">幸手市（最大 30 万円）</option>
+      <option value="埼玉県吉川市">吉川市（最大 約10 万円）</option>
+      <option value="埼玉県白岡市">白岡市（最大 約10 万円）</option>
+      <option value="埼玉県伊奈町">伊奈町（最大 約10 万円）</option>
+      <option value="埼玉県横瀬町">横瀬町（最大 50 万円）</option>
+      <option value="埼玉県皆野町">皆野町（最大 50 万円）</option>
+      <option value="埼玉県長瀞町">長瀞町（最大 50 万円）</option>
+      <option value="埼玉県小鹿野町">小鹿野町（最大 50 万円）</option>
+      <option value="埼玉県東秩父村">東秩父村（最大 60 万円）</option>
+      <option value="埼玉県美里町">美里町（最大 30 万円）</option>
+      <option value="埼玉県神川町">神川町（最大 30 万円）</option>
+      <option value="埼玉県上里町">上里町（最大 30 万円）</option>
+      <option value="埼玉県寄居町">寄居町（最大 50 万円）</option>
+      <option value="埼玉県宮代町">宮代町（最大 30 万円）</option>
+      <option value="埼玉県杉戸町">杉戸町（最大 30 万円）</option>
+      <option value="埼玉県松伏町">松伏町（最大 約10 万円）</option>
+      <option value="東京都">東京都内（東京ゼロエミ 最大360万円）</option>
+    </datalist>
+
+    <!-- Quick Dropdown Picker -->
+    <div style="margin-top: 0.6rem;">
+      <select id="municipality-select" class="municipality-select" style="padding: 0.75rem 1rem; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 0.92rem; background: #fff; color: #1e293b; font-weight: 700; width: 100%; cursor: pointer;">
+  <option value="">▼ 埼玉県内63市町村（40市22町1村）から直接選択する</option>
+  <optgroup label="【西武・比企地域（住ま居る重点施工エリア）】">
+    <option value="埼玉県鶴ヶ島市">埼玉県鶴ヶ島市 (最大 100 万円)</option>
+    <option value="埼玉県坂戸市">埼玉県坂戸市 (最大 80 万円)</option>
+    <option value="埼玉県川越市">埼玉県川越市 (最大 約10 万円)</option>
+    <option value="埼玉県東松山市">埼玉県東松山市 (最大 約10 万円)</option>
+    <option value="埼玉県飯能市">埼玉県飯能市 (最大 50 万円)</option>
+    <option value="埼玉県狭山市">埼玉県狭山市 (最大 約10 万円)</option>
+    <option value="埼玉県入間市">埼玉県入間市 (最大 30 万円)</option>
+    <option value="埼玉県日高市">埼玉県日高市 (最大 約10 万円)</option>
+    <option value="埼玉県毛呂山町">埼玉県毛呂山町 (最大 40 万円)</option>
+    <option value="埼玉県越生町">埼玉県越生町 (最大 30 万円)</option>
+    <option value="埼玉県滑川町">埼玉県滑川町 (最大 30 万円)</option>
+    <option value="埼玉県嵐山町">埼玉県嵐山町 (最大 30 万円)</option>
+    <option value="埼玉県小川町">埼玉県小川町 (最大 40 万円)</option>
+    <option value="埼玉県川島町">埼玉県川島町 (最大 30 万円)</option>
+    <option value="埼玉県吉見町">埼玉県吉見町 (最大 約10 万円)</option>
+    <option value="埼玉県鳩山町">埼玉県鳩山町 (最大 30 万円)</option>
+    <option value="埼玉県ときがわ町">埼玉県ときがわ町 (最大 80 万円)</option>
+  </optgroup>
+  <optgroup label="【県央・南部地域】">
+    <option value="埼玉県さいたま市">埼玉県さいたま市 (最大 30 万円)</option>
+    <option value="埼玉県川口市">埼玉県川口市 (最大 約10 万円)</option>
+    <option value="埼玉県所沢市">埼玉県所沢市 (最大 15 万円)</option>
+    <option value="埼玉県上尾市">埼玉県上尾市 (最大 約10 万円)</option>
+    <option value="埼玉県朝霞市">埼玉県朝霞市 (最大 約10 万円)</option>
+    <option value="埼玉県志木市">埼玉県志木市 (最大 約10 万円)</option>
+    <option value="埼玉県和光市">埼玉県和光市 (最大 約10 万円)</option>
+    <option value="埼玉県新座市">埼玉県新座市 (最大 約10 万円)</option>
+    <option value="埼玉県桶川市">埼玉県桶川市 (最大 約10 万円)</option>
+    <option value="埼玉県北本市">埼玉県北本市 (最大 30 万円)</option>
+    <option value="埼玉県鴻巣市">埼玉県鴻巣市 (最大 約10 万円)</option>
+    <option value="埼玉県蕨市">埼玉県蕨市 (最大 約10 万円)</option>
+    <option value="埼玉県戸田市">埼玉県戸田市 (最大 約10 万円)</option>
+    <option value="埼玉県富士見市">埼玉県富士見市 (最大 約10 万円)</option>
+    <option value="埼玉県ふじみ野市">埼玉県ふじみ野市 (最大 約10 万円)</option>
+    <option value="埼玉県伊奈町">埼玉県伊奈町 (最大 約10 万円)</option>
+    <option value="埼玉県三芳町">埼玉県三芳町 (最大 約10 万円)</option>
+  </optgroup>
+  <optgroup label="【東部地域】">
+    <option value="埼玉県春日部市">埼玉県春日部市 (最大 約10 万円)</option>
+    <option value="埼玉県草加市">埼玉県草加市 (最大 約10 万円)</option>
+    <option value="埼玉県越谷市">埼玉県越谷市 (最大 約10 万円)</option>
+    <option value="埼玉県八潮市">埼玉県八潮市 (最大 約10 万円)</option>
+    <option value="埼玉県三郷市">埼玉県三郷市 (最大 約10 万円)</option>
+    <option value="埼玉県蓮田市">埼玉県蓮田市 (最大 約10 万円)</option>
+    <option value="埼玉県幸手市">埼玉県幸手市 (最大 30 万円)</option>
+    <option value="埼玉県吉川市">埼玉県吉川市 (最大 約10 万円)</option>
+    <option value="埼玉県白岡市">埼玉県白岡市 (最大 約10 万円)</option>
+    <option value="埼玉県久喜市">埼玉県久喜市 (最大 30 万円)</option>
+    <option value="埼玉県宮代町">埼玉県宮代町 (最大 30 万円)</option>
+    <option value="埼玉県杉戸町">埼玉県杉戸町 (最大 30 万円)</option>
+    <option value="埼玉県松伏町">埼玉県松伏町 (最大 約10 万円)</option>
+  </optgroup>
+  <optgroup label="【北部・秩父地域】">
+    <option value="埼玉県熊谷市">埼玉県熊谷市 (最大 約10 万円)</option>
+    <option value="埼玉県行田市">埼玉県行田市 (最大 30 万円)</option>
+    <option value="埼玉県秩父市">埼玉県秩父市 (最大 100 万円)</option>
+    <option value="埼玉県加須市">埼玉県加須市 (最大 30 万円)</option>
+    <option value="埼玉県本庄市">埼玉県本庄市 (最大 30 万円)</option>
+    <option value="埼玉県羽生市">埼玉県羽生市 (最大 30 万円)</option>
+    <option value="埼玉県深谷市">埼玉県深谷市 (最大 30 万円)</option>
+    <option value="埼玉県美里町">埼玉県美里町 (最大 30 万円)</option>
+    <option value="埼玉県神川町">埼玉県神川町 (最大 30 万円)</option>
+    <option value="埼玉県上里町">埼玉県上里町 (最大 30 万円)</option>
+    <option value="埼玉県寄居町">埼玉県寄居町 (最大 50 万円)</option>
+    <option value="埼玉県横瀬町">埼玉県横瀬町 (最大 50 万円)</option>
+    <option value="埼玉県皆野町">埼玉県皆野町 (最大 50 万円)</option>
+    <option value="埼玉県長瀞町">埼玉県長瀞町 (最大 50 万円)</option>
+    <option value="埼玉県小鹿野町">埼玉県小鹿野町 (最大 50 万円)</option>
+    <option value="埼玉県東秩父村">埼玉県東秩父村 (最大 60 万円)</option>
+  </optgroup>
+  <optgroup label="【東京都】">
+    <option value="東京都練馬区">東京都（ゼロエミ水準A・最大360万円）</option>
+  </optgroup>
+</select>
+    </div>
+  </div>
+
+  <!-- Result Banner & Itemized Breakdown -->
+  <div id="result-summary-banner" class="result-banner">
+    <div style="width: 100%;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; border-bottom: 2px dashed rgba(16, 185, 129, 0.4); padding-bottom: 1.2rem; margin-bottom: 1.2rem;">
+        <div>
+          <div class="result-total-label">📍 <span id="res-target-city">埼玉県鶴ヶ島市</span> での受給可能補助金 目安総額</div>
+          <div class="result-total-amount"><span id="res-total-amount">2,440,000</span> <span style="font-size: 1.3rem;">円</span></div>
+          <div class="result-total-note">※国＋県＋市の3層制度を最適併用した場合（HEAT20 G2.5・長期優良・県産木材・子育て同居基準）</div>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+          <a href="/index.html#floorplan-studio" class="btn-nav" style="background: #0284c7; color: #fff; font-size: 0.88rem; font-weight: 800; padding: 10px 16px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);">
+            📐 この補助金を活かして間取り相談 ➜
+          </a>
+          <a href="/index.html#dashboard" class="btn-nav" style="background: #047857; color: #fff; font-size: 0.88rem; font-weight: 800; padding: 10px 16px; border-radius: 8px; text-decoration: none;">
+            📄 家カルテに保存
+          </a>
+        </div>
+      </div>
+
+      <!-- 交付明細内訳（何の補助金がいくら交付されるか） -->
+      <div style="background: rgba(255, 255, 255, 0.95); border-radius: 10px; padding: 1.2rem; border: 1.5px solid #a7f3d0; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+        <div style="font-weight: 900; font-size: 0.95rem; color: #065f46; margin-bottom: 0.8rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px;">
+          <span>📋 【受給金額の内訳明細】何の補助金がいくら交付されるのか？</span>
+          <span style="font-size: 0.74rem; background: #d1fae5; color: #065f46; padding: 2px 8px; border-radius: 4px; font-weight: 800;">国・県・市の3層併用可</span>
+        </div>
+        <div class="breakdown-table-wrap">
+          <table class="breakdown-table">
+            <thead>
+              <tr>
+                <th style="width: 14%;">制度区分</th>
+                <th style="width: 42%;">補助金制度名</th>
+                <th style="width: 22%; text-align: right;">交付目安額</th>
+                <th style="width: 22%;">適用条件・基準</th>
+              </tr>
+            </thead>
+            <tbody id="breakdown-table-body">
+              <!-- JSで動的生成 -->
+            </tbody>
+            <tfoot>
+              <tr style="background: #ecfdf5;">
+                <td colspan="2" style="font-weight: 900; color: #065f46; font-size: 0.95rem;">合算受給可能額（3層最適併用合計）</td>
+                <td style="font-weight: 900; color: #dc2626; font-size: 1.2rem; text-align: right; font-family: var(--font-en);" id="breakdown-total-sum">2,440,000 円</td>
+                <td style="font-size: 0.75rem; color: #065f46; font-weight: 700;">財源が異なるため全額併用可能</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <!-- 🏦 判定結果直結: 住宅ローン月々返済額＆金融機関TOP5比較への誘導バナー -->
+        <div id="subsidy-to-mortgage-bridge" style="margin-top: 1.2rem; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); border-radius: 12px; padding: 1.3rem 1.6rem; color: #ffffff; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: 0 4px 16px rgba(2, 132, 199, 0.25);">
+          <div style="max-width: 600px;">
+            <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.2); color: #e0f2fe; font-size: 0.76rem; font-weight: 800; padding: 2px 8px; border-radius: 10px; margin-bottom: 6px;">
+              <span>💰</span> 次の一歩：手出し費用・毎月返済額の圧縮効果を確認
+            </div>
+            <div style="font-size: 1.15rem; font-weight: 900; line-height: 1.4;">
+              受給できる補助金（<span id="bridge-subsidy-man">244</span>万円）を活かして、<br>
+              「月々の住宅ローン返済額」と「最適金融機関TOP5」をシミュレーション！
+            </div>
+            <div style="font-size: 0.82rem; color: #bae6fd; margin-top: 4px; line-height: 1.5;">
+              ※建物本体価格のほか、住宅設備機器（キッチン・浴室等）、外構工事、諸経費を含めた家づくり総予算から、補助金や自己資金を考慮したご希望の借入額で、武蔵野銀行・埼玉りそな・ソニー・ろうきん等の金利・月々返済額・諸経費を横並び比較できます。
+            </div>
+          </div>
+          <div>
+            <a id="btn-subsidy-to-mortgage" href="/mortgage/index.html" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #0f172a; font-weight: 900; font-size: 0.95rem; padding: 12px 22px; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35); transition: transform 0.2s;">
+              <span>🏦</span> 住宅ローンの月々返済額を比較する ➜
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subsidies List Grid -->
+  <h3 style="font-size: 1.25rem; font-weight: 900; color: #0f172a; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+    <span>📋</span> 受給対象となる補助金・助成金制度内訳（リアルタイム予算残高）
+  </h3>
+
+  <div id="subsidies-cards-container" class="subsidy-grid">
+    <!-- JSで動的生成 -->
+  </div>
+
+  <!-- Combination Rules -->
+  <div class="rules-card">
+    <div class="rules-title">
+      <span>💡</span> 補助金併用・重複禁止ルールと失敗しない申請ノウハウ
+    </div>
+    <ul class="rules-list">
+      <li><strong>国の補助金同士の重複禁止:</strong> 「みらいエコ住宅」と「先進的窓リノベ」は、同一工事部位（同一サッシ）での重複申請は不可。窓リノベ対象外部位をみらいエコで申請するなど、工区の切り分けが必須です。</li>
+      <li><strong>国と地方自治体の併用は原則可能:</strong> 国の「みらいエコ住宅（最大110万円）」と、埼玉県の「県産木材活用（最大34万円）」、鶴ヶ島市や坂戸市の「子育て・多世代近居助成金」は財源が異なるため<strong>全額合算して受給可能</strong>です。</li>
+      <li><strong>予算枠の早期終了リスク:</strong> 人気の窓リノベや自治体独自枠は年度途中で予算上限に達し受付終了となる場合があります。着工前の事前登録が必要な制度が多いため、設計段階での早期申請予約を推奨します。</li>
+    </ul>
+  </div>
+
+  <!-- 💡 補助金・ローンを最大限活かす！住ま居るの次世代家づくり体験 -->
+  <section class="discovery-portal-section">
+    <div class="portal-section-header">
+      <span class="portal-tag">NEXT GENERATION HOUSING</span>
+      <h2 class="portal-title">
+        補助金で生まれた数百万円のゆとりを、<br>
+        「暮らしの本質的な豊かさ」へ昇華させる4つの体験
+      </h2>
+      <p class="portal-desc">
+        国や自治体の補助金を受給しても、住まいの性能や心地よさが妥協されては意味がありません。<br>
+        住ま居るでは、最新のAIテクノロジーと大工の手仕事工芸を融合し、理想の住空間を即座に具現化します。
+      </p>
+    </div>
+
+    <div class="portal-grid">
+      <!-- Card 1: 3Dパース工房 -->
+      <div class="portal-card">
+        <img src="/images/kaitai/ch1_living_craft.jpg" alt="3Dフォトリアルパース生成" class="portal-card-thumb" />
+        <div class="portal-card-body">
+          <div>
+            <span class="portal-card-badge">🎨 3Dフォトリアルパース工房</span>
+            <h3 class="portal-card-title">SmileStudio AI工房</h3>
+            <p class="portal-card-text">
+              建築ホワイトモデルの骨格はそのままに、吉野杉の無垢床や珪藻土壁、勾配天井、間接照明をボタンでポチポチ選んで自分好みの3D空間を一瞬でレンダリング！
+            </p>
+          </div>
+          <a href="/smilestudio.html" target="_blank" class="portal-card-btn" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a;">
+            無料3Dパース工房を開く ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 2: AI間取り作図 -->
+      <div class="portal-card">
+        <img src="/images/carte_story/comic_step1_wife.jpg" alt="AI間取り選別・作図" class="portal-card-thumb" />
+        <div class="portal-card-body">
+          <div>
+            <span class="portal-card-badge">📐 敷地・都市計画×間取り即時製図</span>
+            <h3 class="portal-card-title">AI間取り相談・バブルプラン</h3>
+            <p class="portal-card-text">
+              夫婦の「わがまま」をAIが交通整理。敷地形状や建ぺい率・容積率に合わせて、家事楽動線や回遊動線をその場で自動レイアウト・立体化します。
+            </p>
+          </div>
+          <a href="/index.html#floorplan-studio" class="portal-card-btn" style="background: #0284c7; color: #ffffff;">
+            AI間取り作図を体験する ➜
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 3: 温熱換気AI -->
+      <div class="portal-card">
+        <img src="/images/heat20_insulation_structure.jpg" alt="AI温熱換気相談" class="portal-card-thumb" />
+        <div class="portal-card-body">
+          <div>
+            <span class="portal-card-badge">❄️ HEAT20 G2.5 × 無風空調</span>
+            <h3 class="portal-card-title">24時間 AI温熱・気密・換気相談</h3>
+            <p class="portal-card-text">
+              埼玉特有の「夏の酷暑」と「冬の底冷え」をエアコン1台で克服。補助金交付基準の省エネ等級を余裕でクリアする工学設計の秘密を深掘り相談。
+            </p>
+          </div>
+          <a href="/index.html#thermal-consultation" class="portal-card-btn" style="background: #059669; color: #ffffff;">
+            AI温熱相談をはじめる ➜
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 4: 解体新書・漫画 -->
+      <div class="portal-card">
+        <img src="/images/carte_story/comic_step3_secret.jpg" alt="漫画でわかる家づくり" class="portal-card-thumb" />
+        <div class="portal-card-body">
+          <div>
+            <span class="portal-card-badge">📖 実話漫画ストーリー・全10章</span>
+            <h3 class="portal-card-title">手づくり住宅解体新書</h3>
+            <p class="portal-card-text">
+              「大工さんの手刻みって実際どうなの？」「埼玉県環境住宅賞を受賞した家ってどんな住み心地？」施主様の実話をリアルな漫画と写真で完全公開！
+            </p>
+          </div>
+          <a href="/index.html#article-feature" class="portal-card-btn" style="background: rgba(255,255,255,0.15); color: #ffffff; border: 1px solid rgba(255,255,255,0.3);">
+            家づくり漫画・解体新書を読む ➜
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 📍 SEO / AIO 検索対策: 埼玉県主要都市別 補助金比較ガイド -->
+  <section class="seo-guide-section">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1rem;">
+      <span style="font-size: 1.4rem;">📍</span>
+      <h2 style="font-size: 1.3rem; font-weight: 900; color: #0f172a; margin: 0;">
+        埼玉県主要都市（川越・坂戸・鶴ヶ島・東松山・さいたま）の注文住宅補助金・助成金ガイド
+      </h2>
+    </div>
+    <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin-bottom: 1.5rem;">
+      「川越 注文住宅 補助金」「坂戸市 新築 助成金」「鶴ヶ島市 子育て 住宅補助」「東松山 移住 住宅ローン」等でお調べの方へ。埼玉県内の各自治体では、国の制度に上乗せして独自の優遇制度を展開しています。株式会社住ま居る（鶴ヶ島市）では、設計初期段階からこれら3層の補助金受給申請を完全サポートしています。
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem;">
+        <h3 style="font-size: 1rem; font-weight: 800; color: #0369a1; margin-bottom: 6px;">📍 川越市の新築注文住宅 補助金</h3>
+        <p style="font-size: 0.82rem; color: #475569; line-height: 1.6; margin: 0;">
+          川越市では「住宅用省エネルギー機器等設置費補助金」や市内業者による住宅改修補助を実施。国の「みらいエコ（最大110万円）」＋「埼玉県産木材（最大34万円）」とスマート設備助成を合算し、<strong>最大約 154 万円</strong>の受給が期待できます。
+        </p>
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem;">
+        <h3 style="font-size: 1rem; font-weight: 800; color: #0369a1; margin-bottom: 6px;">📍 坂戸市の新築注文住宅 補助金</h3>
+        <p style="font-size: 0.82rem; color: #475569; line-height: 1.6; margin: 0;">
+          坂戸市は県内屈指の手厚い支援！「坂戸市多世代近居住宅取得補助金」により市外転入の子育て世帯に<strong>最大 80 万円</strong>（同居改修工事は最大100万円）を交付。国の補助金と県産木材を合わせ、<strong>最大約 224 万円</strong>の大型支援となります。
+        </p>
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem;">
+        <h3 style="font-size: 1rem; font-weight: 800; color: #0369a1; margin-bottom: 6px;">📍 鶴ヶ島市の新築注文住宅 補助金</h3>
+        <p style="font-size: 0.82rem; color: #475569; line-height: 1.6; margin: 0;">
+          鶴ヶ島市では正式事業「ちかづく住まい応援金（多世代同居・近居住宅取得補助金）」により、基本額＋転入・子育て・省エネ加算で<strong>最大 100 万円</strong>を提供。国＋県＋市の3層併用により、<strong>最大約 244 万円</strong>の交付が可能です。
+        </p>
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem;">
+        <h3 style="font-size: 1rem; font-weight: 800; color: #0369a1; margin-bottom: 6px;">📍 東松山市の新築注文住宅 補助金</h3>
+        <p style="font-size: 0.82rem; color: #475569; line-height: 1.6; margin: 0;">
+          東松山市では空き家利活用や省エネ設備設置費補助を展開。国の「みらいエコ（最大110万円）」と「埼玉県産木材（最大34万円）」、市の省エネ設備助成を最適併用し、<strong>最大約 154 万円</strong>を受給できます。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Disclaimer -->
+  <div class="disclaimer-card">
+    ⚠️ <strong>免責事項（必ずお読みください）:</strong><br>
+    本ページに掲載している補助金・助成金・優遇税制の内容および金額は、当社（株式会社住ま居る）による独自調査および各官公庁公開データの集計（2026年10月1日時点）による参考情報です。各制度の公募要領、採択条件、予算執行状況、審査基準は予告なく変更される場合があります。実際の申請・お申し込みにあたっては、必ずご自身で各管轄省庁、都道府県、市区町村の公式窓口および公募要領を十分にご確認ください。当社は本情報に基づいて行われた判断や申請の採択結果について一切の責任を負いかねます。
+  </div>
+</div>
+
+<script>
+  // 補助金データベース（Gemini共有リンク https://share.gemini.google/DmihsJJWxNd2 解析結果）
+  const SUBSIDY_DATABASE = {
+    // 国レベル (住宅省エネ2026)
+    national: [
+      {
+        id: "mirai_eco",
+        tier: "national",
+        tierName: "国（国土交通省・環境省・経産省）",
+        name: "みらいエコ住宅2026事業（新築・GX志向型）",
+        maxAmount: 1100000,
+        amountText: "最大 110 万円",
+        desc: "ZEH水準・長期優良住宅を超えるGX志向型高性能木造住宅。住ま居るの標準仕様（HEAT20 G2.5）で満額対象。",
+        usageRate: 48,
+        statusText: "申請受付中（予算枠残高 余裕あり）",
+        conditions: ["長期優良住宅またはZEH水準", "子育て世帯または若者夫婦世帯", "省エネ基準6地域"],
+        link: "https://jutaku-shoene2024.mlit.go.jp/"
+      },
+      {
+        id: "window_reno",
+        tier: "national",
+        tierName: "国（環境省）",
+        name: "先進的窓リノベ2026事業",
+        maxAmount: 1000000,
+        amountText: "最大 100 万円",
+        desc: "トリプルガラス樹脂サッシ（APW430等）への高断熱化。熱貫流率Uw1.1以下で最高額補助。",
+        usageRate: 54,
+        statusText: "申請受付中（予算枠残高 54%消化）",
+        conditions: ["Uw 1.1以下の樹脂サッシ窓", "既存改修または工区分離新築"],
+        link: "https://window-renovation2024.env.go.jp/"
+      },
+      {
+        id: "water_heater",
+        tier: "national",
+        tierName: "国（経済産業省）",
+        name: "給湯省エネ2026事業",
+        maxAmount: 460000,
+        amountText: "最大 46 万円",
+        desc: "高効率給湯器（ハイブリッド給湯器、エコキュート、家庭用燃料電池エネファーム）の導入支援。",
+        usageRate: 39,
+        statusText: "申請受付中（残高十分）",
+        conditions: ["高効率要件を満たすエコキュート等", "昼間シフト機能・再エネ連動"],
+        link: "https://kyutou-shoene2024.meti.go.jp/"
+      }
+    ],
+
+    // 埼玉県
+    saitama_pref: [
+      {
+        id: "saitama_wood",
+        tier: "prefecture",
+        tierName: "埼玉県（林業振興課・埼玉県木材協会）",
+        name: "埼玉県県産木材活用住宅等支援事業",
+        maxAmount: 340000,
+        amountText: "最大 34 万円",
+        desc: "埼玉県産の西川材・吉野杉・檜などの認証合法木材を構造材・内装化粧材に一定割合以上使用する住宅へ助成。",
+        usageRate: 45,
+        statusText: "受付中（残高 55%）",
+        conditions: ["埼玉県産木材使用率 60%以上", "構造材または床・壁の現し仕上げ", "県内登録施工店（住ま居る対応）"],
+        link: "https://www.pref.saitama.lg.jp/a0905/mokuzai-hojo.html"
+      }
+    ],
+
+    // 東京都
+    tokyo_pref: [
+      {
+        id: "tokyo_zero_emi",
+        tier: "prefecture",
+        tierName: "東京都（環境公社）",
+        name: "東京ゼロエミ住宅普及促進事業",
+        maxAmount: 2400000,
+        amountText: "最大 240 万円",
+        desc: "東京都内に新築する最高水準の高断熱・省エネ住宅（水準A: 240万円、水準B: 160万円、水準C: 40万円）。",
+        usageRate: 62,
+        statusText: "申請受付中（予算消化率 62%）",
+        conditions: ["都内新築住宅", "水準A: Ua値0.30以下・再エネ設備", "都登録施工店"],
+        link: "https://www.tokyo-co2down.jp/subsidy/tokyo-zero-emission-house"
+      },
+      {
+        id: "tokyo_battery",
+        tier: "prefecture",
+        tierName: "東京都（環境公社）",
+        name: "家庭における蓄電池・太陽光等導入促進事業",
+        maxAmount: 1200000,
+        amountText: "最大 120 万円",
+        desc: "住宅用太陽光発電システム（最大30万円）＋家庭用蓄電池システム（最大90万円）の合算補助。",
+        usageRate: 70,
+        statusText: "申請受付中（人気集中・残高注意）",
+        conditions: ["都内戸建住宅", "系統連系済蓄電システム"],
+        link: "https://www.tokyo-co2down.jp/subsidy/chikudenchi"
+      }
+    ],
+
+    // 市区町村
+    cities: {
+      "鶴ヶ島": {
+            "name": "鶴ヶ島市",
+            "aliases": [
+                  "鶴ヶ島",
+                  "鶴ヶ島市",
+                  "つるがしま",
+                  "つるがしまし",
+                  "tsurugashima"
+            ],
+            "subsidies": [
+                  {
+                        "id": "鶴ヶ島_sub",
+                        "tier": "city",
+                        "tierName": "鶴ヶ島市公式助成（企業立地・定住推進課）",
+                        "name": "鶴ヶ島市ちかづく住まい応援金（多世代同居・近居住宅取得補助金）",
+                        "maxAmount": 1000000,
+                        "amountText": "最大 100 万円",
+                        "desc": "市内で親と同居または直線1km以内に近居する世帯へ交付。基本額30万円に加え、市外転入加算（20万円）、子ども加算（1人10万円・最大30万円）、再エネ省エネ設備加算（上限10万円）、空き家バンク加算（10万円）により最大100万円交付。",
+                        "usageRate": 58,
+                        "statusText": "申請受付中（2026年度公募実施中）",
+                        "conditions": [
+                              "親と同居または直線1km以内に近居する新築取得",
+                              "中学生以下の子を養育する世帯または40歳未満の若者夫婦",
+                              "転入・子ども・省エネ設備等で最大100万円加算"
+                        ],
+                        "link": "https://www.city.tsurugashima.lg.jp/kurashi-tetsuduki/sumai/jyutaku/page011431.html"
+                  }
+            ]
+      },
+      "坂戸": {
+            "name": "坂戸市",
+            "aliases": [
+                  "坂戸",
+                  "坂戸市",
+                  "さかど",
+                  "さかどし",
+                  "sakado"
+            ],
+            "subsidies": [
+                  {
+                        "id": "坂戸_sub",
+                        "tier": "city",
+                        "tierName": "坂戸市公式助成（都市整備部 住宅政策課）",
+                        "name": "坂戸市多世代近居住宅取得補助金制度",
+                        "maxAmount": 800000,
+                        "amountText": "最大 80 万円",
+                        "desc": "市内に親が1年以上居住し、新たに市外から転入して近居する子育て世帯へ交付。基本額20万円＋転入加算20万円＋義務教育終了前の子扶養加算20万円＋新築住宅取得10万円＋市内施工業者（住ま居る対応）10万円で最大80万円。",
+                        "usageRate": 52,
+                        "statusText": "申請受付中（予算枠あり）",
+                        "conditions": [
+                              "親世帯が市内に1年以上在住",
+                              "市外転入・義務教育終了前の子を扶養",
+                              "新築取得＋市内施工業者で最大80万円"
+                        ],
+                        "link": "https://www.city.sakado.lg.jp/soshiki/33/1409.html"
+                  }
+            ]
+      },
+      "川越": {
+            "name": "川越市",
+            "aliases": [
+                  "川越",
+                  "川越市",
+                  "かわごえ",
+                  "かわごえし",
+                  "kawagoe"
+            ],
+            "subsidies": [
+                  {
+                        "id": "川越_sub",
+                        "tier": "city",
+                        "tierName": "川越市公式助成（環境政策課・住宅課）",
+                        "name": "川越市住宅用省エネルギー機器等設置費補助金 ＆ 国県併用",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "自ら居住する川越市内の新築住宅に太陽光発電・蓄電池・HEMS等の省エネ機器を導入する際に交付。国の大型補助金（みらいエコ最大110万円）および埼玉県産木材（最大34万円）と合わせて新築時に最大約154万円を受給可能。",
+                        "usageRate": 64,
+                        "statusText": "申請受付中（公募中）",
+                        "conditions": [
+                              "自ら居住する川越市内の新築住宅",
+                              "対象省エネ設備（太陽光・蓄電池等）の設置",
+                              "市税滞納のないこと"
+                        ],
+                        "link": "https://www.city.kawagoe.saitama.jp/kurashi/jutaku/jutakuhojo/index.html"
+                  }
+            ]
+      },
+      "東松山": {
+            "name": "東松山市",
+            "aliases": [
+                  "東松山",
+                  "東松山市",
+                  "ひがしまつやま",
+                  "ひがしまつやまし",
+                  "higashimatsuyama"
+            ],
+            "subsidies": [
+                  {
+                        "id": "東松山_sub",
+                        "tier": "city",
+                        "tierName": "東松山市公式助成（環境課・住宅建築課）",
+                        "name": "東松山市住宅用省エネルギー設備等設置費補助金 ＆ 国県併用",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "東松山市内で自ら居住する新築住宅への太陽光・蓄電池等の省エネ設備導入支援。国の「みらいエコ（最大110万円）」と「埼玉県産木材（最大34万円）」と合算し、新築時に最大約154万円の交付が可能。",
+                        "usageRate": 45,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "東松山市内に自ら居住する新築住宅",
+                              "対象省エネ設備を設置",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.higashimatsuyama.lg.jp/soshiki/33/2143.html"
+                  }
+            ]
+      },
+      "さいたま": {
+            "name": "さいたま市",
+            "aliases": [
+                  "さいたま",
+                  "さいたまし",
+                  "さいたま市",
+                  "大宮",
+                  "浦和",
+                  "与野",
+                  "岩槻",
+                  "saitama",
+                  "omiya",
+                  "urawa"
+            ],
+            "subsidies": [
+                  {
+                        "id": "さいたま_sub",
+                        "tier": "city",
+                        "tierName": "さいたま市公式助成（環境局環境共生推進課）",
+                        "name": "さいたま市省エネ・断熱住宅普及促進補助金（スマートホーム推進）",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "ZEH水準以上の高断熱新築住宅や、太陽光・蓄電池・V2Hなどのスマートホーム設備設置に対する支援事業。国のみらいエコ（最大110万円）＋県産木材（最大34万円）と合算可能。",
+                        "usageRate": 58,
+                        "statusText": "申請受付中（公募中）",
+                        "conditions": [
+                              "さいたま市内での新築住宅",
+                              "ZEH基準以上の断熱・省エネ性能",
+                              "対象スマート機器の導入"
+                        ],
+                        "link": "https://www.city.saitama.lg.jp/001/009/015/010/004/p033069.html"
+                  }
+            ]
+      },
+      "ときがわ": {
+            "name": "ときがわ町",
+            "aliases": [
+                  "ときがわ",
+                  "ときがわ町",
+                  "比企郡ときがわ町",
+                  "tokigawa"
+            ],
+            "subsidies": [
+                  {
+                        "id": "ときがわ_sub",
+                        "tier": "city",
+                        "tierName": "ときがわ町公式助成（建設環境課・産業観光課）",
+                        "name": "ときがわ町移住定住促進住宅取得奨励金 ＆ ときがわ材活用住宅助成",
+                        "maxAmount": 800000,
+                        "amountText": "最大 80 万円",
+                        "desc": "町内での住宅新築・定住に対して基本額30万円＋子育て加算20万円（最大50万円）。さらに町内産木材（ときがわ材・西川材）を一定以上使用した場合に最大30万円が加算され、合計最大80万円を交付。",
+                        "usageRate": 42,
+                        "statusText": "申請受付中（2026年度公募）",
+                        "conditions": [
+                              "ときがわ町内での新築住宅取得",
+                              "若者夫婦世帯または中学生以下の子を扶養",
+                              "ときがわ材活用でさらに加算"
+                        ],
+                        "link": "https://www.town.tokigawa.lg.jp/info/1655"
+                  }
+            ]
+      },
+      "鳩山": {
+            "name": "鳩山町",
+            "aliases": [
+                  "鳩山",
+                  "鳩山町",
+                  "比企郡鳩山町",
+                  "hatoyama"
+            ],
+            "subsidies": [
+                  {
+                        "id": "鳩山_sub",
+                        "tier": "city",
+                        "tierName": "鳩山町公式助成（まちづくり推進課）",
+                        "name": "鳩山町多世代同居・近居住宅取得等支援助成金",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "町内での三世代同居・近居を目的とした新築住宅取得および省エネ設備導入に対する支援制度。国の「みらいエコ（最大110万円）」と「埼玉県産木材（最大34万円）」と合算可能。",
+                        "usageRate": 40,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "鳩山町内での新築住宅取得",
+                              "町内親族との近居・同居",
+                              "町税完納"
+                        ],
+                        "link": "https://www.town.hatoyama.saitama.jp/kurashi/sumai/jutaku/1458113401569.html"
+                  }
+            ]
+      },
+      "毛呂山": {
+            "name": "毛呂山町",
+            "aliases": [
+                  "毛呂山",
+                  "毛呂山町",
+                  "もろやま",
+                  "もろやま町",
+                  "moroyama"
+            ],
+            "subsidies": [
+                  {
+                        "id": "毛呂山_sub",
+                        "tier": "city",
+                        "tierName": "毛呂山町公式助成（まちづくり整備課）",
+                        "name": "毛呂山町多世代同居・近居住宅取得等支援補助金",
+                        "maxAmount": 400000,
+                        "amountText": "最大 40 万円",
+                        "desc": "親世帯と同居または町内に近居するために新築住宅を取得する子育て世帯へ交付。基本補助20万円＋町外転入加算10万円＋中学生以下の子扶養加算10万円で最大40万円。",
+                        "usageRate": 48,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "毛呂山町内での親族同居または近居新築",
+                              "中学生以下の子がいる世帯",
+                              "町税完納"
+                        ],
+                        "link": "https://www.town.moroyama.saitama.jp/soshiki/machizukuriseibika/kenchiku_jutaku/3516.html"
+                  }
+            ]
+      },
+      "越生": {
+            "name": "越生町",
+            "aliases": [
+                  "越生",
+                  "越生町",
+                  "おごせ",
+                  "おごせまち",
+                  "ogose"
+            ],
+            "subsidies": [
+                  {
+                        "id": "越生_sub",
+                        "tier": "city",
+                        "tierName": "越生町公式助成（企画財政課）",
+                        "name": "越生町若者・子育て世代定住奨励金（新築住宅取得支援）",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "町内に定住する意思をもって自ら居住する新築住宅を取得した若者夫婦・子育て世帯へ交付。国・県の補助金と合算受給可能。",
+                        "usageRate": 38,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "夫婦いずれかが40歳未満または中学生以下の子を扶養",
+                              "越生町内に新築住宅を取得・住民登録",
+                              "町税完納"
+                        ],
+                        "link": "https://www.town.ogose.saitama.jp/soshiki/kikakuzaisei/kikaku/teiju/1435284307374.html"
+                  }
+            ]
+      },
+      "滑川": {
+            "name": "滑川町",
+            "aliases": [
+                  "滑川",
+                  "滑川町",
+                  "なめがわ",
+                  "なめがわまち",
+                  "namegawa"
+            ],
+            "subsidies": [
+                  {
+                        "id": "滑川_sub",
+                        "tier": "city",
+                        "tierName": "滑川町公式助成（総務課政策推進担当）",
+                        "name": "滑川町新築住宅等取得奨励金 ＆ 太陽光発電設置助成",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "子育て環境に定評のある滑川町内での新築住宅取得および省エネ設備導入に対する奨励金。国のみらいエコ＋県産木材と併用可。",
+                        "usageRate": 55,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "滑川町内に自ら居住する新築住宅を取得",
+                              "転入・定住要件を満たす世帯",
+                              "町税滞納なし"
+                        ],
+                        "link": "https://www.town.namegawa.saitama.jp/soshiki/somuka/seisakusuishintanto/teiju/1269.html"
+                  }
+            ]
+      },
+      "嵐山": {
+            "name": "嵐山町",
+            "aliases": [
+                  "嵐山",
+                  "嵐山町",
+                  "らんざん",
+                  "らんざんまち",
+                  "ranzan"
+            ],
+            "subsidies": [
+                  {
+                        "id": "嵐山_sub",
+                        "tier": "city",
+                        "tierName": "嵐山町公式助成（まちづくり整備課）",
+                        "name": "嵐山町若者・子育て世代マイホーム取得奨励金",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "町内への定住促進と地域活性化のため、新築住宅を取得した40歳未満の若者夫婦または子育て世帯へ交付。",
+                        "usageRate": 43,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "自ら居住する嵐山町内の新築住宅",
+                              "40歳未満の夫婦または中学生以下の子を扶養",
+                              "町税完納"
+                        ],
+                        "link": "https://www.town.ranzan.saitama.jp/0000003264.html"
+                  }
+            ]
+      },
+      "小川": {
+            "name": "小川町",
+            "aliases": [
+                  "小川",
+                  "小川町",
+                  "おがわ",
+                  "おがわまち",
+                  "比企郡小川町",
+                  "ogawa"
+            ],
+            "subsidies": [
+                  {
+                        "id": "小川_sub",
+                        "tier": "city",
+                        "tierName": "小川町公式助成（都市建築課・にぎわい創生課）",
+                        "name": "小川町多世代同居・近居住まい支援助成金 ＆ 地域産木材加算",
+                        "maxAmount": 400000,
+                        "amountText": "最大 40 万円",
+                        "desc": "小川町内での多世代同居・近居新築に最大30万円。さらに比企産木材・西川材の活用により最大10万円を加算。",
+                        "usageRate": 41,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "小川町内に親と同居または近居する新築住宅",
+                              "中学生以下の子を養育または40歳未満夫婦",
+                              "町税完納"
+                        ],
+                        "link": "https://www.town.ogawa.saitama.jp/0000002167.html"
+                  }
+            ]
+      },
+      "川島": {
+            "name": "川島町",
+            "aliases": [
+                  "川島",
+                  "川島町",
+                  "かわじま",
+                  "かわじままち",
+                  "kawajima"
+            ],
+            "subsidies": [
+                  {
+                        "id": "川島_sub",
+                        "tier": "city",
+                        "tierName": "川島町公式助成（政策推進課）",
+                        "name": "川島町多世代同居・近居推進住宅取得等補助金",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "親・子・孫の三世代同居または近居のために町内に新築住宅を取得する子育て世帯へ交付。",
+                        "usageRate": 46,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "町内に親世帯が居住し、近居・同居する新築住宅",
+                              "中学生以下の子がいる世帯",
+                              "町税完納"
+                        ],
+                        "link": "https://www.town.kawajima.saitama.jp/2237.htm"
+                  }
+            ]
+      },
+      "吉見": {
+            "name": "吉見町",
+            "aliases": [
+                  "吉見",
+                  "吉見町",
+                  "よしみ",
+                  "よしみまち",
+                  "yoshimi"
+            ],
+            "subsidies": [
+                  {
+                        "id": "吉見_sub",
+                        "tier": "city",
+                        "tierName": "吉見町公式助成（まち整備課）",
+                        "name": "吉見町住宅用新エネルギーシステム等設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "吉見町内での省エネ機器（太陽光発電・蓄電池等）導入助成。国の「みらいエコ（最大110万円）」＋「埼玉県産木材（最大34万円）」と合算可能。",
+                        "usageRate": 35,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "吉見町内に住所を有する新築住宅",
+                              "対象省エネ設備の導入",
+                              "町税完納"
+                        ],
+                        "link": "https://www.town.yoshimi.saitama.jp/soshiki/machiseibika/3/784.html"
+                  }
+            ]
+      },
+      "日高": {
+            "name": "日高市",
+            "aliases": [
+                  "日高",
+                  "日高市",
+                  "ひだか",
+                  "ひだかし",
+                  "hidaka"
+            ],
+            "subsidies": [
+                  {
+                        "id": "日高_sub",
+                        "tier": "city",
+                        "tierName": "日高市公式助成（生活環境課）",
+                        "name": "日高市住宅用省エネルギー設備設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "住宅用太陽光発電・蓄電池・HEMS等の省エネ設備導入に対する助成。国のみらいエコ＋県産木材と併用可。",
+                        "usageRate": 45,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "自ら居住する日高市内の住宅",
+                              "対象省エネ設備の設置",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.hidaka.lg.jp/soshiki/shimin/seikatsukankyo/kankyo/hojyo/5751.html"
+                  }
+            ]
+      },
+      "飯能": {
+            "name": "飯能市",
+            "aliases": [
+                  "飯能",
+                  "飯能市",
+                  "はんのう",
+                  "はんのうし",
+                  "hanno"
+            ],
+            "subsidies": [
+                  {
+                        "id": "飯能_sub",
+                        "tier": "city",
+                        "tierName": "飯能市公式助成（農林水産課・まちづくり推進課）",
+                        "name": "飯能市西川材活用住宅新築等補助金 ＆ 多世代同居住宅取得支援",
+                        "maxAmount": 500000,
+                        "amountText": "最大 50 万円",
+                        "desc": "伝統の西川材（飯能産ヒノキ・スギ）を柱・梁などの構造材や内装材に使用した新築住宅へ助成。同居・近居支援と合わせて最大50万円受給可能。",
+                        "usageRate": 60,
+                        "statusText": "申請受付中（2026年度公募）",
+                        "conditions": [
+                              "飯能市内での新築住宅",
+                              "西川材使用率等の基準を満たすこと",
+                              "市登録木材取扱業者・施工店（住ま居る対応）"
+                        ],
+                        "link": "https://www.city.hanno.lg.jp/soshikikarasagasu/norinsuisanka/norinshinko/1782.html"
+                  }
+            ]
+      },
+      "秩父": {
+            "name": "秩父市",
+            "aliases": [
+                  "秩父",
+                  "秩父市",
+                  "ちちぶ",
+                  "ちちぶし",
+                  "chichibu"
+            ],
+            "subsidies": [
+                  {
+                        "id": "秩父_sub",
+                        "tier": "city",
+                        "tierName": "秩父市公式助成（移住相談センター・森づくり課）",
+                        "name": "秩父市移住・就業住宅取得支援事業 ＆ 秩父産木材活用助成",
+                        "maxAmount": 1000000,
+                        "amountText": "最大 100 万円",
+                        "desc": "秩父市外からの移住定住に伴う新築住宅取得で最大50万円＋秩父産木材活用助成（最大50万円）により、合計最大100万円交付。",
+                        "usageRate": 53,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "市外からの転入または子育て世帯の新築",
+                              "秩父産木材を一定量以上使用",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.chichibu.lg.jp/5070.html"
+                  }
+            ]
+      },
+      "所沢": {
+            "name": "所沢市",
+            "aliases": [
+                  "所沢",
+                  "所沢市",
+                  "ところざわ",
+                  "ところざわし",
+                  "tokorozawa"
+            ],
+            "subsidies": [
+                  {
+                        "id": "所沢_sub",
+                        "tier": "city",
+                        "tierName": "所沢市公式助成（マチごとエコタウン推進課）",
+                        "name": "所沢市スマートエネルギー製造・利用促進補助金",
+                        "maxAmount": 150000,
+                        "amountText": "最大 15 万円",
+                        "desc": "高断熱住宅や創エネ・省エネ設備（太陽光発電・家庭用蓄電池・V2H等）の新築導入支援。国＋県と併用可能。",
+                        "usageRate": 62,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "所沢市内の新築住宅",
+                              "対象スマートエネルギー設備の設置",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.tokorozawa.saitama.jp/kurashi/seikatukankyo/kankyo/hojyo/smartenergy.html"
+                  }
+            ]
+      },
+      "狭山": {
+            "name": "狭山市",
+            "aliases": [
+                  "狭山",
+                  "狭山市",
+                  "さやま",
+                  "さやまし",
+                  "sayama"
+            ],
+            "subsidies": [
+                  {
+                        "id": "狭山_sub",
+                        "tier": "city",
+                        "tierName": "狭山市公式助成（環境課）",
+                        "name": "狭山市住宅用省エネルギー設備等設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "自ら居住する狭山市内の住宅への太陽光発電・蓄電システム設置助成。国のみらいエコ（最大110万円）＋県産木材（最大34万円）と合算可能。",
+                        "usageRate": 49,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "狭山市内の新築住宅",
+                              "対象省エネ設備の設置",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.sayama.saitama.jp/kurashi/kankyo/kankyo/hojo_syouene.html"
+                  }
+            ]
+      },
+      "入間": {
+            "name": "入間市",
+            "aliases": [
+                  "入間",
+                  "入間市",
+                  "いるま",
+                  "いるまし",
+                  "iruma"
+            ],
+            "subsidies": [
+                  {
+                        "id": "入間_sub",
+                        "tier": "city",
+                        "tierName": "入間市公式助成（都市計画課）",
+                        "name": "入間市多世代同居・近居等住宅取得支援事業",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "親・子世帯が入間市内で同居または近居するために新築住宅を取得する場合に交付。国・県補助金と併用可。",
+                        "usageRate": 47,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "親世帯が市内に1年以上在住",
+                              "中学生以下の子を扶養する世帯",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.iruma.saitama.jp/soshiki/toshikeikakuka/toshikeikakugyomu/sumai/2877.html"
+                  }
+            ]
+      },
+      "朝霞": {
+            "name": "朝霞市",
+            "aliases": [
+                  "朝霞",
+                  "朝霞市",
+                  "あさか",
+                  "あさかし",
+                  "asaka"
+            ],
+            "subsidies": [
+                  {
+                        "id": "朝霞_sub",
+                        "tier": "city",
+                        "tierName": "朝霞市公式助成（環境推進課）",
+                        "name": "朝霞市住宅用省エネルギー設備設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "太陽光発電・家庭用蓄電池等の設置助成。国のみらいエコ（最大110万円）＋埼玉県産木材（最大34万円）と合わせて最大約154万円受給。",
+                        "usageRate": 58,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "朝霞市内に自ら居住する新築住宅",
+                              "対象省エネ設備の設置",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.asaka.lg.jp/soshiki/17/syouene.html"
+                  }
+            ]
+      },
+      "志木": {
+            "name": "志木市",
+            "aliases": [
+                  "志木",
+                  "志木市",
+                  "しき",
+                  "しきし",
+                  "shiki"
+            ],
+            "subsidies": [
+                  {
+                        "id": "志木_sub",
+                        "tier": "city",
+                        "tierName": "志木市公式助成（環境推進課）",
+                        "name": "志木市住宅用再生可能エネルギー等設備設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "住宅用太陽光発電や蓄電池、HEMS設置を支援。国・県の補助金と合算可能。",
+                        "usageRate": 51,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "志木市内の新築住宅",
+                              "対象再エネ設備の導入",
+                              "市税滞納なし"
+                        ],
+                        "link": "https://www.city.shiki.lg.jp/soshiki/17/1460.html"
+                  }
+            ]
+      },
+      "和光": {
+            "name": "和光市",
+            "aliases": [
+                  "和光",
+                  "和光市",
+                  "わこう",
+                  "わこうし",
+                  "wako"
+            ],
+            "subsidies": [
+                  {
+                        "id": "和光_sub",
+                        "tier": "city",
+                        "tierName": "和光市公式助成（環境課）",
+                        "name": "和光市住宅用環境配慮型設備設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "和光市内の住宅への省エネルギー設備（太陽光発電・蓄電池等）導入支援。国＋県と併用可。",
+                        "usageRate": 54,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "和光市内の新築住宅",
+                              "対象環境設備の導入",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.wako.lg.jp/kurashi/kankyo/1002577/1002581.html"
+                  }
+            ]
+      },
+      "新座": {
+            "name": "新座市",
+            "aliases": [
+                  "新座",
+                  "新座市",
+                  "にいざ",
+                  "にいざし",
+                  "niiza"
+            ],
+            "subsidies": [
+                  {
+                        "id": "新座_sub",
+                        "tier": "city",
+                        "tierName": "新座市公式助成（環境課）",
+                        "name": "新座市住宅用新エネルギー・省エネルギー設備設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "新座市内の住宅に太陽光発電・蓄電池・エネファームを設置する場合に交付。国＋県と併用可。",
+                        "usageRate": 59,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "新座市内の新築住宅",
+                              "対象設備の設置",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.niiza.lg.jp/soshiki/14/syouene.html"
+                  }
+            ]
+      },
+      "富士見": {
+            "name": "富士見市",
+            "aliases": [
+                  "富士見",
+                  "富士見市",
+                  "ふじみ",
+                  "ふじみし",
+                  "fujimi"
+            ],
+            "subsidies": [
+                  {
+                        "id": "富士見_sub",
+                        "tier": "city",
+                        "tierName": "富士見市公式助成（環境課）",
+                        "name": "富士見市住宅用省エネルギー設備設置等補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "住宅用太陽光発電・蓄電システム等の設置助成。国＋県と合算可能。",
+                        "usageRate": 48,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "富士見市内の新築住宅",
+                              "対象省エネ設備の設置",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.fujimi.saitama.jp/kurashi_tetsuzuki/kankyo_gomi/kankyo/ondanka/syouene-setsubi.html"
+                  }
+            ]
+      },
+      "ふじみ野": {
+            "name": "ふじみ野市",
+            "aliases": [
+                  "ふじみ野",
+                  "ふじみ野市",
+                  "ふじみの",
+                  "ふじみのし",
+                  "fujimino"
+            ],
+            "subsidies": [
+                  {
+                        "id": "ふじみ野_sub",
+                        "tier": "city",
+                        "tierName": "ふじみ野市公式助成（環境課）",
+                        "name": "ふじみ野市住宅用スマートエネルギー設備設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "自ら居住するふじみ野市内の住宅に太陽光発電・蓄電池・HEMSを導入する場合に助成。",
+                        "usageRate": 53,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "ふじみ野市内の新築住宅",
+                              "対象スマートエネルギー設備の設置",
+                              "市税滞納なし"
+                        ],
+                        "link": "https://www.city.fujimino.saitama.jp/soshiki/kankyoka/kankyosuishinkakari/kankyo/shoene/2418.html"
+                  }
+            ]
+      },
+      "三芳": {
+            "name": "三芳町",
+            "aliases": [
+                  "三芳",
+                  "三芳町",
+                  "みよし",
+                  "みよしまち",
+                  "miyoshi"
+            ],
+            "subsidies": [
+                  {
+                        "id": "三芳_sub",
+                        "tier": "city",
+                        "tierName": "三芳町公式助成（環境課）",
+                        "name": "三芳町住宅用省エネルギー設備設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "町内住宅への太陽光発電・家庭用蓄電池等の設置助成。国＋県と合算受給可能。",
+                        "usageRate": 44,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "三芳町内の新築住宅",
+                              "対象省エネ設備の導入",
+                              "町税完納"
+                        ],
+                        "link": "https://www.town.saitama-miyoshi.lg.jp/environment/clean_energy/hojyo.html"
+                  }
+            ]
+      },
+      "熊谷": {
+            "name": "熊谷市",
+            "aliases": [
+                  "熊谷",
+                  "熊谷市",
+                  "くまがや",
+                  "くまがやし",
+                  "kumagaya"
+            ],
+            "subsidies": [
+                  {
+                        "id": "熊谷_sub",
+                        "tier": "city",
+                        "tierName": "熊谷市公式助成（環境政策課）",
+                        "name": "熊谷市住宅用スマートエネルギー設備設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "ゼロカーボンシティ実現に向けた太陽光・蓄電池等への助成。国＋県と合算可能。",
+                        "usageRate": 52,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "熊谷市内の新築住宅",
+                              "対象省エネ設備の設置",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.kumagaya.lg.jp/kurashi/kankyo/hojyokin/smart_energy.html"
+                  }
+            ]
+      },
+      "行田": {
+            "name": "行田市",
+            "aliases": [
+                  "行田",
+                  "行田市",
+                  "ぎょうだ",
+                  "ぎょうだし",
+                  "gyoda"
+            ],
+            "subsidies": [
+                  {
+                        "id": "行田_sub",
+                        "tier": "city",
+                        "tierName": "行田市公式助成（都市計画課）",
+                        "name": "行田市三世代同居・近居住宅取得等支援助成金",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "市外からの転入や三世代同居・近居に対する住宅取得支援。国のみらいエコ（最大110万円）＋県産木材（最大34万円）と合わせて最大約174万円受給可能。",
+                        "usageRate": 50,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "三世代同居または近居を目的とする新築",
+                              "中学生以下の子を養育する世帯",
+                              "市税滞納のないこと"
+                        ],
+                        "link": "https://www.city.gyoda.lg.jp/soshiki/kankyokeizaibu/kankyo/gyomu/hojyo/2324.html"
+                  }
+            ]
+      },
+      "加須": {
+            "name": "加須市",
+            "aliases": [
+                  "加須",
+                  "加須市",
+                  "かぞ",
+                  "かぞし",
+                  "kazo"
+            ],
+            "subsidies": [
+                  {
+                        "id": "加須_sub",
+                        "tier": "city",
+                        "tierName": "加須市公式助成（都市計画課住宅担当）",
+                        "name": "加須市子育て世代マイホーム取得補助金",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "加須市内に定住する意思をもって新築住宅を取得した中学生以下の子を養育する子育て世帯へ交付。",
+                        "usageRate": 49,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "中学生以下の子を養育する子育て世帯",
+                              "加須市内の新築住宅を取得・定住",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.kazo.lg.jp/soshiki/toshiseibi/jutaku/3752.html"
+                  }
+            ]
+      },
+      "本庄": {
+            "name": "本庄市",
+            "aliases": [
+                  "本庄",
+                  "本庄市",
+                  "ほんじょう",
+                  "ほんじょうし",
+                  "honjo"
+            ],
+            "subsidies": [
+                  {
+                        "id": "本庄_sub",
+                        "tier": "city",
+                        "tierName": "本庄市公式助成（都市整備課住宅担当）",
+                        "name": "本庄市定住促進住宅取得奨励金（子育て・多世代同居支援）",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "本庄市内に自ら居住する新築住宅を取得した子育て世帯・若者夫婦世帯への奨励金。",
+                        "usageRate": 46,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "新築住宅を取得し住民登録",
+                              "中学生以下の子がいる世帯または40歳未満夫婦",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.honjo.lg.jp/soshiki/toshiseibi/jutaku/tantojoho/jutakushien/1435282498565.html"
+                  }
+            ]
+      },
+      "羽生": {
+            "name": "羽生市",
+            "aliases": [
+                  "羽生",
+                  "羽生市",
+                  "はにゅう",
+                  "はにゅうし",
+                  "hanyu"
+            ],
+            "subsidies": [
+                  {
+                        "id": "羽生_sub",
+                        "tier": "city",
+                        "tierName": "羽生市公式助成（まちづくり政策課）",
+                        "name": "羽生市三世代同居・近居住宅取得等支援助成金",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "親・子・孫の三世代が羽生市内で同居または近居するために新築住宅を取得する場合に助成。",
+                        "usageRate": 44,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "三世代同居または直線1km以内の近居新築",
+                              "中学生以下の子を扶養",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.hanyu.lg.jp/docs/2019032600029/"
+                  }
+            ]
+      },
+      "鴻巣": {
+            "name": "鴻巣市",
+            "aliases": [
+                  "鴻巣",
+                  "鴻巣市",
+                  "こうのす",
+                  "こうのすし",
+                  "konosu"
+            ],
+            "subsidies": [
+                  {
+                        "id": "鴻巣_sub",
+                        "tier": "city",
+                        "tierName": "鴻巣市公式助成（環境課）",
+                        "name": "鴻巣市住宅用省エネルギー設備等設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "自ら居住する鴻巣市内の新築住宅に太陽光発電・蓄電池等を設置する際に交付。国＋県と合算可能。",
+                        "usageRate": 50,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "鴻巣市内の新築住宅",
+                              "対象省エネ設備の導入",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.konosu.saitama.jp/soshiki/kankyo/1/1449557788484.html"
+                  }
+            ]
+      },
+      "深谷": {
+            "name": "深谷市",
+            "aliases": [
+                  "深谷",
+                  "深谷市",
+                  "ふかや",
+                  "ふかやし",
+                  "fukaya"
+            ],
+            "subsidies": [
+                  {
+                        "id": "深谷_sub",
+                        "tier": "city",
+                        "tierName": "深谷市公式助成（都市計画課）",
+                        "name": "深谷市定住促進住宅取得補助金（子育て・若者世帯マイホーム支援）",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "市外からの転入や子育て世代による深谷市内での新築住宅取得に対する助成制度。",
+                        "usageRate": 57,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "市外転入または中学生以下の子を養育する世帯",
+                              "自ら居住する新築住宅を取得",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.fukaya.saitama.jp/soshiki/toshiseibi/toshikeikaku/tantojoho/teiju_sumai/1418705917409.html"
+                  }
+            ]
+      },
+      "上尾": {
+            "name": "上尾市",
+            "aliases": [
+                  "上尾",
+                  "上尾市",
+                  "あげお",
+                  "あげおし",
+                  "ageo"
+            ],
+            "subsidies": [
+                  {
+                        "id": "上尾_sub",
+                        "tier": "city",
+                        "tierName": "上尾市公式助成（環境政策課）",
+                        "name": "上尾市省エネ設備設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "住宅用太陽光発電システム・蓄電池・エネファーム等の設置助成。国のみらいエコ＋県産木材と合算可。",
+                        "usageRate": 61,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "上尾市内の新築住宅",
+                              "対象省エネ設備の設置",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.ageo.lg.jp/site/kankyo/025114040101.html"
+                  }
+            ]
+      },
+      "草加": {
+            "name": "草加市",
+            "aliases": [
+                  "草加",
+                  "草加市",
+                  "そうか",
+                  "そうかし",
+                  "soka",
+                  "souka"
+            ],
+            "subsidies": [
+                  {
+                        "id": "草加_sub",
+                        "tier": "city",
+                        "tierName": "草加市公式助成（くらし安全課環境係）",
+                        "name": "草加市住宅用地球温暖化対策設備導入補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "住宅用太陽光発電・蓄電システム・HEMS等の導入補助。国＋県と併用可能。",
+                        "usageRate": 53,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "草加市内の新築住宅",
+                              "対象省エネ設備の設置",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.soka.saitama.jp/cont/s1408/010/010/010/010/PAGE000000000000052327.html"
+                  }
+            ]
+      },
+      "越谷": {
+            "name": "越谷市",
+            "aliases": [
+                  "越谷",
+                  "越谷市",
+                  "こしがや",
+                  "こしがやし",
+                  "koshigaya"
+            ],
+            "subsidies": [
+                  {
+                        "id": "越谷_sub",
+                        "tier": "city",
+                        "tierName": "越谷市公式助成（環境政策課）",
+                        "name": "越谷市住宅用地球温暖化対策設備設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "自ら居住する越谷市内の住宅への省エネルギー設備（太陽光発電・蓄電池等）設置助成。",
+                        "usageRate": 63,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "越谷市内の新築住宅",
+                              "対象設備の設置",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.koshigaya.saitama.jp/kurashi_shisei/kurashi/kankyo/ondankataisaku/kankyo-ondanka-hojo.html"
+                  }
+            ]
+      },
+      "蕨": {
+            "name": "蕨市",
+            "aliases": [
+                  "蕨",
+                  "蕨市",
+                  "わらび",
+                  "わらびし",
+                  "warabi"
+            ],
+            "subsidies": [
+                  {
+                        "id": "蕨_sub",
+                        "tier": "city",
+                        "tierName": "蕨市公式助成（安全安心推進課環境係）",
+                        "name": "蕨市住宅用新・省エネルギーシステム等設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "太陽光発電・蓄電池等の省エネ設備導入支援。国＋県と合算可能。",
+                        "usageRate": 49,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "蕨市内の新築住宅",
+                              "対象システムの設置",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.warabi.saitama.jp/kurashi/kankyo/1002220/1002237.html"
+                  }
+            ]
+      },
+      "戸田": {
+            "name": "戸田市",
+            "aliases": [
+                  "戸田",
+                  "戸田市",
+                  "とだ",
+                  "とだし",
+                  "toda"
+            ],
+            "subsidies": [
+                  {
+                        "id": "戸田_sub",
+                        "tier": "city",
+                        "tierName": "戸田市公式助成（環境課）",
+                        "name": "戸田市省エネルギー設備設置費等補助制度",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "戸田市内の住宅に太陽光発電・蓄電池等を設置する場合に交付。国＋県と併用可。",
+                        "usageRate": 56,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "戸田市内の新築住宅",
+                              "対象省エネ設備の導入",
+                              "市税滞納なし"
+                        ],
+                        "link": "https://www.city.toda.saitama.jp/soshiki/221/kankyo-hojo.html"
+                  }
+            ]
+      },
+      "川口": {
+            "name": "川口市",
+            "aliases": [
+                  "川口",
+                  "川口市",
+                  "かわぐち",
+                  "かわぐちし",
+                  "kawaguchi"
+            ],
+            "subsidies": [
+                  {
+                        "id": "川口_sub",
+                        "tier": "city",
+                        "tierName": "川口市公式助成（環境総務課）",
+                        "name": "川口市省エネ設備設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "住宅用太陽光発電・蓄電システム・エネファーム等の設置助成。国の大型補助金（みらいエコ等）＋埼玉県産木材と合算可能。",
+                        "usageRate": 65,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "川口市内の新築住宅",
+                              "対象省エネ設備の設置",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.kawaguchi.lg.jp/soshiki/01090/030/1/4/21820.html"
+                  }
+            ]
+      },
+      "桶川": {
+            "name": "桶川市",
+            "aliases": [
+                  "桶川",
+                  "桶川市",
+                  "おけがわ",
+                  "おけがわし",
+                  "okegawa"
+            ],
+            "subsidies": [
+                  {
+                        "id": "桶川_sub",
+                        "tier": "city",
+                        "tierName": "桶川市公式助成（環境課生活環境担当）",
+                        "name": "桶川市スマートエネルギー設備設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "太陽光発電・蓄電システム等のスマートエネルギー機器導入支援。国＋県と併用可。",
+                        "usageRate": 47,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "桶川市内の新築住宅",
+                              "対象設備の設置",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.okegawa.lg.jp/soshiki/kankyo/seikatsukankyo/kankyo/hojokin/smart_energy/2619.html"
+                  }
+            ]
+      },
+      "久喜": {
+            "name": "久喜市",
+            "aliases": [
+                  "久喜",
+                  "久喜市",
+                  "くき",
+                  "くきし",
+                  "鷲宮",
+                  "栗橋",
+                  "菖蒲",
+                  "kuki"
+            ],
+            "subsidies": [
+                  {
+                        "id": "久喜_sub",
+                        "tier": "city",
+                        "tierName": "久喜市公式助成（建築住宅課）",
+                        "name": "久喜市三世代同居住宅取得支援補助金",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "親・子・孫の三世代が同居するために久喜市内に新築住宅を取得する世帯へ交付。",
+                        "usageRate": 50,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "三世代同居を目的とする新築住宅取得",
+                              "中学生以下の子を扶養",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.kuki.lg.jp/kurashi/jutaku/sumai_shien/sandai_dokyo.html"
+                  }
+            ]
+      },
+      "北本": {
+            "name": "北本市",
+            "aliases": [
+                  "北本",
+                  "北本市",
+                  "きたもと",
+                  "きたもとし",
+                  "kitamoto"
+            ],
+            "subsidies": [
+                  {
+                        "id": "北本_sub",
+                        "tier": "city",
+                        "tierName": "北本市公式助成（都市計画課住宅担当）",
+                        "name": "北本市多世代同居・近居住宅取得等補助金",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "親世帯と同居または北本市内に近居するために新築住宅を取得する子育て世帯へ交付。",
+                        "usageRate": 48,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "親世帯が市内に1年以上在住",
+                              "中学生以下の子を扶養する世帯",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.kitamoto.lg.jp/kurashi/sumai/jutaku/hojo/4594.html"
+                  }
+            ]
+      },
+      "八潮": {
+            "name": "八潮市",
+            "aliases": [
+                  "八潮",
+                  "八潮市",
+                  "やしお",
+                  "やしおし",
+                  "yashio"
+            ],
+            "subsidies": [
+                  {
+                        "id": "八潮_sub",
+                        "tier": "city",
+                        "tierName": "八潮市公式助成（リサイクルプラザ環境課）",
+                        "name": "八潮市住宅用省エネルギー設備設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "自ら居住する八潮市内の住宅への太陽光発電・蓄電池等設置補助。国＋県と併用可。",
+                        "usageRate": 52,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "八潮市内の新築住宅",
+                              "対象設備の導入",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.yashio.lg.jp/kurashi/kankyo_gomi/kankyo/syouene_hojo.html"
+                  }
+            ]
+      },
+      "春日部": {
+            "name": "春日部市",
+            "aliases": [
+                  "春日部",
+                  "春日部市",
+                  "かすかべ",
+                  "かすかべし",
+                  "庄和",
+                  "kasukabe"
+            ],
+            "subsidies": [
+                  {
+                        "id": "春日部_sub",
+                        "tier": "city",
+                        "tierName": "春日部市公式助成（環境政策課）",
+                        "name": "春日部市住宅用省エネルギー設備設置等補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "自ら居住する春日部市内の新築住宅への太陽光発電システム・家庭用蓄電池等の設置助成。国のみらいエコ（最大110万円）＋埼玉県産木材（最大34万円）と合算可能。",
+                        "usageRate": 53,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "春日部市内の新築住宅",
+                              "対象省エネ設備の設置",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.kasukabe.lg.jp/kurashi_tetsuzuki/kankyo_gomi/shoenerugi/3719.html"
+                  }
+            ]
+      },
+      "三郷": {
+            "name": "三郷市",
+            "aliases": [
+                  "三郷",
+                  "三郷市",
+                  "みさと",
+                  "みさとし",
+                  "misato"
+            ],
+            "subsidies": [
+                  {
+                        "id": "三郷_sub",
+                        "tier": "city",
+                        "tierName": "三郷市公式助成（クリーンライフ課）",
+                        "name": "三郷市住宅用環境配慮型設備設置等補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "太陽光発電・蓄電システム等の導入助成。国のみらいエコ＋県産木材と合算可能。",
+                        "usageRate": 55,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "三郷市内の新築住宅",
+                              "対象設備の設置",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.misato.lg.jp/kurashi_tetsuzuki/kankyo_gomi/kankyo/1169.html"
+                  }
+            ]
+      },
+      "蓮田": {
+            "name": "蓮田市",
+            "aliases": [
+                  "蓮田",
+                  "蓮田市",
+                  "はすだ",
+                  "はすだし",
+                  "hasuda"
+            ],
+            "subsidies": [
+                  {
+                        "id": "蓮田_sub",
+                        "tier": "city",
+                        "tierName": "蓮田市公式助成（環境課環境保全担当）",
+                        "name": "蓮田市住宅用省エネルギー設備設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "自ら居住する蓮田市内の住宅への太陽光発電・蓄電池等導入支援。国＋県と合算可能。",
+                        "usageRate": 45,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "蓮田市内の新築住宅",
+                              "対象省エネ設備の設置",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.hasuda.saitama.jp/kankyo/kurashi/kankyo/hojo/syouene.html"
+                  }
+            ]
+      },
+      "幸手": {
+            "name": "幸手市",
+            "aliases": [
+                  "幸手",
+                  "幸手市",
+                  "さって",
+                  "さってし",
+                  "satte"
+            ],
+            "subsidies": [
+                  {
+                        "id": "幸手_sub",
+                        "tier": "city",
+                        "tierName": "幸手市公式助成（都市整備課住宅担当）",
+                        "name": "幸手市子育て世帯等マイホーム取得奨励金",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "市外からの転入や子育て世帯による幸手市内での新築住宅取得に対する奨励金。",
+                        "usageRate": 46,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "中学生以下の子を養育する世帯または40歳未満夫婦",
+                              "新築住宅を取得・定住",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.satte.lg.jp/soshiki/toshiseibi/jutaku/3794.html"
+                  }
+            ]
+      },
+      "吉川": {
+            "name": "吉川市",
+            "aliases": [
+                  "吉川",
+                  "吉川市",
+                  "よしかわ",
+                  "よしかわし",
+                  "yoshikawa"
+            ],
+            "subsidies": [
+                  {
+                        "id": "吉川_sub",
+                        "tier": "city",
+                        "tierName": "吉川市公式助成（環境課）",
+                        "name": "吉川市住宅用スマートエネルギー設備設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "住宅用太陽光発電・蓄電池・HEMS等の省エネ設備導入助成。国＋県と合算受給可能。",
+                        "usageRate": 49,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "吉川市内の新築住宅",
+                              "対象設備の導入",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.yoshikawa.saitama.jp/index.cfm/24,63581,146,654,html"
+                  }
+            ]
+      },
+      "白岡": {
+            "name": "白岡市",
+            "aliases": [
+                  "白岡",
+                  "白岡市",
+                  "しらおか",
+                  "しらおかし",
+                  "shiraoka"
+            ],
+            "subsidies": [
+                  {
+                        "id": "白岡_sub",
+                        "tier": "city",
+                        "tierName": "白岡市公式助成（環境課環境政策担当）",
+                        "name": "白岡市スマートエネルギー住宅普及促進補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "太陽光発電・蓄電システム等の導入助成。国のみらいエコ＋県産木材と合算可能。",
+                        "usageRate": 47,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "白岡市内の新築住宅",
+                              "対象設備の設置",
+                              "市税完納"
+                        ],
+                        "link": "https://www.city.shiraoka.lg.jp/soshiki/kankyoka/kankyo/smartenergy/3671.html"
+                  }
+            ]
+      },
+      "伊奈": {
+            "name": "伊奈町",
+            "aliases": [
+                  "伊奈",
+                  "伊奈町",
+                  "いな",
+                  "いなまち",
+                  "北足立郡伊奈町",
+                  "ina"
+            ],
+            "subsidies": [
+                  {
+                        "id": "伊奈_sub",
+                        "tier": "city",
+                        "tierName": "伊奈町公式助成（生活環境課）",
+                        "name": "伊奈町住宅用新エネルギーシステム等設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "太陽光発電・家庭用蓄電池等の設置助成。国＋県と併用可能。",
+                        "usageRate": 48,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "伊奈町内の新築住宅",
+                              "対象システムの導入",
+                              "町税完納"
+                        ],
+                        "link": "https://www.town.saitama-ina.lg.jp/0000003058.html"
+                  }
+            ]
+      },
+      "横瀬": {
+            "name": "横瀬町",
+            "aliases": [
+                  "横瀬",
+                  "横瀬町",
+                  "よこぜ",
+                  "よこぜまち",
+                  "秩父郡横瀬町",
+                  "yokoze"
+            ],
+            "subsidies": [
+                  {
+                        "id": "横瀬_sub",
+                        "tier": "city",
+                        "tierName": "横瀬町公式助成（振興課まち経営グループ）",
+                        "name": "横瀬町移住定住促進住宅取得奨励金 ＆ 秩父産木材活用助成",
+                        "maxAmount": 500000,
+                        "amountText": "最大 50 万円",
+                        "desc": "横瀬町内に定住するために新築住宅を取得した世帯へ交付。秩父地域木材を活用した場合に加算。",
+                        "usageRate": 41,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "横瀬町内に新築住宅を取得し住民登録",
+                              "5年以上定住の意思",
+                              "町税完納"
+                        ],
+                        "link": "https://www.town.yokoze.saitama.jp/life/teiju/teiju-josei/"
+                  }
+            ]
+      },
+      "皆野": {
+            "name": "皆野町",
+            "aliases": [
+                  "皆野",
+                  "皆野町",
+                  "みなの",
+                  "みなのまち",
+                  "minano"
+            ],
+            "subsidies": [
+                  {
+                        "id": "皆野_sub",
+                        "tier": "city",
+                        "tierName": "皆野町公式助成（みらい創造課）",
+                        "name": "皆野町定住促進住宅取得奨励金",
+                        "maxAmount": 500000,
+                        "amountText": "最大 50 万円",
+                        "desc": "皆野町内での若者・子育て世帯の新築住宅取得に対する助成制度。国・県補助金と合算可能。",
+                        "usageRate": 39,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "町内に自ら居住する新築住宅を取得",
+                              "若者夫婦世帯または子育て世帯",
+                              "町税滞納なし"
+                        ],
+                        "link": "https://www.town.minano.saitama.jp/kurashi/sumai/teiju-josei/"
+                  }
+            ]
+      },
+      "長瀞": {
+            "name": "長瀞町",
+            "aliases": [
+                  "長瀞",
+                  "長瀞町",
+                  "ながとろ",
+                  "ながとろまち",
+                  "nagatoro"
+            ],
+            "subsidies": [
+                  {
+                        "id": "長瀞_sub",
+                        "tier": "city",
+                        "tierName": "長瀞町公式助成（産業観光課）",
+                        "name": "長瀞町移住定住促進住宅取得補助金",
+                        "maxAmount": 500000,
+                        "amountText": "最大 50 万円",
+                        "desc": "観光と自然豊かな長瀞町内への移住・定住を目的とした新築住宅取得支援事業。",
+                        "usageRate": 40,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "長瀞町内に新築住宅を取得・定住",
+                              "町外転入または子育て世帯",
+                              "町税完納"
+                        ],
+                        "link": "https://www.town.nagatoro.saitama.jp/kurashi/sumai/teiju-hojo/"
+                  }
+            ]
+      },
+      "小鹿野": {
+            "name": "小鹿野町",
+            "aliases": [
+                  "小鹿野",
+                  "小鹿野町",
+                  "おがの",
+                  "おがのまち",
+                  "ogano"
+            ],
+            "subsidies": [
+                  {
+                        "id": "小鹿野_sub",
+                        "tier": "city",
+                        "tierName": "小鹿野町公式助成（まちづくり観光課）",
+                        "name": "小鹿野町移住定住促進住宅取得等奨励金",
+                        "maxAmount": 500000,
+                        "amountText": "最大 50 万円",
+                        "desc": "小鹿野町内での新築マイホーム取得支援。子育て世帯加算・町内木材活用加算あり。",
+                        "usageRate": 37,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "小鹿野町内での新築住宅取得",
+                              "定住の意思を有する世帯",
+                              "町税完納"
+                        ],
+                        "link": "https://www.town.ogano.lg.jp/kurashi/sumai/teiju-shien/"
+                  }
+            ]
+      },
+      "東秩父": {
+            "name": "東秩父村",
+            "aliases": [
+                  "東秩父",
+                  "東秩父村",
+                  "ひがしちちぶ",
+                  "ひがしちちぶむら",
+                  "higashichichibu"
+            ],
+            "subsidies": [
+                  {
+                        "id": "東秩父_sub",
+                        "tier": "city",
+                        "tierName": "東秩父村公式助成（村づくり推進課）",
+                        "name": "東秩父村若者定住住宅取得支援事業 ＆ 村産材活用加算",
+                        "maxAmount": 600000,
+                        "amountText": "最大 60 万円",
+                        "desc": "埼玉県唯一の村・東秩父村内での新築住宅取得に対して基本額40万円＋村内産木材使用加算（最大20万円）で最大60万円交付。",
+                        "usageRate": 35,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "東秩父村内に新築住宅を取得・居住",
+                              "若者夫婦または子育て世帯",
+                              "村税完納"
+                        ],
+                        "link": "https://www.vill.higashichichibu.saitama.jp/soshiki/03/teiju-shien.html"
+                  }
+            ]
+      },
+      "美里": {
+            "name": "美里町",
+            "aliases": [
+                  "美里",
+                  "美里町",
+                  "みさとまち",
+                  "児玉郡美里町",
+                  "misato-machi"
+            ],
+            "subsidies": [
+                  {
+                        "id": "美里_sub",
+                        "tier": "city",
+                        "tierName": "美里町公式助成（総務課政策企画担当）",
+                        "name": "美里町定住促進住宅取得等奨励金",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "美里町内に新築住宅を取得し定住する若者夫婦・子育て世帯への助成金。",
+                        "usageRate": 42,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "美里町内の新築住宅を取得",
+                              "40歳未満の夫婦または中学生以下の子を扶養",
+                              "町税完納"
+                        ],
+                        "link": "https://www.town.saitama-misato.lg.jp/soshiki/somu/kikaku/teiju/1446690467771.html"
+                  }
+            ]
+      },
+      "神川": {
+            "name": "神川町",
+            "aliases": [
+                  "神川",
+                  "神川町",
+                  "かみかわ",
+                  "かみかわまち",
+                  "kamikawa"
+            ],
+            "subsidies": [
+                  {
+                        "id": "神川_sub",
+                        "tier": "city",
+                        "tierName": "神川町公式助成（総合政策課）",
+                        "name": "神川町定住促進マイホーム取得等奨励金",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "神川町内での新築住宅取得に対する支援。子育て世帯・若者世帯定住を推進。",
+                        "usageRate": 38,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "神川町内に新築住宅を取得し定住",
+                              "町税滞納のないこと"
+                        ],
+                        "link": "https://www.town.kamikawa.saitama.jp/soshiki/soumu/kikaku/teijushien/2769.html"
+                  }
+            ]
+      },
+      "上里": {
+            "name": "上里町",
+            "aliases": [
+                  "上里",
+                  "上里町",
+                  "かみさと",
+                  "かみさとまち",
+                  "kamisato"
+            ],
+            "subsidies": [
+                  {
+                        "id": "上里_sub",
+                        "tier": "city",
+                        "tierName": "上里町公式助成（まち整備課）",
+                        "name": "上里町子育て・若者定住住宅取得奨励金",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "上里町内での新築住宅取得を支援。国・県の補助金と合算可能。",
+                        "usageRate": 45,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "自ら居住する上里町内の新築住宅",
+                              "中学生以下の子を養育または40歳未満夫婦",
+                              "町税完納"
+                        ],
+                        "link": "https://www.town.kamisato.saitama.jp/3241.htm"
+                  }
+            ]
+      },
+      "寄居": {
+            "name": "寄居町",
+            "aliases": [
+                  "寄居",
+                  "寄居町",
+                  "よりい",
+                  "よりいまち",
+                  "yorii"
+            ],
+            "subsidies": [
+                  {
+                        "id": "寄居_sub",
+                        "tier": "city",
+                        "tierName": "寄居町公式助成（都市計画課）",
+                        "name": "寄居町中心市街地まちなか居住推進住宅取得補助金 ＆ 省エネ助成",
+                        "maxAmount": 500000,
+                        "amountText": "最大 50 万円",
+                        "desc": "寄居町内の居住誘導区域やまちなか区域での新築住宅取得支援（最大40万円＋省エネ設備加算10万円）。",
+                        "usageRate": 47,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "寄居町内の対象区域での新築取得",
+                              "転入・若者世帯要件",
+                              "町税完納"
+                        ],
+                        "link": "https://www.town.yorii.saitama.jp/soshiki/13/machinaka-kyoju.html"
+                  }
+            ]
+      },
+      "宮代": {
+            "name": "宮代町",
+            "aliases": [
+                  "宮代",
+                  "宮代町",
+                  "みやしろ",
+                  "みやしろまち",
+                  "miyashiro"
+            ],
+            "subsidies": [
+                  {
+                        "id": "宮代_sub",
+                        "tier": "city",
+                        "tierName": "宮代町公式助成（町づくり推進課）",
+                        "name": "宮代町子育て世代定住促進住宅取得助成金",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "宮代町内に新築住宅を取得し定住する子育て世帯へ交付。国・県補助金と併用可。",
+                        "usageRate": 50,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "中学生以下の子を養育する世帯",
+                              "宮代町内に新築住宅を取得・居住",
+                              "町税完納"
+                        ],
+                        "link": "https://www.town.miyashiro.lg.jp/0000005721.html"
+                  }
+            ]
+      },
+      "杉戸": {
+            "name": "杉戸町",
+            "aliases": [
+                  "杉戸",
+                  "杉戸町",
+                  "すぎと",
+                  "すぎとまち",
+                  "sugito"
+            ],
+            "subsidies": [
+                  {
+                        "id": "杉戸_sub",
+                        "tier": "city",
+                        "tierName": "杉戸町公式助成（都市計画課）",
+                        "name": "杉戸町三世代同居・近居支援住宅取得助成金",
+                        "maxAmount": 300000,
+                        "amountText": "最大 30 万円",
+                        "desc": "杉戸町内での親族同居・近居のために新築住宅を取得する子育て世帯へ交付。",
+                        "usageRate": 43,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "三世代同居または近居新築",
+                              "中学生以下の子がいる世帯",
+                              "町税完納"
+                        ],
+                        "link": "https://www.town.sugito.lg.jp/page/9361.html"
+                  }
+            ]
+      },
+      "松伏": {
+            "name": "松伏町",
+            "aliases": [
+                  "松伏",
+                  "松伏町",
+                  "まつぶし",
+                  "まつぶしまち",
+                  "matsubushi"
+            ],
+            "subsidies": [
+                  {
+                        "id": "松伏_sub",
+                        "tier": "city",
+                        "tierName": "松伏町公式助成（環境経済課）",
+                        "name": "松伏町住宅用省エネルギー設備設置費補助金",
+                        "maxAmount": 100000,
+                        "amountText": "最大 約10 万円",
+                        "desc": "自ら居住する松伏町内の住宅への太陽光発電・蓄電システム等の設置助成。国＋県と合算可能。",
+                        "usageRate": 44,
+                        "statusText": "申請受付中",
+                        "conditions": [
+                              "松伏町内の新築住宅",
+                              "対象省エネ設備の導入",
+                              "町税完納"
+                        ],
+                        "link": "https://www.town.matsubushi.lg.jp/www/contents/1491873111818/index.html"
+                  }
+            ]
+      }
+}
+  };
+
+  function updateSubsidyView(query) {
+    const cityInput = document.getElementById('city-input');
+    const targetCityEl = document.getElementById('res-target-city');
+    const totalAmountEl = document.getElementById('res-total-amount');
+    const container = document.getElementById('subsidies-cards-container');
+
+    targetCityEl.textContent = query;
+
+    let totalMax = 1100000; // みらいエコ基本
+    let activeSubsidies = [...SUBSIDY_DATABASE.national];
+    let matchedCity = null;
+
+    const isTokyo = query.includes('東京');
+    if (isTokyo) {
+      activeSubsidies = [...SUBSIDY_DATABASE.national, ...SUBSIDY_DATABASE.tokyo_pref];
+      totalMax = 2400000 + 1200000; // 都ゼロエミA + 蓄電池
+    } else {
+      // 埼玉県
+      activeSubsidies.push(...SUBSIDY_DATABASE.saitama_pref);
+      totalMax += 340000; // 県産木材
+
+      // 市区町村マッチング
+      const qLower = query.toLowerCase().trim();
+      const qClean = qLower
+        .replace(/^(埼玉県|東京都)/, '')
+        .replace(/^(比企郡|入間郡|秩父郡|児玉郡|大里郡|南埼玉郡|北葛飾郡|北足立郡)/, '')
+        .trim();
+
+      for (const cKey in SUBSIDY_DATABASE.cities) {
+        const cData = SUBSIDY_DATABASE.cities[cKey];
+        const keyLower = cKey.toLowerCase();
+        const nameLower = cData.name.toLowerCase();
+        const baseName = nameLower.replace(/(市|町|村)$/, '');
+
+        const isMatch = (qClean && (qClean.includes(keyLower) || keyLower.includes(qClean) || qClean.includes(baseName) || baseName.includes(qClean))) ||
+                        (cData.aliases && cData.aliases.some(a => {
+                          const al = a.toLowerCase();
+                          return qLower.includes(al) || (qClean && (al.includes(qClean) || qClean.includes(al)));
+                        }));
+
+        if (isMatch) {
+          matchedCity = cData;
+          break;
+        }
+      }
+
+      if (matchedCity) {
+        activeSubsidies.push(...matchedCity.subsidies);
+        matchedCity.subsidies.forEach(s => totalMax += s.maxAmount);
+      }
+    }
+
+    totalAmountEl.textContent = totalMax.toLocaleString('ja-JP');
+
+    // 交付明細内訳テーブルの動的生成
+    const breakdownItems = [];
+    if (isTokyo) {
+      breakdownItems.push({
+        badge: '<span class="card-tier-badge tier-national">🏛️ 国</span>',
+        name: 'みらいエコ住宅2026（新築GX志向型）',
+        amount: '1,100,000 円',
+        condition: '長期優良住宅認定・ZEH水準（都ゼロエミと部位併用）'
+      });
+      breakdownItems.push({
+        badge: '<span class="card-tier-badge tier-prefecture">🗼 東京都</span>',
+        name: '東京ゼロエミ住宅普及促進事業（水準A）',
+        amount: '2,400,000 円',
+        condition: 'Ua値0.30以下・再エネ設備設置'
+      });
+      breakdownItems.push({
+        badge: '<span class="card-tier-badge tier-prefecture">🔋 東京都</span>',
+        name: '家庭における蓄電池・太陽光等導入促進事業',
+        amount: '1,200,000 円',
+        condition: '住宅用太陽光＋家庭用蓄電池システム'
+      });
+    } else {
+      breakdownItems.push({
+        badge: '<span class="card-tier-badge tier-national">🏛️ 国</span>',
+        name: 'みらいエコ住宅2026（新築GX志向型）',
+        amount: '1,100,000 円',
+        condition: '長期優良住宅認定 ＆ ZEH水準仕様'
+      });
+      breakdownItems.push({
+        badge: '<span class="card-tier-badge tier-prefecture">🌲 埼玉県</span>',
+        name: '埼玉県県産木材活用住宅等支援事業',
+        amount: '340,000 円',
+        condition: '認証県産木材（西川材・吉野杉等）構造材60%以上活用'
+      });
+      if (matchedCity) {
+        matchedCity.subsidies.forEach(s => {
+          breakdownItems.push({
+            badge: `<span class="card-tier-badge tier-city">📍 ${matchedCity.name}</span>`,
+            name: s.name,
+            amount: `${s.maxAmount.toLocaleString('ja-JP')} 円`,
+            condition: s.conditions[0] || '市独自基準'
+          });
+        });
+      }
+    }
+
+    const breakdownTbody = document.getElementById('breakdown-table-body');
+    if (breakdownTbody) {
+      breakdownTbody.innerHTML = breakdownItems.map(item => `
+        <tr>
+          <td>${item.badge}</td>
+          <td><strong>${item.name}</strong></td>
+          <td class="row-amount" style="text-align: right;">${item.amount}</td>
+          <td style="font-size: 0.78rem; color: #475569;">${item.condition}</td>
+        </tr>
+      `).join('');
+    }
+
+    const breakdownSumEl = document.getElementById('breakdown-total-sum');
+    if (breakdownSumEl) breakdownSumEl.textContent = `${totalMax.toLocaleString('ja-JP')} 円`;
+
+    const formulaEl = document.getElementById('breakdown-formula-text');
+    if (formulaEl) {
+      if (isTokyo) {
+        formulaEl.textContent = `内訳計算式: 国（みらいエコ 110万円）＋ 東京都（ゼロエミ水準A 240万円 ＋ 蓄電池 120万円）＝ 合計 ${totalMax.toLocaleString('ja-JP')} 円`;
+      } else if (matchedCity) {
+        const cityPart = matchedCity.subsidies.map(s => `${s.name.substring(0, 10)} ${(s.maxAmount / 10000)}万円`).join(' ＋ ');
+        formulaEl.textContent = `内訳計算式: 国（みらいエコ 110万円）＋ 埼玉県（県産木材 34万円）＋ ${matchedCity.name}（${cityPart}）＝ 合計 ${totalMax.toLocaleString('ja-JP')} 円`;
+      } else {
+        formulaEl.textContent = `内訳計算式: 国（みらいエコ 110万円）＋ 埼玉県（県産木材 34万円）＝ 合計 ${totalMax.toLocaleString('ja-JP')} 円（各市町村独自枠は別途加算）`;
+      }
+    }
+
+    // 住宅ローン誘導バナーの連動更新
+    const bridgeManEl = document.getElementById('bridge-subsidy-man');
+    const bridgeBtn = document.getElementById('btn-subsidy-to-mortgage');
+    const subsidyMan = Math.round(totalMax / 10000);
+    if (bridgeManEl) bridgeManEl.textContent = subsidyMan;
+
+    if (bridgeBtn) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const planId = urlParams.get('plan') || '';
+      const tsuboVal = urlParams.get('tsubo') || '';
+      const priceParam = urlParams.get('price');
+      const basePrice = priceParam ? parseInt(priceParam, 10) : '';
+      bridgeBtn.href = `/mortgage/index.html?plan=${encodeURIComponent(planId)}&tsubo=${encodeURIComponent(tsuboVal)}${basePrice ? '&price=' + basePrice : ''}&subsidy=${subsidyMan}`;
+    }
+
+    // カード描画
+    container.innerHTML = activeSubsidies.map(s => `
+      <div class="subsidy-card">
+        <div>
+          <span class="card-tier-badge tier-${s.tier}">${s.tierName}</span>
+          <h4 class="card-title">${s.name}</h4>
+          <div class="card-amount-wrap">
+            <span class="card-amount-label">受給上限額</span>
+            <span class="card-amount-val">${s.amountText}</span>
+          </div>
+          <p style="font-size: 0.84rem; color: #475569; line-height: 1.6; margin-bottom: 12px;">${s.desc}</p>
+          <div class="card-meta-list">
+            <div style="font-weight: 700; font-size: 0.78rem; color: #0f172a; margin-bottom: 2px;">📌 主な受給要件:</div>
+            ${s.conditions.map(c => `<div class="card-meta-item"><span>・</span><span>${c}</span></div>`).join('')}
+          </div>
+        </div>
+
+        <div>
+          <div style="border-top: 1px solid #f1f5f9; padding-top: 10px; margin-top: 6px;">
+            <div class="status-meter-text">
+              <span>予算消化率（月1回巡回更新）</span>
+              <span style="color: ${s.usageRate > 60 ? '#d97706' : '#059669'}; font-weight: 800;">${s.usageRate}%</span>
+            </div>
+            <div class="status-meter-wrap">
+              <div class="status-meter-bar" style="width: ${s.usageRate}%;"></div>
+            </div>
+            <div style="font-size: 0.72rem; color: #64748b; margin-top: 3px;">
+              ステータス: <strong>${s.statusText}</strong>
+            </div>
+          </div>
+          <a href="${s.link}" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; margin-top: 12px; background: #f8fafc; border: 1px solid #cbd5e1; padding: 7px; border-radius: 6px; color: #0284c7; font-size: 0.78rem; font-weight: 700; text-decoration: none;">
+            公式サイト・公募要領を確認 ↗
+          </a>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // イベントリスナー
+  document.addEventListener('DOMContentLoaded', () => {
+    // プラン詳細からのURLパラメータ引き継ぎ処理
+    const urlParams = new URLSearchParams(window.location.search);
+    const planId = urlParams.get('plan');
+    const tsuboVal = urlParams.get('tsubo');
+    const priceVal = urlParams.get('price');
+    const cityParam = urlParams.get('city');
+
+    if (planId || tsuboVal) {
+      const heroCard = document.querySelector('.hero-card');
+      const planNotice = document.createElement('div');
+      planNotice.style.cssText = 'background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #16a34a; border-radius: 14px; padding: 1.1rem 1.5rem; margin-bottom: 1.8rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; box-shadow: 0 4px 15px rgba(22, 163, 74, 0.15);';
+      planNotice.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 1.8rem;">📐</span>
+          <div>
+            <div style="font-weight: 900; color: #15803d; font-size: 1rem;">
+              3Dプラン連携中: ${planId ? `【${planId}】` : ''}${tsuboVal ? `${tsuboVal}坪` : ''}${priceVal ? `（概算目安: 約${priceVal}万円）` : ''}
+            </div>
+            <div style="font-size: 0.82rem; color: #166534; margin-top: 2px;">
+              このプランの延床面積・省エネ性能（HEAT20 G2/G3）に適合する補助金・助成金の受給目安を自動判定しています。
+            </div>
+          </div>
+        </div>
+        ${planId ? `<a href="/plans/detail/${planId.toLowerCase()}.html" style="font-size: 0.82rem; font-weight: 800; background: #15803d; color: #ffffff; padding: 7px 14px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">← プラン詳細に戻る</a>` : ''}
+      `;
+      if (heroCard && heroCard.parentNode) {
+        heroCard.parentNode.insertBefore(planNotice, heroCard.nextSibling);
+      }
+    }
+
+    const defaultCity = cityParam || '埼玉県鶴ヶ島市';
+    document.getElementById('city-input').value = defaultCity;
+    updateSubsidyView(defaultCity);
+
+    document.querySelectorAll('.city-chip').forEach(btn => {
+      btn.addEventListener('click', e => {
+        document.querySelectorAll('.city-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const city = btn.getAttribute('data-city');
+        document.getElementById('city-input').value = city;
+        updateSubsidyView(city);
+      });
+    });
+
+    const muniSelect = document.getElementById('municipality-select');
+    if (muniSelect) {
+      muniSelect.addEventListener('change', (e) => {
+        const val = e.target.value;
+        if (val) {
+          document.getElementById('city-input').value = val;
+          document.querySelectorAll('.city-chip').forEach(b => b.classList.remove('active'));
+          updateSubsidyView(val);
+          const banner = document.getElementById('result-summary-banner');
+          if (banner) banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }
+
+    document.getElementById('btn-search-subsidy').addEventListener('click', () => {
+      const q = document.getElementById('city-input').value.trim();
+      if (q) updateSubsidyView(q);
+    });
+
+    document.getElementById('city-input').addEventListener('keypress', e => {
+      if (e.key === 'Enter') {
+        const q = e.target.value.trim();
+        if (q) updateSubsidyView(q);
+      }
+    });
+
+    // 3Dプラン連携 ＆ 住宅ローン診断直結処理
+    const params = new URLSearchParams(window.location.search);
+    const planParam = params.get('plan');
+    const tsuboParam = params.get('tsubo');
+    const priceParam = params.get('price');
+
+    if (planParam || tsuboParam || priceParam) {
+      const banner = document.getElementById('plan-integration-bar');
+      const titleEl = document.getElementById('plan-integration-title');
+      const subEl = document.getElementById('plan-integration-sub');
+      const mortgageBtn = document.getElementById('btn-goto-mortgage');
+
+      if (banner && titleEl) {
+        banner.style.display = 'block';
+        titleEl.textContent = `【${planParam || '間取りプラン'}】延床 ${tsuboParam || '標準'}坪 ｜ 建物本体目安 約${priceParam || '2,400'}万円`;
+        if (subEl) subEl.textContent = '現在、このプランに適用できる国・埼玉県の補助金を判定中。設備機器・外構等を含む全体予算をもとにした住宅ローン比較もご確認いただけます。';
+        if (mortgageBtn) {
+          mortgageBtn.href = `/mortgage/index.html?price=${encodeURIComponent(priceParam || '')}&tsubo=${encodeURIComponent(tsuboParam || '')}&plan=${encodeURIComponent(planParam || '')}`;
+        }
+      }
+    }
+  });
+</script>
+
+  <footer style="background: #0f172a; color: #94a3b8; padding: 3rem 1.5rem 2rem; margin-top: 4rem; border-top: 1px solid rgba(255,255,255,0.1);">
+    <style>
+      .footer-nav-link { color: #cbd5e1; text-decoration: none; display: inline-block; transition: all 0.25s ease; }
+      .footer-nav-link:hover { color: #38bdf8 !important; text-decoration: underline !important; transform: translateX(4px); }
+      .footer-case-link { color: #e2e8f0; text-decoration: none; display: block; padding: 4px 8px; border-radius: 6px; transition: all 0.25s ease; background: rgba(255, 255, 255, 0.03); margin-bottom: 4px; border: 1px solid transparent; }
+      .footer-case-link:hover { color: #6ee7b7 !important; background: rgba(16, 185, 129, 0.15) !important; border-color: rgba(52, 211, 153, 0.4) !important; transform: translateX(5px); }
+      @media (max-width: 768px) {
+        .footer-case-link { padding: 8px 12px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); margin-bottom: 6px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
+        .footer-case-link::after { content: '➜'; font-size: 0.8rem; color: #34d399; }
+      }
+    </style>
+    <div style="max-width: 1200px; margin: 0 auto 2.5rem; text-align: left; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding-bottom: 2rem;">
+      <div>
+        <h4 style="color: #38bdf8; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">🏛️ 公式ページ・AIラボ</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; line-height: 2.1;">
+          <li><a href="/" class="footer-nav-link">🏠 公式トップページ</a></li>
+          <li><a href="/subsidy/index.html" class="footer-nav-link" style="color: #34d399; font-weight: 700;">💰 AI補助金ナビ（市区町村一括判定） ↗</a></li>
+          <li><a href="/mortgage/index.html" class="footer-nav-link" style="color: #38bdf8; font-weight: 700;">🏦 AI住宅ローン診断（金利・団信TOP5） ↗</a></li>
+          <li><a href="/smilestudio.html" target="_blank" class="footer-nav-link" style="color: #fbbf24; font-weight: 700;">🎨 AI 3Dパース工房（SmileStudio） ↗</a></li>
+          <li><a href="/about/" class="footer-nav-link">🛡️ 会社概要・信用の証明 (CredLayer)</a></li>
+          <li><a href="/performance/" class="footer-nav-link">📐 住宅性能数値証明 (HEAT20 G2/G3・耐震3)</a></li>
+          <li><a href="/category/spec/" class="footer-nav-link">⚙️ 標準工学仕様スペック詳細 (APW430・W断熱)</a></li>
+          <li><a href="/evidence/" class="footer-nav-link">📊 光熱費・温熱実測データ実証録</a></li>
+          <li><a href="/flow/" class="footer-nav-link">📐 家づくりの流れ・15万円設計申込特典</a></li>
+          <li><a href="/awards/kankyo-housing/" class="footer-nav-link">🏆 埼玉県環境住宅賞 受賞ストーリー</a></li>
+          <li><a href="/madori-consultation/" class="footer-nav-link">🤖 夫婦の本音間取り相談・カルテ自動作成</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 style="color: #34d399; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">🏡 埼玉県の注文住宅 施工事例</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem;">
+          <li><a href="/cases/case-1.html" class="footer-case-link"><span>【鶴ヶ島市・S様邸】天井高2.8m無垢杉大空間LDK</span></a></li>
+          <li><a href="/cases/case-2.html" class="footer-case-link"><span>【ときがわ町・K様邸】吉野杉大黒柱と吹抜けZEH</span></a></li>
+          <li><a href="/cases/case-3.html" class="footer-case-link"><span>【川越市・N様邸】中庭プライベートテラス平屋</span></a></li>
+          <li><a href="/cases/case-4.html" class="footer-case-link"><span>【坂戸市・M様邸】珪藻土壁とビルトインガレージ</span></a></li>
+          <li><a href="/cases/case-5.html" class="footer-case-link"><span>【日高市・T様邸】薪ストーブと土間リビング</span></a></li>
+          <li><a href="/cases/case-6.html" class="footer-case-link"><span>【東松山市・H様邸】高天井二世帯・全熱交換換気</span></a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 style="color: #fbbf24; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">📚 温熱設計知見200選（実務Q&A）</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; line-height: 2;">
+          <li><a href="/knowledge/thermal/" class="footer-nav-link" style="color: #fbbf24; font-weight: 800;">★ 温熱知見200選 総合ピラーページ</a></li>
+          <li><a href="/knowledge/thermal/th_ins_01.html" class="footer-nav-link">第1章: 断熱性能・UA値・外皮設計（25問）</a></li>
+          <li><a href="/knowledge/thermal/th_air_01.html" class="footer-nav-link">第2章: 気密性能・C値・隙間対策（25問）</a></li>
+          <li><a href="/knowledge/thermal/th_fnd_01.html" class="footer-nav-link">第3章: 基礎断熱・床断熱・床下空間（25問）</a></li>
+          <li><a href="/knowledge/thermal/th_vnt_01.html" class="footer-nav-link">第4章: 24h換気・第1種全熱交換（25問）</a></li>
+          <li><a href="/knowledge/thermal/th_win_01.html" class="footer-nav-link">第5章: 窓・サッシ・日射取得と遮蔽（25問）</a></li>
+          <li><a href="/knowledge/thermal/th_cnd_01.html" class="footer-nav-link">第6章: 結露・カビ防止・壁体内湿気（25問）</a></li>
+          <li><a href="/knowledge/thermal/th_hvac_01.html" class="footer-nav-link">第7章: 冷暖房設計・全館空調（25問）</a></li>
+          <li><a href="/knowledge/thermal/th_law_01.html" class="footer-nav-link">第8章: 2025年法改正・生涯コスト（25問）</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <p style="text-align: center; font-size: 0.78rem; line-height: 1.7; margin: 0;">© 2026 株式会社住ま居る / スマイチ All Rights Reserved.<br>「芳彩（かぐや）— 結露しない家」 / 埼玉県鶴ヶ島市町屋176番地5<br>手刻み大工×建築士のタッグによるミリ単位自由設計 / 呼吸する珪藻土・無垢材 / HEAT20 G2・G3 / C値1.0以下（実測0.28〜0.6目安） / 耐震等級3 (全棟許容応力度計算)</p>
+  </footer>
+</body>
+</html>

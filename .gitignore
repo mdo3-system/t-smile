@@ -1,8 +1,19 @@
+# ==============================================================================
+# Git Ignore Rules for Antigravity (Sumaile Project)
+# GitHub 100MB単一ファイル制限 & リポジトリ容量適正化
+# ==============================================================================
+
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.pyc
+
+# Scratch & Temporary test scripts/outputs
+scratch/
+.tempmediaStorage/
+*.tmp
+*.bak
 
 # Intermediate restore HTML chunks
 ch_*_final.html
@@ -17,21 +28,53 @@ full_restored_article_feature.html
 section_at_*.html
 step_*_dump.txt
 line17_dump.txt
-*.tmp
 
 # Logs & OS artifacts
 *.log
 .DS_Store
 Thumbs.db
+ehthumbs.db
+desktop.ini
 
-# Node
+# Node & Package Managers
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Raw uploaded uncompressed photo archives (multi-GB)
+# ==============================================================================
+# 大容量バイナリ・参考資料・動画（GitHub 100MB制限対策 & サーバー容量最適化）
+# 動画はYouTube埋め込みのみを使用するため、Gitおよび本番サーバーへの動画アップロードは完全禁止
+# ==============================================================================
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.flv
+*.wmv
+test_*.mp3
+scratch_*.jpg
+scratch_*.txt
+screenshot_*.png
+public/sample_data/jfd_survey/3D/
+public/plans/*.png
+public/videos/
+backup/
+*.patch
+public/temp_chunk.js
+public/test_syntax*.html
+
+# 大容量参考資料PDF（10MB〜25MB以上の印刷用元データ）
+public/data/knowledge/images/*.pdf
+data/thermal_knowledge/*.pdf
+public/sample_data/**/*.pdf
+*.pdf
+
+# 生写真アーカイブ・大容量未圧縮ソース（数GB）
 raw_source_cases/
+sample_data/
+cases_drawings/
 *.raw
 *.heic
 *.tif

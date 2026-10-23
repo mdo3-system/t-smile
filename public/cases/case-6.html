@@ -23,14 +23,14 @@
         "@id": "https://t-smile.co.jp/#organization",
         "name": "株式会社住ま居る",
         "image": "https://t-smile.co.jp/images/hero_kaguya_house.jpg",
-        "telephone": "049-282-3580",
+        "telephone": "049-271-2350",
         "priceRange": "￥￥￥",
         "address": {
           "@type": "PostalAddress",
-          "streetAddress": "鶴ヶ島市富士見2-18-28",
+          "streetAddress": "町屋176番地5",
           "addressLocality": "鶴ヶ島市",
           "addressRegion": "埼玉県",
-          "postalCode": "350-2201",
+          "postalCode": "350-2224",
           "addressCountry": "JP"
         },
         "areaServed": ["埼玉県", "鶴ヶ島市", "川越市", "日高市", "坂戸市", "東松山市", "ときがわ町", "行田市"]
@@ -46,6 +46,25 @@
           "addressCountry": "JP"
         },
         "numberOfRooms": "LDK + 個室"
+      },
+      {
+        "@type": "Review",
+        "itemReviewed": {
+          "@type": "HomeAndConstructionBusiness",
+          "name": "株式会社住ま居る",
+          "image": "https://t-smile.co.jp/images/hero_kaguya_house.jpg",
+          "telephone": "049-271-2350"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "H様（お施主様）"
+        },
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": "5",
+          "bestRating": "5"
+        },
+        "reviewBody": "「愛車を雨風から守るビルトインガレージと、深みのあるネイビーの外壁、そして木目のアクセント。私たちのこだわりを工学的な計算と熟練大工の手刻みで見事に具現化していただきました。ガレージから雨に濡れずに室内へ入れる動線は感動的です。手刻み大工さんが一つひとつ丁寧に組んでくれた玄関やリビングの格子戸は、訪れる友人みんなが褒めてくれます。」"
       },
       {
         "@type": "BreadcrumbList",
@@ -308,6 +327,45 @@
   </style>
 </head>
 <body>
+  <!-- 統一グローバルヘッダー（常時表示・全ページ回遊・離脱防止） -->
+  <header style="background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.15); padding: 0.6rem 1.2rem; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.25);">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.5rem;">
+      <!-- Tier 1: ロゴ ＆ AI Suiteツール切替 -->
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;">
+          <a href="/index.html" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #ffffff;">
+            <span style="font-size: 1.3rem; font-weight: 900; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">家づくりAIラボ</span>
+            <span style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 6px; border-radius: 4px; font-weight: 800;">by 住ま居る</span>
+          </a>
+          <span style="background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 12px;">
+            🏡 埼玉の注文住宅 施工実例
+          </span>
+        </div>
+
+        <!-- AI Suite Quick Links -->
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <a href="/index.html" style="font-size: 0.78rem; font-weight: 800; padding: 5px 12px; border-radius: 6px; text-decoration: none; background: rgba(255,255,255,0.1); color: #ffffff; border: 1px solid rgba(255,255,255,0.2);">🏠 ホームTOP</a>
+          <a href="/index.html#floorplan-studio" style="font-size: 0.78rem; font-weight: 800; padding: 5px 12px; border-radius: 6px; text-decoration: none; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3);">📐 AI 3Dプラン検索</a>
+          <a href="/subsidy/index.html" style="font-size: 0.78rem; font-weight: 800; padding: 5px 12px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #047857, #10b981); color: #ffffff;">💰 AI補助金ナビ ↗</a>
+          <a href="/mortgage/index.html" style="font-size: 0.78rem; font-weight: 800; padding: 5px 12px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff;">🏦 AI住宅ローン診断 ↗</a>
+          <a href="/smilestudio.html" target="_blank" style="font-size: 0.78rem; font-weight: 800; padding: 5px 12px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a;">🎨 AI 3Dパース工房 ↗</a>
+        </div>
+      </div>
+
+      <!-- Tier 2: サイト内主要ナビゲーション -->
+      <div style="display: flex; align-items: center; gap: 14px; overflow-x: auto; padding-top: 4px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.78rem; font-weight: 700; white-space: nowrap;">
+        <a href="/index.html#our-philosophy" style="color: #cbd5e1; text-decoration: none;">🏛️ 家づくりのこだわり</a>
+        <a href="/index.html#craftsmanship" style="color: #38bdf8; text-decoration: none; font-weight: 800;">🔨 施工実例（大工手刻み）</a>
+        <a href="/about/" style="color: #6ee7b7; text-decoration: none;">🛡️ 会社概要 (CredLayer)</a>
+        <a href="/performance/" style="color: #cbd5e1; text-decoration: none;">📐 住宅性能数値証明</a>
+        <a href="/category/spec/" style="color: #cbd5e1; text-decoration: none;">⚙️ 標準工学仕様</a>
+        <a href="/evidence/" style="color: #cbd5e1; text-decoration: none;">📊 光熱費実証データ</a>
+        <a href="/knowledge/thermal/" style="color: #fbbf24; text-decoration: none;">📚 温熱知見200選</a>
+        <a href="/catalog/" style="color: #cbd5e1; text-decoration: none;">📖 Webカタログ</a>
+      </div>
+    </div>
+  </header>
+
   <div class="case-container">
     <nav class="case-nav-crumb" aria-label="パンくずリスト">
       <a href="/">🏠 ホーム</a> &gt; <a href="/#craftsmanship">施工事例ギャラリー</a> &gt; <span>行田市・06</span>
@@ -372,61 +430,61 @@
       <div class="photo-grid">
         
             <div class="photo-card">
-              <img src="/images/cases_real/case6/photo_01.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【無垢杉のフロア】手鉋仕上げの無垢杉が足裏に心地よいナチュラル空間" loading="lazy" />
+              <img src="/images/cases_real/case6/photo_01.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【無垢杉のフロア】手鉋仕上げの無垢杉が足裏に心地よいナチュラル空間" loading="lazy" decoding="async" width="800" height="600" />
               <div class="photo-card-caption">【無垢杉のフロア】手鉋仕上げの無垢杉が足裏に心地よいナチュラル空間</div>
             </div>
             
 
             <div class="photo-card">
-              <img src="/images/cases_real/case6/photo_02.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【大容量ウォークイン】大工職人の手刻み造作による格子戸付き大型収納" loading="lazy" />
+              <img src="/images/cases_real/case6/photo_02.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【大容量ウォークイン】大工職人の手刻み造作による格子戸付き大型収納" loading="lazy" decoding="async" width="800" height="600" />
               <div class="photo-card-caption">【大容量ウォークイン】大工職人の手刻み造作による格子戸付き大型収納</div>
             </div>
             
 
             <div class="photo-card">
-              <img src="/images/cases_real/case6/photo_03.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【和モダン寝室】藍色のアクセントクロスと障子の陰影が落ち着く主寝室" loading="lazy" />
+              <img src="/images/cases_real/case6/photo_03.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【和モダン寝室】藍色のアクセントクロスと障子の陰影が落ち着く主寝室" loading="lazy" decoding="async" width="800" height="600" />
               <div class="photo-card-caption">【和モダン寝室】藍色のアクセントクロスと障子の陰影が落ち着く主寝室</div>
             </div>
             
 
             <div class="photo-card">
-              <img src="/images/cases_real/case6/photo_04.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【小上がり和室】リビングから緩やかに繋がるくつろぎの小上がり畳コーナー" loading="lazy" />
+              <img src="/images/cases_real/case6/photo_04.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【小上がり和室】リビングから緩やかに繋がるくつろぎの小上がり畳コーナー" loading="lazy" decoding="async" width="800" height="600" />
               <div class="photo-card-caption">【小上がり和室】リビングから緩やかに繋がるくつろぎの小上がり畳コーナー</div>
             </div>
             
 
             <div class="photo-card">
-              <img src="/images/cases_real/case6/photo_05.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【吹抜け大空間見下ろし】高窓から明るい自然光が降り注ぐリビング全景" loading="lazy" />
+              <img src="/images/cases_real/case6/photo_05.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【吹抜け大空間見下ろし】高窓から明るい自然光が降り注ぐリビング全景" loading="lazy" decoding="async" width="800" height="600" />
               <div class="photo-card-caption">【吹抜け大空間見下ろし】高窓から明るい自然光が降り注ぐリビング全景</div>
             </div>
             
 
             <div class="photo-card">
-              <img src="/images/cases_real/case6/photo_06.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【ビルトインガレージ外観】深みのあるネイビーガルバ×木目羽目板のガレージハウス" loading="lazy" />
+              <img src="/images/cases_real/case6/photo_06.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【ビルトインガレージ外観】深みのあるネイビーガルバ×木目羽目板のガレージハウス" loading="lazy" decoding="async" width="800" height="600" />
               <div class="photo-card-caption">【ビルトインガレージ外観】深みのあるネイビーガルバ×木目羽目板のガレージハウス</div>
             </div>
             
 
             <div class="photo-card">
-              <img src="/images/cases_real/case6/photo_07.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【吹き抜けLDK】化粧梁のダイナミックな架構と手刻み造作家具が調和する空間" loading="lazy" />
+              <img src="/images/cases_real/case6/photo_07.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【吹き抜けLDK】化粧梁のダイナミックな架構と手刻み造作家具が調和する空間" loading="lazy" decoding="async" width="800" height="600" />
               <div class="photo-card-caption">【吹き抜けLDK】化粧梁のダイナミックな架構と手刻み造作家具が調和する空間</div>
             </div>
             
 
             <div class="photo-card">
-              <img src="/images/cases_real/case6/photo_08.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【回遊アイランドキッチン】家族で囲んで料理を楽しめるオリジナル対面キッチン" loading="lazy" />
+              <img src="/images/cases_real/case6/photo_08.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【回遊アイランドキッチン】家族で囲んで料理を楽しめるオリジナル対面キッチン" loading="lazy" decoding="async" width="800" height="600" />
               <div class="photo-card-caption">【回遊アイランドキッチン】家族で囲んで料理を楽しめるオリジナル対面キッチン</div>
             </div>
             
 
             <div class="photo-card">
-              <img src="/images/cases_real/case6/photo_09.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【玄関ホール】格子引き戸と無垢上がり框が温かく迎えるエントランス" loading="lazy" />
+              <img src="/images/cases_real/case6/photo_09.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【玄関ホール】格子引き戸と無垢上がり框が温かく迎えるエントランス" loading="lazy" decoding="async" width="800" height="600" />
               <div class="photo-card-caption">【玄関ホール】格子引き戸と無垢上がり框が温かく迎えるエントランス</div>
             </div>
             
 
             <div class="photo-card">
-              <img src="/images/cases_real/case6/photo_10.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【大工特注仏間・収納】伝統の大工技術が細部に宿る美しい木製建具" loading="lazy" />
+              <img src="/images/cases_real/case6/photo_10.jpg" alt="【行田市・H様邸】寒がりの妻が「暖かすぎる」と太鼓判！大手メーカー比較で選んだ本物の高気密高断熱 - 【大工特注仏間・収納】伝統の大工技術が細部に宿る美しい木製建具" loading="lazy" decoding="async" width="800" height="600" />
               <div class="photo-card-caption">【大工特注仏間・収納】伝統の大工技術が細部に宿る美しい木製建具</div>
             </div>
             
@@ -476,5 +534,66 @@
       </div>
     </div>
   </div>
+
+  <!-- 統一グローバルSEOフッター（全ページ回遊・施工事例ホバー・スマホ対応） -->
+  <footer style="background: #0f172a; color: #94a3b8; padding: 3rem 1.5rem 2rem; margin-top: 4rem; border-top: 1px solid rgba(255,255,255,0.1);">
+    <style>
+      .footer-nav-link { color: #cbd5e1; text-decoration: none; display: inline-block; transition: all 0.25s ease; }
+      .footer-nav-link:hover { color: #38bdf8 !important; text-decoration: underline !important; transform: translateX(4px); }
+      .footer-case-link { color: #e2e8f0; text-decoration: none; display: block; padding: 4px 8px; border-radius: 6px; transition: all 0.25s ease; background: rgba(255, 255, 255, 0.03); margin-bottom: 4px; border: 1px solid transparent; }
+      .footer-case-link:hover { color: #6ee7b7 !important; background: rgba(16, 185, 129, 0.15) !important; border-color: rgba(52, 211, 153, 0.4) !important; transform: translateX(5px); }
+      @media (max-width: 768px) {
+        .footer-case-link { padding: 8px 12px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); margin-bottom: 6px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
+        .footer-case-link::after { content: '➜'; font-size: 0.8rem; color: #34d399; }
+      }
+    </style>
+    <div style="max-width: 1200px; margin: 0 auto 2.5rem; text-align: left; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding-bottom: 2rem;">
+      <div>
+        <h4 style="color: #38bdf8; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">🏛️ 公式ページ・AIラボ</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; line-height: 2.1;">
+          <li><a href="/" class="footer-nav-link">🏠 公式トップページ</a></li>
+          <li><a href="/subsidy/index.html" class="footer-nav-link" style="color: #34d399; font-weight: 700;">💰 AI補助金ナビ（市区町村一括判定） ↗</a></li>
+          <li><a href="/mortgage/index.html" class="footer-nav-link" style="color: #38bdf8; font-weight: 700;">🏦 AI住宅ローン診断（金利・団信TOP5） ↗</a></li>
+          <li><a href="/smilestudio.html" target="_blank" class="footer-nav-link" style="color: #fbbf24; font-weight: 700;">🎨 AI 3Dパース工房（SmileStudio） ↗</a></li>
+          <li><a href="/about/" class="footer-nav-link">🛡️ 会社概要・信用の証明 (CredLayer)</a></li>
+          <li><a href="/performance/" class="footer-nav-link">📐 住宅性能数値証明 (HEAT20 G2/G3・耐震3)</a></li>
+          <li><a href="/category/spec/" class="footer-nav-link">⚙️ 標準工学仕様スペック詳細 (APW430・W断熱)</a></li>
+          <li><a href="/evidence/" class="footer-nav-link">📊 光熱費・温熱実測データ実証録</a></li>
+          <li><a href="/flow/" class="footer-nav-link">📐 家づくりの流れ・15万円設計申込特典</a></li>
+          <li><a href="/awards/kankyo-housing/" class="footer-nav-link">🏆 埼玉県環境住宅賞 受賞ストーリー</a></li>
+          <li><a href="/madori-consultation/" class="footer-nav-link">🤖 夫婦の本音間取り相談・カルテ自動作成</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 style="color: #34d399; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">🏡 埼玉県の注文住宅 施工事例</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem;">
+          <li><a href="/cases/case-1.html" class="footer-case-link"><span>【鶴ヶ島市・S様邸】天井高2.8m無垢杉大空間LDK</span></a></li>
+          <li><a href="/cases/case-2.html" class="footer-case-link"><span>【ときがわ町・K様邸】吉野杉大黒柱と吹抜けZEH</span></a></li>
+          <li><a href="/cases/case-3.html" class="footer-case-link"><span>【川越市・N様邸】中庭プライベートテラス平屋</span></a></li>
+          <li><a href="/cases/case-4.html" class="footer-case-link"><span>【坂戸市・M様邸】珪藻土壁とビルトインガレージ</span></a></li>
+          <li><a href="/cases/case-5.html" class="footer-case-link"><span>【日高市・T様邸】薪ストーブと土間リビング</span></a></li>
+          <li><a href="/cases/case-6.html" class="footer-case-link"><span>【東松山市・H様邸】高天井二世帯・全熱交換換気</span></a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 style="color: #fbbf24; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">📚 温熱設計知見200選（実務Q&A）</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; line-height: 2;">
+          <li><a href="/knowledge/thermal/" class="footer-nav-link" style="color: #fbbf24; font-weight: 800;">★ 温熱知見200選 総合ピラーページ</a></li>
+          <li><a href="/knowledge/thermal/th_ins_01.html" class="footer-nav-link">第1章: 断熱性能・UA値・外皮設計（25問）</a></li>
+          <li><a href="/knowledge/thermal/th_air_01.html" class="footer-nav-link">第2章: 気密性能・C値・隙間対策（25問）</a></li>
+          <li><a href="/knowledge/thermal/th_fnd_01.html" class="footer-nav-link">第3章: 基礎断熱・床断熱・床下空間（25問）</a></li>
+          <li><a href="/knowledge/thermal/th_vnt_01.html" class="footer-nav-link">第4章: 24h換気・第1種全熱交換（25問）</a></li>
+          <li><a href="/knowledge/thermal/th_win_01.html" class="footer-nav-link">第5章: 窓・サッシ・日射取得と遮蔽（25問）</a></li>
+          <li><a href="/knowledge/thermal/th_cnd_01.html" class="footer-nav-link">第6章: 結露・カビ防止・壁体内湿気（25問）</a></li>
+          <li><a href="/knowledge/thermal/th_hvac_01.html" class="footer-nav-link">第7章: 冷暖房設計・全館空調（25問）</a></li>
+          <li><a href="/knowledge/thermal/th_law_01.html" class="footer-nav-link">第8章: 2025年法改正・生涯コスト（25問）</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <p style="text-align: center; font-size: 0.78rem; line-height: 1.7; margin: 0;">© 2026 株式会社住ま居る / スマイチ All Rights Reserved.<br>「芳彩（かぐや）— 結露しない家」 / 埼玉県鶴ヶ島市町屋176番地5<br>手刻み大工×建築士のタッグによるミリ単位自由設計 / 呼吸する珪藻土・無垢材 / HEAT20 G2・G3 / C値1.0以下（実測0.28〜0.6目安） / 耐震等級3 (全棟許容応力度計算)</p>
+  </footer>
 </body>
 </html>
