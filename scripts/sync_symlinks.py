@@ -78,6 +78,22 @@ def sync_links():
             except Exception as e:
                 print(f"  ❌ リンク作成エラー ({item}): {e}")
 
+    # data ディレクトリ内の Web 公開用 JSON ファイル群の同期
+    pub_data_dir = os.path.join(public_dir, 'data')
+    root_data_dir = os.path.join(base_dir, 'data')
+    if os.path.exists(pub_data_dir) and os.path.exists(root_data_dir):
+        print(f"\n📂 public/data から {root_data_dir} への個別ファイルリンク同期中...")
+        for d_item in sorted(os.listdir(pub_data_dir)):
+            d_target = os.path.join(root_data_dir, d_item)
+            d_source = os.path.join('..', 'public', 'data', d_item)
+            if not os.path.exists(d_target) and not os.path.islink(d_target):
+                try:
+                    os.symlink(d_source, d_target)
+                    print(f"  ✅ data内リンク作成: {d_item} -> {d_source}")
+                    created_count += 1
+                except Exception as e:
+                    print(f"  ❌ data内リンクエラー ({d_item}): {e}")
+
     print(f"\n🎉 シンボリックリンク同期完了: 作成={created_count}, 更新={updated_count}, 保持={skipped_count}")
     return True
 
