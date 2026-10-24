@@ -24,6 +24,12 @@ function initDeferredSection(sectionId) {
       if (typeof updateDashboardMortgageStatus === 'function') updateDashboardMortgageStatus();
     } else if (sectionId === 'admin') {
       if (typeof initAdminFloorplanImporter === 'function') initAdminFloorplanImporter();
+    } else if (sectionId === 'article-feature') {
+      if (typeof selectArticleChapter === 'function') {
+        const hash = (window.location.hash || '').replace('#', '');
+        const targetCh = hash.startsWith('art-') ? hash.replace('art-', '') : (/^ch([1-9]|10)$/.test(hash) ? hash : 'ch1');
+        selectArticleChapter(targetCh);
+      }
     }
   } catch (err) {
     console.warn(`[DeferredInit] Error initializing ${sectionId}:`, err);
@@ -278,6 +284,17 @@ function switchPage(pageId, pushState = true) {
       const bubbleBtn = document.getElementById('btn-fp-mode-bubble');
       if (bubbleBtn) bubbleBtn.click();
     }, 150);
+  } else if (pageId === 'article-feature' || pageId.startsWith('art-ch') || /^ch([1-9]|10)$/.test(pageId)) {
+    effectivePageId = 'article-feature';
+    let targetCh = 'ch1';
+    if (pageId.startsWith('art-ch')) targetCh = pageId.replace('art-', '');
+    else if (/^ch([1-9]|10)$/.test(pageId)) targetCh = pageId;
+    scrollToAnchor = 'article-feature';
+    setTimeout(() => {
+      if (typeof selectArticleChapter === 'function') {
+        selectArticleChapter(targetCh, false);
+      }
+    }, 120);
   }
 
   let targetSec = document.getElementById(effectivePageId);
@@ -1027,22 +1044,63 @@ function initRealBookingForm() {
 }
 
 // 7. A4 10-Page Feature Article Chapter Tabs Navigation
-function initArticleTabs() {
+function selectArticleChapter(targetCh, smoothScroll = false) {
+  if (!targetCh) return;
+  const cleanCh = targetCh.replace('art-', '');
+
   const tabs = document.querySelectorAll('.art-tab-btn');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
+  tabs.forEach(t => {
+    if (t.getAttribute('data-tab') === cleanCh) {
+      t.classList.add('active');
+      try {
+        t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      } catch (e) {}
+    } else {
+      t.classList.remove('active');
+    }
+  });
 
-      const targetCh = tab.getAttribute('data-tab');
-      const contents = document.querySelectorAll('.art-tab-content');
-      contents.forEach(c => c.classList.remove('active'));
+  const contents = document.querySelectorAll('.art-tab-content');
+  contents.forEach(c => {
+    c.classList.remove('active');
+    c.style.display = '';
+  });
 
-      const targetContent = document.getElementById(`art-${targetCh}`);
-      if (targetContent) {
-        targetContent.classList.add('active');
+  const targetContent = document.getElementById(`art-${cleanCh}`);
+  if (targetContent) {
+    targetContent.classList.add('active');
+    targetContent.style.display = '';
+    if (smoothScroll) {
+      const tabsNav = document.querySelector('.article-nav-tabs');
+      if (tabsNav) {
+        tabsNav.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    });
+    }
+  }
+}
+
+function initArticleTabs() {
+  // Document-level event delegation so tabs always work regardless of deferred mounting timing
+  document.addEventListener('click', (e) => {
+    const tabBtn = e.target.closest('.art-tab-btn');
+    if (tabBtn) {
+      e.preventDefault();
+      const targetCh = tabBtn.getAttribute('data-tab');
+      if (targetCh) {
+        selectArticleChapter(targetCh, false);
+      }
+      return;
+    }
+
+    const chLink = e.target.closest('[data-article-ch]');
+    if (chLink) {
+      e.preventDefault();
+      const targetCh = chLink.getAttribute('data-article-ch');
+      if (targetCh) {
+        selectArticleChapter(targetCh, true);
+      }
+      return;
+    }
   });
 }
 

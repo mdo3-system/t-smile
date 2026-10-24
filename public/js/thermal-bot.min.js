@@ -271,6 +271,19 @@ class ThermalBotStudio {
     document.getElementById('thermal-modal-det').textContent = q.details;
     document.getElementById('thermal-modal-pri').textContent = q.principle;
 
+    // Diagram Image Setting
+    const modalImg = document.getElementById('thermal-modal-img');
+    const diagramWrap = document.getElementById('thermal-modal-diagram-wrap');
+    if (modalImg) {
+      const imgPath = q.image || `/images/knowledge/thermal_${q.category}.jpg`;
+      modalImg.src = imgPath;
+      modalImg.alt = `${q.question} - 住ま居る温熱設計図解`;
+      modalImg.onerror = () => {
+        modalImg.src = '/images/thermal_interior_hero.jpg';
+      };
+      if (diagramWrap) diagramWrap.style.display = 'block';
+    }
+
     // Video & Diagram Embed Box
     let videoBox = document.getElementById('thermal-modal-video-box');
     if (!videoBox) {
@@ -286,17 +299,20 @@ class ThermalBotStudio {
     const ytId = vInfo.youtubeVideoId || (vInfo.youtubeUrl ? (vInfo.youtubeUrl.match(/(?:youtu\.be\/|watch\?v=)([\w-]{11})/) || [])[1] : null);
 
     if (ytId) {
+      const ytShortsUrl = vInfo.youtubeUrl || `https://www.youtube.com/shorts/${ytId}`;
       videoBox.innerHTML = `
-        <div style="margin: 1rem 0; background: #0f172a; border: 1px solid #334155; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.2);">
-          <div style="padding: 8px 12px; background: #1e293b; color: #f87171; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between;">
-            <span style="display:flex; align-items:center; gap:6px;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="#ef4444"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-              10秒解説YouTube動画（Veo 3 × AI温熱建築士）
+        <div style="margin: 1.2rem 0; background: #0f172a; border: 1.5px solid #334155; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.25);">
+          <div style="padding: 10px 14px; background: #1e293b; color: #f87171; font-size: 0.85rem; font-weight: 800; display: flex; align-items: center; justify-content: space-between;">
+            <span style="display:flex; align-items:center; gap:8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#ef4444"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              📱 10秒解説YouTubeショート（Veo 3 × AI温熱建築士）
             </span>
-            <a href="${vInfo.youtubeUrl}" target="_blank" style="color: #cbd5e1; text-decoration: underline; font-size: 0.78rem;">YouTubeで開く ↗</a>
+            <a href="${ytShortsUrl}" target="_blank" style="color: #38bdf8; text-decoration: none; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 4px;">YouTube Shorts ↗</a>
           </div>
-          <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-            <iframe src="https://www.youtube.com/embed/${ytId}?rel=0" style="position: absolute; top:0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen></iframe>
+          <div style="display: flex; justify-content: center; background: #020617; padding: 12px 8px;">
+            <div style="position: relative; width: 100%; max-width: 320px; aspect-ratio: 9 / 16; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.6); background: #000;">
+              <iframe src="https://www.youtube.com/embed/${ytId}?rel=0&playsinline=1" style="position: absolute; top:0; left: 0; width: 100%; height: 100%; border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
           </div>
         </div>
       `;

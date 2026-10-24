@@ -220,6 +220,22 @@ class RobustRequestHandler(SimpleHTTPRequestHandler):
             }, ensure_ascii=False).encode('utf-8'))
             return
 
+        # API: /api/knowledge-video/links (知見動画リンク一覧取得)
+        if path == '/api/knowledge-video/links':
+            links_file = os.path.join(PUBLIC_DIR, 'data', 'knowledge_video_links.json')
+            data = {}
+            if os.path.exists(links_file):
+                try:
+                    with open(links_file, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                except Exception:
+                    data = {}
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps(data, ensure_ascii=False).encode('utf-8'))
+            return
+
         super().do_GET()
 
     def do_HEAD(self):
@@ -303,8 +319,8 @@ class RobustRequestHandler(SimpleHTTPRequestHandler):
             self.wfile.write(b'{"success": true}')
             return
 
-        # API: /api/knowledge-video/save-links
-        if path == '/api/knowledge-video/save-links':
+        # API: /api/knowledge-video/save-links または /api/knowledge-video/links
+        if path in ('/api/knowledge-video/save-links', '/api/knowledge-video/links'):
             portal_file = os.path.join(PUBLIC_DIR, 'data', 'knowledge_video_portal_data.json')
             links_file = os.path.join(PUBLIC_DIR, 'data', 'knowledge_video_links.json')
             updates = body.get('links', body)

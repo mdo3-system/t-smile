@@ -818,20 +818,46 @@
             showToast(`ステータスを「${getStatusBadge(item.status).label}」に更新しました`);
         }
 
+        // Server Sync Helper
+        async function syncLinksToServer(partialMap) {
+            try {
+                const res = await fetch('/api/knowledge-video/save-links', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ links: partialMap })
+                });
+                if (res.ok) {
+                    console.log('[Portal] Synced to server successfully.');
+                }
+            } catch (e) {
+                console.warn('[Portal] Failed to sync to server API:', e);
+            }
+        }
+
         // Update Handlers
-        function updateItemYoutube(id, url) {
+        async function updateItemYoutube(id, url) {
             const item = allItems.find(i => i.id === id);
             if (!item) return;
             item.youtubeUrl = url.trim();
-            // Extract Video ID
-            const match = item.youtubeUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+            // Extract Video ID (supports youtu.be, watch?v=, and shorts/)
+            const match = item.youtubeUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
             item.youtubeVideoId = match ? match[1] : '';
             if (item.youtubeUrl && item.status === 'unstarted') {
                 item.status = 'youtube_uploaded';
             }
             persistToLocalStorage();
             applyFilters();
-            showToast('YouTube URLを保存しました');
+            
+            // サーバーファイル（knowledge_video_links.json）へ自動同期
+            await syncLinksToServer({
+                [item.id]: {
+                    youtubeUrl: item.youtubeUrl,
+                    youtubeVideoId: item.youtubeVideoId,
+                    veoVideoPath: item.veoVideoPath || '',
+                    status: item.status
+                }
+            });
+            showToast('YouTube URLを本サイトへ即時反映しました！');
         }
 
         function updateItemVeoPath(id, path) {
@@ -1414,16 +1440,30 @@
             persistToLocalStorage();
             const exportMap = {};
             allItems.forEach(item => {
-                exportMap[item.id] = {
-                    youtubeUrl: item.youtubeUrl || '',
-                    youtubeVideoId: item.youtubeVideoId || '',
-                    veoVideoPath: item.veoVideoPath || '',
-                    status: item.status || 'unstarted'
-                };
+                if (item.youtubeUrl || item.status !== 'unstarted') {
+                    exportMap[item.id] = {
+                        youtubeUrl: item.youtubeUrl || '',
+                        youtubeVideoId: item.youtubeVideoId || '',
+                        veoVideoPath: item.veoVideoPath || '',
+                        status: item.status || 'unstarted'
+                    };
+                }
             });
 
             try {
-                // Also trigger download of knowledge_video_links.json for persistence
+                // 1. サーバーへPOSTして knowledge_video_links.json を直接上書き保存！
+                const res = await fetch('/api/knowledge-video/save-links', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ links: exportMap })
+                });
+                if (res.ok) {
+                    showToast('✅ 本サイト（JSONファイル）へ直接保存＆完全反映しました！');
+                } else {
+                    throw new Error('Server returned ' + res.status);
+                }
+            } catch (err) {
+                console.warn('Server save failed, downloading backup JSON:', err);
                 const blob = new Blob([JSON.stringify(exportMap, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -1431,10 +1471,7 @@
                 a.download = 'knowledge_video_links.json';
                 a.click();
                 URL.revokeObjectURL(url);
-
-                showToast('本サイト反映用 knowledge_video_links.json を出力しました！モーダル連動が有効です');
-            } catch (err) {
-                showToast('反映に失敗しました', true);
+                showToast('knowledge_video_links.json をダウンロード保存しました');
             }
         }
 

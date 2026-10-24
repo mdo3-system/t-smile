@@ -58,6 +58,7 @@ scratch_*.jpg
 scratch_*.txt
 screenshot_*.png
 public/sample_data/jfd_survey/3D/
+public/sample_data/architrend/
 public/plans/*.png
 public/videos/
 backup/
@@ -70,12 +71,27 @@ public/data/knowledge/images/*.pdf
 data/thermal_knowledge/*.pdf
 public/sample_data/**/*.pdf
 *.pdf
+# JFD敷地調査マスキング済み公開サンプル成果物（Web公開用・適正サイズ）は追跡許可
+!public/sample_data/jfd_survey/sample_docs/*.pdf
+!public/sample_data/jfd_survey/sample_docs/*.jpg
 
 # 生写真アーカイブ・大容量未圧縮ソース（数GB）
 raw_source_cases/
-sample_data/
+/sample_data/
 cases_drawings/
+!public/sample_data/jfd_survey/sample_docs/
 *.raw
 *.heic
 *.tif
 *.tiff
+
+# 機密情報・認証トークン（Git追跡完全除外）
+.env
+.env.*
+*secrets*.json
+scripts/mail_secrets.json
+
+# 大容量メールバックアップ（PCローカル保管専用）
+email_backup/
+*.eml
+*.mbox

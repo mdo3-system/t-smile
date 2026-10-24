@@ -9,6 +9,13 @@ import sys
 import subprocess
 import os
 
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 def print_banner(text, border_char="="):
     line = border_char * 72
     print(f"\n{line}")

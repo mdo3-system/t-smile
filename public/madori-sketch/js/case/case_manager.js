@@ -74,28 +74,68 @@ window.saveAsNewPlan = saveAsNewPlan;
 
 // 2. 全画面モード切替 ＆ 離脱防止（beforeunload）
 function toggleFullscreenMode() {
+    const isCurrentlyFullscreen = document.body.classList.contains('is-fullscreen') || !!document.fullscreenElement;
     const icon = document.getElementById('fullscreenIcon');
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().then(() => {
-            if (icon) icon.className = 'fa-solid fa-compress';
-            dismissFullscreenPrompt();
-            showToast('全画面モードを開始しました（Escキーまたはボタンで解除）');
-        }).catch(err => {
-            console.warn('Fullscreen error:', err);
-        });
-    } else {
-        if (document.exitFullscreen) {
-            document.exitFullscreen().then(() => {
-                if (icon) icon.className = 'fa-solid fa-expand';
+    const floatingBtn = document.getElementById('btnExitFullscreenFloating');
+
+    if (!isCurrentlyFullscreen) {
+        // 全画面モードへ移行（CSSクラス付与でヘッダー・フッターを隠す）
+        document.body.classList.add('is-fullscreen');
+        if (icon) icon.className = 'fa-solid fa-compress';
+        if (floatingBtn) floatingBtn.style.display = 'inline-flex';
+        dismissFullscreenPrompt();
+        if (typeof closeFullscreenModal === 'function') closeFullscreenModal();
+
+        // ブラウザAPI対応環境であればブラウザ全画面も実行
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.info('Browser fullscreen request avoided or unsupported; CSS fullscreen applied.', err);
             });
         }
+        if (typeof showToast === 'function') {
+            showToast('📐 全画面モードを開始しました（右上の「✕ 通常表示に戻す」ボタンで解除可能）');
+        }
+        if (typeof handleResize === 'function') setTimeout(handleResize, 100);
+    } else {
+        // 通常モードへ戻す（ヘッダー・フッターを再表示）
+        exitFullscreenMode();
     }
 }
+
+function exitFullscreenMode() {
+    document.body.classList.remove('is-fullscreen');
+    const icon = document.getElementById('fullscreenIcon');
+    const floatingBtn = document.getElementById('btnExitFullscreenFloating');
+    if (icon) icon.className = 'fa-solid fa-expand';
+    if (floatingBtn) floatingBtn.style.display = 'none';
+
+    if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(err => console.warn(err));
+    }
+    if (typeof showToast === 'function') {
+        showToast('通常表示に戻しました（ヘッダー・フッター復帰）');
+    }
+    if (typeof handleResize === 'function') setTimeout(handleResize, 100);
+}
+
+// ブラウザ標準のEscキー等によるフルスクリーン解除時にもbodyクラスとUIを同期
+document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) {
+        // ブラウザ全画面が解除された場合
+        document.body.classList.remove('is-fullscreen');
+        const icon = document.getElementById('fullscreenIcon');
+        const floatingBtn = document.getElementById('btnExitFullscreenFloating');
+        if (icon) icon.className = 'fa-solid fa-expand';
+        if (floatingBtn) floatingBtn.style.display = 'none';
+        if (typeof handleResize === 'function') setTimeout(handleResize, 100);
+    }
+});
 
 function dismissFullscreenPrompt() {
     const banner = document.getElementById('fullscreenPromptBanner');
     if (banner) banner.style.display = 'none';
 }
+window.exitFullscreenMode = exitFullscreenMode;
 
 // ブラウザの戻る・タブ閉じ誤操作によるデータ消失防止
 window.addEventListener('beforeunload', (e) => {
