@@ -16,30 +16,39 @@
   RewriteRule ^passive-.*\.html$ /performance/? [R=301,L]
   RewriteRule ^hivic-.*\.html$ /performance/? [R=301,L]
   RewriteRule ^shoene-.*\.html$ /performance/? [R=301,L]
+  RewriteRule ^eq-.*\.html$ /performance/? [R=301,L]
 
-  # 温熱・健康・暖房
+  # 温熱・健康・暖房・換気知見
   RewriteRule ^healthy-.*\.html$ /knowledge/thermal/? [R=301,L]
   RewriteRule ^heating-.*\.html$ /knowledge/thermal/? [R=301,L]
+  RewriteRule ^ventilation-.*\.html$ /knowledge/thermal/? [R=301,L]
 
-  # 電気料金・HEMS・光熱費実測データ
+  # 電気料金・HEMS・光熱費実測データ・過去ブログ
   RewriteRule ^denki_ryokin-.*\.html$ /evidence/? [R=301,L]
   RewriteRule ^hems.*\.html$ /evidence/? [R=301,L]
+  RewriteRule ^a201[0-9].*\.html$ /evidence/? [R=301,L]
 
   # 標準仕様・工学スペック
   RewriteRule ^spec-.*\.html$ /category/spec/? [R=301,L]
 
-  # 会社案内・代表挨拶・お客様の声
+  # 建築費用・ローコスト・不動産土地探し・家づくりの流れ
+  RewriteRule ^real_lowcost_house-.*\.html$ /flow/? [R=301,L]
+  RewriteRule ^service/cost/?$ /flow/? [R=301,L]
+  RewriteRule ^realestate-.*\.html$ /flow/? [R=301,L]
+
+  # 会社案内・設計・技術者大工・代表挨拶・お客様の声
   RewriteRule ^about-2/?$ /about/? [R=301,L]
   RewriteRule ^intro_.*\.html$ /about/? [R=301,L]
   RewriteRule ^voice-.*\.html$ /about/? [R=301,L]
+  RewriteRule ^engineer-.*\.html$ /about/? [R=301,L]
+  RewriteRule ^service/architecture/?$ /about/? [R=301,L]
 
   # 施工実例（川越・見沼等）
   RewriteRule ^kawagoe-.*\.html$ /cases/kawagoe-y.html? [R=301,L]
   RewriteRule ^minuma-.*\.html$ /cases/tsurugashima-s.html? [R=301,L]
 
-  # 間取り・家事動線・キッチン・テラス等の日本語記事
-  RewriteCond %{REQUEST_URI} (洗濯機|キッチン|テラス|ハンガーパイプ|パントリー|ランドリー|収納) [NC]
-  RewriteRule ^.*\.html$ /madori-consultation/? [R=301,L]
+  # 過去のあらゆる施工・造作・インテリア・間取り事例（すべての「日本語タイトル-数字.html」を完全救出）
+  RewriteRule ^.*-[0-9]+\.html$ /madori-consultation/? [R=301,L]
 </IfModule>
 
 # 2. Gzip圧縮（mod_deflate）による転送量70〜80%削減
