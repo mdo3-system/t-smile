@@ -368,112 +368,132 @@ def sync_to_gmail(g_mgr, backup_base_dir, target_folder_names):
     session_count = 0
     start_time = time.time()
 
-    for folder_dir in backup_base_dir.iterdir():
-        if not folder_dir.is_dir():
-            continue
+    def save_log():
+        try:
+            with open(uploaded_log_file, 'w', encoding='utf-8') as f:
+                json.dump(list(uploaded_set), f)
+        except Exception:
+            pass
 
-        folder_name = folder_dir.name
-        is_target = False
-        target_label = folder_name
-        for tf in target_folder_names:
-            if tf.lower() == folder_name.lower():
-                is_target = True
-                target_label = tf
-                break
-            if tf in ["受信箱", "INBOX"] and folder_name in ["受信箱", "INBOX"]:
-                is_target = True
-                target_label = "INBOX"
-                break
-
-        if not is_target:
-            continue
-
-        print(f"\n📤 フォルダ移行中: [{folder_name}] ➔ Gmailラベル: [{target_label}]")
-        encoded_gmail_folder = ensure_gmail_folder(g_mgr, target_label)
-
-        eml_files = list(folder_dir.glob("*.eml"))
-        f_uploaded = 0
-        f_skipped = 0
-        folder_start_time = time.time()
-
-        for eml_file in eml_files:
-            log_key = f"{folder_name}/{eml_file.name}"
-            if log_key in uploaded_set:
-                f_skipped += 1
-                total_skipped += 1
+    try:
+        for folder_dir in backup_base_dir.iterdir():
+            if not folder_dir.is_dir():
                 continue
 
-            file_size = eml_file.stat().st_size
-            # 22MB超の巨大メールはGmailのIMAP上限（約25MB）を超えるため事前に保護スキップ
-            if file_size > MAX_GMAIL_APPEND_BYTES:
-                print(f"\n   ⚠️ 【サイズ超過スキップ】{eml_file.name} ({file_size / (1024*1024):.1f}MB > 22MB上限) - Gmail制限のためローカル保存のみとします")
-                uploaded_set.add(log_key)
-                f_skipped += 1
-                total_skipped += 1
+            folder_name = folder_dir.name
+            is_target = False
+            target_label = folder_name
+            for tf in target_folder_names:
+                if tf.lower() == folder_name.lower():
+                    is_target = True
+                    target_label = tf
+                    break
+                if tf in ["受信箱", "INBOX"] and folder_name in ["受信箱", "INBOX"]:
+                    is_target = True
+                    target_label = "INBOX"
+                    break
+
+            if not is_target:
                 continue
 
-            session_count += 1
-            if session_count >= GMAIL_BATCH_REFRESH_INTERVAL:
-                print(f"   ☕ Googleバッファ詰まり防止のためセッションをリフレッシュ中...")
-                g_mgr.connect()
-                session_count = 0
+            print(f"\n📤 フォルダ移行中: [{folder_name}] ➔ Gmailラベル: [{target_label}]")
+            encoded_gmail_folder = ensure_gmail_folder(g_mgr, target_label)
 
-            max_retries = 3
-            success = False
-            for attempt in range(1, max_retries + 1):
-                try:
-                    with open(eml_file, 'rb') as f:
-                        eml_data = f.read()
+            eml_files = list(folder_dir.glob("*.eml"))
+            f_uploaded = 0
+            f_skipped = 0
+            folder_start_time = time.time()
 
-                    msg = email.message_from_bytes(eml_data)
-                    date_tuple = email.utils.parsedate_tz(msg.get('Date'))
-                    if date_tuple:
-                        epoch = email.utils.mktime_tz(date_tuple)
-                        imap_time = imaplib.Time2Internaldate(epoch)
-                    else:
-                        imap_time = imaplib.Time2Internaldate(time.time())
+            for eml_file in eml_files:
+                log_key = f"{folder_name}/{eml_file.name}"
+                if log_key in uploaded_set:
+                    f_skipped += 1
+                    total_skipped += 1
+                    continue
 
-                    # Gmail IMAP append
-                    status, _ = g_mgr.imap.append(encoded_gmail_folder, '\\Seen', imap_time, eml_data)
-                    if status == 'OK':
-                        f_uploaded += 1
-                        total_uploaded += 1
-                        uploaded_set.add(log_key)
-                        success = True
-                        # 短時間待機（Googleサーバー側の受信バッファをフラッシュ）
-                        time.sleep(0.03)
-                        break
-                    else:
-                        time.sleep(1)
-                except (socket.timeout, TimeoutError, OSError) as e:
-                    wait_sec = attempt * 5
-                    print(f"\n  ⏳ ソケット書き込み一時待機検知 ({e})。Google側の通信混雑のため {wait_sec}秒 待機して再接続・再試行 ({attempt}/{max_retries})...")
-                    time.sleep(wait_sec)
+                file_size = eml_file.stat().st_size
+                # 22MB超の巨大メールはGmailのIMAP上限（約25MB）を超えるため事前に保護スキップ
+                if file_size > MAX_GMAIL_APPEND_BYTES:
+                    print(f"\n   ⚠️ 【サイズ超過スキップ】{eml_file.name} ({file_size / (1024*1024):.1f}MB > 22MB上限) - Gmail制限のためローカル保存のみとします")
+                    uploaded_set.add(log_key)
+                    f_skipped += 1
+                    total_skipped += 1
+                    save_log()
+                    continue
+
+                session_count += 1
+                if session_count >= GMAIL_BATCH_REFRESH_INTERVAL:
+                    print(f"   ☕ Googleバッファ詰まり防止のためセッションをリフレッシュ中...")
                     g_mgr.connect()
-                except Exception as e:
-                    wait_sec = attempt * 3
-                    print(f"\n  🔄 Gmail投入リトライ ({attempt}/{max_retries}) [エラー: {e}]: {wait_sec}秒後再接続...")
-                    time.sleep(wait_sec)
-                    g_mgr.connect()
+                    session_count = 0
 
-            if not success:
-                print(f"   ⚠️ ファイル {eml_file.name} 投入スキップ（3回再試行後もサーバー応答なし）")
+                max_retries = 3
+                success = False
+                for attempt in range(1, max_retries + 1):
+                    try:
+                        with open(eml_file, 'rb') as f:
+                            eml_data = f.read()
 
-            # 進捗 ＆ 速度・残り時間ETAの算出
-            processed = f_uploaded + f_skipped
-            total_in_folder = len(eml_files)
-            if f_uploaded > 0 and (f_uploaded % 25 == 0 or processed == total_in_folder):
-                elapsed = time.time() - folder_start_time
-                speed = f_uploaded / max(elapsed, 0.1) # 通/秒
-                remaining_files = total_in_folder - processed
-                eta_minutes = (remaining_files / max(speed, 0.01)) / 60
-                eta_str = f"約{eta_minutes:.1f}分" if eta_minutes < 60 else f"約{eta_minutes/60:.1f}時間"
-                print(f"   📤 進捗: {processed}/{total_in_folder} 通 ({processed*100/total_in_folder:.1f}%) ｜ 新規: {f_uploaded}通 (速度: {speed:.1f}通/秒, 残り目安: {eta_str})")
+                        msg = email.message_from_bytes(eml_data)
+                        date_tuple = email.utils.parsedate_tz(msg.get('Date'))
+                        if date_tuple:
+                            epoch = email.utils.mktime_tz(date_tuple)
+                            imap_time = imaplib.Time2Internaldate(epoch)
+                        else:
+                            imap_time = imaplib.Time2Internaldate(time.time())
 
-        print(f"   ✨ [{folder_name}] 移行完了: 投入成功={f_uploaded}, スキップ={f_skipped}")
+                        # Gmail IMAP append
+                        status, _ = g_mgr.imap.append(encoded_gmail_folder, '\\Seen', imap_time, eml_data)
+                        if status == 'OK':
+                            f_uploaded += 1
+                            total_uploaded += 1
+                            uploaded_set.add(log_key)
+                            success = True
+                            # 10通ごとに進捗ログを即座にディスク保存（Ctrl+C中断時も完全に保護）
+                            if f_uploaded % 10 == 0:
+                                save_log()
+                            # 短時間待機（Googleサーバー側の受信バッファをフラッシュ）
+                            time.sleep(0.03)
+                            break
+                        else:
+                            time.sleep(1)
+                    except (socket.timeout, TimeoutError, OSError) as e:
+                        wait_sec = attempt * 5
+                        print(f"\n  ⏳ ソケット書き込み一時待機検知 ({e})。Google側の通信混雑のため {wait_sec}秒 待機して再接続・再試行 ({attempt}/{max_retries})...")
+                        time.sleep(wait_sec)
+                        g_mgr.connect()
+                    except Exception as e:
+                        wait_sec = attempt * 3
+                        print(f"\n  🔄 Gmail投入リトライ ({attempt}/{max_retries}) [エラー: {e}]: {wait_sec}秒後再接続...")
+                        time.sleep(wait_sec)
+                        g_mgr.connect()
 
-    with open(uploaded_log_file, 'w', encoding='utf-8') as f:
-        json.dump(list(uploaded_set), f)
+                if not success:
+                    print(f"   ⚠️ ファイル {eml_file.name} 投入スキップ（3回再試行後もサーバー応答なし）")
+
+                # 進捗 ＆ 速度・残り時間ETAの算出
+                processed = f_uploaded + f_skipped
+                total_in_folder = len(eml_files)
+                if f_uploaded > 0 and (f_uploaded % 25 == 0 or processed == total_in_folder):
+                    elapsed = time.time() - folder_start_time
+                    speed = f_uploaded / max(elapsed, 0.1) # 通/秒
+                    remaining_files = total_in_folder - processed
+                    eta_minutes = (remaining_files / max(speed, 0.01)) / 60
+                    eta_str = f"約{eta_minutes:.1f}分" if eta_minutes < 60 else f"約{eta_minutes/60:.1f}時間"
+                    print(f"   📤 進捗: {processed}/{total_in_folder} 通 ({processed*100/total_in_folder:.1f}%) ｜ 新規: {f_uploaded}通 (速度: {speed:.1f}通/秒, 残り目安: {eta_str})")
+
+            # フォルダ完了時にも確実にディスク保存
+            save_log()
+            print(f"   ✨ [{folder_name}] 移行完了: 投入成功={f_uploaded}, スキップ={f_skipped}")
+
+    except KeyboardInterrupt:
+        print("\n\n🛑 ユーザーによる中断 (Ctrl+C) を検知しました。")
+        print("💾 これまでにGmailへ投入完了した進捗を安全に保存しています...")
+        save_log()
+        print("✔ 進捗を保存しました。次回実行時は続きから自動的に再開されます。")
+        return
+    finally:
+        save_log()
 
     total_elapsed = time.time() - start_time
     print(f"\n🎉 【ステップ2 完了】Gmailへの指定フォルダ移行が完了しました！")
