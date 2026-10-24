@@ -276,18 +276,27 @@ def build_knowledge_pages_and_sitemap():
 
     # =========================================================================
     # サイトマップインデックス化 (sitemap-index.xml & 分割サイトマップ)
-    # 1. sitemap-pages.xml     : トップ・固定LP・ツール・施工実例
+    # 1. sitemap-pages.xml     : トップ・固定LP・コアツール・施工実例
     # 2. sitemap-knowledge.xml : 温熱・気密・換気・構造の知見200選
     # 3. sitemap-plans.xml     : 323プランカタログハブ & 全プラン個別詳細ページ
     # 4. sitemap-index.xml     : Google Search Console登録用インデックス
     # 5. sitemap.xml           : 互換性のためのインデックスファイル
     # =========================================================================
 
-    # 1. 固定ページ・LP・施工事例
-    page_urls_list = ['https://t-smile.co.jp/'] + lp_urls + case_urls
+    core_tool_urls = [
+        'https://t-smile.co.jp/subsidy/index.html',
+        'https://t-smile.co.jp/mortgage/index.html',
+        'https://t-smile.co.jp/madori-sketch/',
+        'https://t-smile.co.jp/smilestudio.html',
+        'https://t-smile.co.jp/jfd-survey/',
+        'https://t-smile.co.jp/schedule/'
+    ]
+
+    # 1. 固定ページ・LP・コアツール・施工事例
+    page_urls_list = list(dict.fromkeys(['https://t-smile.co.jp/'] + core_tool_urls + lp_urls + case_urls))
     pages_sitemap_lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u in page_urls_list:
-        priority = "1.0" if u == 'https://t-smile.co.jp/' else ("0.95" if '/about/' in u or '/performance/' in u or '/evidence/' in u or '/category/spec/' in u or '/catalog/' in u or '/awards/' in u or '/flow/' in u else "0.9")
+        priority = "1.0" if u == 'https://t-smile.co.jp/' else ("0.95" if any(k in u for k in ['/subsidy/', '/mortgage/', '/madori-sketch/', '/smilestudio.html', '/jfd-survey/', '/schedule/', '/about/', '/performance/', '/evidence/', '/category/spec/', '/catalog/', '/awards/', '/flow/']) else "0.9")
         pages_sitemap_lines.append(f"  <url><loc>{u}</loc><priority>{priority}</priority><changefreq>weekly</changefreq></url>")
     pages_sitemap_lines.append('</urlset>')
 
@@ -322,7 +331,8 @@ def build_knowledge_pages_and_sitemap():
     print(f"[SEO] Generated sitemap-plans.xml with {len(plan_urls)} URLs!")
 
     # 4. 親サイトマップインデックス (sitemap-index.xml & sitemap.xml)
-    today_str = "2026-10-23"
+    from datetime import datetime
+    today_str = datetime.now().strftime("%Y-%m-%d")
     sitemap_index_lines = [
         '<?xml version="1.0" encoding="UTF-8"?>',
         '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',

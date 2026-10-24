@@ -27,10 +27,11 @@ def run_command(cmd, desc):
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     if result.returncode != 0:
         print(f"❌ エラーが発生しました ({desc}):")
-        print(result.stderr)
+        if result.stderr:
+            print(result.stderr)
         return False
     print(f"✔ 成功: {desc}")
-    if result.stdout.strip():
+    if result.stdout and result.stdout.strip():
         print(result.stdout.strip())
     return True
 
