@@ -78,11 +78,14 @@ function toggleFullscreenMode() {
     const icon = document.getElementById('fullscreenIcon');
     const floatingBtn = document.getElementById('btnExitFullscreenFloating');
 
+    const floatingBar = document.getElementById('floatingFullscreenBar');
+
     if (!isCurrentlyFullscreen) {
         // 全画面モードへ移行（CSSクラス付与でヘッダー・フッターを隠す）
         document.body.classList.add('is-fullscreen');
         if (icon) icon.className = 'fa-solid fa-compress';
-        if (floatingBtn) floatingBtn.style.display = 'inline-flex';
+        if (floatingBar) floatingBar.style.display = 'inline-flex';
+        else if (floatingBtn) floatingBtn.style.display = 'inline-flex';
         dismissFullscreenPrompt();
         if (typeof closeFullscreenModal === 'function') closeFullscreenModal();
 
@@ -106,7 +109,9 @@ function exitFullscreenMode() {
     document.body.classList.remove('is-fullscreen');
     const icon = document.getElementById('fullscreenIcon');
     const floatingBtn = document.getElementById('btnExitFullscreenFloating');
+    const floatingBar = document.getElementById('floatingFullscreenBar');
     if (icon) icon.className = 'fa-solid fa-expand';
+    if (floatingBar) floatingBar.style.display = 'none';
     if (floatingBtn) floatingBtn.style.display = 'none';
 
     if (document.fullscreenElement && document.exitFullscreen) {
@@ -125,7 +130,9 @@ document.addEventListener('fullscreenchange', () => {
         document.body.classList.remove('is-fullscreen');
         const icon = document.getElementById('fullscreenIcon');
         const floatingBtn = document.getElementById('btnExitFullscreenFloating');
+        const floatingBar = document.getElementById('floatingFullscreenBar');
         if (icon) icon.className = 'fa-solid fa-expand';
+        if (floatingBar) floatingBar.style.display = 'none';
         if (floatingBtn) floatingBtn.style.display = 'none';
         if (typeof handleResize === 'function') setTimeout(handleResize, 100);
     }

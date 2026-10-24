@@ -133,23 +133,36 @@
             z-index: 10;
             position: relative;
         }
-        .footer-inner {
-            max-width: 1400px;
+        .footer-inner,
+        .footer-grid-unified {
+            max-width: 1540px;
+            width: 100%;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 2rem;
             text-align: left;
         }
-        @media (max-width: 768px) {
-            .footer-inner { grid-template-columns: 1fr; }
+        @media (max-width: 1100px) {
+            .footer-inner,
+            .footer-grid-unified {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 2.5rem 1.5rem;
+            }
+        }
+        @media (max-width: 640px) {
+            .footer-inner,
+            .footer-grid-unified {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
         }
 
         /* App Container & Fullscreen Modes */
         #madori-app-container {
             width: 100%;
-            height: calc(100vh - 110px);
-            min-height: 750px;
+            height: calc(100vh - 90px);
+            min-height: 720px;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -161,6 +174,10 @@
             width: 100vw !important;
         }
         body.is-fullscreen .common-site-header,
+        body.is-fullscreen .site-header-twotier,
+        body.is-fullscreen #madori-site-header,
+        body.is-fullscreen #madori-app-header,
+        body.is-fullscreen #fullscreenPromptBanner,
         body.is-fullscreen .common-site-footer {
             display: none !important;
         }
@@ -174,8 +191,15 @@
             height: 100vh !important;
             z-index: 99999 !important;
             min-height: unset !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
-        body.is-fullscreen #btnExitFullscreenFloating {
+        body.is-fullscreen #workspace-container,
+        body.is-fullscreen #main-work-area {
+            height: 100vh !important;
+            max-height: 100vh !important;
+        }
+        body.is-fullscreen #floatingFullscreenBar {
             display: inline-flex !important;
         }
 
@@ -184,19 +208,20 @@
 <body class="select-none bg-slate-900 text-slate-100 min-h-screen">
 
     
-    <!-- サイト共通 Two-Tier ヘッダー -->
-    <header class="common-site-header">
-        <div class="header-inner">
-            <div class="header-tier1">
-                <div class="brand-group">
-                    <a href="/" class="brand-link">
-                        <span style="font-size: 1.3rem;">🏡</span>
-                        <div>
-                            <div class="brand-title">株式会社住ま居る</div>
-                            <div class="brand-subtitle">家づくりAIラボ ｜ メタバース展示場</div>
+    <!-- 間取り工房 統一Two-Tier（2段）ヘッダー -->
+    <header class="common-site-header site-header-twotier" id="madori-site-header">
+        <div class="header-inner" style="max-width: 100%; padding: 0 0.5rem;">
+            <!-- Tier 1: ブランド・施工エリア・AI体験クイックリンク -->
+            <div class="header-tier1" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 8px;">
+                <div class="brand-group" style="display: flex; align-items: center; gap: 8px; shrink: 0;">
+                    <a href="/" class="brand-link" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #ffffff;" title="住ま居る トップページへ">
+                        <span style="font-size: 1.25rem;">🏡</span>
+                        <div style="display: inline-flex; align-items: baseline; gap: 4px;">
+                            <span style="font-size: 1.15rem; font-weight: 900; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">家づくりAIラボ</span>
+                            <span style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 5px; border-radius: 4px; font-weight: 800;">by 住ま居る</span>
                         </div>
                     </a>
-                    <div class="badge-corp">
+                    <div class="badge-corp" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.7rem; color: #cbd5e1; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.12); padding: 1px 6px; border-radius: 4px; white-space: nowrap;">
                         <span style="color: #38bdf8; font-weight: 700;">施工エリア：埼玉県全域・一部東京都</span>
                         <span style="opacity: 0.3;">|</span>
                         <span>創業30年・累計800棟</span>
@@ -206,49 +231,30 @@
                 </div>
 
                 <!-- AI Suite Quick Links -->
-                <div class="ai-suite-links">
-                    <span class="ai-suite-label">🏡 AI体験:</span>
-                    <a href="/index.html#floorplan-studio" class="btn-quick-nav" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3);">📐 AI 3Dプラン検索</a>
-                    <a href="/madori-sketch/" class="btn-quick-nav" style="background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; box-shadow: 0 2px 8px rgba(16,185,129,0.35); border: 1.5px solid #34d399;">✏️ 3D間取り工房 (現在地)</a>
-                    <a href="/smilestudio.html" target="_blank" class="btn-quick-nav" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; box-shadow: 0 2px 8px rgba(245,158,11,0.4); border: 1.5px solid #fbbf24;">🎨 AI 3Dパース工房 ↗</a>
-                    <a href="/index.html#thermal-consultation" class="btn-quick-nav" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">💬 AI温熱換気相談</a>
-                    <a href="/subsidy/index.html" class="btn-quick-nav" style="background: linear-gradient(135deg, #047857, #10b981); color: #ffffff; box-shadow: 0 2px 8px rgba(16,185,129,0.3);">💰 AI補助金ナビ ↗</a>
-                    <a href="/mortgage/index.html" class="btn-quick-nav" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; box-shadow: 0 2px 8px rgba(56,189,248,0.3);">🏦 AI住宅ローン診断 ↗</a>
+                <div class="ai-suite-links" style="display: flex; align-items: center; gap: 5px; flex-wrap: nowrap; overflow-x: auto;">
+                    <span class="ai-suite-label" style="color: #fde68a; font-size: 0.72rem; font-weight: 800; white-space: nowrap;">🏡 AIツール:</span>
+                    <a href="/index.html#floorplan-studio" class="btn-quick-nav" style="font-size: 0.74rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); white-space: nowrap;">📐 3Dプラン選定</a>
+                    <a href="/madori-sketch/" class="btn-quick-nav" style="font-size: 0.74rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; box-shadow: 0 2px 8px rgba(16,185,129,0.35); border: 1.5px solid #34d399; white-space: nowrap;">✏️ 間取り工房 (現在地)</a>
+                    <a href="/smilestudio.html" target="_blank" class="btn-quick-nav" style="font-size: 0.74rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; box-shadow: 0 2px 8px rgba(245,158,11,0.4); border: 1.5px solid #fbbf24; white-space: nowrap;">🎨 3Dパース工房 ↗</a>
+                    <a href="/index.html#thermal-consultation" class="btn-quick-nav" style="font-size: 0.74rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); white-space: nowrap;">💬 温熱換気相談</a>
+                    <a href="/subsidy/index.html" class="btn-quick-nav" style="font-size: 0.74rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #047857, #10b981); color: #ffffff; box-shadow: 0 2px 8px rgba(16,185,129,0.3); white-space: nowrap;">💰 補助金ナビ ↗</a>
+                    <a href="/mortgage/index.html" class="btn-quick-nav" style="font-size: 0.74rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; box-shadow: 0 2px 8px rgba(56,189,248,0.3); white-space: nowrap;">🏦 住宅ローン診断 ↗</a>
+                    <a href="/index.html" class="btn-quick-nav" style="font-size: 0.74rem; font-weight: 800; padding: 3px 9px; border-radius: 6px; text-decoration: none; background: rgba(255, 255, 255, 0.1); color: #cbd5e1; border: 1px solid rgba(255, 255, 255, 0.2); white-space: nowrap;">🏠 トップへ戻る</a>
                 </div>
-            </div>
-
-            <!-- Tier 2: Main Links -->
-            <div class="header-tier2">
-                <a href="/index.html">🏠 ホーム</a>
-                <a href="/index.html#our-philosophy">🏛️ こだわり（芳彩・かぐや）</a>
-                <a href="/index.html#craftsmanship">🔨 施工実例（大工手刻み×800棟）</a>
-                <a href="/about/" style="color: #34d399; font-weight: 800;">🛡️ 信用実証 (CredLayer)</a>
-                <a href="/awards/kankyo-housing/" style="color: #fde68a; font-weight: 800;">🏆 埼玉県環境住宅賞</a>
-                <a href="/catalog/" style="color: #6ee7b7; font-weight: 800;">📘 工学カタログ</a>
-                <a href="/index.html#article-feature" style="color: #f59e0b; font-weight: 800;">📖 解体新書 (10章)</a>
-                <a href="/index.html#metaverse">🌐 メタバース展示場</a>
-                <a href="/index.html#scent-experience" style="color: #fde68a; font-weight: 800;">👣 モデルハウス見学予約</a>
-                <a href="/index.html#dashboard" style="color: #38bdf8; font-weight: 800;">👤 家カルテ</a>
             </div>
         </div>
     </header>
 
     <div id="madori-app-container">
-    <!-- TOP HEADER BAR -->
-    <header class="h-14 glass-panel border-b border-slate-700/80 px-2.5 sm:px-3 flex items-center justify-between z-30 shrink-0 gap-1">
+    <!-- Tier 2: 間取り工房 アプリ操作バー（2段目として自然に連結） -->
+    <header id="madori-app-header" class="h-13 bg-slate-900/95 border-b border-slate-700/80 px-2 sm:px-3 flex items-center justify-between z-30 shrink-0 gap-1 backdrop-blur-md">
         <!-- Brand & Floor / Grid Settings -->
-        <div class="flex items-center gap-1.5 sm:gap-2.5 overflow-x-auto py-1">
-            <!-- 住ま居る ブランド＆戻るリンク -->
-            <a href="/" class="flex items-center gap-2 bg-emerald-950/80 hover:bg-emerald-900/90 border border-emerald-500/50 px-2.5 py-1.5 rounded-lg shrink-0 text-white transition text-decoration-none" title="住ま居る メタバース展示場トップへ戻る">
-                <span class="text-base">🏡</span>
-                <div>
-                    <div class="font-bold text-xs sm:text-sm tracking-tight leading-none text-emerald-200 flex items-center gap-1.5">
-                        <span>住ま居る <span class="text-amber-300 font-extrabold">3D間取り工房</span></span>
-                        <span class="text-[10px] bg-emerald-500/25 text-emerald-300 px-1.5 py-0.5 rounded border border-emerald-400/40 font-mono font-bold">v2.5</span>
-                    </div>
-                    <div class="text-[9px] text-emerald-400/80 leading-none mt-0.5">← 展示場トップへ戻る</div>
-                </div>
-            </a>
+        <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto py-1">
+            <!-- 間取り工房バッジ -->
+            <div class="flex items-center gap-1.5 bg-emerald-950/80 border border-emerald-500/50 px-2 py-1 rounded-lg shrink-0 text-white">
+                <span class="text-sm">📐</span>
+                <span class="font-bold text-xs tracking-tight text-emerald-200">3D間取り工房 <span class="text-[10px] bg-emerald-500/25 text-emerald-300 px-1 py-0.5 rounded border border-emerald-400/40 font-mono font-bold">v2.5</span></span>
+            </div>
 
             <!-- Floor Switcher (1F / 2F / 3F) + Onion Skin -->
             <div class="flex items-center bg-slate-800/90 p-1 rounded-lg border border-slate-700 shrink-0">
@@ -348,6 +354,12 @@
                 <i class="fa-solid fa-wand-magic-sparkles text-slate-900"></i>
                 <span class="hidden md:inline">AI 3Dパース工房 ↗</span>
             </button>
+
+            <!-- 👤 家カルテへのクイックリンク -->
+            <a href="/index.html#dashboard" class="px-2 py-1.5 rounded-lg text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/60 text-amber-300 flex items-center gap-1 active:scale-95 transition text-decoration-none" title="マイページ・家カルテを開く">
+                <i class="fa-solid fa-user-shield text-amber-300"></i>
+                <span class="hidden 2xl:inline">家カルテ</span>
+            </a>
 
             <!-- 全画面モード切替（iPad/タブレット/PC誤操作防止） -->
             <button onclick="toggleFullscreenMode()" id="btnFullscreen" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-sky-950/80 hover:bg-sky-900 border border-sky-500/50 text-sky-200 flex items-center gap-1 active:scale-95 transition" title="全画面表示（ブラウザの戻る誤操作を防止して快適に作図）">
@@ -1061,11 +1073,25 @@ window.onload = function () {
         </p>
     </footer>
 
-    <!-- 全画面モード解除用フローティングボタン（ESCキーのないiPad・タブレット向け） -->
-    <button id="btnExitFullscreenFloating" onclick="toggleFullscreenMode()" class="fixed top-3 right-4 z-[100005] hidden px-3.5 py-2 rounded-xl bg-slate-900/95 hover:bg-slate-800 text-amber-300 hover:text-white border-2 border-amber-400 shadow-2xl items-center gap-2 text-xs font-black backdrop-blur-md cursor-pointer transition transform active:scale-95" title="全画面モードを解除して通常表示（ヘッダー・フッター復帰）に戻す">
-        <i class="fa-solid fa-compress text-sm"></i>
-        <span>✕ 通常表示に戻す</span>
-    </button>
+    <!-- 全画面モード用フローティング・ミニツールバー（ヘッダー完全非表示時の最小操作バー） -->
+    <div id="floatingFullscreenBar" class="fixed top-3 right-4 z-[100005] hidden items-center gap-2 bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-2xl border-2 border-slate-700 shadow-2xl">
+        <!-- 階層切替 -->
+        <div class="flex items-center bg-slate-800 p-0.5 rounded-lg border border-slate-700">
+            <button onclick="setFloor(1)" class="px-2 py-0.5 rounded text-xs font-bold text-slate-300 hover:text-white transition">1F</button>
+            <button onclick="setFloor(2)" class="px-2 py-0.5 rounded text-xs font-bold text-slate-300 hover:text-white transition">2F</button>
+            <button onclick="setFloor(3)" class="px-2 py-0.5 rounded text-xs font-bold text-slate-300 hover:text-white transition">3F</button>
+        </div>
+        <!-- 保存ボタン -->
+        <button onclick="saveCurrentPlan()" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1 shadow transition active:scale-95">
+            <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
+            <span>保存</span>
+        </button>
+        <!-- 通常表示に戻す -->
+        <button id="btnExitFullscreenFloating" onclick="toggleFullscreenMode()" class="px-3 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 hover:text-amber-200 border border-amber-400/50 flex items-center gap-1.5 text-xs font-black transition active:scale-95" title="全画面モードを解除して通常表示（ヘッダー・フッター復帰）に戻す">
+            <i class="fa-solid fa-compress text-xs"></i>
+            <span>✕ 通常表示に戻す</span>
+        </button>
+    </div>
 
     <!-- 全画面表示切り替え案内モーダル（iPad・タブレット・タッチPC向け推奨案内） -->
     <div id="modalFullscreenPrompt" class="fixed inset-0 z-[100000] flex items-center justify-center bg-black/75 backdrop-blur-md transition-opacity" style="display: none;">

@@ -98,16 +98,29 @@
       z-index: 10;
       position: relative;
     }
-    .footer-inner {
-      max-width: 1400px;
+    .footer-inner,
+    .footer-grid-unified {
+      max-width: 1540px;
+      width: 100%;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 2rem;
       text-align: left;
     }
-    @media (max-width: 768px) {
-      .footer-inner { grid-template-columns: 1fr; }
+    @media (max-width: 1100px) {
+      .footer-inner,
+      .footer-grid-unified {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 2.5rem 1.5rem;
+      }
+    }
+    @media (max-width: 640px) {
+      .footer-inner,
+      .footer-grid-unified {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
     }
 
     /* Main Container */
@@ -636,13 +649,13 @@
   <header class="common-site-header">
     <div class="header-inner">
       <!-- Tier 1: Brand & AI Suite Links -->
-      <div class="header-tier1">
-        <div style="display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;">
+      <div class="header-tier1" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 0.8rem; flex-wrap: nowrap; flex-shrink: 0;">
           <a href="/index.html" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #ffffff;">
             <span style="font-size: 1.3rem; font-weight: 900; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">家づくりAIラボ</span>
             <span style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 6px; border-radius: 4px; font-weight: 800;">by 住ま居る</span>
           </a>
-          <div style="display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.72rem; color: #cbd5e1; background: rgba(0, 0, 0, 0.28); border: 1px solid rgba(255, 255, 255, 0.15); padding: 2px 8px; border-radius: 4px;">
+          <div style="display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.72rem; color: #cbd5e1; background: rgba(0, 0, 0, 0.28); border: 1px solid rgba(255, 255, 255, 0.15); padding: 2px 8px; border-radius: 4px; white-space: nowrap;">
             <span style="color: #38bdf8; font-weight: 700;">施工エリア：埼玉県全域・一部東京都</span>
             <span style="opacity: 0.3;">|</span>
             <span>創業30年・累計800棟</span>
@@ -652,13 +665,14 @@
         </div>
 
         <!-- AI Suite Quick Links -->
-        <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-          <span style="color: #fde68a; font-size: 0.75rem; font-weight: 700; margin-right: 2px;">🏡 AI体験:</span>
-          <a href="/index.html#floorplan-studio" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3);">📐 AI 3Dプラン検索</a>
-          <a href="/smilestudio.html" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; box-shadow: 0 2px 8px rgba(245,158,11,0.4); border: 1.5px solid #fbbf24;">🎨 AI 3Dパース工房 (現在地)</a>
-          <a href="/index.html#thermal-consultation" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">💬 AI温熱換気相談</a>
-          <a href="/subsidy/index.html" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #047857, #10b981); color: #ffffff; box-shadow: 0 2px 8px rgba(16,185,129,0.3);">💰 AI補助金ナビ ↗</a>
-          <a href="/mortgage/index.html" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; box-shadow: 0 2px 8px rgba(56,189,248,0.3);">🏦 AI住宅ローン診断 ↗</a>
+        <div style="display: flex; align-items: center; gap: 5px; flex-wrap: nowrap; overflow-x: auto;">
+          <span style="color: #fde68a; font-size: 0.75rem; font-weight: 700; margin-right: 2px; white-space: nowrap;">🏡 AIツール:</span>
+          <a href="/index.html#floorplan-studio" style="font-size: 0.76rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); white-space: nowrap;">📐 3Dプラン選定</a>
+          <a href="/madori-sketch/" target="_blank" style="font-size: 0.76rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; box-shadow: 0 2px 8px rgba(16,185,129,0.35); white-space: nowrap;">✏️ 間取り工房 ↗</a>
+          <a href="/smilestudio.html" style="font-size: 0.76rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; box-shadow: 0 2px 8px rgba(245,158,11,0.4); border: 1.5px solid #fbbf24; white-space: nowrap;">🎨 3Dパース工房 (現在地)</a>
+          <a href="/index.html#thermal-consultation" style="font-size: 0.76rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); white-space: nowrap;">💬 温熱換気相談</a>
+          <a href="/subsidy/index.html" style="font-size: 0.76rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #047857, #10b981); color: #ffffff; box-shadow: 0 2px 8px rgba(16,185,129,0.3); white-space: nowrap;">💰 補助金ナビ ↗</a>
+          <a href="/mortgage/index.html" style="font-size: 0.76rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; box-shadow: 0 2px 8px rgba(56,189,248,0.3); white-space: nowrap;">🏦 住宅ローン診断 ↗</a>
         </div>
       </div>
 
@@ -972,7 +986,7 @@
 
   <!-- Common Site Footer -->
   <footer class="common-site-footer">
-    <div class="footer-inner">
+    <div class="footer-grid-unified">
       <!-- Column 1: 公式ページ・AIラボ -->
       <div>
         <div style="font-size: 1.1rem; font-weight: 900; color: #ffffff; margin-bottom: 0.6rem;">株式会社住ま居る（スマイル）</div>
@@ -997,18 +1011,18 @@
       <div>
         <div style="font-weight: 800; color: #34d399; margin-bottom: 0.6rem; font-size: 0.9rem;">🔨 施工実例 全12邸（手刻み×800棟）</div>
         <div style="display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.78rem;">
-          <a href="/cases/tsurugashima-s.html" style="color: #cbd5e1; text-decoration: none;">【鶴ヶ島市・S様邸】天井高2.8m無垢杉大空間LDK</a>
-          <a href="/cases/tokigawa-k.html" style="color: #cbd5e1; text-decoration: none;">【ときがわ町・K様邸】吉野杉大黒柱と吹抜けZEH</a>
-          <a href="/cases/kawagoe-y.html" style="color: #cbd5e1; text-decoration: none;">【川越市・Y様邸】30帖LDKピットリビング平屋</a>
-          <a href="/cases/tsurugashima-t.html" style="color: #cbd5e1; text-decoration: none;">【鶴ヶ島市・T様邸】モダン格子と無垢格子リビング</a>
-          <a href="/cases/hidaka-i.html" style="color: #cbd5e1; text-decoration: none;">【日高市・I様邸】薪ストーブと土間中庭の家</a>
-          <a href="/cases/higashimatsuyama-k.html" style="color: #cbd5e1; text-decoration: none;">【東松山市・K様邸】開放的吹抜け二世帯住宅</a>
-          <a href="/cases/yoshimi-o.html" style="color: #cbd5e1; text-decoration: none;">【吉見町・O様邸】珪藻土壁と広々デッキ平屋</a>
-          <a href="/cases/gyoda-h.html" style="color: #cbd5e1; text-decoration: none;">【行田市・H様邸】ビルトインガレージの家</a>
-          <a href="/cases/hatoyama-t.html" style="color: #cbd5e1; text-decoration: none;">【鳩山町・T様邸】里山自然調和の平屋</a>
-          <a href="/cases/tsurugashima-a.html" style="color: #cbd5e1; text-decoration: none;">【鶴ヶ島市・A様邸】アイランドキッチンLDK</a>
-          <a href="/cases/tsurugashima-kb.html" style="color: #cbd5e1; text-decoration: none;">【鶴ヶ島市・KB様邸】天然木香る二世帯住宅</a>
-          <a href="/cases/tsurugashima-k.html" style="color: #cbd5e1; text-decoration: none;">【鶴ヶ島市・K様邸】光熱費ゼロ高気密高断熱</a>
+          <a href="/cases/tsurugashima-s.html" style="color: #cbd5e1; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">🏠 【鶴ヶ島】S様邸（無垢杉・大空間LDK）</a>
+          <a href="/cases/tokigawa-k.html" style="color: #cbd5e1; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">🏠 【ときがわ】K様邸（吉野杉・吹抜けZEH）</a>
+          <a href="/cases/kawagoe-y.html" style="color: #cbd5e1; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">🏠 【川越】Y様邸（30帖LDK・ピットリビング）</a>
+          <a href="/cases/tsurugashima-t.html" style="color: #cbd5e1; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">🏠 【鶴ヶ島】T様邸（格子デザイン・高断熱）</a>
+          <a href="/cases/hidaka-i.html" style="color: #cbd5e1; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">🏠 【日高】I様邸（薪ストーブ・土間の家）</a>
+          <a href="/cases/higashimatsuyama-k.html" style="color: #cbd5e1; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">🏠 【東松山】K様邸（開放的吹抜け・二世帯）</a>
+          <a href="/cases/yoshimi-o.html" style="color: #cbd5e1; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">🏠 【吉見】O様邸（珪藻土・広々デッキ平屋）</a>
+          <a href="/cases/gyoda-h.html" style="color: #cbd5e1; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">🏠 【行田】H様邸（ビルトインガレージの家）</a>
+          <a href="/cases/hatoyama-t.html" style="color: #cbd5e1; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">🏠 【鳩山】T様邸（里山景観・平屋スタイル）</a>
+          <a href="/cases/tsurugashima-a.html" style="color: #cbd5e1; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">🏠 【鶴ヶ島】A様邸（吹抜けLDK・アイランド）</a>
+          <a href="/cases/tsurugashima-kb.html" style="color: #cbd5e1; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">🏠 【鶴ヶ島】KB様邸（天然木の快適二世帯）</a>
+          <a href="/cases/tsurugashima-k.html" style="color: #cbd5e1; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">🏠 【鶴ヶ島】K様邸（手刻み・光熱費ゼロZEH）</a>
         </div>
       </div>
 

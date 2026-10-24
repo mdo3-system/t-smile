@@ -1501,6 +1501,8 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.14);
   padding-bottom: 0.45rem;
 }
@@ -1508,7 +1510,13 @@ footer {
 .nav-ai-suite {
   display: flex;
   align-items: center;
-  gap: clamp(0.3rem, 0.6vw, 0.6rem);
+  gap: clamp(0.25rem, 0.45vw, 0.55rem);
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-ai-suite::-webkit-scrollbar {
+  display: none;
 }
 
 .nav-group-label {
@@ -1618,8 +1626,9 @@ footer {
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   min-width: 0;
+  flex-shrink: 0;
 }
 
 .brand-cred-tag {
