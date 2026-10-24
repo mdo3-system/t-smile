@@ -212,8 +212,8 @@
     <header class="common-site-header site-header-twotier" id="madori-site-header">
         <div class="header-inner" style="max-width: 100%; padding: 0 0.5rem;">
             <!-- Tier 1: ブランド・施工エリア・AI体験クイックリンク -->
-            <div class="header-tier1" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 8px;">
-                <div class="brand-group" style="display: flex; align-items: center; gap: 8px; shrink: 0;">
+            <div class="header-tier1" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <div class="brand-group" style="display: flex; flex-direction: column; align-items: flex-start; gap: 2px; flex-shrink: 0;">
                     <a href="/" class="brand-link" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #ffffff;" title="住ま居る トップページへ">
                         <span style="font-size: 1.25rem;">🏡</span>
                         <div style="display: inline-flex; align-items: baseline; gap: 4px;">
@@ -221,7 +221,7 @@
                             <span style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 5px; border-radius: 4px; font-weight: 800;">by 住ま居る</span>
                         </div>
                     </a>
-                    <div class="badge-corp" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.7rem; color: #cbd5e1; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.12); padding: 1px 6px; border-radius: 4px; white-space: nowrap;">
+                    <div class="badge-corp" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.68rem; color: #cbd5e1; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.12); padding: 1px 6px; border-radius: 4px; white-space: nowrap;">
                         <span style="color: #38bdf8; font-weight: 700;">施工エリア：埼玉県全域・一部東京都</span>
                         <span style="opacity: 0.3;">|</span>
                         <span>創業30年・累計800棟</span>
@@ -230,8 +230,8 @@
                     </div>
                 </div>
 
-                <!-- AI Suite Quick Links -->
-                <div class="ai-suite-links" style="display: flex; align-items: center; gap: 5px; flex-wrap: nowrap; overflow-x: auto;">
+                <!-- AI Suite Quick Links (Fully Expanded, No Scrollbar Cut) -->
+                <div class="ai-suite-links" style="display: flex; align-items: center; gap: 5px; flex-wrap: wrap; justify-content: flex-end;">
                     <span class="ai-suite-label" style="color: #fde68a; font-size: 0.72rem; font-weight: 800; white-space: nowrap;">🏡 AIツール:</span>
                     <a href="/index.html#floorplan-studio" class="btn-quick-nav" style="font-size: 0.74rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); white-space: nowrap;">📐 3Dプラン選定</a>
                     <a href="/madori-sketch/" class="btn-quick-nav" style="font-size: 0.74rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; box-shadow: 0 2px 8px rgba(16,185,129,0.35); border: 1.5px solid #34d399; white-space: nowrap;">✏️ 間取り工房 (現在地)</a>

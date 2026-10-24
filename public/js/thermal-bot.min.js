@@ -217,19 +217,20 @@ class ThermalBotStudio {
       const qNum = q.questionNumber || q.id.replace(/[^0-9]/g, '');
       const vInfo = (this.videoLinks && this.videoLinks[q.id]) || {};
       const hasVideo = !!(vInfo.youtubeUrl || vInfo.youtubeVideoId);
-      const imgPath = q.image || `/images/knowledge/thermal_${q.category}.jpg`;
+      const rawImgPath = q.image || `/images/knowledge/thermal_${q.category}.jpg`;
+      const imgPath = rawImgPath + (rawImgPath.includes('?') ? '&' : '?') + 'v=20261024';
 
       return `
         <div class="thermal-qa-card" data-id="${q.id}">
-          <div style="position: relative; width: 100%; height: 110px; overflow: hidden; background: #0f172a;">
-            <img src="${imgPath}" alt="${this.escapeHtml(q.question)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/images/thermal_interior_hero.jpg'" />
-            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(15,23,42,0.8) 100%);"></div>
+          <div style="position: relative; width: 100%; height: 130px; overflow: hidden; background: #0f172a;">
+            <img src="${imgPath}" alt="${this.escapeHtml(q.question)}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onerror="this.src='/images/thermal_interior_hero.jpg'" />
+            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.0) 0%, rgba(15,23,42,0.6) 100%);"></div>
             <div style="position: absolute; top: 8px; left: 8px; display: flex; gap: 4px; align-items: center;">
-              <span class="thermal-cat-tag" style="background: rgba(2,132,199,0.85); backdrop-filter: blur(4px);">${this.escapeHtml(q.categoryName)}</span>
-              <span class="thermal-q-number" style="background: rgba(15,23,42,0.85);">Q${qNum}</span>
+              <span class="thermal-cat-tag" style="background: rgba(2,132,199,0.9); backdrop-filter: blur(4px);">${this.escapeHtml(q.categoryName)}</span>
+              <span class="thermal-q-number" style="background: rgba(15,23,42,0.9);">Q${qNum}</span>
             </div>
             ${hasVideo ? `
-              <div style="position: absolute; bottom: 8px; right: 8px; background: rgba(239,68,68,0.9); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">
+              <div style="position: absolute; bottom: 8px; right: 8px; background: rgba(239,68,68,0.92); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">
                 <span>▶ 10秒動画</span>
               </div>
             ` : ''}
@@ -275,7 +276,8 @@ class ThermalBotStudio {
     const modalImg = document.getElementById('thermal-modal-img');
     const diagramWrap = document.getElementById('thermal-modal-diagram-wrap');
     if (modalImg) {
-      const imgPath = q.image || `/images/knowledge/thermal_${q.category}.jpg`;
+      const rawImgPath = q.image || `/images/knowledge/thermal_${q.category}.jpg`;
+      const imgPath = rawImgPath + (rawImgPath.includes('?') ? '&' : '?') + 'v=20261024';
       modalImg.src = imgPath;
       modalImg.alt = `${q.question} - 住ま居る温熱設計図解`;
       modalImg.onerror = () => {

@@ -89,11 +89,11 @@
       color: #fff;
     }
 
-    /* Container */
+    /* Main Container (Unified with Top Page 1360px) */
     .container {
-      max-width: 1050px;
+      max-width: 1360px;
       margin: 2rem auto;
-      padding: 0 1.2rem;
+      padding: 0 1.5rem;
     }
 
     /* Hero Banner */
@@ -958,15 +958,16 @@
 <body>
 
 <header style="background: rgba(27, 67, 50, 0.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 2px solid #f59e0b; padding: 0.6rem 1.2rem; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.35);">
-  <div style="max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.5rem;">
+  <div style="max-width: min(98vw, 1720px); margin: 0 auto; display: flex; flex-direction: column; gap: 0.4rem;">
     <!-- Tier 1: Brand & AI Services -->
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 8px;">
-      <div style="display: flex; align-items: center; gap: 0.8rem; flex-wrap: nowrap; flex-shrink: 0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+      <!-- Brand & Credential Area (2-line compact stack) -->
+      <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 3px; flex-shrink: 0;">
         <a href="/index.html" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #ffffff;">
           <span style="font-size: 1.3rem; font-weight: 900; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">家づくりAIラボ</span>
           <span style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 6px; border-radius: 4px; font-weight: 800;">by 住ま居る</span>
         </a>
-        <div style="display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.72rem; color: #cbd5e1; background: rgba(0, 0, 0, 0.28); border: 1px solid rgba(255, 255, 255, 0.15); padding: 2px 8px; border-radius: 4px; white-space: nowrap;">
+        <div style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.68rem; color: #cbd5e1; background: rgba(0, 0, 0, 0.32); border: 1px solid rgba(255, 255, 255, 0.12); padding: 1px 7px; border-radius: 4px; white-space: nowrap;">
           <span style="color: #38bdf8; font-weight: 700;">施工エリア：埼玉県全域・一部東京都</span>
           <span style="opacity: 0.3;">|</span>
           <span>創業30年・累計800棟</span>
@@ -975,15 +976,15 @@
         </div>
       </div>
 
-      <!-- AI Suite Quick Links -->
-      <div style="display: flex; align-items: center; gap: 5px; flex-wrap: nowrap; overflow-x: auto;">
+      <!-- AI Suite Quick Links (Fully Expanded, No Scrollbar Cut) -->
+      <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end;">
         <span style="color: #fde68a; font-size: 0.75rem; font-weight: 700; margin-right: 2px; white-space: nowrap;">🏡 AIツール:</span>
-        <a href="/index.html#floorplan-studio" style="font-size: 0.76rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); white-space: nowrap;">📐 3Dプラン選定</a>
-        <a href="/madori-sketch/" target="_blank" style="font-size: 0.76rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; box-shadow: 0 2px 8px rgba(16,185,129,0.35); white-space: nowrap;">✏️ 間取り工房 ↗</a>
-        <a href="/smilestudio.html" target="_blank" style="font-size: 0.76rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; box-shadow: 0 2px 8px rgba(245,158,11,0.4); white-space: nowrap;">🎨 3Dパース工房 ↗</a>
-        <a href="/index.html#thermal-consultation" style="font-size: 0.76rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); white-space: nowrap;">💬 温熱換気相談</a>
-        <a href="/subsidy/index.html" style="font-size: 0.76rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #047857, #10b981); color: #ffffff; box-shadow: 0 2px 8px rgba(16,185,129,0.3); white-space: nowrap;">💰 補助金ナビ ↗</a>
-        <a href="/mortgage/index.html" style="font-size: 0.76rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; box-shadow: 0 2px 8px rgba(56,189,248,0.3); border: 1.5px solid #38bdf8; white-space: nowrap;">🏦 住宅ローン診断 (現在地)</a>
+        <a href="/index.html#floorplan-studio" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); white-space: nowrap;">📐 3Dプラン選定</a>
+        <a href="/madori-sketch/" target="_blank" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; box-shadow: 0 2px 8px rgba(16,185,129,0.35); white-space: nowrap;">✏️ 間取り工房 ↗</a>
+        <a href="/smilestudio.html" target="_blank" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; box-shadow: 0 2px 8px rgba(245,158,11,0.4); white-space: nowrap;">🎨 3Dパース工房 ↗</a>
+        <a href="/index.html#thermal-consultation" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); white-space: nowrap;">💬 温熱換気相談</a>
+        <a href="/subsidy/index.html" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #047857, #10b981); color: #ffffff; box-shadow: 0 2px 8px rgba(16,185,129,0.3); white-space: nowrap;">💰 補助金ナビ ↗</a>
+        <a href="/mortgage/index.html" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; box-shadow: 0 2px 8px rgba(56,189,248,0.3); border: 1.5px solid #38bdf8; white-space: nowrap;">🏦 住宅ローン診断 (現在地)</a>
       </div>
     </div>
 
@@ -1029,7 +1030,7 @@
       あなたにぴったりの住宅ローン金融機関 TOP5
     </h1>
     <p class="hero-desc">
-      埼玉地元密着の<strong>武蔵野銀行</strong>や<strong>埼玉りそな</strong>から、人気の<strong>ソニー銀行</strong>・<strong>PayPay銀行</strong>・<strong>SBI新生銀行</strong>・<strong>auじぶん銀行</strong>・<strong>住信SBIネット銀行</strong>・<strong>楽天銀行</strong>、保証料0円の<strong>中央ろうきん</strong>、35年固定の<strong>フラット35（子育てプラス）</strong>まで完全網羅。最新金利、初期費用体系（定率2.2% vs 定額）、中途変更・繰上返済コスト、8大疾病団信と民間生命保険の見直し術までAIが徹底比較します。
+      埼玉地元密着の<strong>武蔵野銀行</strong>や<strong>埼玉りそな銀行</strong>、地域展開の有力地方銀行（<strong>東和銀行</strong>・<strong>群馬銀行</strong>・<strong>足利銀行</strong>）、埼玉県西部・地元住民や自営業者に寄り添う信用金庫（<strong>埼玉縣信用金庫</strong>・<strong>飯能信用金庫</strong>・<strong>川越信用金庫</strong>）、保証料0円の<strong>中央ろうきん</strong>から、超低金利の<strong>主要ネット銀行（ソニー・PayPay・SBI新生・auじぶん・住信SBI・楽天）</strong>、35年固定の<strong>フラット35（子育てプラス）</strong>まで完全網羅。最新金利、諸費用体系、つなぎ融資対応、8大疾病団信と民間生命保険の見直し術までAIが徹底比較します。
     </p>
 
     <!-- 埼玉県内営業拠点 ＆ ネット銀行の選定基準アナウンス -->
@@ -1038,8 +1039,8 @@
         <span>📍</span> 診断対象金融機関の選定基準と拠点区分について:
       </div>
       <div>
-        当診断ボットは、<strong>埼玉県内（鶴ヶ島市・川越市・坂戸市・東松山市・さいたま市等）に有人営業拠点を置く地元提携金融機関（武蔵野銀行、埼玉りそな銀行、中央ろうきん等）</strong>を中核としつつ、全国展開する<strong>完全オンライン完結型の主要ネット銀行（ソニー銀行、PayPay銀行、SBI新生銀行、auじぶん銀行、住信SBIネット銀行、楽天銀行 ※いずれも埼玉県内に実店舗・営業拠点はありません）</strong>、および公的固定金利（フラット35）を含めた最新住宅ローン商品群から客観比較・選定しています。<br>
-        「対面で手厚く相談し、土地先行決済やつなぎ融資を受けたい（埼玉店舗あり）」か「ネット完結で徹底した超低金利や手数料定額を狙うか（営業拠点なし）」、それぞれの特徴と金利上昇時の動きを理解した上で、納得の1社をお選びいただけます。
+        当診断ボットは、<strong>埼玉県内（鶴ヶ島市・川越市・坂戸市・東松山市・さいたま市等）に有人営業拠点を置く地元提携金融機関（武蔵野銀行、埼玉りそな銀行、東和銀行、群馬銀行、足利銀行、埼玉縣信用金庫、飯能信用金庫、川越信用金庫、中央ろうきん等）</strong>を中核としつつ、全国展開する<strong>完全オンライン完結型の主要ネット銀行（ソニー銀行、PayPay銀行、SBI新生銀行、auじぶん銀行、住信SBIネット銀行、楽天銀行 ※いずれも埼玉県内に実店舗・営業拠点はありません）</strong>、および公的固定金利（フラット35）を含めた最新住宅ローン商品群（全16金融機関）から客観比較・選定しています。<br>
+        「地元で手厚く相談し、土地先行決済やつなぎ融資を受けたい（埼玉店舗・信金窓口あり）」か「ネット完結で徹底した超低金利や手数料定額を狙うか（営業拠点なし）」、それぞれの特徴と金利上昇時の動きを理解した上で、納得の1社をお選びいただけます。
       </div>
     </div>
   </div>
@@ -1827,6 +1828,66 @@
             <td><a href="https://chuo.rokin.com/loan/housing/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
           </tr>
           <tr>
+            <td><strong>🏛️ 東和銀行</strong><br><span class="branch-badge-local">埼玉西部・県内店舗多数</span></td>
+            <td>とうわ住宅ローン</td>
+            <td><span class="rate-badge-var">変動 年0.450%〜</span></td>
+            <td><span class="trend-badge-slow">上げ幅小・地域重視</span><br><span style="font-size:0.7rem;color:#64748b;">5年・125%ルール適用</span></td>
+            <td>がん団信50%/100% ｜ 3大疾病</td>
+            <td>定率2.20% または 保証料型<br><span style="font-size:0.7rem;color:#059669;">※個人事業主・農地転用にも柔軟</span></td>
+            <td>切替: 窓口相談<br>繰上: ネット一部無料</td>
+            <td><a href="https://www.towabank.co.jp/personal/loan/jutaku/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
+          </tr>
+          <tr>
+            <td><strong>🏛️ 群馬銀行</strong><br><span class="branch-badge-local">埼玉主要都市展開</span></td>
+            <td>ぐんぎん住宅ローン</td>
+            <td><span class="rate-badge-var">変動 年0.385%〜</span></td>
+            <td><span class="trend-badge-slow">上げ幅小・緩やか</span><br><span style="font-size:0.7rem;color:#64748b;">5年・125%ルール適用</span></td>
+            <td>がん団信特約 ｜ 3大疾病団信</td>
+            <td>定率型 2.20%（88万円）<br><span style="font-size:0.7rem;color:#059669;">※省エネ住宅（住ま居る仕様）引下げ</span></td>
+            <td>切替: ネット無料<br>繰上: ネットバンキングで0円</td>
+            <td><a href="https://www.gunmabank.co.jp/kojin/loan/jutaku/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
+          </tr>
+          <tr>
+            <td><strong>🏛️ 足利銀行</strong><br><span class="branch-badge-local">めぶきFG・県内展開</span></td>
+            <td>あしぎん住宅ローン「暮らし上手」</td>
+            <td><span class="rate-badge-var">変動 年0.425%〜</span></td>
+            <td><span class="trend-badge-slow">上げ幅小・緩やか</span><br><span style="font-size:0.7rem;color:#64748b;">5年・125%ルール適用</span></td>
+            <td>がん団信100% ｜ 8大疾病保障</td>
+            <td>定率2.20% または 保証料型<br><span style="font-size:0.7rem;color:#059669;">※ZEH・省エネ住宅金利優遇プラン</span></td>
+            <td>切替: ネット無料<br>繰上: ネットバンキングで0円</td>
+            <td><a href="https://www.ashikagabank.co.jp/loan/jutaku/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
+          </tr>
+          <tr>
+            <td><strong>🤝 埼玉縣信用金庫</strong><br><span class="branch-badge-local">県内最大メガ信金</span></td>
+            <td>さいしん住宅ローン「わが家」</td>
+            <td><span class="rate-badge-var">変動 年0.475%〜</span></td>
+            <td><span class="trend-badge-slow">上げ幅小・極めて慎重</span><br><span style="font-size:0.7rem;color:#64748b;">5年・125%ルール適用</span></td>
+            <td>3大疾病団信 ｜ しんきん団信</td>
+            <td>保証料分割/一括（しんきん保証基金）<br><span style="font-size:0.7rem;color:#059669;">※自営業・複雑地・親族間承継に最強</span></td>
+            <td>切替: 窓口相談<br>繰上: 窓口・ATM対応</td>
+            <td><a href="https://www.saishin.co.jp/personal/loan/jutaku/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
+          </tr>
+          <tr>
+            <td><strong>🤝 飯能信用金庫</strong><br><span class="branch-badge-local">住ま居る地元・西部密着</span></td>
+            <td>飯能信金「マイホーム」</td>
+            <td><span class="rate-badge-var">変動 年0.485%〜</span></td>
+            <td><span class="trend-badge-slow">上げ幅小・極めて慎重</span><br><span style="font-size:0.7rem;color:#64748b;">5年・125%ルール適用</span></td>
+            <td>がん団信 ｜ 3大疾病 ｜ 就業不能</td>
+            <td>保証料分割型 または 融資手数料型<br><span style="font-size:0.7rem;color:#059669;">※住ま居る（鶴ヶ島・坂戸・日高・川越）利用実績多数</span></td>
+            <td>切替: 窓口相談<br>繰上: 店頭・ネット対応</td>
+            <td><a href="https://www.hanno-shinkin.jp/kariru/jutaku/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
+          </tr>
+          <tr>
+            <td><strong>🤝 川越信用金庫</strong><br><span class="branch-badge-local">川越・坂戸・鶴ヶ島中核</span></td>
+            <td>かわしん住宅ローン</td>
+            <td><span class="rate-badge-var">変動 年0.475%〜</span></td>
+            <td><span class="trend-badge-slow">上げ幅小・極めて慎重</span><br><span style="font-size:0.7rem;color:#64748b;">5年・125%ルール適用</span></td>
+            <td>しんきん3大疾病 ｜ がん保障付団信</td>
+            <td>しんきん保証基金・分割型対応<br><span style="font-size:0.7rem;color:#059669;">※小回り抜群・注文住宅つなぎ資金相談可</span></td>
+            <td>切替: 窓口相談<br>繰上: 店頭・ネット対応</td>
+            <td><a href="https://www.kawashin.net/personal/loan/jutaku/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
+          </tr>
+          <tr>
             <td><strong>🎧 ソニー銀行</strong><br><span class="branch-badge-net">埼玉拠点なし（完全オンライン）</span></td>
             <td>変動セレクト住宅ローン</td>
             <td><span class="rate-badge-var">変動 年0.297%〜</span></td>
@@ -2226,6 +2287,157 @@
       cons: "一般個人の場合、生協や労働組合会員より金利優遇幅が若干小さくなる場合がある。"
     },
     {
+      id: "saishin",
+      name: "埼玉縣信用金庫（さいしん）",
+      badge: "埼玉県内預金量No.1信金 ｜ 自営業・親族経営・複雑地盤・狭小変形地に圧倒的対応力",
+      isNet: false,
+      branchStatus: "🤝 埼玉県内全域に約90店舗（対面窓口充実）",
+      rateTrend: "上げ幅小・極めて慎重（地域中小企業・生活者のため急な引き上げを抑制）",
+      productName: "さいしん住宅ローン「わが家」",
+      productLink: "https://www.saishin.co.jp/personal/loan/jutaku/",
+      rateType: "変動金利（最優遇適用時）",
+      rate: "年 0.475% 〜 0.575%",
+      baseRate: 0.475,
+      feeType: "percent",
+      flatFee: 0,
+      feeDescShort: "定率 2.20% または 保証料分割型",
+      danshin: "しんきん3大疾病団信 ｜ 就業不能保障団信",
+      fees: "融資手数料型 2.20% または 保証料分割（金利内枠）方式選択可",
+      initialFeeDesc: "保証料内枠方式なら初期手元現金ほぼ0円で借入可能（定率型2.2%も選択可）",
+      switchFeeDesc: "変動から固定への切替: 窓口相談（事前シミュレーション対応）",
+      prepayDesc: "窓口・ATMにて繰上返済可能（定期返済日の取扱手数料優遇あり）",
+      danshin8Desc: "しんきん3大疾病特約付団信（がん・急性心筋梗塞・脳卒中で全額弁済）",
+      insuranceAdvice: "💡 自営業・会社役員の方で審査に不安がある場合も親身に合算審査。保証料分割方式を活用すれば初期の持ち出し費用を極小化でき、事業資金の手元流動性を維持できます。",
+      pros: "埼玉県全域に촘촘な店舗網。個人事業主、設立間もない法人経営者、親族名義の土地活用など難度の高い案件に最も強い。",
+      cons: "ネット銀行に比べると表面金利が0.1〜0.15%程度高め。"
+    },
+    {
+      id: "hanno_shinkin",
+      name: "飯能信用金庫（はんしん）",
+      badge: "住ま居る地元・埼玉西部の中核信金 ｜ 鶴ヶ島・川越・坂戸・飯能・日高のお施主様実績多数",
+      isNet: false,
+      branchStatus: "🤝 埼玉県西部エリアに強固な支店網（対面窓口あり）",
+      rateTrend: "上げ幅小・極めて慎重（地元密着型で日銀利上げ時も激変緩和）",
+      productName: "飯能信金住宅ローン「マイホーム」",
+      productLink: "https://www.hanno-shinkin.jp/kariru/jutaku/",
+      rateType: "変動金利（地元応援プラン）",
+      rate: "年 0.485% 〜 0.585%",
+      baseRate: 0.485,
+      feeType: "percent",
+      flatFee: 0,
+      feeDescShort: "しんきん保証基金利用（分割型あり）",
+      danshin: "がん保障特約付団信 ｜ 3大疾病団信 ｜ 就業不能保障",
+      fees: "保証料一括型 または 金利上乗せ（分割）型 ｜ 手数料33,000円〜",
+      initialFeeDesc: "保証料分割型なら初期費用を数万円に抑えられ、自己資金を建物内装に回せます",
+      switchFeeDesc: "固定金利への切替相談随時対応",
+      prepayDesc: "店頭窓口・インターネットバンキングで繰上返済対応",
+      danshin8Desc: "しんきん3大疾病団信 ＋ がん特約（診断確定で100%返済免除プランあり）",
+      insuranceAdvice: "💡 住ま居る（本社: 鶴ヶ島）と各営業店が直接連携。土地の先行決済やつなぎ資金の相談が日常的に行われており、安心して家づくりを進められます。",
+      pros: "鶴ヶ島・川越・坂戸・日高・毛呂山・飯能エリアの地元信頼度No.1。担当者が自宅や現場まで来てくれる手厚いフォロー。",
+      cons: "営業エリアが埼玉県西南部・東京都多摩地区中心のため、県東部など遠方敷地は対象外となる場合がある。"
+    },
+    {
+      id: "kawashin",
+      name: "川越信用金庫（かわしん）",
+      badge: "川越・鶴ヶ島・坂戸・東松山中核 ｜ 地域密着の温かい審査 ｜ つなぎ融資フル対応",
+      isNet: false,
+      branchStatus: "🤝 川越・坂戸・鶴ヶ島・ふじみ野に充実の店舗網",
+      rateTrend: "上げ幅小・緩やか（5年・125%ルール適用で家計負担急増を防ぐ）",
+      productName: "かわしん住宅ローン",
+      productLink: "https://www.kawashin.net/personal/loan/jutaku/",
+      rateType: "変動金利（地域優遇適用後）",
+      rate: "年 0.475% 〜 0.575%",
+      baseRate: 0.475,
+      feeType: "percent",
+      flatFee: 0,
+      feeDescShort: "保証料型または手数料型選択可",
+      danshin: "しんきん団信 ｜ 3大疾病保障付団信",
+      fees: "保証料一括型 または 融資手数料型（定率2.20%）",
+      initialFeeDesc: "定率型 2.20% または 保証料分割型（ライフプランに応じた諸費用設計が可能）",
+      switchFeeDesc: "変動から固定への切替相談対応（店頭窓口）",
+      prepayDesc: "店頭窓口およびWebバンキングで繰上返済対応",
+      danshin8Desc: "3大疾病団信（悪性新生物・急性心筋梗塞・脳卒中カバー）",
+      insuranceAdvice: "💡 小回りの利く相談体制が魅力。転職歴が浅い方や、土地先行決済で他の銀行で断られたケースでも親身に資金計画を組み立ててくれます。",
+      pros: "住ま居るの主要施工エリア（川越・鶴ヶ島・坂戸）に店舗が多く、住宅ローンプラザでの休日相談も手厚い。",
+      cons: "ネット銀行と比較すると金利水準はやや高め。"
+    },
+    {
+      id: "towa_bank",
+      name: "東和銀行",
+      badge: "埼玉西部・川越・東松山・坂戸に多数支店 ｜ 自営業・個人事業主・親族間融資に抜群の柔軟性",
+      isNet: false,
+      branchStatus: "🏛️ 埼玉県西部に20店舗以上展開（対面窓口あり）",
+      rateTrend: "上げ幅小・緩やか（5年・125%ルール標準適用）",
+      productName: "とうわ住宅ローン",
+      productLink: "https://www.towabank.co.jp/personal/loan/jutaku/",
+      rateType: "変動金利（店頭優遇プラン）",
+      rate: "年 0.450% 〜 0.650%",
+      baseRate: 0.450,
+      feeType: "percent",
+      flatFee: 0,
+      feeDescShort: "定率 2.20% または 保証料型",
+      danshin: "がん100%団信 ｜ 3大疾病団信 ｜ 8大疾病保障",
+      fees: "融資手数料型 2.20%（税込） または 保証料型",
+      initialFeeDesc: "定率型 2.20%（4,000万円借入時: 880,000円）",
+      switchFeeDesc: "店頭窓口で固定金利への変更手続き可能",
+      prepayDesc: "インターネットバンキングなら繰上返済手数料0円",
+      danshin8Desc: "がん団信（診断で残高0円）＋3大疾病（急性心筋梗塞・脳卒中）手厚いカバー",
+      insuranceAdvice: "💡 第二地銀ならではの機動性と審査力。確定申告2期分で自営業者の融資を積極的に受け入れており、個人事業主のお施主様に心強い味方です。",
+      pros: "自営業者や確定申告者、土地の権利関係が複雑な実家の敷地内建築などで高い融資承認実績を誇る。",
+      cons: "ネット銀行に比べると金利はやや高め。"
+    },
+    {
+      id: "gunma_bank",
+      name: "群馬銀行",
+      badge: "埼玉県内店舗網充実 ｜ ネット銀行並みの低金利競争力 ｜ 省エネ住宅金利引下げ",
+      isNet: false,
+      branchStatus: "🏛️ 埼玉県内主要都市（大宮・川越・熊谷・所沢等）に店舗あり",
+      rateTrend: "上げ幅小・緩やか（5年・125%ルール標準適用）",
+      productName: "ぐんぎん住宅ローン「スーパーハッピーライフ」",
+      productLink: "https://www.gunmabank.co.jp/kojin/loan/jutaku/",
+      rateType: "変動金利（省エネ性能優遇後）",
+      rate: "年 0.385% 〜 0.475%",
+      baseRate: 0.385,
+      feeType: "percent",
+      flatFee: 0,
+      feeDescShort: "定率 2.20%（融資手数料型）",
+      danshin: "がん保障特約付団信 ｜ 3大疾病団信",
+      fees: "融資手数料型 2.20%（税込）",
+      initialFeeDesc: "定率型 2.20%（4,000万円借入時: 880,000円）※住ま居る仕様で金利引下げ",
+      switchFeeDesc: "ネットバンキングから固定切替可能（手数料無料）",
+      prepayDesc: "インターネットバンキングで1万円から繰上返済手数料0円",
+      danshin8Desc: "がん保障特約（診断確定で100%返済免除）＋3大疾病保障",
+      insuranceAdvice: "💡 埼玉県内でも大手地銀に迫る低金利（0.38%台）を提示。住ま居るの高気密高断熱仕様なら「環境配慮住宅優遇」が適用され、最優遇金利が引き出せます。",
+      pros: "地銀トップクラスの低金利。WEB完結事前審査がスピーディーで、つなぎ融資制度も完備。",
+      cons: "埼玉県南部（川口・草加等）は支店がやや少ない。"
+    },
+    {
+      id: "ashikaga_bank",
+      name: "足利銀行",
+      badge: "めぶきFG（あしぎん・常陽） ｜ ZEH・長期優良住宅優遇 ｜ がん100%団信手厚い",
+      isNet: false,
+      branchStatus: "🏛️ 埼玉県内（久喜・加須・越谷・川越・大宮等）に店舗あり",
+      rateTrend: "上げ幅小・緩やか（5年・125%ルール標準適用）",
+      productName: "あしぎん住宅ローン「暮らし上手」",
+      productLink: "https://www.ashikagabank.co.jp/loan/jutaku/",
+      rateType: "変動金利（ZEH・省エネ住宅プラン）",
+      rate: "年 0.425% 〜 0.525%",
+      baseRate: 0.425,
+      feeType: "percent",
+      flatFee: 0,
+      feeDescShort: "定率 2.20% または 保証料型",
+      danshin: "がん団信100% ｜ 8大疾病補償特約付団信",
+      fees: "融資手数料型 2.20%（税込） または 保証料一括型",
+      initialFeeDesc: "定率型 2.20%（4,000万円借入時: 880,000円）",
+      switchFeeDesc: "インターネットバンキングなら固定金利への切替手数料0円",
+      prepayDesc: "インターネットバンキングなら一部繰上返済手数料0円",
+      danshin8Desc: "8大疾病補償特約（がん・脳卒中・心筋梗塞＋5つの重度慢性疾患）",
+      insuranceAdvice: "💡 めぶきフィナンシャルグループの強固な資本基盤。長期優良住宅・ZEHへの優遇枠があり、住ま居るの標準仕様で無理なく金利引下げが狙えます。",
+      pros: "めぶきFGの充実したネットワーク。対面相談とWEB手続きのハイブリッド運用が便利。",
+      cons: "県西部は川越支店中心で、坂戸・鶴ヶ島からはやや距離がある場合がある。"
+    },
+
+    {
       id: "sony_bank",
       name: "ソニー銀行（Sony Bank）",
       badge: "自己資金10%で最優遇金利 ｜ がん50%無料 ｜ 手数料選択制",
@@ -2553,23 +2765,92 @@
 
     const container = document.getElementById('banks-ranking-container');
 
-    // ユーザー選択に応じた並び替え
-    let sortedBanks = [...BANKS_DB];
+    // ユーザー選択に応じた高度マッチング並び替え（全16行庫対応）
+    const bankMap = {};
+    BANKS_DB.forEach(b => { bankMap[b.id] = b; });
+
+    let sortedBanks = [];
     if (userAnswers.rate === 'fixed') {
-      sortedBanks = [BANKS_DB[9], BANKS_DB[0], BANKS_DB[1], BANKS_DB[2], BANKS_DB[3]];
+      // 全期間固定金利重視
+      sortedBanks = [
+        bankMap['flat35'],
+        bankMap['musashino'],
+        bankMap['saitama_resona'],
+        bankMap['gunma_bank'],
+        bankMap['saishin']
+      ];
+    } else if (userAnswers.career === 'business') {
+      // 自営業・個人事業主・法人役員（信金・地銀が最強）
+      sortedBanks = [
+        bankMap['saishin'],
+        bankMap['hanno_shinkin'],
+        bankMap['kawashin'],
+        bankMap['towa_bank'],
+        bankMap['musashino'],
+        bankMap['chuo_rokin']
+      ];
+    } else if (userAnswers.career === 'new_job') {
+      // 転職直後（ろうきん・信金・フラットが柔軟）
+      sortedBanks = [
+        bankMap['chuo_rokin'],
+        bankMap['hanno_shinkin'],
+        bankMap['saishin'],
+        bankMap['flat35'],
+        bankMap['musashino']
+      ];
     } else if (userAnswers.career === 'senior_rebuild') {
-      sortedBanks = [BANKS_DB[1], BANKS_DB[5], BANKS_DB[0], BANKS_DB[2], BANKS_DB[9]];
-    } else if (userAnswers.career === 'new_job' || userAnswers.career === 'business') {
-      sortedBanks = [BANKS_DB[0], BANKS_DB[2], BANKS_DB[9], BANKS_DB[5], BANKS_DB[8]];
+      // 建替え・シニア層（対面窓口・手厚い相談）
+      sortedBanks = [
+        bankMap['saitama_resona'],
+        bankMap['musashino'],
+        bankMap['hanno_shinkin'],
+        bankMap['kawashin'],
+        bankMap['saishin']
+      ];
     } else if (userAnswers.danshin === 'cancer100') {
-      sortedBanks = [BANKS_DB[3], BANKS_DB[6], BANKS_DB[4], BANKS_DB[1], BANKS_DB[0]];
+      // がん100%・疾病保障重視
+      sortedBanks = [
+        bankMap['saitama_resona'],
+        bankMap['gunma_bank'],
+        bankMap['musashino'],
+        bankMap['sony_bank'],
+        bankMap['ashikaga_bank']
+      ];
     } else if (userAnswers.danshin === 'free') {
-      sortedBanks = [BANKS_DB[7], BANKS_DB[6], BANKS_DB[4], BANKS_DB[2], BANKS_DB[5]];
+      // 金利最安・諸費用重視
+      sortedBanks = [
+        bankMap['gunma_bank'],
+        bankMap['au_jibun'],
+        bankMap['chuo_rokin'],
+        bankMap['musashino'],
+        bankMap['sbi_shinsei']
+      ];
     } else if (userAnswers.danshin === 'couple') {
-      sortedBanks = [BANKS_DB[9], BANKS_DB[1], BANKS_DB[0], BANKS_DB[7], BANKS_DB[6]];
+      // ペアローン・夫婦連生団信
+      sortedBanks = [
+        bankMap['musashino'],
+        bankMap['saitama_resona'],
+        bankMap['hanno_shinkin'],
+        bankMap['flat35'],
+        bankMap['gunma_bank']
+      ];
     } else {
-      sortedBanks = [BANKS_DB[0], BANKS_DB[1], BANKS_DB[3], BANKS_DB[6], BANKS_DB[4]];
+      // 標準マッチング（地元優良金融機関 ＆ ネット銀行ハイブリッド）
+      sortedBanks = [
+        bankMap['musashino'],
+        bankMap['saitama_resona'],
+        bankMap['hanno_shinkin'],
+        bankMap['gunma_bank'],
+        bankMap['saishin'],
+        bankMap['chuo_rokin']
+      ];
     }
+    // 未定義ガード
+    sortedBanks = sortedBanks.filter(Boolean);
+    // 足りない場合は残りを追加
+    BANKS_DB.forEach(b => {
+      if (!sortedBanks.includes(b)) sortedBanks.push(b);
+    });
 
     const top5 = sortedBanks.slice(0, 5);
     currentTop5 = top5;

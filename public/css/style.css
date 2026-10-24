@@ -1511,12 +1511,8 @@ footer {
   display: flex;
   align-items: center;
   gap: clamp(0.25rem, 0.45vw, 0.55rem);
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.nav-ai-suite::-webkit-scrollbar {
-  display: none;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .nav-group-label {
@@ -1532,6 +1528,7 @@ footer {
   gap: clamp(0.2rem, 0.35vw, 0.35rem);
   list-style: none;
   align-items: center;
+  flex-wrap: wrap;
   margin: 0;
   padding: 0;
 }
@@ -1624,22 +1621,21 @@ footer {
 /* Responsive adjustments for header */
 .nav-brand-group {
   display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  flex-wrap: nowrap;
-  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
   flex-shrink: 0;
 }
 
 .brand-cred-tag {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  font-size: 0.72rem;
+  gap: 0.4rem;
+  font-size: 0.68rem;
   color: #cbd5e1;
-  background: rgba(0, 0, 0, 0.28);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 2px 8px;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 1px 7px;
   border-radius: 4px;
   white-space: nowrap;
 }
