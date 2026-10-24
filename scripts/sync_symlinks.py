@@ -94,6 +94,30 @@ def sync_links():
                 except Exception as e:
                     print(f"  ❌ data内リンクエラー ({d_item}): {e}")
 
+    # .htaccess の同期（Xserver固有設定を壊さずにリダイレクト＆最適化ブロックを反映）
+    htaccess_target = os.path.join(base_dir, '.htaccess')
+    htaccess_source = os.path.join(public_dir, '.htaccess')
+    if os.path.exists(htaccess_source):
+        try:
+            with open(htaccess_source, 'r', encoding='utf-8') as sf:
+                source_rules = sf.read()
+            target_content = ""
+            if os.path.exists(htaccess_target):
+                with open(htaccess_target, 'r', encoding='utf-8') as tf:
+                    target_content = tf.read()
+            marker_start = "# ==============================================================================\n# 株式会社住ま居る（t-smile.co.jp）Xserver Apache 最適化設定"
+            if marker_start in target_content:
+                parts = target_content.split(marker_start)
+                new_target_content = parts[0].rstrip() + "\n\n" + source_rules
+            else:
+                new_target_content = target_content.rstrip() + "\n\n" + source_rules
+            
+            with open(htaccess_target, 'w', encoding='utf-8') as tf:
+                tf.write(new_target_content)
+            print("  ✅ .htaccess 最適化＆301リダイレクト設定を安全に同期・更新しました！")
+        except Exception as e:
+            print(f"  ❌ .htaccess 同期エラー: {e}")
+
     print(f"\n🎉 シンボリックリンク同期完了: 作成={created_count}, 更新={updated_count}, 保持={skipped_count}")
     return True
 
