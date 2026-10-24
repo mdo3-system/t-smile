@@ -1,10 +1,10 @@
 {
-  "version": "2.12.3",
+  "version": "2.13.0",
   "buildDate": "2026-10-24",
-  "releaseName": "Header 2-Tier Unification, Madori Fullscreen Clean View & Wide 4-Column Footer",
+  "releaseName": "Production Release v2.13.0 - Unified 4-Column Footer & Enhanced Header Layout",
   "components": {
-    "madoriSketch": "2.6.1",
-    "smileStudio": "2.6.0",
+    "madoriSketch": "2.6.2",
+    "smileStudio": "2.6.1",
     "bubblePlan": "2.0.0",
     "speedPlanner": "2.2.0",
     "knowledgeVideoPortal": "1.8.1",
@@ -14,6 +14,11 @@
     "domEngine": "1.1.0"
   },
   "changelog": [
+    {
+      "version": "2.13.0",
+      "date": "2026-10-24",
+      "summary": "【本番サーバー正式運用デプロイ v2.13.0】①フッターを全ページ（トップ・補助金・住宅ローン・間取り工房・SmileStudio等）でmax-width 1540pxの美しい4カラム（公式・施工実例12邸・間取り知見100選・温熱知見200選）に完全統一、②ヘッダーメニューの2段レイアウト（Tier 1: ブランド+AIツール群, Tier 2: アプリ操作バー）への完全統一、③間取り工房全画面表示時のヘッダー完全非表示＆フローティング復帰バー配備、④Yahoo!➔Gmailバックアップ移行スクリプト（migrate_yahoo_to_gmail.py）のソケットタイムアウト（180秒）・指数バックオフ・セッション自動リフレッシュによる転送安定化＆高速化の達成"
+    },
     {
       "version": "2.12.3",
       "date": "2026-10-24",

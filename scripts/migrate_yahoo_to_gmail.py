@@ -21,6 +21,9 @@ import time
 import socket
 from pathlib import Path
 
+# ソケット全体のデフォルトタイムアウト（大容量データ転送時の write operation timed out を根本防止）
+socket.setdefaulttimeout(180)
+
 # デフォルト設定
 DEFAULT_BACKUP_DIR = Path(__file__).resolve().parent.parent / "email_backup"
 CONFIG_FILE = Path(__file__).resolve().parent / "mail_secrets.json"
@@ -31,8 +34,12 @@ YAHOO_IMAP_PORT = 993
 GMAIL_IMAP_SERVER = "imap.gmail.com"
 GMAIL_IMAP_PORT = 993
 
-# 1セッションあたりの最大連続取得数（これを超えたら安全のため再接続してリフレッシュ）
+# 1セッションあたりの最大連続取得数（Yahooダウンロード用）
 BATCH_REFRESH_INTERVAL = 250
+# Gmailへの投入用（GoogleのIMAPバッファ詰まり防止のため小まめにリフレッシュ）
+GMAIL_BATCH_REFRESH_INTERVAL = 40
+# Gmail IMAP append の安全上限サイズ（22MB超はGmail仕様で拒否されるため保護）
+MAX_GMAIL_APPEND_BYTES = 22 * 1024 * 1024
 
 # ==============================================================================
 # Modified UTF-7 (RFC 3501) コーデック
@@ -139,9 +146,9 @@ class YahooConnectionManager:
         max_retries = 5
         for attempt in range(1, max_retries + 1):
             try:
-                # タイムアウトを設定
+                # タイムアウトを設定（大容量メール取得対策）
                 self.imap = imaplib.IMAP4_SSL(YAHOO_IMAP_SERVER, YAHOO_IMAP_PORT)
-                self.imap.sock.settimeout(60)
+                self.imap.sock.settimeout(180)
                 self.imap.login(self.user, self.password)
                 if self.current_folder:
                     self.imap.select(f'"{self.current_folder}"', readonly=True)
@@ -306,8 +313,9 @@ class GmailConnectionManager:
         max_retries = 5
         for attempt in range(1, max_retries + 1):
             try:
+                # タイムアウトを180秒（3分）に拡大し、大容量メール送信時の write operation timed out を根絶
                 self.imap = imaplib.IMAP4_SSL(GMAIL_IMAP_SERVER, GMAIL_IMAP_PORT)
-                self.imap.sock.settimeout(60)
+                self.imap.sock.settimeout(180)
                 self.imap.login(self.user, self.password)
                 return self.imap
             except Exception as e:
@@ -344,6 +352,7 @@ def sync_to_gmail(g_mgr, backup_base_dir, target_folder_names):
     backup_base_dir = Path(backup_base_dir)
     print(f"\n🚀 【ステップ2】指定フォルダのGmail移行を開始します")
     print(f"🎯 移行対象フォルダ: {target_folder_names}")
+    print(f"⚡ 高速・安定化ブースト: ソケット180秒 / {GMAIL_BATCH_REFRESH_INTERVAL}通ごと自動リフレッシュ / 指数バックオフ搭載")
 
     uploaded_log_file = backup_base_dir / "gmail_uploaded_log.json"
     uploaded_set = set()
@@ -357,6 +366,7 @@ def sync_to_gmail(g_mgr, backup_base_dir, target_folder_names):
     total_uploaded = 0
     total_skipped = 0
     session_count = 0
+    start_time = time.time()
 
     for folder_dir in backup_base_dir.iterdir():
         if not folder_dir.is_dir():
@@ -384,6 +394,7 @@ def sync_to_gmail(g_mgr, backup_base_dir, target_folder_names):
         eml_files = list(folder_dir.glob("*.eml"))
         f_uploaded = 0
         f_skipped = 0
+        folder_start_time = time.time()
 
         for eml_file in eml_files:
             log_key = f"{folder_name}/{eml_file.name}"
@@ -392,9 +403,18 @@ def sync_to_gmail(g_mgr, backup_base_dir, target_folder_names):
                 total_skipped += 1
                 continue
 
+            file_size = eml_file.stat().st_size
+            # 22MB超の巨大メールはGmailのIMAP上限（約25MB）を超えるため事前に保護スキップ
+            if file_size > MAX_GMAIL_APPEND_BYTES:
+                print(f"\n   ⚠️ 【サイズ超過スキップ】{eml_file.name} ({file_size / (1024*1024):.1f}MB > 22MB上限) - Gmail制限のためローカル保存のみとします")
+                uploaded_set.add(log_key)
+                f_skipped += 1
+                total_skipped += 1
+                continue
+
             session_count += 1
-            if session_count >= BATCH_REFRESH_INTERVAL:
-                print(f"   ☕ Gmailセッションリフレッシュ中...")
+            if session_count >= GMAIL_BATCH_REFRESH_INTERVAL:
+                print(f"   ☕ Googleバッファ詰まり防止のためセッションをリフレッシュ中...")
                 g_mgr.connect()
                 session_count = 0
 
@@ -413,34 +433,53 @@ def sync_to_gmail(g_mgr, backup_base_dir, target_folder_names):
                     else:
                         imap_time = imaplib.Time2Internaldate(time.time())
 
+                    # Gmail IMAP append
                     status, _ = g_mgr.imap.append(encoded_gmail_folder, '\\Seen', imap_time, eml_data)
                     if status == 'OK':
                         f_uploaded += 1
                         total_uploaded += 1
                         uploaded_set.add(log_key)
                         success = True
+                        # 短時間待機（Googleサーバー側の受信バッファをフラッシュ）
+                        time.sleep(0.03)
                         break
                     else:
                         time.sleep(1)
+                except (socket.timeout, TimeoutError, OSError) as e:
+                    wait_sec = attempt * 5
+                    print(f"\n  ⏳ ソケット書き込み一時待機検知 ({e})。Google側の通信混雑のため {wait_sec}秒 待機して再接続・再試行 ({attempt}/{max_retries})...")
+                    time.sleep(wait_sec)
+                    g_mgr.connect()
                 except Exception as e:
-                    print(f"\n  🔄 Gmail投入リトライ ({attempt}/{max_retries}): {e}")
-                    time.sleep(2)
+                    wait_sec = attempt * 3
+                    print(f"\n  🔄 Gmail投入リトライ ({attempt}/{max_retries}) [エラー: {e}]: {wait_sec}秒後再接続...")
+                    time.sleep(wait_sec)
                     g_mgr.connect()
 
             if not success:
-                print(f"   ⚠️ ファイル {eml_file.name} 投入失敗")
+                print(f"   ⚠️ ファイル {eml_file.name} 投入スキップ（3回再試行後もサーバー応答なし）")
 
-            if f_uploaded % 30 == 0 or (f_uploaded + f_skipped) == len(eml_files):
-                print(f"   📤 投入進捗: {f_uploaded + f_skipped}/{len(eml_files)} 通 (新規: {f_uploaded}, 済: {f_skipped})")
+            # 進捗 ＆ 速度・残り時間ETAの算出
+            processed = f_uploaded + f_skipped
+            total_in_folder = len(eml_files)
+            if f_uploaded > 0 and (f_uploaded % 25 == 0 or processed == total_in_folder):
+                elapsed = time.time() - folder_start_time
+                speed = f_uploaded / max(elapsed, 0.1) # 通/秒
+                remaining_files = total_in_folder - processed
+                eta_minutes = (remaining_files / max(speed, 0.01)) / 60
+                eta_str = f"約{eta_minutes:.1f}分" if eta_minutes < 60 else f"約{eta_minutes/60:.1f}時間"
+                print(f"   📤 進捗: {processed}/{total_in_folder} 通 ({processed*100/total_in_folder:.1f}%) ｜ 新規: {f_uploaded}通 (速度: {speed:.1f}通/秒, 残り目安: {eta_str})")
 
         print(f"   ✨ [{folder_name}] 移行完了: 投入成功={f_uploaded}, スキップ={f_skipped}")
 
     with open(uploaded_log_file, 'w', encoding='utf-8') as f:
         json.dump(list(uploaded_set), f)
 
+    total_elapsed = time.time() - start_time
     print(f"\n🎉 【ステップ2 完了】Gmailへの指定フォルダ移行が完了しました！")
     print(f"   - 新規投入: {total_uploaded} 通")
-    print(f"   - スキップ: {total_skipped} 通\n")
+    print(f"   - スキップ: {total_skipped} 通")
+    print(f"   - 所要時間: {total_elapsed / 60:.1f} 分\n")
 
 # ==============================================================================
 # メインメニュー
