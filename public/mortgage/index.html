@@ -954,6 +954,97 @@
       .callout-btns { width: 100%; min-width: 0; }
     }
   </style>
+
+  <!-- SEO & AIO (AI Overviews) Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "FinancialService",
+        "@id": "https://t-smile.co.jp/mortgage/#service",
+        "name": "住ま居る AI住宅ローン診断・最適金融機関TOP5ナビ",
+        "url": "https://t-smile.co.jp/mortgage/index.html",
+        "provider": {
+          "@type": "HomeAndConstructionBusiness",
+          "name": "株式会社住ま居る",
+          "url": "https://t-smile.co.jp/",
+          "telephone": "049-271-2350",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "町屋176番地5",
+            "addressLocality": "鶴ヶ島市",
+            "addressRegion": "埼玉県",
+            "postalCode": "350-2224",
+            "addressCountry": "JP"
+          }
+        },
+        "description": "埼玉県内の地域金融機関（武蔵野銀行、埼玉りそな銀行、青梅信用金庫 川越支店、埼玉縣信用金庫、川口信用金庫、青木信用金庫、飯能信用金庫、JAバンク埼玉、中央労働金庫）および主要ネット銀行の住宅ローン金利・諸費用・団信・5年125%ルールを比較診断するAIツール。",
+        "areaServed": {
+          "@type": "State",
+          "name": "埼玉県"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://t-smile.co.jp/mortgage/#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "住ま居る ホーム",
+            "item": "https://t-smile.co.jp/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "AI住宅ローン診断",
+            "item": "https://t-smile.co.jp/mortgage/index.html"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://t-smile.co.jp/mortgage/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "埼玉県内の注文住宅で、青梅信用金庫（川越支店）や埼玉縣信用金庫などの地元信金を選ぶメリットは何ですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "青梅信用金庫（川越支店・埼玉県西部9拠点）や埼玉縣信用金庫、川口信用金庫、青木信用金庫などの信用金庫は、自営業・個人事業主・法人役員や、親族間での敷地内同居・建替えなど難度の高い案件に対面で親身・柔軟に対応してくれる点が最大の強みです。また、5年ルール・125%ルールが標準適用されるため、急激な金利上昇時にも家計の返済額激変を防ぐことができます。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "武蔵野銀行の住宅ローンの特徴は何ですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "武蔵野銀行は変動金利年1.230%〜（店頭最優遇）で提供されており、特筆すべき点として『がん団信100%』が金利上乗せなし（無料付帯）でセットされます。さらに埼玉県内各地に支店・提携窓口を持ち、5年・125%ルールも完備されています。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "変動金利の『5年ルール・125%ルール』とは何ですか？ネット銀行でも適用されますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "金利が上昇しても5年間は毎月の返済額を据え置き、6年目の改定時も従前の返済額の1.25倍を上限とする激変緩和措置です。武蔵野銀行、埼玉りそな銀行、信用金庫各行、JAバンク埼玉、auじぶん銀行、住信SBIネット銀行などでは適用されますが、PayPay銀行、ソニー銀行、楽天銀行など一部のネット銀行では非適用となっており、金利上昇分が翌月以降の返済額に即連動する点に注意が必要です。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "住宅ローンの金利情報はどのように更新・維持されていますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "住ま居るでは、埼玉県内主要行庫（武蔵野銀行、埼玉りそな、青梅信金川越支店、埼玉縣信金、川口信金、青木信金、飯能信金、JAバンク埼玉、ろうきん等）および主要ネット銀行の公式公表データを毎月定期巡回（月次クロール）し、最新の金利体系・諸費用・優遇幅を検証・更新しています。"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
 </head>
 <body>
 
@@ -1030,7 +1121,7 @@
       あなたにぴったりの住宅ローン金融機関 TOP5
     </h1>
     <p class="hero-desc">
-      埼玉地元密着の<strong>武蔵野銀行</strong>や<strong>埼玉りそな銀行</strong>、地域展開の有力地方銀行（<strong>東和銀行</strong>・<strong>群馬銀行</strong>・<strong>足利銀行</strong>）、埼玉県西部・地元住民や自営業者に寄り添う信用金庫（<strong>埼玉縣信用金庫</strong>・<strong>飯能信用金庫</strong>・<strong>川越信用金庫</strong>）、保証料0円の<strong>中央ろうきん</strong>から、超低金利の<strong>主要ネット銀行（ソニー・PayPay・SBI新生・auじぶん・住信SBI・楽天）</strong>、35年固定の<strong>フラット35（子育てプラス）</strong>まで完全網羅。最新金利、諸費用体系、つなぎ融資対応、8大疾病団信と民間生命保険の見直し術までAIが徹底比較します。
+      埼玉地元密着の<strong>武蔵野銀行</strong>や<strong>埼玉りそな銀行</strong>、地域展開の有力地方銀行（<strong>東和銀行</strong>・<strong>群馬銀行</strong>・<strong>足利銀行</strong>）、埼玉全域・地元経済や自営業者に寄り添う信用金庫（<strong>埼玉縣信用金庫</strong>・<strong>川口信用金庫</strong>・<strong>青木信用金庫</strong>・<strong>青梅信用金庫（川越支店）</strong>・<strong>飯能信用金庫</strong>）、<strong>JAバンク埼玉（JAいるま野・JAさいたま）</strong>、保証料0円の<strong>中央ろうきん</strong>から、<strong>主要ネット銀行（auじぶん・住信SBI・PayPay・ソニー・SBI新生・楽天）</strong>、35年完全固定の<strong>フラット35（子育てプラス）</strong>まで完全網羅。最新の実行金利水準、年収倍率連動優遇、諸費用体系、つなぎ融資対応、5年・125%ルール有無、8大疾病団信と民間生命保険の見直し術までAIが徹底比較します。
     </p>
 
     <!-- 埼玉県内営業拠点 ＆ ネット銀行の選定基準アナウンス -->
@@ -1039,7 +1130,7 @@
         <span>📍</span> 診断対象金融機関の選定基準と拠点区分について:
       </div>
       <div>
-        当診断ボットは、<strong>埼玉県内（鶴ヶ島市・川越市・坂戸市・東松山市・さいたま市等）に有人営業拠点を置く地元提携金融機関（武蔵野銀行、埼玉りそな銀行、東和銀行、群馬銀行、足利銀行、埼玉縣信用金庫、飯能信用金庫、川越信用金庫、中央ろうきん等）</strong>を中核としつつ、全国展開する<strong>完全オンライン完結型の主要ネット銀行（ソニー銀行、PayPay銀行、SBI新生銀行、auじぶん銀行、住信SBIネット銀行、楽天銀行 ※いずれも埼玉県内に実店舗・営業拠点はありません）</strong>、および公的固定金利（フラット35）を含めた最新住宅ローン商品群（全16金融機関）から客観比較・選定しています。<br>
+        当診断ボットは、<strong>埼玉県内（鶴ヶ島市・川越市・坂戸市・東松山市・さいたま市・川口市・飯能市等）に有人営業拠点を置く地元提携金融機関（武蔵野銀行、埼玉りそな銀行、東和銀行、群馬銀行、足利銀行、埼玉縣信用金庫、川口信用金庫、青木信用金庫、飯能信用金庫、JAバンク埼玉、中央ろうきん等）</strong>を中核としつつ、全国展開する<strong>完全オンライン完結型の主要ネット銀行（auじぶん銀行、住信SBIネット銀行、PayPay銀行、ソニー銀行、SBI新生銀行、楽天銀行 ※いずれも埼玉県内に実店舗・営業拠点はありません）</strong>、および公的固定金利（フラット35）を含めた最新住宅ローン商品群から客観比較・選定しています。<br>
         「地元で手厚く相談し、土地先行決済やつなぎ融資を受けたい（埼玉店舗・信金窓口あり）」か「ネット完結で徹底した超低金利や手数料定額を狙うか（営業拠点なし）」、それぞれの特徴と金利上昇時の動きを理解した上で、納得の1社をお選びいただけます。
       </div>
     </div>
@@ -1272,6 +1363,16 @@
               <th>諸経費目安<br><span style="font-size: 0.72rem; font-weight: normal; opacity: 0.85;">（融資手数料・保証料）</span></th>
               <th>団信・特約の強み・特徴</th>
             </tr>
+          <tr>
+            <td><strong>🤝 青梅信用金庫</strong><br><span class="branch-badge-local">川越支店（川越市新宿町）・埼玉西部9拠点</span></td>
+            <td>あおしん住宅ローン</td>
+            <td><strong>年 1.475% 〜 1.800%</strong><br><small style="color: #64748b;">（店頭基準 1.800%〜3.100%）</small></td>
+            <td>保証料込型選択可（基金・全国保証）<br>事務手数料55,000円</td>
+            <td>しんきん団信<br>3大疾病特約（+0.30%）</td>
+            <td><strong style="color: #059669;">あり（5年・125%）</strong></td>
+            <td>切替: 窓口相談<br>繰上: 店頭・窓口対応</td>
+            <td><a href="https://www.aosyn.co.jp/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
+          </tr>
           </thead>
           <tbody>
             <tr style="background: rgba(2, 132, 199, 0.04);">
@@ -1281,7 +1382,7 @@
                 <div style="font-size: 0.78rem; color: #0284c7; font-weight: 700;">むさしの住宅ローン（埼玉地銀）</div>
               </td>
               <td>
-                <div class="rate-val">年 0.395%</div>
+                <div class="rate-val">年 1.230%</div>
                 <div class="rate-sub">変動金利（最優遇時）</div>
               </td>
               <td>
@@ -1303,7 +1404,7 @@
                 <div style="font-size: 0.78rem; color: #0284c7; font-weight: 700;">りそな住宅ローン（埼玉シェアNo.1）</div>
               </td>
               <td>
-                <div class="rate-val">年 0.380%</div>
+                <div class="rate-val">年 1.250%</div>
                 <div class="rate-sub">変動金利（最優遇時）</div>
               </td>
               <td>
@@ -1321,11 +1422,11 @@
             <tr>
               <td style="text-align: center;"><span class="rank-badge rank-3">3</span></td>
               <td>
-                <div style="font-weight: 900; color: #0f172a; font-size: 1.05rem;">ソニー銀行</div>
-                <div style="font-size: 0.78rem; color: #0284c7; font-weight: 700;">ネット銀行・手数料定額選択可</div>
+                <div style="font-weight: 900; color: #0f172a; font-size: 1.05rem;">auじぶん銀行</div>
+                <div style="font-size: 0.78rem; color: #0284c7; font-weight: 700;">ネット銀行・金利最安級・5年125%ルールあり</div>
               </td>
               <td>
-                <div class="rate-val">年 0.297%</div>
+                <div class="rate-val">年 1.134%</div>
                 <div class="rate-sub">変動金利（最優遇時）</div>
               </td>
               <td>
@@ -1685,59 +1786,34 @@
     </div>
 
     <!-- Visual Bar Comparison -->
-    <div class="rate-graph-card">
+    
+    <!-- Monthly Crawler Status Notification -->
+    <div style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 1.5px solid #86efac; border-radius: 10px; padding: 0.85rem 1.2rem; margin: 1.2rem 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 0.85rem; color: #166534;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="display: inline-block; width: 10px; height: 10px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2); animation: pulse 2s infinite;"></span>
+        <strong>📡 金利データ月次自動巡回（月1クロール）稼働中</strong>
+        <span>川越市の青梅信用金庫（川越支店）をはじめ埼玉県内主要金融機関・信金・ネット銀行の最新住宅ローン金利・優遇幅を毎月定期巡回・データ検証しています（最新検証: 2026年10月度）。</span>
+      </div>
+      <a href="/data/mortgage_rates_crawl.json" target="_blank" style="font-size: 0.78rem; color: #15803d; text-decoration: underline; font-weight: 700;">クロール検証ログJSON ↗</a>
+    </div>
+
+<div class="rate-graph-card">
       <div style="font-size: 0.86rem; font-weight: 800; color: #0369a1; margin-bottom: 0.8rem;">
-        📈 各行の代表金利水準バー比較（変動金利 vs 全期間固定金利）
+        📈 各行の代表金利水準バー比較（変動金利 vs 全期間固定 ｜ 2026年最新基準）
       </div>
       <div class="graph-item">
         <div class="graph-label-row">
-          <span>SBI新生銀行（変動フォーカス / 半年型） <span class="branch-badge-net">埼玉拠点なし</span></span>
-          <span style="color: #0284c7;">年 0.290% 〜</span>
+          <span>JAバンク埼玉（変動 ｜ JAさいたま最優遇） <span class="branch-badge-local">埼玉店舗多数</span></span>
+          <span style="color: #0284c7;">年 0.980% 〜</span>
         </div>
         <div class="graph-bar-track">
-          <div class="graph-bar-fill" style="width: 24%; background: linear-gradient(90deg, #38bdf8, #0284c7);"></div>
+          <div class="graph-bar-fill" style="width: 28%; background: linear-gradient(90deg, #34d399, #059669);"></div>
         </div>
       </div>
       <div class="graph-item">
         <div class="graph-label-row">
-          <span>auじぶん銀行（変動・auセット割） <span class="branch-badge-net">埼玉拠点なし</span></span>
-          <span style="color: #0284c7;">年 0.296% 〜</span>
-        </div>
-        <div class="graph-bar-track">
-          <div class="graph-bar-fill" style="width: 25%; background: linear-gradient(90deg, #38bdf8, #0284c7);"></div>
-        </div>
-      </div>
-      <div class="graph-item">
-        <div class="graph-label-row">
-          <span>ソニー銀行（変動セレクト・自己資金10%優遇） <span class="branch-badge-net">埼玉拠点なし</span></span>
-          <span style="color: #0284c7;">年 0.297% 〜</span>
-        </div>
-        <div class="graph-bar-track">
-          <div class="graph-bar-fill" style="width: 25%; background: linear-gradient(90deg, #38bdf8, #0284c7);"></div>
-        </div>
-      </div>
-      <div class="graph-item">
-        <div class="graph-label-row">
-          <span>PayPay銀行（変動・ネット専用最優遇） <span class="branch-badge-net">埼玉拠点なし</span></span>
-          <span style="color: #0284c7;">年 0.315% 〜</span>
-        </div>
-        <div class="graph-bar-track">
-          <div class="graph-bar-fill" style="width: 26%; background: linear-gradient(90deg, #38bdf8, #0284c7);"></div>
-        </div>
-      </div>
-      <div class="graph-item">
-        <div class="graph-label-row">
-          <span>住信SBIネット銀行（変動・ネット専用） <span class="branch-badge-net">埼玉拠点なし</span></span>
-          <span style="color: #0284c7;">年 0.320% 〜</span>
-        </div>
-        <div class="graph-bar-track">
-          <div class="graph-bar-fill" style="width: 27%; background: linear-gradient(90deg, #38bdf8, #0284c7);"></div>
-        </div>
-      </div>
-      <div class="graph-item">
-        <div class="graph-label-row">
-          <span>埼玉りそな銀行（変動・省エネ優遇後） <span class="branch-badge-local">埼玉店舗多数</span></span>
-          <span style="color: #0284c7;">年 0.380% 〜</span>
+          <span>auじぶん銀行（変動 ｜ モバイル・電気セット割適用） <span class="branch-badge-net">埼玉拠点なし</span></span>
+          <span style="color: #0284c7;">年 0.930%〜 ｜ 単体 1.134%</span>
         </div>
         <div class="graph-bar-track">
           <div class="graph-bar-fill" style="width: 32%; background: linear-gradient(90deg, #38bdf8, #0284c7);"></div>
@@ -1745,40 +1821,86 @@
       </div>
       <div class="graph-item">
         <div class="graph-label-row">
-          <span>武蔵野銀行（むさしの変動・住ま居る提携） <span class="branch-badge-local">埼玉地元密着</span></span>
-          <span style="color: #0284c7;">年 0.395% 〜</span>
+          <span>武蔵野銀行（変動 ｜ がん団信100%上乗せ0円無料付帯） <span class="branch-badge-local">埼玉地元密着</span></span>
+          <span style="color: #0284c7;">年 1.230% 〜 1.330%</span>
         </div>
         <div class="graph-bar-track">
-          <div class="graph-bar-fill" style="width: 33%; background: linear-gradient(90deg, #38bdf8, #0284c7);"></div>
+          <div class="graph-bar-fill" style="width: 35%; background: linear-gradient(90deg, #38bdf8, #0284c7);"></div>
         </div>
       </div>
       <div class="graph-item">
         <div class="graph-label-row">
-          <span>中央労働金庫（変動・保証料0円） <span class="branch-badge-local">埼玉各支店</span></span>
-          <span style="color: #059669;">年 0.450% 〜</span>
+          <span>埼玉りそな銀行（変動 ｜ SX配慮型・省エネ優遇後） <span class="branch-badge-local">埼玉店舗最多</span></span>
+          <span style="color: #0284c7;">年 1.240% 〜 1.250%</span>
         </div>
         <div class="graph-bar-track">
-          <div class="graph-bar-fill" style="width: 37%; background: linear-gradient(90deg, #34d399, #059669);"></div>
+          <div class="graph-bar-fill" style="width: 35%; background: linear-gradient(90deg, #38bdf8, #0284c7);"></div>
         </div>
       </div>
       <div class="graph-item">
         <div class="graph-label-row">
-          <span>楽天銀行（変動金利） <span class="branch-badge-net">埼玉拠点なし</span></span>
-          <span style="color: #0284c7;">年 0.500% 〜</span>
+          <span>埼玉縣信用金庫（変動 ｜ 最優遇） <span class="branch-badge-local">県内信金最大</span></span>
+          <span style="color: #0284c7;">年 1.245% 〜 1.495%</span>
         </div>
         <div class="graph-bar-track">
-          <div class="graph-bar-fill" style="width: 41%; background: linear-gradient(90deg, #38bdf8, #0284c7);"></div>
+          <div class="graph-bar-fill" style="width: 36%; background: linear-gradient(90deg, #38bdf8, #0284c7);"></div>
         </div>
       </div>
       <div class="graph-item">
         <div class="graph-label-row">
-          <span>フラット35（全期間固定・子育てプラス当初5年） <span class="branch-badge-local">埼玉窓口多数</span></span>
-          <span style="color: #d97706;">当初 年 0.450% 〜（基準1.450%）</span>
+          <span>中央労働金庫（変動 ｜ 保証料・繰上返済0円） <span class="branch-badge-local">埼玉各支店</span></span>
+          <span style="color: #059669;">年 1.250% 〜 1.450%</span>
         </div>
         <div class="graph-bar-track">
-          <div class="graph-bar-fill" style="width: 65%; background: linear-gradient(90deg, #fbbf24, #d97706);"></div>
+          <div class="graph-bar-fill" style="width: 36%; background: linear-gradient(90deg, #34d399, #059669);"></div>
         </div>
       </div>
+      <div class="graph-item">
+        <div class="graph-label-row">
+          <span>川口信用金庫（変動 ｜ かわしん 年収7倍未満優遇） <span class="branch-badge-local">川口・県南西部</span></span>
+          <span style="color: #0284c7;">年 1.525% 〜 1.875%</span>
+        </div>
+        <div class="graph-bar-track">
+          <div class="graph-bar-fill" style="width: 44%; background: linear-gradient(90deg, #38bdf8, #0284c7);"></div>
+        </div>
+      </div>
+      <div class="graph-item">
+        <div class="graph-label-row">
+          <span>青木信用金庫（変動 ｜ あおしん 年収6倍未満優遇） <span class="branch-badge-local">県南・川口・草加</span></span>
+          <span style="color: #0284c7;">年 1.525% 〜 1.925%</span>
+        </div>
+        <div class="graph-bar-track">
+          <div class="graph-bar-fill" style="width: 44%; background: linear-gradient(90deg, #38bdf8, #0284c7);"></div>
+        </div>
+      </div>
+      <div class="graph-item">
+        <div class="graph-label-row">
+          <span>青梅信用金庫（変動 ｜ あおしん 川越支店・埼玉西部最優遇） <span class="branch-badge-local">川越・埼玉西部9拠点</span></span>
+          <span style="color: #0284c7;">年 1.475% 〜 1.800%</span>
+        </div>
+        <div class="graph-bar-track">
+          <div class="graph-bar-fill" style="width: 42%; background: linear-gradient(90deg, #38bdf8, #0284c7);"></div>
+        </div>
+      </div>
+      <div class="graph-item">
+        <div class="graph-label-row">
+          <span>住信SBIネット銀行（変動 ｜ ⚠️ 5年・125%ルールあり） <span class="branch-badge-net">埼玉拠点なし</span></span>
+          <span style="color: #0284c7;">年 1.350% 〜 1.500%</span>
+        </div>
+        <div class="graph-bar-track">
+          <div class="graph-bar-fill" style="width: 40%; background: linear-gradient(90deg, #38bdf8, #0284c7);"></div>
+        </div>
+      </div>
+      <div class="graph-item">
+        <div class="graph-label-row">
+          <span>フラット35（全期間固定 ｜ 子育てプラス等で最大-1.00%優遇） <span class="branch-badge-local">埼玉窓口多数</span></span>
+          <span style="color: #d97706;">当初 年 2.830% 〜（基準3.830%）</span>
+        </div>
+        <div class="graph-bar-track">
+          <div class="graph-bar-fill" style="width: 81%; background: linear-gradient(90deg, #fbbf24, #d97706);"></div>
+        </div>
+      </div>
+    </div></div>
     </div>
 
     <!-- Table of covered institutions with fees and prepayment costs -->
@@ -1788,9 +1910,9 @@
           <tr>
             <th>金融機関名 ＆ 営業拠点</th>
             <th>主力商品名</th>
-            <th>代表金利目安</th>
-            <th>金利上昇時の傾向</th>
-            <th>8大疾病・団信特約</th>
+            <th>代表変動金利</th>
+            <th>金利上昇時の傾向 ＆ 5年・125%ルール</th>
+            <th>主要団信特約 ＆ メリット</th>
             <th>初期費用体系（4,000万借入時）</th>
             <th>固定切替 ＆ 繰上返済コスト</th>
             <th>公式商品詳細</th>
@@ -1800,166 +1922,196 @@
           <tr>
             <td><strong>🏛️ 武蔵野銀行</strong><br><span class="branch-badge-local">埼玉店舗網最多</span></td>
             <td>むさしの住宅ローン</td>
-            <td><span class="rate-badge-var">変動 年0.395%〜</span></td>
-            <td><span class="trend-badge-slow">上げ幅小・緩やか</span><br><span style="font-size:0.7rem;color:#64748b;">5年・125%ルール適用</span></td>
-            <td>がん50%無料 ｜ がん100%+0.15% ｜ 3大疾病</td>
-            <td>定率型 2.20%（88万円）<br><span style="font-size:0.7rem;color:#059669;">※つなぎ融資対面フルサポート</span></td>
-            <td>切替: 5,500円（店頭）<br>繰上: ネット無料（窓口有料）</td>
+            <td><span class="rate-badge-var">変動 年1.230%〜1.330%</span></td>
+            <td><span class="trend-badge-slow">上げ幅小・緩やか</span><br><span style="font-size:0.7rem;color:#059669;">✔ 5年・125%ルール標準適用</span></td>
+            <td><strong>がん100%団信が上乗せ0円（無料付帯）！</strong> ｜ 3大疾病</td>
+            <td>定率型 2.20%（88万円） または 保証料型<br><span style="font-size:0.7rem;color:#059669;">※つなぎ融資対面フルサポート</span></td>
+            <td>切替: 5,500円（店頭）<br>繰上: ネット1円から無料</td>
             <td><a href="https://www.musashinobank.co.jp/loan/housing/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
           </tr>
           <tr>
             <td><strong>🏛️ 埼玉りそな銀行</strong><br><span class="branch-badge-local">県内最大ネットワーク</span></td>
             <td>りそな住宅ローン</td>
-            <td><span class="rate-badge-var">変動 年0.380%〜</span></td>
-            <td><span class="trend-badge-slow">上げ幅小・緩やか</span><br><span style="font-size:0.7rem;color:#64748b;">5年・125%ルール適用</span></td>
-            <td><strong>団信革命（3大疾病＋要介護+0.3%）</strong></td>
-            <td>定率型 2.20%（88万円）<br><span style="font-size:0.7rem;color:#059669;">※住ま居る省エネ仕様で金利引下げ</span></td>
-            <td>切替: ネット無料<br>繰上: マイゲートで1万円から0円</td>
+            <td><span class="rate-badge-var">変動 年1.250%〜</span><br><span style="font-size:0.7rem;color:#059669;">SX住宅で年1.240%〜</span></td>
+            <td><span class="trend-badge-slow">上げ幅小・緩やか</span><br><span style="font-size:0.7rem;color:#059669;">✔ 5年・125%ルール標準適用</span></td>
+            <td><strong>団信革命（3大疾病＋要介護全保障 +0.3%）</strong></td>
+            <td>金利組込型（保証料0円・手数料5.5万円）<br><span style="font-size:0.7rem;color:#059669;">※SX配慮型住宅で金利年▲0.010%優遇</span></td>
+            <td>切替: マイゲート無料<br>繰上: マイゲートで1万円から0円</td>
             <td><a href="https://www.saitamaresona.co.jp/kojin/jutaku/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
           </tr>
           <tr>
-            <td><strong>🤝 中央労働金庫</strong><br><span class="branch-badge-local">埼玉各支店対面</span></td>
-            <td>有担保住宅ローン</td>
-            <td><span class="rate-badge-var">変動 年0.450%〜</span></td>
-            <td><span class="trend-badge-slow">上げ幅小・極めて慎重</span><br><span style="font-size:0.7rem;color:#64748b;">5年・125%ルール適用</span></td>
-            <td>就業不能・オールマイティ保障</td>
-            <td><strong>保証料0円 ＆ 事務手数料0円（諸費用0円）</strong></td>
-            <td>切替: 無料<br>繰上: いつでも何度でも完全0円</td>
-            <td><a href="https://chuo.rokin.com/loan/housing/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
+            <td><strong>🤝 埼玉縣信用金庫</strong><br><span class="branch-badge-local">県内最大メガ信金</span></td>
+            <td>さいしん住宅ローン「わが家」</td>
+            <td><span class="rate-badge-var">変動 年1.245%〜1.445%</span></td>
+            <td><span class="trend-badge-slow">上げ幅小・極めて慎重</span><br><span style="font-size:0.7rem;color:#059669;">✔ 5年・125%ルール適用</span></td>
+            <td>しんきん3大疾病団信 ｜ 就業不能保障団信</td>
+            <td>保証料内枠（金利組込型）または一括前払型<br><span style="font-size:0.7rem;color:#059669;">※自営業・会社役員・複雑地盤・親族間承継に最強</span></td>
+            <td>切替: 窓口相談<br>繰上: 窓口・ATM対応</td>
+            <td><a href="https://www.saishin.co.jp/personal/loan/jutaku/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
+          </tr>
+          <tr>
+            <td><strong>🤝 川口信用金庫</strong><br><span class="branch-badge-local">愛称: かわしん</span></td>
+            <td>かわしん住宅ローン</td>
+            <td><span class="rate-badge-var">変動 年1.525%〜1.875%</span></td>
+            <td><span class="trend-badge-slow">上げ幅小・緩やか</span><br><span style="font-size:0.7rem;color:#059669;">✔ 5年・125%ルール適用</span></td>
+            <td>しんきん団信 ｜ 3大疾病団信</td>
+            <td>保証料込（しんきん保証基金付）<br><span style="font-size:0.7rem;color:#059669;">※年収倍率連動優遇（7倍未満: 1.525%）</span></td>
+            <td>切替: 窓口相談<br>繰上: 店頭・ATM対応</td>
+            <td><a href="https://www.shinkin.co.jp/kawashin/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
+          </tr>
+          <tr>
+            <td><strong>🤝 青木信用金庫</strong><br><span class="branch-badge-local">愛称: あおしん</span></td>
+            <td>あおしん住宅ローン</td>
+            <td><span class="rate-badge-var">変動 年1.525%〜1.925%</span></td>
+            <td><span class="trend-badge-slow">上げ幅小・緩やか</span><br><span style="font-size:0.7rem;color:#059669;">✔ 5年・125%ルール適用</span></td>
+            <td>しんきん団信 ｜ 3大疾病団信</td>
+            <td>保証料込（しんきん保証基金付）<br><span style="font-size:0.7rem;color:#059669;">※年収倍率連動優遇（6倍未満: 1.525%）</span></td>
+            <td>切替: 窓口相談<br>繰上: 店頭・ATM対応</td>
+            <td><a href="https://www.aokishinkin.co.jp/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
+          </tr>
+          <tr>
+            <td><strong>🤝 青梅信用金庫</strong><br><span class="branch-badge-local">愛称: あおしん（川越支店・埼玉西部9拠点）</span></td>
+            <td>あおしん住宅ローン</td>
+            <td><strong>年 1.475% 〜 1.800%</strong><br><small style="color: #64748b;">（店頭基準 1.800%〜3.100%）</small></td>
+            <td>保証料込型選択可（基金・全国保証）<br>事務手数料55,000円</td>
+            <td>しんきん団信<br>3大疾病特約（+0.30%）</td>
+            <td><strong style="color: #059669;">あり（5年・125%）</strong></td>
+            <td>切替: 窓口相談<br>繰上: 店頭・窓口対応</td>
+            <td><a href="https://www.aosyn.co.jp/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
+          </tr>
+          <tr>
+            <td><strong>🤝 飯能信用金庫</strong><br><span class="branch-badge-local">埼玉西部密着（愛称: はんしん）</span></td>
+            <td>飯能信金「マイホーム」</td>
+            <td><span class="rate-badge-var">変動 年1.485%〜1.785%</span></td>
+            <td><span class="trend-badge-slow">上げ幅小・極めて慎重</span><br><span style="font-size:0.7rem;color:#059669;">✔ 5年・125%ルール適用</span></td>
+            <td>がん団信 ｜ 3大疾病 ｜ 就業不能</td>
+            <td>保証料分割型 または 融資手数料型<br><span style="font-size:0.7rem;color:#059669;">※住ま居る地元（鶴ヶ島・川越・坂戸・飯能・日高）実績多数</span></td>
+            <td>切替: 窓口相談<br>繰上: 店頭・ネット対応</td>
+            <td><a href="https://www.hanno-shinkin.jp/kariru/jutaku/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
+          </tr>
+          <tr>
+            <td><strong>🌾 JAバンク埼玉</strong><br><span class="branch-badge-local">JAいるま野 / JAさいたま</span></td>
+            <td>JA住宅ローン</td>
+            <td><span class="rate-badge-var">変動 年0.980%〜1.305%</span></td>
+            <td><span class="trend-badge-slow">上げ幅小・地域重視</span><br><span style="font-size:0.7rem;color:#059669;">✔ 5年・125%ルール適用</span></td>
+            <td>JA団信 ｜ 9大疾病補償特約</td>
+            <td>分割型（金利+0.13%〜0.30%）または一括前払<br><span style="font-size:0.7rem;color:#059669;">※地元農家・組合員・自己資金20%以上で最強</span></td>
+            <td>切替: 窓口相談<br>繰上: ネットバンキング対応</td>
+            <td><a href="https://www.jabank-saitama.or.jp/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
           </tr>
           <tr>
             <td><strong>🏛️ 東和銀行</strong><br><span class="branch-badge-local">埼玉西部・県内店舗多数</span></td>
             <td>とうわ住宅ローン</td>
-            <td><span class="rate-badge-var">変動 年0.450%〜</span></td>
-            <td><span class="trend-badge-slow">上げ幅小・地域重視</span><br><span style="font-size:0.7rem;color:#64748b;">5年・125%ルール適用</span></td>
+            <td><span class="rate-badge-var">変動 年1.375%〜1.625%</span></td>
+            <td><span class="trend-badge-slow">上げ幅小・地域重視</span><br><span style="font-size:0.7rem;color:#059669;">✔ 5年・125%ルール適用</span></td>
             <td>がん団信50%/100% ｜ 3大疾病</td>
-            <td>定率2.20% または 保証料型<br><span style="font-size:0.7rem;color:#059669;">※個人事業主・農地転用にも柔軟</span></td>
+            <td>定率2.20% または 保証料型<br><span style="font-size:0.7rem;color:#059669;">※個人事業主・確定申告者・農地転用に柔軟</span></td>
             <td>切替: 窓口相談<br>繰上: ネット一部無料</td>
             <td><a href="https://www.towabank.co.jp/personal/loan/jutaku/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
           </tr>
           <tr>
             <td><strong>🏛️ 群馬銀行</strong><br><span class="branch-badge-local">埼玉主要都市展開</span></td>
             <td>ぐんぎん住宅ローン</td>
-            <td><span class="rate-badge-var">変動 年0.385%〜</span></td>
-            <td><span class="trend-badge-slow">上げ幅小・緩やか</span><br><span style="font-size:0.7rem;color:#64748b;">5年・125%ルール適用</span></td>
+            <td><span class="rate-badge-var">変動 年1.185%〜1.375%</span></td>
+            <td><span class="trend-badge-slow">上げ幅小・緩やか</span><br><span style="font-size:0.7rem;color:#059669;">✔ 5年・125%ルール適用</span></td>
             <td>がん団信特約 ｜ 3大疾病団信</td>
-            <td>定率型 2.20%（88万円）<br><span style="font-size:0.7rem;color:#059669;">※省エネ住宅（住ま居る仕様）引下げ</span></td>
-            <td>切替: ネット無料<br>繰上: ネットバンキングで0円</td>
+            <td>定率型 2.20%（88万円）<br><span style="font-size:0.7rem;color:#059669;">※住ま居る仕様で省エネ金利引下げ</span></td>
+            <td>切替: ネット無料<br>繰上: ネットで0円</td>
             <td><a href="https://www.gunmabank.co.jp/kojin/loan/jutaku/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
           </tr>
           <tr>
             <td><strong>🏛️ 足利銀行</strong><br><span class="branch-badge-local">めぶきFG・県内展開</span></td>
             <td>あしぎん住宅ローン「暮らし上手」</td>
-            <td><span class="rate-badge-var">変動 年0.425%〜</span></td>
-            <td><span class="trend-badge-slow">上げ幅小・緩やか</span><br><span style="font-size:0.7rem;color:#64748b;">5年・125%ルール適用</span></td>
+            <td><span class="rate-badge-var">変動 年1.225%〜1.425%</span></td>
+            <td><span class="trend-badge-slow">上げ幅小・緩やか</span><br><span style="font-size:0.7rem;color:#059669;">✔ 5年・125%ルール適用</span></td>
             <td>がん団信100% ｜ 8大疾病保障</td>
             <td>定率2.20% または 保証料型<br><span style="font-size:0.7rem;color:#059669;">※ZEH・省エネ住宅金利優遇プラン</span></td>
-            <td>切替: ネット無料<br>繰上: ネットバンキングで0円</td>
+            <td>切替: ネット無料<br>繰上: ネットで0円</td>
             <td><a href="https://www.ashikagabank.co.jp/loan/jutaku/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
           </tr>
           <tr>
-            <td><strong>🤝 埼玉縣信用金庫</strong><br><span class="branch-badge-local">県内最大メガ信金</span></td>
-            <td>さいしん住宅ローン「わが家」</td>
-            <td><span class="rate-badge-var">変動 年0.475%〜</span></td>
-            <td><span class="trend-badge-slow">上げ幅小・極めて慎重</span><br><span style="font-size:0.7rem;color:#64748b;">5年・125%ルール適用</span></td>
-            <td>3大疾病団信 ｜ しんきん団信</td>
-            <td>保証料分割/一括（しんきん保証基金）<br><span style="font-size:0.7rem;color:#059669;">※自営業・複雑地・親族間承継に最強</span></td>
-            <td>切替: 窓口相談<br>繰上: 窓口・ATM対応</td>
-            <td><a href="https://www.saishin.co.jp/personal/loan/jutaku/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
+            <td><strong>🤝 中央労働金庫</strong><br><span class="branch-badge-local">埼玉各支店対面</span></td>
+            <td>有担保住宅ローン</td>
+            <td><span class="rate-badge-var">変動 年1.275%〜1.550%</span></td>
+            <td><span class="trend-badge-slow">上げ幅小・極めて慎重</span><br><span style="font-size:0.7rem;color:#059669;">✔ 5年・125%ルール適用</span></td>
+            <td>就業不能・オールマイティ保障</td>
+            <td><strong>保証料0円 ＆ 事務手数料0円（諸費用0円）</strong></td>
+            <td>切替: 無料<br>繰上: いつでも完全0円</td>
+            <td><a href="https://chuo.rokin.com/loan/housing/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
           </tr>
           <tr>
-            <td><strong>🤝 飯能信用金庫</strong><br><span class="branch-badge-local">住ま居る地元・西部密着</span></td>
-            <td>飯能信金「マイホーム」</td>
-            <td><span class="rate-badge-var">変動 年0.485%〜</span></td>
-            <td><span class="trend-badge-slow">上げ幅小・極めて慎重</span><br><span style="font-size:0.7rem;color:#64748b;">5年・125%ルール適用</span></td>
-            <td>がん団信 ｜ 3大疾病 ｜ 就業不能</td>
-            <td>保証料分割型 または 融資手数料型<br><span style="font-size:0.7rem;color:#059669;">※住ま居る（鶴ヶ島・坂戸・日高・川越）利用実績多数</span></td>
-            <td>切替: 窓口相談<br>繰上: 店頭・ネット対応</td>
-            <td><a href="https://www.hanno-shinkin.jp/kariru/jutaku/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
-          </tr>
-          <tr>
-            <td><strong>🤝 川越信用金庫</strong><br><span class="branch-badge-local">川越・坂戸・鶴ヶ島中核</span></td>
-            <td>かわしん住宅ローン</td>
-            <td><span class="rate-badge-var">変動 年0.475%〜</span></td>
-            <td><span class="trend-badge-slow">上げ幅小・極めて慎重</span><br><span style="font-size:0.7rem;color:#64748b;">5年・125%ルール適用</span></td>
-            <td>しんきん3大疾病 ｜ がん保障付団信</td>
-            <td>しんきん保証基金・分割型対応<br><span style="font-size:0.7rem;color:#059669;">※小回り抜群・注文住宅つなぎ資金相談可</span></td>
-            <td>切替: 窓口相談<br>繰上: 店頭・ネット対応</td>
-            <td><a href="https://www.kawashin.net/personal/loan/jutaku/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
-          </tr>
-          <tr>
-            <td><strong>🎧 ソニー銀行</strong><br><span class="branch-badge-net">埼玉拠点なし（完全オンライン）</span></td>
-            <td>変動セレクト住宅ローン</td>
-            <td><span class="rate-badge-var">変動 年0.297%〜</span></td>
-            <td><span class="trend-badge-fast">⚠️ 5年・125%ルール非適用</span><br><span style="font-size:0.7rem;color:#c2410c;">半年ごと返済額再計算</span></td>
-            <td><strong>がん50%無料付帯</strong> ｜ がん100%+0.10% ｜ 3大疾病+0.20%</td>
-            <td>選択制: 定率2.2%（88万）or <strong>定額44,000円</strong></td>
-            <td>切替: <strong>何度でも0円（Web即時）</strong><br>繰上: <strong>1円から手数料0円（即時）</strong></td>
-            <td><a href="https://moneykit.net/visitor/hl/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
-          </tr>
-          <tr>
-            <td><strong>🅿️ PayPay銀行</strong><br><span class="branch-badge-net">埼玉拠点なし（完全オンライン）</span></td>
-            <td>ネット専用住宅ローン</td>
-            <td><span class="rate-badge-var">変動 年0.315%〜</span></td>
-            <td><span class="trend-badge-slow">5年・125%ルール適用あり</span><br><span style="font-size:0.7rem;color:#0369a1;">急激な返済増を防止</span></td>
-            <td><strong>がん50%無料付帯</strong> ｜ がん100%+0.10% ｜ 11大疾病+0.30%</td>
-            <td>定率型 2.20%（88万円）</td>
-            <td>切替: 無料（Web手続き）<br>繰上: <strong>1円から手数料0円（アプリ）</strong></td>
-            <td><a href="https://www.paypay-bank.co.jp/housing/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
-          </tr>
-          <tr>
-            <td><strong>🌱 SBI新生銀行</strong><br><span class="branch-badge-net">埼玉拠点なし（完全オンライン）</span></td>
-            <td>パワースマート住宅ローン</td>
-            <td><span class="rate-badge-var">変動 年0.290%〜</span></td>
-            <td><span class="trend-badge-fast">⚠️ 5年・125%ルール非適用</span><br><span style="font-size:0.7rem;color:#dc2626;">元利均等でも金利連動</span></td>
-            <td><strong>安心パック（介護・自然災害）</strong> ｜ がん団信+0.10%</td>
-            <td><strong>定額型 一律55,000円〜（諸費用激減）</strong> or 定率2.2%</td>
-            <td>切替: 無料<br>繰上: <strong>1円から手数料0円（スマホ対応）</strong></td>
-            <td><a href="https://www.sbishinseibank.co.jp/retail/housing/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
-          </tr>
-          <tr>
-            <td><strong>📱 auじぶん銀行</strong><br><span class="branch-badge-net">埼玉拠点なし（完全オンライン）</span></td>
+            <td><strong>🌐 auじぶん銀行</strong><br><span class="branch-badge-net">完全オンライン</span></td>
             <td>住宅ローン（全期間引下げ）</td>
-            <td><span class="rate-badge-var">変動 年0.296%〜</span></td>
-            <td><span class="trend-badge-fast">上げ幅大・迅速改定</span><br><span style="font-size:0.7rem;color:#c2410c;">市場金利連動型</span></td>
-            <td><strong>がん50%＋全疾病保障が無料（0円）</strong> ｜ がん100%+0.05%</td>
-            <td>定率型 2.20%（88万円）</td>
-            <td>切替: 無料（Web手続き）<br>繰上: <strong>1円から手数料0円（即時）</strong></td>
+            <td><span class="rate-badge-var">変動 年1.134%〜</span><br><span style="font-size:0.7rem;color:#059669;">セット割時 年0.930%〜</span></td>
+            <td><span class="trend-badge-fast">日銀利上げ連動</span><br><span style="font-size:0.7rem;color:#059669;">✔ ネット銀行で貴重な5年・125%ルール完備</span></td>
+            <td>がん50%＋全疾病保障が無料付帯 ｜ がん100%+0.05%</td>
+            <td>融資事務手数料 2.20%（88万円）</td>
+            <td>切替: 0円<br>繰上: 1円から0円</td>
             <td><a href="https://www.jibunbank.co.jp/products/homeloan/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
           </tr>
           <tr>
-            <td><strong>🌐 住信SBIネット銀行</strong><br><span class="branch-badge-net">埼玉拠点なし（完全オンライン）</span></td>
+            <td><strong>🌐 住信SBIネット銀行</strong><br><span class="branch-badge-net">完全オンライン</span></td>
             <td>ネット専用住宅ローン</td>
-            <td><span class="rate-badge-var">変動 年0.320%〜</span></td>
-            <td><span class="trend-badge-fast">上げ幅大・迅速改定</span><br><span style="font-size:0.7rem;color:#c2410c;">日銀利上げに敏感</span></td>
-            <td><strong>スゴ団信（40歳未満：全疾病＋がん50%無料）</strong> ｜ 3大疾病</td>
-            <td>定率型 2.20%（88万円）</td>
-            <td>切替: 無料<br>繰上: <strong>1円から手数料0円（アプリ）</strong></td>
+            <td><span class="rate-badge-var">変動 年1.600%〜1.700%</span></td>
+            <td><span class="trend-badge-fast">日銀利上げ連動</span><br><span style="font-size:0.7rem;color:#059669;">✔ 5年・125%ルール適用あり</span></td>
+            <td>スゴ団信（50歳以下：全疾病保障＋がん50%無料）</td>
+            <td>事務取扱手数料 2.20%（88万円）</td>
+            <td>切替: 0円<br>繰上: 1円から0円</td>
             <td><a href="https://www.netbk.co.jp/contents/lineup/home-loan/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
           </tr>
           <tr>
-            <td><strong>🔴 楽天銀行</strong><br><span class="branch-badge-net">埼玉拠点なし（完全オンライン）</span></td>
-            <td>住宅ローン（金利選択型）</td>
-            <td><span class="rate-badge-var">変動 年0.500%〜</span></td>
-            <td><span class="trend-badge-fast">⚠️ 5年・125%ルール非適用</span><br><span style="font-size:0.7rem;color:#dc2626;">金利上昇が返済額に即連動</span></td>
-            <td>がん50%無料付帯 ｜ 楽天ポイント付与</td>
-            <td><strong>定額 一律 330,000円（88万より55万円お得）</strong></td>
-            <td>切替: 無料<br>繰上: 1万円から手数料0円</td>
+            <td><strong>🌐 PayPay銀行</strong><br><span class="branch-badge-net">完全オンライン</span></td>
+            <td>ネット専用住宅ローン</td>
+            <td><span class="rate-badge-var">変動 年1.450%〜1.580%</span></td>
+            <td><span class="trend-badge-fast">半年ごと金利見直し</span><br><span style="font-size:0.7rem;color:#dc2626;">⚠️ 5年・125%ルール非適用（即時返済連動）</span></td>
+            <td>がん50%無料 ｜ がん100%+0.10% ｜ 11大疾病+0.30%</td>
+            <td>融資事務手数料 2.20%（88万円）</td>
+            <td>切替: 0円<br>繰上: 1円から0円</td>
+            <td><a href="https://www.paypay-bank.co.jp/housing/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
+          </tr>
+          <tr>
+            <td><strong>🌐 ソニー銀行</strong><br><span class="branch-badge-net">完全オンライン</span></td>
+            <td>変動セレクト住宅ローン</td>
+            <td><span class="rate-badge-var">変動 年1.747%〜1.847%</span></td>
+            <td><span class="trend-badge-fast">半年ごと見直し</span><br><span style="font-size:0.7rem;color:#dc2626;">⚠️ 5年・125%ルール非適用</span></td>
+            <td>がん50%無料 ｜ がん100%+0.10% ｜ 3大疾病+0.20%</td>
+            <td>手数料選択制: 一律44,000円（標準） または 2.20%</td>
+            <td>切替: 0円<br>繰上: 1円から完全無料</td>
+            <td><a href="https://moneykit.net/visitor/hl/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
+          </tr>
+          <tr>
+            <td><strong>🌐 SBI新生銀行</strong><br><span class="branch-badge-net">完全オンライン</span></td>
+            <td>パワースマート住宅ローン</td>
+            <td><span class="rate-badge-var">変動 年1.340%〜1.430%</span></td>
+            <td><span class="trend-badge-slow">急変動抑制</span><br><span style="font-size:0.7rem;color:#059669;">✔ 5年・125%ルール適用あり</span></td>
+            <td>安心パック（要介護保障・自然災害支援） ｜ がん団信+0.10%</td>
+            <td>選択制: 定額55,000円〜 または 定率2.20%</td>
+            <td>切替: 0円<br>繰上: 1円から0円</td>
+            <td><a href="https://www.sbishinseibank.co.jp/retail/housing/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
+          </tr>
+          <tr>
+            <td><strong>🌐 楽天銀行</strong><br><span class="branch-badge-net">完全オンライン</span></td>
+            <td>金利選択型住宅ローン</td>
+            <td><span class="rate-badge-var">変動 年1.500%〜1.650%</span></td>
+            <td><span class="trend-badge-fast">翌月即時連動</span><br><span style="font-size:0.7rem;color:#dc2626;">⚠️ 5年・125%ルール非適用</span></td>
+            <td>がん50%無料 ｜ 楽天ポイント進呈</td>
+            <td><strong>事務取扱手数料 定額一律 330,000円</strong>（高額借入でお得）</td>
+            <td>切替: 0円<br>繰上: 1万円から0円</td>
             <td><a href="https://www.rakuten-bank.co.jp/home-loan/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
           </tr>
           <tr>
-            <td><strong>🏠 住宅金融支援機構</strong><br><span class="branch-badge-local">埼玉取扱窓口多数</span></td>
+            <td><strong>🏠 フラット35</strong><br><span class="branch-badge-local">全期間固定金利</span></td>
             <td>フラット35（子育てプラス）</td>
-            <td><span class="rate-badge-fix">固定 当初0.450%〜</span></td>
-            <td><span style="font-size:0.74rem;font-weight:800;color:#15803d;background:#dcfce7;padding:2px 6px;border-radius:4px;">🔒 完済まで金利変動ゼロ</span><br><span style="font-size:0.7rem;color:#166534;">利上げリスク皆無</span></td>
-            <td>新機構団信（夫婦連生デュエット可）</td>
-            <td>窓口により1.10%〜2.20%</td>
-            <td>切替: なし（全期間固定）<br>繰上: 住・My Noteで1万円から0円</td>
+            <td><span class="rate-badge-fix">当初5年 年2.830%〜</span><br><span style="font-size:0.7rem;color:#64748b;">基準金利 年3.830%〜</span></td>
+            <td><span class="trend-badge-slow">🔒 35年間金利変動ゼロ</span><br><span style="font-size:0.7rem;color:#059669;">返済額固定・将来の金利上昇リスク皆無</span></td>
+            <td>新機構団信（デュエット連生団信で夫婦連名可）</td>
+            <td>窓口により1.10%（楽天銀行等44万円）〜2.20%</td>
+            <td>切替: 不要<br>繰上: 1万円から0円</td>
             <td><a href="https://www.flat35.com/" target="_blank" rel="noopener noreferrer" style="color: #0284c7; font-weight: 700; text-decoration: underline;">公式サイト ↗</a></td>
           </tr>
         </tbody>
       </table>
-  </div>
+    </div>
 
   <!-- 🛡️ 【FP直伝】住宅ローン団信（8大疾病・がん100%）× 民間生命保険の見直し術 -->
   <section class="insurance-guide-section">
@@ -2214,52 +2366,276 @@
     {
       id: "musashino",
       name: "武蔵野銀行",
-      badge: "埼玉地元密着No.1 ｜ 住ま居る提携優遇＆つなぎ融資手厚い対応",
+      badge: "埼玉地元密着No.1 ｜ がん100%団信が上乗せ0円（無料付帯） ｜ つなぎ融資手厚い対応",
       isNet: false,
       branchStatus: "🏛️ 埼玉県内店舗網最多（対面窓口あり）",
       rateTrend: "上げ幅小・緩やか（5年・125%ルール標準適用で激変緩和）",
       productName: "むさしの住宅ローン",
       productLink: "https://www.musashinobank.co.jp/loan/housing/",
       rateType: "変動金利（最優遇適用時）",
-      rate: "年 0.395% 〜 0.475%",
-      baseRate: 0.395,
+      rate: "年 1.230% 〜 1.330%",
+      baseRate: 1.230,
       feeType: "percent",
       flatFee: 0,
-      feeDescShort: "定率 2.20%",
-      danshin: "がん50%団信無料 ｜ がん100%+0.15% ｜ 3大疾病保障",
-      fees: "融資手数料型 2.20%（税込）",
+      feeDescShort: "定率 2.20% または 保証料型",
+      danshin: "がん100%団信が金利上乗せなし（無料付帯）！ ｜ 3大疾病保障",
+      fees: "融資手数料型 2.20%（税込） または 保証料型",
       initialFeeDesc: "定率型 2.20%（4,000万円借入時: 880,000円）",
       switchFeeDesc: "変動から固定へ: 5,500円（店頭窓口）",
       prepayDesc: "インターネットバンキングなら1円から手数料0円（窓口は有料）",
-      danshin8Desc: "がん50%保障が無料 ｜ 3大疾病特約で悪性腫瘍・心疾患・脳血管疾患カバー",
-      insuranceAdvice: "💡 がん100%特約（+0.15%）を付加することで、民間のがん保険を解約・スリム化可能。月々約6,000円（35年で約250万円）の民間保険料を削減できます。",
-      pros: "埼玉県内店舗多数で対面相談が手厚い。住ま居る専任審査デスクがあり土地先行決済やつなぎ融資がスムーズ。",
-      cons: "ネット専業と比較すると金利が0.05%〜0.1%程度高め。固定切替時に店頭手数料が発生。"
+      danshin8Desc: "★特筆保障: がん100%団信（悪性新生物の診断確定で残高0円）が金利上乗せ0円で基本付帯！",
+      insuranceAdvice: "💡 武蔵野銀行の最大強みは『がん100%団信』が金利上乗せなし（無料）で基本セットされる点。他行では金利+0.1%〜0.2%必要な特約が0円のため、民間の高額がん保険を丸ごと解約でき、月々約7,000円（35年で約290万円）の保険料を確実に節約できます。",
+      pros: "埼玉県内店舗網最多。がん100%無料付帯。住ま居る専任審査デスクがあり土地先行決済やつなぎ融資がスムーズ。",
+      cons: "固定金利への切替時に店頭手数料が発生する。"
     },
     {
       id: "saitama_resona",
       name: "埼玉りそな銀行",
-      badge: "県内最大ネットワーク ｜ 団信革命全方位保障 ｜ 土日相談可",
+      badge: "県内最大ネットワーク ｜ 団信革命全方位保障 ｜ SX省エネ住宅優遇",
       isNet: false,
       branchStatus: "🏛️ 埼玉県内最大ネットワーク（対面窓口あり）",
       rateTrend: "上げ幅小・緩やか（5年・125%ルール標準適用で激変緩和）",
       productName: "りそな住宅ローン",
       productLink: "https://www.saitamaresona.co.jp/kojin/jutaku/",
-      rateType: "変動金利（ZEH・省エネ優遇後）",
-      rate: "年 0.380% 〜 0.440%",
-      baseRate: 0.380,
+      rateType: "変動金利（最優遇・SX優遇適用後）",
+      rate: "年 1.240% 〜 1.250%",
+      baseRate: 1.240,
       feeType: "percent",
       flatFee: 0,
-      feeDescShort: "定率 2.20%（省エネ優遇あり）",
+      feeDescShort: "保証料組込型（保証会社手数料5.5万円）",
       danshin: "団信革命（3大疾病＋16状態・要介護全保障 +0.30%）",
-      fees: "融資手数料型 2.20%（税込）",
-      initialFeeDesc: "定率型 2.20%（4,000万円借入時: 880,000円）※住ま居る省エネ仕様で年-0.05%優遇",
+      fees: "保証料組込型（保証会社手数料 55,000円）",
+      initialFeeDesc: "金利組込型なら初期保証料0円（保証会社手数料55,000円のみ！初期手元現金を温存）",
       switchFeeDesc: "変動 ⇔ 固定の切替: マイゲート（Web）で手数料0円",
       prepayDesc: "マイゲート（Web）で1万円から繰上返済手数料0円",
       danshin8Desc: "【団信革命】3大疾病（がん・急性心筋梗塞・脳卒中）＋所定の16状態・要介護で残高0円",
-      insuranceAdvice: "💡 「団信革命」を付帯すれば、民間の医療保険・がん保険・就業不能保険・介護保険をほぼ全て一本化可能。世帯全体で月々約12,000円（35年で約500万円）の保険料を削減できます。",
-      pros: "土日も相談できる住宅ローンプラザを県内主要駅に配置。省エネ住宅（住ま居る仕様）で金利引下げ。団信革命の保障範囲が国内最強クラス。",
-      cons: "団信革命を付けると金利が+0.30%上乗せとなるため、民間保険の削減額との天秤比較が必要。"
+      insuranceAdvice: "💡 『団信革命』を付帯すれば、民間の医療保険・がん保険・就業不能保険・介護保険をほぼ全て一本化可能。世帯全体で月々約12,000円（35年で約500万円）の保険料を削減できます。住ま居るの高断熱仕様ならSX（省エネ配慮）優遇で年▲0.010%引き下げ。",
+      pros: "埼玉県内最大ネットワーク。土日営業の住宅ローンプラザあり。団信革命の保障範囲が国内最強クラス。",
+      cons: "団信革命を付けると金利が+0.30%上乗せとなるため、民間保険削減額との比較検討が必須。"
+    },
+    {
+      id: "saishin",
+      name: "埼玉縣信用金庫（さいしん）",
+      badge: "埼玉県内預金量No.1信金 ｜ 自営業・会社役員・親族間承継・複雑敷地に最強の審査力",
+      isNet: false,
+      branchStatus: "🤝 埼玉県内全域に約90店舗（対面窓口充実）",
+      rateTrend: "上げ幅小・極めて慎重（地域中小企業・生活者のため急激な利上げを抑制）",
+      productName: "さいしん住宅ローン「わが家」",
+      productLink: "https://www.saishin.co.jp/personal/loan/jutaku/",
+      rateType: "変動金利（基準金利3.375%より最大▲2.13%優遇）",
+      rate: "年 1.245% 〜 1.445%",
+      baseRate: 1.245,
+      feeType: "percent",
+      flatFee: 0,
+      feeDescShort: "金利組込型 または 一括前払型",
+      danshin: "しんきん3大疾病団信 ｜ 就業不能保障団信",
+      fees: "金利組込型 または 一括前払型（しんきん保証基金）",
+      initialFeeDesc: "金利組込型なら初期手元現金ほぼ0円で借入可能（事業資金の手元流動性を維持）",
+      switchFeeDesc: "変動から固定への切替: 窓口相談（事前シミュレーション対応）",
+      prepayDesc: "窓口・ATMにて繰上返済可能（定期返済日の取扱手数料優遇あり）",
+      danshin8Desc: "しんきん3大疾病特約付団信（がん・急性心筋梗塞・脳卒中で全額弁済）",
+      insuranceAdvice: "💡 個人事業主や設立間もない法人経営者、親族名義の土地活用などで大手行に断られたケースでも親身に合算審査。保証料分割方式を活用すれば初期の持ち出し費用を極小化できます。",
+      pros: "埼玉県全域に촘촘な店舗網。自営業者、中小企業経営者、変形地・敷地内同居の難度が高い案件に最も強い。",
+      cons: "ネット銀行の最安プランと比べると表面金利が0.1%程度高め。"
+    },
+    {
+      id: "kawashin",
+      name: "川口信用金庫（かわしん）",
+      badge: "年収倍率連動型優遇 ｜ 地域密着の温かい審査 ｜ 埼玉南部・東部中核",
+      isNet: false,
+      branchStatus: "🤝 川口・さいたま・越谷・草加・戸田・蕨等に強固な店舗網",
+      rateTrend: "上げ幅小・緩やか（5年・125%ルール標準適用）",
+      productName: "かわしん住宅ローン",
+      productLink: "https://www.shinkin.co.jp/kawashin/",
+      rateType: "変動金利（年収倍率連動優遇）",
+      rate: "年 1.525% 〜 1.875%",
+      baseRate: 1.525,
+      feeType: "percent",
+      flatFee: 0,
+      feeDescShort: "保証料込（しんきん保証基金付）",
+      danshin: "しんきん団信 ｜ 3大疾病団信",
+      fees: "保証料込型（しんきん保証基金付）",
+      initialFeeDesc: "年収7倍未満なら最優遇年1.525%！保証料込型で初期諸費用を抑制",
+      switchFeeDesc: "変動から固定への切替相談対応（店頭窓口）",
+      prepayDesc: "店頭窓口およびATMで繰上返済対応",
+      danshin8Desc: "しんきん3大疾病団信（がん・心筋梗塞・脳卒中カバー）",
+      insuranceAdvice: "💡 川口信用金庫（かわしん）の大きな特徴は『年収倍率連動型優遇』。借入額が年収の7倍未満であれば年1.525%の最優遇が適用。借入額を抑えた堅実な家づくりをする施主様に有利な設定です。",
+      pros: "年収倍率に応じた明確な優遇体系。埼玉南部〜東部で地域住民からの信頼が厚い。",
+      cons: "年収8倍を超える高倍率借入の場合は金利が1.875%まで上昇する。"
+    },
+    {
+      id: "aokishinkin",
+      name: "青木信用金庫（あおしん）",
+      badge: "年収倍率連動型優遇 ｜ 川口・蕨・戸田・さいたま密着 ｜ 親身な対面相談",
+      isNet: false,
+      branchStatus: "🤝 川口・蕨・戸田・さいたま等に地域密着店舗網",
+      rateTrend: "上げ幅小・緩やか（5年・125%ルール標準適用）",
+      productName: "あおしん住宅ローン",
+      productLink: "https://www.aokishinkin.co.jp/",
+      rateType: "変動金利（年収倍率連動型）",
+      rate: "年 1.525% 〜 1.925%",
+      baseRate: 1.525,
+      feeType: "percent",
+      flatFee: 0,
+      feeDescShort: "保証料込（しんきん保証基金付）",
+      danshin: "しんきん団信 ｜ 3大疾病保障付団信",
+      fees: "保証料込型（しんきん保証基金付）",
+      initialFeeDesc: "年収6倍未満なら年1.525%最優遇！地元密着の親身な資金計画相談",
+      switchFeeDesc: "店頭窓口で固定金利切替相談対応",
+      prepayDesc: "店頭窓口およびATMで繰上返済対応",
+      danshin8Desc: "3大疾病団信（悪性新生物・急性心筋梗塞・脳卒中）",
+      insuranceAdvice: "💡 青木信用金庫（あおしん）も年収倍率連動型を採用。年収6倍未満で年1.525%最優遇。地域密着ならではの温かい審査で、転職歴や家族構成の事情を丁寧に汲み取ってくれます。",
+      pros: "地域密着の小回りの利く相談体制。年収6倍未満なら低金利優遇。",
+      cons: "年収8倍以上では年1.925%と高めの金利設定。"
+    },
+    {
+      id: "ome_shinkin",
+      name: "青梅信用金庫（あおしん 川越支店）",
+      badge: "川越支店・埼玉西部9拠点 ｜ 地域密着・事業主・建替え相談に強み ｜ 対面審査",
+      isNet: false,
+      branchStatus: "🤝 川越支店（川越市新宿町）、飯能、狭山、所沢、入間等に埼玉県内9拠点展開。鶴ヶ島・坂戸も融資対象エリア",
+      rateTrend: "上げ幅小・緩やか（5年・125%ルール標準適用）",
+      productName: "あおしん住宅ローン",
+      productLink: "https://www.aosyn.co.jp/",
+      rateType: "変動金利（最優遇適用時）",
+      rate: "年 1.475% 〜 1.800%",
+      baseRate: 1.475,
+      feeType: "percent",
+      flatFee: 0,
+      feeDescShort: "保証料込型選択可（基金・全国保証）",
+      danshin: "しんきん団信 ｜ 3大疾病特約（+0.30%）",
+      fees: "保証料込型または一括前払型 ｜ 事務手数料55,000円",
+      switchFeeDesc: "金利切替: 窓口相談",
+      prepayDesc: "繰上返済: 店頭・窓口対応",
+      danshin8Desc: "しんきん3大疾病保障特約（がん・急性心筋梗塞・脳卒中）",
+      insuranceAdvice: "💡 川越支店（川越市新宿町5-17-3）をはじめ埼玉西部に根ざした親身な審査。対面での相談を重視される施主様や、地域で事業を営むご家庭に大変心強い信金です。",
+      pros: "川越支店をはじめ埼玉県西部に9店舗展開。自営業や個人事業主、親族間での建替えなど難度の高い相談にも対面で柔軟に対応。5年・125%ルール完備で安心。",
+      cons: "ネット銀行の最安プランと比較すると表面金利はやや高め。"
+    },
+    {
+      id: "hanno_shinkin",
+      name: "飯能信用金庫（はんしん）",
+      badge: "住ま居る地元・埼玉西部の中核信金 ｜ 鶴ヶ島・川越・坂戸・飯能・日高のお施主様実績多数",
+      isNet: false,
+      branchStatus: "🤝 埼玉県西部エリアに強固な支店網（対面窓口あり）",
+      rateTrend: "上げ幅小・極めて慎重（地元密着型で日銀利上げ時も激変緩和）",
+      productName: "飯能信金住宅ローン「マイホーム」",
+      productLink: "https://www.hanno-shinkin.jp/kariru/jutaku/",
+      rateType: "変動金利（地元応援プラン）",
+      rate: "年 1.485% 〜 1.785%",
+      baseRate: 1.485,
+      feeType: "percent",
+      flatFee: 0,
+      feeDescShort: "しんきん保証基金利用（分割型あり）",
+      danshin: "がん保障特約付団信 ｜ 3大疾病団信 ｜ 就業不能保障",
+      fees: "保証料一括型 または 金利上乗せ（分割）型 ｜ 手数料33,000円〜",
+      initialFeeDesc: "保証料分割型なら初期費用を数万円に抑えられ、自己資金を建物内装に回せます",
+      switchFeeDesc: "固定金利への切替相談随時対応",
+      prepayDesc: "店頭窓口・インターネットバンキングで繰上返済対応",
+      danshin8Desc: "しんきん3大疾病団信 ＋ がん特約（診断確定で100%返済免除プランあり）",
+      insuranceAdvice: "💡 住ま居る（本社: 鶴ヶ島）と各営業店（鶴ヶ島・坂戸・日高・川越・飯能等）が直接連携。土地の先行決済やつなぎ資金の相談が日常的に行われており、安心して家づくりを進められます。",
+      pros: "鶴ヶ島・川越・坂戸・日高・毛呂山・飯能エリアの地元信頼度No.1。担当者が現場まで来てくれる手厚いフォロー。",
+      cons: "営業エリアが埼玉県西南部・東京都多摩地区中心のため、県東部など遠方敷地は対象外となる場合がある。"
+    },
+    {
+      id: "jabank_saitama",
+      name: "JAバンク埼玉（JAいるま野 / JAさいたま）",
+      badge: "地元農家・組合員・敷地内同居に最強 ｜ 自己資金20%で年0.980%〜",
+      isNet: false,
+      branchStatus: "🌾 埼玉県内各JA支店（鶴ヶ島・川越・坂戸・東松山等網羅）",
+      rateTrend: "上げ幅小・地域重視（5年・125%ルール標準適用）",
+      productName: "JA住宅ローン",
+      productLink: "https://www.jabank-saitama.or.jp/",
+      rateType: "変動金利（自己資金・優遇後）",
+      rate: "年 0.980% 〜 1.305%",
+      baseRate: 0.980,
+      feeType: "percent",
+      flatFee: 0,
+      feeDescShort: "保証料分割型 または 一括型",
+      danshin: "JA団信 ｜ 9大疾病補償特約付団信",
+      fees: "分割型（金利+0.13%〜0.30%）または一括前払",
+      initialFeeDesc: "JAいるま野・JAさいたま等の管轄JAにより金利・保証料体系がカスタマイズ可能",
+      switchFeeDesc: "窓口相談にて固定切替対応",
+      prepayDesc: "JAネットバンクにて繰上返済可能",
+      danshin8Desc: "9大疾病補償特約（がん・急性心筋梗塞・脳卒中＋6つの重度生活習慣病）",
+      insuranceAdvice: "💡 鶴ヶ島・坂戸・川越・東松山エリアを管轄する『JAいるま野』をはじめ、親の代からJA口座をお持ちのご家庭や、敷地内同居・農地転用を伴う建築計画では他行を圧倒する金利優遇と承認率を誇ります。",
+      pros: "JAさいたま（年0.980%〜）やJAいるま野（年1.305%〜）など地域密着。農地や広大敷地の建築に最も強い。",
+      cons: "管轄の地域JAによって金利や優遇条件が異なるため個別確認が必要。"
+    },
+    {
+      id: "towa_bank",
+      name: "東和銀行",
+      badge: "埼玉西部・川越・東松山・坂戸に多数支店 ｜ 自営業・個人事業主・親族間融資に抜群の柔軟性",
+      isNet: false,
+      branchStatus: "🏛️ 埼玉県西部に20店舗以上展開（対面窓口あり）",
+      rateTrend: "上げ幅小・緩やか（5年・125%ルール標準適用）",
+      productName: "とうわ住宅ローン",
+      productLink: "https://www.towabank.co.jp/personal/loan/jutaku/",
+      rateType: "変動金利（店頭優遇プラン）",
+      rate: "年 1.375% 〜 1.625%",
+      baseRate: 1.375,
+      feeType: "percent",
+      flatFee: 0,
+      feeDescShort: "定率 2.20% または 保証料型",
+      danshin: "がん100%団信 ｜ 3大疾病団信 ｜ 8大疾病保障",
+      fees: "融資手数料型 2.20%（税込） または 保証料型",
+      initialFeeDesc: "定率型 2.20%（4,000万円借入時: 880,000円）",
+      switchFeeDesc: "店頭窓口で固定金利への変更手続き可能",
+      prepayDesc: "インターネットバンキングなら繰上返済手数料0円",
+      danshin8Desc: "がん団信（診断で残高0円）＋3大疾病（急性心筋梗塞・脳卒中）手厚いカバー",
+      insuranceAdvice: "💡 第二地銀ならではの機動性と審査力。確定申告2期分で自営業者の融資を積極的に受け入れており、個人事業主のお施主様に心強い味方です。",
+      pros: "自営業者や確定申告者、土地の権利関係が複雑な実家の敷地内建築などで高い融資承認実績を誇る。",
+      cons: "メガ地銀に比べると表面金利が0.1%程度高め。"
+    },
+    {
+      id: "gunma_bank",
+      name: "群馬銀行",
+      badge: "埼玉県内店舗網充実 ｜ ネット銀行並みの低金利競争力 ｜ 省エネ住宅金利引下げ",
+      isNet: false,
+      branchStatus: "🏛️ 埼玉県内主要都市（大宮・川越・熊谷・所沢等）に店舗あり",
+      rateTrend: "上げ幅小・緩やか（5年・125%ルール標準適用）",
+      productName: "ぐんぎん住宅ローン「スーパーハッピーライフ」",
+      productLink: "https://www.gunmabank.co.jp/kojin/loan/jutaku/",
+      rateType: "変動金利（省エネ性能優遇後）",
+      rate: "年 1.185% 〜 1.375%",
+      baseRate: 1.185,
+      feeType: "percent",
+      flatFee: 0,
+      feeDescShort: "定率 2.20%（融資手数料型）",
+      danshin: "がん保障特約付団信 ｜ 3大疾病団信",
+      fees: "融資手数料型 2.20%（税込）",
+      initialFeeDesc: "定率型 2.20%（4,000万円借入時: 880,000円）※住ま居る仕様で金利引下げ",
+      switchFeeDesc: "ネットバンキングから固定切替可能（手数料無料）",
+      prepayDesc: "インターネットバンキングで1万円から繰上返済手数料0円",
+      danshin8Desc: "がん保障特約（診断確定で100%返済免除）＋3大疾病保障",
+      insuranceAdvice: "💡 埼玉県内でも大手地銀に迫る年1.185%〜の低金利を提示。住ま居るの高気密高断熱仕様なら『環境配慮住宅優遇』が適用され、最優遇金利が引き出せます。",
+      pros: "地銀トップクラスの低金利。WEB完結事前審査がスピーディーで、つなぎ融資制度も完備。",
+      cons: "埼玉県南部（川口・草加等）は支店がやや少ない。"
+    },
+    {
+      id: "ashikaga_bank",
+      name: "足利銀行",
+      badge: "めぶきFG（あしぎん・常陽） ｜ ZEH・長期優良住宅優遇 ｜ がん100%団信手厚い",
+      isNet: false,
+      branchStatus: "🏛️ 埼玉県内（久喜・加須・越谷・川越・大宮等）に店舗あり",
+      rateTrend: "上げ幅小・緩やか（5年・125%ルール標準適用）",
+      productName: "あしぎん住宅ローン「暮らし上手」",
+      productLink: "https://www.ashikagabank.co.jp/loan/jutaku/",
+      rateType: "変動金利（ZEH・省エネ住宅プラン）",
+      rate: "年 1.225% 〜 1.425%",
+      baseRate: 1.225,
+      feeType: "percent",
+      flatFee: 0,
+      feeDescShort: "定率 2.20% または 保証料型",
+      danshin: "がん団信100% ｜ 8大疾病補償特約付団信",
+      fees: "融資手数料型 2.20%（税込） または 保証料一括型",
+      initialFeeDesc: "定率型 2.20%（4,000万円借入時: 880,000円）",
+      switchFeeDesc: "インターネットバンキングなら固定金利への切替手数料0円",
+      prepayDesc: "インターネットバンキングなら一部繰上返済手数料0円",
+      danshin8Desc: "8大疾病補償特約（がん・脳卒中・心筋梗塞＋5つの重度慢性疾患）",
+      insuranceAdvice: "💡 めぶきフィナンシャルグループの強固な資本基盤。長期優良住宅・ZEHへの優遇枠があり、住ま居るの標準仕様で無理なく金利引下げが狙えます。",
+      pros: "めぶきFGの充実したネットワーク。対面相談とWEB手続きのハイブリッド運用が便利。",
+      cons: "県西部は川越支店中心で、坂戸・鶴ヶ島からはやや距離がある場合がある。"
     },
     {
       id: "chuo_rokin",
@@ -2267,12 +2643,12 @@
       badge: "保証料0円・手数料0円 ｜ 諸費用最小化 ｜ 転職直後に強み",
       isNet: false,
       branchStatus: "🤝 埼玉県内各支店対面窓口あり",
-      rateTrend: "上げ幅小・極めて慎重（地域住民の生活防衛のため短プラ改定が遅め）",
+      rateTrend: "上げ幅小・極めて慎重（5年・125%ルール標準適用で激変緩和）",
       productName: "有担保住宅ローン",
       productLink: "https://chuo.rokin.com/loan/housing/",
-      rateType: "変動金利（生協・団体会員優遇）",
-      rate: "年 0.450% 〜 0.520%",
-      baseRate: 0.450,
+      rateType: "変動金利（団体会員・生協会員優遇）",
+      rate: "年 1.275% 〜 1.550%",
+      baseRate: 1.275,
       feeType: "free",
       flatFee: 0,
       feeDescShort: "保証料0円・手数料0円",
@@ -2287,193 +2663,67 @@
       cons: "一般個人の場合、生協や労働組合会員より金利優遇幅が若干小さくなる場合がある。"
     },
     {
-      id: "saishin",
-      name: "埼玉縣信用金庫（さいしん）",
-      badge: "埼玉県内預金量No.1信金 ｜ 自営業・親族経営・複雑地盤・狭小変形地に圧倒的対応力",
-      isNet: false,
-      branchStatus: "🤝 埼玉県内全域に約90店舗（対面窓口充実）",
-      rateTrend: "上げ幅小・極めて慎重（地域中小企業・生活者のため急な引き上げを抑制）",
-      productName: "さいしん住宅ローン「わが家」",
-      productLink: "https://www.saishin.co.jp/personal/loan/jutaku/",
-      rateType: "変動金利（最優遇適用時）",
-      rate: "年 0.475% 〜 0.575%",
-      baseRate: 0.475,
-      feeType: "percent",
-      flatFee: 0,
-      feeDescShort: "定率 2.20% または 保証料分割型",
-      danshin: "しんきん3大疾病団信 ｜ 就業不能保障団信",
-      fees: "融資手数料型 2.20% または 保証料分割（金利内枠）方式選択可",
-      initialFeeDesc: "保証料内枠方式なら初期手元現金ほぼ0円で借入可能（定率型2.2%も選択可）",
-      switchFeeDesc: "変動から固定への切替: 窓口相談（事前シミュレーション対応）",
-      prepayDesc: "窓口・ATMにて繰上返済可能（定期返済日の取扱手数料優遇あり）",
-      danshin8Desc: "しんきん3大疾病特約付団信（がん・急性心筋梗塞・脳卒中で全額弁済）",
-      insuranceAdvice: "💡 自営業・会社役員の方で審査に不安がある場合も親身に合算審査。保証料分割方式を活用すれば初期の持ち出し費用を極小化でき、事業資金の手元流動性を維持できます。",
-      pros: "埼玉県全域に촘촘な店舗網。個人事業主、設立間もない法人経営者、親族名義の土地活用など難度の高い案件に最も強い。",
-      cons: "ネット銀行に比べると表面金利が0.1〜0.15%程度高め。"
-    },
-    {
-      id: "hanno_shinkin",
-      name: "飯能信用金庫（はんしん）",
-      badge: "住ま居る地元・埼玉西部の中核信金 ｜ 鶴ヶ島・川越・坂戸・飯能・日高のお施主様実績多数",
-      isNet: false,
-      branchStatus: "🤝 埼玉県西部エリアに強固な支店網（対面窓口あり）",
-      rateTrend: "上げ幅小・極めて慎重（地元密着型で日銀利上げ時も激変緩和）",
-      productName: "飯能信金住宅ローン「マイホーム」",
-      productLink: "https://www.hanno-shinkin.jp/kariru/jutaku/",
-      rateType: "変動金利（地元応援プラン）",
-      rate: "年 0.485% 〜 0.585%",
-      baseRate: 0.485,
-      feeType: "percent",
-      flatFee: 0,
-      feeDescShort: "しんきん保証基金利用（分割型あり）",
-      danshin: "がん保障特約付団信 ｜ 3大疾病団信 ｜ 就業不能保障",
-      fees: "保証料一括型 または 金利上乗せ（分割）型 ｜ 手数料33,000円〜",
-      initialFeeDesc: "保証料分割型なら初期費用を数万円に抑えられ、自己資金を建物内装に回せます",
-      switchFeeDesc: "固定金利への切替相談随時対応",
-      prepayDesc: "店頭窓口・インターネットバンキングで繰上返済対応",
-      danshin8Desc: "しんきん3大疾病団信 ＋ がん特約（診断確定で100%返済免除プランあり）",
-      insuranceAdvice: "💡 住ま居る（本社: 鶴ヶ島）と各営業店が直接連携。土地の先行決済やつなぎ資金の相談が日常的に行われており、安心して家づくりを進められます。",
-      pros: "鶴ヶ島・川越・坂戸・日高・毛呂山・飯能エリアの地元信頼度No.1。担当者が自宅や現場まで来てくれる手厚いフォロー。",
-      cons: "営業エリアが埼玉県西南部・東京都多摩地区中心のため、県東部など遠方敷地は対象外となる場合がある。"
-    },
-    {
-      id: "kawashin",
-      name: "川越信用金庫（かわしん）",
-      badge: "川越・鶴ヶ島・坂戸・東松山中核 ｜ 地域密着の温かい審査 ｜ つなぎ融資フル対応",
-      isNet: false,
-      branchStatus: "🤝 川越・坂戸・鶴ヶ島・ふじみ野に充実の店舗網",
-      rateTrend: "上げ幅小・緩やか（5年・125%ルール適用で家計負担急増を防ぐ）",
-      productName: "かわしん住宅ローン",
-      productLink: "https://www.kawashin.net/personal/loan/jutaku/",
-      rateType: "変動金利（地域優遇適用後）",
-      rate: "年 0.475% 〜 0.575%",
-      baseRate: 0.475,
-      feeType: "percent",
-      flatFee: 0,
-      feeDescShort: "保証料型または手数料型選択可",
-      danshin: "しんきん団信 ｜ 3大疾病保障付団信",
-      fees: "保証料一括型 または 融資手数料型（定率2.20%）",
-      initialFeeDesc: "定率型 2.20% または 保証料分割型（ライフプランに応じた諸費用設計が可能）",
-      switchFeeDesc: "変動から固定への切替相談対応（店頭窓口）",
-      prepayDesc: "店頭窓口およびWebバンキングで繰上返済対応",
-      danshin8Desc: "3大疾病団信（悪性新生物・急性心筋梗塞・脳卒中カバー）",
-      insuranceAdvice: "💡 小回りの利く相談体制が魅力。転職歴が浅い方や、土地先行決済で他の銀行で断られたケースでも親身に資金計画を組み立ててくれます。",
-      pros: "住ま居るの主要施工エリア（川越・鶴ヶ島・坂戸）に店舗が多く、住宅ローンプラザでの休日相談も手厚い。",
-      cons: "ネット銀行と比較すると金利水準はやや高め。"
-    },
-    {
-      id: "towa_bank",
-      name: "東和銀行",
-      badge: "埼玉西部・川越・東松山・坂戸に多数支店 ｜ 自営業・個人事業主・親族間融資に抜群の柔軟性",
-      isNet: false,
-      branchStatus: "🏛️ 埼玉県西部に20店舗以上展開（対面窓口あり）",
-      rateTrend: "上げ幅小・緩やか（5年・125%ルール標準適用）",
-      productName: "とうわ住宅ローン",
-      productLink: "https://www.towabank.co.jp/personal/loan/jutaku/",
-      rateType: "変動金利（店頭優遇プラン）",
-      rate: "年 0.450% 〜 0.650%",
-      baseRate: 0.450,
-      feeType: "percent",
-      flatFee: 0,
-      feeDescShort: "定率 2.20% または 保証料型",
-      danshin: "がん100%団信 ｜ 3大疾病団信 ｜ 8大疾病保障",
-      fees: "融資手数料型 2.20%（税込） または 保証料型",
-      initialFeeDesc: "定率型 2.20%（4,000万円借入時: 880,000円）",
-      switchFeeDesc: "店頭窓口で固定金利への変更手続き可能",
-      prepayDesc: "インターネットバンキングなら繰上返済手数料0円",
-      danshin8Desc: "がん団信（診断で残高0円）＋3大疾病（急性心筋梗塞・脳卒中）手厚いカバー",
-      insuranceAdvice: "💡 第二地銀ならではの機動性と審査力。確定申告2期分で自営業者の融資を積極的に受け入れており、個人事業主のお施主様に心強い味方です。",
-      pros: "自営業者や確定申告者、土地の権利関係が複雑な実家の敷地内建築などで高い融資承認実績を誇る。",
-      cons: "ネット銀行に比べると金利はやや高め。"
-    },
-    {
-      id: "gunma_bank",
-      name: "群馬銀行",
-      badge: "埼玉県内店舗網充実 ｜ ネット銀行並みの低金利競争力 ｜ 省エネ住宅金利引下げ",
-      isNet: false,
-      branchStatus: "🏛️ 埼玉県内主要都市（大宮・川越・熊谷・所沢等）に店舗あり",
-      rateTrend: "上げ幅小・緩やか（5年・125%ルール標準適用）",
-      productName: "ぐんぎん住宅ローン「スーパーハッピーライフ」",
-      productLink: "https://www.gunmabank.co.jp/kojin/loan/jutaku/",
-      rateType: "変動金利（省エネ性能優遇後）",
-      rate: "年 0.385% 〜 0.475%",
-      baseRate: 0.385,
-      feeType: "percent",
-      flatFee: 0,
-      feeDescShort: "定率 2.20%（融資手数料型）",
-      danshin: "がん保障特約付団信 ｜ 3大疾病団信",
-      fees: "融資手数料型 2.20%（税込）",
-      initialFeeDesc: "定率型 2.20%（4,000万円借入時: 880,000円）※住ま居る仕様で金利引下げ",
-      switchFeeDesc: "ネットバンキングから固定切替可能（手数料無料）",
-      prepayDesc: "インターネットバンキングで1万円から繰上返済手数料0円",
-      danshin8Desc: "がん保障特約（診断確定で100%返済免除）＋3大疾病保障",
-      insuranceAdvice: "💡 埼玉県内でも大手地銀に迫る低金利（0.38%台）を提示。住ま居るの高気密高断熱仕様なら「環境配慮住宅優遇」が適用され、最優遇金利が引き出せます。",
-      pros: "地銀トップクラスの低金利。WEB完結事前審査がスピーディーで、つなぎ融資制度も完備。",
-      cons: "埼玉県南部（川口・草加等）は支店がやや少ない。"
-    },
-    {
-      id: "ashikaga_bank",
-      name: "足利銀行",
-      badge: "めぶきFG（あしぎん・常陽） ｜ ZEH・長期優良住宅優遇 ｜ がん100%団信手厚い",
-      isNet: false,
-      branchStatus: "🏛️ 埼玉県内（久喜・加須・越谷・川越・大宮等）に店舗あり",
-      rateTrend: "上げ幅小・緩やか（5年・125%ルール標準適用）",
-      productName: "あしぎん住宅ローン「暮らし上手」",
-      productLink: "https://www.ashikagabank.co.jp/loan/jutaku/",
-      rateType: "変動金利（ZEH・省エネ住宅プラン）",
-      rate: "年 0.425% 〜 0.525%",
-      baseRate: 0.425,
-      feeType: "percent",
-      flatFee: 0,
-      feeDescShort: "定率 2.20% または 保証料型",
-      danshin: "がん団信100% ｜ 8大疾病補償特約付団信",
-      fees: "融資手数料型 2.20%（税込） または 保証料一括型",
-      initialFeeDesc: "定率型 2.20%（4,000万円借入時: 880,000円）",
-      switchFeeDesc: "インターネットバンキングなら固定金利への切替手数料0円",
-      prepayDesc: "インターネットバンキングなら一部繰上返済手数料0円",
-      danshin8Desc: "8大疾病補償特約（がん・脳卒中・心筋梗塞＋5つの重度慢性疾患）",
-      insuranceAdvice: "💡 めぶきフィナンシャルグループの強固な資本基盤。長期優良住宅・ZEHへの優遇枠があり、住ま居るの標準仕様で無理なく金利引下げが狙えます。",
-      pros: "めぶきFGの充実したネットワーク。対面相談とWEB手続きのハイブリッド運用が便利。",
-      cons: "県西部は川越支店中心で、坂戸・鶴ヶ島からはやや距離がある場合がある。"
-    },
-
-    {
-      id: "sony_bank",
-      name: "ソニー銀行（Sony Bank）",
-      badge: "自己資金10%で最優遇金利 ｜ がん50%無料 ｜ 手数料選択制",
+      id: "au_jibun",
+      name: "auじぶん銀行",
+      badge: "ネット最安級金利（セット時0.93%〜） ｜ がん50%無料 ｜ 5年・125%ルール完備",
       isNet: true,
       branchStatus: "🌐 埼玉県内に営業拠点なし（完全オンライン）",
-      rateTrend: "⚠️ 5年・125%ルール非適用（金利見直し半年ごと、返済額は随時再計算）",
-      productName: "変動セレクト住宅ローン",
-      productLink: "https://moneykit.net/visitor/hl/",
-      rateType: "変動金利（自己資金10%以上優遇後）",
-      rate: "年 0.297% 〜 0.397%",
-      baseRate: 0.297,
-      feeType: "flat_or_percent",
-      flatFee: 44000,
-      feeDescShort: "一律4.4万円 または 定率2.2%",
-      danshin: "がん50%保障無料付帯 ｜ がん100%+0.10% ｜ 3大疾病+0.20%",
-      fees: "選択制: 定率型2.20% または 定額型 一律44,000円",
-      initialFeeDesc: "選択制: 定率型2.20% または 一律44,000円（金利+0.05%上乗せ型）",
-      switchFeeDesc: "変動 ⇔ 固定の変更手数料 何度でも0円（Web即時切替可能）",
-      prepayDesc: "1円から手数料0円（Web即時反映、一部繰上・全額繰上ともに完全無料）",
-      danshin8Desc: "がん50%無料付帯 ＋ 3大疾病団信（急性心筋梗塞・脳卒中）手厚いカバー",
-      insuranceAdvice: "💡 がん100%特約（+0.10%）を付保すれば、がん診断確定でローン完済。民間の高額がん保険（月4,000〜8,000円）を解約でき、浮いた資金を繰上返済に回せます。",
-      pros: "1円単位の繰上返済が0円で資金管理が抜群。手数料定額（4.4万円）プランも選べる。外貨優遇やソニーグループ連携が充実。",
-      cons: "埼玉県内に店舗なし。5年・125%ルールがないため、金利上昇時は半年ごとに返済額が見直されます。"
+      rateTrend: "上げ幅大・迅速改定（市場金利連動型だが、5年・125%ルール完備で家計激変を防止）",
+      productName: "住宅ローン（全期間引下げ）",
+      productLink: "https://www.jibunbank.co.jp/products/homeloan/",
+      rateType: "変動金利（au携帯・じぶん電気等セット優遇後）",
+      rate: "年 0.930% 〜 1.134%",
+      baseRate: 1.134,
+      feeType: "percent",
+      flatFee: 0,
+      feeDescShort: "定率 2.20%",
+      danshin: "がん50%保障＋全疾病保障が上乗せ0円 ｜ がん100%+0.05%",
+      fees: "事務取扱手数料 2.20%（税込）",
+      initialFeeDesc: "定率型 2.20%（4,000万円借入時: 880,000円）",
+      switchFeeDesc: "変動から固定への切替手数料 0円（Web手続き）",
+      prepayDesc: "1円から手数料0円（ネット完結でいつでも即時反映）",
+      danshin8Desc: "全疾病保障＋がん50%が金利上乗せなし無料 ｜ がん100%は+0.05%と業界最安",
+      insuranceAdvice: "💡 がん100%団信の上乗せ金利がわずか+0.05%（月約800円）！ネット専業でありながら『5年ルール・125%ルール』が完備されており、急激な返済額上昇を防げる点が大きな強みです。",
+      pros: "条件達成で年0.9%台の超低金利。5年・125%ルール完備。がん100%団信が+0.05%と格安。",
+      cons: "埼玉県内に対面窓口なし。注文住宅特有の土地先行決済やつなぎ融資は別会社手続きが必要。"
+    },
+    {
+      id: "sbi_sumishin",
+      name: "住信SBIネット銀行",
+      badge: "スゴ団信（50歳以下無料） ｜ 自己資金20%で年1.600% ｜ 5年・125%ルールあり",
+      isNet: true,
+      branchStatus: "🌐 埼玉県内に営業拠点なし（完全オンライン）",
+      rateTrend: "日銀利上げに迅速連動（5年・125%ルール適用あり）",
+      productName: "ネット専用住宅ローン",
+      productLink: "https://www.netbk.co.jp/contents/lineup/home-loan/",
+      rateType: "変動金利（ネット専用住宅ローン・LTV80%以下）",
+      rate: "年 1.600% 〜 1.700%",
+      baseRate: 1.600,
+      feeType: "percent",
+      flatFee: 0,
+      feeDescShort: "定率 2.20%",
+      danshin: "スゴ団信（50歳以下：全疾病保障＋がん50%が無料） ｜ 3大疾病+0.20%",
+      fees: "事務取扱手数料 2.20%（税込）",
+      initialFeeDesc: "定率型 2.20%（4,000万円借入時: 880,000円）",
+      switchFeeDesc: "変動から固定への切替手数料 0円（Web手続き）",
+      prepayDesc: "1円から手数料0円（スマホアプリから即時繰上返済可能）",
+      danshin8Desc: "スゴ団信（がん・急性心筋梗塞・脳卒中＋重度慢性疾患など全疾病保障）",
+      insuranceAdvice: "💡 50歳以下ならスゴ団信（全疾病保障＋がん50%）が金利上乗せ0円で付帯。民間の総合医療保険をスリム化でき、月々約8,000円（35年で約330万円）を浮かせます。",
+      pros: "充実したスゴ団信。5年・125%ルール適用。スマホアプリから1円単位の繰上返済が可能。",
+      cons: "埼玉県内に対面店舗なし。つなぎ融資のスケジュール管理に注意が必要。"
     },
     {
       id: "paypay_bank",
-      name: "PayPay銀行（旧ジャパンネット銀行）",
-      badge: "ネット最安水準0.3%台 ｜ がん50%団信無料 ｜ 5年・125%ルールあり",
+      name: "PayPay銀行",
+      badge: "通信・電気割で年1.45%〜 ｜ がん50%団信無料 ｜ ⚠️ 5年・125%ルールなし",
       isNet: true,
       branchStatus: "🌐 埼玉県内に営業拠点なし（完全オンライン）",
-      rateTrend: "5年・125%ルール適用あり（ネット銀行の中で急激な返済額上昇を防止）",
+      rateTrend: "⚠️ 5年・125%ルール非適用（金利見直し半年ごと、返済額は随時再計算）",
       productName: "ネット専用住宅ローン",
       productLink: "https://www.paypay-bank.co.jp/housing/",
-      rateType: "変動金利（最優遇金利プラン）",
-      rate: "年 0.315% 〜 0.380%",
-      baseRate: 0.315,
+      rateType: "変動金利（通信・電気連携優遇プラン）",
+      rate: "年 1.450% 〜 1.580%",
+      baseRate: 1.450,
       feeType: "percent",
       flatFee: 0,
       feeDescShort: "定率 2.20%",
@@ -2483,97 +2733,72 @@
       switchFeeDesc: "変動から固定への切替手数料 0円（Web手続き）",
       prepayDesc: "1円から手数料0円（スマホアプリから即時繰上返済可能）",
       danshin8Desc: "11大疾病保障（がん・心筋梗塞・脳卒中＋糖尿病・高血圧性疾患など8重度疾患）",
-      insuranceAdvice: "💡 ネット銀行でありながら5年・125%ルールを完備。11大疾病団信（+0.30%）をつければ生活習慣病まで網羅され、民間の医療終身特約をスリム化して月々約9,000円節約できます。",
-      pros: "ネット専業でありながら「5年ルール・125%ルール」が適用。がん50%団信無料。スマホ完結で審査が早い。",
-      cons: "埼玉県内に対面窓口なし。注文住宅特有の土地先行決済やつなぎ融資（分割実行）のスケジュール調整には注意が必要。"
+      insuranceAdvice: "💡 がん50%無料付帯。ただし5年・125%ルールがないため、将来の急激な金利上昇局面では毎月返済額が直接引き上げられるリスクを理解しておく必要があります。",
+      pros: "スマホ完結で審査が早い。通信や電気のセット利用で年1.45%まで優遇。",
+      cons: "埼玉県内に対面窓口なし。5年ルール・125%ルールがないため金利上昇時の家計リスクに注意。"
+    },
+    {
+      id: "sony_bank",
+      name: "ソニー銀行",
+      badge: "手数料定額4.4万円選択可 ｜ 環境配慮優遇 ｜ ⚠️ 5年・125%ルールなし",
+      isNet: true,
+      branchStatus: "🌐 埼玉県内に営業拠点なし（完全オンライン）",
+      rateTrend: "⚠️ 5年・125%ルール非適用（金利見直し半年ごと、返済額は随時再計算）",
+      productName: "変動セレクト住宅ローン",
+      productLink: "https://moneykit.net/visitor/hl/",
+      rateType: "変動金利（環境配慮住宅優遇時）",
+      rate: "年 1.747% 〜 1.847%",
+      baseRate: 1.747,
+      feeType: "flat_or_percent",
+      flatFee: 44000,
+      feeDescShort: "一律4.4万円 または 定率2.2%",
+      danshin: "がん50%保障無料付帯 ｜ がん100%+0.10% ｜ 3大疾病+0.20%",
+      fees: "選択制: 定額型 一律44,000円 または 定率型2.20%",
+      initialFeeDesc: "定額プラン（一律44,000円）を選べば、4,000万借入時で初期費用が約84万円も浮く！",
+      switchFeeDesc: "変動 ⇔ 固定の変更手数料 何度でも0円（Web即時切替可能）",
+      prepayDesc: "1円から手数料0円（Web即時反映、一部繰上・全額繰上ともに完全無料）",
+      danshin8Desc: "がん50%無料付帯 ＋ 3大疾病団信（急性心筋梗塞・脳卒中）手厚いカバー",
+      insuranceAdvice: "💡 手数料定額4.4万円プランなら、定率型（88万円）に比べて初期費用が80万円以上浮きます。浮いた現金を自己資金や繰上返済原資に回せます。ただし5年・125%ルールがない点には留意。",
+      pros: "1円単位の繰上返済が無料。手数料定額（4.4万円）プランあり。住ま居る省エネ仕様で環境配慮優遇。",
+      cons: "埼玉県内に店舗なし。5年・125%ルールがないため金利上昇時は半年ごとに返済額が見直される。"
     },
     {
       id: "sbi_shinsei",
       name: "SBI新生銀行",
-      badge: "超低金利0.29%〜 ｜ 手数料定額5.5万円プランあり ｜ 安心パック介護保障",
+      badge: "手数料定額5.5万円プランあり ｜ ハイパー預金優遇 ｜ 5年・125%ルール完備",
       isNet: true,
       branchStatus: "🌐 埼玉県内に営業拠点なし（完全オンライン完結）",
-      rateTrend: "⚠️ 5年・125%ルール非適用（金利上昇分が元利均等返済でも即座に返済額に連動）",
+      rateTrend: "急変動抑制（5年・125%ルール適用あり）",
       productName: "パワースマート住宅ローン（変動フォーカス）",
       productLink: "https://www.sbishinseibank.co.jp/retail/housing/",
-      rateType: "変動金利（半年型・ステップダウン/フォーカス）",
-      rate: "年 0.290% 〜 0.350%",
-      baseRate: 0.290,
+      rateType: "変動金利（ハイパー預金優遇適用後）",
+      rate: "年 1.340% 〜 1.430%",
+      baseRate: 1.340,
       feeType: "flat_or_percent",
       flatFee: 55000,
       feeDescShort: "一律5.5万円〜 または 定率2.2%",
-      danshin: "安心パック（要介護保障・自然災害支援） ｜ がん団信+0.10% ｜ 8大疾病保障",
+      danshin: "安心パック（要介護保障・自然災害支援） ｜ がん団信+0.10%",
       fees: "選択制: 定額型（一律55,000円〜） または 定率型（2.20%）",
-      initialFeeDesc: "定額プランなら借入額によらず一律55,000円〜！4,000万借入時で初期費用が70万円以上節約",
+      initialFeeDesc: "定額プランなら借入額によらず一律55,000円〜！高額借入で諸費用が大幅に削減",
       switchFeeDesc: "変動 ⇔ 固定の切替手数料 0円（Web手続き）",
       prepayDesc: "1円から手数料0円（パソコン・スマホからいつでも返済可能）",
       danshin8Desc: "独自団信「安心パック」で要介護状態（要介護3以上）や自然災害による修繕費用までカバー",
-      insuranceAdvice: "💡 介護保障付き団信（安心パック）を活用することで、民間の介護保険や特約を解約可能。初期手数料定額プラン（5.5万円）で浮いた70万円を繰上返済や家具代に有効活用できます。",
-      pros: "手数料定額型（一律55,000円〜）が選べる数少ない銀行。初期費用を抑えたい高額借入に最適。介護保障も付帯。",
-      cons: "埼玉県内に有人店舗なし。5年・125%ルールがないため、将来の急激な金利上昇には要注意。"
-    },
-    {
-      id: "au_jibun",
-      name: "auじぶん銀行",
-      badge: "ネット最安級金利 ｜ がん50%＋全疾病保障が無料付帯",
-      isNet: true,
-      branchStatus: "🌐 埼玉県内に営業拠点なし（完全オンライン）",
-      rateTrend: "上げ幅大・迅速改定（利益幅が薄く市場金利の上昇が直撃しやすい）",
-      productName: "住宅ローン（全期間引下げ）",
-      productLink: "https://www.jibunbank.co.jp/products/homeloan/",
-      rateType: "変動金利（au携帯・じぶん電気等セット優遇後）",
-      rate: "年 0.296% 〜 0.389%",
-      baseRate: 0.296,
-      feeType: "percent",
-      flatFee: 0,
-      feeDescShort: "定率 2.20%",
-      danshin: "がん50%保障＋全疾病保障が上乗せ0円 ｜ がん100%+0.05%〜0.10%",
-      fees: "事務取扱手数料 2.20%（税込）",
-      initialFeeDesc: "定率型 2.20%（4,000万円借入時: 880,000円）",
-      switchFeeDesc: "変動から固定への切替手数料 0円（Web手続き）",
-      prepayDesc: "1円から手数料0円（ネット完結でいつでも即時反映）",
-      danshin8Desc: "全疾病保障＋がん50%が金利上乗せなし無料 ｜ がん100%は+0.05%と業界最安",
-      insuranceAdvice: "💡 がん100%団信の上乗せ金利がわずか+0.05%（月約800円）！民間のがん保険（月5,000円）を解約すれば、差し引き月4,200円（35年で約176万円）の純利益が生じます。",
-      pros: "条件達成で年0.2%台の圧倒的超低金利。充実した団信が無料付帯。スマホから即日仮審査が可能。",
-      cons: "埼玉県内に店舗・対面営業拠点なし。注文住宅特有の土地先行決済やつなぎ融資は別会社手続きが必要。"
-    },
-    {
-      id: "sbi_sumishin",
-      name: "住信SBIネット銀行",
-      badge: "ネット最安級金利 ｜ 40歳未満スゴ団信無料付帯",
-      isNet: true,
-      branchStatus: "🌐 埼玉県内に営業拠点なし（完全オンライン）",
-      rateTrend: "上げ幅大・迅速改定（日銀利上げに敏感に連動）",
-      productName: "ネット専用住宅ローン",
-      productLink: "https://www.netbk.co.jp/contents/lineup/home-loan/",
-      rateType: "変動金利（ネット専用住宅ローン）",
-      rate: "年 0.320% 〜 0.398%",
-      baseRate: 0.320,
-      feeType: "percent",
-      flatFee: 0,
-      feeDescShort: "定率 2.20%",
-      danshin: "スゴ団信（40歳未満：全疾病保障＋がん50%が無料） ｜ 3大疾病+0.20%",
-      fees: "事務取扱手数料 2.20%（税込）",
-      initialFeeDesc: "定率型 2.20%（4,000万円借入時: 880,000円）",
-      switchFeeDesc: "変動から固定への切替手数料 0円（Web手続き）",
-      prepayDesc: "1円から手数料0円（スマホアプリから即時繰上返済可能）",
-      danshin8Desc: "スゴ団信（がん・急性心筋梗塞・脳卒中＋重度慢性疾患など全疾病保障）",
-      insuranceAdvice: "💡 40歳未満ならスゴ団信（全疾病保障＋がん50%）が金利上乗せ0円で付帯。民間の総合医療保険をスリム化でき、月々約8,000円（35年で約330万円）を浮かせます。",
-      pros: "業界最安水準の金利。スマホアプリから繰上返済が1円から手数料0円。共働きペアローン対応。",
-      cons: "埼玉県内に店舗・対面営業拠点なし。対面窓口がなく、つなぎ融資のスケジュール管理に注意が必要。"
+      insuranceAdvice: "💡 介護保障付き団信（安心パック）を活用することで民間の介護保険を解約可能。ネット銀行系の中で5年・125%ルールをしっかり完備しているのも安心材料です。",
+      pros: "手数料定額型（一律55,000円〜）が選べる。5年・125%ルール完備。介護保障も付帯。",
+      cons: "埼玉県内に有人店舗なし。対面でのつなぎ融資相談は不可。"
     },
     {
       id: "rakuten_bank",
       name: "楽天銀行",
-      badge: "事務手数料定額33万円 ｜ 楽天ポイント進呈",
+      badge: "事務手数料定額33万円 ｜ 楽天ポイント進呈 ｜ ⚠️ 5年・125%ルールなし",
       isNet: true,
       branchStatus: "🌐 埼玉県内に営業拠点なし（完全オンライン）",
       rateTrend: "⚠️ 5年・125%ルール非適用（金利上昇分が翌月から毎月返済額に即連動）",
       productName: "楽天銀行 住宅ローン（金利選択型）",
       productLink: "https://www.rakuten-bank.co.jp/home-loan/",
       rateType: "変動金利（金利選択型）",
-      rate: "年 0.500% 〜 0.550%",
-      baseRate: 0.500,
+      rate: "年 1.500% 〜 1.650%",
+      baseRate: 1.500,
       feeType: "flat",
       flatFee: 330000,
       feeDescShort: "一律 33.0万円（定額）",
@@ -2584,21 +2809,21 @@
       prepayDesc: "楽天銀行口座から1万円以上で手数料0円",
       danshin8Desc: "がん50%無料付帯 ｜ 8大疾病特約（がん・心筋梗塞・脳卒中＋慢性疾患）",
       insuranceAdvice: "💡 借入額4,000万〜5,000万円以上の施主様なら、手数料定額33万円で諸費用が50万〜80万円即座に浮きます。その浮いた初期費用を自己資金として温存できます。",
-      pros: "借入金額に関わらず事務手数料が一律33万円のため、高額借入では定率2.2%（88万〜110万円）より大幅に諸費用削減可能。",
-      cons: "埼玉県内に営業拠点なし。5年ルール・125%ルールがないため、急激な金利上昇時に毎月返済額が即時増額するリスクがある。"
+      pros: "借入金額に関わらず事務手数料が一律33万円。楽天ポイント進呈。",
+      cons: "埼玉県内に営業拠点なし。5年・125%ルールがないため急激な金利上昇時に返済額が即連動。"
     },
     {
       id: "flat35",
       name: "フラット35（住宅金融支援機構）",
-      badge: "35年完全固定 ｜ 子育てプラス・ZEHで当初5年 最大-1.00%！",
+      badge: "35年完全固定 ｜ 子育てプラス・ZEHで最大-1.00%引下げ ｜ 金利上昇リスク皆無",
       isNet: false,
       branchStatus: "🏠 埼玉県内取扱窓口・提携銀行多数",
       rateTrend: "🔒 完済まで35年間金利変動ゼロ（将来の利上げリスク皆無）",
       productName: "フラット35（子育てプラス）",
       productLink: "https://www.flat35.com/",
       rateType: "全期間固定金利（子育てプラス引下げ適用後）",
-      rate: "当初5年 年 0.450%〜 ｜ 6年目以降 1.450%〜",
-      baseRate: 0.450,
+      rate: "当初5年 年 2.830%〜 ｜ 6年目以降 3.830%〜",
+      baseRate: 2.830,
       feeType: "percent",
       flatFee: 0,
       feeDescShort: "定率 1.10%〜2.20%",
@@ -2608,9 +2833,9 @@
       switchFeeDesc: "金利切替なし（全期間完全固定金利）",
       prepayDesc: "「住・My Note」から1万円単位で手数料0円",
       danshin8Desc: "新機構団信（新3大疾病付機構団信も選択可能）",
-      insuranceAdvice: "💡 35年間金利も返済額も1円も変わらないため、家計の将来計画が完全に確定。民間の教育積立保険や学資保険の収支シミュレーションが最も狂わない安心設計です。",
+      insuranceAdvice: "💡 35年間金利も返済額も1円も変わらないため、家計の将来計画が完全に確定。民間の学資保険や教育積立シミュレーションが最も狂わない安心設計です。",
       pros: "35年間金利が変わらない究極の安心感。年収基準が緩やかで転職直後や自営業でも通りやすい。住ま居るのHEAT20性能で最大金利引下げ適用。",
-      cons: "将来的に金利が低迷し続けた場合、変動金利より総返済額が高くなる可能性がある。"
+      cons: "将来的に低金利が継続した場合、変動金利より総返済額が高くなる可能性がある。"
     }
   ];
 
@@ -2765,7 +2990,7 @@
 
     const container = document.getElementById('banks-ranking-container');
 
-    // ユーザー選択に応じた高度マッチング並び替え（全16行庫対応）
+    // ユーザー選択に応じた高度マッチング並び替え（全17金融機関・完全整合）
     const bankMap = {};
     BANKS_DB.forEach(b => { bankMap[b.id] = b; });
 
@@ -2780,74 +3005,78 @@
         bankMap['saishin']
       ];
     } else if (userAnswers.career === 'business') {
-      // 自営業・個人事業主・法人役員（信金・地銀が最強）
+      // 自営業・個人事業主・法人役員（信金・JA・第二地銀が最強）
       sortedBanks = [
         bankMap['saishin'],
-        bankMap['hanno_shinkin'],
+        bankMap['ome_shinkin'],
         bankMap['kawashin'],
+        bankMap['hanno_shinkin'],
+        bankMap['aokishinkin'],
+        bankMap['jabank_saitama'],
         bankMap['towa_bank'],
-        bankMap['musashino'],
-        bankMap['chuo_rokin']
+        bankMap['musashino']
       ];
     } else if (userAnswers.career === 'new_job') {
-      // 転職直後（ろうきん・信金・フラットが柔軟）
+      // 転職直後（ろうきん・信金・フラットが柔軟審査）
       sortedBanks = [
         bankMap['chuo_rokin'],
         bankMap['hanno_shinkin'],
+        bankMap['kawashin'],
         bankMap['saishin'],
         bankMap['flat35'],
         bankMap['musashino']
       ];
     } else if (userAnswers.career === 'senior_rebuild') {
-      // 建替え・シニア層（対面窓口・手厚い相談）
+      // 建替え・シニア層（対面窓口・敷地内同居・手厚い相談）
       sortedBanks = [
-        bankMap['saitama_resona'],
         bankMap['musashino'],
+        bankMap['ome_shinkin'],
+        bankMap['saitama_resona'],
+        bankMap['jabank_saitama'],
         bankMap['hanno_shinkin'],
-        bankMap['kawashin'],
         bankMap['saishin']
       ];
     } else if (userAnswers.danshin === 'cancer100') {
-      // がん100%・疾病保障重視
+      // がん100%・疾病保障重視（武蔵野銀行は上乗せ0円無料！）
       sortedBanks = [
-        bankMap['saitama_resona'],
-        bankMap['gunma_bank'],
         bankMap['musashino'],
-        bankMap['sony_bank'],
+        bankMap['saitama_resona'],
+        bankMap['au_jibun'],
+        bankMap['gunma_bank'],
         bankMap['ashikaga_bank']
       ];
     } else if (userAnswers.danshin === 'free') {
-      // 金利最安・諸費用重視
+      // 金利最安・諸費用重視（auじぶん、JAバンク、中央ろうきん、SBI新生）
       sortedBanks = [
-        bankMap['gunma_bank'],
         bankMap['au_jibun'],
+        bankMap['jabank_saitama'],
         bankMap['chuo_rokin'],
-        bankMap['musashino'],
-        bankMap['sbi_shinsei']
+        bankMap['sbi_shinsei'],
+        bankMap['gunma_bank'],
+        bankMap['musashino']
       ];
     } else if (userAnswers.danshin === 'couple') {
-      // ペアローン・夫婦連生団信
+      // ペアローン・夫婦連生団信（武蔵野、埼玉りそな、フラット35デュエット）
       sortedBanks = [
         bankMap['musashino'],
         bankMap['saitama_resona'],
-        bankMap['hanno_shinkin'],
         bankMap['flat35'],
-        bankMap['gunma_bank']
+        bankMap['hanno_shinkin'],
+        bankMap['kawashin']
       ];
     } else {
       // 標準マッチング（地元優良金融機関 ＆ ネット銀行ハイブリッド）
       sortedBanks = [
         bankMap['musashino'],
         bankMap['saitama_resona'],
-        bankMap['hanno_shinkin'],
-        bankMap['gunma_bank'],
+        bankMap['au_jibun'],
         bankMap['saishin'],
+        bankMap['hanno_shinkin'],
+        bankMap['kawashin'],
         bankMap['chuo_rokin']
       ];
     }
-    // 未定義ガード
     sortedBanks = sortedBanks.filter(Boolean);
-    // 足りない場合は残りを追加
     BANKS_DB.forEach(b => {
       if (!sortedBanks.includes(b)) sortedBanks.push(b);
     });
