@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>【夫婦の好み擦り合わせAI診断】住宅デザインスタイル21選 マッチングナビ | 株式会社住ま居る</title>
+  <meta name="description" content="言葉では伝わらない理想の住まいの空気感を可視化！シンプルモダン、ジャパンディ、北欧、和モダンなど住宅デザイン21選から夫婦の好みを30秒で直感判定。意見のズレを解消する自然素材ハイブリッド設計アドバイス＆SmileStudioパース連携付き。">
+  <link rel="canonical" href="https://t-smile.co.jp/style-matcher/">
+  <link rel="icon" href="/favicon.ico">
+
+  <!-- Open Graph / Meta -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="【夫婦の好み擦り合わせAI診断】住宅デザインスタイル21選 マッチングナビ | 株式会社住ま居る">
+  <meta property="og:description" content="写真を見るだけで好みのズレが即座にわかる！シンプルモダン、ジャパンディ、北欧、和モダンなど住宅デザイン21選から夫婦の好みを30秒で直感判定。">
+  <meta property="og:url" content="https://t-smile.co.jp/style-matcher/">
+  <meta property="og:image" content="https://t-smile.co.jp/images/styles/japandi_thumb.webp">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800;900&family=Outfit:wght@500;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --primary-light: #e0f2fe;
+      --accent: #f59e0b;
+      --accent-hover: #d97706;
+      --success: #10b981;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --bg-page: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --font-base: 'Noto Sans JP', sans-serif;
+      --font-outfit: 'Outfit', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-base);
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem;
+    }
+
+    /* Hero Section */
+    .hero-box {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f766e 100%);
+      color: #ffffff;
+      border-radius: 20px;
+      padding: 2.2rem 1.8rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+    .hero-box::after {
+      content: '🏡';
+      position: absolute;
+      right: 15px;
+      bottom: -25px;
+      font-size: 7rem;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(45, 212, 191, 0.2);
+      border: 1px solid rgba(45, 212, 191, 0.5);
+      color: #5eead4;
+      font-size: 0.8rem;
+      font-weight: 800;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 0.9rem;
+    }
+    .hero-title {
+      font-size: 1.85rem;
+      font-weight: 900;
+      line-height: 1.35;
+      margin-bottom: 0.8rem;
+      letter-spacing: -0.02em;
+    }
+    .hero-desc {
+      color: #cbd5e1;
+      font-size: 0.94rem;
+      line-height: 1.7;
+      max-width: 760px;
+      margin: 0 auto 1.5rem;
+    }
+
+    /* Mode Switcher Buttons */
+    .mode-switcher {
+      display: inline-flex;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 4px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      gap: 4px;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .mode-btn {
+      padding: 8px 20px;
+      border-radius: 24px;
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      font-size: 0.88rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mode-btn.active {
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+    }
+
+    /* Category Filter Tabs */
+    .category-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 1.5rem;
+      scrollbar-width: none;
+    }
+    .category-tabs::-webkit-scrollbar {
+      display: none;
+    }
+    .cat-tab {
+      background: #ffffff;
+      border: 1.5px solid var(--border);
+      border-radius: 30px;
+      padding: 8px 18px;
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .cat-tab:hover {
+      border-color: #94a3b8;
+    }
+    .cat-tab.active {
+      background: #0f172a;
+      color: #ffffff;
+      border-color: #0f172a;
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.2);
+    }
+
+    /* Turn Banner for Pair Mode */
+    .turn-indicator {
+      display: none;
+      background: linear-gradient(135deg, #fef3c7, #fed7aa);
+      border: 1.5px solid #f59e0b;
+      border-radius: 12px;
+      padding: 0.85rem 1.2rem;
+      margin-bottom: 1.5rem;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-weight: 800;
+      color: #9a3412;
+      box-shadow: 0 3px 10px rgba(245, 158, 11, 0.15);
+    }
+    .turn-indicator.active {
+      display: flex;
+    }
+
+    /* Style Grid */
+    .style-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    @media (max-width: 640px) {
+      .style-grid {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+      }
+    }
+
+    /* Style Card */
+    .style-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1.5px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .style-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      border-color: #cbd5e1;
+    }
+    .style-card.evaluated-love {
+      border: 2.5px solid #f43f5e;
+      background: #fff1f2;
+    }
+    .style-card.evaluated-like {
+      border: 2.5px solid #0ea5e9;
+      background: #f0f9ff;
+    }
+    .style-card.evaluated-dislike {
+      border: 1.5px solid #cbd5e1;
+      opacity: 0.65;
+      background: #f8fafc;
+    }
+
+    /* Media Box */
+    .card-media-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #f1f5f9;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease, opacity 0.3s ease;
+      cursor: pointer;
+      display: block;
+    }
+    .card-media-box:hover .card-img {
+      transform: scale(1.03);
+    }
+    .media-type-bar {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      display: flex;
+      gap: 4px;
+      z-index: 2;
+    }
+    .type-pill {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(4px);
+      color: #ffffff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .type-pill:hover, .type-pill.active {
+      background: #0284c7;
+      border-color: #38bdf8;
+    }
+    .zoom-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(4px);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      z-index: 2;
+      transition: all 0.2s;
+    }
+    .zoom-btn:hover {
+      background: #f59e0b;
+      border-color: #fbbf24;
+      color: #0f172a;
+    }
+
+    /* Card Body */
+    .card-body {
+      padding: 1.1rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .style-category-tag {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #0284c7;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 2px;
+    }
+    .style-name-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .style-title {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: var(--text-main);
+    }
+    .style-en {
+      font-size: 0.76rem;
+      color: #94a3b8;
+      font-family: var(--font-outfit);
+      font-weight: 700;
+    }
+    .style-catch {
+      font-size: 0.8rem;
+      color: #b45309;
+      font-weight: 800;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .style-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 12px;
+      flex-grow: 1;
+    }
+
+    /* 3 Action Vote Buttons */
+    .vote-box {
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+    .vote-btn {
+      padding: 8px 4px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: #ffffff;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+    .vote-btn-icon {
+      font-size: 1.1rem;
+    }
+    .vote-btn.btn-love:hover, .vote-btn.btn-love.selected {
+      background: #f43f5e;
+      color: #ffffff;
+      border-color: #e11d48;
+      box-shadow: 0 3px 8px rgba(244, 63, 94, 0.3);
+    }
+    .vote-btn.btn-like:hover, .vote-btn.btn-like.selected {
+      background: #0284c7;
+      color: #ffffff;
+      border-color: #0369a1;
+      box-shadow: 0 3px 8px rgba(2, 132, 199, 0.3);
+    }
+    .vote-btn.btn-dislike:hover, .vote-btn.btn-dislike.selected {
+      background: #64748b;
+      color: #ffffff;
+      border-color: #475569;
+    }
+
+    /* Fixed Bottom Action Floating Bar */
+    .floating-action-bar {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      border-radius: 40px;
+      padding: 10px 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 900;
+      max-width: 92vw;
+      width: auto;
+    }
+    .bar-stat {
+      color: #ffffff;
+      font-size: 0.84rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .bar-stat span {
+      color: #38bdf8;
+      font-family: var(--font-outfit);
+      font-size: 1.1rem;
+    }
+    .btn-show-result {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      border: none;
+      border-radius: 30px;
+      padding: 9px 22px;
+      font-size: 0.9rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .btn-show-result:hover {
+      transform: scale(1.03);
+    }
+    .btn-show-result:disabled {
+      background: #475569;
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: 0.7;
+      transform: none;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-card {
+      background: #ffffff;
+      border-radius: 20px;
+      max-width: 960px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+    .modal-header {
+      padding: 1.2rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: #ffffff;
+      z-index: 10;
+    }
+    .modal-close-btn {
+      background: #f1f5f9;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      transition: all 0.2s;
+    }
+    .modal-close-btn:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    /* Result Modal Specific */
+    .score-banner {
+      background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+      border: 2px solid #86efac;
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .score-circle {
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: #059669;
+      font-family: var(--font-outfit);
+      line-height: 1;
+      margin: 8px 0;
+    }
+
+    .top-style-card {
+      background: #ffffff;
+      border: 2px solid #bae6fd;
+      border-radius: 14px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08);
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    @media (max-width: 600px) {
+      .top-style-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+    .top-style-img {
+      width: 140px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+    @media (max-width: 600px) {
+      .top-style-img {
+        width: 100%;
+        height: 140px;
+      }
+    }
+
+    .action-cta-wrap {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+      justify-content: center;
+    }
+    .btn-cta-primary {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      color: #0f172a;
+      border: none;
+      border-radius: 30px;
+      padding: 12px 28px;
+      font-size: 0.95rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+      transition: transform 0.2s;
+    }
+    .btn-cta-primary:hover {
+      transform: translateY(-2px);
+    }
+    .btn-cta-secondary {
+      background: #ffffff;
+      color: #0284c7;
+      border: 2px solid #0284c7;
+      border-radius: 30px;
+      padding: 10px 22px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 2-Tier Header -->
+<header style="background: rgba(27, 67, 50, 0.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 2px solid #f59e0b; padding: 0.6rem 1.2rem; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.35);">
+  <div style="max-width: min(98vw, 1720px); margin: 0 auto; display: flex; flex-direction: column; gap: 0.4rem;">
+    <!-- Tier 1: Brand & AI Services -->
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+      <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 3px; flex-shrink: 0;">
+        <a href="/index.html" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #ffffff;">
+          <span style="font-size: 1.3rem; font-weight: 900; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">家づくりAIラボ</span>
+          <span style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 6px; border-radius: 4px; font-weight: 800;">by 住ま居る</span>
+        </a>
+        <div style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.68rem; color: #cbd5e1; background: rgba(0, 0, 0, 0.32); border: 1px solid rgba(255, 255, 255, 0.12); padding: 1px 7px; border-radius: 4px; white-space: nowrap;">
+          <span style="color: #38bdf8; font-weight: 700;">施工エリア：埼玉県全域・一部東京都</span>
+          <span style="opacity: 0.3;">|</span>
+          <span>創業30年・累計800棟</span>
+          <span style="opacity: 0.3;">|</span>
+          <span style="color: #6ee7b7;">般-8 第60650号</span>
+        </div>
+      </div>
+
+      <!-- AI Suite Quick Links -->
+      <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end;">
+        <span style="color: #fde68a; font-size: 0.75rem; font-weight: 700; margin-right: 2px; white-space: nowrap;">🏡 AIツール:</span>
+        <a href="/style-matcher/" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #f43f5e, #fb7185); color: #ffffff; box-shadow: 0 2px 8px rgba(244,63,94,0.4); white-space: nowrap;">🎨 スタイル診断 (現在地)</a>
+        <a href="/index.html#floorplan-studio" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); white-space: nowrap;">📐 3Dプラン選定</a>
+        <a href="/madori-sketch/" target="_blank" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; box-shadow: 0 2px 8px rgba(16,185,129,0.35); white-space: nowrap;">✏️ 間取り工房 ↗</a>
+        <a href="/smilestudio.html" target="_blank" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; box-shadow: 0 2px 8px rgba(245,158,11,0.4); white-space: nowrap;">🎨 3Dパース工房 ↗</a>
+        <a href="/mortgage/index.html" style="font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-decoration: none; background: rgba(2, 132, 199, 0.15); color: #38bdf8; border: 1px solid rgba(2, 132, 199, 0.3); white-space: nowrap;">🏦 住宅ローン診断 ↗</a>
+      </div>
+    </div>
+
+    <!-- Tier 2: Main Links -->
+    <div style="display: flex; align-items: center; gap: 14px; overflow-x: auto; padding-top: 4px; border-top: 1px solid rgba(255,255,255,0.12); font-size: 0.78rem; font-weight: 700; white-space: nowrap;">
+      <a href="/index.html" style="color: #cbd5e1; text-decoration: none;">🏠 ホーム</a>
+      <a href="/index.html#our-philosophy" style="color: #cbd5e1; text-decoration: none;">🏛️ こだわり（芳彩・かぐや）</a>
+      <a href="/index.html#craftsmanship" style="color: #cbd5e1; text-decoration: none;">🔨 施工実例（大工手刻み×800棟）</a>
+      <a href="/about/" style="color: #34d399; text-decoration: none; font-weight: 800;">🛡️ 信用実証 (CredLayer)</a>
+      <a href="/catalog/" style="color: #6ee7b7; text-decoration: none; font-weight: 800;">📘 工学カタログ</a>
+      <a href="/index.html#dashboard" style="color: #38bdf8; text-decoration: none; font-weight: 800;">👤 家カルテ</a>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <!-- Hero Section -->
+  <div class="hero-box">
+    <div class="hero-badge">
+      <span>✨</span> 言葉では伝わらない「理想の空気感」を30秒で可視化
+    </div>
+    <h1 class="hero-title">
+      夫婦の好み擦り合わせAI診断<br>
+      <span style="font-size: 1.3rem; font-weight: 800; color: #fde68a;">住宅デザインスタイル21選 マッチングナビ</span>
+    </h1>
+    <p class="hero-desc">
+      「夫はシンプルモダン希望、妻は北欧ナチュラル希望」など、家づくり初期に最も多いのがご夫婦間でのイメージのズレ。<br>
+      写真を見るだけで直感判定！おふたりの共通スイートスポットと、意見が分かれたときの<strong>「自然素材ハイブリッド調和設計」</strong>をAIが即座に提案します。
+    </p>
+
+    <!-- Mode Selector -->
+    <div class="mode-switcher">
+      <button type="button" class="mode-btn active" id="btn-mode-single" onclick="setMode('single')">
+        <span>👤</span> ひとりで直感診断
+      </button>
+      <button type="button" class="mode-btn" id="btn-mode-pair" onclick="setMode('pair')">
+        <span>👫</span> 夫婦で擦り合わせ診断
+      </button>
+    </div>
+  </div>
+
+  <!-- Pair Mode Turn Indicator -->
+  <div id="pair-turn-indicator" class="turn-indicator">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span id="turn-icon" style="font-size: 1.4rem;">👨</span>
+      <div>
+        <strong id="turn-label">現在：パートナー1（夫）の回答ターンです</strong>
+        <div style="font-size: 0.76rem; font-weight: 500; color: #b45309;">
+          直感で「好き・いいかも・苦手」を選んでください。回答後にパートナー2（妻）へ交代します。
+        </div>
+      </div>
+    </div>
+    <button type="button" id="btn-next-partner" onclick="switchPartner()" style="display: none; background: #0f172a; color: #fff; border: none; padding: 6px 16px; border-radius: 20px; font-size: 0.82rem; font-weight: 800; cursor: pointer;">
+      パートナー2へ交代 ➜
+    </button>
+  </div>
+
+  <!-- Category Filter Tabs -->
+  <div class="category-tabs">
+    <button type="button" class="cat-tab active" data-cat="all" onclick="filterCategory('all')">
+      <span>🌟</span> すべて（21選）
+    </button>
+    <button type="button" class="cat-tab" data-cat="modern_minimal" onclick="filterCategory('modern_minimal')">
+      <span>🏢</span> 1. モダン・ミニマル系（7選）
+    </button>
+    <button type="button" class="cat-tab" data-cat="traditional_western" onclick="filterCategory('traditional_western')">
+      <span>🏰</span> 2. クラシック・洋風系（5選）
+    </button>
+    <button type="button" class="cat-tab" data-cat="natural_country" onclick="filterCategory('natural_country')">
+      <span>🌿</span> 3. ナチュラル・カントリー系（4選）
+    </button>
+    <button type="button" class="cat-tab" data-cat="japanese_resort" onclick="filterCategory('japanese_resort')">
+      <span>⛩️</span> 4. 和風・エキゾチック系（5選）
+    </button>
+  </div>
+
+  <!-- Cards Grid -->
+  <div id="styles-grid" class="style-grid">
+    <!-- Populated dynamically by JavaScript -->
+  </div>
+</main>
+
+<!-- Floating Action Bar -->
+<div class="floating-action-bar">
+  <div class="bar-stat">
+    回答済: <span id="stat-answered">0</span> / 21
+  </div>
+  <button type="button" id="btn-calculate-result" class="btn-show-result" onclick="calculateAndShowResult()" disabled>
+    🎉 診断結果を見る ➜
+  </button>
+</div>
+
+<!-- Modal 1: Image Zoom Modal -->
+<div id="zoom-modal" class="modal-overlay" onclick="closeZoomModal(event)">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <span id="zoom-cat-badge" style="font-size: 0.72rem; color: #0284c7; font-weight: 800;">CATEGORY</span>
+        <h3 id="zoom-title" style="font-size: 1.25rem; font-weight: 900; color: #0f172a;">スタイル詳細</h3>
+      </div>
+      <button type="button" class="modal-close-btn" onclick="closeZoomModal()">✕</button>
+    </div>
+    <div style="padding: 1.2rem;">
+      <div style="margin-bottom: 1rem; border-radius: 12px; overflow: hidden; background: #0f172a;">
+        <img id="zoom-img" src="" alt="詳細写真" style="width: 100%; height: auto; display: block;">
+      </div>
+      <p id="zoom-desc" style="font-size: 0.9rem; color: #334155; line-height: 1.7; margin-bottom: 1rem;"></p>
+      
+      <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
+        <h4 style="font-size: 0.85rem; font-weight: 800; color: #0284c7; margin-bottom: 6px;">🌿 住ま居る仕様で叶える自然素材・マテリアル</h4>
+        <p id="zoom-materials" style="font-size: 0.82rem; color: #475569; line-height: 1.6; margin: 0;"></p>
+      </div>
+
+      <div style="text-align: center;">
+        <button type="button" class="btn-cta-secondary" onclick="closeZoomModal()">閉じる</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 2: Diagnosis Result Modal -->
+<div id="result-modal" class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 style="font-size: 1.25rem; font-weight: 900; color: #0f172a;">
+        🎯 住宅スタイル診断結果
+      </h3>
+      <button type="button" class="modal-close-btn" onclick="closeResultModal()">✕</button>
+    </div>
+    <div style="padding: 1.5rem;" id="result-content">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer style="background: #1b4332; color: #cbd5e1; padding: 3rem 1.5rem 2rem; margin-top: 4rem; border-top: 2px solid #f59e0b;">
+  <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+    <p style="font-size: 0.85rem; line-height: 1.7; margin-bottom: 1rem;">
+      © 2026 株式会社住ま居る / スマイチ All Rights Reserved.<br>
+      「芳彩（かぐや）ー 結露しない家」 / 埼玉県鶴ヶ島市脚折176番地5<br>
+      手刻み大工×建築士のタッグによるミリ単位自由設計 / 呼吸する珪藻土・無垢材 / HEAT20 G2・G3 / 耐震等級3
+    </p>
+    <div style="display: flex; justify-content: center; gap: 16px; font-size: 0.8rem;">
+      <a href="/index.html" style="color: #cbd5e1; text-decoration: underline;">トップページ</a>
+      <a href="/index.html#floorplan-studio" style="color: #cbd5e1; text-decoration: underline;">3Dプラン選定</a>
+      <a href="/smilestudio.html" style="color: #cbd5e1; text-decoration: underline;">AI 3Dパース工房</a>
+      <a href="/mortgage/index.html" style="color: #cbd5e1; text-decoration: underline;">住宅ローン診断</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  let STYLES_DB = [];
+  let currentMode = 'single'; // 'single' or 'pair'
+  let currentPartner = 1; // 1 (夫/P1) or 2 (妻/P2)
+  let votesP1 = {}; // { styleId: 2 (love), 1 (like), 0 (dislike) }
+  let votesP2 = {};
+
+  // Fetch styles DB on load
+  async function initApp() {
+    try {
+      const res = await fetch('/data/housing_styles_db.json');
+      STYLES_DB = await res.json();
+      renderGrid('all');
+      updateProgress();
+    } catch (e) {
+      console.error("Failed to load housing styles DB:", e);
+    }
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    document.getElementById('btn-mode-single').classList.toggle('active', mode === 'single');
+    document.getElementById('btn-mode-pair').classList.toggle('active', mode === 'pair');
+
+    const turnInd = document.getElementById('pair-turn-indicator');
+    if (mode === 'pair') {
+      turnInd.classList.add('active');
+      currentPartner = 1;
+      updateTurnUI();
+    } else {
+      turnInd.classList.remove('active');
+    }
+    renderGrid('all');
+    updateProgress();
+  }
+
+  function updateTurnUI() {
+    const label = document.getElementById('turn-label');
+    const icon = document.getElementById('turn-icon');
+    const btnNext = document.getElementById('btn-next-partner');
+    if (currentPartner === 1) {
+      icon.textContent = '👨';
+      label.textContent = '現在：パートナー1（夫）の回答ターンです';
+      btnNext.style.display = 'inline-block';
+      btnNext.textContent = 'パートナー2（妻）へ交代 ➜';
+    } else {
+      icon.textContent = '👩';
+      label.textContent = '現在：パートナー2（妻）の回答ターンです';
+      btnNext.style.display = 'none';
+    }
+  }
+
+  function switchPartner() {
+    currentPartner = 2;
+    updateTurnUI();
+    renderGrid('all');
+    updateProgress();
+    window.scrollTo({ top: 200, behavior: 'smooth' });
+  }
+
+  function filterCategory(cat) {
+    document.querySelectorAll('.cat-tab').forEach(b => {
+      b.classList.toggle('active', b.dataset.cat === cat);
+    });
+    renderGrid(cat);
+  }
+
+  function renderGrid(catFilter) {
+    const grid = document.getElementById('styles-grid');
+    grid.innerHTML = '';
+
+    const currentVotes = (currentMode === 'pair' && currentPartner === 2) ? votesP2 : votesP1;
+
+    const filtered = catFilter === 'all' 
+      ? STYLES_DB 
+      : STYLES_DB.filter(s => s.category === catFilter);
+
+    filtered.forEach(style => {
+      const card = document.createElement('div');
+      card.className = 'style-card';
+      card.id = `card-${style.id}`;
+
+      const userVote = currentVotes[style.id];
+      if (userVote === 2) card.classList.add('evaluated-love');
+      else if (userVote === 1) card.classList.add('evaluated-like');
+      else if (userVote === 0) card.classList.add('evaluated-dislike');
+
+      card.innerHTML = `
+        <div class="card-media-box">
+          <img src="/images/styles/${style.id}_thumb.webp" class="card-img" id="img-${style.id}" alt="${style.name}" onclick="openZoomModal('${style.id}')" loading="lazy">
+          <div class="media-type-bar">
+            <span class="type-pill active" onclick="switchMedia('${style.id}', 'thumb', this)">コラージュ</span>
+            <span class="type-pill" onclick="switchMedia('${style.id}', 'ldk', this)">LDK</span>
+            <span class="type-pill" onclick="switchMedia('${style.id}', 'exterior', this)">外観</span>
+          </div>
+          <button type="button" class="zoom-btn" onclick="openZoomModal('${style.id}')">
+            <span>🔍</span> 全体拡大
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="style-category-tag">${style.categoryName}</div>
+          <div class="style-name-row">
+            <h3 class="style-title">${style.name}</h3>
+            <span class="style-en">${style.enName}</span>
+          </div>
+          <div class="style-catch">${style.catch}</div>
+          <p class="style-desc">${style.description}</p>
+          <div class="vote-box">
+            <button type="button" class="vote-btn btn-love ${userVote === 2 ? 'selected' : ''}" onclick="vote('${style.id}', 2)">
+              <span class="vote-btn-icon">❤️</span>
+              <span>大好き・本命</span>
+            </button>
+            <button type="button" class="vote-btn btn-like ${userVote === 1 ? 'selected' : ''}" onclick="vote('${style.id}', 1)">
+              <span class="vote-btn-icon">😊</span>
+              <span>いいかも</span>
+            </button>
+            <button type="button" class="vote-btn btn-dislike ${userVote === 0 ? 'selected' : ''}" onclick="vote('${style.id}', 0)">
+              <span class="vote-btn-icon">✖️</span>
+              <span>ちょっと違う</span>
+            </button>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function switchMedia(styleId, type, btnElem) {
+    const img = document.getElementById(`img-${styleId}`);
+    if (!img) return;
+    img.src = `/images/styles/${styleId}_${type}.webp`;
+
+    const parent = btnElem.parentElement;
+    parent.querySelectorAll('.type-pill').forEach(p => p.classList.remove('active'));
+    btnElem.classList.add('active');
+  }
+
+  function vote(styleId, score) {
+    if (currentMode === 'pair' && currentPartner === 2) {
+      votesP2[styleId] = score;
+    } else {
+      votesP1[styleId] = score;
+    }
+
+    const card = document.getElementById(`card-${styleId}`);
+    if (card) {
+      card.classList.remove('evaluated-love', 'evaluated-like', 'evaluated-dislike');
+      if (score === 2) card.classList.add('evaluated-love');
+      else if (score === 1) card.classList.add('evaluated-like');
+      else if (score === 0) card.classList.add('evaluated-dislike');
+
+      const btns = card.querySelectorAll('.vote-btn');
+      btns.forEach(b => b.classList.remove('selected'));
+      if (score === 2) btns[0].classList.add('selected');
+      else if (score === 1) btns[1].classList.add('selected');
+      else if (score === 0) btns[2].classList.add('selected');
+    }
+
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const currentVotes = (currentMode === 'pair' && currentPartner === 2) ? votesP2 : votesP1;
+    const answeredCount = Object.keys(currentVotes).length;
+    document.getElementById('stat-answered').textContent = answeredCount;
+
+    const btnCalc = document.getElementById('btn-calculate-result');
+    // Enable if at least 3 styles are evaluated
+    if (answeredCount >= 3) {
+      btnCalc.disabled = false;
+      btnCalc.textContent = `🎉 診断結果を見る (${answeredCount}件判定済) ➜`;
+    } else {
+      btnCalc.disabled = true;
+      btnCalc.textContent = `あと${3 - answeredCount}つ選ぶと結果表示 ➜`;
+    }
+  }
+
+  function openZoomModal(styleId) {
+    const style = STYLES_DB.find(s => s.id === styleId);
+    if (!style) return;
+
+    document.getElementById('zoom-cat-badge').textContent = style.categoryName;
+    document.getElementById('zoom-title').textContent = `${style.name}（${style.enName}）`;
+    document.getElementById('zoom-img').src = `/images/styles/${style.id}_full.webp`;
+    document.getElementById('zoom-desc').textContent = `${style.description} ${style.catch}`;
+    document.getElementById('zoom-materials').textContent = style.materials;
+
+    document.getElementById('zoom-modal').classList.add('active');
+  }
+
+  function closeZoomModal(e) {
+    if (e && e.target !== e.currentTarget && !e.target.classList.contains('modal-close-btn')) return;
+    document.getElementById('zoom-modal').classList.remove('active');
+  }
+
+  function closeResultModal() {
+    document.getElementById('result-modal').classList.remove('active');
+  }
+
+  function calculateAndShowResult() {
+    const content = document.getElementById('result-content');
+    
+    if (currentMode === 'single') {
+      renderSingleResult(content);
+    } else {
+      renderPairResult(content);
+    }
+
+    document.getElementById('result-modal').classList.add('active');
+  }
+
+  function renderSingleResult(container) {
+    const sorted = Object.entries(votesP1)
+      .sort((a, b) => b[1] - a[1])
+      .map(([id]) => STYLES_DB.find(s => s.id === id))
+      .filter(Boolean);
+
+    const top3 = sorted.slice(0, 3);
+    const top1 = top3[0] || STYLES_DB[0];
+
+    let html = `
+      <div class="score-banner">
+        <span style="font-size: 0.8rem; background: #dcfce7; color: #15803d; padding: 3px 10px; border-radius: 20px; font-weight: 800;">あなたに最も似合うテイスト</span>
+        <div class="score-circle">${top1.name}</div>
+        <p style="font-size: 0.88rem; color: #166534; font-weight: 700; margin: 0;">${top1.catch}</p>
+      </div>
+
+      <h4 style="font-size: 1rem; font-weight: 900; margin-bottom: 0.8rem; color: #0f172a;">👑 あなたのお気に入り TOP3</h4>
+    `;
+
+    top3.forEach((s, idx) => {
+      html += `
+        <div class="top-style-card">
+          <img src="/images/styles/${s.id}_thumb.webp" class="top-style-img" alt="${s.name}">
+          <div>
+            <div style="font-size: 0.76rem; color: #0284c7; font-weight: 800;">第${idx + 1}位 ｜ ${s.categoryName}</div>
+            <h4 style="font-size: 1.15rem; font-weight: 900; margin: 2px 0 4px;">${s.name}</h4>
+            <p style="font-size: 0.82rem; color: #475569; line-height: 1.5; margin: 0;">${s.description}</p>
+            <div style="font-size: 0.78rem; color: #b45309; font-weight: 700; margin-top: 4px;">🌿 おすすめ素材: ${s.materials}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `
+      <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 1.2rem; margin-top: 1.2rem;">
+        <h4 style="font-size: 0.95rem; font-weight: 800; color: #0369a1; margin-bottom: 6px;">💡 建築士からのワンポイント提案</h4>
+        <p style="font-size: 0.84rem; color: #334155; line-height: 1.7; margin: 0;">
+          第1位の「${top1.name}」は、住ま居るの標準躯体（無垢材×呼吸する珪藻土×HEAT20 G2/G3外皮）と相性抜群です。
+          無垢材の色味（オーク・杉・ヒノキ）や照明計画を調整することで、飽きのこない上質な空間をミリ単位で自由設計できます。
+        </p>
+      </div>
+
+      <div class="action-cta-wrap">
+        <a href="/smilestudio.html?style=${top1.id}" target="_blank" class="btn-cta-primary">
+          <span>🎨</span> このスタイルでAI 3Dパースを作る ↗
+        </a>
+        <button type="button" class="btn-cta-secondary" onclick="saveToHouseCarte('${top1.id}', '${top1.name}')">
+          <span>📁</span> 家カルテに保存
+        </button>
+        <button type="button" class="btn-cta-secondary" onclick="shareResult('${top1.name}')">
+          <span>🔗</span> 結果URLを共有 / コピー
+        </button>
+      </div>
+    `;
+
+    container.innerHTML = html;
+  }
+
+  function renderPairResult(container) {
+    // Calculate alignment
+    const allEvaluatedKeys = Array.from(new Set([...Object.keys(votesP1), ...Object.keys(votesP2)]));
+    let matchScore = 0;
+    let totalCompared = 0;
+    let bothLove = [];
+    let conflict = [];
+
+    allEvaluatedKeys.forEach(k => {
+      const v1 = votesP1[k] !== undefined ? votesP1[k] : 1;
+      const v2 = votesP2[k] !== undefined ? votesP2[k] : 1;
+      totalCompared++;
+      
+      const diff = Math.abs(v1 - v2);
+      if (diff === 0) matchScore += 100;
+      else if (diff === 1) matchScore += 65;
+      else if (diff === 2) matchScore += 20;
+
+      const styleObj = STYLES_DB.find(s => s.id === k);
+      if (v1 === 2 && v2 === 2) {
+        bothLove.push(styleObj);
+      } else if ((v1 === 2 && v2 === 0) || (v1 === 0 && v2 === 2)) {
+        conflict.push({ style: styleObj, p1: v1, p2: v2 });
+      }
+    });
+
+    const finalPercent = totalCompared > 0 ? Math.round(matchScore / totalCompared) : 85;
+
+    let html = `
+      <div class="score-banner" style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); border-color: #fdba74;">
+        <span style="font-size: 0.8rem; background: #fed7aa; color: #9a3412; padding: 3px 10px; border-radius: 20px; font-weight: 800;">夫婦の好み一致度判定</span>
+        <div class="score-circle" style="color: #ea580c;">${finalPercent}%</div>
+        <p style="font-size: 0.88rem; color: #9a3412; font-weight: 700; margin: 0;">
+          ${finalPercent >= 80 ? '息ぴったり！おふたりの理想の空気感はほぼ完全に重なっています。' : '個性が豊か！異なる好みを調和させるハイブリッド設計が最も輝くペアです。'}
+        </p>
+      </div>
+    `;
+
+    if (bothLove.length > 0) {
+      html += `
+        <h4 style="font-size: 1rem; font-weight: 900; margin-bottom: 0.8rem; color: #059669;">💖 おふたりとも大絶賛の共通スタイル</h4>
+      `;
+      bothLove.forEach(s => {
+        html += `
+          <div class="top-style-card" style="border-color: #86efac; background: #f0fdf4;">
+            <img src="/images/styles/${s.id}_thumb.webp" class="top-style-img" alt="${s.name}">
+            <div>
+              <div style="font-size: 0.76rem; color: #166534; font-weight: 800;">満場一致 ｜ ${s.categoryName}</div>
+              <h4 style="font-size: 1.15rem; font-weight: 900; margin: 2px 0 4px; color: #166534;">${s.name}</h4>
+              <p style="font-size: 0.82rem; color: #334155; line-height: 1.5; margin: 0;">${s.description}</p>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    if (conflict.length > 0) {
+      html += `
+        <div style="background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 14px; padding: 1.2rem; margin: 1.2rem 0;">
+          <h4 style="font-size: 0.95rem; font-weight: 900; color: #1e40af; margin-bottom: 6px;">
+            ⚖️ 意見が分かれたポイントとハイブリッド調和提案
+          </h4>
+          <p style="font-size: 0.82rem; color: #1e3a8a; line-height: 1.6; margin-bottom: 8px;">
+            例えば「外観は夫の好むシャープなシンプルモダン（黒ガルバ）」にしつつ、「LDK・寝室は妻の好む温もりある北欧・ジャパンディ（無垢床・珪藻土）」にするハイブリッド設計なら、おふたりの理想を100%両立できます。
+          </p>
+        </div>
+      `;
+    }
+
+    const leadStyle = bothLove[0] || STYLES_DB[0];
+
+    html += `
+      <div class="action-cta-wrap">
+        <a href="/smilestudio.html?style=${leadStyle.id}" target="_blank" class="btn-cta-primary">
+          <span>🎨</span> 共通スタイル（${leadStyle.name}）でAI 3Dパースを作る ↗
+        </a>
+        <button type="button" class="btn-cta-secondary" onclick="saveToHouseCarte('${leadStyle.id}', '${leadStyle.name}（一致度${finalPercent}%）')">
+          <span>📁</span> 家カルテに保存
+        </button>
+        <button type="button" class="btn-cta-secondary" onclick="shareResult('${leadStyle.name}')">
+          <span>📲</span> 夫婦の診断結果URLをコピー / LINE共有
+        </button>
+      </div>
+    `;
+
+    container.innerHTML = html;
+  }
+
+  function saveToHouseCarte(styleId, styleName) {
+    try {
+      let carte = {};
+      const raw = localStorage.getItem('smile_house_carte_data');
+      if (raw) {
+        carte = JSON.parse(raw);
+      }
+      carte.savedStyle = {
+        styleId: styleId,
+        styleName: styleName,
+        savedAt: new Date().toISOString()
+      };
+      localStorage.setItem('smile_house_carte_data', JSON.stringify(carte));
+      alert(`【家カルテに保存しました】\nご希望のスタイル「${styleName}」を家カルテにストックしました。\nマイページ（家カルテ）からいつでも確認できます。`);
+    } catch(e) {
+      alert(`家カルテに「${styleName}」を一時保存しました。`);
+    }
+  }
+
+  function shareResult(styleName) {
+    const url = window.location.href;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(() => {
+        alert(`【共有URLをコピーしました】\nLINEやメモ帳に貼り付けてパートナーとご共有ください！\n\n診断スタイル: ${styleName}`);
+      }).catch(() => {
+        window.prompt('以下のURLをコピーして共有してください：', url);
+      });
+    } else {
+      window.prompt('以下のURLをコピーして共有してください：', url);
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', initApp);
+</script>
+
+</body>
+</html>

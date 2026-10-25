@@ -1,20 +1,42 @@
 {
-  "version": "2.15.0",
+  "version": "2.16.0",
   "buildDate": "2026-10-25",
-  "releaseName": "Production Release v2.15.0 - Financial Institutions Full Coverage, Monthly Crawler & SEO/AIO Master Deployment",
+  "releaseName": "Feature Release v2.16.0 - Mortgage Width Stabilization, Couple Style Matcher & SmileStudio Bridge",
   "components": {
     "madoriSketch": "2.6.2",
-    "smileStudio": "2.6.1",
+    "smileStudio": "2.7.0",
+    "styleMatcher": "1.0.0",
     "bubblePlan": "2.0.0",
     "speedPlanner": "2.2.0",
     "knowledgeVideoPortal": "1.8.1",
     "subsidyNavi": "2.6.0",
-    "mortgageDiagnosis": "2.7.0",
+    "mortgageDiagnosis": "2.7.2",
     "thermalBot": "2.6.0",
     "plansSSG": "2.8.0",
     "domEngine": "1.1.0"
   },
   "changelog": [
+    {
+      "version": "2.16.0",
+      "date": "2026-10-25",
+      "title": "住宅ローン診断レイアウト安定化＆住宅デザインスタイル21選 マッチングナビ新設",
+      "changes": [
+        "【住宅ローン診断】HTMLタグ構造の不整合を解消し、コンテナ幅100%崩れを完全修正・安定化",
+        "【住宅スタイル21選】直感診断＆夫婦ペア擦り合わせ診断ツール（/style-matcher/）を新設（WebP 84アセット）",
+        "【AI 3Dパース工房連携】スタイル診断結果からワンタップでSmileStudioプロンプトへ自動連動",
+        "【SEO/AIO】サイトマップ（555URL）およびllms-full.txt第7章へスタイルナビを完全同期"
+      ]
+    },
+    {
+      "version": "2.15.2",
+      "date": "2026-10-25",
+      "summary": "【住宅デザインスタイル21選 夫婦の好み擦り合わせAI診断（style-matcher）新設 ＆ SmileStudio連動】①4大カテゴリ・21スタイルの完全マスターDB（housing_styles_db.json）および高画質WebP（全体コラージュ・LDK・外観・サムネイル計84アセット）の配備、②個人直感診断＆夫婦ペア診断（好み一致度％算出・ハイブリッド調和提案）ツール（/style-matcher/）の実装、③AI 3Dパース工房（SmileStudio）への?style=クエリ連動（ワンタップで選定スタイルプロンプト注入・生成）、④トップページ3Dプラン選定セクションへの連携バナー配備、⑤サイトマップ（555URL）およびllms-full.txtへの知見ダンプ完全同期"
+    },
+    {
+      "version": "2.15.1",
+      "date": "2026-10-25",
+      "summary": "【AI住宅ローン診断ページ HTMLコンテナ・ネスト崩れ緊急修復】①金利バー比較カード末尾の余分な閉じdiv（</div></div>）を削除し、商品一覧テーブルおよび団信ガイド・地域別ガイド・免責事項が外側コンテナ（div.container）の外に押し出され全幅100%に崩れていた不具合を完全解消、②table-summary-cardの閉じタグ整合、③PC・タブレット・スマートフォン実機ビューポート（390px〜2560px）での中央配置レイアウト＆横スクロール保護を完全検証・復旧"
+    },
     {
       "version": "2.15.0",
       "date": "2026-10-25",

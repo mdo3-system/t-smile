@@ -1548,6 +1548,29 @@
       } catch (e) {
         console.warn('Madori 3D bridge error:', e);
       }
+
+      // スタイル診断（style-matcher）からの指定スタイル受取
+      const urlParams = new URLSearchParams(window.location.search);
+      const styleParam = urlParams.get('style');
+      if (styleParam) {
+        fetch('/data/housing_styles_db.json').then(r => r.json()).then(db => {
+          const match = db.find(s => s.id === styleParam);
+          if (match) {
+            showToast(`🎨 スタイル診断から【${match.name}】のテイストを受信・適用しました`);
+            // Update chip if exists
+            const existingChip = document.querySelector(`.style-chip[data-style="${styleParam}"]`);
+            if (existingChip) {
+              existingChip.click();
+            } else {
+              // Inject custom style prompt
+              if (sdPromptPreview) {
+                const basePrompt = sdPromptPreview.textContent;
+                sdPromptPreview.textContent = `${match.geminiPrompt}, natural wood materials: ${match.materials}`;
+              }
+            }
+          }
+        }).catch(err => console.warn('Styles DB fetch error:', err));
+      }
     });
   </script>
 </body>
