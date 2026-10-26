@@ -86,10 +86,24 @@
     .seo-principle { background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 1.2rem 1.5rem; margin-top: 1.5rem; }
     .seo-cta { margin-top: 2.5rem; text-align: center; padding: 2rem; background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%); border-radius: 16px; border: 2px solid #bae6fd; }
     .seo-cta-btn { display: inline-block; background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-weight: 800; padding: 0.9rem 2rem; border-radius: 12px; text-decoration: none; font-size: 1rem; margin-top: 1rem; box-shadow: 0 4px 14px rgba(5,150,105,0.3); }
+    .seo-back-btn { display: inline-flex; align-items: center; gap: 6px; background: #f8fafc; color: #1e293b; font-weight: 800; font-size: 0.88rem; padding: 8px 16px; border-radius: 8px; border: 1.5px solid #cbd5e1; text-decoration: none; transition: all 0.2s ease; }
+    .seo-back-btn:hover { background: #0369a1; color: #ffffff; border-color: #0369a1; transform: translateX(-3px); }
+    .seo-back-btn-bottom { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #0f172a; color: #ffffff; font-weight: 800; font-size: 0.96rem; padding: 12px 28px; border-radius: 10px; text-decoration: none; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2); transition: all 0.2s ease; }
+    .seo-back-btn-bottom:hover { background: #0284c7; transform: translateY(-2px); box-shadow: 0 6px 18px rgba(2, 132, 199, 0.35); }
   </style>
 </head>
 <body style="background: #f1f5f9; padding: 1rem;">
   <div class="seo-article-wrap">
+    <!-- 上部 総合ピラーページへ戻るナビバー -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; gap: 10px;">
+      <a href="/knowledge/thermal/" class="seo-back-btn">
+        <span>←</span> 温熱実務知見200選 総合ピラーページへ戻る
+      </a>
+      <a href="/#thermal-consultation" style="font-size: 0.85rem; font-weight: 700; color: #0284c7; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+        <span>💬</span> 24h AI温熱相談室 ↗
+      </a>
+    </div>
+
     <nav class="seo-crumb" aria-label="パンくずリスト">
       <a href="/">🏠 ホーム</a> &gt; <a href="/knowledge/thermal/">温熱実務知見200選</a> &gt; <span>基礎断熱・床断熱・床下空間</span>
     </nav>
@@ -119,6 +133,13 @@
     
     <div style="margin-top: 2rem; font-size: 0.82rem; color: #64748b; border-top: 1px dashed #cbd5e1; padding-top: 1rem;">
       ※本知見は、株式会社住ま居るが埼玉の気候風土の中で、専門家・研究者の勉強会に足繁く通い、実際の現場で試行錯誤（成功と失敗の実体験）を重ねて現在たどり着いた知見です。絶対の正解ではなく間違いがある可能性を前提に、私どもが考える現時点での最善手として公開しています。
+    </div>
+
+    <!-- 下部 総合ピラーページへ戻るアクション -->
+    <div style="margin-top: 2.2rem; display: flex; justify-content: center;">
+      <a href="/knowledge/thermal/" class="seo-back-btn-bottom">
+        <span>←</span> 温熱実務知見200選（全8章 一覧）へ戻る
+      </a>
     </div>
     
     <div class="seo-cta">

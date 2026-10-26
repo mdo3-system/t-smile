@@ -32,6 +32,15 @@ db.exec(`
     created_at TEXT
   );
 
+  CREATE TABLE IF NOT EXISTS admin_staff (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    role_name TEXT NOT NULL,
+    icon TEXT NOT NULL,
+    password TEXT NOT NULL,
+    updated_at TEXT
+  );
+
   CREATE TABLE IF NOT EXISTS files (
     id TEXT PRIMARY KEY,
     user_id TEXT,
@@ -47,6 +56,8 @@ db.exec(`
     id TEXT PRIMARY KEY,
     user_id TEXT,
     sender TEXT,
+    sender_role TEXT,
+    sender_name TEXT,
     text TEXT,
     created_at TEXT
   );
@@ -84,9 +95,51 @@ db.exec(`
   );
 `);
 
+// Safe column migrations for existing databases
+try { db.exec(`ALTER TABLE messages ADD COLUMN sender_role TEXT;`); } catch (_) {}
+try { db.exec(`ALTER TABLE messages ADD COLUMN sender_name TEXT;`); } catch (_) {}
+
+// Seed Default Admin Staff Accounts
+const DEFAULT_ADMIN_STAFF = [
+  { id: '@help', name: '家づくりサポート係', role_name: '家づくりサポート係', icon: '🤝', password: 'smile2656' },
+  { id: '@s271', name: '設計係', role_name: '設計係', icon: '📐', password: 'smile2656' },
+  { id: 'ss049', name: '工事係', role_name: '工事係', icon: '🔨', password: 'smile2656' },
+  { id: '@keiri', name: '経理総務係', role_name: '経理総務係', icon: '💼', password: 'smile2656' }
+];
+
+const insertStaffStmt = db.prepare(`
+  INSERT OR IGNORE INTO admin_staff (id, name, role_name, icon, password, updated_at)
+  VALUES (?, ?, ?, ?, ?, ?)
+`);
+const nowIso = new Date().toISOString();
+DEFAULT_ADMIN_STAFF.forEach(staff => {
+  insertStaffStmt.run(staff.id, staff.name, staff.role_name, staff.icon, staff.password, nowIso);
+});
+
 // Helper Functions
 function generateId() {
   return 'id_' + Math.random().toString(36).substring(2, 11) + '_' + Date.now();
+}
+
+// Admin Staff DAO
+function authenticateAdminStaff(id, password) {
+  const staff = db.prepare(`SELECT * FROM admin_staff WHERE id = ?`).get(id);
+  if (!staff) return null;
+  if (staff.password !== password) return null;
+  const { password: _, ...safeStaff } = staff;
+  return safeStaff;
+}
+
+function changeAdminStaffPassword(id, newPassword) {
+  const staff = db.prepare(`SELECT * FROM admin_staff WHERE id = ?`).get(id);
+  if (!staff) return false;
+  db.prepare(`UPDATE admin_staff SET password = ?, updated_at = ? WHERE id = ?`)
+    .run(newPassword, new Date().toISOString(), id);
+  return true;
+}
+
+function getAllAdminStaff() {
+  return db.prepare(`SELECT id, name, role_name, icon, updated_at FROM admin_staff`).all();
 }
 
 // User DAO
@@ -210,14 +263,14 @@ function getUserFiles(userId) {
   return db.prepare(`SELECT * FROM files WHERE user_id = ? ORDER BY created_at DESC`).all(userId);
 }
 
-function addMessage({ userId, sender, text }) {
+function addMessage({ userId, sender, senderRole, senderName, text }) {
   const id = generateId();
   const createdAt = new Date().toISOString();
   db.prepare(`
-    INSERT INTO messages (id, user_id, sender, text, created_at)
-    VALUES (?, ?, ?, ?, ?)
-  `).run(id, userId, sender, text, createdAt);
-  return { id, userId, sender, text, createdAt };
+    INSERT INTO messages (id, user_id, sender, sender_role, sender_name, text, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `).run(id, userId, sender, senderRole || null, senderName || null, text, createdAt);
+  return { id, userId, sender, sender_role: senderRole || null, sender_name: senderName || null, text, createdAt };
 }
 
 function getUserMessages(userId) {
@@ -385,6 +438,9 @@ module.exports = {
   searchFloorPlans,
   getFloorPlanById,
   getAllFloorPlans,
-  importFloorPlan
+  importFloorPlan,
+  authenticateAdminStaff,
+  changeAdminStaffPassword,
+  getAllAdminStaff
 };
 

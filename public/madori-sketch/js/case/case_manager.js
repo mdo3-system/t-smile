@@ -74,14 +74,14 @@ window.saveAsNewPlan = saveAsNewPlan;
 
 // 2. 全画面モード切替 ＆ 離脱防止（beforeunload）
 function toggleFullscreenMode() {
-    const isCurrentlyFullscreen = document.body.classList.contains('is-fullscreen') || !!document.fullscreenElement;
+    const isCurrentlyFullscreen = document.body.classList.contains('is-fullscreen');
     const icon = document.getElementById('fullscreenIcon');
     const floatingBtn = document.getElementById('btnExitFullscreenFloating');
-
     const floatingBar = document.getElementById('floatingFullscreenBar');
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
     if (!isCurrentlyFullscreen) {
-        // 全画面モードへ移行（CSSクラス付与でヘッダー・フッターを隠す）
+        // 全画面モードへ移行（CSSクラス付与でヘッダー・フッターを完全隠蔽）
         document.body.classList.add('is-fullscreen');
         if (icon) icon.className = 'fa-solid fa-compress';
         if (floatingBar) floatingBar.style.display = 'inline-flex';
@@ -89,8 +89,8 @@ function toggleFullscreenMode() {
         dismissFullscreenPrompt();
         if (typeof closeFullscreenModal === 'function') closeFullscreenModal();
 
-        // ブラウザAPI対応環境であればブラウザ全画面も実行
-        if (document.documentElement.requestFullscreen) {
+        // PC（非タッチ端末）環境でのみブラウザAPI全画面を併用。iPad/タッチ端末ではCSS全画面が最安定
+        if (!isTouchDevice && document.documentElement.requestFullscreen) {
             document.documentElement.requestFullscreen().catch(err => {
                 console.info('Browser fullscreen request avoided or unsupported; CSS fullscreen applied.', err);
             });
@@ -123,18 +123,18 @@ function exitFullscreenMode() {
     if (typeof handleResize === 'function') setTimeout(handleResize, 100);
 }
 
-// ブラウザ標準のEscキー等によるフルスクリーン解除時にもbodyクラスとUIを同期
+// PC環境でのEscキー押下による全画面解除対応
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.body.classList.contains('is-fullscreen')) {
+        exitFullscreenMode();
+    }
+});
+
+// PC環境でブラウザ標準のEscキー等によるフルスクリーン解除時にもbodyクラスとUIを同期（タッチ端末は除外）
 document.addEventListener('fullscreenchange', () => {
-    if (!document.fullscreenElement) {
-        // ブラウザ全画面が解除された場合
-        document.body.classList.remove('is-fullscreen');
-        const icon = document.getElementById('fullscreenIcon');
-        const floatingBtn = document.getElementById('btnExitFullscreenFloating');
-        const floatingBar = document.getElementById('floatingFullscreenBar');
-        if (icon) icon.className = 'fa-solid fa-expand';
-        if (floatingBar) floatingBar.style.display = 'none';
-        if (floatingBtn) floatingBtn.style.display = 'none';
-        if (typeof handleResize === 'function') setTimeout(handleResize, 100);
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (!isTouchDevice && !document.fullscreenElement && document.body.classList.contains('is-fullscreen')) {
+        exitFullscreenMode();
     }
 });
 

@@ -80,12 +80,25 @@
       return;
     }
 
+    bindStudioDomEvents();
+  }
+
+  function bindStudioDomEvents() {
     initStep1Showcase();
     setupStep1Events();
     setupNavigationEvents();
     setupStep3Events();
     initMadoriKeywordSlots();
+    initAtelierGate();
   }
+
+  window.initFloorPlanStudio = function() {
+    if (!allPlans || allPlans.length === 0) {
+      init();
+    } else {
+      bindStudioDomEvents();
+    }
+  };
 
   // --- STEP 1: 代表プラン実演スライドショー＆2D-3Dスライダー実演 ---
   let showcasePlans = [];
@@ -276,10 +289,10 @@
       if (!groupEl) return;
       const btns = groupEl.querySelectorAll('.fp-choice-btn');
       btns.forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.onclick = () => {
           btns.forEach(b => b.classList.remove('selected'));
           btn.classList.add('selected');
-        });
+        };
       });
     });
 
@@ -287,44 +300,44 @@
     const inputWidth = document.getElementById('opt-input-width');
     const valWidth = document.getElementById('opt-val-width');
     if (inputWidth && valWidth) {
-      inputWidth.addEventListener('input', (e) => {
+      inputWidth.oninput = (e) => {
         valWidth.textContent = `〜 ${Number(e.target.value).toFixed(1)} m`;
-      });
+      };
     }
 
     const inputDepth = document.getElementById('opt-input-depth');
     const valDepth = document.getElementById('opt-val-depth');
     if (inputDepth && valDepth) {
-      inputDepth.addEventListener('input', (e) => {
+      inputDepth.oninput = (e) => {
         valDepth.textContent = `〜 ${Number(e.target.value).toFixed(1)} m`;
-      });
+      };
     }
 
     // こだわりタグ（複数選択可）
     const featuresGroup = document.getElementById('opt-features');
     if (featuresGroup) {
       featuresGroup.querySelectorAll('.fp-tag-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.onclick = () => {
           btn.classList.toggle('selected');
-        });
+        };
       });
     }
 
     // 条件リセットボタン
     const btnResetConditions = document.getElementById('btn-reset-step1-conditions');
     if (btnResetConditions) {
-      btnResetConditions.addEventListener('click', () => {
+      btnResetConditions.onclick = () => {
         resetStep1Conditions();
-      });
+      };
     }
 
     // 「🔍 この条件でAIに間取りを選別してもらう」ボタン
     const btnStart = document.getElementById('btn-start-ai-chat');
     if (btnStart) {
-      btnStart.addEventListener('click', (e) => {
+      btnStart.onclick = (e) => {
         e.preventDefault();
         runAiPlanMatching();
-      });
+      };
     }
   }
 
@@ -2001,35 +2014,35 @@
     // Step 2 -> Step 1 (1つ前: 基本条件の選択に戻る - 条件保持)
     const btnBackTo1 = document.getElementById('btn-back-to-step1');
     if (btnBackTo1) {
-      btnBackTo1.addEventListener('click', () => {
+      btnBackTo1.onclick = () => {
         showStep1();
-      });
+      };
     }
 
     // Step 2 -> Step 1 (最初からやり直す - 条件リセット)
     const btnResetFrom2 = document.getElementById('btn-reset-to-step1-from-step2');
     if (btnResetFrom2) {
-      btnResetFrom2.addEventListener('click', () => {
+      btnResetFrom2.onclick = () => {
         resetStep1Conditions();
         showStep1();
-      });
+      };
     }
 
     // Step 3 -> Step 2 (1つ前: おすすめ一覧に戻る)
     const btnBackTo2 = document.getElementById('btn-back-to-step2');
     if (btnBackTo2) {
-      btnBackTo2.addEventListener('click', () => {
+      btnBackTo2.onclick = () => {
         showStep2();
-      });
+      };
     }
 
     // Step 3 -> Step 1 (最初からやり直す - 条件リセット)
     const btnResetFrom3 = document.getElementById('btn-reset-to-step1-from-step3');
     if (btnResetFrom3) {
-      btnResetFrom3.addEventListener('click', () => {
+      btnResetFrom3.onclick = () => {
         resetStep1Conditions();
         showStep1();
-      });
+      };
     }
   }
 

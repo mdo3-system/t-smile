@@ -114,9 +114,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initFamilyAndScreenSync();
   initRealBookingForm();
   initArticleTabs();
-  initCaseStudiesGallery();
-  initWagamaShowcase();
-  initCredLayerStudio();
+  if (typeof initCaseStudiesGallery === 'function') initCaseStudiesGallery();
+  if (typeof initWagamaShowcase === 'function') initWagamaShowcase();
+  if (typeof initCredLayerStudio === 'function') initCredLayerStudio();
   initDeferredSectionObserver();
   checkUrlToken();
 });
@@ -211,17 +211,17 @@ function initNavigation() {
 
   // Handle browser back/forward buttons (History API) and direct hash change
   window.addEventListener('popstate', (e) => {
-    const pageId = (window.location.hash || '').replace('#', '') || 'top';
+    const pageId = (window.location.hash || '').replace(/^#+/, '') || 'top';
     switchPage(pageId, false);
   });
   window.addEventListener('hashchange', (e) => {
-    const pageId = (window.location.hash || '').replace('#', '') || 'top';
+    const pageId = (window.location.hash || '').replace(/^#+/, '') || 'top';
     switchPage(pageId, false);
   });
 
   // Initial load deep link support (e.g. #ai-studio)
   if (window.location.hash) {
-    const initHash = window.location.hash.replace('#', '');
+    const initHash = (window.location.hash || '').replace(/^#+/, '');
     if (initHash && initHash !== 'top') {
       setTimeout(() => {
         switchPage(initHash, false);
@@ -268,58 +268,77 @@ function closeMobileDrawer() {
   document.body.style.overflow = '';
 }
 
+let isSwitchingPage = false;
 function switchPage(pageId, pushState = true) {
-  let effectivePageId = pageId;
-  let scrollToAnchor = null;
+  if (isSwitchingPage) return;
+  isSwitchingPage = true;
+  try {
+    let rawId = (pageId || 'top').replace(/^#+/, '');
+    let effectivePageId = rawId;
+    let scrollToAnchor = null;
 
-  if (pageId === 'our-philosophy') {
-    effectivePageId = 'top';
-    scrollToAnchor = 'our-philosophy';
-  } else if (pageId === 'wagama-showcase' || pageId === 'wagama') {
-    effectivePageId = 'craftsmanship';
-    scrollToAnchor = 'wagama-showcase';
-  } else if (pageId === 'floorplan-bubble') {
-    effectivePageId = 'floorplan-studio';
-    setTimeout(() => {
-      const bubbleBtn = document.getElementById('btn-fp-mode-bubble');
-      if (bubbleBtn) bubbleBtn.click();
-    }, 150);
-  } else if (pageId === 'article-feature' || pageId.startsWith('art-ch') || /^ch([1-9]|10)$/.test(pageId)) {
-    effectivePageId = 'article-feature';
-    let targetCh = 'ch1';
-    if (pageId.startsWith('art-ch')) targetCh = pageId.replace('art-', '');
-    else if (/^ch([1-9]|10)$/.test(pageId)) targetCh = pageId;
-    scrollToAnchor = 'article-feature';
-    setTimeout(() => {
-      if (typeof selectArticleChapter === 'function') {
-        selectArticleChapter(targetCh, false);
-      }
-    }, 120);
-  }
+    if (rawId === 'our-philosophy') {
+      effectivePageId = 'top';
+      scrollToAnchor = 'our-philosophy';
+    } else if (rawId === 'wagama-showcase' || rawId === 'wagama') {
+      effectivePageId = 'craftsmanship';
+      scrollToAnchor = 'wagama-showcase';
+    } else if (rawId === 'floorplan-bubble') {
+      effectivePageId = 'floorplan-studio';
+      setTimeout(() => {
+        const bubbleBtn = document.getElementById('btn-fp-mode-bubble');
+        if (bubbleBtn) bubbleBtn.click();
+      }, 150);
+    } else if (rawId === 'article-feature' || rawId.startsWith('art-ch') || /^ch([1-9]|10)$/.test(rawId)) {
+      effectivePageId = 'article-feature';
+      let targetCh = 'ch1';
+      if (rawId.startsWith('art-ch')) targetCh = rawId.replace('art-', '');
+      else if (/^ch([1-9]|10)$/.test(rawId)) targetCh = rawId;
+      scrollToAnchor = 'article-feature';
+      setTimeout(() => {
+        if (typeof selectArticleChapter === 'function') {
+          selectArticleChapter(targetCh, false);
+        }
+      }, 120);
+    }
 
-  let targetSec = document.getElementById(effectivePageId);
-  if (!targetSec) {
-    // If not found on current page (e.g., subpage like /about/, /mortgage/), navigate to top page with hash
-    const targetHash = effectivePageId === 'top' && !scrollToAnchor ? '' : '#' + pageId;
-    window.location.href = '/' + targetHash;
-    return;
-  }
-
-  // Ensure deferred template content is mounted into DOM
-  ensureSectionMounted(targetSec);
-
-  // Update browser URL hash & history state
-  if (pushState && window.history && window.history.pushState) {
-    const targetHash = effectivePageId === 'top' && !scrollToAnchor ? '' : '#' + pageId;
-    const currentHash = window.location.hash;
-    if (targetHash !== currentHash) {
-      if (targetHash === '') {
-        window.history.pushState({ pageId: 'top' }, '', window.location.pathname + window.location.search);
+    let targetSec = document.getElementById(effectivePageId);
+    if (!targetSec) {
+      // If on subpage (e.g. /mortgage/), navigate to top page with hash
+      const isTopPage = window.location.pathname === '/' || window.location.pathname.endsWith('/index.html') || window.location.pathname === '';
+      if (!isTopPage) {
+        const targetHash = effectivePageId === 'top' && !scrollToAnchor ? '' : '#' + rawId;
+        window.location.href = '/' + targetHash;
+        return;
       } else {
-        window.history.pushState({ pageId: pageId }, '', targetHash);
+        effectivePageId = 'top';
+        targetSec = document.getElementById('top');
       }
     }
-  }
+
+    if (!targetSec) return;
+
+    // Ensure deferred template content is mounted into DOM
+    ensureSectionMounted(targetSec, () => {
+      if (effectivePageId === 'floorplan-studio' && typeof window.initFloorPlanStudio === 'function') {
+        window.initFloorPlanStudio();
+      } else if (effectivePageId === 'dashboard') {
+        loadDashboardData();
+      }
+    });
+
+    // Update browser URL hash & history state
+    if (pushState && window.history && window.history.pushState) {
+      const targetHash = effectivePageId === 'top' && !scrollToAnchor ? '' : '#' + rawId;
+      const currentHash = window.location.hash;
+      if (targetHash !== currentHash) {
+        if (targetHash === '') {
+          window.history.pushState({ pageId: 'top' }, '', window.location.pathname + window.location.search);
+        } else {
+          window.history.pushState({ pageId: rawId }, '', targetHash);
+        }
+      }
+    }
 
   const sections = document.querySelectorAll('.page-section');
   sections.forEach(sec => sec.classList.remove('active'));
@@ -371,9 +390,12 @@ function switchPage(pageId, pushState = true) {
     loadAdminPlansData();
   }
 
-  // Screen synchronization broadcast
-  if (pushState && typeof broadcastScreenState === 'function') {
-    broadcastScreenState('navigate', { pageId: effectivePageId });
+    // Screen synchronization broadcast
+    if (pushState && typeof broadcastScreenState === 'function') {
+      broadcastScreenState('navigate', { pageId: effectivePageId });
+    }
+  } finally {
+    isSwitchingPage = false;
   }
 }
 
@@ -544,14 +566,55 @@ function startJobPolling(jobId) {
 
 // 5. Dedicated Dashboard & AI Agent Chat
 async function loadDashboardData() {
+  const userNameEl = document.getElementById('dash-user-name');
+  const userPhoneEl = document.getElementById('dash-user-phone');
+  const userEmailEl = document.getElementById('dash-user-email');
+
   if (!currentUser) {
-    document.getElementById('auth-modal').classList.add('active');
+    if (userNameEl) userNameEl.textContent = 'ゲストお施主様（ブラウザ保存中）';
+    if (userPhoneEl) userPhoneEl.textContent = '未登録（不要・営業電話ゼロ）';
+    if (userEmailEl) userEmailEl.textContent = '未連携（LINEまたはメールで共有可能）';
+
+    // ゲスト用カルテ連携案内バーの表示
+    const headerBox = document.querySelector('#dashboard .dashboard-header') || document.querySelector('#dashboard h2');
+    let guestNotice = document.getElementById('dash-guest-notice');
+    if (!guestNotice && headerBox && headerBox.parentNode) {
+      guestNotice = document.createElement('div');
+      guestNotice.id = 'dash-guest-notice';
+      guestNotice.style.cssText = 'background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 1.5px solid #86efac; border-radius: 12px; padding: 1rem 1.4rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; box-shadow: 0 4px 15px rgba(5,150,105,0.08);';
+      guestNotice.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.6rem;">📱</span>
+          <div>
+            <div style="font-weight: 800; color: #15803d; font-size: 0.95rem;">
+              現在はゲスト（ブラウザ一時保存）としてカルテを表示しています
+            </div>
+            <div style="font-size: 0.78rem; color: #047857; margin-top: 2px;">
+              ストックした間取り図面や住宅ローン診断結果は端末に安全に保存されています。公式LINEと連携すると、他端末や夫婦間での共有・担当スタッフとの個別相談チャットがご利用いただけます。
+            </div>
+          </div>
+        </div>
+        <button type="button" onclick="document.getElementById('auth-modal').classList.add('active')" class="btn" style="background: #06c755; color: #fff; font-weight: 800; font-size: 0.85rem; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 3px 10px rgba(6,199,85,0.3);">
+          💬 公式LINE連携・ログイン →
+        </button>
+      `;
+      headerBox.parentNode.insertBefore(guestNotice, headerBox.nextSibling);
+    } else if (guestNotice) {
+      guestNotice.style.display = 'flex';
+    }
+
+    updateDashboardSavedPlans();
+    updateDashboardMortgageStatus();
+    updateDashboardScheduleStatus();
     return;
   }
 
-  document.getElementById('dash-user-name').textContent = `${currentUser.name} 様`;
-  document.getElementById('dash-user-phone').textContent = currentUser.phone;
-  document.getElementById('dash-user-email').textContent = currentUser.email;
+  const guestNotice = document.getElementById('dash-guest-notice');
+  if (guestNotice) guestNotice.style.display = 'none';
+
+  if (userNameEl) userNameEl.textContent = `${currentUser.name} 様`;
+  if (userPhoneEl) userPhoneEl.textContent = currentUser.phone || '未登録';
+  if (userEmailEl) userEmailEl.textContent = currentUser.email || '未登録';
 
   updateDashboardSavedPlans();
   updateDashboardMortgageStatus();
@@ -600,14 +663,26 @@ function renderChatMessages(messages) {
   const box = document.getElementById('chat-history-box');
   if (!box) return;
 
-  box.innerHTML = messages.map(m => `
-    <div class="chat-bubble ${m.sender === 'user' ? 'user' : ''}">
-      <div style="font-size: 0.75rem; font-weight: 800; color: ${m.sender === 'user' ? '#f59e0b' : '#38bdf8'}; margin-bottom: 4px;">
-        ${m.sender === 'user' ? 'お施主様' : (m.sender === 'ai' ? '🤖 住ま居る 建築AIエージェント' : '🧑‍💼 住ま居る 専任スタッフ')}
+  box.innerHTML = messages.map(m => {
+    let senderBadge = '';
+    if (typeof window.formatStaffSenderBadge === 'function') {
+      senderBadge = window.formatStaffSenderBadge(m);
+    } else {
+      senderBadge = m.sender === 'user' ? '<span style="color:#f59e0b;font-weight:800;">👤 お施主様</span>' : 
+                   (m.sender === 'ai' ? '<span style="color:#38bdf8;font-weight:800;">🤖 建築AIエージェント</span>' : 
+                   `<span style="background:#e0f2fe;color:#0284c7;padding:2px 8px;border-radius:6px;font-weight:800;">🧑‍💼 ${m.sender_role || m.senderRole || '専任スタッフ'}</span>`);
+    }
+
+    const isUser = m.sender === 'user';
+    return `
+      <div class="chat-bubble ${isUser ? 'user' : ''}" style="${!isUser && m.sender !== 'ai' ? 'border-left: 4px solid #0284c7;' : ''}">
+        <div style="font-size: 0.75rem; margin-bottom: 4px;">
+          ${senderBadge}
+        </div>
+        <div style="white-space: pre-wrap;">${m.text}</div>
       </div>
-      <div style="white-space: pre-wrap;">${m.text}</div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 
   box.scrollTop = box.scrollHeight;
 }
@@ -626,11 +701,22 @@ function initDashboardChat() {
 
     input.value = '';
 
+    // 管理者スタッフ判定（係がログイン中ならその係として返信）
+    const currentAdmin = typeof window.getCurrentAdminStaff === 'function' ? window.getCurrentAdminStaff() : null;
+    const isStaffOperating = Boolean(currentAdmin);
+
+    const payload = {
+      text,
+      sender: isStaffOperating ? 'staff' : 'user',
+      senderRole: isStaffOperating ? currentAdmin.role_name : null,
+      senderName: isStaffOperating ? currentAdmin.name : null
+    };
+
     try {
       const res = await fetch(`/api/dashboard/${currentUser.id}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text })
+        body: JSON.stringify(payload)
       });
       const data = await res.json();
       if (data.success) {
@@ -638,6 +724,22 @@ function initDashboardChat() {
       }
     } catch (err) {
       console.error(err);
+      // オフライン/静的ホスティング用フォールバック
+      try {
+        const localKey = `smile_carte_messages_${currentUser.id}`;
+        const existing = JSON.parse(localStorage.getItem(localKey) || '[]');
+        existing.push({
+          id: 'msg_' + Date.now(),
+          user_id: currentUser.id,
+          sender: payload.sender,
+          sender_role: payload.senderRole,
+          sender_name: payload.senderName,
+          text: payload.text,
+          created_at: new Date().toISOString()
+        });
+        localStorage.setItem(localKey, JSON.stringify(existing));
+        renderChatMessages(existing);
+      } catch (_) {}
     }
   });
 
@@ -929,18 +1031,23 @@ function updateDashboardMortgageStatus() {
     if (raw) {
       const carte = JSON.parse(raw);
       if (carte && carte.savedMortgage && carte.savedMortgage.bestBank) {
-        const b = carte.savedMortgage.bestBank;
+        const sm = carte.savedMortgage;
+        const b = sm.bestBank;
         card.style.background = '#eff6ff';
         card.style.border = '1.5px solid #3b82f6';
         card.innerHTML = `
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
             <div style="font-size: 0.82rem; font-weight: 800; color: #1e40af;">🏦 家カルテ登録済み 最適ローン診断結果</div>
-            <span style="font-size: 0.72rem; color: #0284c7; background: #dbeafe; padding: 2px 8px; border-radius: 10px; font-weight: 800;">第1位推奨</span>
+            <span style="font-size: 0.72rem; color: #0284c7; background: #dbeafe; padding: 2px 8px; border-radius: 10px; font-weight: 800;">第1位推奨（${sm.savedAt || '保存済み'}）</span>
           </div>
-          <div style="font-size: 1rem; font-weight: 900; color: #0f172a;">${b.name}：${b.rateType || '変動'} <span style="color: #0284c7;">${b.rate}</span></div>
-          <div style="font-size: 0.76rem; color: #475569; margin-top: 2px;">団信: ${b.danshin || ''} ｜ 手数料: ${b.fees || ''}</div>
-          <div style="margin-top: 6px; text-align: right;">
-            <a href="/mortgage/index.html" target="_blank" style="font-size: 0.76rem; color: #0284c7; font-weight: 800; text-decoration: none;">診断結果TOP5を確認 ↗</a>
+          <div style="font-size: 1.05rem; font-weight: 900; color: #0f172a;">${b.name}：${b.rateType || '変動'} <span style="color: #0284c7;">${b.rate}</span></div>
+          <div style="font-size: 0.82rem; color: #0369a1; font-weight: 800; margin-top: 4px;">
+            借入想定: ${sm.borrowAmount || 3500}万円（${sm.repayYears || 35}年返済） ｜ ${b.monthlyPayment ? `目安: <span style="font-size: 0.95rem; color: #0f172a;">約${b.monthlyPayment.toLocaleString()}円/月</span>` : ''}
+          </div>
+          <div style="font-size: 0.76rem; color: #475569; margin-top: 3px;">団信: ${b.danshin || ''} ｜ 諸経費目安: ${b.estimatedFees || b.fees || ''}</div>
+          <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.74rem; color: #059669; font-weight: 700;">✅ TOP5比較データ保管完了</span>
+            <a href="/mortgage/index.html" target="_blank" style="font-size: 0.76rem; color: #0284c7; font-weight: 800; text-decoration: none;">再シミュレーション・TOP5確認 ↗</a>
           </div>
         `;
       }

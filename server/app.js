@@ -560,23 +560,40 @@ const server = http.createServer(async (req, res) => {
     });
   }
 
-  // 6. Post Chat Message & get AI reply
+  // 6. Post Chat Message (User or Admin Staff)
   if (pathname.startsWith('/api/dashboard/') && pathname.includes('/chat') && method === 'POST') {
     const parts = pathname.split('/');
     const userId = parts[3];
     try {
       const body = await parseJsonBody(req);
+      const isStaff = body.sender === 'staff' || Boolean(body.senderRole);
+
+      if (isStaff) {
+        const staffMsg = db.addMessage({
+          userId,
+          sender: 'staff',
+          senderRole: body.senderRole || '専任スタッフ',
+          senderName: body.senderName || 'スタッフ',
+          text: body.text
+        });
+        return sendJson(res, 200, { success: true, messages: [staffMsg] });
+      }
+
       const userMsg = db.addMessage({
         userId,
         sender: 'user',
+        senderRole: null,
+        senderName: null,
         text: body.text
       });
 
-      // Generate AI Agent Answer
+      // Generate AI Agent Answer only for user inquiries
       const aiReplyText = generateAiAgentResponse(body.text);
       const aiMsg = db.addMessage({
         userId,
         sender: 'ai',
+        senderRole: 'AIエージェント',
+        senderName: '建築AIエージェント',
         text: aiReplyText
       });
 
@@ -659,7 +676,42 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
-  // 9. Admin Portal & CRM Sync
+  // 9. Admin Portal & Staff Authentication
+  if (pathname === '/api/admin/login' && method === 'POST') {
+    try {
+      const body = await parseJsonBody(req);
+      const staff = db.authenticateAdminStaff(body.id, body.password);
+      if (!staff) {
+        return sendJson(res, 401, { success: false, message: 'IDまたはパスワードが正しくありません。' });
+      }
+      return sendJson(res, 200, { success: true, staff });
+    } catch (e) {
+      return sendJson(res, 400, { success: false, error: e.message });
+    }
+  }
+
+  if (pathname === '/api/admin/change-password' && method === 'POST') {
+    try {
+      const body = await parseJsonBody(req);
+      const staff = db.authenticateAdminStaff(body.id, body.currentPassword);
+      if (!staff) {
+        return sendJson(res, 401, { success: false, message: '現在のパスワードが正しくありません。' });
+      }
+      if (!body.newPassword || body.newPassword.length < 4) {
+        return sendJson(res, 400, { success: false, message: '新しいパスワードは4文字以上で設定してください。' });
+      }
+      db.changeAdminStaffPassword(body.id, body.newPassword);
+      return sendJson(res, 200, { success: true, message: 'パスワードを正常に変更しました。' });
+    } catch (e) {
+      return sendJson(res, 400, { success: false, error: e.message });
+    }
+  }
+
+  if (pathname === '/api/admin/staff' && method === 'GET') {
+    const staffList = db.getAllAdminStaff();
+    return sendJson(res, 200, { success: true, staffList });
+  }
+
   if (pathname === '/api/admin/users' && method === 'GET') {
     const users = db.getAllUsers();
     return sendJson(res, 200, { success: true, users });
@@ -1640,6 +1692,7 @@ ${matchedQa.principle}
     } catch (e) {
       return sendJson(res, 500, { success: false, error: e.message });
     }
+  }
 
 
   // 10-H. Admin Floor Plans Management API

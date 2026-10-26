@@ -1,21 +1,55 @@
 {
-  "version": "2.16.0",
-  "buildDate": "2026-10-25",
-  "releaseName": "Feature Release v2.16.0 - Mortgage Width Stabilization, Couple Style Matcher & SmileStudio Bridge",
+  "version": "2.17.0",
+  "buildDate": "2026-10-26",
+  "releaseName": "Production Release v2.17.0 - Carte Loan & Plan Studio Hardening & Admin Multi-Role Auth",
   "components": {
-    "madoriSketch": "2.6.2",
+    "madoriSketch": "2.6.4",
     "smileStudio": "2.7.0",
     "styleMatcher": "1.0.0",
     "bubblePlan": "2.0.0",
     "speedPlanner": "2.2.0",
     "knowledgeVideoPortal": "1.8.1",
     "subsidyNavi": "2.6.0",
-    "mortgageDiagnosis": "2.7.2",
+    "mortgageDiagnosis": "2.8.0",
     "thermalBot": "2.6.0",
     "plansSSG": "2.8.0",
-    "domEngine": "1.1.0"
+    "domEngine": "1.2.1"
   },
   "changelog": [
+    {
+      "version": "2.17.0",
+      "date": "2026-10-26",
+      "title": "本番サーバー正式運用デプロイ v2.17.0（住宅ローン家カルテ連携・プラン選定工房復旧・担当係別管理認証・フッター温熱知見ピラー直結）",
+      "changes": [
+        "【住宅ローン家カルテ連携】未ログイン時でも住宅ローン診断結果（第1位推奨銀行・金利・借入額・月々返済額・諸経費）をマイカルテ（#dashboard）に即座に表示するゲストカルテ機能の実装",
+        "【プラン選定工房復旧】遅延マウント時における検索ボタン（#btn-start-ai-chat）や条件選択ボタンのイベント再バインド（window.initFloorPlanStudio）を整備し、プラン選定・比較を100%復旧",
+        "【公式LINE通知連携】マイカルテ認証モーダル内の公式LINE通知連携（https://lin.ee/8fdyyGu / @051vqxla）の正常化",
+        "【担当係別ログイン認証】4大係（@help, @s271, ss049, @keiri）の専用認証およびパスワード変更機能（初期PW: smile2656）の本番反映",
+        "【温熱知見ピラー直結】フッター各章リンクを総合ピラーページアンカー（#chapter-1〜#chapter-8）へ直結、個別カード全200枚に戻るボタン配備",
+        "【iPad間取り工房保護】3D操作パネルのタッチイベント伝播遮断＆全画面CSS主軸化によるヘッダー突然出現・ロックアウトの根絶"
+      ]
+    },
+    {
+      "version": "2.16.2",
+      "date": "2026-10-26",
+      "title": "フッター温熱知見ピラーリンク化＆iPad設計間取り知見表示最適化＆間取り工房iPad全画面保護",
+      "changes": [
+        "【フッター温熱知見】各章タイトルから「(25問)」を削除し、遷移先を総合ピラーページの該当章アンカー（/knowledge/thermal/#chapter-1〜8）へ変更",
+        "【単カード戻るナビ】温熱知見個別カード（全200枚）の上部・下部に「← 温熱知見200選 総合ピラーページへ戻る」ボタンを配備しブラウザ戻る頼みを解消",
+        "【iPadフッター表示】iPad幅（768px〜1024px）で設計・間取り知見が折り返さず、テキスト全文が綺麗に1行で収まるレスポンシブCSS（clamp & letter-spacing & nowrap）を配備",
+        "【間取り工房iPad安定化】右側3D操作パネルのタッチイベント伝播遮断（overscroll-behavior: contain & stopPropagation）および全画面モードのCSS主軸化・fullscreenchange誤解除防止により、iPad操作時のヘッダー突然出現・全画面ロックアウトを完全根絶"
+      ]
+    },
+    {
+      "version": "2.16.1",
+      "date": "2026-10-26",
+      "title": "担当係別ログイン認証 ＆ 施主カルテ一元チャット役割表示の実装",
+      "changes": [
+        "【担当係別ログイン】4大係（@help, @s271, ss049, @keiri）の専用認証およびパスワード変更機能（初期PW: smile2656）を新設",
+        "【管理者ダッシュボード】承認済み施主カルテ一覧カードからの直接カルテオープン・サポート導線を整備",
+        "【チャット役割バッジ】チャット送信時にログイン中の担当係バッジ（🤝サポート, 📐設計, 🔨工事, 💼経理総務）が自動付与されるUIを実装"
+      ]
+    },
     {
       "version": "2.16.0",
       "date": "2026-10-25",

@@ -1,126 +1,238 @@
     <section id="admin" class="page-section" data-deferred-template="tmpl-admin"></section>
     <template id="tmpl-admin">
-      <div class="hero">
-        <span class="hero-tag">管理者・チーフ建築士専用ポータル</span>
-        <h2 class="hero-title">社内統合管理コンソール<br><span style="color: #38bdf8; font-size: 1.6rem;">施主CRM連動 ＆ 間取りライブラリ・スケール正規化インポーター</span></h2>
-        <p class="hero-subtitle">登録されたお施主様のマイページ情報・展示場予約の管理と、AI間取り選別スタジオで提供する間取り図ライブラリ（自社図面＋X投稿・海外カタログ等の外部取込）の統合管理を行えます。</p>
+      <div class="hero" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-left: 6px solid #38bdf8;">
+        <span class="hero-tag" style="background: #0284c7; color: #fff;">🔐 社員・専任スタッフ専用ポータル</span>
+        <h2 class="hero-title">社内統合管理コンソール<br><span style="color: #38bdf8; font-size: 1.6rem;">施主カルテ一元対応 ＆ 係別チャット・図面連携</span></h2>
+        <p class="hero-subtitle">家づくりサポート係、設計係、工事係、経理・総務係がそれぞれの専門性を持って、お施主様の家カルテを一元サポートする専用コンソールです。</p>
       </div>
 
-      <!-- Admin Tab Controls -->
-      <div style="display: flex; gap: 12px; margin-bottom: 2rem; border-bottom: 2px solid #334155; padding-bottom: 0.8rem;">
-        <button type="button" id="admin-tab-users" class="btn btn-primary" style="font-size: 0.95rem;">
-          👥 施主カルテ ＆ CRMワンタップ同期
-        </button>
-        <button type="button" id="admin-tab-plans" class="btn btn-secondary" style="font-size: 0.95rem;">
-          📂 間取りライブラリ管理 ＆ 外部図面インポーター
-        </button>
-      </div>
-
-      <!-- Tab 1: Users & CRM List -->
-      <div id="admin-view-users">
-        <div id="admin-users-list"></div>
-      </div>
-
-      <!-- Tab 2: Floorplan Library & Importer -->
-      <div id="admin-view-plans" style="display: none;">
-        
-        <!-- Importer Form Box -->
-        <div class="card" style="background: #ffffff; border: 2px solid #0284c7; border-radius: var(--radius-lg); padding: 1.8rem; margin-bottom: 2.5rem;">
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.8rem; margin-bottom: 1.2rem;">
-            <h3 style="color: #0369a1; font-family: var(--font-heading); font-size: 1.25rem; margin: 0;">
-              📥 外部図面（X投稿・海外カタログ等）取込 ＆ スケール正規化
-            </h3>
-            <span style="background: #e0f2fe; color: #0284c7; font-size: 0.8rem; font-weight: 800; padding: 4px 10px; border-radius: 12px;">
-              ミリ単位・壁厚130mm自動統一
-            </span>
-          </div>
-
-          <form id="admin-plan-import-form">
-            <div class="grid-2">
-              <div class="form-group">
-                <label class="form-label">プラン名称・タイトル</label>
-                <input type="text" id="imp-title" class="form-input" placeholder="例: X投稿共有: 中庭テラスを囲む回遊動線の平屋" required />
-              </div>
-              <div class="form-group">
-                <label class="form-label">階数</label>
-                <select id="imp-stories" class="form-select">
-                  <option value="1">平屋 (1階建て)</option>
-                  <option value="2">2階建て</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">延床面積（㎡）</label>
-                <input type="number" id="imp-area-sqm" class="form-input" step="0.1" placeholder="例: 92.5" required />
-              </div>
-              <div class="form-group">
-                <label class="form-label">坪数（坪）</label>
-                <input type="number" id="imp-tsubo" class="form-input" step="0.1" placeholder="例: 28.0" required />
-              </div>
-              <div class="form-group">
-                <label class="form-label">間取りタイプ（部屋数）</label>
-                <input type="text" id="imp-rooms" class="form-input" placeholder="例: 3LDK+パントリー" required />
-              </div>
-              <div class="form-group">
-                <label class="form-label">ターゲット家族構成</label>
-                <select id="imp-family" class="form-select">
-                  <option value="子育て3〜4人">子育て3〜4人</option>
-                  <option value="夫婦・単身">夫婦・単身</option>
-                  <option value="二世帯・同居">二世帯・同居</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="grid-2" style="margin-top: 1rem;">
-              <div class="form-group">
-                <label class="form-label">スケール正規化モジュール設定</label>
-                <select id="imp-module" class="form-select">
-                  <option value="910">尺モジュール (910mmグリッド基準)</option>
-                  <option value="1000">メーターモジュール (1000mmグリッド基準)</option>
-                  <option value="auto">AIスケール自動検出 (寸法線・文字認識で正規化)</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">図面取込元ソース</label>
-                <select id="imp-source" class="form-select">
-                  <option value="自社既存顧客図面">自社既存顧客図面</option>
-                  <option value="X(旧Twitter)1日1プラン投稿者">X(旧Twitter)1日1プラン投稿者</option>
-                  <option value="海外カタログスキャン">海外カタログスキャン</option>
-                  <option value="その他建築設計資料">その他建築設計資料</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-group" style="margin-top: 1rem;">
-              <label class="form-label">こだわり特徴タグ（カンマ区切り）</label>
-              <input type="text" id="imp-features" class="form-input" placeholder="例: 中庭テラス, パントリー, 回遊動線, ファミリークローゼット" />
-            </div>
-
-            <div class="form-group" style="margin-top: 1rem;">
-              <label class="form-label">プランの特徴・おすすめ解説文</label>
-              <textarea id="imp-desc" class="form-textarea" rows="3" placeholder="プランの魅力や動線設計の意図を入力"></textarea>
-            </div>
-
-            <div style="text-align: right; margin-top: 1.5rem;">
-              <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; padding: 0.8rem 2rem;">
-                ➕ スケールを正規化して間取りライブラリに登録する
-              </button>
-            </div>
-          </form>
+      <!-- 1. 未ログイン時: 社員認証フォーム -->
+      <div id="admin-login-box" class="card" style="max-width: 520px; margin: 2rem auto; padding: 2.2rem; background: #ffffff; border: 2px solid #0284c7; border-radius: var(--radius-lg); box-shadow: 0 15px 35px rgba(0,0,0,0.1);">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🛡️</div>
+          <h3 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 1.35rem; margin-bottom: 0.4rem;">
+            社員・担当係 ログイン
+          </h3>
+          <p style="color: #64748b; font-size: 0.85rem; margin: 0;">
+            各担当係のIDとパスワードを入力してください。
+          </p>
         </div>
 
-        <!-- Stored Floor Plans List -->
-        <div>
-          <h3 style="color: #f8fafc; font-family: var(--font-heading); font-size: 1.35rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between;">
-            <span>📋 登録済み間取りライブラリ一覧 (<span id="admin-plans-count">30</span>プラン蓄積中)</span>
-            <span style="font-size: 0.85rem; color: #94a3b8; font-weight: normal;">※AI間取り選別スタジオで常時提供中</span>
-          </h3>
-          <div id="admin-plans-table-container" style="background: #ffffff; border-radius: var(--radius-md); overflow-x: auto; box-shadow: var(--shadow-card);">
-            <!-- Dynamically populated table of floor plans -->
+        <form id="admin-login-form">
+          <div class="form-group" style="margin-bottom: 1.2rem;">
+            <label class="form-label" style="font-weight: 700; color: #334155;">担当係 ID</label>
+            <input type="text" id="admin-login-id" class="form-input" placeholder="例: @help, @s271, ss049, @keiri" required style="font-size: 1rem; padding: 0.75rem 1rem;" />
+            <div style="font-size: 0.78rem; color: #0284c7; margin-top: 4px; display: flex; gap: 8px; flex-wrap: wrap;">
+              <span>🤝 サポート: @help</span>
+              <span>📐 設計: @s271</span>
+              <span>🔨 工事: ss049</span>
+              <span>💼 経理総務: @keiri</span>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label class="form-label" style="font-weight: 700; color: #334155;">パスワード</label>
+            <input type="password" id="admin-login-password" class="form-input" placeholder="パスワードを入力" required style="font-size: 1rem; padding: 0.75rem 1rem;" />
+          </div>
+
+          <div id="admin-login-error" style="display: none; background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 0.6rem 1rem; border-radius: 8px; font-size: 0.85rem; margin-bottom: 1.2rem;"></div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-size: 1.05rem; font-weight: 800; background: linear-gradient(135deg, #0284c7, #0369a1); border: none;">
+            ログインして業務を開始する ➜
+          </button>
+        </form>
+      </div>
+
+      <!-- 2. ログイン後: 管理コンソール画面 -->
+      <div id="admin-authenticated-view" style="display: none;">
+        
+        <!-- 管理者ステータスバー -->
+        <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #ffffff; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border: 1px solid rgba(56, 189, 248, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span id="admin-staff-icon" style="font-size: 1.8rem;">🤝</span>
+            <div>
+              <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 700;">現在のログイン担当:</div>
+              <div style="font-size: 1.15rem; font-weight: 800; color: #38bdf8; display: flex; align-items: center; gap: 8px;">
+                <span id="admin-staff-role-badge" style="background: #0284c7; color: #fff; padding: 2px 10px; border-radius: 12px; font-size: 0.85rem;">家づくりサポート係</span>
+                <span id="admin-staff-id" style="color: #cbd5e1; font-size: 0.85rem; font-family: monospace;">(@help)</span>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <button type="button" id="btn-admin-change-pw-open" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.4rem 0.9rem; background: rgba(255,255,255,0.1); color: #e2e8f0; border: 1px solid rgba(255,255,255,0.25);">
+              🔑 パスワード変更
+            </button>
+            <button type="button" id="btn-admin-logout" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.4rem 0.9rem; background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid #ef4444;">
+              🚪 ログアウト
+            </button>
+          </div>
+        </div>
+
+        <!-- パスワード変更モーダル -->
+        <div id="admin-change-pw-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 10005; justify-content: center; align-items: center; padding: 1rem;">
+          <div style="background: #ffffff; border-radius: 16px; max-width: 440px; width: 100%; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 2px solid #0284c7;">
+            <h3 style="color: #0369a1; font-size: 1.25rem; font-weight: 800; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+              <span>🔑</span> パスワード変更
+            </h3>
+            <form id="admin-change-pw-form">
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label class="form-label" style="font-size: 0.85rem;">現在のパスワード</label>
+                <input type="password" id="admin-curr-pw" class="form-input" required />
+              </div>
+              <div class="form-group" style="margin-bottom: 1.2rem;">
+                <label class="form-label" style="font-size: 0.85rem;">新しいパスワード（4文字以上）</label>
+                <input type="password" id="admin-new-pw" class="form-input" minlength="4" required />
+              </div>
+              <div id="admin-change-pw-msg" style="display: none; font-size: 0.85rem; margin-bottom: 1rem; padding: 0.5rem; border-radius: 6px;"></div>
+              <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                <button type="button" id="btn-admin-change-pw-cancel" class="btn btn-secondary" style="font-size: 0.85rem;">キャンセル</button>
+                <button type="submit" class="btn btn-primary" style="font-size: 0.85rem; background: #0284c7;">変更を保存</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Admin Tab Controls -->
+        <div style="display: flex; gap: 12px; margin-bottom: 2rem; border-bottom: 2px solid #334155; padding-bottom: 0.8rem;">
+          <button type="button" id="admin-tab-users" class="btn btn-primary" style="font-size: 0.95rem;">
+            👥 承認済み施主カルテ一覧 (チャット対応)
+          </button>
+          <button type="button" id="admin-tab-plans" class="btn btn-secondary" style="font-size: 0.95rem;">
+            📂 間取りライブラリ管理 ＆ 外部図面インポーター
+          </button>
+        </div>
+
+        <!-- Tab 1: Users & CRM List -->
+        <div id="admin-view-users">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; gap: 8px;">
+            <p style="color: #475569; font-size: 0.92rem; margin: 0;">
+              お施主様が作成・承認した家カルテの一覧です。カードをクリックすると、該当お施主様のカルテ画面が開き、各担当係として直接チャット返信や図面確認が行えます。
+            </p>
+            <button type="button" onclick="loadAdminData()" class="btn btn-secondary" style="font-size: 0.85rem; padding: 4px 12px;">
+              🔄 最新一覧を更新
+            </button>
+          </div>
+          <div id="admin-users-list" class="grid-2" style="gap: 1.5rem;"></div>
+        </div>
+
+        <!-- Tab 2: Floorplan Library & Importer -->
+        <div id="admin-view-plans" style="display: none;">
+          
+          <!-- Importer Form Box -->
+          <div class="card" style="background: #ffffff; border: 2px solid #0284c7; border-radius: var(--radius-lg); padding: 1.8rem; margin-bottom: 2.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.8rem; margin-bottom: 1.2rem;">
+              <h3 style="color: #0369a1; font-family: var(--font-heading); font-size: 1.25rem; margin: 0;">
+                📥 外部図面（X投稿・海外カタログ等）取込 ＆ スケール正規化
+              </h3>
+              <span style="background: #e0f2fe; color: #0284c7; font-size: 0.8rem; font-weight: 800; padding: 4px 10px; border-radius: 12px;">
+                ミリ単位・壁厚130mm自動統一
+              </span>
+            </div>
+
+            <form id="admin-plan-import-form">
+              <div class="grid-2">
+                <div class="form-group">
+                  <label class="form-label">プラン名称・タイトル</label>
+                  <input type="text" id="imp-title" class="form-input" placeholder="例: X投稿共有: 中庭テラスを囲む回遊動線の平屋" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">階数</label>
+                  <select id="imp-stories" class="form-select">
+                    <option value="1">平屋 (1階建て)</option>
+                    <option value="2">2階建て</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">延床面積（㎡）</label>
+                  <input type="number" id="imp-area-sqm" class="form-input" step="0.1" placeholder="例: 92.5" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">坪数（坪）</label>
+                  <input type="number" id="imp-tsubo" class="form-input" step="0.1" placeholder="例: 28.0" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">間取りタイプ（部屋数）</label>
+                  <input type="text" id="imp-rooms" class="form-input" placeholder="例: 3LDK+パントリー" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">ターゲット家族構成</label>
+                  <select id="imp-family" class="form-select">
+                    <option value="子育て3〜4人">子育て3〜4人</option>
+                    <option value="夫婦・単身">夫婦・単身</option>
+                    <option value="二世帯・同居">二世帯・同居</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid-2" style="margin-top: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">スケール正規化モジュール設定</label>
+                  <select id="imp-module" class="form-select">
+                    <option value="910">尺モジュール (910mmグリッド基準)</option>
+                    <option value="1000">メーターモジュール (1000mmグリッド基準)</option>
+                    <option value="auto">AIスケール自動検出 (寸法線・文字認識で正規化)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">図面取込元ソース</label>
+                  <select id="imp-source" class="form-select">
+                    <option value="自社既存顧客図面">自社既存顧客図面</option>
+                    <option value="X(旧Twitter)1日1プラン投稿者">X(旧Twitter)1日1プラン投稿者</option>
+                    <option value="海外カタログスキャン">海外カタログスキャン</option>
+                    <option value="その他建築設計資料">その他建築設計資料</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-top: 1rem;">
+                <label class="form-label">こだわり特徴タグ（カンマ区切り）</label>
+                <input type="text" id="imp-features" class="form-input" placeholder="例: 中庭テラス, パントリー, 回遊動線, ファミリークローゼット" />
+              </div>
+
+              <div class="form-group" style="margin-top: 1rem;">
+                <label class="form-label">プランの特徴・おすすめ解説文</label>
+                <textarea id="imp-desc" class="form-textarea" rows="3" placeholder="プランの魅力や動線設計の意図を入力"></textarea>
+              </div>
+
+              <div class="form-group" style="margin-top: 1rem;">
+                <label class="form-label">部屋構成サマリー</label>
+                <input type="text" id="imp-rooms-summary" class="form-input" placeholder="例: LDK 20帖, 主寝室 8帖, 子ども部屋 5.5帖×2, WIC 3帖" />
+              </div>
+
+              <div class="grid-2" style="margin-top: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">1階平面図SVG (XMLコード)</label>
+                  <textarea id="imp-svg-1f" class="form-textarea" rows="4" placeholder="&lt;svg ...&gt;&lt;/svg&gt; コードを貼り付け" required></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">2階平面図SVG (2階建ての場合)</label>
+                  <textarea id="imp-svg-2f" class="form-textarea" rows="4" placeholder="&lt;svg ...&gt;&lt;/svg&gt; コードを貼り付け"></textarea>
+                </div>
+              </div>
+
+              <div style="margin-top: 1.5rem; display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="reset" class="btn btn-secondary">リセット</button>
+                <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff;">
+                  📥 スケール正規化して間取りライブラリへ即時登録
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Existing Plans Table -->
+          <div class="card" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: var(--radius-lg); padding: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <h3 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 1.2rem; margin: 0; display: flex; align-items: center; gap: 8px;">
+                <span>📋 登録済み間取りライブラリ一覧</span>
+                <span id="admin-plans-count" style="background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 12px; font-size: 0.85rem; font-weight: 800;">323</span>
+              </h3>
+              <button type="button" class="btn btn-secondary" onclick="loadAdminPlansData()" style="font-size: 0.85rem; padding: 4px 12px;">
+                🔄 一覧を再取得
+              </button>
+            </div>
+            <div id="admin-plans-table-container" style="overflow-x: auto;"></div>
           </div>
         </div>
 
       </div>
     </template>
-
-
-
