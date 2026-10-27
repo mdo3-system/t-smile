@@ -49,9 +49,14 @@
             </div>
           </div>
         </div>
-        <a href="#chat-history-box" onclick="document.getElementById('chat-input')?.focus();" class="btn btn-sm" style="background: #2563eb; color: #ffffff; font-weight: 800; font-size: 0.8rem; padding: 6px 14px; border-radius: 6px; text-decoration: none; white-space: nowrap; box-shadow: 0 2px 6px rgba(37,99,235,0.3);">
-          💬 チャットでお知らせする
-        </a>
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <a href="#chat-history-box" onclick="document.getElementById('chat-input')?.focus();" class="btn btn-sm" style="background: #2563eb; color: #ffffff; font-weight: 800; font-size: 0.8rem; padding: 6px 14px; border-radius: 6px; text-decoration: none; white-space: nowrap; box-shadow: 0 2px 6px rgba(37,99,235,0.3);">
+            💬 チャットでお知らせする
+          </a>
+          <a href="tel:0492712350" class="btn btn-sm" style="background: #ffffff; border: 1.5px solid #2563eb; color: #1e40af; font-weight: 800; font-size: 0.8rem; padding: 5px 12px; border-radius: 6px; text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
+            📞 049-271-2350
+          </a>
+        </div>
       </div>
 
       <!-- 👨‍👩‍👧‍👦 家族アカウント管理 ＆ 📡 夫婦・家族間リアルタイム画面共有バー -->
@@ -344,17 +349,178 @@
               </a>
             </div>
             <p style="font-size: 0.78rem; color: #475569; margin: 0 0 8px; line-height: 1.5;">
-              【情報の分断ゼロへ】図面・見積書・議事録のやり取りはすべて「家カルテ」に一元保管されます。専任スタッフが回答するとお施主様のLINEへ新着通知が届き、タップ1つでこの画面に直通します。LINE上の会話分散を防ぎ、ご夫婦間でも常に最新の同一記録を共有できます。
+              【情報の分断ゼロへ】図面・見積書・議事録のやり取りはすべて「家カルテ」に一元保管されます。家づくりサポート係が回答するとお施主様のLINEへ新着通知が届き、タップ1つでこの画面に直通します。LINE上の会話分散を防ぎ、ご夫婦間でも常に最新の同一記録を共有できます。
             </p>
             <div style="background: #ffffff; padding: 8px 10px; border-radius: 6px; border: 1px solid #86efac; font-size: 0.78rem;">
               <span style="font-weight: 800; color: #166534;">💬 最新の図面質疑:</span>
               <div style="font-size: 0.74rem; color: #334155; margin-top: 2px;">
                 「パントリー入口の垂れ壁はR下がり壁にできますか？」<br>
-                ↳ 🧑‍💼 専任スタッフ:「施工可能です。寸法図を家カルテにアップロードしました（LINEへ通知済み）。」
+                ↳ 🧑‍💼 家づくりサポート係:「施工可能です。寸法図を家カルテにアップロードしました（LINEへ通知済み）。」
               </div>
             </div>
           </div>
 
+        </div>
+
+        <!-- 🛠️ 【お引渡し後・一生涯サポート】年に一度の住まい点検 ＆ 家を200年持たせる維持保全・修繕計画 -->
+        <div id="dash-maintenance-portal" style="margin-top: 1.5rem; background: #ffffff; border: 2px solid #10b981; border-radius: 16px; padding: 1.4rem; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.1);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 1rem; border-bottom: 2px solid #d1fae5; padding-bottom: 0.8rem;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                <span style="background: #059669; color: #fff; font-size: 0.74rem; font-weight: 800; padding: 2px 10px; border-radius: 12px;">
+                  お引渡し後 永久サポート ｜ 長期優良住宅 維持保全台帳対応
+                </span>
+                <span style="font-size: 0.74rem; color: #047857; font-weight: 800;">
+                  点検調査日: 令和8年10月24日 実施済（担当: 株式会社住ま居る 家づくりサポート係 049-271-2350）
+                </span>
+              </div>
+              <h3 style="margin: 0; font-size: 1.25rem; font-weight: 900; color: #065f46;">
+                🛠️ 年に一度の住まい点検シート ＆ 家を200年持たせる維持保全・修繕計画
+              </h3>
+              <p style="margin: 2px 0 0; font-size: 0.8rem; color: #64748b;">
+                毎年スタッフが訪問点検を行い、カルテに記録を蓄積。5年後・10年後に行政から「長期優良住宅の定期報告」を求められた際も、この画面の写しをそのまま提出できます。
+              </p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" onclick="alert('【長期優良住宅 定期報告用PDF出力】\n直近の調査日・全12部位の点検結果・担当者サインが記録された公式点検報告書PDFを出力します。');" class="btn btn-sm" style="background: #059669; color: #fff; font-weight: 800; font-size: 0.82rem; padding: 6px 14px; border-radius: 8px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(5,150,105,0.3);">
+                📄 行政提出用 定期報告書の写しを出力 ⬇
+              </button>
+            </div>
+          </div>
+
+          <!-- 2カラム: 左=全12部位点検チェック一覧 / 右=200年維持保全・修繕計画 -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px;">
+            
+            <!-- 左: 年に一度の住まい点検・確認シート（全12部位） -->
+            <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 1.1rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <strong style="color: #0f172a; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+                  <span>📋</span> 住まいの点検部位と結果（全12部位）
+                </strong>
+                <span style="font-size: 0.72rem; background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; padding: 2px 6px; border-radius: 4px; font-weight: 800;">
+                  全項目 異常なし (良好)
+                </span>
+              </div>
+              <p style="font-size: 0.76rem; color: #64748b; margin: 0 0 10px; line-height: 1.5;">
+                建物外周（基礎・外壁・サッシ・軒裏・給湯器・屋根目視）、屋内（窓・ドア建具開閉、全水栓給排水、ガス、床下収納を開けて懐中電灯で床下確認、バルコニー目視）を網羅。
+              </p>
+              
+              <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.74rem; max-height: 280px; overflow-y: auto; padding-right: 4px;">
+                <div style="background: #fff; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between;">
+                  <span><strong>1. 屋根:</strong> 瓦・金属板（割れ・欠け・ずれ・浮き・雨漏り）</span>
+                  <span style="color: #10b981; font-weight: 800;">✔ 良好</span>
+                </div>
+                <div style="background: #fff; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between;">
+                  <span><strong>2. 外壁:</strong> サイディング・目地シーリング（亀裂・剥離・劣化）</span>
+                  <span style="color: #10b981; font-weight: 800;">✔ 良好</span>
+                </div>
+                <div style="background: #fff; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between;">
+                  <span><strong>3. 雨樋:</strong> 軒樋・タテ樋（破損・外れ・詰まり・垂れ下がり）</span>
+                  <span style="color: #10b981; font-weight: 800;">✔ 清掃済・良好</span>
+                </div>
+                <div style="background: #fff; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between;">
+                  <span><strong>4. 基礎:</strong> ベタ基礎立ち上がり（地盤沈下・クラック・換気口・蟻道）</span>
+                  <span style="color: #10b981; font-weight: 800;">✔ 異常なし</span>
+                </div>
+                <div style="background: #fff; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between;">
+                  <span><strong>5. 床下:</strong> 土台・大引・床束（きしみ・腐朽・たわみ・シロアリ蟻害）</span>
+                  <span style="color: #10b981; font-weight: 800;">✔ 潜入確認済</span>
+                </div>
+                <div style="background: #fff; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between;">
+                  <span><strong>6. 軒裏:</strong> サイディング・合板（雨漏り・剥がれ・腐朽）</span>
+                  <span style="color: #10b981; font-weight: 800;">✔ 良好</span>
+                </div>
+                <div style="background: #fff; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between;">
+                  <span><strong>7. バルコニー:</strong> FRP防水・金属手すり（ぐらつき・沈み・雨漏り）</span>
+                  <span style="color: #10b981; font-weight: 800;">✔ 良好</span>
+                </div>
+                <div style="background: #fff; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between;">
+                  <span><strong>8. 金属建具:</strong> サッシ・玄関・網戸・シャッター（開閉・隙間）</span>
+                  <span style="color: #10b981; font-weight: 800;">✔ 建付け調整済</span>
+                </div>
+                <div style="background: #fff; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between;">
+                  <span><strong>9. 室内建具:</strong> 引き戸・開き戸・ふすま（金具異常・開閉不良）</span>
+                  <span style="color: #10b981; font-weight: 800;">✔ 良好</span>
+                </div>
+                <div style="background: #fff; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between;">
+                  <span><strong>10. 給水:</strong> 混合水栓・配管（赤水・水漏れ・パッキン・流量）</span>
+                  <span style="color: #10b981; font-weight: 800;">✔ 良好</span>
+                </div>
+                <div style="background: #fff; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between;">
+                  <span><strong>11. 排水:</strong> 配水管・トラップ（詰まり・悪臭・水漏れ・滞留）</span>
+                  <span style="color: #10b981; font-weight: 800;">✔ 良好</span>
+                </div>
+                <div style="background: #fff; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between;">
+                  <span><strong>12. ガス:</strong> ガス管・給湯器接続口（ガス漏れ・器具異常・ゴム管）</span>
+                  <span style="color: #10b981; font-weight: 800;">✔ 良好</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 右: 家を200年持たせる維持保全・修繕計画 -->
+            <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 1.1rem; display: flex; flex-direction: column;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <strong style="color: #92400e; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+                  <span>🏡</span> 家を200年持たせるメンテナンス・修繕計画
+                </strong>
+                <span style="font-size: 0.72rem; background: #fef3c7; color: #b45309; border: 1px solid #fde68a; padding: 2px 6px; border-radius: 4px; font-weight: 800;">
+                  長期修繕ロードマップ
+                </span>
+              </div>
+              <p style="font-size: 0.76rem; color: #64748b; margin: 0 0 10px; line-height: 1.5;">
+                経過年数に応じた部位別メンテナンスと費用目安。計画的な修繕で生涯コストを最小化します。
+              </p>
+
+              <div style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+                <div style="background: #fff; border-left: 4px solid #10b981; border-radius: 6px; padding: 7px 10px; border: 1px solid #e2e8f0; border-left-width: 4px; font-size: 0.74rem;">
+                  <div style="display: flex; justify-content: space-between; font-weight: 800;">
+                    <span style="color: #065f46;">入居5年目（費用目安: 約5万円）</span>
+                    <span style="color: #10b981;">点検・再塗布</span>
+                  </div>
+                  <div style="color: #475569; margin-top: 2px;">外壁・雨樋・UB/キッチン洗面給排水点検、シロアリ再塗布（5年毎）、換気扇分解清掃</div>
+                </div>
+
+                <div style="background: #fff; border-left: 4px solid #0284c7; border-radius: 6px; padding: 7px 10px; border: 1px solid #e2e8f0; border-left-width: 4px; font-size: 0.74rem;">
+                  <div style="display: flex; justify-content: space-between; font-weight: 800;">
+                    <span style="color: #0369a1;">入居10年目（費用目安: 約30万円）</span>
+                    <span style="color: #0284c7;">設備更新目安</span>
+                  </div>
+                  <div style="color: #475569; margin-top: 2px;">水栓パッキン交換、給湯器寿命（マイクロバブル対応検討 約25万）、屋根・バルコニー点検補修</div>
+                </div>
+
+                <div style="background: #fff; border-left: 4px solid #f59e0b; border-radius: 6px; padding: 7px 10px; border: 1px solid #e2e8f0; border-left-width: 4px; font-size: 0.74rem;">
+                  <div style="display: flex; justify-content: space-between; font-weight: 800;">
+                    <span style="color: #b45309;">入居15年目（費用目安: 約60万円）</span>
+                    <span style="color: #f59e0b;">水回り・防水</span>
+                  </div>
+                  <div style="color: #475569; margin-top: 2px;">ガス台・ウォシュレット部寿命、バルコニー再防水処理（約12万）、キッチン/UB水栓交換</div>
+                </div>
+
+                <div style="background: #fff; border-left: 4px solid #ea580c; border-radius: 6px; padding: 7px 10px; border: 1px solid #e2e8f0; border-left-width: 4px; font-size: 0.74rem;">
+                  <div style="display: flex; justify-content: space-between; font-weight: 800;">
+                    <span style="color: #c2410c;">入居20年目（費用目安: 約170万円）</span>
+                    <span style="color: #ea580c;">外装リフレッシュ</span>
+                  </div>
+                  <div style="color: #475569; margin-top: 2px;">外壁・破風・軒天吹替検討（約85万）、雨樋交換（約20万）、洗面化粧台交換、内装部分補修</div>
+                </div>
+
+                <div style="background: #fff; border-left: 4px solid #7c3aed; border-radius: 6px; padding: 7px 10px; border: 1px solid #e2e8f0; border-left-width: 4px; font-size: 0.74rem;">
+                  <div style="display: flex; justify-content: space-between; font-weight: 800;">
+                    <span style="color: #6d28d9;">入居30年経過時（費用目安: 約250万円）</span>
+                    <span style="color: #7c3aed;">大規模リニューアル</span>
+                  </div>
+                  <div style="color: #475569; margin-top: 2px;">屋根葺き替え検討（約90万）、システムキッチン交換（約90万）、ユニットバス交換（約65万）</div>
+                </div>
+              </div>
+
+              <!-- スマイチ＆住ま居る 有料フルサポート案内 -->
+              <div style="margin-top: 10px; background: #fffbeb; border: 1px dashed #f59e0b; border-radius: 8px; padding: 6px 10px; font-size: 0.72rem; color: #78350f;">
+                💡 <strong>住ま居る 定期フルメンテナンスパック:</strong> 5年毎のシステムキッチン・UB・トイレ換気扇分解清掃＋エアコン掃除＋床下シロアリ処理（延床30坪で約15万円）もチャットから1タップでお申し込みいただけます。
+              </div>
+
+            </div>
+
+          </div>
         </div>
       </div>
 
@@ -371,7 +537,7 @@
         <!-- Main: Live Chat with AI Agent & Specialist Staff -->
         <div class="chat-panel">
           <h4 style="color: var(--primary-green-dark); font-family: var(--font-heading); border-bottom: 1px solid #e2e8f0; padding-bottom: 0.8rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-            <span>💬 家カルテ一元チャット（専任スタッフ回答時はLINEへ即時通知）</span>
+            <span>💬 家カルテ一元チャット（家づくりサポート係の回答時はLINEへ即時通知）</span>
             <span style="font-size: 0.72rem; background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 12px; font-weight: 700;">永久保管・ご夫婦完全同期</span>
           </h4>
           <p style="font-size: 0.78rem; color: #64748b; margin-top: 0; margin-bottom: 0.8rem;">

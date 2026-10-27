@@ -113,11 +113,14 @@ async def combine_video_with_audio(item_id, voice_type='female'):
 
     genre = item['genre']
     subfolder = 'madori' if genre == 'madori' else 'thermal'
+    alt_subfolder = 'thermal' if subfolder == 'madori' else 'madori'
 
     video_file = os.path.join(VIDEO_BASE, subfolder, f"{item_id}.mp4")
+    alt_video_file = os.path.join(VIDEO_BASE, alt_subfolder, f"{item_id}.mp4")
     raw_archive_dir = os.path.join(VIDEO_BASE, 'raw_archive', subfolder)
     os.makedirs(raw_archive_dir, exist_ok=True)
     raw_archive_file = os.path.join(raw_archive_dir, f"{item_id}_raw.mp4")
+    alt_raw_file = os.path.join(VIDEO_BASE, 'raw_archive', alt_subfolder, f"{item_id}_raw.mp4")
 
     # もし raw_archive_file が既にある場合はそこから再結合可能
     source_video = None
@@ -125,6 +128,13 @@ async def combine_video_with_audio(item_id, voice_type='female'):
         source_video = video_file
     elif os.path.exists(raw_archive_file):
         source_video = raw_archive_file
+    elif os.path.exists(alt_video_file):
+        # 逆側のフォルダにアップロードされていた場合は自動救済コピー
+        print(f"[Auto Recover] {alt_video_file} から {video_file} へ救済同期します")
+        shutil.copy2(alt_video_file, video_file)
+        source_video = video_file
+    elif os.path.exists(alt_raw_file):
+        source_video = alt_raw_file
     else:
         raise FileNotFoundError(f"動画ファイルが見つかりません。先にVeo 3からダウンロードして配置してください: {video_file}")
 

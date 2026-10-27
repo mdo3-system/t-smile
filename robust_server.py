@@ -38,6 +38,12 @@ def save_users_db(data):
     except Exception as e:
         print(f"Error saving users db: {e}")
 
+def resolve_knowledge_genre(item_id):
+    """知見IDからジャンル（madori または thermal）を正確に判定（th_以外はmadori）"""
+    if str(item_id).startswith('th_'):
+        return 'thermal'
+    return 'madori'
+
 class RobustRequestHandler(SimpleHTTPRequestHandler):
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
@@ -552,7 +558,7 @@ class RobustRequestHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(b'{"error": "Missing id or video data"}')
                 return
 
-            genre = 'madori' if item_id.startswith('k_') else 'thermal'
+            genre = resolve_knowledge_genre(item_id)
             save_dir = os.path.join(PUBLIC_DIR, 'videos', 'veo3', genre)
             os.makedirs(save_dir, exist_ok=True)
             video_file = os.path.join(save_dir, f"{item_id}.mp4")
@@ -583,7 +589,7 @@ class RobustRequestHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(b'{"error": "Missing id"}')
                 return
 
-            genre = 'madori' if item_id.startswith('k_') else 'thermal'
+            genre = resolve_knowledge_genre(item_id)
             video_file = os.path.join(PUBLIC_DIR, 'videos', 'veo3', genre, f"{item_id}.mp4")
             raw_archive = os.path.join(PUBLIC_DIR, 'videos', 'veo3', 'raw_archive', genre, f"{item_id}_raw.mp4")
             target_source = raw_archive if os.path.exists(raw_archive) else video_file
@@ -637,7 +643,7 @@ class RobustRequestHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(b'{"error": "Missing id"}')
                 return
 
-            genre = 'madori' if item_id.startswith('k_') else 'thermal'
+            genre = resolve_knowledge_genre(item_id)
             video_file = os.path.join(PUBLIC_DIR, 'videos', 'veo3', genre, f"{item_id}.mp4")
             raw_archive = os.path.join(PUBLIC_DIR, 'videos', 'veo3', 'raw_archive', genre, f"{item_id}_raw.mp4")
             source_video = video_file if os.path.exists(video_file) else raw_archive

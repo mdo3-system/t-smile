@@ -1,14 +1,14 @@
 {
-  "version": "2.17.0",
-  "buildDate": "2026-10-26",
-  "releaseName": "Production Release v2.17.0 - Carte Loan & Plan Studio Hardening & Admin Multi-Role Auth",
+  "version": "2.18.0",
+  "buildDate": "2026-10-27",
+  "releaseName": "Major Update v2.18.0 - Home Carte Maintenance Portal & Schedule Guide Modal & Support Unified",
   "components": {
     "madoriSketch": "2.6.4",
     "smileStudio": "2.7.0",
     "styleMatcher": "1.0.0",
     "bubblePlan": "2.0.0",
     "speedPlanner": "2.2.0",
-    "knowledgeVideoPortal": "1.8.1",
+    "knowledgeVideoPortal": "1.8.2",
     "subsidyNavi": "2.6.0",
     "mortgageDiagnosis": "2.8.0",
     "thermalBot": "2.6.0",
@@ -16,6 +16,17 @@
     "domEngine": "1.2.1"
   },
   "changelog": [
+    {
+      "version": "2.18.0",
+      "date": "2026-10-27",
+      "title": "本番サーバー正式運用デプロイ v2.18.0（家カルテ点検・修繕計画ポータル・スケジュール家カルテ解説モーダル・家づくりサポート係統一・SNS動画合成復旧）",
+      "changes": [
+        "【家づくりサポート係の完全統一】全WebUI・LINE連携・家カルテ・電話窓口（049-271-2350）における対応主体を「家づくりサポート係」に厳格統一（代表・菅原・建築士の露出はプラン申込後の設計打合せ3回のみに限定）",
+        "【家カルテ長期維持保全ポータル】「年に一度の住まい点検シート（全12部位記録）」および「家を200年持たせる維持保全・修繕計画（5年・10年・15年・20年・30年）」をマイページ（#dashboard）に実装",
+        "【スケジュール家カルテ解説モーダル】家づくり全工程スケジュール（/schedule/）内に「家カルテって何？（解説を見る）」ポップアップモーダルを配備",
+        "【SNSスタジオ合成パイプライン復旧】動画アップロード時のジャンル自動判定を修復し、全間取り・温熱知見動画とアナウンサーナレーション音声の自動合成（FFmpeg）を完全復旧"
+      ]
+    },
     {
       "version": "2.17.0",
       "date": "2026-10-26",
