@@ -153,7 +153,7 @@ def build_knowledge_pages_and_sitemap():
   <link rel="stylesheet" href="/css/thermal-bot.css" />
   <style>
     .seo-article-wrap {{
-      max-width: 860px;
+      max-width: 1360px;
       margin: 2rem auto;
       padding: 2.5rem;
       background: #ffffff;
@@ -201,6 +201,10 @@ def build_knowledge_pages_and_sitemap():
     <div class="seo-box">
       <div class="seo-box-title">💡 結論・重要ポイント</div>
       <p style="margin: 0; font-size: 1.05rem; font-weight: 700; color: #1e293b;">{shortAnswer}</p>
+    </div>
+
+    <div style="margin: 1.5rem 0 2rem; border-radius: 12px; overflow: hidden; background: #f8fafc; border: 1px solid #e2e8f0; text-align: center; max-height: 480px;">
+      <img src="{image}" alt="{question}" style="max-width: 100%; max-height: 480px; object-fit: contain;" onerror="this.src='/images/hero_kaguya_house.jpg'" />
     </div>
     
     <h2 style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-top: 1.8rem; margin-bottom: 0.8rem;">📐 標準基準・数値指標</h2>
@@ -260,7 +264,8 @@ def build_knowledge_pages_and_sitemap():
             shortAnswer=q.get('shortAnswer', ''),
             dimension=q.get('dimension', ''),
             details=q.get('details', ''),
-            principle=q.get('principle', '')
+            principle=q.get('principle', ''),
+            image=q.get('image', '/images/hero_kaguya_house.jpg')
         )
         
         with open(file_path, 'w', encoding='utf-8') as f:
@@ -295,10 +300,19 @@ def build_knowledge_pages_and_sitemap():
     except Exception as e:
         print(f"[WARN] Failed to generate plan pages: {e}")
 
+    # 設計プロの知見200選（間取り・寸法・動線実務）の生成とSitemapへの追加
+    madori_knowledge_urls = []
+    try:
+        from scripts.build_madori_knowledge import build_all_madori_knowledge
+        madori_knowledge_urls = build_all_madori_knowledge()
+        urls_for_sitemap.extend(madori_knowledge_urls)
+    except Exception as e:
+        print(f"[WARN] Failed to generate madori knowledge pages: {e}")
+
     # =========================================================================
     # サイトマップインデックス化 (sitemap-index.xml & 分割サイトマップ)
     # 1. sitemap-pages.xml     : トップ・固定LP・コアツール・施工実例
-    # 2. sitemap-knowledge.xml : 温熱・気密・換気・構造の知見200選
+    # 2. sitemap-knowledge.xml : 温熱200選 ＆ 設計プロの知見200選（計400問）
     # 3. sitemap-plans.xml     : 323プランカタログハブ & 全プラン個別詳細ページ
     # 4. sitemap-index.xml     : Google Search Console登録用インデックス
     # 5. sitemap.xml           : 互換性のためのインデックスファイル
@@ -327,11 +341,11 @@ def build_knowledge_pages_and_sitemap():
         f.write('\n'.join(pages_sitemap_lines))
     print(f"[SEO] Generated sitemap-pages.xml with {len(page_urls_list)} URLs!")
 
-    # 2. 知見専用 (knowledge_urls)
-    knowledge_urls_list = [u for u in urls_for_sitemap if '/knowledge/thermal/' in u]
+    # 2. 知見専用 (knowledge_urls: 温熱200選 + 設計知見200選)
+    knowledge_urls_list = [u for u in urls_for_sitemap if '/knowledge/thermal/' in u or '/knowledge/madori/' in u]
     knowledge_sitemap_lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u in knowledge_urls_list:
-        priority = "0.95" if u.endswith('/knowledge/thermal/') else "0.8"
+        priority = "0.95" if (u.endswith('/knowledge/thermal/') or u.endswith('/knowledge/madori/') or any(u.endswith(f'/{c}.html') for c in ['kitchen', 'ldk', 'water', 'entrance', 'storage', 'equipment', 'garden', 'kaso'])) else "0.8"
         knowledge_sitemap_lines.append(f"  <url><loc>{u}</loc><priority>{priority}</priority><changefreq>weekly</changefreq></url>")
     knowledge_sitemap_lines.append('</urlset>')
 
@@ -562,6 +576,7 @@ def generate_llms_full_txt():
     lines.append("- 夫婦の本音間取り相談・家づくりカルテ: https://t-smile.co.jp/madori-consultation/")
     lines.append("- AIフォトリアルパース工房: https://t-smile.co.jp/ai-studio/")
     lines.append("- 温熱知見200選 インデックス: https://t-smile.co.jp/knowledge/thermal/")
+    lines.append("- 設計プロの知見200選 インデックス: https://t-smile.co.jp/knowledge/madori/")
     lines.append("- 3D住宅間取りプラン集（全323選）総合カタログ: https://t-smile.co.jp/plans/")
     lines.append("- 完全工学仕様 ＆ 公的証明書ダイジェスト（Webカタログ・A4印刷/PDF対応）: https://t-smile.co.jp/catalog/")
 

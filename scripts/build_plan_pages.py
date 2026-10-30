@@ -19,6 +19,20 @@ PUBLIC_DIR = os.path.join(os.path.dirname(__file__), '..', 'public')
 PLANS_DATA_PATH = os.path.join(PUBLIC_DIR, 'data', 'plans.json')
 OUT_DIR = os.path.join(PUBLIC_DIR, 'plans', 'detail')
 HUB_OUT_PATH = os.path.join(PUBLIC_DIR, 'plans', 'index.html')
+SRC_DIR = os.path.join(os.path.dirname(__file__), '..', 'src')
+
+def get_common_components():
+    header_path = os.path.join(SRC_DIR, 'partials', 'header-nav.html')
+    footer_path = os.path.join(SRC_DIR, 'partials', 'footer.html')
+    header_html = ""
+    footer_html = ""
+    if os.path.exists(header_path):
+        with open(header_path, 'r', encoding='utf-8') as f:
+            header_html = f.read()
+    if os.path.exists(footer_path):
+        with open(footer_path, 'r', encoding='utf-8') as f:
+            footer_html = f.read()
+    return header_html, footer_html
 
 PLAN_TEMPLATE = """<!DOCTYPE html>
 <html lang="ja">
@@ -81,6 +95,22 @@ PLAN_TEMPLATE = """<!DOCTYPE html>
         },
         "provider": {
           "@id": "https://t-smile.co.jp/#organization"
+        }
+      },
+      {
+        "@type": "Product",
+        "@id": "__CANONICAL_URL__#product",
+        "name": __JSON_TITLE__,
+        "description": __JSON_DESC__,
+        "image": "https://t-smile.co.jp__OG_IMAGE__",
+        "category": "注文住宅 規格・自由設計間取りプラン",
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "JPY",
+          "price": "__COST_BODY_MIN_NUM__",
+          "priceValidUntil": "2027-12-31",
+          "availability": "https://schema.org/InStock",
+          "url": "__CANONICAL_URL__"
         }
       },
       {
@@ -679,8 +709,9 @@ PLAN_TEMPLATE = """<!DOCTYPE html>
     .similar-meta { font-size: 0.75rem; color: #64748b; margin-top: 4px; }
   </style>
 </head>
-<body style="background: #f1f5f9; padding: 1rem;">
-  <div class="plan-detail-wrap">
+<body>
+  __COMMON_HEADER__
+  <div class="plan-detail-wrap" style="margin-top: 1.5rem;">
     <!-- パンくずリスト（正規階層） -->
     <nav class="plan-crumb" aria-label="パンくずリスト">
       <a href="/">🏠 ホーム</a> &gt; <a href="/plans/">3D間取りプラン集（323選）</a> &gt; <span>__PLAN_ID__</span>
@@ -1080,6 +1111,8 @@ PLAN_TEMPLATE = """<!DOCTYPE html>
       }
     }
   </script>
+  __COMMON_FOOTER__
+  <script src="/js/app.js"></script>
 </body>
 </html>"""
 
@@ -1159,6 +1192,21 @@ def build_plans_hub(plans):
         else:
             tsubo_cat = "over36"
 
+        # 特徴・動線カテゴリの判定
+        features = []
+        text_for_search = f"{title} {rooms}".lower()
+        if any(k in text_for_search for k in ['キッチン', 'パントリー', '対面', 'アイランド', '回遊']):
+            features.append('kitchen')
+        if any(k in text_for_search for k in ['ldk', 'リビング', '吹抜', '小上がり', '畳', 'タタミ', 'ロフト']):
+            features.append('ldk')
+        if any(k in text_for_search for k in ['ランドリー', '洗面', '脱衣', '乾太', '水回り', '室内干し', 'サンルーム']):
+            features.append('laundry')
+        if any(k in text_for_search for k in ['土間', 'sic', 'シューズ', '玄関', 'ポーチ']):
+            features.append('entrance')
+        if any(k in text_for_search for k in ['収納', 'wic', 'クローク', 'ファミクロ', 'パントリー', '納戸', '小屋裏']):
+            features.append('storage')
+        feature_str = " ".join(features) if features else "all"
+
         thumb = "/images/hero_kaguya_house.jpg"
         if plan.get('floors') and plan['floors'][0].get('gemini_3d'):
             thumb = plan['floors'][0]['gemini_3d']
@@ -1166,7 +1214,7 @@ def build_plans_hub(plans):
             thumb = plan['floors'][0]['clean_2d']
 
         card = f"""
-        <article class="hub-plan-card" data-tsubo="{tsubo_cat}" data-floors="{floors}" data-dir="{clean_dir}">
+        <article class="hub-plan-card" data-tsubo="{tsubo_cat}" data-floors="{floors}" data-dir="{clean_dir}" data-features="{feature_str}">
           <a href="/plans/detail/{slug}.html" class="hub-card-link">
             <div class="hub-thumb-wrap">
               <img src="{thumb}" alt="{title} 3Dパース鳥瞰" loading="lazy" class="hub-thumb" />
@@ -1189,6 +1237,7 @@ def build_plans_hub(plans):
         cards_html.append(card)
 
     cards_all_html = "\n".join(cards_html)
+    header_html, footer_html = get_common_components()
 
     hub_html = f"""<!DOCTYPE html>
 <html lang="ja">
@@ -1514,8 +1563,9 @@ def build_plans_hub(plans):
     }}
   </style>
 </head>
-<body style="background: #f1f5f9; padding: 1rem 0;">
-  <div class="hub-container">
+<body>
+  {header_html}
+  <div class="hub-container" style="margin-top: 1.5rem;">
     <!-- パンくずリスト -->
     <nav class="hub-crumb" aria-label="パンくずリスト">
       <a href="/">🏠 ホーム</a> &gt; <span>3D間取りプラン集（323選）</span>
@@ -1602,7 +1652,17 @@ def build_plans_hub(plans):
     </section>
 
     <!-- 絞り込みフィルター -->
-    <div class="filter-box">
+    <!-- 絞り込みフィルター -->
+    <div class="filter-box" id="plans-filter">
+      <div class="filter-group">
+        <span class="filter-label">✨ こだわり動線:</span>
+        <button class="filter-btn active" data-filter-type="feature" data-value="all">すべて</button>
+        <button class="filter-btn" data-filter-type="feature" data-value="kitchen">🍳 キッチン・パントリー（回遊動線）</button>
+        <button class="filter-btn" data-filter-type="feature" data-value="ldk">🛋️ LDK・小上がり・吹抜け</button>
+        <button class="filter-btn" data-filter-type="feature" data-value="laundry">🧺 水回り・ランドリー・乾太くん</button>
+        <button class="filter-btn" data-filter-type="feature" data-value="entrance">👞 土間SIC・ポーチ玄関</button>
+        <button class="filter-btn" data-filter-type="feature" data-value="storage">📦 ファミクロ・分散収納</button>
+      </div>
       <div class="filter-group">
         <span class="filter-label">📐 延床坪数:</span>
         <button class="filter-btn active" data-filter-type="tsubo" data-value="all">すべて</button>
@@ -1630,21 +1690,37 @@ def build_plans_hub(plans):
 
     <!-- プランカードグリッド -->
     <main class="hub-grid" id="plan-grid">
+      <div id="plans-grid" style="display: contents;"></div>
       {cards_all_html}
     </main>
   </div>
 
+  {footer_html}
+
   <script>
-    // クライアントサイド高速フィルタリング
+    // クライアントサイド高速フィルタリング ＆ URLパラメータ連動
     (function() {{
       const state = {{
         tsubo: 'all',
         floors: 'all',
-        dir: 'all'
+        dir: 'all',
+        feature: 'all'
       }};
 
       const cards = document.querySelectorAll('.hub-plan-card');
       const countEl = document.getElementById('visible-count');
+
+      // URLパラメータの自動初期化 (?feature=kitchen など)
+      const urlParams = new URLSearchParams(window.location.search);
+      const initFeature = urlParams.get('feature');
+      if (initFeature) {{
+        state.feature = initFeature;
+        const targetBtn = document.querySelector(`.filter-btn[data-filter-type="feature"][data-value="${{initFeature}}"]`);
+        if (targetBtn) {{
+          document.querySelectorAll('.filter-btn[data-filter-type="feature"]').forEach(b => b.classList.remove('active'));
+          targetBtn.classList.add('active');
+        }}
+      }}
 
       document.querySelectorAll('.filter-btn').forEach(btn => {{
         btn.addEventListener('click', function() {{
@@ -1665,8 +1741,10 @@ def build_plans_hub(plans):
           const matchTsubo = (state.tsubo === 'all' || card.dataset.tsubo === state.tsubo);
           const matchFloors = (state.floors === 'all' || card.dataset.floors === state.floors);
           const matchDir = (state.dir === 'all' || card.dataset.dir === state.dir);
+          const cardFeatures = (card.dataset.features || '').split(' ');
+          const matchFeature = (state.feature === 'all' || cardFeatures.includes(state.feature));
 
-          if (matchTsubo && matchFloors && matchDir) {{
+          if (matchTsubo && matchFloors && matchDir && matchFeature) {{
             card.style.display = 'flex';
             visible++;
           }} else {{
@@ -1675,8 +1753,20 @@ def build_plans_hub(plans):
         }});
         if (countEl) countEl.textContent = visible;
       }}
+
+      // 初期実行
+      applyFilter();
+
+      // ハッシュまたはパラメータ指定時のスムーズスクロール
+      if (window.location.hash || initFeature) {{
+        setTimeout(() => {{
+          const target = document.getElementById('plans-filter') || document.getElementById('plan-grid');
+          if (target) target.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+        }}, 100);
+      }}
     }})();
   </script>
+  <script src="/js/app.js"></script>
 </body>
 </html>"""
 
@@ -1696,6 +1786,9 @@ def build_all_plans():
 
     # 1. 静的プランカタログハブ (/plans/) の生成
     hub_url = build_plans_hub(plans)
+
+    # 共通ヘッダー・フッター読み込み
+    common_header, common_footer = get_common_components()
 
     # 2. 個別プラン詳細ページ (/plans/detail/*.html) の生成
     os.makedirs(OUT_DIR, exist_ok=True)
@@ -1833,7 +1926,14 @@ def build_all_plans():
         daylight_ratio = f"{round(26.0 + ((tsubo_f * 5.1) % 6.8), 1):.1f}"
 
         # SEO Title & Description (費用・返済キーワード ＆ 埼玉全域エリアキーワードの獲得)
-        seo_title = f"{title}（{tsubo}坪・{rooms}）間取り図・3Dパース・概算費用 | 株式会社住ま居る"
+        # 本体価格と坪単価の概算算出
+        try:
+            cost_num = float(cost_body_min.replace(',', ''))
+            tsubo_unit_man = round(cost_num / tsubo_f, 1)
+        except Exception:
+            tsubo_unit_man = 68.0
+
+        seo_title = f"【本体約{cost_body_min}万円〜｜坪単価約{tsubo_unit_man}万】{title}（{tsubo}坪・{rooms}）間取り図・3Dパース・建築費用 | 株式会社住ま居る"
         seo_description = f"{desc} 延床面積{sqm}㎡（{tsubo}坪）、{display_dir}、{rooms}、LDK{ldk}帖。本体約{cost_body_min}万円〜、月々返済約{monthly_pay}万円。埼玉県全域（さいたま市・川口市・戸田市・越谷市・春日部市・川越市・鶴ヶ島市等）対応の完全自由設計3D間取りプラン。"
         seo_keywords = f"注文住宅 間取り, {tsubo}坪 間取り, 注文住宅 概算費用, 月々返済額, {rooms}, {display_dir}, 埼玉 工務店, さいたま市 注文住宅, 川口市 注文住宅, 越谷市 注文住宅, 春日部市 注文住宅, 鶴ヶ島 注文住宅, 川越 注文住宅, 3Dパース, 株式会社住ま居る"
 
@@ -1877,7 +1977,9 @@ def build_all_plans():
             "__BEDROOMS_COUNT__": str(bedrooms_count),
             "__STORAGE_RATIO__": str(storage_ratio),
             "__HOUSEWORK_STEPS__": str(housework_steps),
-            "__DAYLIGHT_RATIO__": str(daylight_ratio)
+            "__DAYLIGHT_RATIO__": str(daylight_ratio),
+            "__COMMON_HEADER__": common_header,
+            "__COMMON_FOOTER__": common_footer
         }
 
         for k, v in replacements.items():

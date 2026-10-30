@@ -16,8 +16,53 @@ class ThermalBotStudio {
   async init() {
     await this.loadQaData();
     this.bindEvents();
+
+    // URLから初期カテゴリを取得（例: ?cat=th_ins または #thermal-consultation?cat=th_ins）
+    const urlCat = this.getCategoryFromUrl();
+    if (urlCat && urlCat !== 'all') {
+      this.currentCategory = urlCat;
+      document.querySelectorAll('.thermal-tab-pill').forEach(p => {
+        if (p.getAttribute('data-cat') === urlCat) p.classList.add('active');
+        else p.classList.remove('active');
+      });
+    }
+
     this.renderQaCards();
     this.updateCategoryCounts();
+
+    // popstate / hashchange でのカテゴリ切り替え監視
+    window.addEventListener('hashchange', () => this.handleUrlChange());
+    window.addEventListener('popstate', () => this.handleUrlChange());
+  }
+
+  getCategoryFromUrl() {
+    const full = window.location.href;
+    const match = full.match(/[?&]cat=([a-zA-Z0-9_]+)/);
+    return match ? match[1] : null;
+  }
+
+  handleUrlChange() {
+    const cat = this.getCategoryFromUrl();
+    if (cat && cat !== this.currentCategory) {
+      this.selectCategory(cat);
+    }
+  }
+
+  selectCategory(cat) {
+    if (!cat) return;
+    this.currentCategory = cat;
+    document.querySelectorAll('.thermal-tab-pill').forEach(p => {
+      if (p.getAttribute('data-cat') === cat) p.classList.add('active');
+      else p.classList.remove('active');
+    });
+    this.renderQaCards();
+
+    const target = document.getElementById('thermal-consultation');
+    if (target) {
+      setTimeout(() => {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    }
   }
 
   async loadQaData() {

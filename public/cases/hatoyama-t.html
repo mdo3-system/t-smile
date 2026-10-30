@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>鳩山町・T様邸 施工実例（厳選20枚・プロ写真）｜株式会社住ま居る</title>
-  <meta name="description" content="鳩山町・T様邸の施工実例。緑豊かな丘陵地に寄り添う平屋調ファサード・深い庇が日射を遮るパッシブ設計。延床面積33.1坪 (109.4㎡)、間取り3LDK + パントリー + 広々テラス、耐震等級3、実測C値0.39 ㎠/㎡、UA値0.35 W/㎡K。プロ撮影高精細WebP写真20枚とお施主様の声を全公開。" />
+  <title>鳩山町・T様邸 施工実例（プロ撮影写真20枚・建築解説）｜株式会社住ま居る</title>
+  <meta name="description" content="鳩山町・T様邸の施工実例。緑豊かな丘陵地に寄り添う平屋調ファサード・深い庇が日射を遮るパッシブ設計。延床面積33.1坪 (109.4㎡)、間取り3LDK + パントリー + 広々テラス、耐震等級3、実測C値0.39 ㎠/㎡、UA値0.35 W/㎡K。プロ撮影高精細WebP写真20枚と職人のこだわり解説を全公開。" />
   <link rel="canonical" href="https://t-smile.co.jp/cases/hatoyama-t.html" />
 
   <!-- OGP -->
@@ -44,7 +44,7 @@
   <!-- Google Fonts & Stylesheet -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800&family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800&family=Noto+Sans+JP:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css" />
 
   <style>
@@ -53,24 +53,136 @@
     .spec-table th { background: #f1f5f9; padding: 10px 14px; font-weight: 800; color: #334155; border: 1px solid #cbd5e1; width: 28%; }
     .spec-table td { background: #ffffff; padding: 10px 14px; color: #0f172a; border: 1px solid #cbd5e1; font-weight: 600; }
     .voice-box { background: #ffffff; border-radius: 12px; padding: 1.5rem; border: 2px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
+    .case-photo-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+    .case-photo-card:hover a img { transform: scale(1.03); }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
-  <header style="background: rgba(15,23,42,0.95); backdrop-filter: blur(10px); border-bottom: 2px solid #0284c7; padding: 0.8rem 1.5rem; position: sticky; top: 0; z-index: 100;">
-    <div style="max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-      <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
-        <span style="font-size: 1.4rem;">🏡</span>
-        <span style="color: #ffffff; font-weight: 900; font-size: 1.15rem; letter-spacing: -0.5px;">株式会社住ま居る</span>
-        <span style="color: #38bdf8; font-size: 0.82rem; font-weight: 700; background: rgba(56,189,248,0.15); padding: 2px 8px; border-radius: 4px;">施工実例ギャラリー</span>
-      </a>
-      <div style="display: flex; gap: 10px; align-items: center;">
-        <a href="/#craftsmanship" style="color: #94a3b8; text-decoration: none; font-size: 0.85rem; font-weight: 700;">実例一覧へ戻る ↩</a>
-        <a href="/#real-booking-section" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; padding: 7px 16px; border-radius: 6px; text-decoration: none; font-weight: 800; font-size: 0.85rem; box-shadow: 0 2px 8px rgba(16,185,129,0.3);">見学予約する ➜</a>
+  <header class="site-header">
+    <div class="nav-container-twotier">
+      <!-- Tier 1: Brand & AI Services / Bots -->
+      <div class="nav-tier-top">
+        <div class="nav-brand-group">
+          <div style="display: inline-flex; align-items: center;">
+            <a href="#" class="logo" id="logo-ai-lab" data-target="top" style="cursor: pointer;">
+              <span>家づくりAIラボ</span>
+              <span class="logo-badge">by 住ま居る</span>
+            </a>
+            <button type="button" id="btn-ai-lab-info" style="background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 10px; margin-left: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px;" title="家づくりAIラボとは？">
+              <span>ℹ️</span> 概要
+            </button>
+          </div>
+          <div class="brand-cred-tag">
+            <span class="cred-tag-area" style="color: #38bdf8; font-weight: 700;">施工エリア：埼玉県全域・一部東京都</span>
+            <span class="cred-tag-sep" style="opacity: 0.3;">|</span>
+            <span class="cred-tag-years">創業30年・累計800棟</span>
+            <span class="cred-tag-sep" style="opacity: 0.3;">|</span>
+            <span class="cred-tag-license" style="color: #6ee7b7;">般-8 第60650号</span>
+          </div>
+        </div>
+
+        <!-- AI Tools & Interactive Bots (Top Row) -->
+        <div class="nav-ai-suite">
+          <span class="nav-group-label" style="color: #fde68a;">🏡 AIツール:</span>
+          <ul class="nav-links-tier">
+            <li><a href="/plans/index.html" class="nav-link-btn highlight-sky" data-target="floorplan-studio" style="cursor: pointer;">📐 3Dプラン選定 ↗</a></li>
+            <li><a href="/madori-sketch/" target="_blank" class="nav-link-btn" style="background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; font-weight: 800; text-decoration: none; box-shadow: 0 2px 8px rgba(16,185,129,0.35);">✏️ 間取り工房 ↗</a></li>
+            <li><a href="/smilestudio.html" target="_blank" class="nav-link-btn highlight-amber" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800; box-shadow: 0 2px 8px rgba(245,158,11,0.4); text-decoration: none;">🎨 3Dパース工房 ↗</a></li>
+            <li><a href="/knowledge/madori/" class="nav-link-btn" style="background: linear-gradient(135deg, #7c3aed, #a855f7); color: #ffffff; font-weight: 800; text-decoration: none; box-shadow: 0 2px 8px rgba(168,85,247,0.35);">📖 設計知見200 ↗</a></li>
+            <li><a href="/knowledge/thermal/" class="nav-link-btn highlight-emerald" style="cursor: pointer;">💬 温熱換気相談 ↗</a></li>
+            <li><a href="/subsidy/index.html" class="nav-link-btn" style="background: linear-gradient(135deg, #047857, #10b981); color: #ffffff; font-weight: 800; text-decoration: none; box-shadow: 0 2px 8px rgba(16,185,129,0.3);">💰 補助金ナビ ↗</a></li>
+            <li><a href="/mortgage/index.html" class="nav-link-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; font-weight: 800; text-decoration: none; box-shadow: 0 2px 8px rgba(56,189,248,0.3);">🏦 住宅ローン診断 ↗</a></li>
+          </ul>
+        </div>
+
+        <!-- Mobile Hamburger Button -->
+        <button class="nav-toggle" id="nav-toggle" aria-label="メニュー切り替え">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <!-- Tier 2: Main Navigation & Showroom (Balanced Clean Bar) -->
+      <div class="nav-tier-bottom">
+        <ul class="nav-links-tier nav-main-links">
+          <li><a href="/" class="nav-link active" data-target="top">🏠 ホーム</a></li>
+          <li><a href="/plans/index.html" class="nav-link" style="color: #38bdf8; font-weight: 800;">📐 323プラン集</a></li>
+          <li><a href="/about/" class="nav-link" data-target="our-philosophy" style="cursor: pointer;">🏛️ こだわり（芳彩）</a></li>
+          <li><a href="/schedule/" class="nav-link" style="color: #38bdf8; font-weight: 800;">📅 家づくり工程</a></li>
+          <li><a href="/evidence/" class="nav-link" data-target="credlayer" style="color: #34d399; font-weight: 800; cursor: pointer;">🛡️ 信頼実証</a></li>
+          <li><a class="nav-link" href="/awards/kankyo-housing/" style="color: #fde68a; font-weight: 800;">🏆 環境住宅賞</a></li>
+          <li><a class="nav-link" href="/catalog/" style="color: #6ee7b7; font-weight: 800;">📘 工学カタログ</a></li>
+          <li><a href="/#article-feature" class="nav-link" data-target="article-feature" style="color: #f59e0b; font-weight: 800; cursor: pointer;">📖 解体新書</a></li>
+          <li><a href="/#metaverse" class="nav-link" data-target="metaverse" style="cursor: pointer;">🌐 メタバース</a></li>
+          <li><a href="/#scent-experience" class="nav-link" data-target="scent-experience" style="cursor: pointer; color: #fde68a; font-weight: 800;">👣 素足モデルハウス</a></li>
+          <li><a href="/#dashboard" class="nav-link carte-btn" id="nav-auth-btn" data-target="dashboard" style="cursor: pointer; border-radius: 8px; padding: 4px 12px;">👤 家カルテ</a></li>
+        </ul>
       </div>
     </div>
   </header>
+
+  <!-- Mobile Drawer Overlay & Menu -->
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+  <aside class="mobile-drawer" id="mobile-drawer" aria-label="モバイルナビゲーション">
+    <ul class="mobile-drawer-links">
+      <li style="padding: 0.75rem 1rem 0.5rem; font-size: 0.76rem; color: #94a3b8; border-bottom: 1px solid rgba(255, 255, 255, 0.1); line-height: 1.5;">
+        🏛️ <strong style="color: #e2e8f0;">株式会社住ま居る</strong>（鶴ヶ島市）<br>
+        創業30年・累計800棟｜知事許可(般-8)第60650号
+      </li>
+      <li><a class="mobile-nav-link active" href="/" data-target="top">🏠 ホーム（高気密高断熱注文住宅）</a></li>
+      <li><a class="mobile-nav-link highlight" href="/schedule/" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; font-weight: 800;">📅 家づくりスケジュール（カレンダーチェックリスト） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/jfd-survey/" style="background: linear-gradient(135deg, #0f766e, #0d9488); color: #fff; font-weight: 800;">🛰️ JFD 3D点群測量と敷地調査（本物資料公開） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/subsidy/index.html" style="background: linear-gradient(135deg, #047857, #10b981); color: #fff; font-weight: 800;">💰 AI補助金ナビ（市区町村別一括判定） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/mortgage/index.html" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-weight: 800;">🏦 AI住宅ローン診断（金利・団信TOP5） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/plans/index.html">📐 AI 3Dプラン選定（323選）</a></li>
+      <li><a class="mobile-nav-link highlight" href="https://lin.ee/8fdyyGu" target="_blank" rel="noopener noreferrer" style="background: #06c755; color: #fff; font-weight: 900;">💬 公式LINE（専任スタッフ直通・ID: @051vqxla） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/madori-sketch/" target="_blank" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-weight: 800;">✏️ 3D手描き間取り工房 ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/smilestudio.html" target="_blank" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800;">🎨 AI 3Dパース工房（SmileStudio） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/knowledge/madori/" style="background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; font-weight: 800;">📖 設計知見200選（間取り実務Q&A） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/knowledge/thermal/" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff;">💬 24時間 AI温熱換気相談（知見200選）</a></li>
+      <li><a class="mobile-nav-link" href="/awards/kankyo-housing/" style="background: linear-gradient(135deg, #b45309, #d97706); color: #fff; font-weight: 800;">🏆 【受賞実話】埼玉県環境住宅賞</a></li>
+      <li><a class="mobile-nav-link highlight" href="/evidence/" data-target="credlayer" style="background: linear-gradient(135deg, #064e3b, #059669); color: #fff; font-weight: 800;">🛡️ CredLayer (信頼実証レイヤー)</a></li>
+      <li><a class="mobile-nav-link" href="/catalog/" style="background: linear-gradient(135deg, #065f46, #059669); color: #fff; font-weight: 800;">📘 完全工学カタログ（A4印刷/PDF）</a></li>
+      <li><a class="mobile-nav-link" href="/#article-feature" data-target="article-feature" style="color: #f59e0b; font-weight: 700;">📖 手づくり住宅解体新書（全10章）</a></li>
+      <li><a class="mobile-nav-link" href="/about/" data-target="our-philosophy">🏛️ 私たちの家づくり（芳彩・かぐや）</a></li>
+      <li><a class="mobile-nav-link" href="/cases/tsurugashima-s.html" data-target="craftsmanship">🔨 お客様×大工さん×建築士（施工実例）</a></li>
+      <li><a class="mobile-nav-link" href="/#metaverse" data-target="metaverse">🌐 バーチャル展示場</a></li>
+      <li><a class="mobile-nav-link" href="/#scent-experience" data-target="scent-experience" style="color: #fde68a; font-weight: 800;">👣 毛呂山モデルハウス（素足見学予約）</a></li>
+      <li><a class="mobile-nav-link" href="/#dashboard" id="nav-auth-btn-mobile" data-target="dashboard">👤 マイページ・家カルテ</a></li>
+    </ul>
+  </aside>
+
+  <!-- Mobile Thumb-Friendly Fixed Bottom Navigation -->
+  <nav class="mobile-bottom-bar" aria-label="クイック操作バー">
+    <a href="/" class="bottom-tab-btn active" data-target="top">
+      <span class="tab-icon">🏠</span>
+      <span>ホーム</span>
+    </a>
+    <a href="/plans/index.html" class="bottom-tab-btn" style="color: #38bdf8; font-weight: 800;">
+      <span class="tab-icon">📐</span>
+      <span>間取り</span>
+    </a>
+    <a href="/smilestudio.html" class="bottom-tab-btn" style="color: #f59e0b; font-weight: 800;">
+      <span class="tab-icon">🎨</span>
+      <span>パース</span>
+    </a>
+    <a href="/knowledge/thermal/" class="bottom-tab-btn" style="color: #10b981; font-weight: 800;">
+      <span class="tab-icon">💬</span>
+      <span>温熱AI</span>
+    </a>
+    <a href="/#article-feature" class="bottom-tab-btn" data-target="article-feature" style="color: #f59e0b; font-weight: 800;">
+      <span class="tab-icon">📖</span>
+      <span>解体新書</span>
+    </a>
+  </nav>
+
+  <!-- Main Content Container -->
+  <main class="main-content">
+
+
+
 
   <!-- Breadcrumb -->
   <nav class="case-container" style="padding-top: 1rem; padding-bottom: 0.5rem; font-size: 0.82rem; color: #64748b;">
@@ -84,7 +196,7 @@
     <div style="background: #ffffff; border-radius: 14px; overflow: hidden; border: 2px solid #0284c7; box-shadow: 0 10px 30px rgba(2,132,199,0.1); margin-bottom: 2.5rem;">
       <div style="position: relative; height: 480px; max-height: 60vh; background: #0f172a;">
         <img src="/images/cases/hatoyama-t/photo_01_img_0001.webp" alt="鳩山町・T様邸 メイン写真" style="width: 100%; height: 100%; object-fit: cover;" width="1920" height="1080">
-        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(15,23,42,0.9) 0%, rgba(15,23,42,0.3) 70%, transparent 100%); padding: 2rem 2rem 1.5rem; color: #fff;">
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(15,23,42,0.92) 0%, rgba(15,23,42,0.3) 70%, transparent 100%); padding: 2rem 2rem 1.5rem; color: #fff;">
           <span style="background: #0284c7; color: #fff; font-size: 0.82rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 6px;">
             📍 比企郡鳩山町 ｜ 厳選20枚フォトギャラリー
           </span>
@@ -123,7 +235,7 @@
       <!-- 3-Party Voices -->
       <div>
         <h2 style="font-size: 1.3rem; font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 1rem; border-left: 4px solid #059669; padding-left: 10px;">
-          お客様 × 大工職人 × 建築士の想い
+          お客様 × 大工職人 × 設計の想い
         </h2>
         <div style="display: flex; flex-direction: column; gap: 1rem;">
           <div class="voice-box" style="border-left: 4px solid #f59e0b;">
@@ -132,10 +244,10 @@
           </div>
           <div class="voice-box" style="border-left: 4px solid #0284c7;">
             <div style="font-weight: 800; color: #0369a1; font-size: 0.85rem; margin-bottom: 4px;">🪚 専属大工のこだわり</div>
-            <p style="margin: 0; font-size: 0.88rem; color: #334155; line-height: 1.7;">「軒の出を1.2m深く出した垂木を大工手刻みで強固に固定。風雨に耐える伝統の木組みを現代工法と融合させました。」</p>
+            <p style="margin: 0; font-size: 0.88rem; color: #334155; line-height: 1.7;">「軒の出を1.2m深く出した垂木を大工さんの手刻みで強固に固定。風雨に耐える伝統の木組みを現代工法と融合させました。」</p>
           </div>
           <div class="voice-box" style="border-left: 4px solid #059669;">
-            <div style="font-weight: 800; color: #047857; font-size: 0.85rem; margin-bottom: 4px;">📐 建築士の構造・温熱設計</div>
+            <div style="font-weight: 800; color: #047857; font-size: 0.85rem; margin-bottom: 4px;">📐 構造・温熱設計</div>
             <p style="margin: 0; font-size: 0.88rem; color: #334155; line-height: 1.7;">「埼玉の夏の猛暑をパッシブに防ぐ『深い軒』と、冬の太陽熱を室内にたっぷり取り込む窓配置をシミュレーション。四季を通じてエアコン頼みにならない家を実現しました。」</p>
           </div>
         </div>
@@ -154,228 +266,471 @@
 
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.4rem;">
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_01_img_0001.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_01_img_0001.webp" alt="【外観ファサード】鳩山町・T様邸 - 街並みに美しく映える外観デザイン。埼玉の自然光と風の流れを計算したパッシブ設計。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_01_img_0001.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_01_img_0001.webp" alt="【アーリーアメリカン調のラップサイディングとカバードポーチ】 爽やかなブルーグレーのラップサイディングに白い窓枠トリムが美しく映える外観。切妻屋根の妻飾りやポーチコラムが、古き良きアメリカンハウスの風情を醸し出します。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #01 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【外観ファサード】鳩山町・T様邸 - 街並みに美しく映える外観デザイン。埼玉の自然光と風の流れを計算したパッシブ設計。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #01 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【アーリーアメリカン調のラップサイディングとカバードポーチ】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">爽やかなブルーグレーのラップサイディングに白い窓枠トリムが美しく映える外観。切妻屋根の妻飾りやポーチコラムが、古き良きアメリカンハウスの風情を醸し出します。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_02_img_0007.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_02_img_0007.webp" alt="【アプローチ・玄関】鳩山町・T様邸 - 愛車や家族をやさしく迎え入れるエントランス。深い庇が雨風を防ぎます。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_02_img_0007.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_02_img_0007.webp" alt="【夕暮れの空に凛と佇む陰影豊かなアーリーアメリカンスタイル】 横張りのラップサイディングが創り出す陰影と温かみのある佇まい。ダブル切妻の美しいプロポーションが、街並みの中で確かな存在感を放ちます。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #02 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【アプローチ・玄関】鳩山町・T様邸 - 愛車や家族をやさしく迎え入れるエントランス。深い庇が雨風を防ぎます。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #02 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【夕暮れの空に凛と佇む陰影豊かなアーリーアメリカンスタイル】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">横張りのラップサイディングが創り出す陰影と温かみのある佇まい。ダブル切妻の美しいプロポーションが、街並みの中で確かな存在感を放ちます。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_03_img_0026.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_03_img_0026.webp" alt="【エントランスホール】鳩山町・T様邸 - 扉を開けた瞬間に広がる無垢材の香りと上質な空間。来客を温かくもてなします。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_03_img_0026.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_03_img_0026.webp" alt="【ダブル切妻の妻飾りと白いコラム柱が迎えるファサード】 正面から見たシンメトリーな妻飾りデザインと開放的なカバードポーチ。木目調ドアと白いポーチ柱のコントラストが、訪れる人をあたたかく迎え入れます。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #03 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【エントランスホール】鳩山町・T様邸 - 扉を開けた瞬間に広がる無垢材の香りと上質な空間。来客を温かくもてなします。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #03 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【ダブル切妻の妻飾りと白いコラム柱が迎えるファサード】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">正面から見たシンメトリーな妻飾りデザインと開放的なカバードポーチ。木目調ドアと白いポーチ柱のコントラストが、訪れる人をあたたかく迎え入れます。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_04_img_0038.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_04_img_0038.webp" alt="【大開口LDK全景】鳩山町・T様邸 - 家族全員がゆったり寛げる広々リビング。耐震等級3を維持しながら大空間を実現。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_04_img_0038.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_04_img_0038.webp" alt="【コーナーFIX窓とバルコニーが陽光を導く開放的な南面】 吹抜けへと光を届けるコーナーFIX窓や2階インナーバルコニー。アメリカンカントリーの意匠美と、日差しをたっぷり取り込むパッシブ設計を両立しています。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #04 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【大開口LDK全景】鳩山町・T様邸 - 家族全員がゆったり寛げる広々リビング。耐震等級3を維持しながら大空間を実現。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #04 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【コーナーFIX窓とバルコニーが陽光を導く開放的な南面】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">吹抜けへと光を届けるコーナーFIX窓や2階インナーバルコニー。アメリカンカントリーの意匠美と、日差しをたっぷり取り込むパッシブ設計を両立しています。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_05_img_0056.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_05_img_0056.webp" alt="【リビング・吹き抜け】鳩山町・T様邸 - 上部からの光が降り注ぐ心地よいリビング。開放感と高気密高断熱を両立。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_05_img_0056.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_05_img_0056.webp" alt="【ヴィンテージアメリカンの世界観が広がるウェルカムエントランス】 重厚な木目ドアを開けると広がるアンティークな空間。建具屋さんが手掛けたチェッカーガラス入りの木製引き戸が、柔らかな光と気品ある趣を漂わせます。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #05 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【リビング・吹き抜け】鳩山町・T様邸 - 上部からの光が降り注ぐ心地よいリビング。開放感と高気密高断熱を両立。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #05 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【ヴィンテージアメリカンの世界観が広がるウェルカムエントランス】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">重厚な木目ドアを開けると広がるアンティークな空間。建具屋さんが手掛けたチェッカーガラス入りの木製引き戸が、柔らかな光と気品ある趣を漂わせます。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_06_img_0067.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_06_img_0067.webp" alt="【ピットリビング・畳コーナー】鳩山町・T様邸 - 空間をゆるやかに仕切る工夫。段差に腰掛けたり寝転んだりと多彩なくつろぎを提案。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_06_img_0067.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_06_img_0067.webp" alt="【吹抜けの開放感とダークブラウン化粧梁が織りなす大空間LDK】 白い無垢フローリングにダークブラウンの表し梁がアクセントを添えるLDK。高い吹抜けのコーナー窓から心地よい光が注ぎ、家族の憩いのひとときを包み込みます。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #06 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【ピットリビング・畳コーナー】鳩山町・T様邸 - 空間をゆるやかに仕切る工夫。段差に腰掛けたり寝転んだりと多彩なくつろぎを提案。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #06 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【吹抜けの開放感とダークブラウン化粧梁が織りなす大空間LDK】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">白い無垢フローリングにダークブラウンの表し梁がアクセントを添えるLDK。高い吹抜けのコーナー窓から心地よい光が注ぎ、家族の憩いのひとときを包み込みます。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_07_img_0083.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_07_img_0083.webp" alt="【オーダーキッチン】鳩山町・T様邸 - 料理が楽しくなる機能美あふれるキッチン。家事負担を軽減する回遊動線を確保。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_07_img_0083.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_07_img_0083.webp" alt="【ダイナミックな吹抜け見上げとリビング階段・小上がり空間】 天井高を活かした大吹抜けにはシーリングファンを設置し、室内の空気を快適に循環。奥にはリビング階段と、お子様を見守れる小上がりスペースが続きます。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #07 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【オーダーキッチン】鳩山町・T様邸 - 料理が楽しくなる機能美あふれるキッチン。家事負担を軽減する回遊動線を確保。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #07 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【ダイナミックな吹抜け見上げとリビング階段・小上がり空間】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">天井高を活かした大吹抜けにはシーリングファンを設置し、室内の空気を快適に循環。奥にはリビング階段と、お子様を見守れる小上がりスペースが続きます。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_08_img_0100.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_08_img_0100.webp" alt="【ダイニングゾーン】鳩山町・T様邸 - 家族の会話が弾む明るい食卓。庭の景色を眺めながら食事が楽しめます。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_08_img_0100.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_08_img_0100.webp" alt="【キッチンから家族の気配を感じられる一体感あふれるリビング】 家事をしながらリビング全体や吹抜けを見渡せる開放的なレイアウト。家族が自然と集まり、思い思いにくつろげる温もりあるワンフロア設計です。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #08 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【ダイニングゾーン】鳩山町・T様邸 - 家族の会話が弾む明るい食卓。庭の景色を眺めながら食事が楽しめます。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #08 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【キッチンから家族の気配を感じられる一体感あふれるリビング】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">家事をしながらリビング全体や吹抜けを見渡せる開放的なレイアウト。家族が自然と集まり、思い思いにくつろげる温もりあるワンフロア設計です。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_09_img_0191.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_09_img_0191.webp" alt="【大容量収納・パントリー】鳩山町・T様邸 - 生活感をすっきり隠す造作収納。必要な場所に必要な容量を配置。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_09_img_0191.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_09_img_0191.webp" alt="【吹抜けキャットウォークから見下ろす明るいリビングの表情】 2階からリビングを見下ろすダイナミックな鳥瞰アングル。コーナーFIX窓から射し込む自然光が白い床に広がり、どこにいても上下階の気配がつながります。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #09 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【大容量収納・パントリー】鳩山町・T様邸 - 生活感をすっきり隠す造作収納。必要な場所に必要な容量を配置。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #09 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【吹抜けキャットウォークから見下ろす明るいリビングの表情】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">2階からリビングを見下ろすダイナミックな鳥瞰アングル。コーナーFIX窓から射し込む自然光が白い床に広がり、どこにいても上下階の気配がつながります。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_10_img_0110.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_10_img_0110.webp" alt="【大工手刻み・化粧梁】鳩山町・T様邸 - 熟練大工が木の癖を見極めて手刻み加工した化粧梁。構造の力強さと美しさが共存。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_10_img_0110.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_10_img_0110.webp" alt="【ワインレッド×モノトーンチェッカー床のアメリカンダイナー風キッチン】 鮮やかなワインレッドの鏡面パネルと市松模様のチェッカー床が魅せるこだわりのキッチン。赤いペンダントライトがレトロポップなアメリカンダイナーの雰囲気を引き立てます。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #10 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【大工手刻み・化粧梁】鳩山町・T様邸 - 熟練大工が木の癖を見極めて手刻み加工した化粧梁。構造の力強さと美しさが共存。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #10 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【ワインレッド×モノトーンチェッカー床のアメリカンダイナー風キッチン】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">鮮やかなワインレッドの鏡面パネルと市松模様のチェッカー床が魅せるこだわりのキッチン。赤いペンダントライトがレトロポップなアメリカンダイナーの雰囲気を引き立てます。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_11_img_0121.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_11_img_0121.webp" alt="【本格和室・障子ディテール】鳩山町・T様邸 - 伝統の木組みとモダンが融合した和室。細部に宿る職人の精緻な手仕事。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_11_img_0121.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_11_img_0121.webp" alt="【清潔感あふれるワイド洗面化粧台と充実のリネン収納】 三面鏡付きの機能的なワイド洗面台に、タオルや着替えをすっきり収められる専用収納棚を設置。奥にはシックなアクセントパネルのバスルームが続きます。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #11 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【本格和室・障子ディテール】鳩山町・T様邸 - 伝統の木組みとモダンが融合した和室。細部に宿る職人の精緻な手仕事。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #11 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【清潔感あふれるワイド洗面化粧台と充実のリネン収納】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">三面鏡付きの機能的なワイド洗面台に、タオルや着替えをすっきり収められる専用収納棚を設置。奥にはシックなアクセントパネルのバスルームが続きます。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_12_img_0131.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_12_img_0131.webp" alt="【デザイン階段】鳩山町・T様邸 - インテリアの主役となる美しい階段。軽やかなスチールと無垢木材の調和。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_12_img_0131.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_12_img_0131.webp" alt="【明るい採光勝手口を備えた家事効率を高めるユーティリティ動線】 格子入りの勝手口ドアから明るい自然光が差し込むサニタリー。床下収納やスムーズな動線設計により、毎日の洗濯・家事も軽やかにこなせます。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #12 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【デザイン階段】鳩山町・T様邸 - インテリアの主役となる美しい階段。軽やかなスチールと無垢木材の調和。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #12 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【明るい採光勝手口を備えた家事効率を高めるユーティリティ動線】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">格子入りの勝手口ドアから明るい自然光が差し込むサニタリー。床下収納やスムーズな動線設計により、毎日の洗濯・家事も軽やかにこなせます。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_13_img_0141.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_13_img_0141.webp" alt="【ホテルライク造作洗面】鳩山町・T様邸 - 毎日の身支度が楽しくなるオリジナル洗面台。タイルと照明の美しい組み合わせ。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_13_img_0141.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_13_img_0141.webp" alt="【ティファニーブルーの壁とロフトが彩る開放的な勾配天井の主寝室】 爽快なティファニーブルーのアクセントウォールと白いインテリア。勾配天井の伸びやかな高さを活かし、上部には趣味を楽しむロフトスペースを設けました。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #13 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【ホテルライク造作洗面】鳩山町・T様邸 - 毎日の身支度が楽しくなるオリジナル洗面台。タイルと照明の美しい組み合わせ。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #13 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【ティファニーブルーの壁とロフトが彩る開放的な勾配天井の主寝室】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">爽快なティファニーブルーのアクセントウォールと白いインテリア。勾配天井の伸びやかな高さを活かし、上部には趣味を楽しむロフトスペースを設けました。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_14_img_0209.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_14_img_0209.webp" alt="【浴室・バスルーム】鳩山町・T様邸 - 1日の疲れを心地よく癒すバスルーム。高断熱浴槽で冬でもあたたかさが持続。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_14_img_0209.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_14_img_0209.webp" alt="【ロフトから見下ろす主寝室の伸びやかな立体空間】 高低差が生み出す立体的な広がり。ロフトの木製手すり越しに見下ろすベッドルームは、爽やかな色合いと木の温もりが美しく調和しています。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #14 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【浴室・バスルーム】鳩山町・T様邸 - 1日の疲れを心地よく癒すバスルーム。高断熱浴槽で冬でもあたたかさが持続。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #14 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【ロフトから見下ろす主寝室の伸びやかな立体空間】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">高低差が生み出す立体的な広がり。ロフトの木製手すり越しに見下ろすベッドルームは、爽やかな色合いと木の温もりが美しく調和しています。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_15_img_0220.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_15_img_0220.webp" alt="【レストルーム】鳩山町・T様邸 - 清潔感と落ち着きのあるレストルーム。独立手洗い器やニッチ収納を完備。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_15_img_0220.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_15_img_0220.webp" alt="【コレクションや読書を楽しむ大人の秘密基地のようなロフト】 落ち着いたダークブラウンの無垢床と化粧梁に囲まれたロフト。お気に入りのトイや本を並べ、日常の喧騒を離れて自分だけの時間を満喫できる隠れ家です。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #15 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【レストルーム】鳩山町・T様邸 - 清潔感と落ち着きのあるレストルーム。独立手洗い器やニッチ収納を完備。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #15 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【コレクションや読書を楽しむ大人の秘密基地のようなロフト】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">落ち着いたダークブラウンの無垢床と化粧梁に囲まれたロフト。お気に入りのトイや本を並べ、日常の喧騒を離れて自分だけの時間を満喫できる隠れ家です。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_16_img_0167.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_16_img_0167.webp" alt="【主寝室・ウォークインクローゼット】鳩山町・T様邸 - 静かな眠りを約束する落ち着いた寝室。大容量のウォークインクローゼットを併設。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_16_img_0167.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_16_img_0167.webp" alt="【3連の格子入り上げ下げ窓から心地よい風が抜ける明るい洋室】 白を基調とした爽やかな洋室。リズミカルに並ぶ格子入りの上げ下げ窓が、アメリカンハウスならではの愛らしい表情と爽快な採光・通風をもたらします。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #16 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【主寝室・ウォークインクローゼット】鳩山町・T様邸 - 静かな眠りを約束する落ち着いた寝室。大容量のウォークインクローゼットを併設。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #16 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【3連の格子入り上げ下げ窓から心地よい風が抜ける明るい洋室】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">白を基調とした爽やかな洋室。リズミカルに並ぶ格子入りの上げ下げ窓が、アメリカンハウスならではの愛らしい表情と爽快な採光・通風をもたらします。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_17_img_0233.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_17_img_0233.webp" alt="【子ども部屋・スタディスペース】鳩山町・T様邸 - 子どもの成長に合わせて間仕切り可能な可変設計。自然光が入る明るい空間。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_17_img_0233.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_17_img_0233.webp" alt="【クロス手すりとモンステラ型ブラケット照明が照らす階段室】 カントリースタイルのクロス（X型）木製手すり壁と、ダークトーンの踏面の美しい調和。壁に灯るリーフ型の陰影照明が、上下階の上り下りを優しく演出します。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #17 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【子ども部屋・スタディスペース】鳩山町・T様邸 - 子どもの成長に合わせて間仕切り可能な可変設計。自然光が入る明るい空間。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #17 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【クロス手すりとモンステラ型ブラケット照明が照らす階段室】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">カントリースタイルのクロス（X型）木製手すり壁と、ダークトーンの踏面の美しい調和。壁に灯るリーフ型の陰影照明が、上下階の上り下りを優しく演出します。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_18_img_0062.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_18_img_0062.webp" alt="【バルコニー・ウッドデッキ】鳩山町・T様邸 - 屋内外が一体となるアウトドアリビング。青空の下でリフレッシュできる特等席。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_18_img_0062.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_18_img_0062.webp" alt="【格子窓の自然光とチェッカーガラス引き戸が迎える玄関ホール】 大きな格子窓から柔らかな陽光が注ぎ込む明るい玄関ホール。建具屋さんが丹精込めて仕立てたランマ付き木製引き戸が、住まいの格式と温もりを物語ります。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #18 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【バルコニー・ウッドデッキ】鳩山町・T様邸 - 屋内外が一体となるアウトドアリビング。青空の下でリフレッシュできる特等席。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #18 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【格子窓の自然光とチェッカーガラス引き戸が迎える玄関ホール】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">大きな格子窓から柔らかな陽光が注ぎ込む明るい玄関ホール。建具屋さんが丹精込めて仕立てたランマ付き木製引き戸が、住まいの格式と温もりを物語ります。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_19_img_0111.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_19_img_0111.webp" alt="【夜景ライティング】鳩山町・T様邸 - 夕暮れ時から美しく灯る建築化照明。安心感とやすらぎに包まれる夜の佇まい。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_19_img_0111.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_19_img_0111.webp" alt="【使いやすさとポップな意匠を両立したフル装備のキッチン空間】 家電カウンターやパントリーを備え、作業性と収納力を極めたキッチンスペース。白と黒のチェッカーフロアが毎日の料理時間を特別なひとときに彩ります。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #19 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【夜景ライティング】鳩山町・T様邸 - 夕暮れ時から美しく灯る建築化照明。安心感とやすらぎに包まれる夜の佇まい。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #19 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【使いやすさとポップな意匠を両立したフル装備のキッチン空間】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">家電カウンターやパントリーを備え、作業性と収納力を極めたキッチンスペース。白と黒のチェッカーフロアが毎日の料理時間を特別なひとときに彩ります。</p>
           </div>
         </div>
         
-        <div class="case-photo-card" style="background: #ffffff; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease;">
-          <a href="/images/cases/hatoyama-t/photo_20_img_0165.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px;">
-            <img src="/images/cases/hatoyama-t/thumb/photo_20_img_0165.webp" alt="【建物全景・竣工ディテール】鳩山町・T様邸 - お施主様の叶えたい想い、大工の技、建築士の計算が結実した世界にひとつの邸宅。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
-            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.8); color: #fff; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">拡大表示 ↗</span>
+        <div class="case-photo-card" style="background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease;">
+          <a href="/images/cases/hatoyama-t/photo_20_img_0165.webp" target="_blank" style="display: block; position: relative; overflow: hidden; height: 260px; background: #0f172a;">
+            <img src="/images/cases/hatoyama-t/thumb/photo_20_img_0165.webp" alt="【爽やかなミントグリーンと2面採光が心地よい子ども部屋】 優しく爽やかなミントグリーンの壁紙と、白い格子窓のコンビネーション。2方向からの採光で一日中明るく、子どもの成長を健やかに育む空間です。" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;" width="600" height="400">
+            <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; backdrop-filter: blur(4px);">拡大表示 ↗</span>
           </a>
-          <div style="padding: 1rem;">
-            <div style="font-size: 0.75rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">Photo #20 / 20</div>
-            <p style="font-size: 0.88rem; color: #1e293b; line-height: 1.6; margin: 0; font-weight: 600;">【建物全景・竣工ディテール】鳩山町・T様邸 - お施主様の叶えたい想い、大工の技、建築士の計算が結実した世界にひとつの邸宅。</p>
+          <div style="padding: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; color: #0284c7; font-weight: 800; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">Photo #20 / 20</span>
+            </div>
+            <h3 style="font-size: 1rem; color: #0f172a; margin: 0 0 6px 0; font-weight: 800; line-height: 1.4;">【爽やかなミントグリーンと2面採光が心地よい子ども部屋】</h3>
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.7; margin: 0;">優しく爽やかなミントグリーンの壁紙と、白い格子窓のコンビネーション。2方向からの採光で一日中明るく、子どもの成長を健やかに育む空間です。</p>
           </div>
         </div>
         
       </div>
     </section>
+
+    <!-- 横の回遊リンク：他の施工実例アーカイブ（全12邸） -->
+    <section style="margin-top: 4.5rem; background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; padding: 2.5rem 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <span style="background: #e0f2fe; color: #0284c7; font-weight: 800; padding: 4px 14px; border-radius: 20px; font-size: 0.82rem;">他の邸宅も見る</span>
+        <h2 style="font-size: 1.6rem; font-weight: 900; color: #0f172a; margin: 0.5rem 0 0.3rem;">
+          埼玉の注文住宅 施工実例アーカイブ（全12実邸）
+        </h2>
+        <p style="color: #64748b; font-size: 0.92rem; margin: 0;">専属大工さんの手仕事と許容応力度計算 耐震等級3で建てた本物の住まい</p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.4rem;">
+        
+            <a href="/cases/tokigawa-k.html" style="text-decoration: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+              <div style="height: 160px; overflow: hidden; background: #0f172a;">
+                <img src="/images/cases/tokigawa-k/thumb/photo_01_dsc_8715.webp" alt="ときがわ町・K様邸" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" width="300" height="180">
+              </div>
+              <div style="padding: 1rem; flex-grow: 1; display: flex; flex-direction: column;">
+                <span style="font-size: 0.72rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">📍 ときがわ町 ｜ 全20枚</span>
+                <h4 style="font-size: 0.95rem; color: #0f172a; margin: 0 0 4px; font-weight: 800; line-height: 1.4;">ときがわ町・K様邸</h4>
+                <p style="font-size: 0.8rem; color: #64748b; margin: 0; line-height: 1.5; flex-grow: 1;">吉野杉大黒柱 × 太陽光ZEH × パッシブ設計 × C値0.3</p>
+                <div style="margin-top: 8px; font-size: 0.8rem; color: #059669; font-weight: 800;">実写真集を見る ➜</div>
+              </div>
+            </a>
+            
+            <a href="/cases/yoshimi-o.html" style="text-decoration: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+              <div style="height: 160px; overflow: hidden; background: #0f172a;">
+                <img src="/images/cases/yoshimi-o/thumb/photo_01_dsc_0556.webp" alt="吉見町・O様邸" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" width="300" height="180">
+              </div>
+              <div style="padding: 1rem; flex-grow: 1; display: flex; flex-direction: column;">
+                <span style="font-size: 0.72rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">📍 比企郡吉見町 ｜ 全20枚</span>
+                <h4 style="font-size: 0.95rem; color: #0f172a; margin: 0 0 4px; font-weight: 800; line-height: 1.4;">吉見町・O様邸</h4>
+                <p style="font-size: 0.8rem; color: #64748b; margin: 0; line-height: 1.5; flex-grow: 1;">無垢杉フロア × 珪藻土塗り壁 × 平屋風ワンフロア動線</p>
+                <div style="margin-top: 8px; font-size: 0.8rem; color: #059669; font-weight: 800;">実写真集を見る ➜</div>
+              </div>
+            </a>
+            
+            <a href="/cases/kawagoe-y.html" style="text-decoration: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+              <div style="height: 160px; overflow: hidden; background: #0f172a;">
+                <img src="/images/cases/kawagoe-y/thumb/photo_01_r0037347.webp" alt="川越市・Y様邸" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" width="300" height="180">
+              </div>
+              <div style="padding: 1rem; flex-grow: 1; display: flex; flex-direction: column;">
+                <span style="font-size: 0.72rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">📍 川越市 ｜ 全20枚</span>
+                <h4 style="font-size: 0.95rem; color: #0f172a; margin: 0 0 4px; font-weight: 800; line-height: 1.4;">川越市・Y様邸</h4>
+                <p style="font-size: 0.8rem; color: #64748b; margin: 0; line-height: 1.5; flex-grow: 1;">30帖大LDK × 白タイル床暖房 × ピットリビング × 造作間接照明</p>
+                <div style="margin-top: 8px; font-size: 0.8rem; color: #059669; font-weight: 800;">実写真集を見る ➜</div>
+              </div>
+            </a>
+            
+            <a href="/cases/hidaka-i.html" style="text-decoration: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+              <div style="height: 160px; overflow: hidden; background: #0f172a;">
+                <img src="/images/cases/hidaka-i/thumb/photo_01_dsc_8924_edit01.webp" alt="日高市・I様邸" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" width="300" height="180">
+              </div>
+              <div style="padding: 1rem; flex-grow: 1; display: flex; flex-direction: column;">
+                <span style="font-size: 0.72rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">📍 日高市 ｜ 全20枚</span>
+                <h4 style="font-size: 0.95rem; color: #0f172a; margin: 0 0 4px; font-weight: 800; line-height: 1.4;">日高市・I様邸</h4>
+                <p style="font-size: 0.8rem; color: #64748b; margin: 0; line-height: 1.5; flex-grow: 1;">光熱費大幅削減 × 勾配天井大空間 × 付加断熱 × 気密C値0.28</p>
+                <div style="margin-top: 8px; font-size: 0.8rem; color: #059669; font-weight: 800;">実写真集を見る ➜</div>
+              </div>
+            </a>
+            
+            <a href="/cases/higashimatsuyama-k.html" style="text-decoration: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+              <div style="height: 160px; overflow: hidden; background: #0f172a;">
+                <img src="/images/cases/higashimatsuyama-k/thumb/photo_01_20150923_000.webp" alt="東松山市・K様邸" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" width="300" height="180">
+              </div>
+              <div style="padding: 1rem; flex-grow: 1; display: flex; flex-direction: column;">
+                <span style="font-size: 0.72rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">📍 東松山市 ｜ 全20枚</span>
+                <h4 style="font-size: 0.95rem; color: #0f172a; margin: 0 0 4px; font-weight: 800; line-height: 1.4;">東松山市・K様邸</h4>
+                <p style="font-size: 0.8rem; color: #64748b; margin: 0; line-height: 1.5; flex-grow: 1;">手刻み木組み × 伝統格子戸 × 職人手づくり家具 × 和モダン</p>
+                <div style="margin-top: 8px; font-size: 0.8rem; color: #059669; font-weight: 800;">実写真集を見る ➜</div>
+              </div>
+            </a>
+            
+            <a href="/cases/gyoda-h.html" style="text-decoration: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+              <div style="height: 160px; overflow: hidden; background: #0f172a;">
+                <img src="/images/cases/gyoda-h/thumb/photo_01_dsc_3218.webp" alt="行田市・H様邸" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" width="300" height="180">
+              </div>
+              <div style="padding: 1rem; flex-grow: 1; display: flex; flex-direction: column;">
+                <span style="font-size: 0.72rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">📍 行田市 ｜ 全20枚</span>
+                <h4 style="font-size: 0.95rem; color: #0f172a; margin: 0 0 4px; font-weight: 800; line-height: 1.4;">行田市・H様邸</h4>
+                <p style="font-size: 0.8rem; color: #64748b; margin: 0; line-height: 1.5; flex-grow: 1;">ビルトインガレージ × ネイビーガルバリウム × 愛車直結動線</p>
+                <div style="margin-top: 8px; font-size: 0.8rem; color: #059669; font-weight: 800;">実写真集を見る ➜</div>
+              </div>
+            </a>
+            
+            <a href="/cases/tsurugashima-a.html" style="text-decoration: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+              <div style="height: 160px; overflow: hidden; background: #0f172a;">
+                <img src="/images/cases/tsurugashima-a/thumb/photo_01__dsc8468.webp" alt="鶴ヶ島市・A様邸" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" width="300" height="180">
+              </div>
+              <div style="padding: 1rem; flex-grow: 1; display: flex; flex-direction: column;">
+                <span style="font-size: 0.72rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">📍 鶴ヶ島市 ｜ 全20枚</span>
+                <h4 style="font-size: 0.95rem; color: #0f172a; margin: 0 0 4px; font-weight: 800; line-height: 1.4;">鶴ヶ島市・A様邸</h4>
+                <p style="font-size: 0.8rem; color: #64748b; margin: 0; line-height: 1.5; flex-grow: 1;">不満ゼロの家 × アイランドキッチン × プライベート中庭 × 家事動線</p>
+                <div style="margin-top: 8px; font-size: 0.8rem; color: #059669; font-weight: 800;">実写真集を見る ➜</div>
+              </div>
+            </a>
+            
+            <a href="/cases/tsurugashima-kb.html" style="text-decoration: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+              <div style="height: 160px; overflow: hidden; background: #0f172a;">
+                <img src="/images/cases/tsurugashima-kb/thumb/photo_01_dsc_8594.webp" alt="鶴ヶ島市・KB様邸" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" width="300" height="180">
+              </div>
+              <div style="padding: 1rem; flex-grow: 1; display: flex; flex-direction: column;">
+                <span style="font-size: 0.72rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">📍 鶴ヶ島市 ｜ 全20枚</span>
+                <h4 style="font-size: 0.95rem; color: #0f172a; margin: 0 0 4px; font-weight: 800; line-height: 1.4;">鶴ヶ島市・KB様邸</h4>
+                <p style="font-size: 0.8rem; color: #64748b; margin: 0; line-height: 1.5; flex-grow: 1;">雪見障子 × 本格数寄屋和室 × 庭園景観 × 銘木化粧梁</p>
+                <div style="margin-top: 8px; font-size: 0.8rem; color: #059669; font-weight: 800;">実写真集を見る ➜</div>
+              </div>
+            </a>
+            
+            <a href="/cases/tsurugashima-k.html" style="text-decoration: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+              <div style="height: 160px; overflow: hidden; background: #0f172a;">
+                <img src="/images/cases/tsurugashima-k/thumb/photo_01__dsc8401.webp" alt="鶴ヶ島市・K様邸" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" width="300" height="180">
+              </div>
+              <div style="padding: 1rem; flex-grow: 1; display: flex; flex-direction: column;">
+                <span style="font-size: 0.72rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">📍 鶴ヶ島市 ｜ 全20枚</span>
+                <h4 style="font-size: 0.95rem; color: #0f172a; margin: 0 0 4px; font-weight: 800; line-height: 1.4;">鶴ヶ島市・K様邸</h4>
+                <p style="font-size: 0.8rem; color: #64748b; margin: 0; line-height: 1.5; flex-grow: 1;">吹抜けスケルトン階段 × オープンスタディ × ファミリー動線</p>
+                <div style="margin-top: 8px; font-size: 0.8rem; color: #059669; font-weight: 800;">実写真集を見る ➜</div>
+              </div>
+            </a>
+            
+            <a href="/cases/tsurugashima-s.html" style="text-decoration: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+              <div style="height: 160px; overflow: hidden; background: #0f172a;">
+                <img src="/images/cases/tsurugashima-s/thumb/photo_01_nakade-3539.webp" alt="鶴ヶ島市・S様邸" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" width="300" height="180">
+              </div>
+              <div style="padding: 1rem; flex-grow: 1; display: flex; flex-direction: column;">
+                <span style="font-size: 0.72rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">📍 鶴ヶ島市 ｜ 全20枚</span>
+                <h4 style="font-size: 0.95rem; color: #0f172a; margin: 0 0 4px; font-weight: 800; line-height: 1.4;">鶴ヶ島市・S様邸</h4>
+                <p style="font-size: 0.8rem; color: #64748b; margin: 0; line-height: 1.5; flex-grow: 1;">ウォークスルー土間収納 × 2wayパントリー × 片付く家</p>
+                <div style="margin-top: 8px; font-size: 0.8rem; color: #059669; font-weight: 800;">実写真集を見る ➜</div>
+              </div>
+            </a>
+            
+            <a href="/cases/tsurugashima-t.html" style="text-decoration: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+              <div style="height: 160px; overflow: hidden; background: #0f172a;">
+                <img src="/images/cases/tsurugashima-t/thumb/photo_01_img_9219.webp" alt="鶴ヶ島市・T様邸" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" width="300" height="180">
+              </div>
+              <div style="padding: 1rem; flex-grow: 1; display: flex; flex-direction: column;">
+                <span style="font-size: 0.72rem; color: #0284c7; font-weight: 800; margin-bottom: 4px;">📍 鶴ヶ島市 ｜ 全20枚</span>
+                <h4 style="font-size: 0.95rem; color: #0f172a; margin: 0 0 4px; font-weight: 800; line-height: 1.4;">鶴ヶ島市・T様邸</h4>
+                <p style="font-size: 0.8rem; color: #64748b; margin: 0; line-height: 1.5; flex-grow: 1;">薪ストーブ土間 × 杉無垢床 × 吹き抜けシーリングファン</p>
+                <div style="margin-top: 8px; font-size: 0.8rem; color: #059669; font-weight: 800;">実写真集を見る ➜</div>
+              </div>
+            </a>
+            
+      </div>
+    </section>
+
+
+    <!-- 近隣坪数の323プラン（価格・月々返済シミュレーション付）への相互リンク -->
+    <div style="margin-top: 3.5rem; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 2px solid #38bdf8; border-radius: 16px; padding: 2.2rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; box-shadow: 0 4px 18px rgba(2,132,199,0.08);">
+      <div style="max-width: 720px;">
+        <span style="background: #0284c7; color: #fff; font-size: 0.78rem; font-weight: 800; padding: 3px 10px; border-radius: 4px; display: inline-block; margin-bottom: 6px;">
+          323プラン集 ＆ リアルタイム価格連動
+        </span>
+        <h3 style="font-size: 1.4rem; font-weight: 900; color: #0c4a6e; margin: 0 0 0.5rem;">
+          この邸宅（33.1坪 (109.4㎡)）に近い人気間取りプランと建築費用を見る
+        </h3>
+        <p style="margin: 0; font-size: 0.92rem; color: #0369a1; line-height: 1.7;">
+          住ま居るの「323プラン集」では、平屋・2階建て・二世帯・ビルトインガレージなど、全プランの本体価格目安（坪単価約60万〜70万円台）と月々ローン返済額シミュレーション、3D立体パースを無料公開しています。
+        </p>
+      </div>
+      <a href="/plans/index.html" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #ffffff; font-weight: 900; font-size: 1rem; padding: 13px 26px; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 15px rgba(2,132,199,0.35); white-space: nowrap;">
+        323プラン集（価格公開）を見る ➜
+      </a>
+    </div>
+
+    <!-- 私のわがまま・俺のわがまま 特設バナー -->
+    <div style="margin-top: 2.5rem; background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%); border: 2px solid #f59e0b; border-radius: 16px; padding: 2rem 2.2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; box-shadow: 0 6px 20px rgba(245,158,11,0.15);">
+      <div style="max-width: 680px;">
+        <span style="background: #b45309; color: #fff; font-size: 0.78rem; font-weight: 800; padding: 3px 10px; border-radius: 4px; display: inline-block; margin-bottom: 6px;">
+          施主様の本音エピソード 66選
+        </span>
+        <h3 style="font-size: 1.35rem; font-weight: 900; color: #78350f; margin: 0 0 0.5rem;">
+          「私のわがまま・俺のわがまま かなう家」全66事例を公開中！
+        </h3>
+        <p style="margin: 0; font-size: 0.92rem; color: #92400e; line-height: 1.7;">
+          「薪ストーブの土間がほしい」「中庭でBBQしたい」「秘密基地のようなロフト」「アイランドキッチンから庭を見渡したい」…施主様たちの自由なわがままをミリ単位の手仕事で叶えたリアルなエピソードと図面解説を一覧できます。
+        </p>
+      </div>
+      <a href="/#wagama-showcase" style="background: linear-gradient(135deg, #d97706, #b45309); color: #ffffff; font-weight: 900; font-size: 1rem; padding: 13px 26px; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 15px rgba(180,83,9,0.35); white-space: nowrap;">
+        わがまま事例66選を見る ➜
+      </a>
+    </div>
 
     <!-- Bottom Callout Funnel -->
     <div style="margin-top: 4rem; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 2px solid #38bdf8; border-radius: 14px; padding: 2.5rem 2rem; text-align: center; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.25);">
@@ -400,11 +755,183 @@
     </div>
   </main>
 
-  <!-- Footer -->
-  <footer style="background: #0f172a; border-top: 1px solid #334155; padding: 2rem 1.5rem; text-align: center; color: #94a3b8; font-size: 0.82rem;">
-    <p style="margin: 0 0 0.5rem; color: #cbd5e1; font-weight: 700;">株式会社住ま居る ｜ 埼玉県知事許可（般－8）第60650号 ｜ 二級建築設計事務所</p>
-    <p style="margin: 0;">〒350-2224 埼玉県鶴ヶ島市町屋176番地5 ｜ TEL: 049-271-2350</p>
+  <!-- Footer with Semantic Internal Linking Sitemap (SEO PageRank Booster) -->
+  <footer>
+    <style>
+      .footer-nav-link {
+        color: #cbd5e1;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.25s ease;
+      }
+      .footer-nav-link:hover {
+        color: #38bdf8 !important;
+        text-decoration: underline !important;
+        transform: translateX(4px);
+      }
+      .footer-case-link {
+        color: #cbd5e1;
+        text-decoration: none;
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        transition: all 0.25s ease;
+      }
+      .footer-case-link:hover {
+        color: #34d399 !important;
+        text-decoration: underline !important;
+        transform: translateX(4px);
+      }
+      .footer-madori-link {
+        color: #cbd5e1;
+        text-decoration: none;
+        display: inline-block;
+        white-space: nowrap;
+        letter-spacing: -0.025em;
+        transition: all 0.25s ease;
+      }
+      .footer-madori-link:hover {
+        color: #c4b5fd !important;
+        text-decoration: underline !important;
+        transform: translateX(4px);
+      }
+      .footer-thermal-link {
+        color: #cbd5e1;
+        text-decoration: none;
+        display: inline-block;
+        white-space: nowrap;
+        letter-spacing: -0.025em;
+        transition: all 0.25s ease;
+      }
+      .footer-thermal-link:hover {
+        color: #fbbf24 !important;
+        text-decoration: underline !important;
+        transform: translateX(4px);
+      }
+      .footer-grid-unified {
+        max-width: 1540px;
+        width: 100%;
+        margin: 0 auto 2.5rem;
+        text-align: left;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        padding-bottom: 2.5rem;
+      }
+      @media (max-width: 1100px) {
+        .footer-grid-unified {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 2rem 1.2rem;
+        }
+        .footer-madori-link,
+        .footer-thermal-link {
+          font-size: clamp(0.72rem, 1.35vw, 0.83rem);
+          white-space: nowrap;
+        }
+      }
+      @media (max-width: 640px) {
+        .footer-grid-unified {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+        .footer-madori-link,
+        .footer-thermal-link {
+          font-size: 0.82rem;
+          white-space: normal;
+        }
+      }
+    </style>
+
+    <div class="footer-grid-unified">
+      <!-- Column 1: 公式ページ・AIラボ -->
+      <div itemscope itemtype="https://schema.org/SiteNavigationElement">
+        <h4 style="color: #38bdf8; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">🏛️ 公式ページ・AIラボ</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; line-height: 2;">
+          <li><a href="/" class="footer-nav-link" itemprop="url"><span itemprop="name">🏠 公式トップページ</span></a></li>
+          <li><a href="/subsidy/index.html" class="footer-nav-link" itemprop="url" style="color: #34d399; font-weight: 700;"><span itemprop="name">💰 AI補助金ナビ（市区町村一括判定） ↗</span></a></li>
+          <li><a href="/mortgage/index.html" class="footer-nav-link" itemprop="url" style="color: #38bdf8; font-weight: 700;"><span itemprop="name">🏦 AI住宅ローン診断（金利・団信TOP5） ↗</span></a></li>
+          <li><a href="/madori-sketch/" target="_blank" class="footer-nav-link" itemprop="url" style="color: #6ee7b7; font-weight: 700;"><span itemprop="name">✏️ 3D手描き間取り工房 ↗</span></a></li>
+          <li><a href="/smilestudio.html" target="_blank" class="footer-nav-link" itemprop="url" style="color: #fbbf24; font-weight: 700;"><span itemprop="name">🎨 AI 3Dパース工房（SmileStudio） ↗</span></a></li>
+          <li><a href="https://lin.ee/8fdyyGu" target="_blank" rel="noopener noreferrer" class="footer-nav-link" itemprop="url" style="color: #4ade80; font-weight: 800;"><span itemprop="name">💬 公式LINE（専任スタッフ直通・ID: @051vqxla） ↗</span></a></li>
+          <li><a href="/about/" class="footer-nav-link" itemprop="url"><span itemprop="name">🛡️ 会社概要・信用の証明 (CredLayer)</span></a></li>
+          <li><a href="/performance/" class="footer-nav-link" itemprop="url"><span itemprop="name">📐 住宅性能数値証明 (HEAT20 G2/G3・耐震3)</span></a></li>
+          <li><a href="/category/spec/" class="footer-nav-link" itemprop="url"><span itemprop="name">⚙️ 標準工学仕様スペック詳細 (APW430・W断熱)</span></a></li>
+          <li><a href="/evidence/" class="footer-nav-link" itemprop="url"><span itemprop="name">📊 光熱費・温熱実測データ実証録</span></a></li>
+          <li><a href="/flow/" class="footer-nav-link" itemprop="url"><span itemprop="name">📐 家づくりの流れ・15万円設計申込特典</span></a></li>
+          <li><a href="/schedule/" class="footer-nav-link" itemprop="url" style="color: #38bdf8; font-weight: 700;"><span itemprop="name">📅 家づくりスケジュール（進行チェックシート）</span></a></li>
+          <li><a href="/jfd-survey/" class="footer-nav-link" itemprop="url" style="color: #34d399; font-weight: 700;"><span itemprop="name">🛰️ JFD 3D点群測量と敷地調査（本物資料公開）</span></a></li>
+          <li><a href="/awards/kankyo-housing/" class="footer-nav-link" itemprop="url"><span itemprop="name">🏆 埼玉県環境住宅賞 受賞ストーリー</span></a></li>
+        </ul>
+      </div>
+
+      <!-- Column 2: 埼玉県の注文住宅 施工実例（全12邸）＆わがまま事例 -->
+      <div itemscope itemtype="https://schema.org/SiteNavigationElement">
+        <h4 style="color: #34d399; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">🔨 施工実例 全12邸 ＆ 施主わがまま</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.82rem; line-height: 2;">
+          <li><a href="/#wagama-showcase" class="footer-case-link" itemprop="url" style="color: #f59e0b; font-weight: 800;"><span itemprop="name">🌟 私のわがまま・俺のわがまま（66選） ➜</span></a></li>
+          <li><a href="/cases/tsurugashima-s.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【鶴ヶ島】S様邸（無垢杉・大空間LDK）</span></a></li>
+          <li><a href="/cases/tokigawa-k.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【ときがわ】K様邸（吉野杉・吹抜けZEH）</span></a></li>
+          <li><a href="/cases/kawagoe-y.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【川越】Y様邸（30帖LDK・ピットリビング）</span></a></li>
+          <li><a href="/cases/tsurugashima-t.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【鶴ヶ島】T様邸（格子デザイン・高断熱）</span></a></li>
+          <li><a href="/cases/hidaka-i.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【日高】I様邸（薪ストーブ・土間の家）</span></a></li>
+          <li><a href="/cases/higashimatsuyama-k.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【東松山】K様邸（開放的吹抜け・二世帯）</span></a></li>
+          <li><a href="/cases/yoshimi-o.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【吉見】O様邸（珪藻土・広々デッキ平屋）</span></a></li>
+          <li><a href="/cases/gyoda-h.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【行田】H様邸（ビルトインガレージの家）</span></a></li>
+          <li><a href="/cases/hatoyama-t.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【鳩山】T様邸（里山景観・平屋スタイル）</span></a></li>
+          <li><a href="/cases/tsurugashima-a.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【鶴ヶ島】A様邸（吹抜けLDK・アイランド）</span></a></li>
+          <li><a href="/cases/tsurugashima-kb.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【鶴ヶ島】KB様邸（天然木の快適二世帯）</span></a></li>
+          <li><a href="/cases/tsurugashima-k.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【鶴ヶ島】K様邸（手刻み・光熱費ゼロZEH）</span></a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: 設計・間取り知見200選（実務寸法と動線） -->
+      <div itemscope itemtype="https://schema.org/SiteNavigationElement">
+        <h4 style="color: #a78bfa; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">📐 設計・間取り知見200選</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; line-height: 2;">
+          <li><a href="/#madori-consultation-bot" class="footer-madori-link" itemprop="url" style="color: #a78bfa; font-weight: 800;"><span itemprop="name">★ 設計知見200選 カード一覧ボット</span></a></li>
+          <li><a href="/?cat=kitchen#madori-consultation-bot" class="footer-madori-link" data-madori-cat="kitchen" itemprop="url"><span itemprop="name">🍳 キッチン・パントリー（通路幅・回遊動線）</span></a></li>
+          <li><a href="/?cat=ldk#madori-consultation-bot" class="footer-madori-link" data-madori-cat="ldk" itemprop="url"><span itemprop="name">🛋️ LDK・小上がり・スタディ（畳数・吹抜設計）</span></a></li>
+          <li><a href="/?cat=water#madori-consultation-bot" class="footer-madori-link" data-madori-cat="water" itemprop="url"><span itemprop="name">🧺 水回り・ランドリー（室内干し・洗面分離）</span></a></li>
+          <li><a href="/?cat=entrance#madori-consultation-bot" class="footer-madori-link" data-madori-cat="entrance" itemprop="url"><span itemprop="name">👞 玄関・土間SIC（カバードポーチ・引戸動線）</span></a></li>
+          <li><a href="/?cat=storage#madori-consultation-bot" class="footer-madori-link" data-madori-cat="storage" itemprop="url"><span itemprop="name">📦 収納・WIC（ファミクロ・分散収納計画）</span></a></li>
+          <li><a href="/?cat=equipment#madori-consultation-bot" class="footer-madori-link" data-madori-cat="equipment" itemprop="url"><span itemprop="name">🔥 暖炉・設備・照明（薪ストーブ・間接照明）</span></a></li>
+          <li><a href="/?cat=garden#madori-consultation-bot" class="footer-madori-link" data-madori-cat="garden" itemprop="url"><span itemprop="name">🌿 尺庭・デッキ（中庭テラス・日射採光外構）</span></a></li>
+          <li><a href="/?cat=kaso#madori-consultation-bot" class="footer-madori-link" data-madori-cat="kaso" itemprop="url"><span itemprop="name">⛩️ 家相・風水（鬼門対策・現代科学の間取り）</span></a></li>
+          <li><a href="/plans/index.html" class="footer-madori-link" itemprop="url" style="color: #38bdf8; font-weight: 700;"><span itemprop="name">📐 323プラン集（間取り＆費用カタログ） ↗</span></a></li>
+          <li><a href="/madori-consultation/" class="footer-madori-link" itemprop="url" style="color: #c4b5fd; font-weight: 700;"><span itemprop="name">💬 夫婦のAI間取り相談＆家づくりカルテ ↗</span></a></li>
+          <li><a href="/knowledge/madori/" class="footer-madori-link" itemprop="url" style="color: #94a3b8; font-size: 0.8rem;"><span itemprop="name">📄 設計知見200選 総合記事版（SSGピラー） ↗</span></a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: 温熱設計知見200選（実務Q&A） -->
+      <div itemscope itemtype="https://schema.org/SiteNavigationElement">
+        <h4 style="color: #fbbf24; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">📚 温熱設計知見200選（実務Q&A）</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; line-height: 2;">
+          <li><a href="/#thermal-consultation" class="footer-thermal-link" itemprop="url" style="color: #fbbf24; font-weight: 800;"><span itemprop="name">★ 温熱換気AI相談（200問カード一覧）</span></a></li>
+          <li><a href="/?cat=th_ins#thermal-consultation" class="footer-thermal-link" data-thermal-cat="th_ins" itemprop="url"><span itemprop="name">第1章: 断熱性能・UA値・外皮設計</span></a></li>
+          <li><a href="/?cat=th_air#thermal-consultation" class="footer-thermal-link" data-thermal-cat="th_air" itemprop="url"><span itemprop="name">第2章: 気密性能・C値・隙間対策</span></a></li>
+          <li><a href="/?cat=th_fnd#thermal-consultation" class="footer-thermal-link" data-thermal-cat="th_fnd" itemprop="url"><span itemprop="name">第3章: 基礎断熱・床断熱・床下空間</span></a></li>
+          <li><a href="/?cat=th_vnt#thermal-consultation" class="footer-thermal-link" data-thermal-cat="th_vnt" itemprop="url"><span itemprop="name">第4章: 24h換気・第1種全熱交換</span></a></li>
+          <li><a href="/?cat=th_win#thermal-consultation" class="footer-thermal-link" data-thermal-cat="th_win" itemprop="url"><span itemprop="name">第5章: 窓・サッシ・日射取得と遮蔽</span></a></li>
+          <li><a href="/?cat=th_cnd#thermal-consultation" class="footer-thermal-link" data-thermal-cat="th_cnd" itemprop="url"><span itemprop="name">第6章: 結露・カビ防止・壁体内湿気</span></a></li>
+          <li><a href="/?cat=th_hvac#thermal-consultation" class="footer-thermal-link" data-thermal-cat="th_hvac" itemprop="url"><span itemprop="name">第7章: 冷暖房設計・全館空調</span></a></li>
+          <li><a href="/?cat=th_law#thermal-consultation" class="footer-thermal-link" data-thermal-cat="th_law" itemprop="url"><span itemprop="name">第8章: 2025年法改正・生涯コスト</span></a></li>
+          <li><a href="/knowledge/thermal/" class="footer-thermal-link" itemprop="url" style="color: #94a3b8; font-size: 0.8rem;"><span itemprop="name">📄 温熱知見200選 総合記事版（SSGピラー） ↗</span></a></li>
+        </ul>
+      </div>
+    </div>
+    </div>
+
+    <p style="margin-top: 1.5rem; font-size: 0.85rem; color: #94a3b8; line-height: 1.8;">
+      © 2026 株式会社住ま居る（すまいる） All Rights Reserved.<br>
+      〒350-2224 埼玉県鶴ヶ島市町屋176番地5 ｜ TEL: 049-271-2350<br>
+      埼玉の夏に効く遮熱設計 ＋ HEAT20 G2〜G2.5 ｜ 全棟実測C値0.3台（1.0以下保証） ｜ 全棟許容応力度計算 耐震等級3 ｜ 呼吸する無垢材と珪藻土の家
+    </p>
   </footer>
+
 
 </body>
 </html>

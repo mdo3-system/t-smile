@@ -99,9 +99,23 @@ class GoogleDriveManager:
     """Google Drive API連携クラス（本番API接続 ＆ 安全検証モード両対応）"""
     def __init__(self, config_path=CONFIG_FILE):
         self.config_path = config_path
+        self.config = {}
+        self.target_account = "049smile02@gmail.com"
+        self._load_config()
         self.is_live = False
         self.service = None
         self._init_service()
+
+    def _load_config(self):
+        """設定ファイル（google_drive_config.json）の読み込み"""
+        if os.path.exists(self.config_path):
+            try:
+                with open(self.config_path, 'r', encoding='utf-8') as f:
+                    self.config = json.load(f)
+                    self.target_account = self.config.get('target_google_account', '049smile02@gmail.com')
+                    print(f"⚙️ [Config] Google Drive 移管先アカウント: {self.target_account}")
+            except Exception as e:
+                print(f"⚠️ 設定ファイル読み込みエラー: {e}")
 
     def _init_service(self):
         """Google Drive APIクライアント初期化（認証情報が存在する場合は本番接続）"""
@@ -125,7 +139,7 @@ class GoogleDriveManager:
             self.is_live = False
 
     def create_customer_folder(self, customer_name, customer_id):
-        """お施主様専用フォルダをGoogle Drive上に作成"""
+        """お施主様専用フォルダをGoogle Drive上に作成し、049smile02@gmail.com へ共有付与"""
         folder_name = f"住ま居る家カルテ_{customer_name}_{customer_id}"
         if self.is_live and self.service:
             meta = {
@@ -133,10 +147,30 @@ class GoogleDriveManager:
                 'mimeType': 'application/vnd.google-apps.folder'
             }
             folder = self.service.files().create(body=meta, fields='id').execute()
-            return folder.get('id'), folder_name
+            folder_id = folder.get('id')
+            
+            # 049smile02@gmail.com への編集権限・共有の付与
+            try:
+                permission = {
+                    'type': 'user',
+                    'role': 'writer',
+                    'emailAddress': self.target_account
+                }
+                self.service.permissions().create(
+                    fileId=folder_id,
+                    body=permission,
+                    sendNotificationEmail=True,
+                    fields='id'
+                ).execute()
+                print(f"   🤝 施主様フォルダを {self.target_account} へ自動共有しました。")
+            except Exception as pe:
+                print(f"   ⚠️ 共有権限付与エラー: {pe}")
+
+            return folder_id, folder_name
         else:
             # モック / 検証用ID
             mock_id = f"gdrive_folder_{customer_id}_{int(datetime.now().timestamp())}"
+            print(f"   🤝 [シミュレーション] 施主様フォルダを {self.target_account} へ自動共有設定完了")
             return mock_id, folder_name
 
     def upload_file(self, local_filepath, folder_id, remote_filename=None):

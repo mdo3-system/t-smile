@@ -1,907 +1,225 @@
-    <section id="floorplan-studio" class="page-section" data-deferred-template="tmpl-floorplan-studio"></section>
-    <template id="tmpl-floorplan-studio">
-      <!-- セクションヘッダー: 323実例プラン検索 ＆ 概算価格シミュレーター HEROボックス -->
+    <section id="floorplan-studio" class="page-section">
       <div class="hero hero-soft-sky" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 45%, #ffffff 100%); border: 2px solid #bae6fd; border-radius: 16px; padding: 2.2rem 2rem 1.8rem; margin-bottom: 2rem; box-shadow: 0 8px 25px rgba(2, 132, 199, 0.08); text-align: center;">
         <span class="hero-tag" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: #0369a1; font-weight: 800; font-size: 0.88rem; padding: 6px 18px; border-radius: 20px; display: inline-block; margin-bottom: 0.8rem;">
-          【完全無料】建物規模・広さから価格の目安がすぐわかる！
+          【実例323選】建物規模・広さから価格の目安がすぐわかる！
         </span>
         <h2 class="hero-title" style="color: #0f172a; font-size: 1.95rem; font-weight: 900; line-height: 1.4; margin-bottom: 0.8rem;">
-          323実例プラン選定 ＆ 概算価格の目安確認
+          323実例プラン選定 ＆ 建築費用の目安確認
         </h2>
         <p style="color: #334155; font-size: 0.95rem; line-height: 1.8; max-width: 820px; margin: 0 auto 1.3rem;">
-          建物規模や大きさによって変わる<strong>概算建築費用の目安</strong>をご確認いただけます。<br>
-          気になる間取りプランが見つかったら、気に入っている箇所や変更したいご要望を<strong>「間取りチャット相談」</strong>で相談したり、<strong>「3D手描き間取り工房」</strong>で自由にアレンジスケッチしていただけます。
+          平屋・2階建て・30坪台など、実際の施工実績に基づく323件の実例間取りと、<strong>リアルタイム建築費用シミュレーション</strong>を専用カタログで全件公開しています。
         </p>
 
-        <!-- アクションボタン群: 使い方・手描き間取り工房・電話サポート -->
+        <!-- アクションボタン群 -->
         <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
-          <a href="/style-matcher/" target="_blank" style="background: linear-gradient(135deg, #f43f5e, #fb7185); color: #ffffff; border: none; border-radius: 30px; padding: 10px 22px; font-size: 0.94rem; font-weight: 900; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 4px 15px rgba(244, 63, 94, 0.4); transition: transform 0.2s;">
-            <span>🎨</span> 夫婦の好み擦り合わせ診断（21スタイル） ↗
+          <a href="/plans/index.html" class="btn btn-primary" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; border: none; border-radius: 30px; padding: 12px 28px; font-size: 1.05rem; font-weight: 900; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);">
+            <span>📐</span> 323プラン全件カタログ・費用シミュレーターを見る ↗
           </a>
-          <a href="/madori-sketch/" target="_blank" style="background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; border: none; border-radius: 30px; padding: 10px 22px; font-size: 0.94rem; font-weight: 900; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); transition: transform 0.2s;">
-            <span>✏️</span> 白紙から手描き・アレンジする（3D間取り工房） ↗
-          </a>
-          <button type="button" class="btn-open-how-to-use" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #ffffff; border: none; border-radius: 30px; padding: 10px 20px; font-size: 0.92rem; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; box-shadow: 0 3px 12px rgba(2, 132, 199, 0.3);">
-            <span>📖</span> 使い方を聞く（まんが解説）
-          </button>
-          <a href="tel:0492712350" style="display: inline-flex; align-items: center; gap: 6px; background: #ffffff; border: 2px solid #0284c7; color: #0369a1; padding: 9px 18px; border-radius: 30px; font-weight: 800; font-size: 0.9rem; text-decoration: none;">
-            <span>📞</span> 049-271-2350（9:00〜18:00・水日定休）
+          <a href="/madori-sketch/" target="_blank" style="background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; border: none; border-radius: 30px; padding: 12px 24px; font-size: 0.98rem; font-weight: 900; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+            <span>✏️</span> 3D手描き間取り工房で自由に作図する ↗
           </a>
         </div>
       </div>
 
-      <!-- 323実例プラン選別・比較ウィザード＆各ステップ表示 -->
-            <div id="floorplan-search-section-wrap">
-
-      <!-- STEP 1: INITIAL CONDITIONS SELECTION PANEL -->
-      <div id="fp-step1-container">
-        <div class="fp-wizard-card">
-          <div style="text-align: center; margin-bottom: 2rem;">
-            <h2 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 1.6rem; margin-bottom: 0.4rem;">
-              まずはご希望の建物規模・条件をお選びください
-            </h2>
-            <p style="color: var(--text-muted); font-size: 0.95rem;">
-              323件の実例プランから、AIがご希望の規模・広さに合致するプランと概算価格を即座に選別・提示します。
+      <!-- 人気の代表カテゴリ 3大ピックアップカード -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 2rem;">
+        <!-- Card 1: 平屋 -->
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.06); display: flex; flex-direction: column;">
+          <div style="background: linear-gradient(135deg, #0f766e, #14b8a6); color: #fff; padding: 10px 16px; font-weight: 800; font-size: 0.95rem; display: flex; justify-content: space-between;">
+            <span>🏡 ワンフロアで暮らす平屋</span>
+            <span>20〜28坪</span>
+          </div>
+          <div style="padding: 16px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.6; margin-bottom: 12px;">
+              階段のない安心感と回遊動線。勾配天井と中庭テラスで開放感を極めた平屋スタイル。
             </p>
-          </div>
-
-          <!-- 1. 階数 -->
-          <div class="fp-option-group">
-            <label class="fp-option-label"><span>🏢</span> 1. 建物の階数</label>
-            <div class="fp-button-grid" id="opt-floors">
-              <button type="button" class="fp-choice-btn selected" data-value="1">平屋 (1階建て)</button>
-              <button type="button" class="fp-choice-btn" data-value="2">2階建て</button>
-              <button type="button" class="fp-choice-btn" data-value="3">3階建て</button>
-            </div>
-          </div>
-
-          <!-- 2. 広さ（坪数） -->
-          <div class="fp-option-group">
-            <label class="fp-option-label"><span>📐</span> 2. 希望の広さ・延床面積</label>
-            <div class="fp-button-grid" id="opt-size" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
-              <button type="button" class="fp-choice-btn" data-min="20" data-max="25" data-label="20〜25坪 (コンパクト)">20〜25坪 (約70〜82㎡)</button>
-              <button type="button" class="fp-choice-btn selected" data-min="26" data-max="30" data-label="26〜30坪 (標準人気)">26〜30坪 (約85〜99㎡)</button>
-              <button type="button" class="fp-choice-btn" data-min="31" data-max="35" data-label="31〜35坪 (ゆとり)">31〜35坪 (約100〜115㎡)</button>
-              <button type="button" class="fp-choice-btn" data-min="36" data-max="44" data-label="36〜44坪 (ゆったり・二世帯)">36〜44坪 (約118〜145㎡)</button>
-              <button type="button" class="fp-choice-btn" data-min="45" data-max="100" data-label="45坪以上 (大型邸宅・完全分離二世帯)">45坪以上 (約150㎡〜大型)</button>
-            </div>
-          </div>
-
-          <!-- 3. 世帯・家族構成（家カルテ登録用・検索対象外） -->
-          <div class="fp-option-group">
-            <label class="fp-option-label"><span>👨‍👩‍👧‍👦</span> 3. 家族構成・世帯人数</label>
-            <div style="font-size: 0.84rem; color: #b45309; background: #fefce8; border: 1.5px solid #fde047; padding: 7px 14px; border-radius: 8px; margin-bottom: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
-              <span>⚠️</span> ※家族構成・こだわり条件は検索の絞り込み対象外です（家カルテの個別設計用データとして登録されます）。
-            </div>
-            <div class="fp-button-grid" id="opt-family">
-              <button type="button" class="fp-choice-btn" data-value="夫婦・単身">単身・ご夫婦2人</button>
-              <button type="button" class="fp-choice-btn selected" data-value="子育て3〜4人">子育て世帯（3〜4人）</button>
-              <button type="button" class="fp-choice-btn" data-value="二世帯・同居">二世帯住宅・親世代同居</button>
-            </div>
-          </div>
-
-          <!-- 4. こだわり・欲しい空間（複数選択可・検索対象外明記） -->
-          <div class="fp-option-group">
-            <label class="fp-option-label"><span>✨</span> 4. こだわり重視ポイント（複数選択可）</label>
-            <div style="font-size: 0.84rem; color: #b45309; background: #fefce8; border: 1.5px solid #fde047; padding: 7px 14px; border-radius: 8px; margin-bottom: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
-              <span>⚠️</span> ※こだわり重視ポイントは検索の絞り込み対象外です（家カルテの個別設計用データとして登録されます）。
-            </div>
-            <div class="fp-tag-grid" id="opt-features">
-              <button type="button" class="fp-tag-btn selected" data-value="中庭テラス">🌿 中庭テラス・光庭</button>
-              <button type="button" class="fp-tag-btn selected" data-value="パントリー">🥫 パントリー (食品庫)</button>
-              <button type="button" class="fp-tag-btn" data-value="回遊動線">🔄 家事ラク回遊動線</button>
-              <button type="button" class="fp-tag-btn" data-value="ファミリークローゼット">👔 ファミリークローゼット</button>
-              <button type="button" class="fp-tag-btn" data-value="小上がり畳">🍵 小上がり畳コーナー</button>
-              <button type="button" class="fp-tag-btn" data-value="独立書斎">💻 テレワーク・独立書斎</button>
-              <button type="button" class="fp-tag-btn" data-value="土間リビング">🚪 土間リビング・土間収納</button>
-              <button type="button" class="fp-tag-btn" data-value="アイランドキッチン">🍳 アイランドキッチン</button>
-              <button type="button" class="fp-tag-btn" data-value="ランドリールーム">🧺 室内干しランドリールーム</button>
-            </div>
-          </div>
-
-          <div style="text-align: center; margin-top: 2.5rem; margin-bottom: 2.5rem;">
-            <button type="button" id="btn-start-ai-chat" class="btn btn-primary" style="padding: 1.1rem 3rem; font-size: 1.15rem; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);">
-              🔍 条件に合致する実例プランと概算価格を見る（全件表示） →
-            </button>
+            <a href="/plans/index.html#plans-grid" style="display: block; text-align: center; background: #f0fdf4; border: 1px solid #86efac; color: #166534; padding: 8px; border-radius: 8px; font-weight: 800; font-size: 0.85rem; text-decoration: none;">平屋プラン一覧を見る →</a>
           </div>
         </div>
 
-        <!-- 🎨 バナー: 夫婦の好み擦り合わせAI診断（住宅スタイル21選） -->
-        <div style="background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 45%, #ffffff 100%); border: 2px solid #fda4af; border-radius: 16px; padding: 1.4rem 1.8rem; margin: 1.5rem 0 2.2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; box-shadow: 0 4px 15px rgba(244, 63, 94, 0.08);">
-          <div style="display: flex; align-items: center; gap: 14px;">
-            <div style="width: 60px; height: 60px; border-radius: 12px; overflow: hidden; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
-              <img src="/images/styles/japandi_thumb.webp" alt="スタイル診断" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            <div>
-              <span style="font-size: 0.74rem; background: #ffe4e6; color: #be123c; padding: 2px 8px; border-radius: 4px; font-weight: 800;">
-                夫婦のすれ違いゼロへ ｜ 30秒直感チェック
-              </span>
-              <h3 style="margin: 3px 0 0; font-size: 1.15rem; font-weight: 900; color: #9f1239;">
-                🎨 どんな外観・インテリアが好き？ 住宅スタイル21選 判定ナビ
-              </h3>
-              <p style="margin: 2px 0 0; font-size: 0.82rem; color: #4c0519; line-height: 1.5;">
-                シンプルモダン、北欧、ジャパンディ、和モダンなど、夫婦それぞれの好みを写真で直感判定！
-              </p>
-            </div>
+        <!-- Card 2: 30坪台・子育てファミリー -->
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.06); display: flex; flex-direction: column;">
+          <div style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; padding: 10px 16px; font-weight: 800; font-size: 0.95rem; display: flex; justify-content: space-between;">
+            <span>👨‍👩‍👧‍👦 30坪台・子育て家事ラク動線</span>
+            <span>30〜35坪</span>
           </div>
-          <a href="/style-matcher/" target="_blank" style="background: linear-gradient(135deg, #f43f5e, #e11d48); color: #ffffff; padding: 10px 22px; border-radius: 25px; font-weight: 900; font-size: 0.9rem; text-decoration: none; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
-            <span>💖</span> スタイル診断を試す ↗
-          </a>
-        </div>
-
-        <!-- 設計プロの知見200選 HEROボックス -->
-              <!-- 💡 HEROボックス: 設計プロの知見200選（失敗しない間取り・黄金寸法データベース） -->
-      <div class="fp-knowledge-hero-banner" style="background: linear-gradient(135deg, #064e3b 0%, #065f46 45%, #047857 100%); border: 2.5px solid #34d399; border-radius: 18px; padding: 2.2rem 2.2rem 2rem; margin-bottom: 2.2rem; box-shadow: 0 10px 30px rgba(6, 78, 59, 0.2); color: #ffffff; position: relative; overflow: hidden;">
-        <!-- 装飾用バックグラウンドパターン -->
-        <div style="position: absolute; right: -20px; top: -30px; font-size: 10rem; opacity: 0.07; pointer-events: none; user-select: none;">📐</div>
-
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 1rem; border-bottom: 1.5px solid rgba(255, 255, 255, 0.2); padding-bottom: 0.9rem;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 2rem;">🏆</span>
-            <div>
-              <span style="background: #34d399; color: #022c22; font-size: 0.78rem; font-weight: 900; padding: 3px 12px; border-radius: 20px; display: inline-block; margin-bottom: 3px; letter-spacing: 0.5px;">
-                鶴ヶ島・川越 創業30年800棟の実績結晶 ｜ 完全無料公開
-              </span>
-              <h3 style="margin: 0; color: #ffffff; font-size: 1.45rem; font-family: var(--font-heading); font-weight: 900; letter-spacing: 0.5px;">
-                設計プロの知見200選 〜後悔しない間取り・黄金寸法データベース〜
-              </h3>
-            </div>
+          <div style="padding: 16px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.6; margin-bottom: 12px;">
+              乾太くん×ファミリークローク直結、洗面脱衣分離、帰宅時手洗い動線を完備した一番人気プラン。
+            </p>
+            <a href="/plans/index.html#plans-grid" style="display: block; text-align: center; background: #f0f9ff; border: 1px solid #7dd3fc; color: #0369a1; padding: 8px; border-radius: 8px; font-weight: 800; font-size: 0.85rem; text-decoration: none;">30坪台プラン一覧を見る →</a>
           </div>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) document.getElementById('tab-btn-knowledge').click();" class="btn" style="background: #ffffff; color: #065f46; font-weight: 900; font-size: 0.92rem; padding: 0.65rem 1.4rem; border-radius: 25px; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: inline-flex; align-items: center; gap: 6px; transition: transform 0.2s;">
-            <span>📖</span> 知見200選の逆引き一覧を見る ➔
-          </a>
         </div>
 
-        <p style="color: #ecfdf5; font-size: 0.96rem; line-height: 1.8; margin-bottom: 1.4rem; max-width: 900px;">
-          「対面キッチンの通路幅は何mmが正解？」「冷蔵庫は手前と奥どっち？」「洗面室と脱衣室を分ける黄金比率は？」<br>
-          図面選びで後悔しないために、<strong>プロの設計士が長年の現場実例から導き出した「リアルな急所と黄金寸法」200問</strong>を網羅しました。<br>
-          気になる知見や図解は、<strong>そのまま「家カルテ」にワンタップ登録</strong>してお施主様のご要望メモとしてストックできます。
-        </p>
-
-        <!-- 代表的な知見ジャンルハイライト -->
-        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.4rem;">
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'kitchen\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            🍳 キッチン・パントリー通路幅
-          </a>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'water\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            🧺 洗面脱衣2室分離＆乾太くん
-          </a>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'ldk\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            🛋️ LDK・小上がり・ヌック書斎
-          </a>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'entrance\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            👞 2way玄関土間・ファミリー玄関
-          </a>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'storage\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            📦 WIC・分散収納の適正率
-          </a>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'garden\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            🌿 尺庭・ウッドデッキ・採光
-          </a>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'kaso\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            ⛩️ 家相・鬼門・現代動線の調和
-          </a>
-        </div>
-
-        <div style="display: flex; align-items: center; justify-content: flex-start; gap: 12px; flex-wrap: wrap;">
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) document.getElementById('tab-btn-knowledge').click();" class="btn" style="background: #10b981; color: #ffffff; font-weight: 900; font-size: 0.95rem; padding: 0.75rem 1.8rem; border-radius: 30px; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: inline-flex; align-items: center; gap: 8px;">
-            <span>🔍</span> キーワード・寸法から知見200選を逆引き検索する →
-          </a>
-          <span style="font-size: 0.82rem; color: #d1fae5;">※間取り検索の前にぜひ一度ご覧ください</span>
+        <!-- Card 3: 二世帯・ビルトインガレージ -->
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.06); display: flex; flex-direction: column;">
+          <div style="background: linear-gradient(135deg, #b45309, #f59e0b); color: #fff; padding: 10px 16px; font-weight: 800; font-size: 0.95rem; display: flex; justify-content: space-between;">
+            <span>🚗 ガレージハウス・二世帯</span>
+            <span>36〜50坪</span>
+          </div>
+          <div style="padding: 16px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.6; margin-bottom: 12px;">
+              愛車と暮らすインナーガレージや、適度な距離感で支え合う完全・一部共有型の二世帯住宅。
+            </p>
+            <a href="/plans/index.html#plans-grid" style="display: block; text-align: center; background: #fefce8; border: 1px solid #fde047; color: #854d0e; padding: 8px; border-radius: 8px; font-weight: 800; font-size: 0.85rem; text-decoration: none;">二世帯・ガレージ一覧を見る →</a>
+          </div>
         </div>
       </div>
-
-
-        <!-- まずは「家カルテ」❓とは？ HEROボックス -->
-              <!-- 📋 家カルテ利用促進＆夫婦AIヒアリング活用案内ブロック -->
-      <div class="fp-carte-intro-banner" style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #ffffff 100%); border: 2px solid #8b5cf6; border-radius: 16px; padding: 1.8rem 2rem; margin-bottom: 2rem; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.1);">
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 1rem; border-bottom: 1.5px dashed #c4b5fd; padding-bottom: 0.8rem;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 1.8rem;">👨‍👩‍👧‍👦</span>
-            <div>
-              <span style="background: #7c3aed; color: #fff; font-size: 0.76rem; font-weight: 800; padding: 2px 10px; border-radius: 12px; display: inline-block; margin-bottom: 2px;">
-                住ま居る独自 ｜ 完全無料（お試し登録不要・営業連絡ゼロ）
-              </span>
-              <h3 style="margin: 0; color: #4c1d95; font-size: 1.32rem; font-family: var(--font-heading);">
-                まずは<span class="carte-hover-trigger" style="cursor: pointer; text-decoration: underline dashed #7c3aed; color: #4c1d95; font-weight: 900;" title="タップまたはクリックで家カルテ解説を開く">「家カルテ」<span style="font-size:0.75rem; background:#ede9fe; color:#6d28d9; padding:2px 8px; border-radius:12px; margin-left:4px;">❓とは？</span></span>から始めませんか？ 〜AIが夫婦の本音を聞き出し、理想の家づくりをサポート〜
-              </h3>
-            </div>
-          </div>
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <button type="button" class="btn-open-carte-guide-modal" style="background: #ffffff; border: 1.5px solid #7c3aed; color: #6d28d9; font-weight: 800; font-size: 0.88rem; padding: 0.6rem 1.1rem; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-              <span>📖</span> 家カルテとは？
-            </button>
-            <a href="#madori-consultation-bot" class="btn btn-primary" style="background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: #fff; font-weight: 800; font-size: 0.88rem; padding: 0.6rem 1.2rem; border-radius: 20px; text-decoration: none; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25); display: inline-flex; align-items: center; gap: 6px;">
-              <span>💬</span> カルテ作成を始める →
-            </a>
-          </div>
-        </div>
-
-        <p style="color: #475569; font-size: 0.93rem; line-height: 1.8; margin-bottom: 1.2rem;">
-          家づくりを始めた多くのご夫婦が「希望の食い違い」「営業マンへの気兼ね」「要望がうまくまとまらない」という壁にぶつかります。<br>
-          <strong class="carte-hover-trigger" style="cursor: pointer; text-decoration: underline dashed #7c3aed; color: #5b21b6;">「家カルテ」</strong>は、AIが勝手に答えを出したり口出しするのではなく、<strong>まずはご夫婦それぞれの希望・本音や、お気に入りの間取り・メモをしっかりとストック・整理することに務めるツール</strong>です。<br>
-          AIは<strong>「どう両立させたらいい？」と回答を求められた時にだけ</strong>、ストックされたお互いの本音をもとに客観的な「折衷案・融合案」をご提案します。
-        </p>
-
-        <!-- 3大特徴グリッド -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 1.2rem;">
-          <div style="background: #ffffff; border: 1.5px solid #ddd6fe; border-radius: 12px; padding: 1.1rem; box-shadow: 0 2px 8px rgba(124, 58, 237, 0.05);">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-              <span style="font-size: 1.3rem;">📱</span>
-              <strong style="color: #5b21b6; font-size: 0.95rem;">① 夫婦それぞれの本音をストック</strong>
-            </div>
-            <p style="color: #64748b; font-size: 0.84rem; line-height: 1.6; margin: 0;">
-              営業マンへの気兼ねや夫婦間の遠慮なく、「駐車台数」「洗面渋滞」「秘密のこだわり」など各自の希望を自由にAIへストックできます（プライバシー保護・画面共有不可）。
-            </p>
-          </div>
-
-          <div style="background: #ffffff; border: 1.5px solid #ddd6fe; border-radius: 12px; padding: 1.1rem; box-shadow: 0 2px 8px rgba(124, 58, 237, 0.05);">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-              <span style="font-size: 1.3rem;">💾</span>
-              <strong style="color: #5b21b6; font-size: 0.95rem;">② 気に入った図面をメモ付き保存</strong>
-            </div>
-            <p style="color: #64748b; font-size: 0.84rem; line-height: 1.6; margin: 0;">
-              実例プラン検索や3Dパースから「これがよかった！」「ここはこうしたい」というメモと一緒に間取りを何個でもカルテにストック・比較できます。
-            </p>
-          </div>
-
-          <div style="background: #ffffff; border: 1.5px solid #ddd6fe; border-radius: 12px; padding: 1.1rem; box-shadow: 0 2px 8px rgba(124, 58, 237, 0.05);">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-              <span style="font-size: 1.3rem;">🤝</span>
-              <strong style="color: #5b21b6; font-size: 0.95rem;">③ 回答を求められた時だけAIが提案</strong>
-            </div>
-            <p style="color: #64748b; font-size: 0.84rem; line-height: 1.6; margin: 0;">
-              AIは勝手に回答せず要望の蓄積に徹します。「どうすれば両立できる？」と回答を求めた時だけ、妥協ではない客観的な融合案をご提案します。
-            </p>
-          </div>
-        </div>
-
-        <!-- 🎯 2つの明確な導線（① 家カルテを理解する / ② 家カルテを作成・利用する） -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1.5px dashed #c4b5fd;">
-          <!-- 導線①: 家カルテ説明・解説（理解したい方へ） -->
-          <div style="background: #ffffff; border: 2px solid #a78bfa; border-radius: 14px; padding: 1.2rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 3px 10px rgba(124, 58, 237, 0.08);">
-            <div>
-              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                <span style="font-size: 1.3rem;">📖</span>
-                <strong style="color: #5b21b6; font-size: 1rem;">【導線①】家カルテって何するの？（解説・使い方）</strong>
-              </div>
-              <p style="color: #64748b; font-size: 0.84rem; line-height: 1.6; margin: 0 0 12px;">
-                夫婦の本音整理から3D図面ストック、知見保存まで。「なぜ家カルテを使うと後悔しないのか」を30秒で解説します。
-              </p>
-            </div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <button type="button" class="btn-open-carte-guide-modal" style="flex: 1; min-width: 140px; background: #ede9fe; border: 1.5px solid #7c3aed; color: #5b21b6; font-weight: 800; font-size: 0.88rem; padding: 0.65rem 1rem; border-radius: 20px; cursor: pointer; text-align: center;">
-                📖 30秒解説（モーダル）
-              </button>
-              <a href="/madori-consultation/" target="_blank" rel="noopener" style="flex: 1; min-width: 140px; background: #ffffff; border: 1.5px solid #64748b; color: #334155; font-weight: 800; font-size: 0.88rem; padding: 0.65rem 1rem; border-radius: 20px; text-decoration: none; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
-                🌐 WEB解説ページ ↗
-              </a>
-            </div>
-          </div>
-
-          <!-- 導線②: 家カルテ本体（今すぐ作りたい・見たい方へ） -->
-          <div style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); border-radius: 14px; padding: 1.2rem; color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 6px 18px rgba(109, 40, 217, 0.25);">
-            <div>
-              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                <span style="font-size: 1.3rem;">🌿</span>
-                <strong style="color: #ffffff; font-size: 1rem;">【導線②】夫婦の家カルテを始める</strong>
-              </div>
-              <p style="color: #ede9fe; font-size: 0.84rem; line-height: 1.6; margin: 0 0 12px;">
-                営業マンへの気兼ねゼロ。AIヒアリングで夫婦それぞれの想いやこだわりを安全にストックしましょう。
-              </p>
-            </div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <a href="#madori-consultation-bot" class="btn" style="flex: 1.4; min-width: 170px; background: #ffffff; color: #5b21b6; font-weight: 900; font-size: 0.88rem; padding: 0.65rem 1rem; border-radius: 20px; text-decoration: none; text-align: center; box-shadow: 0 3px 10px rgba(0,0,0,0.15);">
-                ✍️ ヒアリング＆作成（無料） →
-              </a>
-              <a href="#dashboard" class="btn" style="flex: 1; min-width: 130px; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.4); color: #ffffff; font-weight: 800; font-size: 0.88rem; padding: 0.65rem 1rem; border-radius: 20px; text-decoration: none; text-align: center;">
-                👤 マイカルテを見る
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- 📲 公式LINE連携 ＆ 🛡️ 共有ポリシーバナー -->
-        <div style="margin-top: 1rem; background: #ecfdf5; border: 1.5px solid #86efac; border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px;">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-size: 1.2rem;">🛡️</span>
-            <strong style="font-size: 0.88rem; color: #065f46;">
-              安心のプライバシー保護 ＆ プラン申し込み後の個別ポータル化について
-            </strong>
-          </div>
-          <p style="margin: 0; font-size: 0.8rem; color: #1e3a8a; line-height: 1.6; background: #eff6ff; padding: 8px 12px; border-radius: 8px; border: 1px solid #bfdbfe;">
-            ・<strong>プラン申し込み前:</strong> ご登録内容は住ま居る側にも伝わらず、お施主様だけのプライベート保管庫です。営業連絡も一切ありません。<br>
-            ・<strong>プラン申し込み後:</strong> <strong style="color: #0369a1;">「家カルテの内容はプラン申し込み後は、ユーザー（お施主様）の承認をもって、住ま居ると共有させていただきます。」</strong><br>
-            ・<strong>専用ポータルへの昇華:</strong> プラン申し込み後の家カルテは、JFD敷地測量成果物・各意匠図スロット・詳細見積書・電気図面・契約書を一元管理し、図面チャットやLINE通知と連動する<strong>住ま居るとお客様との「完全個別ポータルサイト」</strong>へ昇華します。
-          </p>
-        </div>
-      </div>
-
-      </div>
-
-      <!-- STEP 2: AI MATCHED RECOMMENDATION CARDS (全件一覧＆詳細比較) -->
-      <div id="fp-step2-container" style="display: none;">
-        <!-- ① 条件に合致した実例間取りプラン一覧（ここを大きく表示するエリア） -->
-        <div style="text-align: center; margin-bottom: 1.8rem;">
-          <div style="display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap;">
-            <h2 id="fp-step2-title" style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 1.75rem; margin: 0;">
-              条件に合致した実例間取りプラン一覧
-            </h2>
-            <button type="button" id="btn-back-to-step1" class="btn btn-secondary" style="padding: 0.45rem 1.1rem; font-size: 0.85rem; border-radius: 20px; border: 1.5px solid #cbd5e1; background: #ffffff; color: #475569; font-weight: 700;">
-              ← 条件を選び直す
-            </button>
-          </div>
-          <p style="color: #64748b; font-size: 0.95rem; margin-top: 0.5rem; margin-bottom: 0.3rem;" id="fp-selected-summary-text">
-            選択条件: 2階建て ｜ 26〜30坪
-          </p>
-          <p style="color: #475569; font-size: 0.9rem; margin: 0;">
-            建物規模による概算価格の目安をご確認ください。気に入ったプランは「間取りチャット相談」で自由設計のご相談が可能です。
-          </p>
-        </div>
-
-        <!-- 大きく表示するエリア: HEROボックス（最有力プラン大画面フィーチャー: スライダー・前/後切替・家カルテ保存メモ・仕様パネル） -->
-        <div id="fp-step2-featured-hero" class="fp-hero-featured-box" style="margin-bottom: 2.5rem;">
-          <!-- JSで動的にレンダリング -->
-        </div>
-
-        <!-- ② 間取りキーワード辞典 ＆ 設計プロのアドバイスのHEROボックス -->
-        <div class="fp-keywords-slot-section" style="background: #ffffff; border: 1.5px solid #bae6fd; border-radius: 16px; padding: 1.8rem; box-shadow: 0 4px 20px rgba(2, 132, 199, 0.08); margin-bottom: 2rem;">
-          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.75rem;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 1.4rem;">🏷️</span>
-              <div>
-                <h4 style="margin: 0; color: #0f172a; font-size: 1.15rem; font-weight: 800;">
-                  間取りキーワード辞典 ＆ 設計プロのアドバイス
-                </h4>
-                <p style="margin: 2px 0 0; color: #64748b; font-size: 0.84rem;">
-                  気になるキーワードをタップすると、用語の意味・黄金寸法・失敗しない設計のツボをAIが詳しく解説します
-                </p>
-              </div>
-            </div>
-            <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) document.getElementById('tab-btn-knowledge').click();" style="font-size: 0.85rem; font-weight: 800; color: #7c3aed; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-              📖 設計プロの知見200選で詳しく調べる ↗
-            </a>
-          </div>
-
-          <!-- スロット・タグ一覧 -->
-          <div id="fp-keyword-slots-container" style="display: flex; flex-wrap: wrap; gap: 10px;">
-            <!-- JSで動的にボタン生成 -->
-          </div>
-        </div>
-
-        <!-- ③ 設計プロの知見200選 〜後悔しない間取り・黄金寸法データベース〜のHEROボックス -->
-              <!-- 💡 HEROボックス: 設計プロの知見200選（失敗しない間取り・黄金寸法データベース） -->
-      <div class="fp-knowledge-hero-banner" style="background: linear-gradient(135deg, #064e3b 0%, #065f46 45%, #047857 100%); border: 2.5px solid #34d399; border-radius: 18px; padding: 2.2rem 2.2rem 2rem; margin-bottom: 2.2rem; box-shadow: 0 10px 30px rgba(6, 78, 59, 0.2); color: #ffffff; position: relative; overflow: hidden;">
-        <!-- 装飾用バックグラウンドパターン -->
-        <div style="position: absolute; right: -20px; top: -30px; font-size: 10rem; opacity: 0.07; pointer-events: none; user-select: none;">📐</div>
-
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 1rem; border-bottom: 1.5px solid rgba(255, 255, 255, 0.2); padding-bottom: 0.9rem;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 2rem;">🏆</span>
-            <div>
-              <span style="background: #34d399; color: #022c22; font-size: 0.78rem; font-weight: 900; padding: 3px 12px; border-radius: 20px; display: inline-block; margin-bottom: 3px; letter-spacing: 0.5px;">
-                鶴ヶ島・川越 創業30年800棟の実績結晶 ｜ 完全無料公開
-              </span>
-              <h3 style="margin: 0; color: #ffffff; font-size: 1.45rem; font-family: var(--font-heading); font-weight: 900; letter-spacing: 0.5px;">
-                設計プロの知見200選 〜後悔しない間取り・黄金寸法データベース〜
-              </h3>
-            </div>
-          </div>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) document.getElementById('tab-btn-knowledge').click();" class="btn" style="background: #ffffff; color: #065f46; font-weight: 900; font-size: 0.92rem; padding: 0.65rem 1.4rem; border-radius: 25px; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: inline-flex; align-items: center; gap: 6px; transition: transform 0.2s;">
-            <span>📖</span> 知見200選の逆引き一覧を見る ➔
-          </a>
-        </div>
-
-        <p style="color: #ecfdf5; font-size: 0.96rem; line-height: 1.8; margin-bottom: 1.4rem; max-width: 900px;">
-          「対面キッチンの通路幅は何mmが正解？」「冷蔵庫は手前と奥どっち？」「洗面室と脱衣室を分ける黄金比率は？」<br>
-          図面選びで後悔しないために、<strong>プロの設計士が長年の現場実例から導き出した「リアルな急所と黄金寸法」200問</strong>を網羅しました。<br>
-          気になる知見や図解は、<strong>そのまま「家カルテ」にワンタップ登録</strong>してお施主様のご要望メモとしてストックできます。
-        </p>
-
-        <!-- 代表的な知見ジャンルハイライト -->
-        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.4rem;">
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'kitchen\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            🍳 キッチン・パントリー通路幅
-          </a>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'water\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            🧺 洗面脱衣2室分離＆乾太くん
-          </a>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'ldk\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            🛋️ LDK・小上がり・ヌック書斎
-          </a>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'entrance\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            👞 2way玄関土間・ファミリー玄関
-          </a>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'storage\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            📦 WIC・分散収納の適正率
-          </a>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'garden\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            🌿 尺庭・ウッドデッキ・採光
-          </a>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'kaso\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            ⛩️ 家相・鬼門・現代動線の調和
-          </a>
-        </div>
-
-        <div style="display: flex; align-items: center; justify-content: flex-start; gap: 12px; flex-wrap: wrap;">
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) document.getElementById('tab-btn-knowledge').click();" class="btn" style="background: #10b981; color: #ffffff; font-weight: 900; font-size: 0.95rem; padding: 0.75rem 1.8rem; border-radius: 30px; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: inline-flex; align-items: center; gap: 8px;">
-            <span>🔍</span> キーワード・寸法から知見200選を逆引き検索する →
-          </a>
-          <span style="font-size: 0.82rem; color: #d1fae5;">※間取り検索の前にぜひ一度ご覧ください</span>
-        </div>
-      </div>
-
-
-        <!-- ④ まずは「家カルテ」❓とは？から始めませんか？のHEROボックス -->
-              <!-- 📋 家カルテ利用促進＆夫婦AIヒアリング活用案内ブロック -->
-      <div class="fp-carte-intro-banner" style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #ffffff 100%); border: 2px solid #8b5cf6; border-radius: 16px; padding: 1.8rem 2rem; margin-bottom: 2rem; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.1);">
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 1rem; border-bottom: 1.5px dashed #c4b5fd; padding-bottom: 0.8rem;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 1.8rem;">👨‍👩‍👧‍👦</span>
-            <div>
-              <span style="background: #7c3aed; color: #fff; font-size: 0.76rem; font-weight: 800; padding: 2px 10px; border-radius: 12px; display: inline-block; margin-bottom: 2px;">
-                住ま居る独自 ｜ 完全無料（お試し登録不要・営業連絡ゼロ）
-              </span>
-              <h3 style="margin: 0; color: #4c1d95; font-size: 1.32rem; font-family: var(--font-heading);">
-                まずは<span class="carte-hover-trigger" style="cursor: pointer; text-decoration: underline dashed #7c3aed; color: #4c1d95; font-weight: 900;" title="タップまたはクリックで家カルテ解説を開く">「家カルテ」<span style="font-size:0.75rem; background:#ede9fe; color:#6d28d9; padding:2px 8px; border-radius:12px; margin-left:4px;">❓とは？</span></span>から始めませんか？ 〜AIが夫婦の本音を聞き出し、理想の家づくりをサポート〜
-              </h3>
-            </div>
-          </div>
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <button type="button" class="btn-open-carte-guide-modal" style="background: #ffffff; border: 1.5px solid #7c3aed; color: #6d28d9; font-weight: 800; font-size: 0.88rem; padding: 0.6rem 1.1rem; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-              <span>📖</span> 家カルテとは？
-            </button>
-            <a href="#madori-consultation-bot" class="btn btn-primary" style="background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: #fff; font-weight: 800; font-size: 0.88rem; padding: 0.6rem 1.2rem; border-radius: 20px; text-decoration: none; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25); display: inline-flex; align-items: center; gap: 6px;">
-              <span>💬</span> カルテ作成を始める →
-            </a>
-          </div>
-        </div>
-
-        <p style="color: #475569; font-size: 0.93rem; line-height: 1.8; margin-bottom: 1.2rem;">
-          家づくりを始めた多くのご夫婦が「希望の食い違い」「営業マンへの気兼ね」「要望がうまくまとまらない」という壁にぶつかります。<br>
-          <strong class="carte-hover-trigger" style="cursor: pointer; text-decoration: underline dashed #7c3aed; color: #5b21b6;">「家カルテ」</strong>は、AIが勝手に答えを出したり口出しするのではなく、<strong>まずはご夫婦それぞれの希望・本音や、お気に入りの間取り・メモをしっかりとストック・整理することに務めるツール</strong>です。<br>
-          AIは<strong>「どう両立させたらいい？」と回答を求められた時にだけ</strong>、ストックされたお互いの本音をもとに客観的な「折衷案・融合案」をご提案します。
-        </p>
-
-        <!-- 3大特徴グリッド -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 1.2rem;">
-          <div style="background: #ffffff; border: 1.5px solid #ddd6fe; border-radius: 12px; padding: 1.1rem; box-shadow: 0 2px 8px rgba(124, 58, 237, 0.05);">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-              <span style="font-size: 1.3rem;">📱</span>
-              <strong style="color: #5b21b6; font-size: 0.95rem;">① 夫婦それぞれの本音をストック</strong>
-            </div>
-            <p style="color: #64748b; font-size: 0.84rem; line-height: 1.6; margin: 0;">
-              営業マンへの気兼ねや夫婦間の遠慮なく、「駐車台数」「洗面渋滞」「秘密のこだわり」など各自の希望を自由にAIへストックできます（プライバシー保護・画面共有不可）。
-            </p>
-          </div>
-
-          <div style="background: #ffffff; border: 1.5px solid #ddd6fe; border-radius: 12px; padding: 1.1rem; box-shadow: 0 2px 8px rgba(124, 58, 237, 0.05);">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-              <span style="font-size: 1.3rem;">💾</span>
-              <strong style="color: #5b21b6; font-size: 0.95rem;">② 気に入った図面をメモ付き保存</strong>
-            </div>
-            <p style="color: #64748b; font-size: 0.84rem; line-height: 1.6; margin: 0;">
-              実例プラン検索や3Dパースから「これがよかった！」「ここはこうしたい」というメモと一緒に間取りを何個でもカルテにストック・比較できます。
-            </p>
-          </div>
-
-          <div style="background: #ffffff; border: 1.5px solid #ddd6fe; border-radius: 12px; padding: 1.1rem; box-shadow: 0 2px 8px rgba(124, 58, 237, 0.05);">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-              <span style="font-size: 1.3rem;">🤝</span>
-              <strong style="color: #5b21b6; font-size: 0.95rem;">③ 回答を求められた時だけAIが提案</strong>
-            </div>
-            <p style="color: #64748b; font-size: 0.84rem; line-height: 1.6; margin: 0;">
-              AIは勝手に回答せず要望の蓄積に徹します。「どうすれば両立できる？」と回答を求めた時だけ、妥協ではない客観的な融合案をご提案します。
-            </p>
-          </div>
-        </div>
-
-        <!-- 🎯 2つの明確な導線（① 家カルテを理解する / ② 家カルテを作成・利用する） -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1.5px dashed #c4b5fd;">
-          <!-- 導線①: 家カルテ説明・解説（理解したい方へ） -->
-          <div style="background: #ffffff; border: 2px solid #a78bfa; border-radius: 14px; padding: 1.2rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 3px 10px rgba(124, 58, 237, 0.08);">
-            <div>
-              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                <span style="font-size: 1.3rem;">📖</span>
-                <strong style="color: #5b21b6; font-size: 1rem;">【導線①】家カルテって何するの？（解説・使い方）</strong>
-              </div>
-              <p style="color: #64748b; font-size: 0.84rem; line-height: 1.6; margin: 0 0 12px;">
-                夫婦の本音整理から3D図面ストック、知見保存まで。「なぜ家カルテを使うと後悔しないのか」を30秒で解説します。
-              </p>
-            </div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <button type="button" class="btn-open-carte-guide-modal" style="flex: 1; min-width: 140px; background: #ede9fe; border: 1.5px solid #7c3aed; color: #5b21b6; font-weight: 800; font-size: 0.88rem; padding: 0.65rem 1rem; border-radius: 20px; cursor: pointer; text-align: center;">
-                📖 30秒解説（モーダル）
-              </button>
-              <a href="/madori-consultation/" target="_blank" rel="noopener" style="flex: 1; min-width: 140px; background: #ffffff; border: 1.5px solid #64748b; color: #334155; font-weight: 800; font-size: 0.88rem; padding: 0.65rem 1rem; border-radius: 20px; text-decoration: none; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
-                🌐 WEB解説ページ ↗
-              </a>
-            </div>
-          </div>
-
-          <!-- 導線②: 家カルテ本体（今すぐ作りたい・見たい方へ） -->
-          <div style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); border-radius: 14px; padding: 1.2rem; color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 6px 18px rgba(109, 40, 217, 0.25);">
-            <div>
-              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                <span style="font-size: 1.3rem;">🌿</span>
-                <strong style="color: #ffffff; font-size: 1rem;">【導線②】夫婦の家カルテを始める</strong>
-              </div>
-              <p style="color: #ede9fe; font-size: 0.84rem; line-height: 1.6; margin: 0 0 12px;">
-                営業マンへの気兼ねゼロ。AIヒアリングで夫婦それぞれの想いやこだわりを安全にストックしましょう。
-              </p>
-            </div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <a href="#madori-consultation-bot" class="btn" style="flex: 1.4; min-width: 170px; background: #ffffff; color: #5b21b6; font-weight: 900; font-size: 0.88rem; padding: 0.65rem 1rem; border-radius: 20px; text-decoration: none; text-align: center; box-shadow: 0 3px 10px rgba(0,0,0,0.15);">
-                ✍️ ヒアリング＆作成（無料） →
-              </a>
-              <a href="#dashboard" class="btn" style="flex: 1; min-width: 130px; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.4); color: #ffffff; font-weight: 800; font-size: 0.88rem; padding: 0.65rem 1rem; border-radius: 20px; text-decoration: none; text-align: center;">
-                👤 マイカルテを見る
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- 📲 公式LINE連携 ＆ 🛡️ 共有ポリシーバナー -->
-        <div style="margin-top: 1rem; background: #ecfdf5; border: 1.5px solid #86efac; border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px;">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-size: 1.2rem;">🛡️</span>
-            <strong style="font-size: 0.88rem; color: #065f46;">
-              安心のプライバシー保護 ＆ プラン申し込み後の個別ポータル化について
-            </strong>
-          </div>
-          <p style="margin: 0; font-size: 0.8rem; color: #1e3a8a; line-height: 1.6; background: #eff6ff; padding: 8px 12px; border-radius: 8px; border: 1px solid #bfdbfe;">
-            ・<strong>プラン申し込み前:</strong> ご登録内容は住ま居る側にも伝わらず、お施主様だけのプライベート保管庫です。営業連絡も一切ありません。<br>
-            ・<strong>プラン申し込み後:</strong> <strong style="color: #0369a1;">「家カルテの内容はプラン申し込み後は、ユーザー（お施主様）の承認をもって、住ま居ると共有させていただきます。」</strong><br>
-            ・<strong>専用ポータルへの昇華:</strong> プラン申し込み後の家カルテは、JFD敷地測量成果物・各意匠図スロット・詳細見積書・電気図面・契約書を一元管理し、図面チャットやLINE通知と連動する<strong>住ま居るとお客様との「完全個別ポータルサイト」</strong>へ昇華します。
-          </p>
-        </div>
-      </div>
-
-
-        <!-- ⑤ 最後に下の検索結果一覧（全件カード一覧グリッド） -->
-        <div style="margin: 2.5rem 0 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-          <div>
-            <h3 id="fp-matched-list-heading" style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin: 0;">
-              条件に合致した全実例プラン一覧
-            </h3>
-            <span style="font-size: 0.82rem; color: #64748b;">
-              気になるカードをクリックすると、上記の大画面スライダーと概算価格表が即座に切り替わります
-            </span>
-          </div>
-          <span id="fp-matched-total-badge" style="font-size: 0.85rem; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 4px 12px; border-radius: 20px;">
-            全 0 件
+    
+      <!-- 設計知見200選：間取り検討中の滞在時間・回遊率向上コンテンツ -->
+      <div style="margin-top: 4rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #bae6fd; border-radius: 16px; padding: 2.5rem 2rem; box-shadow: 0 4px 20px rgba(2,132,199,0.06);">
+        <div style="text-align: center; max-width: 800px; margin: 0 auto 2.5rem;">
+          <span style="background: #e0f2fe; color: #0284c7; font-size: 0.82rem; font-weight: 800; padding: 4px 14px; border-radius: 20px; display: inline-block; margin-bottom: 8px;">
+            📐 間取り選びで後悔しないための実務エビデンス
           </span>
+          <h3 style="font-size: 1.7rem; font-weight: 900; color: #0f172a; margin: 0 0 0.6rem; letter-spacing: -0.5px;">
+            設計プロの知見200選（実務寸法 ＆ 黄金動線ルール抜粋）
+          </h3>
+          <p style="font-size: 0.95rem; color: #64748b; line-height: 1.7; margin: 0;">
+            「図面では広く見えたのに家具を置いたら狭い…」「毎日の洗濯動線が遠くて疲れる…」<br>
+            そんな間取りの後悔を防ぐために、埼玉の現場実務30年から導き出した【黄金寸法】と【動線の正解】を厳選ピックアップしました。
+          </p>
         </div>
 
-        <!-- Matched Plan Cards Container (全件表示) -->
-        <div id="fp-matched-cards-grid" class="grid-3" style="gap: 1.5rem; margin-bottom: 2.5rem;">
-          <!-- Dynamically populated from JS -->
-        </div>
-
-        <!-- 間取りキーワード解説モーダル -->
-        <div id="modal-madori-advice" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;">
-          <div style="background: #ffffff; border-radius: 16px; max-width: 650px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.25); position: relative; border: 2px solid #38bdf8; animation: modalPop 0.25s ease-out;">
-            <div style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; padding: 1.2rem 1.5rem; border-radius: 14px 14px 0 0; display: flex; justify-content: space-between; align-items: center;">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span id="modal-kw-icon" style="font-size: 1.5rem;">🏷️</span>
-                <h3 id="modal-kw-title" style="margin: 0; font-size: 1.25rem; font-weight: 800; color: #ffffff;">間取り用語解説</h3>
-              </div>
-              <button type="button" id="btn-close-kw-modal" style="background: rgba(255,255,255,0.2); border: none; color: #fff; font-size: 1.4rem; line-height: 1; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;">×</button>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.4rem; margin-bottom: 2.5rem;">
+          <!-- 1. キッチン -->
+          <div style="background: #ffffff; border-radius: 12px; padding: 1.4rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 1.3rem;">🍳</span>
+              <span style="font-size: 0.75rem; font-weight: 800; color: #d97706; background: #fef3c7; padding: 2px 8px; border-radius: 4px;">第1章：キッチン（全25問）</span>
             </div>
-
-            <div style="padding: 1.5rem;" id="modal-kw-body">
-              <!-- JSで動的に展開 -->
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- STEP 3: BASE PLAN DETAIL & "あーでもないこーでもない" AI REMIX CHAT -->
-      <div id="fp-step3-container" style="display: none;">
-        
-        <!-- Navigation bar to Step 2 -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; background: #ffffff; padding: 0.8rem 1.4rem; border-radius: 10px; border: 1px solid #cbd5e1;">
-          <button type="button" id="btn-back-to-step2" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.88rem;">
-            ← 検索結果プラン一覧に戻る
-          </button>
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <span id="fp-current-plan-title-bar" style="font-weight: 800; color: #0284c7; font-size: 0.95rem;">
-              選択中プラン
-            </span>
-          </div>
-        </div>
-
-        <!-- Studio Grid: Left Chat Panel & Right Live Floor Plan Viewer -->
-        <div class="fp-studio-grid" style="margin-bottom: 2.5rem;">
-        
-        <!-- Left: AI Architect Conversational Chat Panel -->
-        <div class="fp-chat-card">
-          <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 0.8rem; margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <h3 style="font-size: 1.15rem; color: var(--primary-green-dark); font-family: var(--font-heading);">💬 間取りチャット相談</h3>
-              <div style="font-size: 0.8rem; color: var(--text-muted);">気に入っている箇所・変更したいご要望をチャットで相談</div>
-            </div>
-            <span style="font-size: 0.75rem; background: #e0f2fe; border: 1px solid #38bdf8; color: #0369a1; font-weight: 700; padding: 2px 8px; border-radius: 12px;">
-              ⚡ 自由設計相談
-            </span>
-          </div>
-
-          <!-- Chat History -->
-          <div id="fp-chat-history" class="fp-chat-history">
-            <!-- Dynamically populated -->
-          </div>
-
-          <!-- Quick Suggestion Chips -->
-          <div style="font-size: 0.8rem; color: #64748b; font-weight: 700; margin-top: 6px;">💡 ワンタップで要望を相談してみる:</div>
-          <div id="fp-chat-chips" class="fp-chips-box">
-            <!-- Chips populated dynamically -->
-          </div>
-
-          <!-- Chat Input Form -->
-          <form id="fp-chat-form" style="display: flex; gap: 8px; margin-top: 6px;">
-            <input type="text" id="fp-chat-input" class="form-input" placeholder="例: LDKを広くして、和室とパントリーを追加したい" required style="font-size: 0.92rem; padding: 0.75rem;" />
-            <button type="submit" id="fp-chat-send-btn" class="btn btn-primary" style="white-space: nowrap; padding: 0.75rem 1.4rem; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff;">
-              送信 ✈️
-            </button>
-          </form>
-        </div>
-
-        <!-- Right: Live Vector Floor Plan Display -->
-        <div>
-          <!-- Plan Meta Header -->
-          <div style="background: #ffffff; border: 1px solid #cbd5e1; padding: 1.2rem 1.5rem; border-radius: var(--radius-lg); margin-bottom: 1.2rem; box-shadow: var(--shadow-card);">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-              <div>
-                <span class="badge-number" id="res-plan-type" style="background: #0284c7;">自由設計ベースプラン</span>
-                <h2 id="res-plan-title" style="font-family: var(--font-heading); color: #0f172a; font-size: 1.35rem; margin-top: 4px;">理想の間取りプラン</h2>
-                <div style="font-size: 0.9rem; color: var(--text-muted);" id="res-plan-specs">
-                  延床面積: 34.0坪 (112.4㎡) ｜ 4LDK
-                </div>
-              </div>
-              <!-- Floor Switching Tabs (B1F, 1F, 2F, 3F, PH) & Mode Buttons -->
-              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                <div id="fp-floor-tabs" style="display: flex; gap: 6px; flex-wrap: wrap;">
-                  <!-- Dynamically generated floor buttons -->
-                </div>
-                <div style="display: flex; gap: 4px; margin-left: auto;">
-                  <button type="button" id="btn-mode-2d" class="pg-mode-btn" style="padding: 4px 10px; font-size: 0.8rem; font-weight: 700; border-radius: 6px; cursor: pointer;">2D原図</button>
-                  <button type="button" id="btn-mode-gemini" class="pg-mode-btn" style="padding: 4px 10px; font-size: 0.8rem; font-weight: 700; border-radius: 6px; cursor: pointer;">3Dパース</button>
-                  <button type="button" id="btn-mode-compare" class="pg-mode-btn" style="padding: 4px 10px; font-size: 0.8rem; font-weight: 700; border-radius: 6px; cursor: pointer;">⚡ 2D⇔3Dスライダー</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Floorplan Viewport Stage (2D / 3D / Slider) -->
-          <div id="fp-viewer-stage" style="background: #ffffff; border: 2px solid #0284c7; border-radius: var(--radius-lg); padding: 1rem; box-shadow: var(--shadow-card); overflow: auto; text-align: center; min-height: 480px; display: flex; align-items: center; justify-content: center;">
-            <div style="color: #64748b; font-size: 1.05rem;">
-              ⏳ 間取り図面を準備しています...
-            </div>
-          </div>
-
-          <!-- Room Specifications List for Current Level -->
-          <div style="margin-top: 1.8rem;">
-            <h4 style="color: var(--primary-green-dark); font-family: var(--font-heading); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px;">
-              <span>📋</span> <span id="res-rooms-floor-label">選択中フロア</span> の寸法・仕上げ建材詳細一覧
-            </h4>
-            <div id="res-rooms-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
-              <!-- Dynamic Room Cards -->
-            </div>
-          </div>
-
-          <!-- 次のステップへのアクション（保存・相談・モデルハウス見学） -->
-          <div style="margin-top: 1.8rem; background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 1.5rem; border-radius: var(--radius-lg); text-align: center;">
-            <h4 style="color: #0f172a; font-size: 1.1rem; font-weight: 800; margin-bottom: 0.4rem;">
-              気に入ったプランを保存・専任スタッフに相談
-            </h4>
-            <p style="color: #64748b; font-size: 0.88rem; margin-bottom: 1.1rem;">
-              この間取りプランと概算価格を家カルテに保存し、住ま居るの専任スタッフに直接ご相談いただけます。
+            <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">通路幅・冷蔵庫・パントリー動線</h4>
+            <p style="font-size: 0.84rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+              1人なら850〜900mm、2人なら1,000〜1,050mmが黄金寸法。冷蔵庫を手前側に配置して調理中の横切り動線を防ぐ法則。
             </p>
-            <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
-              <button id="btn-save-plan-mypage" class="btn btn-primary" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; font-size: 0.94rem; padding: 0.75rem 1.8rem; border-radius: 30px;">
-                💾 この間取りを家カルテに保存する
-              </button>
-              <button class="btn btn-secondary" data-target="scent-experience" style="background: #10b981; color: #fff; border: none; font-size: 0.94rem; padding: 0.75rem 1.8rem; border-radius: 30px;">
-                🌿 毛呂山モデルハウスで実寸と香りを体感する →
-              </button>
-            </div>
+            <a href="/knowledge/madori/kitchen.html" style="color: #d97706; font-weight: 800; font-size: 0.82rem; text-decoration: none;">
+              キッチンの知見25選を見る ➜
+            </a>
           </div>
 
-        </div>
-
-      </div>
-
-      <!-- ③ 設計プロの知見200選 〜後悔しない間取り・黄金寸法データベース〜のHEROボックス -->
-            <!-- 💡 HEROボックス: 設計プロの知見200選（失敗しない間取り・黄金寸法データベース） -->
-      <div class="fp-knowledge-hero-banner" style="background: linear-gradient(135deg, #064e3b 0%, #065f46 45%, #047857 100%); border: 2.5px solid #34d399; border-radius: 18px; padding: 2.2rem 2.2rem 2rem; margin-bottom: 2.2rem; box-shadow: 0 10px 30px rgba(6, 78, 59, 0.2); color: #ffffff; position: relative; overflow: hidden;">
-        <!-- 装飾用バックグラウンドパターン -->
-        <div style="position: absolute; right: -20px; top: -30px; font-size: 10rem; opacity: 0.07; pointer-events: none; user-select: none;">📐</div>
-
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 1rem; border-bottom: 1.5px solid rgba(255, 255, 255, 0.2); padding-bottom: 0.9rem;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 2rem;">🏆</span>
-            <div>
-              <span style="background: #34d399; color: #022c22; font-size: 0.78rem; font-weight: 900; padding: 3px 12px; border-radius: 20px; display: inline-block; margin-bottom: 3px; letter-spacing: 0.5px;">
-                鶴ヶ島・川越 創業30年800棟の実績結晶 ｜ 完全無料公開
-              </span>
-              <h3 style="margin: 0; color: #ffffff; font-size: 1.45rem; font-family: var(--font-heading); font-weight: 900; letter-spacing: 0.5px;">
-                設計プロの知見200選 〜後悔しない間取り・黄金寸法データベース〜
-              </h3>
+          <!-- 2. LDK -->
+          <div style="background: #ffffff; border-radius: 12px; padding: 1.4rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 1.3rem;">🛋️</span>
+              <span style="font-size: 0.75rem; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">第2章：LDK・小上がり（全25問）</span>
             </div>
+            <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">畳数感覚・視線抜け・小上がり</h4>
+            <p style="font-size: 0.84rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+              吹き抜けの寒さ・音対策、畳コーナー小上がり30〜35cmの引き出し収納活用、TVとソファの適正視聴距離の計算式。
+            </p>
+            <a href="/knowledge/madori/ldk.html" style="color: #0284c7; font-weight: 800; font-size: 0.82rem; text-decoration: none;">
+              LDKの知見25選を見る ➜
+            </a>
           </div>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) document.getElementById('tab-btn-knowledge').click();" class="btn" style="background: #ffffff; color: #065f46; font-weight: 900; font-size: 0.92rem; padding: 0.65rem 1.4rem; border-radius: 25px; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: inline-flex; align-items: center; gap: 6px; transition: transform 0.2s;">
-            <span>📖</span> 知見200選の逆引き一覧を見る ➔
-          </a>
-        </div>
 
-        <p style="color: #ecfdf5; font-size: 0.96rem; line-height: 1.8; margin-bottom: 1.4rem; max-width: 900px;">
-          「対面キッチンの通路幅は何mmが正解？」「冷蔵庫は手前と奥どっち？」「洗面室と脱衣室を分ける黄金比率は？」<br>
-          図面選びで後悔しないために、<strong>プロの設計士が長年の現場実例から導き出した「リアルな急所と黄金寸法」200問</strong>を網羅しました。<br>
-          気になる知見や図解は、<strong>そのまま「家カルテ」にワンタップ登録</strong>してお施主様のご要望メモとしてストックできます。
-        </p>
-
-        <!-- 代表的な知見ジャンルハイライト -->
-        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.4rem;">
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'kitchen\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            🍳 キッチン・パントリー通路幅
-          </a>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'water\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            🧺 洗面脱衣2室分離＆乾太くん
-          </a>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'ldk\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            🛋️ LDK・小上がり・ヌック書斎
-          </a>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'entrance\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            👞 2way玄関土間・ファミリー玄関
-          </a>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'storage\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            📦 WIC・分散収納の適正率
-          </a>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'garden\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            🌿 尺庭・ウッドデッキ・採光
-          </a>
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) { document.getElementById('tab-btn-knowledge').click(); const p = document.querySelector('.madori-tab-pill[data-cat=\'kaso\']'); if(p) p.click(); }" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; font-size: 0.85rem; font-weight: 700; padding: 5px 12px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-            ⛩️ 家相・鬼門・現代動線の調和
-          </a>
-        </div>
-
-        <div style="display: flex; align-items: center; justify-content: flex-start; gap: 12px; flex-wrap: wrap;">
-          <a href="#madori-consultation-bot" onclick="if(document.getElementById('tab-btn-knowledge')) document.getElementById('tab-btn-knowledge').click();" class="btn" style="background: #10b981; color: #ffffff; font-weight: 900; font-size: 0.95rem; padding: 0.75rem 1.8rem; border-radius: 30px; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: inline-flex; align-items: center; gap: 8px;">
-            <span>🔍</span> キーワード・寸法から知見200選を逆引き検索する →
-          </a>
-          <span style="font-size: 0.82rem; color: #d1fae5;">※間取り検索の前にぜひ一度ご覧ください</span>
-        </div>
-      </div>
-
-
-      <!-- ④ まずは「家カルテ」❓とは？から始めませんか？のHEROボックス -->
-            <!-- 📋 家カルテ利用促進＆夫婦AIヒアリング活用案内ブロック -->
-      <div class="fp-carte-intro-banner" style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #ffffff 100%); border: 2px solid #8b5cf6; border-radius: 16px; padding: 1.8rem 2rem; margin-bottom: 2rem; box-shadow: 0 6px 20px rgba(124, 58, 237, 0.1);">
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 1rem; border-bottom: 1.5px dashed #c4b5fd; padding-bottom: 0.8rem;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 1.8rem;">👨‍👩‍👧‍👦</span>
-            <div>
-              <span style="background: #7c3aed; color: #fff; font-size: 0.76rem; font-weight: 800; padding: 2px 10px; border-radius: 12px; display: inline-block; margin-bottom: 2px;">
-                住ま居る独自 ｜ 完全無料（お試し登録不要・営業連絡ゼロ）
-              </span>
-              <h3 style="margin: 0; color: #4c1d95; font-size: 1.32rem; font-family: var(--font-heading);">
-                まずは<span class="carte-hover-trigger" style="cursor: pointer; text-decoration: underline dashed #7c3aed; color: #4c1d95; font-weight: 900;" title="タップまたはクリックで家カルテ解説を開く">「家カルテ」<span style="font-size:0.75rem; background:#ede9fe; color:#6d28d9; padding:2px 8px; border-radius:12px; margin-left:4px;">❓とは？</span></span>から始めませんか？ 〜AIが夫婦の本音を聞き出し、理想の家づくりをサポート〜
-              </h3>
+          <!-- 3. 水回り -->
+          <div style="background: #ffffff; border-radius: 12px; padding: 1.4rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 1.3rem;">🧺</span>
+              <span style="font-size: 0.75rem; font-weight: 800; color: #059669; background: #ecfdf5; padding: 2px 8px; border-radius: 4px;">第3章：水回り・ランドリー（全25問）</span>
             </div>
+            <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">洗面脱衣分離・室内干し動線</h4>
+            <p style="font-size: 0.84rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+              「脱衣室」と「洗面所」の完全分離で家族の入浴時も安心。洗濯機・物干し・ファミクロが1直線につながる時短ランドリー。
+            </p>
+            <a href="/knowledge/madori/water.html" style="color: #059669; font-weight: 800; font-size: 0.82rem; text-decoration: none;">
+              水回りの知見25選を見る ➜
+            </a>
           </div>
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <button type="button" class="btn-open-carte-guide-modal" style="background: #ffffff; border: 1.5px solid #7c3aed; color: #6d28d9; font-weight: 800; font-size: 0.88rem; padding: 0.6rem 1.1rem; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-              <span>📖</span> 家カルテとは？
-            </button>
-            <a href="#madori-consultation-bot" class="btn btn-primary" style="background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: #fff; font-weight: 800; font-size: 0.88rem; padding: 0.6rem 1.2rem; border-radius: 20px; text-decoration: none; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25); display: inline-flex; align-items: center; gap: 6px;">
-              <span>💬</span> カルテ作成を始める →
+
+          <!-- 4. 玄関 -->
+          <div style="background: #ffffff; border-radius: 12px; padding: 1.4rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 1.3rem;">👞</span>
+              <span style="font-size: 0.75rem; font-weight: 800; color: #0369a1; background: #bae6fd; padding: 2px 8px; border-radius: 4px;">第4章：玄関・土間SIC（全25問）</span>
+            </div>
+            <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">家族・来客動線分離・土間収納</h4>
+            <p style="font-size: 0.84rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+              ウォークスルー型シューズクロークでメイン玄関を常に整頓。ベビーカーやコート掛けを土間にビルトインする設計法。
+            </p>
+            <a href="/knowledge/madori/entrance.html" style="color: #0369a1; font-weight: 800; font-size: 0.82rem; text-decoration: none;">
+              玄関の知見25選を見る ➜
+            </a>
+          </div>
+
+          <!-- 5. 収納 -->
+          <div style="background: #ffffff; border-radius: 12px; padding: 1.4rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 1.3rem;">📦</span>
+              <span style="font-size: 0.75rem; font-weight: 800; color: #7c3aed; background: #ede9fe; padding: 2px 8px; border-radius: 4px;">第5章：収納・WIC（全25問）</span>
+            </div>
+            <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">ファミクロ・適材適所の分散配置</h4>
+            <p style="font-size: 0.84rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+              収納率12〜15%の黄金比率。1階ファミリークローゼットで洗濯畳み・服運びゼロ化。奥行きが深すぎて使いにくい収納の解消法。
+            </p>
+            <a href="/knowledge/madori/storage.html" style="color: #7c3aed; font-weight: 800; font-size: 0.82rem; text-decoration: none;">
+              収納の知見25選を見る ➜
+            </a>
+          </div>
+
+          <!-- 6. 設備・照明 -->
+          <div style="background: #ffffff; border-radius: 12px; padding: 1.4rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 1.3rem;">🔥</span>
+              <span style="font-size: 0.75rem; font-weight: 800; color: #dc2626; background: #fee2e2; padding: 2px 8px; border-radius: 4px;">第6章：暖炉・設備・照明（全25問）</span>
+            </div>
+            <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">薪ストーブ・間接照明・空調計画</h4>
+            <p style="font-size: 0.84rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+              薪ストーブの煙突ルートと遮熱大谷石の配置基準。まぶしさを抑えた建築化コーブ照明とグレアレスダウンライトの配当設計。
+            </p>
+            <a href="/knowledge/madori/equipment.html" style="color: #dc2626; font-weight: 800; font-size: 0.82rem; text-decoration: none;">
+              設備の知見25選を見る ➜
+            </a>
+          </div>
+
+          <!-- 7. 中庭・デッキ -->
+          <div style="background: #ffffff; border-radius: 12px; padding: 1.4rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 1.3rem;">🌿</span>
+              <span style="font-size: 0.75rem; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 8px; border-radius: 4px;">第7章：尺庭・デッキ（全25問）</span>
+            </div>
+            <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">アウターリビング・プライベート中庭</h4>
+            <p style="font-size: 0.84rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+              外からの視線を遮るコの字・ロの字配棟。リビングとフラットにつながるタイルデッキテラスと雨に濡れないカバードポーチ。
+            </p>
+            <a href="/knowledge/madori/garden.html" style="color: #16a34a; font-weight: 800; font-size: 0.82rem; text-decoration: none;">
+              庭・デッキの知見25選を見る ➜
+            </a>
+          </div>
+
+          <!-- 8. 家相・風水 -->
+          <div style="background: #ffffff; border-radius: 12px; padding: 1.4rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 1.3rem;">⛩️</span>
+              <span style="font-size: 0.75rem; font-weight: 800; color: #475569; background: #f1f5f9; padding: 2px 8px; border-radius: 4px;">第8章：家相・風水（全25問）</span>
+            </div>
+            <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">鬼門・裏鬼門・現代科学間取り</h4>
+            <p style="font-size: 0.84rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+              「鬼門にトイレ・玄関は本当にNG？」古来の知恵を現代の換気・採光・衛生工学で論理的に読み解くストレスフリーな家相設計。
+            </p>
+            <a href="/knowledge/madori/kaso.html" style="color: #475569; font-weight: 800; font-size: 0.82rem; text-decoration: none;">
+              家相・風水の知見25選を見る ➜
             </a>
           </div>
         </div>
 
-        <p style="color: #475569; font-size: 0.93rem; line-height: 1.8; margin-bottom: 1.2rem;">
-          家づくりを始めた多くのご夫婦が「希望の食い違い」「営業マンへの気兼ね」「要望がうまくまとまらない」という壁にぶつかります。<br>
-          <strong class="carte-hover-trigger" style="cursor: pointer; text-decoration: underline dashed #7c3aed; color: #5b21b6;">「家カルテ」</strong>は、AIが勝手に答えを出したり口出しするのではなく、<strong>まずはご夫婦それぞれの希望・本音や、お気に入りの間取り・メモをしっかりとストック・整理することに務めるツール</strong>です。<br>
-          AIは<strong>「どう両立させたらいい？」と回答を求められた時にだけ</strong>、ストックされたお互いの本音をもとに客観的な「折衷案・融合案」をご提案します。
-        </p>
-
-        <!-- 3大特徴グリッド -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 1.2rem;">
-          <div style="background: #ffffff; border: 1.5px solid #ddd6fe; border-radius: 12px; padding: 1.1rem; box-shadow: 0 2px 8px rgba(124, 58, 237, 0.05);">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-              <span style="font-size: 1.3rem;">📱</span>
-              <strong style="color: #5b21b6; font-size: 0.95rem;">① 夫婦それぞれの本音をストック</strong>
-            </div>
-            <p style="color: #64748b; font-size: 0.84rem; line-height: 1.6; margin: 0;">
-              営業マンへの気兼ねや夫婦間の遠慮なく、「駐車台数」「洗面渋滞」「秘密のこだわり」など各自の希望を自由にAIへストックできます（プライバシー保護・画面共有不可）。
+        <div style="background: #ffffff; border-radius: 12px; padding: 1.5rem 2rem; border: 1.5px solid #0284c7; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.2rem;">
+          <div>
+            <h4 style="margin: 0 0 0.3rem; font-size: 1.15rem; font-weight: 900; color: #0f172a;">
+              📚 設計プロの知見200選・全8カテゴリ（全200問）を完全公開中！
+            </h4>
+            <p style="margin: 0; font-size: 0.88rem; color: #64748b;">
+              キッチン・LDK・水回り・玄関・収納・設備・中庭・家相風水まで、図解と寸法基準を網羅したナレッジハブ。
             </p>
           </div>
-
-          <div style="background: #ffffff; border: 1.5px solid #ddd6fe; border-radius: 12px; padding: 1.1rem; box-shadow: 0 2px 8px rgba(124, 58, 237, 0.05);">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-              <span style="font-size: 1.3rem;">💾</span>
-              <strong style="color: #5b21b6; font-size: 0.95rem;">② 気に入った図面をメモ付き保存</strong>
-            </div>
-            <p style="color: #64748b; font-size: 0.84rem; line-height: 1.6; margin: 0;">
-              実例プラン検索や3Dパースから「これがよかった！」「ここはこうしたい」というメモと一緒に間取りを何個でもカルテにストック・比較できます。
-            </p>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="/knowledge/madori/" style="background: #0284c7; color: #fff; font-weight: 800; font-size: 0.9rem; padding: 10px 20px; border-radius: 8px; text-decoration: none; box-shadow: 0 2px 8px rgba(2,132,199,0.3);">
+              知見200選ポータルを見る ➜
+            </a>
+            <a href="/#madori-consultation-bot" style="background: #f0fdf4; color: #059669; border: 1.5px solid #059669; font-weight: 800; font-size: 0.9rem; padding: 10px 18px; border-radius: 8px; text-decoration: none;">
+              💬 24h AI間取り相談ボット ↗
+            </a>
           </div>
-
-          <div style="background: #ffffff; border: 1.5px solid #ddd6fe; border-radius: 12px; padding: 1.1rem; box-shadow: 0 2px 8px rgba(124, 58, 237, 0.05);">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-              <span style="font-size: 1.3rem;">🤝</span>
-              <strong style="color: #5b21b6; font-size: 0.95rem;">③ 回答を求められた時だけAIが提案</strong>
-            </div>
-            <p style="color: #64748b; font-size: 0.84rem; line-height: 1.6; margin: 0;">
-              AIは勝手に回答せず要望の蓄積に徹します。「どうすれば両立できる？」と回答を求めた時だけ、妥協ではない客観的な融合案をご提案します。
-            </p>
-          </div>
-        </div>
-
-        <!-- 🎯 2つの明確な導線（① 家カルテを理解する / ② 家カルテを作成・利用する） -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1.5px dashed #c4b5fd;">
-          <!-- 導線①: 家カルテ説明・解説（理解したい方へ） -->
-          <div style="background: #ffffff; border: 2px solid #a78bfa; border-radius: 14px; padding: 1.2rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 3px 10px rgba(124, 58, 237, 0.08);">
-            <div>
-              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                <span style="font-size: 1.3rem;">📖</span>
-                <strong style="color: #5b21b6; font-size: 1rem;">【導線①】家カルテって何するの？（解説・使い方）</strong>
-              </div>
-              <p style="color: #64748b; font-size: 0.84rem; line-height: 1.6; margin: 0 0 12px;">
-                夫婦の本音整理から3D図面ストック、知見保存まで。「なぜ家カルテを使うと後悔しないのか」を30秒で解説します。
-              </p>
-            </div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <button type="button" class="btn-open-carte-guide-modal" style="flex: 1; min-width: 140px; background: #ede9fe; border: 1.5px solid #7c3aed; color: #5b21b6; font-weight: 800; font-size: 0.88rem; padding: 0.65rem 1rem; border-radius: 20px; cursor: pointer; text-align: center;">
-                📖 30秒解説（モーダル）
-              </button>
-              <a href="/madori-consultation/" target="_blank" rel="noopener" style="flex: 1; min-width: 140px; background: #ffffff; border: 1.5px solid #64748b; color: #334155; font-weight: 800; font-size: 0.88rem; padding: 0.65rem 1rem; border-radius: 20px; text-decoration: none; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
-                🌐 WEB解説ページ ↗
-              </a>
-            </div>
-          </div>
-
-          <!-- 導線②: 家カルテ本体（今すぐ作りたい・見たい方へ） -->
-          <div style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); border-radius: 14px; padding: 1.2rem; color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 6px 18px rgba(109, 40, 217, 0.25);">
-            <div>
-              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                <span style="font-size: 1.3rem;">🌿</span>
-                <strong style="color: #ffffff; font-size: 1rem;">【導線②】夫婦の家カルテを始める</strong>
-              </div>
-              <p style="color: #ede9fe; font-size: 0.84rem; line-height: 1.6; margin: 0 0 12px;">
-                営業マンへの気兼ねゼロ。AIヒアリングで夫婦それぞれの想いやこだわりを安全にストックしましょう。
-              </p>
-            </div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <a href="#madori-consultation-bot" class="btn" style="flex: 1.4; min-width: 170px; background: #ffffff; color: #5b21b6; font-weight: 900; font-size: 0.88rem; padding: 0.65rem 1rem; border-radius: 20px; text-decoration: none; text-align: center; box-shadow: 0 3px 10px rgba(0,0,0,0.15);">
-                ✍️ ヒアリング＆作成（無料） →
-              </a>
-              <a href="#dashboard" class="btn" style="flex: 1; min-width: 130px; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.4); color: #ffffff; font-weight: 800; font-size: 0.88rem; padding: 0.65rem 1rem; border-radius: 20px; text-decoration: none; text-align: center;">
-                👤 マイカルテを見る
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- 📲 公式LINE連携 ＆ 🛡️ 共有ポリシーバナー -->
-        <div style="margin-top: 1rem; background: #ecfdf5; border: 1.5px solid #86efac; border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px;">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-size: 1.2rem;">🛡️</span>
-            <strong style="font-size: 0.88rem; color: #065f46;">
-              安心のプライバシー保護 ＆ プラン申し込み後の個別ポータル化について
-            </strong>
-          </div>
-          <p style="margin: 0; font-size: 0.8rem; color: #1e3a8a; line-height: 1.6; background: #eff6ff; padding: 8px 12px; border-radius: 8px; border: 1px solid #bfdbfe;">
-            ・<strong>プラン申し込み前:</strong> ご登録内容は住ま居る側にも伝わらず、お施主様だけのプライベート保管庫です。営業連絡も一切ありません。<br>
-            ・<strong>プラン申し込み後:</strong> <strong style="color: #0369a1;">「家カルテの内容はプラン申し込み後は、ユーザー（お施主様）の承認をもって、住ま居ると共有させていただきます。」</strong><br>
-            ・<strong>専用ポータルへの昇華:</strong> プラン申し込み後の家カルテは、JFD敷地測量成果物・各意匠図スロット・詳細見積書・電気図面・契約書を一元管理し、図面チャットやLINE通知と連動する<strong>住ま居るとお客様との「完全個別ポータルサイト」</strong>へ昇華します。
-          </p>
         </div>
       </div>
-
-
-    </div>
-      </div> <!-- /#floorplan-search-section-wrap -->
-
-    </template>
-
+</section>

@@ -1,7 +1,8 @@
-/* =========================================================
-   住ま居る 家づくりスケジュール＆進行チェックリスト専用スタイル
-   public/css/schedule.css
-   ========================================================= */
+/* スケジュールページではFHDやタブレット横画面での広々とした可読性を最優先し、ヘッダーの画面固定（sticky）を解除 */
+.site-header {
+  position: relative !important;
+  top: auto !important;
+}
 
 .schedule-main-wrap {
   background-color: #f1f5f9;

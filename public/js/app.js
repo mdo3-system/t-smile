@@ -209,6 +209,45 @@ function initNavigation() {
     });
   });
 
+  // Handle footer and in-page knowledge links with data-madori-cat / data-thermal-cat
+  document.addEventListener('click', (e) => {
+    const madoriLink = e.target.closest('[data-madori-cat]');
+    if (madoriLink) {
+      const isTop = window.location.pathname === '/' || window.location.pathname.endsWith('index.html');
+      if (isTop) {
+        e.preventDefault();
+        const cat = madoriLink.getAttribute('data-madori-cat');
+        switchPage('madori-consultation-bot');
+        const tabBtn = document.getElementById('tab-btn-knowledge');
+        if (tabBtn) tabBtn.click();
+        if (cat) {
+          const pill = document.querySelector(`.madori-tab-pill[data-cat="${cat}"]`);
+          if (pill) pill.click();
+        }
+        const el = document.getElementById('madori-consultation-bot');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+        window.history.pushState(null, '', `/#madori-consultation-bot?cat=${cat}`);
+      }
+    }
+
+    const thermalLink = e.target.closest('[data-thermal-cat]');
+    if (thermalLink) {
+      const isTop = window.location.pathname === '/' || window.location.pathname.endsWith('index.html');
+      if (isTop) {
+        e.preventDefault();
+        const cat = thermalLink.getAttribute('data-thermal-cat');
+        switchPage('thermal-consultation');
+        if (cat) {
+          const pill = document.querySelector(`.thermal-tab-pill[data-cat="${cat}"]`);
+          if (pill) pill.click();
+        }
+        const el = document.getElementById('thermal-consultation');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+        window.history.pushState(null, '', `/#thermal-consultation?cat=${cat}`);
+      }
+    }
+  });
+
   // Handle browser back/forward buttons (History API) and direct hash change
   window.addEventListener('popstate', (e) => {
     const pageId = (window.location.hash || '').replace(/^#+/, '') || 'top';
@@ -280,6 +319,9 @@ function switchPage(pageId, pushState = true) {
     if (rawId === 'our-philosophy') {
       effectivePageId = 'top';
       scrollToAnchor = 'our-philosophy';
+    } else if (rawId === 'real-booking-section' || rawId === 'real-booking') {
+      effectivePageId = 'scent-experience';
+      scrollToAnchor = 'real-booking-section';
     } else if (rawId === 'wagama-showcase' || rawId === 'wagama') {
       effectivePageId = 'craftsmanship';
       scrollToAnchor = 'wagama-showcase';
@@ -300,20 +342,63 @@ function switchPage(pageId, pushState = true) {
           selectArticleChapter(targetCh, false);
         }
       }, 120);
+    } else if (rawId.startsWith('madori-consultation') || rawId.startsWith('madori-bot')) {
+      effectivePageId = 'madori-consultation-bot';
+      scrollToAnchor = 'madori-consultation-bot';
+      setTimeout(() => {
+        const tabBtn = document.getElementById('tab-btn-knowledge');
+        if (tabBtn) tabBtn.click();
+        
+        let targetCat = null;
+        const catMatch = (window.location.hash + window.location.search).match(/[?&]cat=([a-zA-Z0-9_]+)/);
+        if (catMatch) targetCat = catMatch[1];
+        if (targetCat) {
+          const pill = document.querySelector(`.madori-tab-pill[data-cat="${targetCat}"]`);
+          if (pill) pill.click();
+        }
+      }, 150);
+    } else if (rawId.startsWith('thermal-consultation')) {
+      effectivePageId = 'thermal-consultation';
+      scrollToAnchor = 'thermal-consultation';
+      setTimeout(() => {
+        let targetCat = null;
+        const catMatch = (window.location.hash + window.location.search).match(/[?&]cat=([a-zA-Z0-9_]+)/);
+        if (catMatch) targetCat = catMatch[1];
+        if (targetCat) {
+          const pill = document.querySelector(`.thermal-tab-pill[data-cat="${targetCat}"]`);
+          if (pill) pill.click();
+        }
+      }, 150);
+    }
+
+    // ページ内に該当するIDの要素（アンカー等）が直接存在するか確認
+    const directElem = document.getElementById(rawId);
+    const normalizedPath = window.location.pathname.replace(/\/index\.html$/, '/');
+    const isTopPage = normalizedPath === '/' || normalizedPath === '';
+
+    // トップページ以外の静的サブページの場合
+    if (!isTopPage) {
+      if (directElem) {
+        // 同一ページ内のアンカーが存在する場合はその位置へスクロール
+        directElem.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+      // トップページの専用SPAセクションへの明確な移動指定である場合のみトップへ遷移
+      const topSpaSections = ['top', 'ai-studio', 'floorplan-studio', 'craftsmanship', 'metaverse', 'scent-experience', 'article-feature', 'dashboard', 'credlayer', 'madori-consultation-bot', 'thermal-consultation', 'our-philosophy', 'real-booking-section'];
+      if (topSpaSections.includes(effectivePageId)) {
+        window.location.href = '/' + (effectivePageId === 'top' && !scrollToAnchor ? '' : '#' + rawId);
+      }
+      return;
     }
 
     let targetSec = document.getElementById(effectivePageId);
     if (!targetSec) {
-      // If on subpage (e.g. /mortgage/), navigate to top page with hash
-      const isTopPage = window.location.pathname === '/' || window.location.pathname.endsWith('/index.html') || window.location.pathname === '';
-      if (!isTopPage) {
-        const targetHash = effectivePageId === 'top' && !scrollToAnchor ? '' : '#' + rawId;
-        window.location.href = '/' + targetHash;
+      if (directElem) {
+        directElem.scrollIntoView({ behavior: 'smooth' });
         return;
-      } else {
-        effectivePageId = 'top';
-        targetSec = document.getElementById('top');
       }
+      effectivePageId = 'top';
+      targetSec = document.getElementById('top');
     }
 
     if (!targetSec) return;
@@ -346,10 +431,12 @@ function switchPage(pageId, pushState = true) {
   if (targetSec) {
     targetSec.classList.add('active');
     if (scrollToAnchor) {
-      setTimeout(() => {
+      const scrollFn = () => {
         const anchorEl = document.getElementById(scrollToAnchor);
         if (anchorEl) anchorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 50);
+      };
+      setTimeout(scrollFn, 60);
+      setTimeout(scrollFn, 200);
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }

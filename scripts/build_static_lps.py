@@ -9,6 +9,21 @@ import json
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PUBLIC_DIR = os.path.join(BASE_DIR, 'public')
+SRC_DIR = os.path.join(BASE_DIR, 'src')
+
+def load_common_components():
+    """トップページの共通ヘッダーとフッターを読み込む"""
+    header_path = os.path.join(SRC_DIR, 'partials', 'header-nav.html')
+    footer_path = os.path.join(SRC_DIR, 'partials', 'footer.html')
+    header_html = ""
+    footer_html = ""
+    if os.path.exists(header_path):
+        with open(header_path, 'r', encoding='utf-8') as f:
+            header_html = f.read()
+    if os.path.exists(footer_path):
+        with open(footer_path, 'r', encoding='utf-8') as f:
+            footer_html = f.read()
+    return header_html, footer_html
 
 def get_common_layout(title, description, canonical_url, og_image, breadcrumbs, content_html, active_nav='', extra_head='', extra_scripts=''):
     """共通の洗練されたレスポンシブHTMLレイアウト"""
@@ -87,6 +102,8 @@ def get_common_layout(title, description, canonical_url, og_image, breadcrumbs, 
         ]
     }, ensure_ascii=False)
 
+    header_html, footer_html = load_common_components()
+
     return f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -142,57 +159,8 @@ def get_common_layout(title, description, canonical_url, og_image, breadcrumbs, 
       margin: 0;
       padding: 0;
     }}
-    .lp-header-wrap {{
-      background: rgba(27, 67, 50, 0.98);
-      backdrop-filter: blur(12px);
-      border-bottom: 2px solid #d4af37;
-      padding: 0.75rem 1.5rem;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }}
-    .lp-header-inner {{
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }}
-    .lp-logo {{
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      color: #fff;
-      font-weight: 800;
-      font-size: 1.25rem;
-    }}
-    .lp-nav-links {{
-      display: flex;
-      gap: 0.6rem;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      flex-wrap: wrap;
-      align-items: center;
-    }}
-    .lp-nav-links a {{
-      color: #e2e8f0;
-      text-decoration: none;
-      font-size: 0.88rem;
-      font-weight: 700;
-      padding: 5px 12px;
-      border-radius: 6px;
-      transition: all 0.2s;
-    }}
-    .lp-nav-links a:hover, .lp-nav-links a.active {{
-      background: rgba(255, 255, 255, 0.15);
-      color: #38bdf8;
-    }}
     .lp-main-container {{
-      max-width: 1040px;
+      max-width: 1360px;
       margin: 2.5rem auto;
       padding: 0 1.5rem;
     }}
@@ -325,18 +293,6 @@ def get_common_layout(title, description, canonical_url, og_image, breadcrumbs, 
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(2, 132, 199, 0.6);
     }}
-    .lp-footer {{
-      background: #0f172a;
-      color: #94a3b8;
-      padding: 3rem 1.5rem;
-      font-size: 0.88rem;
-      text-align: center;
-      border-top: 1px solid #1e293b;
-    }}
-    .lp-footer a {{
-      color: #38bdf8;
-      text-decoration: none;
-    }}
     @media (max-width: 768px) {{
       .lp-card {{ padding: 1.8rem 1.2rem; }}
       .lp-h1 {{ font-size: 1.65rem; }}
@@ -347,38 +303,11 @@ def get_common_layout(title, description, canonical_url, og_image, breadcrumbs, 
 </head>
 <body>
 
-  <!-- Header -->
-  <header class="lp-header-wrap">
-    <div class="lp-header-inner">
-      <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-        <a href="/" class="lp-logo">
-          <span>家づくりAIラボ</span>
-          <span style="background: #f59e0b; color: #0f172a; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px;">by 住ま居る</span>
-        </a>
-        <span style="font-size: 0.72rem; color: #94a3b8; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);">
-          施工エリア：埼玉県全域・一部東京都｜創業30年・累計800棟
-        </span>
-      </div>
-      <nav>
-        <ul class="lp-nav-links">
-          <li><a href="/">🏠 ホーム</a></li>
-          <li><a href="/schedule/" class="{ 'active' if active_nav == 'schedule' else '' }" style="background: rgba(2, 132, 199, 0.25); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.35);">📅 家づくり工程</a></li>
-          <li><a href="/jfd-survey/" class="{ 'active' if active_nav == 'jfd' else '' }" style="background: rgba(13, 148, 136, 0.25); color: #5eead4; border: 1px solid rgba(45, 212, 191, 0.35);">🛰️ 3D点群測量</a></li>
-          <li><a href="/madori-consultation/" class="{ 'active' if active_nav == 'madori' else '' }" style="background: rgba(124, 58, 237, 0.25); color: #c4b5fd; border: 1px solid rgba(167, 139, 250, 0.3);">🤖 間取り相談＆カルテ</a></li>
-          <li><a href="/flow/" class="{ 'active' if active_nav == 'flow' else '' }" style="background: rgba(2, 132, 199, 0.2); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.3);">📐 家づくりの流れ・15万特典</a></li>
-          <li><a href="/about/" class="{ 'active' if active_nav == 'about' else '' }">🛡️ 会社・信用 (CredLayer)</a></li>
-          <li><a href="/performance/" class="{ 'active' if active_nav == 'performance' else '' }">📐 温熱・構造性能</a></li>
-          <li><a href="/evidence/" class="{ 'active' if active_nav == 'evidence' else '' }">📊 実測データ実証録</a></li>
-          <li><a href="/ai-studio/" class="{ 'active' if active_nav == 'ai-studio' else '' }">🎨 AIパース工房</a></li>
-          <li><a href="/knowledge/thermal/" class="{ 'active' if active_nav == 'thermal' else '' }">💬 温熱知見200選</a></li>
-          <li><a href="/catalog/" class="{ 'active' if active_nav == 'catalog' else '' }" style="background: rgba(5, 150, 105, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);">📘 工学カタログ (PDF)</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  <!-- 共通ヘッダー -->
+  {header_html}
 
   <!-- Main Content -->
-  <main class="lp-main-container">
+  <div class="lp-main-container">
     <nav class="lp-crumb" aria-label="パンくずリスト">
       {crumb_html}
     </nav>
@@ -398,35 +327,23 @@ def get_common_layout(title, description, canonical_url, og_image, breadcrumbs, 
       </p>
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
         <a href="/schedule/" class="lp-cta-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); font-weight: 800;">📅 家づくりスケジュール進捗シート ➜</a>
-        <a href="/#floorplan-studio" class="lp-cta-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); font-weight: 800;">📐 間取りプラン選別・実例検索 ➜</a>
+        <a href="/plans/index.html" class="lp-cta-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); font-weight: 800;">📐 323プラン選別・実例検索 ➜</a>
         <a href="/madori-consultation/" class="lp-cta-btn" style="background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: #fff; font-weight: 800;">💬 夫婦の家づくりカルテ ➜</a>
-        <a href="/#thermal-consultation" class="lp-cta-btn" style="background: linear-gradient(135deg, #059669, #10b981); font-weight: 800;">🌡️ 24h温熱換気AI相談 ➜</a>
+        <a href="/knowledge/thermal/" class="lp-cta-btn" style="background: linear-gradient(135deg, #059669, #10b981); font-weight: 800;">🌡️ 24h温熱換気AI相談 ➜</a>
       </div>
     </div>
+  </div>
   </main>
 
-  <!-- Footer -->
-  <footer class="lp-footer">
-    <p style="margin: 0 0 0.5rem 0; font-weight: 700; color: #e2e8f0;">
-      株式会社住ま居る（埼玉県鶴ヶ島市）
-    </p>
-    <p style="margin: 0 0 1rem 0; font-size: 0.82rem; color: #64748b;">
-      埼玉県知事許可（般－8）第60650号 ｜ 二級建築設計事務所 埼玉県知事（5）第10278号 ｜ 創業1994年・施工実績800棟以上
-    </p>
-    <p style="margin: 0; font-size: 0.78rem;">
-      <a href="/">トップページ</a> ｜ <a href="/schedule/">家づくりスケジュール</a> ｜ <a href="/jfd-survey/">3D点群測量と敷地調査</a> ｜ <a href="/madori-consultation/">間取り相談＆カルテ</a> ｜ <a href="/flow/">家づくりの流れ・15万円設計申込特典</a> ｜ <a href="/about/">会社概要・信用の証明</a> ｜ <a href="/performance/">温熱・構造性能</a> ｜ <a href="/evidence/">光熱費実証録</a> ｜ <a href="/knowledge/thermal/">温熱知見200選</a>
-    </p>
-    <p style="margin-top: 1.5rem; font-size: 0.75rem; color: #475569;">
-      &copy; 株式会社住ま居る (Sumairu) All Rights Reserved.
-    </p>
-  </footer>
+  <!-- 共通フッター -->
+  {footer_html}
 
   <!-- 全頁共通: TOPへ戻る△ボタン -->
   <button type="button" id="back-to-top-btn" class="back-to-top-btn" aria-label="トップへ戻る" title="ページの先頭へ戻る">
     <span>▲</span>
   </button>
 
-  <script src="/js/app.min.js" defer></script>
+  <script src="/js/app.js" defer></script>
   <script src="/js/manga-viewer.min.js" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {{
@@ -1580,38 +1497,67 @@ def generate_thermal_pillar_page():
     os.makedirs(out_dir, exist_ok=True)
     out_file = os.path.join(out_dir, 'index.html')
 
+    chapter_map = {
+        '断熱性能・UA値・外皮設計': 1,
+        '気密性能・C値・隙間対策': 2,
+        '基礎断熱・床断熱・床下空間': 3,
+        '24h換気・第1種全熱交換・給排気': 4,
+        '窓・サッシ戦略・日射取得と遮蔽': 5,
+        '結露・カビ防止・壁体内湿気挙動': 6,
+        '冷暖房設計・全館空調・パッシブ': 7,
+        '2025年法改正・生涯コスト・健康': 8
+    }
+
     cat_sections = []
-    for cname, q_list in grouped.items():
-        q_links = []
+    for c_idx, (cname, q_list) in enumerate(grouped.items(), 1):
+        chap_num = chapter_map.get(cname, c_idx)
+        q_cards = []
         for q in q_list:
             q_id = q.get('id')
             q_title = q.get('question')
             q_ans = q.get('shortAnswer', '')
-            q_links.append(f"""
-              <li style="margin-bottom: 0.9rem; padding-bottom: 0.8rem; border-bottom: 1px dashed #e2e8f0;">
-                <a href="/knowledge/thermal/{q_id}.html" style="color: #0369a1; font-weight: 700; text-decoration: none; font-size: 0.98rem; display: block; margin-bottom: 0.2rem;">
-                  Q{q.get('questionNumber', '')}. {q_title}
+            q_img = q.get('image', '/images/hero_kaguya_house.jpg')
+            q_num = q.get('questionNumber', '')
+            q_dim = q.get('dimension', '')
+
+            q_cards.append(f"""
+              <div class="thermal-card-item" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,0.04); display: flex; flex-direction: column; transition: transform 0.25s ease, box-shadow 0.25s ease;">
+                <a href="/knowledge/thermal/{q_id}.html" style="display: block; position: relative; height: 180px; overflow: hidden; background: #0f172a;">
+                  <img src="{q_img}" alt="{q_title}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s ease;" onerror="this.src='/images/hero_kaguya_house.jpg'" width="400" height="240">
+                  <span style="position: absolute; top: 10px; left: 10px; background: #0284c7; color: #fff; font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 4px;">Q{q_num}</span>
+                  <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;">図解あり ↗</span>
                 </a>
-                <span style="font-size: 0.85rem; color: #64748b; line-height: 1.5; display: block;">
-                  💡 {q_ans}
-                </span>
-              </li>
+                <div style="padding: 1.2rem; display: flex; flex-direction: column; flex-grow: 1;">
+                  <h3 style="font-size: 0.98rem; font-weight: 800; line-height: 1.5; margin: 0 0 0.6rem; color: #0f172a;">
+                    <a href="/knowledge/thermal/{q_id}.html" style="color: inherit; text-decoration: none;">{q_title}</a>
+                  </h3>
+                  <div style="background: #f8fafc; border-left: 3px solid #10b981; padding: 8px 10px; border-radius: 4px; margin-bottom: 0.8rem;">
+                    <span style="font-size: 0.78rem; font-weight: 800; color: #047857; display: block; margin-bottom: 2px;">💡 結論・重要ポイント:</span>
+                    <p style="font-size: 0.84rem; color: #334155; line-height: 1.5; margin: 0;">{q_ans}</p>
+                  </div>
+                  <div style="margin-top: auto; padding-top: 0.5rem;">
+                    <a href="/knowledge/thermal/{q_id}.html" style="display: flex; align-items: center; justify-content: center; gap: 4px; background: #f0fdf4; color: #059669; font-weight: 800; font-size: 0.82rem; padding: 8px 12px; border-radius: 6px; text-decoration: none; border: 1px solid #bbf7d0; transition: all 0.2s ease;">
+                      詳細解説・数値基準を読む ➜
+                    </a>
+                  </div>
+                </div>
+              </div>
             """)
         
-        q_list_html = ''.join(q_links)
+        q_cards_html = ''.join(q_cards)
         cat_sections.append(f"""
-          <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.8rem; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 1rem; border-bottom: 2px solid #10b981; padding-bottom: 0.6rem;">
-              <h2 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; margin: 0;">
-                📂 {cname}
+          <div id="chapter-{chap_num}" style="scroll-margin-top: 100px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 2rem; margin-bottom: 3rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 1.5rem; border-bottom: 2px solid #10b981; padding-bottom: 0.8rem; gap: 10px;">
+              <h2 style="font-size: 1.4rem; font-weight: 900; color: #0f172a; margin: 0;">
+                📂 第{chap_num}章: {cname}
               </h2>
-              <span style="background: #ecfdf5; color: #059669; font-weight: 800; font-size: 0.8rem; padding: 2px 10px; border-radius: 20px;">
-                全{len(q_list)}問
+              <span style="background: #ecfdf5; color: #059669; font-weight: 800; font-size: 0.82rem; padding: 4px 12px; border-radius: 20px; border: 1px solid #a7f3d0;">
+                全{len(q_list)}問の図解カード
               </span>
             </div>
-            <ul style="list-style: none; padding: 0; margin: 0;">
-              {q_list_html}
-            </ul>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.4rem;">
+              {q_cards_html}
+            </div>
           </div>
         """)
 

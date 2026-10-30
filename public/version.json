@@ -1,7 +1,7 @@
 {
-  "version": "2.18.0",
-  "buildDate": "2026-10-27",
-  "releaseName": "Major Update v2.18.0 - Home Carte Maintenance Portal & Schedule Guide Modal & Support Unified",
+  "version": "2.19.0",
+  "buildDate": "2026-10-30",
+  "releaseName": "Production Release v2.19.0 - 12 Case Studies Archived 240 Photos & CredLayer Certificate Evidence & Thermal 200 Cards",
   "components": {
     "madoriSketch": "2.6.4",
     "smileStudio": "2.7.0",
@@ -11,11 +11,26 @@
     "knowledgeVideoPortal": "1.8.2",
     "subsidyNavi": "2.6.0",
     "mortgageDiagnosis": "2.8.0",
-    "thermalBot": "2.6.0",
-    "plansSSG": "2.8.0",
-    "domEngine": "1.2.1"
+    "thermalBot": "2.19.0",
+    "plansSSG": "2.19.0",
+    "domEngine": "1.2.1",
+    "caseStudies": "2.19.0"
   },
   "changelog": [
+    {
+      "version": "2.19.0",
+      "date": "2026-10-30",
+      "title": "本番サーバー正式運用デプロイ v2.19.0（施工実例全12邸240枚アーカイブ・公的認定書エビデンス・温熱知見200選カード化・323プランSEO強化）",
+      "changes": [
+        "【施工実例全12邸・240枚完全公開】全12邸（行田市・鳩山町・日高市・東松山市・川越市・ときがわ町・鶴ヶ島市5邸・吉見町）の各20枚・計240枚のWebP実写真およびエモーショナル建築解説・工学キャプションを完全配備",
+        "【実物公的エビデンスギャラリー】長期優良住宅認定通知書、BELS評価書（最高ランク★★★★★）、全棟現場気密測定試験結果報告書原本、外皮計算書の公式証明録（#credlayer）を公開",
+        "【温熱知見200選 総合ピラーカード化】温熱知見全200問（/knowledge/thermal/）を図解WebP入りレスポンシブカードグリッドとしてリニューアル",
+        "【フロアプラン工房 知見200選全8カテゴリー配備】トップページ（/#floorplan-studio）直下にキッチン・LDK・水回り・玄関・収納・設備・中庭・家相風水の全8大カテゴリー解説カードを実装",
+        "【323プラン集 SEO/AIO価格・坪単価強化】全323プランのTitle・H1・Schema.org Product+Offer構造化データに概算本体価格・坪単価レンジを動的付与",
+        "【全12邸個別詳細ヘッダー・フッター統一＆相互回遊】全12邸に2段ナビゲーションヘッダーおよび48リンク4カラムフッター、近隣延床面積プランへの相互リンクを完全同期",
+        "【全3,202リンク走査 404ゼロ達成】サイト内全リンクおよび画像参照の自動監査（crawl_and_verify_links.py）により404エラー完全0件を担保"
+      ]
+    },
     {
       "version": "2.18.0",
       "date": "2026-10-27",

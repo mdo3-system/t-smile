@@ -16,8 +16,71 @@ class MadoriBotStudio {
   async init() {
     await this.loadQaData();
     this.bindEvents();
+
+    // URLから初期カテゴリを取得（例: ?cat=kitchen または #madori-consultation-bot?cat=kitchen）
+    const urlCat = this.getCategoryFromUrl();
+    if (urlCat && urlCat !== 'all') {
+      this.currentCategory = urlCat;
+      document.querySelectorAll('.madori-tab-pill').forEach(p => {
+        if (p.getAttribute('data-cat') === urlCat) p.classList.add('active');
+        else p.classList.remove('active');
+      });
+      // 知見カードタブを展開表示
+      const knowledgeWrap = document.getElementById('madori-knowledge-wrap');
+      const interviewWrap = document.getElementById('lifestyle-interview-wrap');
+      const tabBtnKnowledge = document.getElementById('tab-btn-knowledge');
+      const tabBtnInterview = document.getElementById('tab-btn-interview');
+      if (knowledgeWrap) knowledgeWrap.style.display = 'block';
+      if (interviewWrap) interviewWrap.style.display = 'none';
+      if (tabBtnKnowledge) tabBtnKnowledge.style.opacity = '1';
+      if (tabBtnInterview) tabBtnInterview.style.opacity = '0.6';
+    }
+
     this.renderQaCards();
     this.updateCategoryCounts();
+
+    // popstate / hashchange でのカテゴリ切り替え監視
+    window.addEventListener('hashchange', () => this.handleUrlChange());
+    window.addEventListener('popstate', () => this.handleUrlChange());
+  }
+
+  getCategoryFromUrl() {
+    const full = window.location.href;
+    const match = full.match(/[?&]cat=([a-zA-Z0-9_]+)/);
+    return match ? match[1] : null;
+  }
+
+  handleUrlChange() {
+    const cat = this.getCategoryFromUrl();
+    if (cat && cat !== this.currentCategory) {
+      this.selectCategory(cat);
+    }
+  }
+
+  selectCategory(cat) {
+    if (!cat) return;
+    this.currentCategory = cat;
+    document.querySelectorAll('.madori-tab-pill').forEach(p => {
+      if (p.getAttribute('data-cat') === cat) p.classList.add('active');
+      else p.classList.remove('active');
+    });
+    const knowledgeWrap = document.getElementById('madori-knowledge-wrap');
+    const interviewWrap = document.getElementById('lifestyle-interview-wrap');
+    const tabBtnKnowledge = document.getElementById('tab-btn-knowledge');
+    const tabBtnInterview = document.getElementById('tab-btn-interview');
+    if (knowledgeWrap) knowledgeWrap.style.display = 'block';
+    if (interviewWrap) interviewWrap.style.display = 'none';
+    if (tabBtnKnowledge) tabBtnKnowledge.style.opacity = '1';
+    if (tabBtnInterview) tabBtnInterview.style.opacity = '0.6';
+
+    this.renderQaCards();
+
+    const target = document.getElementById('madori-consultation-bot');
+    if (target) {
+      setTimeout(() => {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    }
   }
 
   async loadQaData() {

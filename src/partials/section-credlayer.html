@@ -1,6 +1,6 @@
-    <section id="credlayer" class="page-section" data-deferred-template="tmpl-credlayer"></section>
-    <template id="tmpl-credlayer">
-      <div class="hero hero-dark" style="background: linear-gradient(135deg, #091e2f 0%, #064e3b 50%, #0f172a 100%); position: relative; overflow: hidden; border-radius: var(--radius-lg); padding: 3rem 2rem; color: #ffffff; margin-bottom: 2.5rem; border: 1px solid rgba(16, 185, 129, 0.4); box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);">
+<section id="credlayer" class="page-section" data-deferred-template="tmpl-credlayer"></section>
+<template id="tmpl-credlayer">
+<div class="hero hero-dark" style="background: linear-gradient(135deg, #091e2f 0%, #064e3b 50%, #0f172a 100%); position: relative; overflow: hidden; border-radius: var(--radius-lg); padding: 3rem 2rem; color: #ffffff; margin-bottom: 2.5rem; border: 1px solid rgba(16, 185, 129, 0.4); box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);">
         <div style="position: absolute; top: -50px; right: -50px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%); pointer-events: none;"></div>
         <span class="hero-tag" style="background: #ffffff; color: #064e3b; font-weight: 900; font-size: 0.95rem; padding: 6px 18px; border-radius: 24px; border: 2px solid #34d399; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); display: inline-flex; align-items: center; gap: 6px;">
           🛡️ 工務店CredLayer活用宣言｜根拠ある物理データ証明
@@ -500,7 +500,119 @@
           </div>
         </div>
       </div>
-    </template>
+      <!-- 物理データ証明：公的認定書・BELS・気密測定報告書 実物アーカイブ -->
+      <div style="margin-top: 4.5rem; background: #ffffff; border: 2px solid #059669; border-radius: 16px; padding: 3rem 2rem; box-shadow: 0 10px 35px rgba(5,150,105,0.08);">
+        <div style="text-align: center; max-width: 850px; margin: 0 auto 2.5rem;">
+          <span style="background: #ecfdf5; color: #059669; font-weight: 800; font-size: 0.85rem; padding: 4px 16px; border-radius: 20px; border: 1px solid #a7f3d0; display: inline-block; margin-bottom: 8px;">
+            📑 言葉ではなく公的書面で証明する物理データ
+          </span>
+          <h3 style="font-size: 1.85rem; font-weight: 900; color: #0f172a; margin: 0 0 0.6rem; letter-spacing: -0.5px;">
+            公的認定書・BELS評価書・全棟気密測定 実物証明録
+          </h3>
+          <p style="font-size: 0.95rem; color: #475569; line-height: 1.8; margin: 0;">
+            「耐震等級3相当」「高気密高断熱」という営業トークに惑わされないために。<br>
+            住ま居るはお引渡しするすべての邸宅において、<strong>所管行政庁の認定書、登録性能評価機関のBELS証、現場気密測定の実測減圧グラフ原本</strong>を保管・公開しています。
+          </p>
+        </div>
 
-    <!-- PAGE 8: ADMIN PORTAL, CRM & FLOORPLAN LIBRARY IMPORTER -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.8rem; margin-bottom: 2.5rem;">
+          <!-- Item 1: 長期優良住宅認定通知書 -->
+          <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #cbd5e1; overflow: hidden; display: flex; flex-direction: column;">
+            <div style="position: relative; height: 260px; background: #0f172a; overflow: hidden;">
+              <a href="/images/certs/cert_chouki_21.webp" target="_blank" style="display: block; width: 100%; height: 100%;">
+                <img src="/images/certs/cert_chouki_21.webp" alt="長期優良住宅建築等計画認定通知書（所管行政庁交付原本）" loading="lazy" style="width: 100%; height: 100%; object-fit: contain; background: #1e293b;" width="400" height="300">
+                <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700;">原本拡大 ↗</span>
+              </a>
+            </div>
+            <div style="padding: 1.2rem; flex-grow: 1; display: flex; flex-direction: column;">
+              <span style="background: #dbeafe; color: #1e40af; font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; display: inline-block; width: fit-content; margin-bottom: 6px;">
+                所管行政庁交付
+              </span>
+              <h4 style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">
+                長期優良住宅 認定通知書
+              </h4>
+              <p style="font-size: 0.85rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+                耐震等級3、劣化対策等級3、維持管理対策等級3をクリアした公的認定。住宅ローン控除最大化・固定資産税減税の法定要件を完全証明。
+              </p>
+              <div style="font-size: 0.78rem; color: #059669; font-weight: 700;">✔ 全棟許容応力度計算 耐震等級3基準</div>
+            </div>
+          </div>
 
+          <!-- Item 2: BELS評価書 -->
+          <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #cbd5e1; overflow: hidden; display: flex; flex-direction: column;">
+            <div style="position: relative; height: 260px; background: #0f172a; overflow: hidden;">
+              <a href="/images/certs/cert_bels_01.webp" target="_blank" style="display: block; width: 100%; height: 100%;">
+                <img src="/images/certs/cert_bels_01.webp" alt="BELS 建築物省エネルギー性能評価書（最高5つ星・ZEH水準）" loading="lazy" style="width: 100%; height: 100%; object-fit: contain; background: #1e293b;" width="400" height="300">
+                <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700;">原本拡大 ↗</span>
+              </a>
+            </div>
+            <div style="padding: 1.2rem; flex-grow: 1; display: flex; flex-direction: column;">
+              <span style="background: #fef3c7; color: #92400e; font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; display: inline-block; width: fit-content; margin-bottom: 6px;">
+                登録住宅性能評価機関
+              </span>
+              <h4 style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">
+                BELS 省エネ性能評価書（最高ランク★★★★★）
+              </h4>
+              <p style="font-size: 0.85rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+                一次エネルギー消費量削減率および外皮基準（UA値）を第三者機関が厳格審査。国交省補助金（子育てエコホーム等）の交付要件を証明。
+              </p>
+              <div style="font-size: 0.78rem; color: #d97706; font-weight: 700;">✔ HEAT20 G2/G3水準・ZEH完全適合</div>
+            </div>
+          </div>
+
+          <!-- Item 3: 気密測定結果報告書 -->
+          <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #cbd5e1; overflow: hidden; display: flex; flex-direction: column;">
+            <div style="position: relative; height: 260px; background: #0f172a; overflow: hidden;">
+              <a href="/images/certs/cert_c_value_09.webp" target="_blank" style="display: block; width: 100%; height: 100%;">
+                <img src="/images/certs/cert_c_value_09.webp" alt="現場気密測定試験結果報告書（JIS A 2201減圧法・実測C値0.3台）" loading="lazy" style="width: 100%; height: 100%; object-fit: contain; background: #1e293b;" width="400" height="300">
+                <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700;">原本拡大 ↗</span>
+              </a>
+            </div>
+            <div style="padding: 1.2rem; flex-grow: 1; display: flex; flex-direction: column;">
+              <span style="background: #dcfce7; color: #166534; font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; display: inline-block; width: fit-content; margin-bottom: 6px;">
+                JIS A 2201現場実測
+              </span>
+              <h4 style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">
+                全棟現場気密測定 試験結果報告書
+              </h4>
+              <p style="font-size: 0.85rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+                計算値ではなく、工事現場で専用測定器を用いて実測した減圧特性グラフと隙間相当面積（C値）。専属大工さんの手仕事による高精度施工を証明。
+              </p>
+              <div style="font-size: 0.78rem; color: #059669; font-weight: 700;">✔ C値1.0以下保証（実測0.28〜0.40目安）</div>
+            </div>
+          </div>
+
+          <!-- Item 4: 外皮熱貫流率・構造計算書 -->
+          <div style="background: #f8fafc; border-radius: 12px; border: 1px solid #cbd5e1; overflow: hidden; display: flex; flex-direction: column;">
+            <div style="position: relative; height: 260px; background: #0f172a; overflow: hidden;">
+              <a href="/images/certs/cert_envelope_11.webp" target="_blank" style="display: block; width: 100%; height: 100%;">
+                <img src="/images/certs/cert_envelope_11.webp" alt="外皮平均熱貫流率設計計算書・伏図構造計算データ" loading="lazy" style="width: 100%; height: 100%; object-fit: contain; background: #1e293b;" width="400" height="300">
+                <span style="position: absolute; bottom: 8px; right: 8px; background: rgba(15,23,42,0.85); color: #fff; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; font-weight: 700;">原本拡大 ↗</span>
+              </a>
+            </div>
+            <div style="padding: 1.2rem; flex-grow: 1; display: flex; flex-direction: column;">
+              <span style="background: #f3e8ff; color: #6b21a8; font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; display: inline-block; width: fit-content; margin-bottom: 6px;">
+                科学的工学エビデンス
+              </span>
+              <h4 style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">
+                外皮計算書 ＆ 許容応力度計算書
+              </h4>
+              <p style="font-size: 0.85rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+                屋根・外壁・開口部サッシ・基礎の熱損失を部位ごとに算定した詳細シート。数百ページに及ぶ立体フレーム構造計算書で安全性を完全立証。
+              </p>
+              <div style="font-size: 0.78rem; color: #7c3aed; font-weight: 700;">✔ 勘に頼らない科学的建築エンジニアリング</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 信頼証明書アーカイブへの誘導 -->
+        <div style="text-align: center; background: #f0fdf4; border: 1.5px solid #a7f3d0; border-radius: 12px; padding: 1.5rem; max-width: 720px; margin: 0 auto;">
+          <p style="margin: 0 0 1rem; font-size: 0.92rem; color: #166534; font-weight: 700;">
+            このほか、過去施工の長期優良認定証・BELS証・気密測定シート（計40枚超）を展示場および個別資料にて全開示しております。
+          </p>
+          <a href="/evidence/" style="display: inline-block; background: #059669; color: #ffffff; font-weight: 800; font-size: 0.95rem; padding: 10px 24px; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 12px rgba(5,150,105,0.3);">
+            📊 温熱・光熱費・構造実測エビデンス詳細ページを見る ➜
+          </a>
+        </div>
+      </div>
+</template>
