@@ -557,7 +557,7 @@ def generate_wagama_page():
   </section>
 
   <!-- 絞り込みタブ ＆ カードグリッド -->
-  <main class="wg-container">
+  <div class="wg-container">
 
     <!-- 絞り込みタブ -->
     <div class="wg-tabs-wrap">
@@ -602,6 +602,8 @@ def generate_wagama_page():
         </div>
       </div>
     </div>
+
+  </div>
 
   </main>
 
