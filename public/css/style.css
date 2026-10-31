@@ -323,14 +323,22 @@ header, .site-header {
 .hero-brand-container {
   display: grid;
   grid-template-columns: 1.15fr 1fr;
-  gap: 2rem;
-  align-items: center;
+  gap: clamp(1.5rem, 2.5vw, 2.5rem);
+  align-items: start;
   background: linear-gradient(135deg, rgba(27, 67, 50, 0.96) 0%, rgba(15, 23, 42, 0.96) 100%);
   border-radius: var(--radius-lg);
-  padding: 3rem;
+  padding: clamp(1.5rem, 3.0vw, 2.8rem);
   color: #ffffff;
   box-shadow: var(--shadow-card);
   overflow: hidden;
+}
+
+@media (max-width: 992px) {
+  .hero-brand-container {
+    grid-template-columns: 1fr !important;
+    padding: 1.6rem 1.2rem !important;
+    gap: 1.5rem !important;
+  }
 }
 
 .hero-brand-tag {

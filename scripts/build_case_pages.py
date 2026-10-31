@@ -308,7 +308,7 @@ def build_case_detail_page(case_data, photo_list, all_cases_summary=None):
           「薪ストーブの土間がほしい」「中庭でBBQしたい」「秘密基地のようなロフト」「アイランドキッチンから庭を見渡したい」…施主様たちの自由なわがままをミリ単位の手仕事で叶えたリアルなエピソードと図面解説を一覧できます。
         </p>
       </div>
-      <a href="/#wagama-showcase" style="background: linear-gradient(135deg, #d97706, #b45309); color: #ffffff; font-weight: 900; font-size: 1rem; padding: 13px 26px; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 15px rgba(180,83,9,0.35); white-space: nowrap;">
+      <a href="/wagama/" style="background: linear-gradient(135deg, #d97706, #b45309); color: #ffffff; font-weight: 900; font-size: 1rem; padding: 13px 26px; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 15px rgba(180,83,9,0.35); white-space: nowrap;">
         わがまま事例66選を見る ➜
       </a>
     </div>

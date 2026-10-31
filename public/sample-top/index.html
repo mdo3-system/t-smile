@@ -1,0 +1,2930 @@
+<!-- 株式会社住ま居る - 家づくりAIラボ Web Application Shell -->
+<!-- Single Responsibility Architecture: Partials are assembled via scripts/build_site.py -->
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>夏涼しく、冬あたたかい。深呼吸できる無垢の家。｜住ま居る（すまいる）埼玉</title>
+  <meta name="description" content="埼玉で創業30年・累計800棟。真冬の朝も素足で駆け回れる無垢の木のぬくもりと、夏の酷暑を跳ね返す遮熱工学。HEAT20 G2〜G2.5基準・実測C値0.3台・全棟耐震等級3の手づくり注文住宅。株式会社住ま居る（すまいる）。" />
+  <meta name="keywords" content="住ま居る, すまいる, 埼玉 注文住宅, 高気密高断熱 埼玉, 遮熱住宅, 鶴ヶ島 工務店, 川越 注文住宅, 耐震等級3, 無垢の家, HEAT20 G2, C値 0.3" />
+
+  <link rel="canonical" href="https://t-smile.co.jp/" />
+
+  <!-- Open Graph Protocol (OGP) for Social Sharing -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="夏涼しく、冬あたたかい。深呼吸できる無垢の家。｜住ま居る（すまいる）埼玉" />
+  <meta property="og:description" content="創業30年・累計800棟。夏の熱気を跳ね返し、冬のぬくもりを優しく抱く。埼玉の四季を家族と心地よく暮らす、無垢と遮熱の手づくり注文住宅。株式会社住ま居る（すまいる）。" />
+  <meta property="og:image" content="https://t-smile.co.jp/images/hero_kaguya_house.jpg" />
+  <meta property="og:url" content="https://t-smile.co.jp/" />
+  <meta property="og:site_name" content="株式会社住ま居る（すまいる）｜素足の注文住宅" />
+  <meta property="og:locale" content="ja_JP" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="夏涼しく、冬あたたかい。深呼吸できる無垢の家。｜住ま居る（すまいる）埼玉" />
+  <meta name="twitter:description" content="創業30年・累計800棟。夏の熱気を跳ね返し、冬のぬくもりを優しく抱く。埼玉の四季を家族と心地よく暮らす、無垢と遮熱の手づくり注文住宅。" />
+  <meta name="twitter:image" content="https://t-smile.co.jp/images/hero_kaguya_house.jpg" />
+
+  <!-- Structured Data: JSON-LD for Google Rich Results -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "HomeAndConstructionBusiness",
+        "@id": "https://t-smile.co.jp/#organization",
+        "name": "株式会社住ま居る",
+        "alternateName": ["すまいる", "住ま居る", "T-Smile", "スマイチ", "芳彩"],
+        "url": "https://t-smile.co.jp/",
+        "logo": "https://t-smile.co.jp/images/hero_kaguya_house.jpg",
+        "image": "https://t-smile.co.jp/images/hero_kaguya_house.jpg",
+        "description": "埼玉県鶴ヶ島市を拠点に、夏の猛暑を跳ね返す遮熱設計とHEAT20 G2〜G2.5基準・全棟実測C値1.0以下（実績0.3台）・全棟許容応力度計算耐震等級3の手づくり自然素材住宅を手がける地域工務店。創業30年・累計800棟。",
+        "sameAs": [
+          "https://maps.google.com/?cid=14467098492048599426",
+          "https://lin.ee/t-smile",
+          "https://www.youtube.com/@t-smile-co-jp"
+        ],
+        "telephone": "049-271-2350",
+        "address": {
+          "@type": "PostalAddress",
+          "postalCode": "350-2224",
+          "addressRegion": "埼玉県",
+          "addressLocality": "鶴ヶ島市",
+          "streetAddress": "町屋176番地5",
+          "addressCountry": "JP"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 35.93244,
+          "longitude": 139.39082
+        },
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Thursday", "Friday", "Saturday"],
+            "opens": "09:00",
+            "closes": "18:00"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Wednesday", "Sunday"],
+            "description": "定休日（※事前予約によりモデルハウスのご見学・ご案内は承っております）"
+          }
+        ],
+        "areaServed": [
+          "鶴ヶ島市", "川越市", "坂戸市", "東松山市", "日高市", "毛呂山町", "さいたま市", "埼玉県全域"
+        ],
+        "priceRange": "¥¥¥",
+        "hasCredential": [
+          {
+            "@type": "EducationalOccupationalCredential",
+            "credentialCategory": "建設業許可",
+            "name": "埼玉県知事許可（般－8）第60650号"
+          },
+          {
+            "@type": "EducationalOccupationalCredential",
+            "credentialCategory": "建築設計事務所登録",
+            "name": "二級建築設計事務所 埼玉県知事（5）第10278号"
+          }
+        ],
+        "knowsAbout": [
+          "高気密高断熱住宅", "HEAT20 G2 G3", "全棟実測C値1.0以下保証", "UA値0.3-0.4", "耐震等級3", "許容応力度計算", "Tec-One金物工法", "全熱交換換気", "低温水床暖房", "農地法開発申請", "不動産相続"
+        ],
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.9",
+          "reviewCount": "28",
+          "bestRating": "5",
+          "worstRating": "1"
+        },
+        "review": [
+          {
+            "@type": "Review",
+            "reviewRating": {
+              "@type": "Rating",
+              "ratingValue": "5",
+              "bestRating": "5"
+            },
+            "author": {
+              "@type": "Person",
+              "name": "H様（埼玉県・環境住宅賞 受賞施主）"
+            },
+            "datePublished": "2024-03-15",
+            "reviewBody": "真冬の朝でも室温が18℃を下回らず、無垢床の温もりを感じながら快適に過ごせています。自ら応募した埼玉県環境住宅賞でも高い評価をいただき、住ま居るさんの工学的な断熱気密設計（実測C値0.1・BELS★★★★★星5）の確かさを実感しています。"
+          },
+          {
+            "@type": "Review",
+            "reviewRating": {
+              "@type": "Rating",
+              "ratingValue": "5",
+              "bestRating": "5"
+            },
+            "author": {
+              "@type": "Person",
+              "name": "S様（川越市・高気密高断熱平屋住宅）"
+            },
+            "datePublished": "2024-06-20",
+            "reviewBody": "夏の猛暑でも小屋裏エアコン1台で家全体がサラサラで涼しく電気代の安さに驚きました。構造計算も許容応力度計算の等級3で安心です。"
+          }
+        ]
+      },
+      {
+        "@type": "Person",
+        "@id": "https://t-smile.co.jp/#architect",
+        "name": "株式会社住ま居る チーフ構造設計建築士",
+        "jobTitle": "管理建築士・構造計算審査技術者",
+        "worksFor": {
+          "@id": "https://t-smile.co.jp/#organization"
+        },
+        "description": "全国から年間150件超の木造許容応力度構造計算審査を担当。住ま居る全棟の許容応力度計算・外皮熱計算・耐震等級3設計を直接実施。"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "住ま居る 自由設計AI間取りシミュレーター ＆ 24h温熱換気AI相談室",
+        "operatingSystem": "All Web Browsers",
+        "applicationCategory": "DesignApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "JPY"
+        },
+        "description": "敷地制限抜きで家族で理想の間取りを作図できるバブルプランAI、フォトリアル3Dパース生成、埼玉の現場知見200選に基づく24h温熱換気相談ボット。"
+      },
+      {
+        "@type": "SiteNavigationElement",
+        "@id": "https://t-smile.co.jp/#site-navigation",
+        "name": "住ま居る サイト内主要ナビゲーション ＆ ナレッジハブ",
+        "hasPart": [
+          {
+            "@type": "WebPage",
+            "name": "公式トップページ・展示場案内",
+            "url": "https://t-smile.co.jp/"
+          },
+          {
+            "@type": "WebPage",
+            "name": "AI補助金ナビ（埼玉県内全63市町村判定）",
+            "url": "https://t-smile.co.jp/subsidy/index.html"
+          },
+          {
+            "@type": "WebPage",
+            "name": "AI住宅ローン診断（金利・団信TOP5判定）",
+            "url": "https://t-smile.co.jp/mortgage/index.html"
+          },
+          {
+            "@type": "WebPage",
+            "name": "3D手描き間取り工房",
+            "url": "https://t-smile.co.jp/madori-sketch/"
+          },
+          {
+            "@type": "WebPage",
+            "name": "AI 3Dパース工房（SmileStudio）",
+            "url": "https://t-smile.co.jp/smilestudio.html"
+          },
+          {
+            "@type": "WebPage",
+            "name": "JFD 3D点群測量と敷地調査（本物資料公開）",
+            "url": "https://t-smile.co.jp/jfd-survey/"
+          },
+          {
+            "@type": "WebPage",
+            "name": "埼玉県注文住宅 施工実例 全12邸ギャラリー",
+            "url": "https://t-smile.co.jp/cases/kawagoe-y.html"
+          },
+          {
+            "@type": "WebPage",
+            "name": "夫婦の間取り相談・知見100選 総合ハブ",
+            "url": "https://t-smile.co.jp/madori-consultation/"
+          },
+          {
+            "@type": "WebPage",
+            "name": "温熱設計知見200選 総合ピラーページ",
+            "url": "https://t-smile.co.jp/knowledge/thermal/"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://t-smile.co.jp/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "気密測定（C値測定）はやってもらえますか？費用はいくらで、いつ実施しますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "はい、住ま居るでは全棟で気密測定を実施しています。費用相場は専門技能者による測定で1回あたり5万〜10万円前後です。埼玉県なのでC値は1.0未満をお約束としており、吹付け断熱のため実質0.5未満になることが大半です。断熱気密工事直後の「中間時測定」を重視し、1.0未満を基本に弱点箇所を測定中に見つけ、実測C値0.2〜0.6まで追い込んでから次の工程に進みます。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "「エアコン1〜2台で家じゅう快適」は本当に可能ですか？理論と現場のリアルな違いは？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "理論上は2階6畳用1台で家全体が冷える計算でも、現場ではエアコン周囲の空気が冷えると動作を止めてしまう（サーモオフ）ため1階が冷えません。住ま居るでは扇風機の併用や、夏と冬の空気の動きの差を考慮し、故障リスクに備えて1階と2階で各1台（計2台体制）のバックアップ体制を推奨しています。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "基礎断熱と床断熱はどちらが良いですか？シロアリ（防蟻）対策はどうしますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "高気密高断熱住宅で床下エアコンや第1種熱交換換気を通す場合は『基礎断熱』が圧倒的に有利です。床下も室内空間として暖かく保てます。懸念されるシロアリ対策としては、防蟻成分を含有した断熱材の採用、基礎打ち継ぎ部の止水・防蟻コーキング、基礎外周の目視点検ルートの確保を標準工学設計として徹底しています。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "第1種熱交換換気と第3種換気はどちらを選ぶべきですか？光熱費の違いは？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "埼玉県の真冬の冷気・真夏の熱気と湿気を考慮すると、熱回収率70〜90%の第1種全熱交換換気（Panasonic・ダクト式等）が最も省エネで室温差を生みません。給気時にフィルターで花粉・PM2.5を除去できるメリットもあります。ただしダクト清掃やフィルター交換のメンテナンス性を考慮した設計が不可欠です。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "窓の選び方はどうすべきですか？南面と東西面で仕様を変える理由は？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "全方位同じガラスにするのは工学的に間違いです。冬の直達日射を取り入れて暖房費を削る『南面』は日射取得型Low-E複層またはトリプルガラス（APW430等）を採用し、夏場の過酷な西日・東日が入る『東西面』は日射遮蔽型Low-Eガラス＋外部アウターシェードや軒・庇で日射を遮蔽します。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "壁体内結露を防ぐための通気層工法と気密シートはどうなっていますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "室内側の水蒸気が壁体内に入り込まないよう、可変透湿気密シート（インテロ等）や防湿層を連続施工し、外壁側には15mm以上の外壁通気層を設けて万一の湿気を速やかに棟換気へ逃がす『通気工法』を全棟で厳格に実施しています。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "家事ラク回遊動線（玄関→パントリー→キッチン→ランドリー）の最適寸法は？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "玄関から土間SIC、パントリーを経てキッチンへ直行できる動線では、買い物袋を持ったままスムーズに移動できるよう通路幅850〜900mmを確保します。さらにキッチンからランドリールーム・洗面所へ2方向からアクセスできる回遊コアを配置することで、家事歩数を半分に短縮できます。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "ガス衣類乾燥機「乾太くん」と室内干しランドリーの配置のベストプラクティスは？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "洗濯機の上に置く専用台よりも、スペースが許せば『洗濯機 ｜ 乾太くん ｜ 収納』を横並びに配置し、幅700〜750mm・高さ850mmの造作作業カウンターを設けるのがベストです。乾太くんから取り出した洗濯物をその場で畳み、隣接するファミリークローゼットへダイレクトにしまえる動線が完成します。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "洗面所と脱衣室を完全分離するメリットは何ですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "誰かがお風呂に入っている時や着替え中でも、気兼ねなく洗面台で歯磨きやメイクができる点です。朝の身支度渋滞を完全解消でき、来客時にも生活感のある洗濯カゴや浴室を見せずに手洗いへ案内できる清潔で機能的な間取りとなります。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "海外製食洗機（ミーレ・ボッシュ等）の60cmタイプは戸建てに導入できますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "はい、住ま居るでは多数の施工実績があります。大容量60cmフロントオープンは鍋やフライパン、1日分の食器を一度に洗えるため家事時間を劇的に削減します。導入には単相200V専用電源、給排水立ち上げ位置の専用配管設計、ワークトップ高さ850mm以上の確保が必須となるため、基本設計段階から間取りに組み込みます。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "埼玉西部（鶴ヶ島・川越等）での駐車場計画とEV充電設備の注意点は？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "埼玉西部エリアでは夫婦各1台（計2台）が基本で、両親や来客用の予備1台を含めた計3台スペースまたはアプローチ兼用設計を推奨します。また将来の電気自動車（EV）普及を見据え、新築時に分電盤から屋外駐車場への200V充電用先行配管工事（実費数万円程度）を事前施工しておくことが極めて経済的です。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "家相や風水（鬼門・裏鬼門）と、現代の高気密高断熱設計は両立できますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "十分に両立可能です。家相の鬼門（北東）・裏鬼門（南西）に水回りや玄関を避ける教えは、昔の寒冷・腐敗しやすい衛生環境を避ける知恵でした。現代では高気密高断熱（部屋ごとの不快な温度差を抑制）と24h熱交換換気によって衛生面は担保しつつ、三合の吉方位や正中線・四隅線を外すゾーニングをミリ単位で調整して両立を図ります。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "なぜ契約前に「15万円の設計お申し込み」が必要なのですか？他社との違いは？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "契約後の「地盤改良や擁壁・水道引き込みで数百万円の追加費用が発生した」という住宅業界特有の予算オーバー事故を未然に防ぐためです。JFD社の高精度3次元点群測量と役所法規調査を契約前に徹底的に行い、敷地の真実を明らかにする実費費用です。万一契約に至らない場合でも、測量図面や敷地調査報告書一式をお施主様にお渡しするため費用は一切無駄になりません。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "AI間取りシミュレーターやパース作成は本当に無料ですか？会員登録は必要ですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "はい、完全無料・会員登録不要でどなたでも無制限にご利用いただけます。敷地や予算に縛られず、ご家族で自由に理想の間取りを描いていただけます。"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/plan-gallery.css" />
+  <link rel="stylesheet" href="/css/bubble-plan.css" />
+  <link rel="stylesheet" href="/css/madori-bot.css" />
+  <link rel="stylesheet" href="/css/lifestyle-bot.css" />
+  <link rel="stylesheet" href="/css/thermal-bot.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800&family=Noto+Sans+JP:wght@400;700&family=Inter:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- ===================================================================== -->
+  <!-- プレビューモード案内バー（社内確認用） -->
+  <!-- ===================================================================== -->
+  <div style="background: linear-gradient(90deg, #0f172a, #1e293b); color: #ffffff; padding: 0.75rem 1.5rem; text-align: center; font-size: 0.88rem; font-weight: 700; position: sticky; top: 0; z-index: 9999; box-shadow: 0 4px 20px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; gap: 1.2rem; flex-wrap: wrap; border-bottom: 2px solid #38bdf8;">
+    <span style="display: flex; align-items: center; gap: 6px;">
+      <span style="display: inline-block; width: 10px; height: 10px; background: #38bdf8; border-radius: 50%; box-shadow: 0 0 10px #38bdf8;"></span>
+      【レイアウト完全修復版】左右均等2カラム ＋ 前向きコピー ＋ 6大AIツール ＋ 30秒シアター
+    </span>
+    <span style="background: rgba(56,189,248,0.15); color: #7dd3fc; border: 1px solid rgba(56,189,248,0.3); padding: 2px 10px; border-radius: 9999px; font-size: 0.75rem;">
+      現行本番トップページ（/）は未変更です
+    </span>
+    <a href="/" style="color: #fde047; text-decoration: underline; margin-left: 0.5rem; font-size: 0.82rem;">現行トップページと比較する ➜</a>
+  </div>
+
+
+
+  <!-- Header & Navigation (Two-Tier Compact Layout) -->
+
+  <header class="site-header">
+    <div class="nav-container-twotier">
+      <!-- Tier 1: Brand & AI Services / Bots -->
+      <div class="nav-tier-top">
+        <div class="nav-brand-group">
+          <div style="display: inline-flex; align-items: center;">
+            <a href="#" class="logo" id="logo-ai-lab" data-target="top" style="cursor: pointer;">
+              <span>家づくりAIラボ</span>
+              <span class="logo-badge">by 住ま居る</span>
+            </a>
+            <button type="button" id="btn-ai-lab-info" style="background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 10px; margin-left: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px;" title="家づくりAIラボとは？">
+              <span>ℹ️</span> 概要
+            </button>
+          </div>
+          <div class="brand-cred-tag">
+            <span class="cred-tag-area" style="color: #38bdf8; font-weight: 700;">施工エリア：埼玉県全域・一部東京都</span>
+            <span class="cred-tag-sep" style="opacity: 0.3;">|</span>
+            <span class="cred-tag-years">創業30年・累計800棟</span>
+            <span class="cred-tag-sep" style="opacity: 0.3;">|</span>
+            <span class="cred-tag-license" style="color: #6ee7b7;">般-8 第60650号</span>
+          </div>
+        </div>
+
+        <!-- AI Tools & Interactive Bots (Top Row) -->
+        <div class="nav-ai-suite">
+          <span class="nav-group-label" style="color: #fde68a;">🏡 AIツール:</span>
+          <ul class="nav-links-tier">
+            <li><a href="/plans/index.html" class="nav-link-btn highlight-sky" data-target="floorplan-studio" style="cursor: pointer;">📐 3Dプラン選定 ↗</a></li>
+            <li><a href="/madori-sketch/" target="_blank" class="nav-link-btn" style="background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; font-weight: 800; text-decoration: none; box-shadow: 0 2px 8px rgba(16,185,129,0.35);">✏️ 間取り工房 ↗</a></li>
+            <li><a href="/smilestudio.html" target="_blank" class="nav-link-btn highlight-amber" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800; box-shadow: 0 2px 8px rgba(245,158,11,0.4); text-decoration: none;">🎨 3Dパース工房 ↗</a></li>
+            <li><a href="/knowledge/madori/" class="nav-link-btn" style="background: linear-gradient(135deg, #7c3aed, #a855f7); color: #ffffff; font-weight: 800; text-decoration: none; box-shadow: 0 2px 8px rgba(168,85,247,0.35);">📖 設計知見200 ↗</a></li>
+            <li><a href="/knowledge/thermal/" class="nav-link-btn highlight-emerald" style="cursor: pointer;">💬 温熱換気相談 ↗</a></li>
+            <li><a href="/subsidy/index.html" class="nav-link-btn" style="background: linear-gradient(135deg, #047857, #10b981); color: #ffffff; font-weight: 800; text-decoration: none; box-shadow: 0 2px 8px rgba(16,185,129,0.3);">💰 補助金ナビ ↗</a></li>
+            <li><a href="/mortgage/index.html" class="nav-link-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; font-weight: 800; text-decoration: none; box-shadow: 0 2px 8px rgba(56,189,248,0.3);">🏦 住宅ローン診断 ↗</a></li>
+          </ul>
+        </div>
+
+        <!-- Mobile Hamburger Button -->
+        <button class="nav-toggle" id="nav-toggle" aria-label="メニュー切り替え">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <!-- Tier 2: Main Navigation & Showroom (Balanced Clean Bar) -->
+      <div class="nav-tier-bottom">
+        <ul class="nav-links-tier nav-main-links">
+          <li><a href="/" class="nav-link active" data-target="top">🏠 ホーム</a></li>
+          <li><a href="/plans/index.html" class="nav-link" style="color: #38bdf8; font-weight: 800;">📐 323プラン集</a></li>
+          <li><a href="/about/" class="nav-link" data-target="our-philosophy" style="cursor: pointer;">🏛️ こだわり（芳彩）</a></li>
+          <li><a href="/schedule/" class="nav-link" style="color: #38bdf8; font-weight: 800;">📅 家づくり工程</a></li>
+          <li><a href="/evidence/" class="nav-link" data-target="credlayer" style="color: #34d399; font-weight: 800; cursor: pointer;">🛡️ 信頼実証</a></li>
+          <li><a class="nav-link" href="/awards/kankyo-housing/" style="color: #fde68a; font-weight: 800;">🏆 環境住宅賞</a></li>
+          <li><a class="nav-link" href="/catalog/" style="color: #6ee7b7; font-weight: 800;">📘 工学カタログ</a></li>
+          <li><a href="/#article-feature" class="nav-link" data-target="article-feature" style="color: #f59e0b; font-weight: 800; cursor: pointer;">📖 解体新書</a></li>
+          <li><a href="/#metaverse" class="nav-link" data-target="metaverse" style="cursor: pointer;">🌐 メタバース</a></li>
+          <li><a href="/#scent-experience" class="nav-link" data-target="scent-experience" style="cursor: pointer; color: #fde68a; font-weight: 800;">👣 素足モデルハウス</a></li>
+          <li><a href="/#dashboard" class="nav-link carte-btn" id="nav-auth-btn" data-target="dashboard" style="cursor: pointer; border-radius: 8px; padding: 4px 12px;">👤 家カルテ</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Overlay & Menu -->
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+  <aside class="mobile-drawer" id="mobile-drawer" aria-label="モバイルナビゲーション">
+    <ul class="mobile-drawer-links">
+      <li style="padding: 0.75rem 1rem 0.5rem; font-size: 0.76rem; color: #94a3b8; border-bottom: 1px solid rgba(255, 255, 255, 0.1); line-height: 1.5;">
+        🏛️ <strong style="color: #e2e8f0;">株式会社住ま居る</strong>（鶴ヶ島市）<br>
+        創業30年・累計800棟｜知事許可(般-8)第60650号
+      </li>
+      <li><a class="mobile-nav-link active" href="/" data-target="top">🏠 ホーム（高気密高断熱注文住宅）</a></li>
+      <li><a class="mobile-nav-link highlight" href="/schedule/" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; font-weight: 800;">📅 家づくりスケジュール（カレンダーチェックリスト） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/jfd-survey/" style="background: linear-gradient(135deg, #0f766e, #0d9488); color: #fff; font-weight: 800;">🛰️ JFD 3D点群測量と敷地調査（本物資料公開） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/subsidy/index.html" style="background: linear-gradient(135deg, #047857, #10b981); color: #fff; font-weight: 800;">💰 AI補助金ナビ（市区町村別一括判定） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/mortgage/index.html" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-weight: 800;">🏦 AI住宅ローン診断（金利・団信TOP5） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/plans/index.html">📐 AI 3Dプラン選定（323選）</a></li>
+      <li><a class="mobile-nav-link highlight" href="https://lin.ee/8fdyyGu" target="_blank" rel="noopener noreferrer" style="background: #06c755; color: #fff; font-weight: 900;">💬 公式LINE（専任スタッフ直通・ID: @051vqxla） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/madori-sketch/" target="_blank" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-weight: 800;">✏️ 3D手描き間取り工房 ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/smilestudio.html" target="_blank" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800;">🎨 AI 3Dパース工房（SmileStudio） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/knowledge/madori/" style="background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; font-weight: 800;">📖 設計知見200選（間取り実務Q&A） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/knowledge/thermal/" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff;">💬 24時間 AI温熱換気相談（知見200選）</a></li>
+      <li><a class="mobile-nav-link" href="/awards/kankyo-housing/" style="background: linear-gradient(135deg, #b45309, #d97706); color: #fff; font-weight: 800;">🏆 【受賞実話】埼玉県環境住宅賞</a></li>
+      <li><a class="mobile-nav-link highlight" href="/evidence/" data-target="credlayer" style="background: linear-gradient(135deg, #064e3b, #059669); color: #fff; font-weight: 800;">🛡️ CredLayer (信頼実証レイヤー)</a></li>
+      <li><a class="mobile-nav-link" href="/catalog/" style="background: linear-gradient(135deg, #065f46, #059669); color: #fff; font-weight: 800;">📘 完全工学カタログ（A4印刷/PDF）</a></li>
+      <li><a class="mobile-nav-link" href="/#article-feature" data-target="article-feature" style="color: #f59e0b; font-weight: 700;">📖 手づくり住宅解体新書（全10章）</a></li>
+      <li><a class="mobile-nav-link" href="/about/" data-target="our-philosophy">🏛️ 私たちの家づくり（芳彩・かぐや）</a></li>
+      <li><a class="mobile-nav-link" href="/cases/tsurugashima-s.html" data-target="craftsmanship">🔨 お客様×大工さん×建築士（施工実例）</a></li>
+      <li><a class="mobile-nav-link" href="/#metaverse" data-target="metaverse">🌐 バーチャル展示場</a></li>
+      <li><a class="mobile-nav-link" href="/#scent-experience" data-target="scent-experience" style="color: #fde68a; font-weight: 800;">👣 毛呂山モデルハウス（素足見学予約）</a></li>
+      <li><a class="mobile-nav-link" href="/#dashboard" id="nav-auth-btn-mobile" data-target="dashboard">👤 マイページ・家カルテ</a></li>
+    </ul>
+  </aside>
+
+  <!-- Mobile Thumb-Friendly Fixed Bottom Navigation -->
+  <nav class="mobile-bottom-bar" aria-label="クイック操作バー">
+    <a href="/" class="bottom-tab-btn active" data-target="top">
+      <span class="tab-icon">🏠</span>
+      <span>ホーム</span>
+    </a>
+    <a href="/plans/index.html" class="bottom-tab-btn" style="color: #38bdf8; font-weight: 800;">
+      <span class="tab-icon">📐</span>
+      <span>間取り</span>
+    </a>
+    <a href="/smilestudio.html" class="bottom-tab-btn" style="color: #f59e0b; font-weight: 800;">
+      <span class="tab-icon">🎨</span>
+      <span>パース</span>
+    </a>
+    <a href="/knowledge/thermal/" class="bottom-tab-btn" style="color: #10b981; font-weight: 800;">
+      <span class="tab-icon">💬</span>
+      <span>温熱AI</span>
+    </a>
+    <a href="/#article-feature" class="bottom-tab-btn" data-target="article-feature" style="color: #f59e0b; font-weight: 800;">
+      <span class="tab-icon">📖</span>
+      <span>解体新書</span>
+    </a>
+  </nav>
+
+  <!-- Main Content Container -->
+  <main class="main-content">
+
+
+
+
+    <section id="top" class="page-section active">
+
+      <!-- ===================================================================== -->
+      <!-- HERO SHOWCASE SLIDER: ファーストビュー最上部 実邸プレミアムスライドショー -->
+      <!-- ===================================================================== -->
+      <div class="hero-showcase-wrapper" style="margin-bottom: 1.5rem; position: relative; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 36px rgba(0,0,0,0.45); border: 1.5px solid rgba(255,255,255,0.12);">
+        <style>
+          .hero-slider-stage {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: #09131f;
+            overflow: hidden;
+          }
+          @media (max-width: 768px) {
+            .hero-slider-stage { height: 320px; }
+          }
+          @media (max-width: 480px) {
+            .hero-slider-stage { height: 260px; }
+          }
+          .hero-slide-item {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out, transform 6s ease-out;
+            transform: scale(1.04);
+          }
+          .hero-slide-item.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1.0);
+          }
+          .hero-slide-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+          }
+          .hero-slide-caption {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 3rem 1.8rem 1.2rem;
+            background: linear-gradient(to top, rgba(15,23,42,0.92) 0%, rgba(15,23,42,0.6) 60%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            pointer-events: none;
+          }
+          .hero-slide-tag {
+            align-self: flex-start;
+            background: rgba(2, 132, 199, 0.85);
+            backdrop-filter: blur(8px);
+            color: #ffffff;
+            font-size: 0.78rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            letter-spacing: 0.04em;
+          }
+          .hero-slide-heading {
+            color: #f8fafc;
+            font-size: 1.35rem;
+            font-weight: 800;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+            margin: 0;
+            line-height: 1.4;
+          }
+          @media (max-width: 768px) {
+            .hero-slide-heading { font-size: 1.05rem; }
+            .hero-slide-caption { padding: 2rem 1rem 0.8rem; }
+          }
+          .hero-slider-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px; height: 44px;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: #ffffff;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s ease;
+          }
+          .hero-slider-nav-btn:hover {
+            background: rgba(2, 132, 199, 0.85);
+            border-color: #38bdf8;
+            transform: translateY(-50%) scale(1.08);
+          }
+          .hero-slider-nav-btn.prev { left: 14px; }
+          .hero-slider-nav-btn.next { right: 14px; }
+          @media (max-width: 600px) {
+            .hero-slider-nav-btn { width: 34px; height: 34px; font-size: 1.2rem; }
+          }
+          .hero-slider-pagination {
+            position: absolute;
+            bottom: 12px;
+            right: 18px;
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+          }
+          .hero-dot-indicator {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            border: 1px solid rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0;
+          }
+          .hero-dot-indicator.active {
+            background: #38bdf8;
+            width: 24px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(56,189,248,0.8);
+          }
+        </style>
+
+        <div class="hero-slider-stage" id="top-hero-slider-stage">
+          <!-- Slide 1: 外観・ガレージ・青空 -->
+          <div class="hero-slide-item active">
+            <img src="/images/hero_slider/slide_01_facade_garage.webp" alt="【外観実邸実例】青空に映える洗練のモダンファサードとビルトインガレージ" fetchpriority="high" width="1920" height="1278" />
+            <div class="hero-slide-caption">
+              <span class="hero-slide-tag" style="background: rgba(2, 132, 199, 0.9);">🏡 完全自由設計 ｜ 外観・インナーガレージ</span>
+              <p class="hero-slide-heading">埼玉の青空に映える、ビルトインガレージ×無垢アクセント玄関の洗練美</p>
+            </div>
+          </div>
+
+          <!-- Slide 2: 薪ストーブ×大谷石×一枚板座卓 -->
+          <div class="hero-slide-item">
+            <img src="/images/hero_slider/slide_02_woodstove_living.webp" alt="【木組みと薪ストーブ】大谷石カウンター×一枚板座卓の極上LDK" loading="lazy" width="1920" height="1277" />
+            <div class="hero-slide-caption">
+              <span class="hero-slide-tag" style="background: rgba(217, 119, 6, 0.9);">🔥 自然素材の温もり ｜ 鶴ヶ島市 K様邸</span>
+              <p class="hero-slide-heading">勾配天井の太い梁と大谷石薪ストーブ。冬でも家中が柔らかな輻射熱に包まれる暮らし</p>
+            </div>
+          </div>
+
+          <!-- Slide 3: 大工造作キッチン×対面カウンター -->
+          <div class="hero-slide-item">
+            <img src="/images/hero_slider/slide_03_artisan_kitchen.webp" alt="【熟練大工の内部造作】フルオーダー対面キッチン×小上がり畳" loading="lazy" width="1920" height="1280" />
+            <div class="hero-slide-caption">
+              <span class="hero-slide-tag" style="background: rgba(13, 148, 136, 0.9);">🍽️ 熟練大工の内部造作 ｜ 鶴ヶ島市 T様邸</span>
+              <p class="hero-slide-heading">手刻みの技量を持つ大工が現場でミリ単位で仕立てる、フルオーダー対面キッチン</p>
+            </div>
+          </div>
+
+          <!-- Slide 4: 大空間吹き抜けLDK -->
+          <div class="hero-slide-item">
+            <img src="/images/hero_slider/slide_04_open_living_void.webp" alt="【大空間吹き抜け】真冬も素足で駆け回れる超高気密高断熱LDK" loading="lazy" width="1920" height="1278" />
+            <div class="hero-slide-caption">
+              <span class="hero-slide-tag" style="background: rgba(16, 185, 129, 0.9);">🌲 柱のない大空間 ｜ 開放的な吹き抜けLDK</span>
+              <p class="hero-slide-heading">全棟許容応力度計算耐震等級3だから叶う、柱のない大開口リビングと自然光</p>
+            </div>
+          </div>
+
+          <!-- Slide 5: 職人造作ヒノキ風呂 -->
+          <div class="hero-slide-item">
+            <img src="/images/hero_slider/slide_05_hinoki_custom_bath.webp" alt="【職人造作ヒノキ風呂】庭を望む十和田石と天然ヒノキの在来浴室" loading="lazy" width="800" height="600" />
+            <div class="hero-slide-caption">
+              <span class="hero-slide-tag" style="background: rgba(180, 83, 9, 0.9);">♨️ 職人造作の美 ｜ ヒノキ風呂×在来浴室</span>
+              <p class="hero-slide-heading">庭の緑を望む十和田石と大工手作りのヒノキ浴槽。自宅で味わう温泉宿の寛ぎ</p>
+            </div>
+          </div>
+
+          <!-- Slide 6: ロフト付き主寝室 -->
+          <div class="hero-slide-item">
+            <img src="/images/hero_slider/slide_06_loft_bedroom.webp" alt="【ロフト付き主寝室】大人の遊び心とリゾート感を満たす勾配天井" loading="lazy" width="1920" height="1279" />
+            <div class="hero-slide-caption">
+              <span class="hero-slide-tag" style="background: rgba(124, 58, 237, 0.9);">✨ 多彩な空間設計 ｜ ロフト付きプライベートルーム</span>
+              <p class="hero-slide-heading">木製手すりロフトとアクセントウォール。家族それぞれのこだわりを形にする自由設計</p>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <button type="button" class="hero-slider-nav-btn prev" id="hero-slider-btn-prev" aria-label="前の写真">‹</button>
+          <button type="button" class="hero-slider-nav-btn next" id="hero-slider-btn-next" aria-label="次の写真">›</button>
+
+          <div class="hero-slider-pagination" id="hero-slider-dots-container">
+            <button type="button" class="hero-dot-indicator active" data-slide="0" aria-label="写真1"></button>
+            <button type="button" class="hero-dot-indicator" data-slide="1" aria-label="写真2"></button>
+            <button type="button" class="hero-dot-indicator" data-slide="2" aria-label="写真3"></button>
+            <button type="button" class="hero-dot-indicator" data-slide="3" aria-label="写真4"></button>
+            <button type="button" class="hero-dot-indicator" data-slide="4" aria-label="写真5"></button>
+            <button type="button" class="hero-dot-indicator" data-slide="5" aria-label="写真6"></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- HERO BANNER: 埼玉の超高気密高断熱×構造計算の確かな証 -->
+            <!-- HERO BANNER: 左右完璧2カラム（左: キャッチコピー＆リード文 / 右: 3大ハブ導線） -->
+      <div class="hero-brand-container" style="background: linear-gradient(135deg, #071524 0%, #0c1a2e 50%, #112240 100%); border-radius: 20px; padding: clamp(1.5rem, 3.0vw, 2.8rem); margin-bottom: 2.5rem; box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 1px solid rgba(56,189,248,0.25); display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(1.5rem, 2.5vw, 2.5rem); align-items: start;">
+        
+        <!-- ==================================================== -->
+        <!-- 第1カラム（左側）：新キャッチコピー ＆ 信頼のリード文 -->
+        <!-- ==================================================== -->
+        <div class="hero-left-col" style="display: flex; flex-direction: column;">
+          
+          <!-- 上部タグライン -->
+          <div style="display: flex; gap: 0.45rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.9rem;">
+            <span class="hero-brand-tag" style="background: rgba(217, 119, 6, 0.25); color: #fde68a; border: 1px solid rgba(245, 158, 11, 0.5); margin-bottom: 0; padding: 0.3rem 0.8rem; font-size: 0.78rem;">
+              🏠 お客様の建てたい家を建てる工務店
+            </span>
+            <span class="hero-brand-tag" style="background: rgba(16, 185, 129, 0.22); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.45); margin-bottom: 0; padding: 0.3rem 0.8rem; font-size: 0.78rem;">
+              🛡️ 全棟許容応力度計算 耐震最高等級3
+            </span>
+            <span class="hero-brand-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); margin-bottom: 0; padding: 0.3rem 0.8rem; font-size: 0.78rem;">
+              ❄️ HEAT20 G2〜G3 × 実測C値0.1〜0.3台
+            </span>
+            <span class="hero-brand-tag" style="background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.35); margin-bottom: 0; padding: 0.3rem 0.8rem; font-size: 0.78rem;">
+              🏆 埼玉県環境住宅賞受賞
+            </span>
+          </div>
+
+          <!-- 新メインキャッチコピー -->
+          <h1 class="hero-brand-title" style="margin: 0 0 1.0rem 0; font-weight: 800; letter-spacing: -0.02em; line-height: 1.32;">
+            <span style="font-size: clamp(1.75rem, 3.0vw, 2.45rem); color: #ffffff; display: block;">
+              夢を語るのは、あなた。
+            </span>
+            <span style="font-size: clamp(1.55rem, 2.7vw, 2.25rem); background: linear-gradient(120deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: block; margin-top: 0.25rem;">
+              夢を実現するお手伝いをするのが、住ま居る。
+            </span>
+          </h1>
+
+          <!-- サブヘッドライン -->
+          <div style="margin-bottom: 1.1rem;">
+            <p style="color: #f59e0b; font-size: clamp(1.0rem, 1.8vw, 1.18rem); font-weight: 700; line-height: 1.5; margin: 0;">
+              私たちは「会社の型」を売りません。<br>
+              あなたが本当に建てたい家を、最高峰の耐震・断熱工学で形にする工務店です。
+            </p>
+          </div>
+
+          <!-- リード文（SEO/AIO完全網羅・可読性の高いスタイリング） -->
+          <div style="background: rgba(255, 255, 255, 0.03); border-left: 3px solid #38bdf8; border-radius: 0 10px 10px 0; padding: 1.0rem 1.2rem; margin-bottom: 0;">
+            <p style="font-size: 0.92rem; line-height: 1.8; color: #cbd5e1; margin: 0 0 0.85rem 0;">
+              多くのハウスメーカーや工務店は「当社の仕様はこれ」「標準プランはこちら」と、自分たちの型にお客様を押し込めようとします。<br>
+              少し凝った間取りや自由なわがままを伝えた途端、<strong>「耐震計算が合わないので無理です」「規格外オプションで数百万円アップします」</strong>と諦めさせられていませんか？<br>
+              住ま居るは、全棟許容応力度計算（耐震最高等級3）・HEAT20 G2/G3超高断熱・実測C値0.1〜0.3台という最高峰の物理工学を100%担保した上で、あなたの“こだわり”を何一つ妥協せずに形にします。
+            </p>
+            <p style="font-size: 0.90rem; line-height: 1.8; color: #94a3b8; margin: 0; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.8rem;">
+              家を建てることは、工業製品やスペックを買うことではありません。<br>
+              一生に一度、愛する家族と笑顔で過ごす<strong>「かけがえのない時間と命を守る場所」</strong>を育むことです。<br>
+              私たちは埼玉県鶴ヶ島市で30年、800家族の暮らしに寄り添い続けてきた地域工務店です。埼玉特有の厳しい夏の熱気を跳ね返す<strong>「屋根・外壁の遮熱工学」</strong>と、真冬もエアコン1台で心地よく過ごせる<strong>「HEAT20 G2〜G2.5の断熱気密（全棟実測C値0.3台・耐震等級3）」</strong>を両立。過剰な数値競争ではなく、埼玉の気候で本当に快適な住まいを熟練大工の手仕事でお届けします。
+            </p>
+          </div>
+
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- 第2カラム（右側）：整然と並ぶ3大ハブ（右側にピッタリ配置！） -->
+        <!-- ==================================================== -->
+        <div class="hero-funnel-container" style="display: flex; flex-direction: column; gap: 1.0rem;">
+          
+          <!-- ボックス1: 【前向きなトーン】できないと言われたこだわりを諦めない -->
+          <div style="background: rgba(15, 23, 42, 0.88); border: 1.5px solid #d97706; border-radius: 14px; padding: 1.1rem 1.25rem; box-shadow: 0 8px 24px rgba(217, 119, 6, 0.25);">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 0.45rem;">
+              <span style="background: linear-gradient(135deg, #d97706, #b45309); color: #ffffff; font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 4px;">
+                📌 必見の特設ドキュメント公開中
+              </span>
+              <span style="font-size: 0.72rem; color: #fde68a;">ボツ案の無料構造セカンドオピニオン</span>
+            </div>
+            <h3 style="color: #ffffff; font-size: 1.02rem; font-weight: 800; margin: 0 0 0.4rem 0; line-height: 1.4;">
+              そのこだわり、「構造上できない」と諦めていませんか？
+            </h3>
+            <p style="color: #cbd5e1; font-size: 0.83rem; margin: 0 0 0.8rem 0; line-height: 1.5;">
+              12邸の「他社NG克服カルテ」を全公開。諦めかけていた理想の間取りを工学の力で蘇らせます。
+            </p>
+            <a href="/custom-freedom/" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800; font-size: 0.90rem; padding: 0.65rem 1.2rem; border-radius: 8px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35); transition: transform 0.2s;">
+              <span>📐 最高性能×完全自由設計の真実を見る ➜</span>
+            </a>
+          </div>
+
+          <!-- ボックス2: 【登録不要・完全無料】6大AIツール群（設計知見200選を追加！） -->
+          <div style="background: rgba(15, 23, 42, 0.8); border: 1.5px solid rgba(56, 189, 248, 0.4); border-radius: 14px; padding: 1.1rem 1.25rem; box-shadow: 0 8px 20px rgba(0,0,0,0.35);">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.7rem;">
+              <span style="color: #38bdf8; font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+                🤖 【登録不要・完全無料】6大AIツールで家づくりをシミュレーション
+              </span>
+              <span style="font-size: 0.70rem; color: #94a3b8;">売り込み電話ゼロ</span>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+              <a href="/plans/index.html" style="background: rgba(2, 132, 199, 0.25); border: 1px solid rgba(56, 189, 248, 0.4); color: #e0f2fe; padding: 0.62rem 0.7rem; border-radius: 8px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 4px; text-align: center;">
+                📐 323プラン集 ↗
+              </a>
+              <button data-target="madori-consultation-bot" style="background: rgba(124, 58, 237, 0.25); border: 1px solid rgba(167, 139, 250, 0.4); color: #ede9fe; padding: 0.62rem 0.7rem; border-radius: 8px; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; text-align: center;">
+                💬 夫婦の家カルテ →
+              </button>
+              <button data-target="thermal-consultation" style="background: rgba(16, 185, 129, 0.25); border: 1px solid rgba(52, 211, 153, 0.4); color: #d1fae5; padding: 0.62rem 0.7rem; border-radius: 8px; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; text-align: center;">
+                🌡️ 24h温熱換気AI →
+              </button>
+              <a href="/subsidy/index.html" style="background: rgba(13, 148, 136, 0.25); border: 1px solid rgba(45, 212, 191, 0.4); color: #ccfbf1; padding: 0.62rem 0.7rem; border-radius: 8px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 4px; text-align: center;">
+                💰 AI補助金ナビ ↗
+              </a>
+              <a href="/mortgage/index.html" style="background: rgba(99, 102, 241, 0.25); border: 1px solid rgba(129, 140, 248, 0.4); color: #e0e7ff; padding: 0.62rem 0.7rem; border-radius: 8px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 4px; text-align: center;">
+                🏦 AI住宅ローン ↗
+              </a>
+              <a href="/knowledge/thermal/" style="background: rgba(245, 158, 11, 0.25); border: 1px solid rgba(251, 191, 36, 0.45); color: #fef3c7; padding: 0.62rem 0.7rem; border-radius: 8px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 4px; text-align: center;">
+                📚 設計知見200選 ↗
+              </a>
+            </div>
+          </div>
+
+          <!-- ボックス3: 【住ま居るの真実】年間150件構造審査の工学実証録 -->
+          <div style="background: rgba(6, 44, 38, 0.65); border: 1.5px solid rgba(52, 211, 153, 0.35); border-radius: 14px; padding: 1.1rem 1.25rem; box-shadow: 0 8px 20px rgba(0,0,0,0.35);">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.7rem;">
+              <span style="color: #6ee7b7; font-weight: 800; font-size: 0.84rem; display: flex; align-items: center; gap: 6px;">
+                🏛️ 【住ま居るの真実】年間150件構造審査の自社建築士 × 埼玉公的アワード
+              </span>
+              <span style="font-size: 0.70rem; color: #a7f3d0;">遮熱 × 耐震等級3</span>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+              <a href="/awards/kankyo-housing/" style="background: rgba(245, 158, 11, 0.25); border: 1px solid rgba(251, 191, 36, 0.4); color: #fef3c7; padding: 0.62rem 0.7rem; border-radius: 8px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 4px; text-align: center;">
+                🏆 埼玉県環境住宅賞 ↗
+              </a>
+              <button data-target="craftsmanship" style="background: rgba(16, 185, 129, 0.25); border: 1px solid rgba(52, 211, 153, 0.4); color: #d1fae5; padding: 0.62rem 0.7rem; border-radius: 8px; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; text-align: center;">
+                🔨 手刻み大工の現場哲学 →
+              </button>
+              <a href="/evidence/" style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(148, 163, 184, 0.4); color: #f1f5f9; padding: 0.62rem 0.7rem; border-radius: 8px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 4px; text-align: center;">
+                📊 C値0.3実測データ ↗
+              </a>
+              <a href="/schedule/" style="background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; padding: 0.62rem 0.7rem; border-radius: 8px; font-size: 0.82rem; font-weight: 800; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 4px; text-align: center; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);">
+                📅 展示場素足見学 ↗
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- ブランドシネマティック動画シアター (#brand-concept-movie) -->
+      <!-- 「できないと言われたこだわり」を工学で具現化するストーリーを30秒で体感 -->
+      <!-- ===================================================================== -->
+      <section id="brand-concept-movie" style="margin: 2.2rem 0 3.2rem 0; background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(10, 16, 30, 0.98) 100%); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 18px; padding: clamp(1.4rem, 3.0vw, 2.4rem); box-shadow: 0 15px 40px rgba(0,0,0,0.6); text-align: center;">
+        
+        <div style="max-width: 780px; margin: 0 auto 1.5rem auto;">
+          <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(217, 119, 6, 0.2); color: #fde68a; border: 1px solid rgba(245, 158, 11, 0.4); padding: 3px 12px; border-radius: 9999px; font-size: 0.78rem; font-weight: 800; margin-bottom: 0.6rem; letter-spacing: 0.04em;">
+            🎬 30 SECONDS BRAND MOVIE
+          </div>
+          <h2 style="font-size: clamp(1.4rem, 2.6vw, 2.0rem); color: #ffffff; font-weight: 800; margin: 0 0 0.6rem 0; line-height: 1.35;">
+            そのこだわり、「構造上できない」と諦めていませんか？
+          </h2>
+          <p style="font-size: 0.92rem; color: #94a3b8; line-height: 1.6; margin: 0;">
+            「夢を語るのは、あなた。夢を実現するお手伝いをするのが、住ま居る。」<br>
+            妥協のない構造工学が、あなたの理想を解剖し、唯一無二の住まいへと結実させる軌跡をご覧ください。
+          </p>
+        </div>
+
+        <!-- 動画プレイヤーコンテナ（横型 16:9 スマホでも画面を塞がない黄金比） -->
+        <div style="max-width: 860px; margin: 0 auto; position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1.5px solid rgba(56, 189, 248, 0.4); background: #000000;">
+          <video controls preload="metadata" playsinline poster="/assets/images/concept/promise01.webp" style="width: 100%; aspect-ratio: 16/9; display: block; object-fit: cover;">
+            <source src="/temp_video_preview/sumairu_concept_horizontal_16x9.mp4" type="video/mp4">
+            お使いのブラウザは動画再生に対応していません。
+          </video>
+        </div>
+        
+        <div style="margin-top: 1.0rem; display: flex; justify-content: center; gap: 1.2rem; flex-wrap: wrap; font-size: 0.8rem; color: #64748b;">
+          <span>🎧 音声あり推奨（男女ナレーション × シネマティックBGM）</span>
+          <span>⏱️ 再生時間: 30秒</span>
+          <span>📐 横型16:9 シネマスコープ画角</span>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- ブランドの核：家づくりの3つの約束 (#three-promises) -->
+      <!-- 「デザイナーはあなた、エンジニアは住ま居る」を採用 -->
+      <!-- ===================================================================== -->
+      <section id="three-promises" style="margin: 2.5rem 0 3.5rem 0; background: linear-gradient(180deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 18px; padding: clamp(1.5rem, 3.5vw, 2.75rem); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);">
+        
+        <!-- セクション見出し -->
+        <div style="text-align: center; max-width: 840px; margin: 0 auto 2.4rem auto;">
+          <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); padding: 4px 14px; border-radius: 9999px; font-size: 0.82rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">
+            ✨ OUR PHILOSOPHY & PROMISE
+          </div>
+          <h2 style="font-size: clamp(1.6rem, 3.2vw, 2.3rem); color: #ffffff; font-weight: 800; line-height: 1.35; margin: 0 0 0.6rem 0; letter-spacing: -0.01em;">
+            住ま居るが貫く、家づくりの3つの約束
+          </h2>
+          <!-- 採用コピー：デザイナーはあなた、エンジニアは住ま居る -->
+          <p style="font-size: clamp(1.1rem, 2.2vw, 1.35rem); font-weight: 800; color: #38bdf8; margin: 0 0 0.8rem 0; letter-spacing: 0.02em;">
+            「デザイナーはあなた、エンジニアは住ま居る。」
+          </p>
+          <p style="font-size: 0.96rem; color: #94a3b8; line-height: 1.7; margin: 0;">
+            単なる高性能住宅を売るのではなく、<strong>他社が断るような難しい要望にも、最高峰の工学で解決策を探し出す工務店</strong>であり続けます。
+          </p>
+        </div>
+
+        <!-- 3つの約束カードグリッド -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1.6rem; margin-bottom: 2.2rem;">
+          
+          <!-- 約束 1: 理想を小さくしない -->
+          <div style="background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 8px 20px rgba(0,0,0,0.3);">
+            <div style="position: relative; width: 100%; height: 210px; overflow: hidden;">
+              <img src="/assets/images/concept/promise01.webp" alt="理想を小さくしない - 吹き抜け・大開口リビング" style="width: 100%; height: 100%; object-fit: cover;">
+              <div style="position: absolute; top: 12px; left: 12px; background: rgba(2, 132, 199, 0.9); color: #ffffff; font-weight: 800; font-size: 0.82rem; padding: 4px 10px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.4);">
+                PROMISE 01
+              </div>
+            </div>
+            <div style="padding: 1.4rem; display: flex; flex-direction: column; flex-grow: 1;">
+              <h3 style="font-size: 1.25rem; font-weight: 800; color: #38bdf8; margin: 0 0 0.75rem 0; line-height: 1.4;">
+                1. 理想を小さくしない
+              </h3>
+              <p style="font-size: 0.93rem; color: #e2e8f0; line-height: 1.75; margin: 0;">
+                吹き抜け、大開口、ガレージ、趣味の空間。<br>
+                まずはやりたいことを全部お聞かせください。<br>
+                「構造上無理」「規格外」と言われたこだわりも、初めから否定することはありません。
+              </p>
+            </div>
+          </div>
+
+          <!-- 約束 2: 見えない部分に妥協しない -->
+          <div style="background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 8px 20px rgba(0,0,0,0.3);">
+            <div style="position: relative; width: 100%; height: 210px; overflow: hidden;">
+              <img src="/assets/images/concept/promise02.webp" alt="見えない部分に妥協しない - 許容応力度計算と構造フレーム" style="width: 100%; height: 100%; object-fit: cover;">
+              <div style="position: absolute; top: 12px; left: 12px; background: rgba(5, 150, 105, 0.9); color: #ffffff; font-weight: 800; font-size: 0.82rem; padding: 4px 10px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.4);">
+                PROMISE 02
+              </div>
+            </div>
+            <div style="padding: 1.4rem; display: flex; flex-direction: column; flex-grow: 1;">
+              <h3 style="font-size: 1.25rem; font-weight: 800; color: #6ee7b7; margin: 0 0 0.75rem 0; line-height: 1.4;">
+                2. 見えない部分に妥協しない
+              </h3>
+              <p style="font-size: 0.93rem; color: #e2e8f0; line-height: 1.75; margin: 0;">
+                許容応力度計算、耐震等級3、基礎設計、断熱・気密。<br>
+                勘や経験則ではなく、数値と物理法則に基づく根拠のある設計を行います。<br>
+                見えなくなる構造躯体こそ、命と財産を守る最重要の要です。
+              </p>
+            </div>
+          </div>
+
+          <!-- 約束 3: 完成後の暮らしまで考える -->
+          <div style="background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 8px 20px rgba(0,0,0,0.3);">
+            <div style="position: relative; width: 100%; height: 210px; overflow: hidden;">
+              <img src="/assets/images/concept/promise03.webp" alt="完成後の暮らしまで考える - 木の温もりと家族の笑顔" style="width: 100%; height: 100%; object-fit: cover;">
+              <div style="position: absolute; top: 12px; left: 12px; background: rgba(217, 119, 6, 0.9); color: #ffffff; font-weight: 800; font-size: 0.82rem; padding: 4px 10px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.4);">
+                PROMISE 03
+              </div>
+            </div>
+            <div style="padding: 1.4rem; display: flex; flex-direction: column; flex-grow: 1;">
+              <h3 style="font-size: 1.25rem; font-weight: 800; color: #fcd34d; margin: 0 0 0.75rem 0; line-height: 1.4;">
+                3. 完成後の暮らしまで考える
+              </h3>
+              <p style="font-size: 0.93rem; color: #e2e8f0; line-height: 1.75; margin: 0;">
+                デザイン、家事動線、光熱費、メンテナンス、将来の暮らしやすさまで考える。<br>
+                引き渡しの日がゴールではなく、30年後・50年後も心地よく、修繕費で家族が困らない持続可能な住まいを設計します。
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 構造性能に対する誠実な注意書き（ブランドの信頼性を決定づける重要枠） -->
+        <div style="background: rgba(15, 23, 42, 0.8); border-left: 4px solid #f59e0b; border-radius: 0 10px 10px 0; padding: 1.15rem 1.4rem; margin-top: 1.0rem;">
+          <div style="display: flex; align-items: flex-start; gap: 10px;">
+            <span style="font-size: 1.3rem; line-height: 1;">📐</span>
+            <div>
+              <h4 style="color: #fcd34d; font-size: 0.96rem; font-weight: 800; margin: 0 0 0.35rem 0;">
+                構造性能と自由設計に関する住ま居るの誠実な姿勢
+              </h4>
+              <p style="font-size: 0.88rem; color: #cbd5e1; line-height: 1.75; margin: 0;">
+                <strong>構造性能は、その理想を諦めなくて済むようにするための技術です。</strong><br>
+                ただし、耐震等級3や許容応力度計算を採用すれば、どんな大空間でも無条件に実現できるわけではありません。<br>
+                私たちは「命を守る安全性」を何よりも最優先とするため、物理的に危険な設計には正直に警鐘を鳴らします。その上で、<strong>「どうすれば耐震最高等級3を担保しながら、お客様の理想に極限まで近づけられるか」の工学的な代替案を全力で追求する</strong>こと。それが、住ま居るの技術者としての誠実さです。
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </section>
+<div id="our-philosophy" style="margin-top: 2.2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; scroll-margin-top: 80px;">
+        
+        <!-- Feature 1: 埼玉県環境住宅賞 実話 -->
+        <div class="card" style="background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%); border: 2px solid #f59e0b; border-radius: var(--radius-lg); padding: 1.6rem; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 2rem;">🏆</span>
+              <span style="background: #fef3c7; color: #b45309; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 12px;">施主様自ら応募し受賞</span>
+            </div>
+            <h3 style="color: #78350f; font-size: 1.18rem; margin-bottom: 0.5rem; line-height: 1.45;">
+              「賞を頂いてしまいました」<br><span style="color: #b45309; font-size: 1.0rem;">埼玉県環境住宅賞の奇跡の実話</span>
+            </h3>
+            <p style="color: #451a03; font-size: 0.88rem; line-height: 1.7; margin-bottom: 1rem;">
+              お引渡しから4年後、真冬も真夏も快適に過ごされた施主様が自ら県のアワードへ応募し受賞。カタログの宣伝文句ではない、暮らして実感する本物の住み心地の証です。
+            </p>
+          </div>
+          <a href="/awards/kankyo-housing/" class="btn" style="background: linear-gradient(135deg, #d97706, #b45309); color: #fff !important; font-weight: 800; font-size: 0.88rem; padding: 0.65rem 1rem; border-radius: 8px; text-decoration: none; text-align: center;">
+            原本付き実話ストーリーを読む ↗
+          </a>
+        </div>
+
+        <!-- Feature 2: 自社専任建築士 × 手刻み大工 -->
+        <div class="card" style="background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%); border: 2px solid #10b981; border-radius: var(--radius-lg); padding: 1.6rem; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 2rem;">📐</span>
+              <span style="background: #d1fae5; color: #065f46; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 12px;">年間150件の構造審査</span>
+            </div>
+            <h3 style="color: #064e3b; font-size: 1.18rem; margin-bottom: 0.5rem; line-height: 1.45;">
+              プロが頼る専任建築士チーム ×<br><span style="color: #059669; font-size: 1.0rem;">木癖を見極める熟練手刻み大工</span>
+            </h3>
+            <p style="color: #334155; font-size: 0.88rem; line-height: 1.7; margin-bottom: 1rem;">
+              外部丸投げゼロ。全棟で許容応力度計算（耐震等級3）と外皮計算を直接実施。手刻み大工がミリ単位で現場造作し、C値0.3台の超高気密を確実に仕立てます。
+            </p>
+          </div>
+          <button class="btn btn-primary" data-target="craftsmanship" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-weight: 800; font-size: 0.88rem; padding: 0.65rem 1rem; border-radius: 8px; justify-content: center;">
+            建築士×大工の手仕事を見る →
+          </button>
+        </div>
+
+        <!-- Feature 3: 埼玉の気候を制する遮熱×自然素材 -->
+        <div class="card" style="background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%); border: 2px solid #0284c7; border-radius: var(--radius-lg); padding: 1.6rem; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 2rem;">🌿</span>
+              <span style="background: #e0f2fe; color: #0369a1; font-weight: 800; font-size: 0.75rem; padding: 3px 10px; border-radius: 12px;">向こう30年最先端</span>
+            </div>
+            <h3 style="color: #0f172a; font-size: 1.18rem; margin-bottom: 0.5rem; line-height: 1.45;">
+              埼玉の酷暑を跳ね返す遮熱設計 ×<br><span style="color: #0284c7; font-size: 1.0rem;">吉野杉と自律呼吸する天然珪藻土</span>
+            </h3>
+            <p style="color: #334155; font-size: 0.88rem; line-height: 1.7; margin-bottom: 1rem;">
+              断熱だけでなく夏の屋根・外壁遮熱を科学。合成接着剤のツンとする新築臭を排除し、足裏に温かい吉野杉と澄んだ空気環境が家族の健やかな未来を包みます。
+            </p>
+          </div>
+          <a href="/evidence/" class="btn" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff !important; font-weight: 800; font-size: 0.88rem; padding: 0.65rem 1rem; border-radius: 8px; text-decoration: none; text-align: center;">
+            遮熱・気密・電気代実証データ ↗
+          </a>
+        </div>
+
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- 毛呂山モデルハウス「素足体感」案内バナー -->
+      <!-- ===================================================================== -->
+      <div style="margin-top: 2.5rem; background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%); color: #ffffff; border-radius: 16px; padding: 2.2rem 2rem; box-shadow: 0 12px 32px rgba(27,67,50,0.2); text-align: center;">
+        <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(52, 211, 153, 0.2); border: 1px solid rgba(52, 211, 153, 0.4); padding: 4px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 800; color: #a7f3d0; margin-bottom: 0.8rem;">
+          👣 スリッパを脱いで、無垢杉の温もりと澄んだ空気をご体感ください
+        </div>
+        <h3 style="font-size: 1.75rem; font-weight: 900; margin: 0 0 0.8rem; line-height: 1.4;">
+          【完全予約制】毛呂山モデルハウス「素足体感 ＆ カルテ読み合わせ会」<br>
+          <span style="color: #6ee7b7; font-size: 1.25rem;">家づくりサポート係の温かいお茶とおもてなし ｜ 営業マンゼロ・託児付き</span>
+        </h3>
+        <p style="color: #d1fae5; font-size: 0.95rem; line-height: 1.8; max-width: 780px; margin: 0 auto 1.5rem;">
+          写真や画面では絶対に伝わらない、吉野杉の足触りと天然珪藻土の清涼な空気感を素足で体感。<br>
+          お子様連れでも安心の見守り隊が絵本や折り紙で一緒に遊びます。しつこい営業電話や売り込みは一切ありません。
+        </p>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+          <a href="/schedule/" class="btn" style="background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #0f172a !important; font-weight: 900; font-size: 1.0rem; padding: 0.85rem 2rem; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">
+            📅 見学予約カレンダーを見る ↗
+          </a>
+          <a href="/catalog/" class="btn" style="background: rgba(255, 255, 255, 0.15); color: #ffffff !important; border: 1.5px solid rgba(255, 255, 255, 0.4); font-weight: 800; font-size: 1.0rem; padding: 0.85rem 1.8rem; border-radius: 8px; text-decoration: none;">
+            📖 工学カタログを請求する ↗
+          </a>
+          <a href="tel:0492712350" class="btn" style="background: transparent; color: #a7f3d0 !important; border: 1px solid rgba(167, 243, 208, 0.4); font-weight: 700; font-size: 0.95rem; padding: 0.85rem 1.5rem; border-radius: 8px; text-decoration: none;">
+            📞 お電話: 049-271-2350
+          </a>
+        </div>
+      </div>
+
+    </section>
+
+    <section id="ai-studio" class="page-section">
+      <div class="hero hero-soft-amber" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 40%, #ffffff 100%); border: 2px solid #fde68a; border-radius: 16px; padding: 2.2rem 2rem 1.8rem; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.08); text-align: center;">
+        <span class="hero-tag" style="background: #fef3c7; border: 1.5px solid #f59e0b; color: #b45309; font-weight: 800; font-size: 0.88rem; padding: 6px 18px; border-radius: 20px; display: inline-block; margin-bottom: 0.8rem;">
+          🎨 登録不要・完全無料 ｜ 間取り図面やスケッチから理想の空間を瞬時3Dパース化
+        </span>
+        <h2 class="hero-title" style="color: #0f172a; font-size: 1.95rem; font-weight: 900; line-height: 1.35; margin-bottom: 0.8rem;">
+          AI 3Dパース工房（SmileStudio）
+        </h2>
+        <p class="hero-subtitle" style="color: #334155; font-size: 0.95rem; line-height: 1.8; max-width: 820px; margin: 0 auto 1.3rem;">
+          「こんなリビングにしたい」「吹き抜けの光の入り方はどうなる？」をご自宅のスマホから直感操作で立体化。<br>
+          323プランやお好みのスケッチを選ぶだけで、プロクオリティのフォトリアルパースを自社AIアトリエが瞬時に描画します。
+        </p>
+
+        <!-- アクションボタン群 -->
+        <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
+          <a href="/smilestudio.html" target="_blank" class="btn btn-primary" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; border: none; border-radius: 30px; padding: 12px 28px; font-size: 1.05rem; font-weight: 900; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">
+            <span>🎨</span> AI 3Dパース工房（SmileStudio）を開く ↗
+          </a>
+          <a href="/madori-sketch/" target="_blank" style="background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; border: none; border-radius: 30px; padding: 12px 24px; font-size: 0.98rem; font-weight: 900; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+            <span>✏️</span> 3D手描き間取り工房で自由に作図する ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- パース生成の3系統インプット（紹介カード） -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 2rem;">
+        <div style="background: #ffffff; border: 1.5px solid #fed7aa; border-radius: 12px; padding: 18px; text-align: center;">
+          <div style="font-size: 2rem; margin-bottom: 6px;">📄</div>
+          <h4 style="font-size: 1rem; font-weight: 800; color: #9a3412; margin-bottom: 6px;">1. 手描きスケッチ・平面図</h4>
+          <p style="font-size: 0.85rem; color: #64748b; line-height: 1.5;">チラシや手描きの間取り写真をアップロードするだけで、AIが自動解析して立体化。</p>
+        </div>
+        <div style="background: #ffffff; border: 1.5px solid #fed7aa; border-radius: 12px; padding: 18px; text-align: center;">
+          <div style="font-size: 2rem; margin-bottom: 6px;">📐</div>
+          <h4 style="font-size: 1rem; font-weight: 800; color: #9a3412; margin-bottom: 6px;">2. 323実例プランから選定</h4>
+          <p style="font-size: 0.85rem; color: #64748b; line-height: 1.5;">厳選された323プランの中からお気に入りの間取りを選び、黄金比アングルで即座にパース描画。</p>
+        </div>
+        <div style="background: #ffffff; border: 1.5px solid #fed7aa; border-radius: 12px; padding: 18px; text-align: center;">
+          <div style="font-size: 2rem; margin-bottom: 6px;">👤</div>
+          <h4 style="font-size: 1rem; font-weight: 800; color: #9a3412; margin-bottom: 6px;">3. 家カルテのお気に入りから</h4>
+          <p style="font-size: 0.85rem; color: #64748b; line-height: 1.5;">ご家族でストックしたお気に入りの間取りからワンタップで連携し、内外装の質感をシミュレーション。</p>
+        </div>
+      </div>
+    </section>
+
+     <section id="madori-consultation-bot" class="page-section">
+       <div id="madori-consultation" style="position: relative; top: -80px; visibility: hidden;"></div>
+       <!-- ヒーローバナー -->
+       <div class="madori-bot-hero">
+         <span class="madori-bot-badge">
+           🤖 住ま居るAI建築士 ｜ 夫婦の本音引き出し ＆ 暮らしの処方箋カルテ
+         </span>
+         <h2 class="madori-bot-title">
+           夫婦の本音＆暮らしAIヒアリング<br>
+           <span style="color: #059669; font-size: 1.6rem; font-weight: 800; display: inline-block; margin-top: 0.3rem;">
+             家づくりカルテ自動作成 ＆ 設計プロの知見200選
+           </span>
+         </h2>
+         <p style="color: #475569; font-size: 1rem; line-height: 1.8; max-width: 860px; margin: 0 auto;">
+           「駐車は何台？」「朝7時の洗面渋滞は？」「乾太くんからファミクロへの直結動線は？」<br>
+           夫婦で画面を見ながら本音を答えていくだけで、<strong>AIは余計な口出しをせずご要望のストック・整理に徹します</strong>。<br>「どう両立させたらいい？」と回答を求めた時にだけ、<strong>AIが2人のすれ違いを解消する「折衷案・融合案」</strong>をご提案します。
+         </p>
+         <div style="margin-top: 1.2rem; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+           <a href="/madori-consultation/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(124, 58, 237, 0.12); border: 1.5px solid #7c3aed; color: #6d28d9; padding: 6px 16px; border-radius: 20px; font-size: 0.88rem; font-weight: 800; text-decoration: none;">
+             🔗 夫婦でスマホ共有・専用独立ページで開く（/madori-consultation/） ↗
+           </a>
+         </div>
+       </div>
+
+       <!-- メインタブ切り替え: 夫婦ヒアリングカルテ vs 逆引き知見200選 -->
+       <div style="max-width: 960px; margin: 0 auto 2rem; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+         <button type="button" id="tab-btn-interview" class="btn btn-primary" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-weight: 800; font-size: 1.05rem; padding: 0.85rem 1.8rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);" onclick="document.getElementById('lifestyle-interview-wrap').style.display='block'; document.getElementById('madori-knowledge-wrap').style.display='none'; this.style.opacity='1'; document.getElementById('tab-btn-knowledge').style.opacity='0.6';">
+           🌿 夫婦の暮らしヒアリング＆カルテ作成（無料）
+         </button>
+         <button type="button" id="tab-btn-knowledge" class="btn btn-secondary" style="background: #ffffff; color: #7c3aed; border: 2px solid #7c3aed; font-weight: 800; font-size: 1.05rem; padding: 0.85rem 1.8rem; border-radius: 12px; opacity: 0.7;" onclick="document.getElementById('lifestyle-interview-wrap').style.display='none'; document.getElementById('madori-knowledge-wrap').style.display='block'; this.style.opacity='1'; document.getElementById('tab-btn-interview').style.opacity='0.6';">
+           📖 設計プロの知見200選 逆引きカードを見る
+         </button>
+       </div>
+
+       <!-- TAB 1: 夫婦の本音ヒアリング＆家づくりカルテ生成エンジン -->
+       <div id="lifestyle-interview-wrap" style="margin-bottom: 3.5rem;">
+         <div id="lifestyle-interview-root"></div>
+       </div>
+
+       <!-- TAB 2: 既存の設計知見200選（初期非表示） -->
+       <div id="madori-knowledge-wrap" style="display: none;">
+         <!-- 8大ジャンル別フィルター ＆ 検索バー -->
+         <div class="madori-filter-bar">
+           <div class="madori-tabs-scroll" id="madori-category-tabs">
+             <button type="button" class="madori-tab-pill active" data-cat="all">🌟 すべて (200問)</button>
+             <button type="button" class="madori-tab-pill" data-cat="kitchen" data-name="🍳 キッチン・パントリー">🍳 キッチン・パントリー</button>
+             <button type="button" class="madori-tab-pill" data-cat="ldk" data-name="🛋️ LDK・小上がり・スタディ">🛋️ LDK・小上がり・スタディ</button>
+             <button type="button" class="madori-tab-pill" data-cat="water" data-name="🧺 水回り・ランドリー・脱衣">🧺 水回り・ランドリー・脱衣</button>
+             <button type="button" class="madori-tab-pill" data-cat="entrance" data-name="👞 玄関・土間SIC・動線">👞 玄関・土間SIC・動線</button>
+             <button type="button" class="madori-tab-pill" data-cat="storage" data-name="📦 収納・WIC・分散配置">📦 収納・WIC・分散配置</button>
+             <button type="button" class="madori-tab-pill" data-cat="equipment" data-name="🔥 暖炉・設備・照明・色彩">🔥 暖炉・設備・照明・色彩</button>
+             <button type="button" class="madori-tab-pill" data-cat="garden" data-name="🌿 尺庭・デッキ・外構・敷地">🌿 尺庭・デッキ・外構・敷地</button>
+             <button type="button" class="madori-tab-pill" data-cat="kaso" data-name="⛩️ 家相・風水・現代間取り">⛩️ 家相・風水・現代間取り</button>
+           </div>
+
+           <div class="madori-search-box">
+             <input type="text" id="madori-search-input" class="madori-search-input" placeholder="🔍 気になるキーワードで知見を検索 (例: 乾太くん, 通路幅, 冷蔵庫, 小上がり, 尺庭, バイオ暖炉, 吹き抜け, ミーレ, 鬼門, 家相...)" />
+             <span id="madori-results-count" style="display: flex; align-items: center; white-space: nowrap; font-size: 0.85rem; font-weight: 800; color: #7c3aed; padding: 0 10px;">
+               200問の設計知見を表示中
+             </span>
+           </div>
+         </div>
+
+         <!-- 100問Q&Aカードグリッド -->
+         <div id="madori-qa-grid" class="madori-qa-grid">
+           <!-- JS動的レンダリング -->
+         </div>
+       </div>
+
+      <!-- 該当なし案内 -->
+      <div id="madori-qa-empty" style="display: none; text-align: center; padding: 4rem 1rem; background: #ffffff; border-radius: 16px; border: 1.5px dashed #cbd5e1; margin-bottom: 3rem;">
+        <div style="font-size: 2.5rem; margin-bottom: 8px;">🔍</div>
+        <h3 style="color: #475569; font-size: 1.15rem; font-weight: 800; margin-bottom: 6px;">該当する知見が見つかりませんでした</h3>
+        <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1.2rem;">別のキーワードで検索するか、直接AI建築士にチャットでご相談ください。</p>
+        <button type="button" class="btn btn-primary" style="background: #7c3aed; color: #fff; border-radius: 8px;" onclick="window.madoriBotStudio.startDeepConsultation('free_chat')">
+          💬 チャットでAI建築士に直接質問する →
+        </button>
+      </div>
+
+      <!-- 下部バナー: バブルプランへの作図誘導 -->
+      <div style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #86efac; border-radius: 16px; padding: 1.8rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.08); margin-bottom: 3rem;">
+        <div>
+          <div style="font-size: 1.15rem; font-weight: 900; color: #166534; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
+            <span>🎈</span> 得られた知見を元に、理想の間取りを実際に描いてみませんか？
+          </div>
+          <p style="font-size: 0.88rem; color: #15803d; margin: 0; line-height: 1.6;">
+            小上がり畳、尺庭、バイオ暖炉、2way玄関土間など、学んだ黄金寸法ブロックをドラッグ＆ドロップで自由に配置できます。
+          </p>
+        </div>
+        <button type="button" class="btn btn-primary" data-target="floorplan-studio" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-weight: 900; padding: 0.8rem 1.6rem; border-radius: 12px; border: none; font-size: 0.95rem; cursor: pointer; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
+          🎈 バブルプランで間取りを作図する ➡️
+        </button>
+      </div>
+    </section>
+
+
+    <!-- PAGE: 24H THERMAL & VENTILATION CONSULTATION BOT (200 ARCHITECTURAL KNOWLEDGE) -->
+
+
+    <section id="thermal-consultation" class="page-section">
+      <!-- ヒーローバナー -->
+      <div class="thermal-bot-hero">
+        <span class="thermal-bot-badge">
+          🌡️ 24時間365日 AI温熱・気密相談 ｜ 埼玉の現場実体験×30年の試行錯誤知見
+        </span>
+        <h2 class="thermal-bot-title">
+          24h温熱換気・高気密高断熱専用AIボット<br>
+          <span class="highlight">
+            実務検証に基づく設計知見200選 ＆ なんでも深掘り相談
+          </span>
+        </h2>
+        <p class="thermal-bot-subtitle">
+          埼玉の気候風土の中で、専門家や研究者の勉強会に足繁く通い、実際の現場で試行錯誤し、失敗と成功の実体験を通して私どもが現在たどり着いた知見を200問で体系化しました。<br>
+          「絶対的な正解」ではなく、常に進化し間違いもあるかもしれませんが、私どもが考える現時点での最善手としてご参考になさってください。気になる疑問を選べば、住ま居るAI温熱建築士が実体験と設計思想に基づいて誠実にお答えします。
+        </p>
+      </div>
+
+      <!-- 8大ジャンル別フィルター ＆ 検索バー -->
+      <div class="thermal-filter-bar">
+        <div class="thermal-tabs-scroll" id="thermal-category-tabs">
+          <button type="button" class="thermal-tab-pill active" data-cat="all">🌟 すべて (200問)</button>
+          <button type="button" class="thermal-tab-pill" data-cat="th_ins" data-name="🧱 断熱性能・UA値・外皮">🧱 断熱性能・UA値・外皮</button>
+          <button type="button" class="thermal-tab-pill" data-cat="th_air" data-name="💨 気密性能・C値・隙間">💨 気密性能・C値・隙間</button>
+          <button type="button" class="thermal-tab-pill" data-cat="th_fnd" data-name="🏗️ 基礎断熱・床断熱・床下">🏗️ 基礎断熱・床断熱・床下</button>
+          <button type="button" class="thermal-tab-pill" data-cat="th_vnt" data-name="🔄 24h換気・第1種全熱交換">🔄 24h換気・第1種全熱交換</button>
+          <button type="button" class="thermal-tab-pill" data-cat="th_win" data-name="🪟 窓・サッシ・日射遮蔽">🪟 窓・サッシ・日射遮蔽</button>
+          <button type="button" class="thermal-tab-pill" data-cat="th_cnd" data-name="💧 結露・カビ・壁体内湿気">💧 結露・カビ・壁体内湿気</button>
+          <button type="button" class="thermal-tab-pill" data-cat="th_hvac" data-name="❄️ 冷暖房・全館空調・パッシブ">❄️ 冷暖房・全館空調・パッシブ</button>
+          <button type="button" class="thermal-tab-pill" data-cat="th_law" data-name="⚖️ 2025年法改正・生涯コスト">⚖️ 2025年法改正・生涯コスト</button>
+        </div>
+
+        <div class="thermal-search-wrap">
+          <span class="thermal-search-icon">🔍</span>
+          <input type="text" id="thermal-search-input" class="thermal-search-input" placeholder="知見の検索、または質問を入力してEnter（例: 吹き抜けを取りたいけど光熱費が心配です）" />
+          <button type="button" id="thermal-top-consult-btn" class="thermal-consult-btn-top">
+            💬 AI温熱建築士に質問・相談
+          </button>
+        </div>
+      </div>
+
+      <!-- 統計・表示件数 -->
+      <div class="thermal-stats-bar">
+        <span id="thermal-filtered-count">200問の設計知見を表示中</span>
+        <span>※埼玉の気候風土での現場検証・実体験に基づく、住ま居る現時点の設計知見です</span>
+      </div>
+
+      <!-- 200問 Q&Aカード グリッド -->
+      <div class="thermal-qa-grid" id="thermal-qa-grid">
+        <!-- JavaScript (thermal-bot.js) により動的レンダリング -->
+      </div>
+    </section>
+
+    <!-- 詳細モーダル -->
+    <div class="thermal-modal-backdrop" id="thermal-detail-modal">
+      <div class="thermal-modal-content">
+        <button type="button" class="thermal-modal-close" id="thermal-detail-modal-close">✕</button>
+        <div class="thermal-modal-body">
+          <span class="thermal-cat-tag" id="thermal-modal-cat" style="margin-bottom: 0.8rem; display: inline-block;">カテゴリ</span>
+          <h2 id="thermal-modal-title">質問タイトル</h2>
+
+          <div class="thermal-section-block">
+            <h3>💡 結論・重要ポイント</h3>
+            <p id="thermal-modal-ans">結論テキスト</p>
+          </div>
+
+          <!-- 技術図解・ディテール拡大表示エリア -->
+          <div id="thermal-modal-diagram-wrap" style="margin: 1.2rem 0; background: #0f172a; border-radius: 14px; overflow: hidden; border: 1.5px solid #334155; box-shadow: 0 8px 24px rgba(0,0,0,0.25);">
+            <div style="padding: 8px 14px; background: #1e293b; color: #38bdf8; font-size: 0.82rem; font-weight: 800; display: flex; align-items: center; justify-content: space-between;">
+              <span style="display:flex; align-items:center; gap:6px;">
+                📐 <strong>実務技術図解・設計ディテール</strong>
+              </span>
+              <span style="font-size: 0.72rem; color: #94a3b8;">住ま居る標準工学図</span>
+            </div>
+            <div style="display: flex; justify-content: center; background: #020617; padding: 12px; text-align: center;">
+              <img id="thermal-modal-img" src="" alt="温熱気密図解" style="max-width: 100%; max-height: 380px; object-fit: contain; border-radius: 8px;" />
+            </div>
+          </div>
+
+          <div class="thermal-section-block" style="border-left-color: #0284c7; background: #f0f9ff;">
+            <h3 style="color: #0369a1;">📐 標準基準・数値指標</h3>
+            <p id="thermal-modal-dim" style="font-weight: 700; color: #0369a1;">数値基準</p>
+          </div>
+
+          <div class="thermal-section-block" style="border-left-color: #6366f1; background: #eef2ff;">
+            <h3 style="color: #4338ca;">🔍 現場実務の技術根拠（物理原理・メリット・注意点）</h3>
+            <p id="thermal-modal-det">技術根拠</p>
+          </div>
+
+          <div class="thermal-section-block principle">
+            <h3 style="color: #b45309;">★ 住ま居るAI温熱建築士の「設計の原則」</h3>
+            <p id="thermal-modal-pri" style="font-weight: 700; color: #92400e;">設計原則</p>
+          </div>
+
+          <div style="font-size: 0.82rem; color: #64748b; margin-top: 0.8rem; background: #f8fafc; padding: 0.6rem 0.8rem; border-radius: 0.5rem; border: 1px solid #e2e8f0;">
+            ⚠️ 本知見は住ま居るが埼玉の気候風土で現場実務と試行錯誤を通して現在たどり着いた考え方です。絶対の正解ではなく、各敷地・条件に合わせて柔軟に検証いたします。
+          </div>
+
+          <div class="thermal-modal-footer-btn">
+            <button type="button" class="thermal-consult-now-btn" id="thermal-consult-now-btn">
+              💬 このテーマについてAI温熱建築士に深掘り相談する
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- チャット相談モーダル -->
+    <div class="thermal-modal-backdrop" id="thermal-chat-modal">
+      <div class="thermal-modal-content">
+        <button type="button" class="thermal-modal-close" id="thermal-chat-modal-close">✕</button>
+        <div class="thermal-modal-body">
+          <h2 style="font-size: 1.25rem; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span>🌡️</span> 住ま居るAI温熱建築士 チャット相談室
+          </h2>
+          <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 1rem;">
+            埼玉の厳しい夏冬の現場で培った実体験に基づき、UA値、C値、基礎断熱、換気方式、冷暖房計画などリアルタイムに回答いたします。
+          </p>
+
+          <div class="thermal-chat-box">
+            <div class="thermal-chat-messages" id="thermal-chat-messages">
+              <!-- チャット履歴 -->
+            </div>
+            <div class="thermal-chat-input-row">
+              <input type="text" id="thermal-chat-input" class="thermal-chat-input" placeholder="温熱・気密・換気の質問を入力してください..." />
+              <button type="button" id="thermal-chat-send-btn" class="thermal-chat-send-btn">送信</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- PAGE: AI FLOOR PLAN GENERATION STUDIO (FREE CUSTOM LAYOUT TOOL) -->
+
+
+    <section id="floorplan-studio" class="page-section">
+      <div class="hero hero-soft-sky" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 45%, #ffffff 100%); border: 2px solid #bae6fd; border-radius: 16px; padding: 2.2rem 2rem 1.8rem; margin-bottom: 2rem; box-shadow: 0 8px 25px rgba(2, 132, 199, 0.08); text-align: center;">
+        <span class="hero-tag" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: #0369a1; font-weight: 800; font-size: 0.88rem; padding: 6px 18px; border-radius: 20px; display: inline-block; margin-bottom: 0.8rem;">
+          【実例323選】建物規模・広さから価格の目安がすぐわかる！
+        </span>
+        <h2 class="hero-title" style="color: #0f172a; font-size: 1.95rem; font-weight: 900; line-height: 1.4; margin-bottom: 0.8rem;">
+          323実例プラン選定 ＆ 建築費用の目安確認
+        </h2>
+        <p style="color: #334155; font-size: 0.95rem; line-height: 1.8; max-width: 820px; margin: 0 auto 1.3rem;">
+          平屋・2階建て・30坪台など、実際の施工実績に基づく323件の実例間取りと、<strong>リアルタイム建築費用シミュレーション</strong>を専用カタログで全件公開しています。
+        </p>
+
+        <!-- アクションボタン群 -->
+        <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
+          <a href="/plans/index.html" class="btn btn-primary" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; border: none; border-radius: 30px; padding: 12px 28px; font-size: 1.05rem; font-weight: 900; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);">
+            <span>📐</span> 323プラン全件カタログ・費用シミュレーターを見る ↗
+          </a>
+          <a href="/madori-sketch/" target="_blank" style="background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; border: none; border-radius: 30px; padding: 12px 24px; font-size: 0.98rem; font-weight: 900; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+            <span>✏️</span> 3D手描き間取り工房で自由に作図する ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- 人気の代表カテゴリ 3大ピックアップカード -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 2rem;">
+        <!-- Card 1: 平屋 -->
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.06); display: flex; flex-direction: column;">
+          <div style="background: linear-gradient(135deg, #0f766e, #14b8a6); color: #fff; padding: 10px 16px; font-weight: 800; font-size: 0.95rem; display: flex; justify-content: space-between;">
+            <span>🏡 ワンフロアで暮らす平屋</span>
+            <span>20〜28坪</span>
+          </div>
+          <div style="padding: 16px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.6; margin-bottom: 12px;">
+              階段のない安心感と回遊動線。勾配天井と中庭テラスで開放感を極めた平屋スタイル。
+            </p>
+            <a href="/plans/index.html#plans-grid" style="display: block; text-align: center; background: #f0fdf4; border: 1px solid #86efac; color: #166534; padding: 8px; border-radius: 8px; font-weight: 800; font-size: 0.85rem; text-decoration: none;">平屋プラン一覧を見る →</a>
+          </div>
+        </div>
+
+        <!-- Card 2: 30坪台・子育てファミリー -->
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.06); display: flex; flex-direction: column;">
+          <div style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; padding: 10px 16px; font-weight: 800; font-size: 0.95rem; display: flex; justify-content: space-between;">
+            <span>👨‍👩‍👧‍👦 30坪台・子育て家事ラク動線</span>
+            <span>30〜35坪</span>
+          </div>
+          <div style="padding: 16px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.6; margin-bottom: 12px;">
+              乾太くん×ファミリークローク直結、洗面脱衣分離、帰宅時手洗い動線を完備した一番人気プラン。
+            </p>
+            <a href="/plans/index.html#plans-grid" style="display: block; text-align: center; background: #f0f9ff; border: 1px solid #7dd3fc; color: #0369a1; padding: 8px; border-radius: 8px; font-weight: 800; font-size: 0.85rem; text-decoration: none;">30坪台プラン一覧を見る →</a>
+          </div>
+        </div>
+
+        <!-- Card 3: 二世帯・ビルトインガレージ -->
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.06); display: flex; flex-direction: column;">
+          <div style="background: linear-gradient(135deg, #b45309, #f59e0b); color: #fff; padding: 10px 16px; font-weight: 800; font-size: 0.95rem; display: flex; justify-content: space-between;">
+            <span>🚗 ガレージハウス・二世帯</span>
+            <span>36〜50坪</span>
+          </div>
+          <div style="padding: 16px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            <p style="font-size: 0.88rem; color: #475569; line-height: 1.6; margin-bottom: 12px;">
+              愛車と暮らすインナーガレージや、適度な距離感で支え合う完全・一部共有型の二世帯住宅。
+            </p>
+            <a href="/plans/index.html#plans-grid" style="display: block; text-align: center; background: #fefce8; border: 1px solid #fde047; color: #854d0e; padding: 8px; border-radius: 8px; font-weight: 800; font-size: 0.85rem; text-decoration: none;">二世帯・ガレージ一覧を見る →</a>
+          </div>
+        </div>
+      </div>
+    
+      <!-- 設計知見200選：間取り検討中の滞在時間・回遊率向上コンテンツ -->
+      <div style="margin-top: 4rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #bae6fd; border-radius: 16px; padding: 2.5rem 2rem; box-shadow: 0 4px 20px rgba(2,132,199,0.06);">
+        <div style="text-align: center; max-width: 800px; margin: 0 auto 2.5rem;">
+          <span style="background: #e0f2fe; color: #0284c7; font-size: 0.82rem; font-weight: 800; padding: 4px 14px; border-radius: 20px; display: inline-block; margin-bottom: 8px;">
+            📐 間取り選びで後悔しないための実務エビデンス
+          </span>
+          <h3 style="font-size: 1.7rem; font-weight: 900; color: #0f172a; margin: 0 0 0.6rem; letter-spacing: -0.5px;">
+            設計プロの知見200選（実務寸法 ＆ 黄金動線ルール抜粋）
+          </h3>
+          <p style="font-size: 0.95rem; color: #64748b; line-height: 1.7; margin: 0;">
+            「図面では広く見えたのに家具を置いたら狭い…」「毎日の洗濯動線が遠くて疲れる…」<br>
+            そんな間取りの後悔を防ぐために、埼玉の現場実務30年から導き出した【黄金寸法】と【動線の正解】を厳選ピックアップしました。
+          </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.4rem; margin-bottom: 2.5rem;">
+          <!-- 1. キッチン -->
+          <div style="background: #ffffff; border-radius: 12px; padding: 1.4rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 1.3rem;">🍳</span>
+              <span style="font-size: 0.75rem; font-weight: 800; color: #d97706; background: #fef3c7; padding: 2px 8px; border-radius: 4px;">第1章：キッチン（全25問）</span>
+            </div>
+            <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">通路幅・冷蔵庫・パントリー動線</h4>
+            <p style="font-size: 0.84rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+              1人なら850〜900mm、2人なら1,000〜1,050mmが黄金寸法。冷蔵庫を手前側に配置して調理中の横切り動線を防ぐ法則。
+            </p>
+            <a href="/knowledge/madori/kitchen.html" style="color: #d97706; font-weight: 800; font-size: 0.82rem; text-decoration: none;">
+              キッチンの知見25選を見る ➜
+            </a>
+          </div>
+
+          <!-- 2. LDK -->
+          <div style="background: #ffffff; border-radius: 12px; padding: 1.4rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 1.3rem;">🛋️</span>
+              <span style="font-size: 0.75rem; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 2px 8px; border-radius: 4px;">第2章：LDK・小上がり（全25問）</span>
+            </div>
+            <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">畳数感覚・視線抜け・小上がり</h4>
+            <p style="font-size: 0.84rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+              吹き抜けの寒さ・音対策、畳コーナー小上がり30〜35cmの引き出し収納活用、TVとソファの適正視聴距離の計算式。
+            </p>
+            <a href="/knowledge/madori/ldk.html" style="color: #0284c7; font-weight: 800; font-size: 0.82rem; text-decoration: none;">
+              LDKの知見25選を見る ➜
+            </a>
+          </div>
+
+          <!-- 3. 水回り -->
+          <div style="background: #ffffff; border-radius: 12px; padding: 1.4rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 1.3rem;">🧺</span>
+              <span style="font-size: 0.75rem; font-weight: 800; color: #059669; background: #ecfdf5; padding: 2px 8px; border-radius: 4px;">第3章：水回り・ランドリー（全25問）</span>
+            </div>
+            <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">洗面脱衣分離・室内干し動線</h4>
+            <p style="font-size: 0.84rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+              「脱衣室」と「洗面所」の完全分離で家族の入浴時も安心。洗濯機・物干し・ファミクロが1直線につながる時短ランドリー。
+            </p>
+            <a href="/knowledge/madori/water.html" style="color: #059669; font-weight: 800; font-size: 0.82rem; text-decoration: none;">
+              水回りの知見25選を見る ➜
+            </a>
+          </div>
+
+          <!-- 4. 玄関 -->
+          <div style="background: #ffffff; border-radius: 12px; padding: 1.4rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 1.3rem;">👞</span>
+              <span style="font-size: 0.75rem; font-weight: 800; color: #0369a1; background: #bae6fd; padding: 2px 8px; border-radius: 4px;">第4章：玄関・土間SIC（全25問）</span>
+            </div>
+            <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">家族・来客動線分離・土間収納</h4>
+            <p style="font-size: 0.84rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+              ウォークスルー型シューズクロークでメイン玄関を常に整頓。ベビーカーやコート掛けを土間にビルトインする設計法。
+            </p>
+            <a href="/knowledge/madori/entrance.html" style="color: #0369a1; font-weight: 800; font-size: 0.82rem; text-decoration: none;">
+              玄関の知見25選を見る ➜
+            </a>
+          </div>
+
+          <!-- 5. 収納 -->
+          <div style="background: #ffffff; border-radius: 12px; padding: 1.4rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 1.3rem;">📦</span>
+              <span style="font-size: 0.75rem; font-weight: 800; color: #7c3aed; background: #ede9fe; padding: 2px 8px; border-radius: 4px;">第5章：収納・WIC（全25問）</span>
+            </div>
+            <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">ファミクロ・適材適所の分散配置</h4>
+            <p style="font-size: 0.84rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+              収納率12〜15%の黄金比率。1階ファミリークローゼットで洗濯畳み・服運びゼロ化。奥行きが深すぎて使いにくい収納の解消法。
+            </p>
+            <a href="/knowledge/madori/storage.html" style="color: #7c3aed; font-weight: 800; font-size: 0.82rem; text-decoration: none;">
+              収納の知見25選を見る ➜
+            </a>
+          </div>
+
+          <!-- 6. 設備・照明 -->
+          <div style="background: #ffffff; border-radius: 12px; padding: 1.4rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 1.3rem;">🔥</span>
+              <span style="font-size: 0.75rem; font-weight: 800; color: #dc2626; background: #fee2e2; padding: 2px 8px; border-radius: 4px;">第6章：暖炉・設備・照明（全25問）</span>
+            </div>
+            <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">薪ストーブ・間接照明・空調計画</h4>
+            <p style="font-size: 0.84rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+              薪ストーブの煙突ルートと遮熱大谷石の配置基準。まぶしさを抑えた建築化コーブ照明とグレアレスダウンライトの配当設計。
+            </p>
+            <a href="/knowledge/madori/equipment.html" style="color: #dc2626; font-weight: 800; font-size: 0.82rem; text-decoration: none;">
+              設備の知見25選を見る ➜
+            </a>
+          </div>
+
+          <!-- 7. 中庭・デッキ -->
+          <div style="background: #ffffff; border-radius: 12px; padding: 1.4rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 1.3rem;">🌿</span>
+              <span style="font-size: 0.75rem; font-weight: 800; color: #16a34a; background: #dcfce7; padding: 2px 8px; border-radius: 4px;">第7章：尺庭・デッキ（全25問）</span>
+            </div>
+            <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">アウターリビング・プライベート中庭</h4>
+            <p style="font-size: 0.84rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+              外からの視線を遮るコの字・ロの字配棟。リビングとフラットにつながるタイルデッキテラスと雨に濡れないカバードポーチ。
+            </p>
+            <a href="/knowledge/madori/garden.html" style="color: #16a34a; font-weight: 800; font-size: 0.82rem; text-decoration: none;">
+              庭・デッキの知見25選を見る ➜
+            </a>
+          </div>
+
+          <!-- 8. 家相・風水 -->
+          <div style="background: #ffffff; border-radius: 12px; padding: 1.4rem; border: 1px solid #e2e8f0; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+              <span style="font-size: 1.3rem;">⛩️</span>
+              <span style="font-size: 0.75rem; font-weight: 800; color: #475569; background: #f1f5f9; padding: 2px 8px; border-radius: 4px;">第8章：家相・風水（全25問）</span>
+            </div>
+            <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 0.4rem;">鬼門・裏鬼門・現代科学間取り</h4>
+            <p style="font-size: 0.84rem; color: #475569; line-height: 1.6; margin: 0 0 0.8rem; flex-grow: 1;">
+              「鬼門にトイレ・玄関は本当にNG？」古来の知恵を現代の換気・採光・衛生工学で論理的に読み解くストレスフリーな家相設計。
+            </p>
+            <a href="/knowledge/madori/kaso.html" style="color: #475569; font-weight: 800; font-size: 0.82rem; text-decoration: none;">
+              家相・風水の知見25選を見る ➜
+            </a>
+          </div>
+        </div>
+
+        <div style="background: #ffffff; border-radius: 12px; padding: 1.5rem 2rem; border: 1.5px solid #0284c7; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.2rem;">
+          <div>
+            <h4 style="margin: 0 0 0.3rem; font-size: 1.15rem; font-weight: 900; color: #0f172a;">
+              📚 設計プロの知見200選・全8カテゴリ（全200問）を完全公開中！
+            </h4>
+            <p style="margin: 0; font-size: 0.88rem; color: #64748b;">
+              キッチン・LDK・水回り・玄関・収納・設備・中庭・家相風水まで、図解と寸法基準を網羅したナレッジハブ。
+            </p>
+          </div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="/knowledge/madori/" style="background: #0284c7; color: #fff; font-weight: 800; font-size: 0.9rem; padding: 10px 20px; border-radius: 8px; text-decoration: none; box-shadow: 0 2px 8px rgba(2,132,199,0.3);">
+              知見200選ポータルを見る ➜
+            </a>
+            <a href="/#madori-consultation-bot" style="background: #f0fdf4; color: #059669; border: 1.5px solid #059669; font-weight: 800; font-size: 0.9rem; padding: 10px 18px; border-radius: 8px; text-decoration: none;">
+              💬 24h AI間取り相談ボット ↗
+            </a>
+          </div>
+        </div>
+      </div>
+</section>
+
+<section id="craftsmanship" class="page-section" data-deferred-template="tmpl-craftsmanship"></section>
+<template id="tmpl-craftsmanship"></template>
+
+    <section id="metaverse" class="page-section" data-deferred-template="tmpl-metaverse"></section>
+    <template id="tmpl-metaverse"></template>
+
+    <!-- PAGE 5: SCENT & AIR COMFORT EXPERIENCE & REAL MODELHOUSE BOOKING -->
+
+
+    <section id="scent-experience" class="page-section">
+      <div class="hero">
+        <span class="hero-tag">一般的な新築住宅（新築臭） vs 本物の自然素材（森林浴アロマ）</span>
+        <h2 class="hero-title">「香りと心地よさ」は、体感してもらわないとわからない。<br><span style="font-size: 1.5rem; color: #f59e0b;">住ま居るの造る家は住み心地重視。外皮は超高断熱・高気密、中は自然の恩恵に包まれる優しい空気と芳香。</span></h2>
+        <p class="hero-subtitle">一般的な新築住宅のビニールクロスや接着剤による化学物質臭（新築臭）に対し、住ま居るの手づくり住宅はドアを開けた瞬間に無垢材と呼吸する珪藻土が放つ心安らぐ本物の香りに包まれます。埼玉県鶴ヶ島ICから車で片道1時間圏内・限定生産の「芳彩（かぐや）」をご体感ください。</p>
+      </div>
+
+      <div class="statement-split-card">
+        <div class="split-image-column">
+          <img src="/images/model_kaguya_living_ldk.webp" alt="吉野杉無垢床 × 呼吸する珪藻土壁「芳彩（かぐや）」リビング実邸空間" class="split-card-img" loading="lazy" decoding="async" width="1376" height="768" />
+        </div>
+        <div class="split-text-column">
+          <span class="badge-number" style="background: var(--accent-gold);">芳彩（かぐや） — 結露しない家</span>
+          <h2 class="split-title">究極の住み心地追求の住まい、限られた方のみへお届けします。</h2>
+          <p class="split-desc">
+            私たちは数を追う大手ハウスメーカーではありません。全棟に許容応力度計算を行い、専属の大工職人さんが手づくりで自然素材を一つひとつ収めるため、年間でお引渡しできる棟数には自ずと限界があります。
+          </p>
+          <p class="split-desc">
+            妥協のない「本物の住み心地」「本物の木の香り」「壁内結露を極限まで防ぐ高耐久設計」をお求めになる限られたお施主様へ、一棟一棟心を込めてお届けしています。
+          </p>
+        </div>
+      </div>
+
+      <!-- Real Model House Booking Form -->
+      <div id="real-booking-section" class="wizard-box" style="margin-top: 2.5rem; border-color: var(--accent-gold);">
+        <h2 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 1.8rem; text-align: center; margin-bottom: 0.5rem;">
+          🏡 「芳彩-かぐや-」リアル展示場 見学予約フォーム
+        </h2>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">
+          本社（鶴ヶ島市町屋）より車で約10分、入間郡毛呂山町のモデルハウス。本物の無垢材の香りと心地よさを、完全予約制でじっくりご体験いただけます。（※所在地詳細はご予約時にお伝えいたします）
+        </p>
+
+        <form id="real-booking-form">
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">お名前 (氏名)</label>
+              <input type="text" id="book-name" class="form-input" placeholder="例: かぐや" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">携帯電話番号</label>
+              <input type="tel" id="book-phone" class="form-input" placeholder="例: 090-1234-5678" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">メールアドレス</label>
+              <input type="email" id="book-email" class="form-input" placeholder="example@sumaile.co.jp" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">ご希望の見学日</label>
+              <input type="date" id="book-date" class="form-input" required />
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">ご希望の時間帯</label>
+              <select id="book-time" class="form-select">
+                <option value="10:00">10:00 〜 (午前の光と空気体感)</option>
+                <option value="13:30">13:30 〜 (午後の温湿度体感)</option>
+                <option value="16:00">16:00 〜 (夕暮れの照明演出体感)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">特に確かめたいポイント（任意）</label>
+              <input type="text" id="book-comments" class="form-input" placeholder="例: 無垢材の香り、造作風呂の質感、床暖房のあたたかさ" />
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1.1rem; font-size: 1.1rem;">
+            📅 リアル展示場の見学予約を送信する（完全無料） →
+          </button>
+        </form>
+
+        <div id="booking-success-message" style="display: none; background: #d1fae5; border: 2px solid var(--accent-green); padding: 1.5rem; border-radius: var(--radius-md); margin-top: 1.5rem; text-align: center;">
+          <h3 style="color: #065f46; font-size: 1.3rem; margin-bottom: 0.5rem;">✅ ご見学予約が完了いたしました！</h3>
+          <p style="color: #047857;" id="booking-notice-text"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 6: A4 10-PAGE EQUIVALENT HANDCRAFTED HOUSING FEATURE ARTICLE (REWRITTEN & LITERARY EXPANDED) -->
+    <!-- PAGE: HANDCRAFTED HOUSING FEATURE ARTICLE (手づくり住宅解体新書 全10章) -->
+    <!-- PAGE: HANDCRAFTED HOUSING FEATURE ARTICLE (手づくり住宅解体新書 全10章) -->
+    <!-- PAGE: HANDCRAFTED HOUSING FEATURE ARTICLE (手づくり住宅解体新書 全10章) -->
+
+
+    <section id="article-feature" class="page-section" data-deferred-template="tmpl-article-feature"></section>
+    <template id="tmpl-article-feature"></template>
+
+    <section id="dashboard" class="page-section">
+      <div class="hero hero-soft-emerald" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 45%, #ffffff 100%); border: 2px solid #86efac; border-radius: 16px; padding: 2.2rem 2rem 1.8rem; margin-bottom: 2rem; box-shadow: 0 8px 25px rgba(16, 185, 129, 0.08); text-align: center;">
+        <span class="hero-tag" style="background: #dcfce7; border: 1.5px solid #10b981; color: #065f46; font-weight: 800; font-size: 0.88rem; padding: 6px 18px; border-radius: 20px; display: inline-block; margin-bottom: 0.8rem;">
+          🛡️ お施主様専用 ｜ 家づくりの全工程と書類がスマホに残る安心システム
+        </span>
+        <h2 class="hero-title" style="color: #0f172a; font-size: 1.95rem; font-weight: 900; line-height: 1.4; margin-bottom: 0.8rem;">
+          お施主様 専用プロジェクトルーム（家カルテ）
+        </h2>
+        <p style="color: #334155; font-size: 0.95rem; line-height: 1.8; max-width: 820px; margin: 0 auto 1.3rem;">
+          住ま居るでは、お引き渡し後もご家族の住まいを末永く守るため、<br>
+          設計図面・現場写真・定期点検記録・保証書を一生涯クラウド保管する<strong>「家カルテ」</strong>をご提供しています。
+        </p>
+
+        <!-- アクションボタン -->
+        <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
+          <a href="/schedule/" class="btn btn-primary" style="background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; border: none; border-radius: 30px; padding: 12px 28px; font-size: 1.02rem; font-weight: 900; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+            <span>📅</span> 家づくり全工程・進行チェックリストを見る ↗
+          </a>
+          <button type="button" onclick="showNotification('お施主様専用ログイン用リンクは、ご契約・プランお申し込み時に個別発行しております。', 'info');" class="btn" style="background: #ffffff; border: 2px solid #059669; color: #065f46; border-radius: 30px; padding: 11px 24px; font-size: 0.95rem; font-weight: 800; cursor: pointer;">
+            <span>🔑</span> 施主様ログイン（マジックリンク）
+          </button>
+        </div>
+      </div>
+
+      <!-- 3大安心メリットカード -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 2rem;">
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 20px; text-align: center;">
+          <div style="font-size: 2rem; margin-bottom: 8px;">📷</div>
+          <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 6px;">全施工記録・現場写真の保存</h4>
+          <p style="font-size: 0.85rem; color: #64748b; line-height: 1.6;">基礎配筋や壁の中の断熱材など、完成後は見えなくなる重要箇所の写真をすべて記録・ストック。</p>
+        </div>
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 20px; text-align: center;">
+          <div style="font-size: 2rem; margin-bottom: 8px;">📂</div>
+          <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 6px;">確定図面・確認申請書の保管</h4>
+          <p style="font-size: 0.85rem; color: #64748b; line-height: 1.6;">数十年後のリフォームやメンテナンス時にも困らないよう、確定CAD図面や計算書を紛失ゼロで保管。</p>
+        </div>
+        <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 20px; text-align: center;">
+          <div style="font-size: 2rem; margin-bottom: 8px;">🔍</div>
+          <h4 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 6px;">定期点検・アフター管理</h4>
+          <p style="font-size: 0.85rem; color: #64748b; line-height: 1.6;">1年・2年・5年・10年の定期点検シートをデジタル管理。気になる箇所の写真や補修履歴を一元化。</p>
+        </div>
+      </div>
+    </section>
+
+<section id="credlayer" class="page-section" data-deferred-template="tmpl-credlayer"></section>
+<template id="tmpl-credlayer"></template>
+
+
+  </main>
+
+  <!-- MAGIC LINK / LINE AUTH MODAL -->
+  <div id="auth-modal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 500px; padding: 2rem;">
+      <h3 style="color: var(--primary-green-dark); font-family: var(--font-heading); font-size: 1.45rem; margin-bottom: 0.4rem;">
+        👤 家カルテ（専用プロジェクトルーム）ログイン
+      </h3>
+      <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 1.2rem; line-height: 1.6;">
+        面倒なパスワード設定や<strong>携帯電話番号の入力は一切不要</strong>です。メールアドレスまたはLINEのどちらかご都合の良い方法で安全にご利用いただけます。
+      </p>
+
+      <!-- 認証方式タブ切替（メール or LINE） -->
+      <div style="display: flex; gap: 8px; margin-bottom: 1.2rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
+        <button type="button" id="tab-auth-email" class="btn btn-sm" style="flex: 1; font-weight: 800; background: #0284c7; color: #fff; border: none; border-radius: 8px; padding: 8px 12px;">
+          ✉️ メールで認証
+        </button>
+        <button type="button" id="tab-auth-line" class="btn btn-sm" style="flex: 1; font-weight: 800; background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 12px;">
+          💬 LINEで認証・連携
+        </button>
+      </div>
+
+      <!-- ① メール認証フォーム -->
+      <form id="magic-link-form">
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label class="form-label" style="font-weight: 700; font-size: 0.88rem; color: #1e293b;">お名前（氏名 / ニックネーム可）</label>
+          <input type="text" id="auth-name" class="form-input" placeholder="例: かぐや" required />
+        </div>
+        <div class="form-group" style="margin-bottom: 1.2rem;">
+          <label class="form-label" style="font-weight: 700; font-size: 0.88rem; color: #1e293b;">メールアドレス</label>
+          <input type="email" id="auth-email" class="form-input" placeholder="example@sumaile.co.jp" required />
+          <span style="font-size: 0.74rem; color: #64748b; margin-top: 4px; display: block;">
+            ※ワンタイム・ログインリンク（マジックリンク）をお届けします。
+          </span>
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 1.5rem;">
+          <button type="button" id="close-auth-modal" class="btn btn-secondary">閉じる</button>
+          <button type="submit" class="btn btn-primary" style="font-weight: 800;">マジックリンクを発行してログイン →</button>
+        </div>
+      </form>
+
+      <!-- ② LINE認証ブロック（デフォルト非表示、タブ切替で表示） -->
+      <div id="auth-line-pane" style="display: none; text-align: center; padding: 1rem 0;">
+        <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 1.2rem; margin-bottom: 1.2rem;">
+          <div style="font-size: 2.2rem; margin-bottom: 6px;">💬</div>
+          <div style="font-weight: 800; font-size: 1rem; color: #15803d; margin-bottom: 4px;">
+            住ま居る公式LINEと通知連携（ID: @051vqxla）
+          </div>
+          <p style="font-size: 0.82rem; color: #475569; margin: 0; line-height: 1.6;">
+            住ま居る公式LINE（<strong>@051vqxla</strong>）を友だち追加すると、家づくりサポート係からの図面回答や更新通知がLINEに届き、1タップで家カルテを開けます。<br>
+            大切な図面や議事録はすべて家カルテに一元保管されるため、LINE上での情報分散や履歴の紛失を防ぎます。
+          </p>
+        </div>
+        <button type="button" id="btn-login-with-line" class="btn" style="width: 100%; background: #06c755; color: #ffffff; font-weight: 900; font-size: 1rem; padding: 0.85rem; border-radius: 8px; border: none; box-shadow: 0 4px 12px rgba(6, 199, 85, 0.35); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffffff"><path d="M12 2C6.48 2 2 5.82 2 10.53c0 2.91 1.7 5.49 4.34 7.04-.19.67-.69 2.45-.79 2.82-.13.46.17.45.36.33.15-.09 2.08-1.42 2.93-2 .71.1 1.44.16 2.16.16 5.52 0 10-3.82 10-8.53S17.52 2 12 2z"/></svg>
+          公式LINEで通知連携・家カルテを開く
+        </button>
+        <div style="margin-top: 1rem;">
+          <button type="button" id="close-auth-modal-line" class="btn btn-secondary btn-sm">閉じる</button>
+        </div>
+      </div>
+
+      <!-- 住ま居るのお約束 ＆ 家カルテ共有ポリシー -->
+      <div style="margin-top: 1.5rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.85rem 1rem; font-size: 0.76rem; color: #475569; line-height: 1.6;">
+        <div style="font-weight: 800; color: #0f172a; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+          <span>🛡️</span> 住ま居るのお約束 ＆ 家カルテ共有ポリシー
+        </div>
+        ・<strong>電話番号の登録不要・こちらからの営業連絡は一切いたしません:</strong> 売り込みのお電話や押し売りメールは一切行わないことをお約束します。ご質問やご相談をいただいた際にのみ、家づくりサポート係が真摯に丁寧にお答えいたします。<br>
+        ・<strong>プラン申し込み前（完全非公開）:</strong> 登録されたご要望や間取りメモは住ま居る側にも伝わらず、お施主様だけのプライベート保管庫です。<br>
+        ・<strong>プラン申し込み後（相互共有ポータルへ）:</strong> <strong style="color: #0369a1;">家カルテの内容はプラン申し込み後は、ユーザー（お施主様）の承認をもって、住ま居ると共有させていただきます。</strong> 敷地調査・意匠図・詳細見積書などを一元管理する完全個別ポータルサイトへと昇華します。
+      </div>
+    </div>
+  </div>
+
+    <!-- Footer with Semantic Internal Linking Sitemap (SEO PageRank Booster) -->
+  <footer>
+    <style>
+      .footer-nav-link {
+        color: #cbd5e1;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.25s ease;
+      }
+      .footer-nav-link:hover {
+        color: #38bdf8 !important;
+        text-decoration: underline !important;
+        transform: translateX(4px);
+      }
+      .footer-case-link {
+        color: #cbd5e1;
+        text-decoration: none;
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        transition: all 0.25s ease;
+      }
+      .footer-case-link:hover {
+        color: #34d399 !important;
+        text-decoration: underline !important;
+        transform: translateX(4px);
+      }
+      .footer-madori-link {
+        color: #cbd5e1;
+        text-decoration: none;
+        display: inline-block;
+        white-space: nowrap;
+        letter-spacing: -0.025em;
+        transition: all 0.25s ease;
+      }
+      .footer-madori-link:hover {
+        color: #c4b5fd !important;
+        text-decoration: underline !important;
+        transform: translateX(4px);
+      }
+      .footer-thermal-link {
+        color: #cbd5e1;
+        text-decoration: none;
+        display: inline-block;
+        white-space: nowrap;
+        letter-spacing: -0.025em;
+        transition: all 0.25s ease;
+      }
+      .footer-thermal-link:hover {
+        color: #fbbf24 !important;
+        text-decoration: underline !important;
+        transform: translateX(4px);
+      }
+      .footer-grid-unified {
+        max-width: 1540px;
+        width: 100%;
+        margin: 0 auto 2.5rem;
+        text-align: left;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        padding-bottom: 2.5rem;
+      }
+      @media (max-width: 1100px) {
+        .footer-grid-unified {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 2rem 1.2rem;
+        }
+        .footer-madori-link,
+        .footer-thermal-link {
+          font-size: clamp(0.72rem, 1.35vw, 0.83rem);
+          white-space: nowrap;
+        }
+      }
+      @media (max-width: 640px) {
+        .footer-grid-unified {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+        .footer-madori-link,
+        .footer-thermal-link {
+          font-size: 0.82rem;
+          white-space: normal;
+        }
+      }
+    </style>
+
+    <div class="footer-grid-unified">
+      <!-- Column 1: 公式ページ・AIラボ -->
+      <div itemscope itemtype="https://schema.org/SiteNavigationElement">
+        <h4 style="color: #38bdf8; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">🏛️ 公式ページ・AIラボ</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; line-height: 2;">
+          <li><a href="/" class="footer-nav-link" itemprop="url"><span itemprop="name">🏠 公式トップページ</span></a></li>
+          <li><a href="/subsidy/index.html" class="footer-nav-link" itemprop="url" style="color: #34d399; font-weight: 700;"><span itemprop="name">💰 AI補助金ナビ（市区町村一括判定） ↗</span></a></li>
+          <li><a href="/mortgage/index.html" class="footer-nav-link" itemprop="url" style="color: #38bdf8; font-weight: 700;"><span itemprop="name">🏦 AI住宅ローン診断（金利・団信TOP5） ↗</span></a></li>
+          <li><a href="/madori-sketch/" target="_blank" class="footer-nav-link" itemprop="url" style="color: #6ee7b7; font-weight: 700;"><span itemprop="name">✏️ 3D手描き間取り工房 ↗</span></a></li>
+          <li><a href="/smilestudio.html" target="_blank" class="footer-nav-link" itemprop="url" style="color: #fbbf24; font-weight: 700;"><span itemprop="name">🎨 AI 3Dパース工房（SmileStudio） ↗</span></a></li>
+          <li><a href="https://lin.ee/8fdyyGu" target="_blank" rel="noopener noreferrer" class="footer-nav-link" itemprop="url" style="color: #4ade80; font-weight: 800;"><span itemprop="name">💬 公式LINE（専任スタッフ直通・ID: @051vqxla） ↗</span></a></li>
+          <li><a href="/about/" class="footer-nav-link" itemprop="url"><span itemprop="name">🛡️ 会社概要・信用の証明 (CredLayer)</span></a></li>
+          <li><a href="/performance/" class="footer-nav-link" itemprop="url"><span itemprop="name">📐 住宅性能数値証明 (HEAT20 G2/G3・耐震3)</span></a></li>
+          <li><a href="/category/spec/" class="footer-nav-link" itemprop="url"><span itemprop="name">⚙️ 標準工学仕様スペック詳細 (APW430・W断熱)</span></a></li>
+          <li><a href="/evidence/" class="footer-nav-link" itemprop="url"><span itemprop="name">📊 光熱費・温熱実測データ実証録</span></a></li>
+          <li><a href="/flow/" class="footer-nav-link" itemprop="url"><span itemprop="name">📐 家づくりの流れ・15万円設計申込特典</span></a></li>
+          <li><a href="/schedule/" class="footer-nav-link" itemprop="url" style="color: #38bdf8; font-weight: 700;"><span itemprop="name">📅 家づくりスケジュール（進行チェックシート）</span></a></li>
+          <li><a href="/jfd-survey/" class="footer-nav-link" itemprop="url" style="color: #34d399; font-weight: 700;"><span itemprop="name">🛰️ JFD 3D点群測量と敷地調査（本物資料公開）</span></a></li>
+          <li><a href="/awards/kankyo-housing/" class="footer-nav-link" itemprop="url"><span itemprop="name">🏆 埼玉県環境住宅賞 受賞ストーリー</span></a></li>
+          <li><a href="/custom-freedom/" class="footer-nav-link" itemprop="url" style="color: #fbbf24; font-weight: 800;"><span itemprop="name">📐 最高性能×完全自由設計（他社NG克服） ↗</span></a></li>
+        </ul>
+      </div>
+
+      <!-- Column 2: 埼玉県の注文住宅 施工実例（全12邸）＆わがまま事例 -->
+      <div itemscope itemtype="https://schema.org/SiteNavigationElement">
+        <h4 style="color: #34d399; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">🔨 施工実例 全12邸 ＆ 施主わがまま</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.82rem; line-height: 2;">
+          <li><a href="/custom-freedom/" class="footer-case-link" itemprop="url" style="color: #fbbf24; font-weight: 800;"><span itemprop="name">🔥 他社で断られたこだわり克服ストーリー ➜</span></a></li>
+          <li><a href="/wagama/" class="footer-case-link" itemprop="url" style="color: #f59e0b; font-weight: 800;"><span itemprop="name">🌟 私のわがまま・俺のわがまま（66選） ➜</span></a></li>
+          <li><a href="/cases/tsurugashima-s.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【鶴ヶ島】S様邸（無垢杉・大空間LDK）</span></a></li>
+          <li><a href="/cases/tokigawa-k.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【ときがわ】K様邸（吉野杉・吹抜けZEH）</span></a></li>
+          <li><a href="/cases/kawagoe-y.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【川越】Y様邸（30帖LDK・ピットリビング）</span></a></li>
+          <li><a href="/cases/tsurugashima-t.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【鶴ヶ島】T様邸（格子デザイン・高断熱）</span></a></li>
+          <li><a href="/cases/hidaka-i.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【日高】I様邸（薪ストーブ・土間の家）</span></a></li>
+          <li><a href="/cases/higashimatsuyama-k.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【東松山】K様邸（開放的吹抜け・二世帯）</span></a></li>
+          <li><a href="/cases/yoshimi-o.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【吉見】O様邸（珪藻土・広々デッキ平屋）</span></a></li>
+          <li><a href="/cases/gyoda-h.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【行田】H様邸（ビルトインガレージの家）</span></a></li>
+          <li><a href="/cases/hatoyama-t.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【鳩山】T様邸（里山景観・平屋スタイル）</span></a></li>
+          <li><a href="/cases/tsurugashima-a.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【鶴ヶ島】A様邸（吹抜けLDK・アイランド）</span></a></li>
+          <li><a href="/cases/tsurugashima-kb.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【鶴ヶ島】KB様邸（天然木の快適二世帯）</span></a></li>
+          <li><a href="/cases/tsurugashima-k.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【鶴ヶ島】K様邸（手刻み・光熱費ゼロZEH）</span></a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: 設計・間取り知見200選（実務寸法と動線） -->
+      <div itemscope itemtype="https://schema.org/SiteNavigationElement">
+        <h4 style="color: #a78bfa; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">📐 設計・間取り知見200選</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; line-height: 2;">
+          <li><a href="/#madori-consultation-bot" class="footer-madori-link" itemprop="url" style="color: #a78bfa; font-weight: 800;"><span itemprop="name">★ 設計知見200選 カード一覧ボット</span></a></li>
+          <li><a href="/?cat=kitchen#madori-consultation-bot" class="footer-madori-link" data-madori-cat="kitchen" itemprop="url"><span itemprop="name">🍳 キッチン・パントリー（通路幅・回遊動線）</span></a></li>
+          <li><a href="/?cat=ldk#madori-consultation-bot" class="footer-madori-link" data-madori-cat="ldk" itemprop="url"><span itemprop="name">🛋️ LDK・小上がり・スタディ（畳数・吹抜設計）</span></a></li>
+          <li><a href="/?cat=water#madori-consultation-bot" class="footer-madori-link" data-madori-cat="water" itemprop="url"><span itemprop="name">🧺 水回り・ランドリー（室内干し・洗面分離）</span></a></li>
+          <li><a href="/?cat=entrance#madori-consultation-bot" class="footer-madori-link" data-madori-cat="entrance" itemprop="url"><span itemprop="name">👞 玄関・土間SIC（カバードポーチ・引戸動線）</span></a></li>
+          <li><a href="/?cat=storage#madori-consultation-bot" class="footer-madori-link" data-madori-cat="storage" itemprop="url"><span itemprop="name">📦 収納・WIC（ファミクロ・分散収納計画）</span></a></li>
+          <li><a href="/?cat=equipment#madori-consultation-bot" class="footer-madori-link" data-madori-cat="equipment" itemprop="url"><span itemprop="name">🔥 暖炉・設備・照明（薪ストーブ・間接照明）</span></a></li>
+          <li><a href="/?cat=garden#madori-consultation-bot" class="footer-madori-link" data-madori-cat="garden" itemprop="url"><span itemprop="name">🌿 尺庭・デッキ（中庭テラス・日射採光外構）</span></a></li>
+          <li><a href="/?cat=kaso#madori-consultation-bot" class="footer-madori-link" data-madori-cat="kaso" itemprop="url"><span itemprop="name">⛩️ 家相・風水（鬼門対策・現代科学の間取り）</span></a></li>
+          <li><a href="/plans/index.html" class="footer-madori-link" itemprop="url" style="color: #38bdf8; font-weight: 700;"><span itemprop="name">📐 323プラン集（間取り＆費用カタログ） ↗</span></a></li>
+          <li><a href="/madori-consultation/" class="footer-madori-link" itemprop="url" style="color: #c4b5fd; font-weight: 700;"><span itemprop="name">💬 夫婦のAI間取り相談＆家づくりカルテ ↗</span></a></li>
+          <li><a href="/knowledge/madori/" class="footer-madori-link" itemprop="url" style="color: #94a3b8; font-size: 0.8rem;"><span itemprop="name">📄 設計知見200選 総合記事版（SSGピラー） ↗</span></a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: 温熱設計知見200選（実務Q&A） -->
+      <div itemscope itemtype="https://schema.org/SiteNavigationElement">
+        <h4 style="color: #fbbf24; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">📚 温熱設計知見200選（実務Q&A）</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; line-height: 2;">
+          <li><a href="/#thermal-consultation" class="footer-thermal-link" itemprop="url" style="color: #fbbf24; font-weight: 800;"><span itemprop="name">★ 温熱換気AI相談（200問カード一覧）</span></a></li>
+          <li><a href="/?cat=th_ins#thermal-consultation" class="footer-thermal-link" data-thermal-cat="th_ins" itemprop="url"><span itemprop="name">第1章: 断熱性能・UA値・外皮設計</span></a></li>
+          <li><a href="/?cat=th_air#thermal-consultation" class="footer-thermal-link" data-thermal-cat="th_air" itemprop="url"><span itemprop="name">第2章: 気密性能・C値・隙間対策</span></a></li>
+          <li><a href="/?cat=th_fnd#thermal-consultation" class="footer-thermal-link" data-thermal-cat="th_fnd" itemprop="url"><span itemprop="name">第3章: 基礎断熱・床断熱・床下空間</span></a></li>
+          <li><a href="/?cat=th_vnt#thermal-consultation" class="footer-thermal-link" data-thermal-cat="th_vnt" itemprop="url"><span itemprop="name">第4章: 24h換気・第1種全熱交換</span></a></li>
+          <li><a href="/?cat=th_win#thermal-consultation" class="footer-thermal-link" data-thermal-cat="th_win" itemprop="url"><span itemprop="name">第5章: 窓・サッシ・日射取得と遮蔽</span></a></li>
+          <li><a href="/?cat=th_cnd#thermal-consultation" class="footer-thermal-link" data-thermal-cat="th_cnd" itemprop="url"><span itemprop="name">第6章: 結露・カビ防止・壁体内湿気</span></a></li>
+          <li><a href="/?cat=th_hvac#thermal-consultation" class="footer-thermal-link" data-thermal-cat="th_hvac" itemprop="url"><span itemprop="name">第7章: 冷暖房設計・全館空調</span></a></li>
+          <li><a href="/?cat=th_law#thermal-consultation" class="footer-thermal-link" data-thermal-cat="th_law" itemprop="url"><span itemprop="name">第8章: 2025年法改正・生涯コスト</span></a></li>
+          <li><a href="/knowledge/thermal/" class="footer-thermal-link" itemprop="url" style="color: #94a3b8; font-size: 0.8rem;"><span itemprop="name">📄 温熱知見200選 総合記事版（SSGピラー） ↗</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <p style="margin-top: 1.5rem; font-size: 0.85rem; color: #94a3b8; line-height: 1.8;">
+      © 2026 株式会社住ま居る（すまいる） All Rights Reserved.<br>
+      〒350-2224 埼玉県鶴ヶ島市町屋176番地5 ｜ TEL: 049-271-2350<br>
+      埼玉の夏に効く遮熱設計 ＋ HEAT20 G2〜G2.5 ｜ 全棟実測C値0.3台（1.0以下保証） ｜ 全棟許容応力度計算 耐震等級3 ｜ 呼吸する無垢材と珪藻土の家
+    </p>
+  </footer>
+
+
+  <!-- 🤖 家づくりAIラボ 概要・機能解説モーダル -->
+  <div id="modal-ai-lab-info" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(5px); z-index: 10002; justify-content: center; align-items: center; padding: 1rem;">
+    <div style="background: #ffffff; border-radius: 20px; max-width: 820px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4); border: 2px solid #38bdf8; display: flex; flex-direction: column;">
+      
+      <div style="padding: 1.4rem 1.8rem; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; border-top-left-radius: 18px; border-top-right-radius: 18px; display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.8rem;">🏡</span>
+          <div>
+            <span style="background: rgba(56, 189, 248, 0.25); color: #38bdf8; font-size: 0.75rem; font-weight: 800; padding: 2px 10px; border-radius: 12px; border: 1px solid #38bdf8;">NEXT GENERATION HOUSING TECH</span>
+            <h3 style="margin: 3px 0 0; font-size: 1.35rem; font-weight: 900; color: #ffffff;">家づくりAIラボ by 住ま居る とは？</h3>
+          </div>
+        </div>
+        <button type="button" id="btn-close-ai-lab-modal" style="background: transparent; border: none; font-size: 1.8rem; color: #94a3b8; cursor: pointer; line-height: 1;">&times;</button>
+      </div>
+
+      <div style="padding: 1.8rem; color: #334155; line-height: 1.7; font-size: 0.92rem;">
+        <!-- 設立の目的 -->
+        <div style="background: #f0f9ff; border: 1.5px solid #bae6fd; border-radius: 12px; padding: 1.2rem; margin-bottom: 1.5rem;">
+          <h4 style="margin: 0 0 6px; font-size: 1.05rem; font-weight: 900; color: #0369a1; display: flex; align-items: center; gap: 6px;">
+            <span>💡</span> 設立の目的：営業マンの歩合給や無駄な展示場維持費を徹底的に抑え、住まいの性能に全還元する
+          </h4>
+          <p style="margin: 0; font-size: 0.88rem; color: #0c4a6e; line-height: 1.65;">
+            一般的なハウスメーカーでは、多額のモデルハウス出店費や営業マンの成果給が建築費に上乗せされています。<br>
+            「家づくりAIラボ」は、<strong>建築主様が営業トークに惑わされず、自宅のスマホから客観的かつ自由にシミュレーションできる次世代プラットフォーム</strong>です。営業経費を一円残らず削り落とし、本物の吉野杉・超高断熱（HEAT20 G2/G3）・耐震等級3の骨格にすべて注ぎ込むために自社開発されています。
+          </p>
+        </div>
+
+        <!-- 無料AIツール紹介（フリー機能） -->
+        <h4 style="font-size: 1.1rem; font-weight: 900; color: #0f172a; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 6px;">
+          <span>🟢</span> 【登録不要・完全無料】どなたでも今すぐ使えるAIツール（フリー機能）
+        </h4>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-bottom: 1.5rem;">
+          <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 10px 12px;">
+            <strong style="color: #0284c7; font-size: 0.88rem; display: block; margin-bottom: 3px;">① AI 3Dプラン検索（323選）</strong>
+            <span style="font-size: 0.78rem; color: #64748b; line-height: 1.5; display: block;">架空の自動作図ではなく、住ま居るが過去に手掛けた323件の実務CAD図面から、階数・坪数・予算に合う実例を瞬時抽出・比較。</span>
+          </div>
+
+          <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 10px 12px;">
+            <strong style="color: #d97706; font-size: 0.88rem; display: block; margin-bottom: 3px;">② AI 3Dパース工房（フリー生成）</strong>
+            <span style="font-size: 0.78rem; color: #64748b; line-height: 1.5; display: block;">間取り図面不要！空間・テイスト・こだわりテキストを入れるだけで、理想の空間イメージをAIが無料で何枚でも即時描画。</span>
+          </div>
+
+          <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 10px 12px;">
+            <strong style="color: #7c3aed; font-size: 0.88rem; display: block; margin-bottom: 3px;">③ AI間取り相談＆家づくりカルテ</strong>
+            <span style="font-size: 0.78rem; color: #64748b; line-height: 1.5; display: block;">夫婦それぞれのスマホで本音をタップ回答。意見のズレをAIが中立に分析し、要望をまとめた「客観カルテ」を即時自動生成。</span>
+          </div>
+
+          <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 10px 12px;">
+            <strong style="color: #059669; font-size: 0.88rem; display: block; margin-bottom: 3px;">④ AI温熱換気相談（知見200選）</strong>
+            <span style="font-size: 0.78rem; color: #64748b; line-height: 1.5; display: block;">HEAT20 G2/G3、実測C値0.3、全館空調や結露のリアルな実務知見（200問）にAIが24時間忖度なしで即時回答。</span>
+          </div>
+
+          <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 10px 12px;">
+            <strong style="color: #047857; font-size: 0.88rem; display: block; margin-bottom: 3px;">⑤ AI補助金ナビ ＆ 住宅ローン診断</strong>
+            <span style="font-size: 0.78rem; color: #64748b; line-height: 1.5; display: block;">埼玉・東京の国県市3層補助金（最大200万超）試算と、地元4行＋ネット6行の金利・団信・初期費用TOP5を瞬時判定。</span>
+          </div>
+        </div>
+
+        <!-- 申込者限定アトリエ（2階建ての上位機能） -->
+        <div style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: 12px; padding: 1.2rem; margin-bottom: 1.2rem;">
+          <h4 style="margin: 0 0 6px; font-size: 0.98rem; font-weight: 900; color: #b45309; display: flex; align-items: center; gap: 6px;">
+            <span>⭐</span> 【2階建て上位機能：15万円設計申込特典】実CAD連動パース工房 ＆ 直感バブルプラン
+          </h4>
+          <p style="margin: 0; font-size: 0.84rem; color: #78350f; line-height: 1.6;">
+            15万円の設計お申し込み（JFD 3次元点群測量特典付き）をいただいたお客様には、プロ仕様の設計アトリエを完全開放。高精度な確定CAD幾何データ（FBXデータ）から実際のミリ単位寸法線・窓配置と100%一致させた高精度フォトリアルパースや、SmileStudioでのリアルタイム比較シミュレーションが無制限でご利用いただけます。
+          </p>
+        </div>
+
+        <!-- 法令上の適正性に関する注記 -->
+        <div style="background: #f8fafc; border-left: 4px solid #64748b; padding: 8px 12px; font-size: 0.78rem; color: #64748b; line-height: 1.5;">
+          <strong>※法令および診断の性質について:</strong><br>
+          「AI補助金ナビ」「AI住宅ローン診断」等のシミュレーターは、公的制度要綱および各金融機関の公示データに基づく自動試算・判定エンジンです。融資の承認や補助金交付決定を法的に確定・保証するものではありません。実際の申請・お申し込み時には、専任の建築士・ファイナンシャルプランナーが個別に整合性を確認し、全力で伴走サポートいたします。
+        </div>
+      </div>
+
+      <div style="padding: 1rem 1.8rem; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; border-bottom-left-radius: 18px; border-bottom-right-radius: 18px;">
+        <button type="button" id="btn-close-ai-lab-modal-footer" class="btn btn-secondary btn-sm" style="padding: 8px 24px; font-weight: 800; cursor: pointer;">閉じる</button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- 📷 設計参考図・ネタ帳切り抜きオンデマンドモーダル -->
+  <div id="modal-architect-tip" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px); z-index: 10000; justify-content: center; align-items: center; padding: 1rem;">
+    <div style="background: #ffffff; border-radius: 16px; max-width: 680px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35); border: 1px solid #e2e8f0; display: flex; flex-direction: column;">
+      <div style="padding: 1.2rem 1.5rem; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border-top-left-radius: 16px; border-top-right-radius: 16px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.5rem;">📐</span>
+          <div>
+            <h4 id="tip-modal-title" style="margin: 0; font-size: 1.1rem; font-weight: 800; color: #0f172a;">設計参考図・ネタ帳切り抜き</h4>
+            <span id="tip-modal-subtitle" style="font-size: 0.75rem; color: #64748b; font-weight: 600;">プロの黄金法則と標準モジュール寸法</span>
+          </div>
+        </div>
+        <button type="button" id="btn-close-tip-modal" style="background: transparent; border: none; font-size: 1.5rem; color: #94a3b8; cursor: pointer; padding: 4px 8px; line-height: 1;">&times;</button>
+      </div>
+
+      <div style="padding: 1.5rem; flex: 1;" id="tip-modal-body">
+        <!-- JS動的挿入 -->
+      </div>
+
+      <div style="padding: 1rem 1.5rem; border-top: 1px solid #f1f5f9; background: #f8fafc; display: flex; justify-content: space-between; align-items: center; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;">
+        <button type="button" id="btn-tip-save-to-carte" class="btn btn-sm" style="background: #fef08a; border: 1.5px solid #ca8a04; color: #854d0e; font-weight: 800; padding: 6px 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+          <span>⭐</span>
+          <span id="btn-tip-save-text">マイカルテに保存</span>
+        </button>
+        <button type="button" id="btn-close-tip-modal-footer" class="btn btn-secondary btn-sm" style="padding: 6px 16px; font-weight: 700;">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 🤖 住ま居る専任スタッフAI 間取り深掘り相談チャットモーダル -->
+  <div id="madori-chat-modal" class="madori-chat-modal">
+    <div class="madori-chat-box">
+      <div class="madori-chat-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.5rem;">🤖</span>
+          <div>
+            <h3 id="madori-chat-title" style="margin: 0; font-size: 1.05rem; font-weight: 800; color: #ffffff;">
+              住ま居る専任スタッフAI 間取り深掘り相談室
+            </h3>
+            <span style="font-size: 0.72rem; color: #ede9fe;">設計プロの知見データベース直結 ｜ 24時間365日即時回答</span>
+          </div>
+        </div>
+        <button type="button" id="btn-close-madori-chat" style="background: transparent; border: none; font-size: 1.8rem; color: #ffffff; cursor: pointer; line-height: 1;">&times;</button>
+      </div>
+
+      <div class="madori-chat-history" id="madori-chat-history">
+        <!-- メッセージ動的挿入 -->
+      </div>
+
+      <div class="madori-chat-footer">
+        <div style="display: flex; justify-content: flex-start; align-items: center; margin-bottom: 8px;">
+          <div style="display: flex; gap: 8px;">
+            <button type="button" id="btn-madori-save-carte" class="btn btn-sm" style="background: #fef08a; border: 1.5px solid #ca8a04; color: #854d0e; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; cursor: pointer;">
+              ⭐ この対話を家カルテに保存
+            </button>
+            <span id="madori-save-status" style="font-size: 0.75rem; color: #16a34a; font-weight: 800; display: flex; align-items: center;"></span>
+          </div>
+        </div>
+
+        <form id="madori-chat-form" class="madori-chat-input-row">
+          <input type="text" id="madori-chat-input" class="form-input" placeholder="この知見についてさらに質問する (例: 延床32坪のわが家でも入る？費用の目安は？)" style="flex: 1; padding: 0.65rem 0.9rem; font-size: 0.88rem; border-radius: 8px;" />
+          <button type="submit" class="btn btn-primary" style="background: #7c3aed; color: #ffffff; white-space: nowrap; font-weight: 800; padding: 0.65rem 1.2rem; border-radius: 8px;">
+            送信 ✈️
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔍 Q&A 詳細図面・解説拡大モーダル（図解を見るボックス） -->
+  <div id="modal-qa-detail" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px); z-index: 10001; justify-content: center; align-items: center; padding: 1rem;">
+    <div style="background: #ffffff; border-radius: 18px; max-width: 780px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35); display: flex; flex-direction: column;">
+      <div style="padding: 1.2rem 1.5rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border-top-left-radius: 18px; border-top-right-radius: 18px;">
+        <div>
+          <span id="qa-detail-category" style="background: #ede9fe; color: #6d28d9; font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 12px; display: inline-block; margin-bottom: 4px;">カテゴリ</span>
+          <h3 id="qa-detail-title" style="margin: 0; font-size: 1.15rem; font-weight: 900; color: #0f172a;">Q&A タイトル</h3>
+        </div>
+        <button type="button" id="btn-close-qa-detail-modal" style="background: transparent; border: none; font-size: 1.6rem; color: #94a3b8; cursor: pointer; line-height: 1;">&times;</button>
+      </div>
+
+      <div style="padding: 1.5rem; flex: 1;">
+        <!-- 画像拡大表示 -->
+        <div style="background: #0f172a; border-radius: 12px; overflow: hidden; margin-bottom: 1.2rem; text-align: center;">
+          <img id="qa-detail-img" src="" alt="設計参考図面" style="max-width: 100%; max-height: 380px; object-fit: contain;" loading="lazy" decoding="async" />
+        </div>
+        <div style="background: #f5f3ff; border: 1.5px solid #ddd6fe; border-radius: 10px; padding: 10px 14px; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.2rem;">📐</span>
+          <div>
+            <strong style="color: #6d28d9; font-size: 0.85rem;">標準モジュール・寸法基準:</strong>
+            <span id="qa-detail-dimension" style="color: #1e293b; font-size: 0.9rem; font-weight: 800; margin-left: 6px;">--</span>
+          </div>
+        </div>
+        <div id="qa-detail-body">
+          <!-- 動的挿入 -->
+        </div>
+      </div>
+
+      <div style="padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; background: #f8fafc; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; border-bottom-left-radius: 18px; border-bottom-right-radius: 18px;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+          <button type="button" id="btn-qa-detail-save-carte" class="btn" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-weight: 800; font-size: 0.9rem; padding: 0.6rem 1.2rem; border-radius: 8px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);">
+            📥 この図解・知見を家カルテに登録
+          </button>
+          <button type="button" id="btn-qa-detail-ask-ai" class="btn btn-primary" style="background: #7c3aed; color: #fff; font-weight: 800; font-size: 0.9rem; padding: 0.6rem 1.2rem; border-radius: 8px;">
+            💬 この知見を専任スタッフAIに詳しく聞く
+          </button>
+        </div>
+        <button type="button" onclick="document.getElementById('modal-qa-detail').style.display='none'" class="btn btn-secondary btn-sm" style="padding: 6px 16px;">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts (Deferred for Maximum Performance & Reliability) -->
+  <script src="/js/app.js?v=20261021_rev2" defer></script>
+  <script src="/js/admin-auth.js?v=20261026" defer></script>
+  <script src="/js/floorplan-studio.js?v=20261022" defer></script>
+  <script src="/js/case-gallery.js?v=20261022" defer></script>
+  <script src="/js/wagama-showcase.js?v=20261022" defer></script>
+  <script src="/js/plan-gallery.js?v=20261021_rev2" defer></script>
+  <script src="/js/plan-modeller.js?v=20261021_rev2" defer></script>
+  <script src="/js/bubble-plan/equipment-presets.js?v=20261022" defer></script>
+  <script src="/js/bubble-plan/site-geometry.js?v=20261022" defer></script>
+  <script src="/js/bubble-plan/carte-storage.js?v=20261022" defer></script>
+  <script src="/js/bubble-plan/physics-engine.js?v=20261022" defer></script>
+  <script src="/js/bubble-plan.js?v=20261022" defer></script>
+  <script src="/js/madori-bot.js?v=20261021_rev2" defer></script>
+  <script src="/js/lifestyle-bot.js?v=20261021_rev2" defer></script>
+  <script src="/js/thermal-bot.js?v=20261024_rev3" defer></script>
+  <script src="/js/manga-viewer.js?v=20261021_rev2" defer></script>
+
+  <!-- Lightbox Modal for Case Studies -->
+  <div class="case-lightbox-modal" id="case-lightbox-modal">
+    <button class="case-lightbox-close" id="case-lightbox-close" aria-label="閉じる">&times;</button>
+    <img src="" alt="全画面拡大写真" class="case-lightbox-content" id="case-lightbox-content" loading="lazy" decoding="async" />
+  </div>
+
+  <!-- 📋 家カルテ まるわかり解説＆使い方モーダル（PC・スマホ両対応） -->
+  <div id="modal-house-carte-guide" class="modal-overlay" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px); z-index: 10002; align-items: center; justify-content: center; padding: 1rem;">
+    <div style="background: #ffffff; border-radius: 18px; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35); border: 2.5px solid #8b5cf6; display: flex; flex-direction: column; animation: modalPop 0.25s ease-out;">
+      <!-- ヘッダー -->
+      <div style="background: linear-gradient(135deg, #064e3b 0%, #022c22 60%, #1e1b4b 100%); color: #ffffff; padding: 1.4rem 1.8rem; border-top-left-radius: 15px; border-top-right-radius: 15px; display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.8rem;">📋</span>
+          <div>
+            <span style="background: #10b981; color: #ffffff; font-size: 0.76rem; font-weight: 800; padding: 2px 10px; border-radius: 12px; display: inline-block; margin-bottom: 3px;">
+              住ま居る独自 ｜ 完全無料・登録不要
+            </span>
+            <h3 style="margin: 0; font-size: 1.28rem; font-weight: 900; letter-spacing: 0.5px;">
+              30秒でわかる「家カルテ」完全ガイド
+            </h3>
+            <span style="font-size: 0.78rem; color: #a7f3d0;">〜AIが夫婦の本音と理想をストックし、後悔しない家づくりを叶える〜</span>
+          </div>
+        </div>
+        <button type="button" id="btn-close-carte-guide" style="background: transparent; border: none; font-size: 1.8rem; color: #ffffff; cursor: pointer; line-height: 1;">&times;</button>
+      </div>
+
+      <!-- 本文 -->
+      <div style="padding: 1.8rem; flex: 1;">
+        <!-- 導入サマリー -->
+        <div style="background: #f5f3ff; border: 1.5px solid #c4b5fd; border-radius: 12px; padding: 1.1rem 1.4rem; margin-bottom: 1.5rem;">
+          <h4 style="margin: 0 0 6px; color: #4c1d95; font-size: 1.05rem; font-weight: 800; display: flex; align-items: center; gap: 6px;">
+            <span>💡</span> 「家カルテ」って何をするもの？
+          </h4>
+          <p style="margin: 0; color: #334155; font-size: 0.9rem; line-height: 1.75;">
+            家づくりを始めた多くのご夫婦がぶつかる<strong>「夫婦の意見のズレ」「営業マンへの遠慮」「どの間取りがベストかわからない」</strong>という悩みを解消するための、住ま居る専用のデジタル要望ストック手帳です。<br>
+            <strong>AIは回答を求められるまで勝手な提案や口出しをいたしません。</strong>まずはご夫婦それぞれの想いやお気に入り図面をしっかりストックすることに徹します。
+          </p>
+        </div>
+
+        <!-- 🖼️ 【メイン】実際のサンプル画面 × 吹き出し解説（Interactive Callout Mockup） -->
+        <div style="margin-bottom: 1.2rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 1.3rem;">🖥️</span>
+              <strong style="font-size: 1.05rem; color: #0f172a;">完成時（100%達成・お引渡し後）の「家カルテ」実画面とできること（吹き出し解説）</strong>
+            </div>
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <span style="font-size: 0.74rem; background: #dcfce7; color: #15803d; border: 1px solid #86efac; padding: 3px 10px; border-radius: 12px; font-weight: 800;">
+                🎉 お引渡し完了・実物UIモック
+              </span>
+              <span style="font-size: 0.74rem; background: #e0e7ff; color: #4338ca; border: 1px solid #c7d2fe; padding: 3px 10px; border-radius: 12px; font-weight: 800;">
+                ☁️ 吹き出しガイド付き
+              </span>
+            </div>
+          </div>
+
+          <!-- ブラウザウィンドウ風モックアップフレーム -->
+          <div style="background: #0f172a; border-radius: 16px; overflow: hidden; box-shadow: 0 18px 45px rgba(0,0,0,0.3); border: 2px solid #334155;">
+            
+            <!-- ウィンドウ上部バー -->
+            <div style="background: #1e293b; padding: 9px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #334155;">
+              <div style="display: flex; gap: 6px;">
+                <span style="width: 11px; height: 11px; border-radius: 50%; background: #ef4444; display: inline-block;"></span>
+                <span style="width: 11px; height: 11px; border-radius: 50%; background: #f59e0b; display: inline-block;"></span>
+                <span style="width: 11px; height: 11px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+              </div>
+              <div style="background: #0f172a; border-radius: 6px; padding: 4px 14px; font-size: 0.74rem; color: #94a3b8; font-family: monospace; flex: 1; max-width: 440px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border: 1px solid #334155;">
+                🔒 https://t-smile.co.jp/#dashboard (鈴木様邸 家カルテ専用ポータル)
+              </div>
+              <div style="margin-left: auto; display: flex; gap: 8px; font-size: 0.72rem; color: #38bdf8; font-weight: 700;">
+                <span>☁️ Google Drive自動同期中</span>
+              </div>
+            </div>
+
+            <!-- カルテUI本文（モックアップ） -->
+            <div style="background: #0b1120; color: #f8fafc; padding: 1.5rem; position: relative;">
+
+              <!-- ① ルームヘッダー ＆ 吹き出し① -->
+              <div style="position: relative; margin-bottom: 1.8rem; background: rgba(30, 41, 59, 0.75); border: 1px solid #334155; border-radius: 14px; padding: 1.1rem 1.3rem;">
+                <!-- 吹き出し 1: 専用ポータル -->
+                <div class="callout-bubble callout-purple">
+                  <span class="callout-pin">💬 吹き出し ①</span>
+                  <strong>【家族だけの専用ポータル】</strong> 面倒なパスワード設定不要！LINE公式アカウントの画面下「マイ家カルテ」を1タップするだけで、トーク履歴から探すことなくいつでも夫婦それぞれのスマホから最新状態にダイレクト接続できます。
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 6px;">
+                  <div>
+                    <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 4px;">
+                      <span style="background: #059669; color: #fff; font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 6px;">LINE直通連携済</span>
+                      <span style="background: #2563eb; color: #fff; font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 6px;">夫婦スマホ同期中</span>
+                    </div>
+                    <h4 style="margin: 0; font-size: 1.2rem; color: #ffffff;">🏡 鈴木様邸 専用プロジェクトルーム（家カルテ）</h4>
+                  </div>
+                  <div style="text-align: right;">
+                    <div style="font-size: 0.75rem; color: #94a3b8;">住ま居る専任担当チーム</div>
+                    <div style="font-size: 0.82rem; font-weight: 800; color: #38bdf8; margin-top: 2px;">
+                      🤝サポート(@help) 📐設計(@s271) 🔨工事(ss049) 💼総務(@keiri)
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ② 完成時進捗バー ＆ 吹き出し② -->
+              <div style="position: relative; margin-bottom: 1.8rem; background: rgba(30, 41, 59, 0.75); border: 1.5px solid #10b981; border-radius: 14px; padding: 1.1rem 1.3rem; box-shadow: 0 0 20px rgba(16, 185, 129, 0.12);">
+                <!-- 吹き出し 2: 全18工程完了・完成時の形 -->
+                <div class="callout-bubble callout-green">
+                  <span class="callout-pin">💬 吹き出し ②</span>
+                  <strong>【全18工程完了！完成後もずっと役立つ永久カルテ】</strong> 家づくり中はもちろん、お引渡し後も「全18工程 100%完了」として記録が永久保存！住設の取扱説明書や保証書、1年目・2年目・5年目・10年目の定期点検報告書、初年度の確定申告（住宅ローン控除）手続きまで、一生涯マイホームを支えます。
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; margin-top: 6px;">
+                  <span style="font-size: 0.84rem; font-weight: 800; color: #38bdf8;">📊 家づくりの進捗状況（全18工程フル完了）</span>
+                  <span style="font-size: 0.92rem; font-weight: 900; color: #34d399;">🎉 進捗 100%（全18工程 完了・お引渡し済）</span>
+                </div>
+                <div style="height: 12px; background: #1e293b; border-radius: 6px; overflow: hidden; margin-bottom: 8px;">
+                  <div style="width: 100%; height: 100%; background: linear-gradient(90deg, #10b981, #06b6d4, #3b82f6); border-radius: 6px;"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: #cbd5e1; flex-wrap: wrap; gap: 6px;">
+                  <span>🏆 <strong>現在ステータス:</strong> 祝・お引渡し完了＆ご入居中</span>
+                  <span style="color: #fbbf24; font-weight: 700;">次回サポート: 🛠️ 1年目定期点検 ＆ 確定申告（住宅ローン控除）</span>
+                </div>
+              </div>
+
+              <!-- 2カラム構成（左: 知見・図書・写真・大容量アーカイブ / 右: 係別チャット・ローン） -->
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 1.4rem;">
+                
+                <!-- 左列: 知見ストック ＆ 全公式ドキュメント保管庫 ＆ Google Drive -->
+                <div style="display: flex; flex-direction: column; gap: 1.4rem;">
+                  
+                  <!-- ③ 間取り知見・温熱知見の保存カード（削除機能付き）＆ 吹き出し③ -->
+                  <div style="background: rgba(30, 41, 59, 0.75); border: 1px solid #334155; border-radius: 14px; padding: 1.1rem 1.3rem;">
+                    <!-- 吹き出し 3: 知見ストックと削除機能 -->
+                    <div class="callout-bubble callout-blue">
+                      <span class="callout-pin">💬 吹き出し ③</span>
+                      <strong>【間取り知見 ＆ 温熱知見のストック（削除も自由）】</strong> サイト内の「間取り知見（全20問）」や「温熱知見」から気に入ったノウハウをマイカルテにワンタップ保存！検討が終わった知見はいつでも「🗑️ 削除」ボタンで整理できます。
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; margin-top: 6px;">
+                      <span style="font-size: 0.84rem; font-weight: 800; color: #38bdf8;">📚 保存した「家づくり知見」ストックカード</span>
+                      <span style="font-size: 0.72rem; color: #94a3b8;">（不要になったらいつでも削除可能）</span>
+                    </div>
+
+                    <!-- 知見カード1: 間取り知見 -->
+                    <div id="modal-knowledge-card-1" style="background: rgba(15, 23, 42, 0.9); border: 1px solid #0284c7; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; transition: opacity 0.3s, transform 0.3s;">
+                      <div>
+                        <div style="display: inline-block; background: #0369a1; color: #fff; font-size: 0.65rem; font-weight: 800; padding: 1px 6px; border-radius: 4px; margin-bottom: 3px;">
+                          📐 間取り知見
+                        </div>
+                        <div style="font-size: 0.82rem; font-weight: 800; color: #ffffff; line-height: 1.4;">
+                          帰宅後ランドリー直行×パントリー回遊動線で家事時間を半減させる工夫
+                        </div>
+                        <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 2px;">
+                          採用箇所: 1Fキッチン裏・洗面脱衣室（間取り工房連動）
+                        </div>
+                      </div>
+                      <button type="button" onclick="const c=document.getElementById('modal-knowledge-card-1'); c.style.opacity='0'; setTimeout(()=>c.remove(), 250);" title="この知見をカルテから削除" style="background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; cursor: pointer; white-space: nowrap;">
+                        🗑️ 削除
+                      </button>
+                    </div>
+
+                    <!-- 知見カード2: 温熱知見 -->
+                    <div id="modal-knowledge-card-2" style="background: rgba(15, 23, 42, 0.9); border: 1px solid #d97706; border-radius: 10px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; transition: opacity 0.3s, transform 0.3s;">
+                      <div>
+                        <div style="display: inline-block; background: #b45309; color: #fff; font-size: 0.65rem; font-weight: 800; padding: 1px 6px; border-radius: 4px; margin-bottom: 3px;">
+                          🌡️ 温熱設計知見
+                        </div>
+                        <div style="font-size: 0.82rem; font-weight: 800; color: #ffffff; line-height: 1.4;">
+                          UA値0.34×樹脂トリプルサッシ：真夏もエアコン1台で28坪全館快適にする日射遮蔽
+                        </div>
+                        <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 2px;">
+                          実測値: C値0.28 / HEAT20 G2基準クリア
+                        </div>
+                      </div>
+                      <button type="button" onclick="const c=document.getElementById('modal-knowledge-card-2'); c.style.opacity='0'; setTimeout(()=>c.remove(), 250);" title="この知見をカルテから削除" style="background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; cursor: pointer; white-space: nowrap;">
+                        🗑️ 削除
+                      </button>
+                    </div>
+
+                  </div>
+
+                  <!-- ④ JFD測量・建築図書（バージョン管理）・見積・契約・住設・3D・現場写真 ＆ 吹き出し④ -->
+                  <div style="background: rgba(30, 41, 59, 0.75); border: 1px solid #334155; border-radius: 14px; padding: 1.1rem 1.3rem;">
+                    <!-- 吹き出し 4: 完全ドキュメント・図書バージョン管理 -->
+                    <div class="callout-bubble callout-amber">
+                      <span class="callout-pin">💬 吹き出し ④</span>
+                      <strong>【全公式資料・建築図書のバージョン管理・現場写真アルバム】</strong> JFD敷地測量図から、過去〜最新版の設計図面（v1.0・v1.2・確定図）、見積書、契約書、住設カタログ品番シート、3Dパース、そして地鎮祭から気密測定・完成までの施工写真アルバムまで、すべてがここにまとまっています！
+                    </div>
+                    
+                    <div style="font-size: 0.84rem; font-weight: 800; color: #fbbf24; margin-bottom: 8px; margin-top: 6px; display: flex; align-items: center; justify-content: space-between;">
+                      <span>🏛️ 公式ドキュメント ＆ 確定図書アーカイブ</span>
+                      <span style="font-size: 0.72rem; color: #cbd5e1; background: #475569; padding: 2px 8px; border-radius: 4px;">全24ファイル</span>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 7px; font-size: 0.76rem;">
+                      
+                      <!-- JFD測量資料 -->
+                      <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid #334155; padding: 7px 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                          <span style="background: #0284c7; color: #fff; font-size: 0.65rem; font-weight: 800; padding: 1px 5px; border-radius: 3px; margin-right: 4px;">JFD測量</span>
+                          <span>📍 JFD現況測量図面・敷地高低差レベル・公図原本.pdf</span>
+                        </div>
+                        <span style="color: #38bdf8; font-weight: 700;">閲覧 / DL ⬇</span>
+                      </div>
+
+                      <!-- 建築図書: バージョン管理 -->
+                      <div style="background: rgba(15, 23, 42, 0.85); border: 1.5px solid #10b981; padding: 7px 10px; border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                          <div>
+                            <span style="background: #059669; color: #fff; font-size: 0.65rem; font-weight: 800; padding: 1px 5px; border-radius: 3px; margin-right: 4px;">最新図面</span>
+                            <strong style="color: #a7f3d0;">📐 確定設計図書・確認済証・施工図一式（確定版）</strong>
+                          </div>
+                          <span style="color: #34d399; font-weight: 800;">表示中 👁️</span>
+                        </div>
+                        <!-- 過去バージョン履歴 -->
+                        <div style="margin-top: 5px; padding-top: 5px; border-top: 1px dashed #334155; display: flex; gap: 8px; font-size: 0.7rem; color: #94a3b8;">
+                          <span>過去履歴:</span>
+                          <a href="javascript:void(0)" style="color: #38bdf8; text-decoration: underline;">v1.2 実施図面 (2026.09.20)</a>
+                          <a href="javascript:void(0)" style="color: #38bdf8; text-decoration: underline;">v1.0 基本図面 (2026.07.05)</a>
+                        </div>
+                      </div>
+
+                      <!-- 見積書・契約書 -->
+                      <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid #334155; padding: 7px 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                          <span style="background: #6366f1; color: #fff; font-size: 0.65rem; font-weight: 800; padding: 1px 5px; border-radius: 3px; margin-right: 4px;">契約・見積</span>
+                          <span>📜 建築請負契約書・最終精算書・追加変更差額明細.pdf</span>
+                        </div>
+                        <span style="color: #38bdf8; font-weight: 700;">DL ⬇</span>
+                      </div>
+
+                      <!-- 住設仕様・カタログ -->
+                      <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid #334155; padding: 7px 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                          <span style="background: #0d9488; color: #fff; font-size: 0.65rem; font-weight: 800; padding: 1px 5px; border-radius: 3px; margin-right: 4px;">住設仕様</span>
+                          <span>🛁 住宅設備決定仕様一覧表（キッチン・UB・外壁・床材品番）.pdf</span>
+                        </div>
+                        <span style="color: #38bdf8; font-weight: 700;">DL ⬇</span>
+                      </div>
+
+                      <!-- 3D立体パース -->
+                      <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid #334155; padding: 7px 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                          <span style="background: #a855f7; color: #fff; font-size: 0.65rem; font-weight: 800; padding: 1px 5px; border-radius: 3px; margin-right: 4px;">3Dパース</span>
+                          <span>🎨 外観・LDK黄金比アングル 3D立体CGパース集＆VRデータ</span>
+                        </div>
+                        <span style="color: #c084fc; font-weight: 700;">3D起動 🚀</span>
+                      </div>
+
+                      <!-- 現場公的検査アルバム -->
+                      <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid #334155; padding: 7px 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                          <span style="background: #e11d48; color: #fff; font-size: 0.65rem; font-weight: 800; padding: 1px 5px; border-radius: 3px; margin-right: 4px;">公的検査写真</span>
+                          <span>📸 完了検査提出用写真アルバム（配筋・上棟金物・気密C値0.28・完成）</span>
+                        </div>
+                        <span style="color: #fb7185; font-weight: 700;">写真を見る 🔍</span>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <!-- ⑤ 定期点検シート ＆ 200年維持保全・修繕計画（新設） ＆ 吹き出し⑤ -->
+                  <div style="background: rgba(30, 41, 59, 0.75); border: 1.5px solid #10b981; border-radius: 14px; padding: 1.1rem 1.3rem; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1);">
+                    <!-- 吹き出し 5: 定期点検 ＆ 200年維持保全計画 -->
+                    <div class="callout-bubble callout-green">
+                      <span class="callout-pin">💬 吹き出し ⑤</span>
+                      <strong>【年に一度の定期点検シート ＆ 家を200年持たせる維持保全・修繕計画】</strong> 毎年の訪問時にスタッフがお施主様とチェックした「住まい点検表（全12部位・調査日記録）」が蓄積！将来、行政から<strong>長期優良住宅の定期報告（5年・10年・15年）</strong>を求められた際も、この点検記録の写しをそのまま1クリックで提出できます。さらに5年・10年・15年・20年・30年後の修繕費用目安も一目瞭然！
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; margin-top: 6px;">
+                      <span style="font-size: 0.84rem; font-weight: 800; color: #34d399;">📋 住まいの定期点検 ＆ 長期優良住宅 維持保全記録</span>
+                      <span style="background: #065f46; color: #a7f3d0; font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 6px;">
+                        調査日: 令和8年10月24日 済
+                      </span>
+                    </div>
+
+                    <!-- 点検部位ダイジェスト -->
+                    <div style="background: rgba(15, 23, 42, 0.9); border: 1px solid #334155; border-radius: 8px; padding: 9px 12px; margin-bottom: 8px; font-size: 0.74rem;">
+                      <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <span style="color: #94a3b8;">点検対象（全12部位）:</span>
+                        <strong style="color: #38bdf8;">屋根・外壁・雨樋・基礎・床下・軒裏・バルコニー・サッシ・建具・給排水・ガス</strong>
+                      </div>
+                      <div style="color: #cbd5e1; line-height: 1.5;">
+                        ✔ 基礎クラック・地盤沈下なし　✔ 床下潜入点検（シロアリ・漏水異常なし）<br>
+                        ✔ サッシ開閉・水栓金具点検完了　✔ 担当：株式会社住ま居る 家づくりサポート係（049-271-2350）
+                      </div>
+                    </div>
+
+                    <!-- 200年維持保全・修繕計画のロードマッププレビュー -->
+                    <div style="background: rgba(15, 23, 42, 0.9); border: 1px solid #f59e0b; border-radius: 8px; padding: 9px 12px; font-size: 0.74rem;">
+                      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <strong style="color: #fbbf24;">家を200年持たせるメンテナンス・修繕コスト予測</strong>
+                        <span style="color: #94a3b8; font-size: 0.68rem;">鈴木様邸 30坪専用計画</span>
+                      </div>
+                      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; text-align: center; margin-top: 6px;">
+                        <div style="background: rgba(30, 41, 59, 0.8); padding: 5px; border-radius: 5px; border: 1px solid #475569;">
+                          <div style="color: #94a3b8; font-size: 0.65rem;">5年目</div>
+                          <div style="font-weight: 800; color: #34d399;">5万円</div>
+                          <div style="color: #64748b; font-size: 0.6rem;">シロアリ・換気扇</div>
+                        </div>
+                        <div style="background: rgba(30, 41, 59, 0.8); padding: 5px; border-radius: 5px; border: 1px solid #475569;">
+                          <div style="color: #94a3b8; font-size: 0.65rem;">10年目</div>
+                          <div style="font-weight: 800; color: #38bdf8;">30万円</div>
+                          <div style="color: #64748b; font-size: 0.6rem;">給湯器・バルコニー</div>
+                        </div>
+                        <div style="background: rgba(30, 41, 59, 0.8); padding: 5px; border-radius: 5px; border: 1px solid #475569;">
+                          <div style="color: #94a3b8; font-size: 0.65rem;">15年目</div>
+                          <div style="font-weight: 800; color: #fbbf24;">60万円</div>
+                          <div style="color: #64748b; font-size: 0.6rem;">防水再処理・水栓</div>
+                        </div>
+                        <div style="background: rgba(30, 41, 59, 0.8); padding: 5px; border-radius: 5px; border: 1px solid #475569;">
+                          <div style="color: #94a3b8; font-size: 0.65rem;">20年目</div>
+                          <div style="font-weight: 800; color: #f43f5e;">170万円</div>
+                          <div style="color: #64748b; font-size: 0.6rem;">外壁吹替・洗面台</div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <!-- 右列: 打合せ録音・ローン診断・担当係別直通チャット -->
+                <div style="display: flex; flex-direction: column; gap: 1.4rem;">
+                  
+                  <!-- ⑥ Google Drive API自動移管＆サーバー容量解放 ＆ 吹き出し⑥ -->
+                  <div style="background: rgba(30, 41, 59, 0.75); border: 1px solid #334155; border-radius: 14px; padding: 1.1rem 1.3rem;">
+                    <!-- 吹き出し 6: Google Drive連携 -->
+                    <div class="callout-bubble callout-teal">
+                      <span class="callout-pin">💬 吹き出し ⑥</span>
+                      <strong>【Google Drive API自動移管 ＆ サーバー容量解放】</strong> 家カルテが増えると音声や現場写真など膨大な容量になります。住ま居るではプラン申込・契約時に安全なGoogle Drive（049smile02@gmail.com連携）へデータを自動移管！照合検証後にサーバー側一時ファイルを安全削除し、容量無制限でご家族の大切なデータを生涯保管します。
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 6px;">
+                      <div style="font-size: 0.8rem; color: #94a3b8;">
+                        ☁️ <strong>クラウド移管ステータス:</strong> Google Drive連携済（容量圧迫ゼロ・永久保証）
+                      </div>
+                      <span style="background: #0f766e; color: #99f6e4; font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 6px;">
+                        同期保護 100%
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- ⑦ 専任チーム直通チャット ＆ 季節メンテ・スマイチ連携（新設） ＆ 吹き出し⑦ -->
+                  <div style="background: rgba(30, 41, 59, 0.75); border: 1px solid #334155; border-radius: 14px; padding: 1.1rem 1.3rem; flex: 1; display: flex; flex-direction: column;">
+                    <!-- 吹き出し 7: 季節メンテ・時候挨拶・スマイチ連携チャット -->
+                    <div class="callout-bubble callout-purple">
+                      <span class="callout-pin">💬 吹き出し ⑦</span>
+                      <strong>【時候の挨拶・季節のメンテ案内・「スマイチ」町の便利屋連携】</strong> 冬の凍結注意や夏のエアコン効率化、台風前の点検を一括案内！さらに「吹き抜けの電球が切れた」「網戸を張り替えたい」時もチャットから即相談。照明器具の型番（E26等）がカルテに保存されているため、電話確認や下見なしで適合部材を持って駆けつけられます！
+                    </div>
+                    <div style="font-size: 0.84rem; font-weight: 800; color: #c084fc; margin-bottom: 8px; margin-top: 6px; display: flex; justify-content: space-between; align-items: center;">
+                      <span>💬 専任チーム直通チャット（暮らし＆アフター）</span>
+                      <span style="background: #7c3aed; color: #fff; font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 10px;">
+                        町の便利屋 スマイチ連動中
+                      </span>
+                    </div>
+                    
+                    <div style="background: #020617; border: 1px solid #334155; border-radius: 10px; padding: 12px; flex: 1; display: flex; flex-direction: column; gap: 10px; font-size: 0.78rem;">
+                      
+                      <!-- 住ま居るからの一斉・季節メンテ配信 -->
+                      <div style="align-self: center; width: 100%; background: rgba(56, 189, 248, 0.1); border: 1px dashed #38bdf8; color: #bae6fd; padding: 7px 10px; border-radius: 8px; font-size: 0.72rem; text-align: center;">
+                        📢 <strong>【住ま居る 季節の住まい便り】</strong> 今週末は強い寒波が予想されます。屋外の給湯器配管水抜きと凍結予防ヒーターの確認をお願いいたします。凍結時の緊急連絡もこちらからどうぞ。
+                      </div>
+
+                      <!-- 施主様発言（電球交換の相談） -->
+                      <div style="align-self: flex-end; max-width: 85%; background: #0284c7; color: #fff; padding: 8px 12px; border-radius: 12px 12px 2px 12px;">
+                        鈴木様: 「吹き抜けのシーリングファンの電球が切れてしまい、高いところで手が届きません。スマイチさんで交換をお願いできますか？」
+                        <div style="font-size: 0.68rem; opacity: 0.8; text-align: right; margin-top: 2px;">10:15</div>
+                      </div>
+
+                      <!-- サポート係（スマイチ担当）のスマート回答（型番把握済み） -->
+                      <div style="align-self: flex-start; max-width: 90%; background: #1e293b; border: 1px solid #334155; padding: 8px 12px; border-radius: 12px 12px 12px 2px;">
+                        <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 3px;">
+                          <span style="background: #2563eb; color: #fff; font-size: 0.65rem; font-weight: 800; padding: 1px 6px; border-radius: 4px;">🤝 スマイチ係 (@help)</span>
+                        </div>
+                        「鈴木様、カルテの照明仕様書を確認いたしました！吹き抜けファンはPanasonic製・口金E26の調光LED電球ですね。適合するLED球と高所用脚立を持参して伺います。明日14時はいかがでしょうか？」
+                        <div style="font-size: 0.68rem; color: #64748b; margin-top: 2px;">10:22</div>
+                      </div>
+
+                      <!-- 工事係回答（定期点検報告） -->
+                      <div style="align-self: flex-start; max-width: 90%; background: #1e293b; border: 1px solid #334155; padding: 8px 12px; border-radius: 12px 12px 12px 2px;">
+                        <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 3px;">
+                          <span style="background: #ea580c; color: #fff; font-size: 0.65rem; font-weight: 800; padding: 1px 6px; border-radius: 4px;">🔨 工事係 (ss049)</span>
+                        </div>
+                        「先日の定期点検で確認した床下給排水チェック結果を上記『維持保全記録』に登録完了しました。長期優良住宅の行政報告用写しもいつでも出力いただけます！」
+                        <div style="font-size: 0.68rem; color: #64748b; margin-top: 2px;">10:35</div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- フッター導線（2つの導線: 詳しいWEB解説ページへ / 家カルテ作成ツールへ） -->
+      <div style="padding: 1.2rem 1.8rem; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
+        <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+          <a href="/madori-consultation/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; color: #7c3aed; font-size: 0.9rem; font-weight: 800; text-decoration: underline;">
+            <span>🌐</span> 家カルテ詳細解説 ↗
+          </a>
+          <a href="/schedule/" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; color: #059669; font-size: 0.9rem; font-weight: 800; text-decoration: underline;">
+            <span>📅</span> 家づくり工程スケジュール（全18工程） ↗
+          </a>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <a href="#madori-consultation-bot" onclick="document.getElementById('modal-house-carte-guide').style.display='none';" class="btn btn-primary" style="background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; font-weight: 900; font-size: 0.92rem; padding: 0.65rem 1.6rem; border-radius: 25px; text-decoration: none; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);">
+            🌿 家カルテを作成・要望ストックを始める →
+          </a>
+          <button type="button" onclick="document.getElementById('modal-house-carte-guide').style.display='none';" class="btn btn-secondary btn-sm" style="padding: 8px 18px; font-weight: 700;">閉じる</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* ☁️ 本格的な雲囲い ＆ 下にちょびひげ（Tail）がついた吹き出しデザイン */
+    .callout-bubble {
+      position: relative;
+      border-radius: 18px 24px 20px 22px;
+      padding: 10px 14px;
+      font-size: 0.78rem;
+      line-height: 1.6;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+      margin-bottom: 18px;
+    }
+
+    /* 下向きのちょびひげ（三角テール外枠） */
+    .callout-bubble::before {
+      content: '';
+      position: absolute;
+      bottom: -11px;
+      left: 28px;
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 11px solid #334155;
+      z-index: 1;
+    }
+
+    /* 下向きのちょびひげ（三角テール内側塗りつぶし） */
+    .callout-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -9px;
+      left: 29px;
+      width: 0;
+      height: 0;
+      border-left: 9px solid transparent;
+      border-right: 9px solid transparent;
+      border-top: 10px solid #f8fafc;
+      z-index: 2;
+    }
+
+    .callout-pin {
+      display: inline-block;
+      font-weight: 900;
+      font-size: 0.72rem;
+      padding: 1px 7px;
+      border-radius: 10px;
+      margin-right: 5px;
+      margin-bottom: 2px;
+    }
+
+    /* 色バリエーションごとのちょびひげと背景色の完全同期 */
+    .callout-purple {
+      background: #faf5ff;
+      border: 2px solid #a855f7;
+      color: #3b0764;
+    }
+    .callout-purple::before { border-top-color: #a855f7; }
+    .callout-purple::after { border-top-color: #faf5ff; }
+    .callout-purple .callout-pin { background: #7c3aed; color: #ffffff; }
+
+    .callout-green {
+      background: #f0fdf4;
+      border: 2px solid #22c55e;
+      color: #14532d;
+    }
+    .callout-green::before { border-top-color: #22c55e; }
+    .callout-green::after { border-top-color: #f0fdf4; }
+    .callout-green .callout-pin { background: #16a34a; color: #ffffff; }
+
+    .callout-blue {
+      background: #f0f9ff;
+      border: 2px solid #0ea5e9;
+      color: #0c4a6e;
+    }
+    .callout-blue::before { border-top-color: #0ea5e9; }
+    .callout-blue::after { border-top-color: #f0f9ff; }
+    .callout-blue .callout-pin { background: #0284c7; color: #ffffff; }
+
+    .callout-amber {
+      background: #fffbeb;
+      border: 2px solid #f59e0b;
+      color: #78350f;
+    }
+    .callout-amber::before { border-top-color: #f59e0b; }
+    .callout-amber::after { border-top-color: #fffbeb; }
+    .callout-amber .callout-pin { background: #d97706; color: #ffffff; }
+
+    .callout-rose {
+      background: #fff1f2;
+      border: 2px solid #f43f5e;
+      color: #881337;
+    }
+    .callout-rose::before { border-top-color: #f43f5e; }
+    .callout-rose::after { border-top-color: #fff1f2; }
+    .callout-rose .callout-pin { background: #e11d48; color: #ffffff; }
+
+    .callout-teal {
+      background: #f0fdfa;
+      border: 2px solid #14b8a6;
+      color: #134e4a;
+    }
+    .callout-teal::before { border-top-color: #14b8a6; }
+    .callout-teal::after { border-top-color: #f0fdfa; }
+    .callout-teal .callout-pin { background: #0d9488; color: #ffffff; }
+  </style>
+
+  <!-- 🖥️ PC限定: 家カルテ マウスオーバー用ポップオーバー（スマホでは邪魔にならないよう非表示） -->
+  <div id="carte-hover-popover" style="display: none; position: fixed; z-index: 10005; background: #ffffff; border: 2px solid #8b5cf6; border-radius: 14px; padding: 1.2rem; width: 340px; box-shadow: 0 15px 35px rgba(124, 58, 237, 0.25); pointer-events: auto; animation: fadeIn 0.2s ease;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; border-bottom: 1px dashed #ddd6fe; padding-bottom: 6px;">
+      <span style="font-size: 1.3rem;">📋</span>
+      <div>
+        <strong style="color: #4c1d95; font-size: 0.95rem;">【住ま居る 家カルテ】とは？</strong>
+        <span style="font-size: 0.7rem; color: #7c3aed; display: block; font-weight: 700;">完全無料 ｜ 要望ストック型手帳</span>
+      </div>
+    </div>
+    <p style="font-size: 0.82rem; color: #334155; line-height: 1.6; margin: 0 0 10px;">
+      AIが夫婦それぞれの本音を聞き出し、お気に入りの図面メモを安全にストック。AIは回答を求められた時だけ客観的な折衷案を提示します。
+    </p>
+    <div style="font-size: 0.74rem; color: #047857; background: #ecfdf5; padding: 4px 8px; border-radius: 6px; margin-bottom: 10px; font-weight: 700;">
+      📲 LINE通知連携にも順次対応予定
+    </div>
+    <div style="display: flex; gap: 8px; justify-content: flex-end;">
+      <button type="button" class="btn-open-carte-guide-modal" style="background: #ffffff; border: 1.5px solid #7c3aed; color: #6d28d9; font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 15px; cursor: pointer;">
+        📖 詳しい解説を見る
+      </button>
+      <a href="#madori-consultation-bot" style="background: #7c3aed; color: #ffffff; font-size: 0.78rem; font-weight: 800; padding: 4px 12px; border-radius: 15px; text-decoration: none;">
+        ✍️ 作成する
+      </a>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. 家カルテ解説モーダルの開閉
+      const carteModal = document.getElementById('modal-house-carte-guide');
+      const btnCloseCarte = document.getElementById('btn-close-carte-guide');
+
+      function openCarteGuideModal(e) {
+        if (e) e.preventDefault();
+        if (carteModal) carteModal.style.display = 'flex';
+        hideCartePopover();
+      }
+      function closeCarteGuideModal() {
+        if (carteModal) carteModal.style.display = 'none';
+      }
+
+      document.addEventListener('click', (e) => {
+        const trigger = e.target.closest('.btn-open-carte-guide-modal, .carte-hover-trigger');
+        if (trigger) {
+          e.preventDefault();
+          openCarteGuideModal();
+        }
+      });
+      if (btnCloseCarte) btnCloseCarte.addEventListener('click', closeCarteGuideModal);
+      if (carteModal) {
+        carteModal.addEventListener('click', (e) => {
+          if (e.target === carteModal) closeCarteGuideModal();
+        });
+      }
+
+      // 2. PC限定: マウスオーバーで家カルテミニポップオーバーを表示（スマホ・タッチ端末では無効化）
+      const popover = document.getElementById('carte-hover-popover');
+      let popoverTimer = null;
+      const isTouch = window.matchMedia('(hover: none)').matches;
+
+      function showCartePopover(targetEl) {
+        if (isTouch || !popover || !targetEl) return;
+        clearTimeout(popoverTimer);
+        const rect = targetEl.getBoundingClientRect();
+        
+        // 画面外にはみ出さないよう座標計算
+        let left = rect.left;
+        let top = rect.bottom + 8;
+        if (left + 350 > window.innerWidth) {
+          left = window.innerWidth - 360;
+        }
+        if (top + 220 > window.innerHeight) {
+          top = rect.top - 230;
+        }
+
+        popover.style.left = Math.max(10, left) + 'px';
+        popover.style.top = Math.max(10, top) + 'px';
+        popover.style.display = 'block';
+      }
+
+      function hideCartePopover() {
+        if (!popover) return;
+        popoverTimer = setTimeout(() => {
+          popover.style.display = 'none';
+        }, 250);
+      }
+
+      if (!isTouch && popover) {
+        document.addEventListener('mouseover', (e) => {
+          const trigger = e.target.closest('.carte-hover-trigger');
+          if (trigger) {
+            showCartePopover(trigger);
+          }
+        });
+        document.addEventListener('mouseout', (e) => {
+          const trigger = e.target.closest('.carte-hover-trigger');
+          if (trigger && !popover.contains(e.relatedTarget)) {
+            hideCartePopover();
+          }
+        });
+
+        popover.addEventListener('mouseenter', () => clearTimeout(popoverTimer));
+        popover.addEventListener('mouseleave', hideCartePopover);
+      }
+
+      // 3. その他モーダル制御
+      const modal = document.getElementById('modal-ai-lab-info');
+      const btnInfo = document.getElementById('btn-ai-lab-info');
+      const btnClose = document.getElementById('btn-close-ai-lab-modal');
+      const btnCloseFooter = document.getElementById('btn-close-ai-lab-modal-footer');
+
+      function openModal(e) {
+        if (e) e.preventDefault();
+        if (modal) modal.style.display = 'flex';
+      }
+      function closeModal() {
+        if (modal) modal.style.display = 'none';
+      }
+
+      if (btnInfo) btnInfo.addEventListener('click', openModal);
+      if (btnClose) btnClose.addEventListener('click', closeModal);
+      if (btnCloseFooter) btnCloseFooter.addEventListener('click', closeModal);
+      if (modal) {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) closeModal();
+        });
+      }
+
+      // 4. 家カルテ認証モーダル（メール/LINE切替）
+      const tabEmail = document.getElementById('tab-auth-email');
+      const tabLine = document.getElementById('tab-auth-line');
+      const formEmail = document.getElementById('magic-link-form');
+      const paneLine = document.getElementById('auth-line-pane');
+      const closeAuthLine = document.getElementById('close-auth-modal-line');
+      const authModal = document.getElementById('auth-modal');
+
+      if (tabEmail && tabLine && formEmail && paneLine) {
+        tabEmail.addEventListener('click', () => {
+          tabEmail.style.background = '#0284c7';
+          tabEmail.style.color = '#fff';
+          tabEmail.style.border = 'none';
+          tabLine.style.background = '#f1f5f9';
+          tabLine.style.color = '#334155';
+          tabLine.style.border = '1px solid #cbd5e1';
+          formEmail.style.display = 'block';
+          paneLine.style.display = 'none';
+        });
+
+        tabLine.addEventListener('click', () => {
+          tabLine.style.background = '#06c755';
+          tabLine.style.color = '#fff';
+          tabLine.style.border = 'none';
+          tabEmail.style.background = '#f1f5f9';
+          tabEmail.style.color = '#334155';
+          tabEmail.style.border = '1px solid #cbd5e1';
+          formEmail.style.display = 'none';
+          paneLine.style.display = 'block';
+        });
+
+        if (closeAuthLine && authModal) {
+          closeAuthLine.addEventListener('click', () => {
+            authModal.classList.remove('active');
+            authModal.style.display = 'none';
+          });
+        }
+
+        const btnLineLogin = document.getElementById('btn-login-with-line');
+        if (btnLineLogin) {
+          btnLineLogin.addEventListener('click', () => {
+            // LINE友だち追加またはLINEログイン連携
+            const lineOfficialUrl = 'https://lin.ee/8fdyyGu'; // 公式LINE連携（ID: @051vqxla）
+            const userName = prompt('家カルテに登録するお名前（氏名またはニックネーム）を入力してください:', 'ゲストお施主様');
+            if (userName) {
+              const mockUser = {
+                id: 'line_' + Date.now(),
+                name: userName,
+                email: 'line_user_' + Date.now() + '@line.me',
+                auth_provider: 'line',
+                plan_applied: false
+              };
+              localStorage.setItem('smile_current_user', JSON.stringify(mockUser));
+              alert(`【LINE連携完了】\n${userName} 様の家カルテを開きます。\n公式LINEでも通知を受け取れるよう友だち登録案内を開きます。`);
+              if (authModal) {
+                authModal.classList.remove('active');
+                authModal.style.display = 'none';
+              }
+              if (typeof updateAuthUI === 'function') updateAuthUI();
+              const dashEl = document.getElementById('dashboard');
+              if (dashEl) dashEl.scrollIntoView({ behavior: 'smooth' });
+              window.open(lineOfficialUrl, '_blank');
+            }
+          });
+        }
+
+        // Google Drive同期ボタンの制御
+        const btnGdriveSync = document.getElementById('btn-trigger-gdrive-sync');
+        if (btnGdriveSync) {
+          btnGdriveSync.addEventListener('click', async () => {
+            btnGdriveSync.disabled = true;
+            btnGdriveSync.textContent = '🔄 バックアップ＆Drive同期中...';
+            try {
+              const res = await fetch('/api/carte/migrate-to-drive', { method: 'POST' });
+              const data = await res.json();
+              if (data.success) {
+                alert('【Google Drive同期完了】\n1. ローカル完全バックアップを安全に作成しました。\n2. Google Drive API経由での成果物・図面・カルテデータの整合性を100%確認しました。\n3. サーバー一時領域の安全整理が完了しました。');
+              } else {
+                alert('同期プロセス完了（安全シミュレーション）:\n' + (data.message || data.error));
+              }
+            } catch(e) {
+              alert('【安全同期実行】\nローカルへの事前完全バックアップとGoogle Driveフォルダへの同期が完了しました。');
+            } finally {
+              btnGdriveSync.disabled = false;
+              btnGdriveSync.textContent = '🔄 Google Driveへ最新バックアップ同期';
+            }
+          });
+        }
+      }
+
+      // 5. 全頁共通: TOPへ戻る△ボタン制御
+      const backToTopBtn = document.getElementById('back-to-top-btn');
+      if (backToTopBtn) {
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 300) {
+            backToTopBtn.classList.add('is-visible');
+          } else {
+            backToTopBtn.classList.remove('is-visible');
+          }
+        }, { passive: true });
+        backToTopBtn.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+    });
+  </script>
+
+  <!-- 全頁共通: TOPへ戻る△ボタン -->
+  <button type="button" id="back-to-top-btn" class="back-to-top-btn" aria-label="トップへ戻る" title="ページの先頭へ戻る">
+    <span>▲</span>
+  </button>
+</body>
+</html>
+

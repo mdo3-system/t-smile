@@ -144,20 +144,14 @@ def main():
                 # hash_part にクエリ等が含まれる場合を除去
                 clean_hash = unquote(hash_part.split('?')[0])
                 if clean_hash and clean_hash not in target_ids:
-                    # SPA動的レンダリング用ターゲットID（top, craftsmanship, scent-experience等）はindex.html用として例外許容
-                    spa_dynamic_ids = {'top', 'ai-studio', 'floorplan-studio', 'craftsmanship', 'metaverse', 
-                                       'scent-experience', 'article-feature', 'dashboard', 'credlayer', 
-                                       'madori-consultation-bot', 'thermal-consultation', 'our-philosophy', 
-                                       'real-booking-section', 'wagama-showcase', 'wagama', 'floorplan-bubble'}
-                    is_index = os.path.basename(target_fpath) == 'index.html' and os.path.dirname(target_fpath) == PUBLIC_DIR
-                    if not (is_index and clean_hash in spa_dynamic_ids):
-                        broken_anchors.append({
-                            'from': rel_fpath,
-                            'to': os.path.relpath(target_fpath, PUBLIC_DIR).replace('\\', '/'),
-                            'url': url_clean,
-                            'missing_id': clean_hash
-                        })
-
+                    # GEMINI.md No.11: Whitelist is strictly forbidden.
+                    # Verify real IDs on DOM.
+                    broken_anchors.append({
+                        'from': rel_fpath,
+                        'to': os.path.relpath(target_fpath, PUBLIC_DIR).replace('\\', '/'),
+                        'url': url_clean,
+                        'missing_id': clean_hash
+                    })
     print(f"\n================ リンク検証結果 ================")
     print(f"総検証リンク数: {checked_link_count} 箇所")
     print(f"リンク切れ (404 Not Found): {len(broken_links)} 件")

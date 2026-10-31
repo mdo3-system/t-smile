@@ -323,8 +323,9 @@ function switchPage(pageId, pushState = true) {
       effectivePageId = 'scent-experience';
       scrollToAnchor = 'real-booking-section';
     } else if (rawId === 'wagama-showcase' || rawId === 'wagama') {
-      effectivePageId = 'craftsmanship';
-      scrollToAnchor = 'wagama-showcase';
+      window.location.href = '/wagama/';
+      isSwitchingPage = false;
+      return;
     } else if (rawId === 'floorplan-bubble') {
       effectivePageId = 'floorplan-studio';
       setTimeout(() => {

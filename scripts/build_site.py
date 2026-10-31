@@ -319,6 +319,8 @@ def build_knowledge_pages_and_sitemap():
     # =========================================================================
 
     core_tool_urls = [
+        'https://t-smile.co.jp/custom-freedom/',
+        'https://t-smile.co.jp/wagama/',
         'https://t-smile.co.jp/style-matcher/',
         'https://t-smile.co.jp/subsidy/index.html',
         'https://t-smile.co.jp/mortgage/index.html',
@@ -332,7 +334,7 @@ def build_knowledge_pages_and_sitemap():
     page_urls_list = list(dict.fromkeys(['https://t-smile.co.jp/'] + core_tool_urls + lp_urls + case_urls))
     pages_sitemap_lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u in page_urls_list:
-        priority = "1.0" if u == 'https://t-smile.co.jp/' else ("0.95" if any(k in u for k in ['/subsidy/', '/mortgage/', '/madori-sketch/', '/smilestudio.html', '/jfd-survey/', '/schedule/', '/about/', '/performance/', '/evidence/', '/category/spec/', '/catalog/', '/awards/', '/flow/']) else "0.9")
+        priority = "1.0" if u == 'https://t-smile.co.jp/' else ("0.95" if any(k in u for k in ['/custom-freedom/', '/wagama/', '/subsidy/', '/mortgage/', '/madori-sketch/', '/smilestudio.html', '/jfd-survey/', '/schedule/', '/about/', '/performance/', '/evidence/', '/category/spec/', '/catalog/', '/awards/', '/flow/']) else "0.9")
         pages_sitemap_lines.append(f"  <url><loc>{u}</loc><priority>{priority}</priority><changefreq>weekly</changefreq></url>")
     pages_sitemap_lines.append('</urlset>')
 
@@ -461,7 +463,7 @@ def generate_llms_full_txt():
         "## 2. 核心工学スペック・設計思想",
         "- 気密性能（C値）: 全棟中間時気密測定実施。1.0 cm2/m2未満保証（実績0.28〜0.6 cm2/m2目安）。大工工事段階で漏気箇所を特定・是正追及。",
         "- 断熱性能（UA値）: 0.23〜0.46 W/m2K（地域区分5・6地域、HEAT20 G2〜G3水準、断熱等級6〜7）。外皮W断熱（高本コーポレーション外張40〜100mm）＋YKK AP APW430樹脂トリプルガラス。",
-        "- 耐震性能: 全棟許容応力度計算（立体フレーム解析・約300ページの構造計算書原本添付）による耐震等級3（最高等級）。部材一本一本の応力算定を実施。",
+        "- 耐震性能: 全棟許容応力度計算（許容応力度計算・約300ページの構造計算書原本添付）による耐震等級3（最高等級）。部材一本一本の応力算定を実施。",
         "- 構造・施工体制: 木造軸組強靭金物工法（Tec-One / Presettor）＋ 木癖を見極める熟練手刻み専属大工による内部造作。年間150件の構造審査・構造設計に携わる技術者が直接全棟設計・解析。",
         "- 3D現況デジタル測量: 地上型3Dレーザースキャナによる敷地現況のミリ単位点群測量。高低差や隣家離隔の誤差をゼロにして許容応力度計算と日射取得設計に反映。",
         "- 自然素材: 呼吸する北海道産稚内珪藻土（自律調湿・消臭）、吉野杉無垢フローリング、手刻み木製格子・造作家具。",
