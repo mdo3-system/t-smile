@@ -57,6 +57,7 @@ yarn-error.log*
 *.mp3
 scratch_*.jpg
 scratch_*.txt
+scratch_*.png
 screenshot_*.png
 public/sample_data/jfd_survey/3D/
 public/sample_data/architrend/
@@ -66,6 +67,47 @@ backup/
 *.patch
 public/temp_chunk.js
 public/test_syntax*.html
+
+# ローカル監査・スキャン切り抜き作業フォルダ（大容量メディア除外）
+public/verify_audit/
+public/plans/archive_old_2d_20261104/
+public/plans/preview_2473/
+test_rotations/
+scan2486_correct_titles/
+scan2486_grids_correct/
+scan2486_previews_correct/
+scan2487_orient_test/
+scan2487_titles_split/
+scan2488_orient_test/
+scan2488_titles_split/
+*.png
+*.jpg
+!public/**/*.jpg
+!public/**/*.png
+!public/**/*.webp
+!public/sample_data/jfd_survey/sample_docs/*.jpg
+
+# 一時作業スクリプト
+test_*.py
+tune_*.py
+scan_*.py
+scan*.py
+slice_*.py
+update_*.py
+verify_*.py
+zero_base_*.py
+self_check_*.py
+sample_*.py
+save_*.py
+set_*.py
+survey_*.py
+split_*.py
+sort_*.py
+take_*.py
+temp_*.ps1
+run_*.ps1
+test_*.ps1
+self_check_*.ps1
 
 # 大容量参考資料PDF（10MB〜25MB以上の印刷用元データ）
 public/data/knowledge/images/*.pdf
@@ -107,7 +149,27 @@ scripts/*yahoo_mail*.py
 scripts/*gmail*.py
 scripts/*genba_nippo*.py
 scripts/*yahoo_attachments*.py
-
-
+scripts/temp_check.js
+scripts/fetch_*.py
+scripts/find_*.py
+scripts/inspect_*.py
+scripts/update_*.py
+scripts/apply_*.py
+scripts/bump_*.py
+scripts/verify_*.py
+scripts/parse_*.py
+scripts/set_*.py
+scripts/add_*.py
+scripts/check_*.py
 
 public/temp_video_preview/
+
+# 間取りスキャン・テストプレビュー除外（巨大バイナリ除外）
+public/plans/recropped_*/
+public/plans/preview_*/
+public/plans/test_*.png
+public/plans/PLAN-*-P*_*.png
+public/plans/plan_*.png
+*.py
+!scripts/deploy.py
+!scripts/sync_symlinks.py

@@ -51,15 +51,19 @@
                         <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">住ま居る AI Lab</span>
                         <h1 class="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2">
                             AI知見動画＆マルチSNSスタジオ
-                            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Veo 3 × YouTube × SNS</span>
+                            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Veo 3 (15s) × YouTube × SNS × note</span>
                         </h1>
                     </div>
-                    <p class="text-[11px] text-slate-400">設計プロの知見200 ＆ 温熱換気相談200｜10秒解説動画・YouTube・Instagram・Threads・X 統合管理ポータル</p>
+                    <p class="text-[11px] text-slate-400">設計プロの知見200 ＆ 温熱換気相談200｜15秒ストーリー動画・YouTube・Instagram・Threads・X・note 統合管理ポータル</p>
                 </div>
             </div>
 
             <!-- Header Action Controls -->
-            <div class="flex items-center gap-2 shrink-0">
+            <div class="flex flex-wrap items-center gap-2 shrink-0">
+                <button onclick="openNoteReplyModal()" class="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white text-xs font-extrabold shadow-lg shadow-amber-900/30 flex items-center gap-1.5 transition" title="noteでもらったコメントやスキ・フォローへの返信文を即時生成">
+                    <i class="fa-solid fa-comment-dots"></i>
+                    <span>💬 noteコメント返信作成</span>
+                </button>
                 <a href="/" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition">
                     <i class="fa-solid fa-house text-slate-400"></i>
                     <span>展示場トップ</span>
@@ -216,7 +220,7 @@
     <!-- FOOTER -->
     <footer class="bg-slate-900/90 border-t border-slate-800 py-6 mt-12 text-center text-xs text-slate-500 space-y-2">
         <p>© 2026 株式会社住ま居る - 高気密高断熱注文住宅 AI知見動画＆マルチSNSスタジオ</p>
-        <p class="text-[11px] text-slate-600">Google Veo 3 10-Second Explainer Automation & YouTube / Instagram Reels / Threads / X Cross-Posting Portal</p>
+        <p class="text-[11px] text-slate-600">Google Veo 3 15-Second Story Explainer Automation & YouTube / Instagram Reels / Threads / X / note Cross-Posting Portal</p>
     </footer>
 
     <!-- ========================================================================= -->
@@ -241,7 +245,10 @@
             <!-- Modal Nav Tabs -->
             <div class="flex items-center bg-slate-950 px-4 pt-2 border-b border-slate-800 gap-2 overflow-x-auto custom-scrollbar shrink-0">
                 <button onclick="setModalTab('veo')" id="tabVeo" class="px-3.5 py-2 text-xs font-bold border-b-2 border-purple-500 text-purple-300 flex items-center gap-1.5 transition whitespace-nowrap">
-                    <i class="fa-solid fa-video text-purple-400"></i> Veo 3 動画プロンプト
+                    <i class="fa-solid fa-video text-purple-400"></i> Veo 3 15秒ストーリー動画
+                </button>
+                <button onclick="setModalTab('note')" id="tabNote" class="px-3.5 py-2 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 transition whitespace-nowrap">
+                    <i class="fa-solid fa-pen-nib text-amber-400"></i> note 記事＆コメント返信
                 </button>
                 <button onclick="setModalTab('youtube')" id="tabYoutube" class="px-3.5 py-2 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 transition whitespace-nowrap">
                     <i class="fa-brands fa-youtube text-rose-500"></i> YouTube 設定
@@ -294,29 +301,52 @@
                         </div>
                     </div>
 
-                    <!-- Veo 3 推奨生成パラメータ (縦型9:16警告強化) -->
+                    <!-- Veo 3 推奨生成パラメータ (縦型9:16警告強化・15秒仕様) -->
                     <div class="p-3.5 rounded-xl bg-purple-950/40 border-2 border-purple-500/60 flex items-start gap-3 text-xs shadow-lg shadow-purple-950/50">
                         <div class="text-xl text-amber-400 shrink-0 mt-0.5"><i class="fa-solid fa-triangle-exclamation"></i></div>
                         <div class="space-y-1">
                             <span class="font-extrabold text-purple-200 block text-xs">
-                                Google Veo 3 生成パラメータ設定（※設定必須）
+                                Google Veo 3 生成パラメータ設定（15秒ストーリー動画仕様・設定必須）
                             </span>
                             <div class="text-slate-300 space-y-0.5 text-[11px] leading-relaxed">
                                 <div>• アスペクト比: <span class="bg-rose-500/20 text-rose-300 font-black px-1.5 py-0.5 rounded border border-rose-500/40">⚠️ 必ず【9:16 (Vertical / 縦型)】を選択してください</span>（※横画面16:9はShorts・リールでNG！）</div>
-                                <div>• 尺: <b class="text-white">10秒 (10s)</b> / 解像度: <b class="text-white">1080p (60fps推奨)</b></div>
+                                <div>• 尺: <b class="text-amber-300">15秒 (15s)</b> / 解像度: <b class="text-white">1080p (60fps推奨)</b> / 構成: <b class="text-cyan-300">0〜5秒(課題) ➔ 5〜10秒(解決寸法) ➔ 10〜15秒(快適実証)</b></div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Japanese Prompt (Veo 3 本番入力用) -->
+                    <!-- 📖 15秒ストーリー構成 & 🖼️ ストーリー準拠・画像生成プロンプト -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div class="space-y-1.5 p-3 rounded-xl bg-slate-900/90 border border-cyan-500/30">
+                            <div class="flex items-center justify-between text-xs font-bold">
+                                <span class="text-cyan-300 flex items-center gap-1.5"><i class="fa-solid fa-book-open text-cyan-400"></i>📖 15秒ストーリー構成（3シーン展開）</span>
+                                <button onclick="copyToClipboard('txtStorySummary', '15秒ストーリー構成')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-200 border border-cyan-500/40 text-[11px] font-bold transition">
+                                    <i class="fa-regular fa-copy"></i> コピー
+                                </button>
+                            </div>
+                            <textarea id="txtStorySummary" readonly class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-[11px] font-sans text-slate-200 leading-relaxed h-28 focus:outline-none"></textarea>
+                        </div>
+
+                        <div class="space-y-1.5 p-3 rounded-xl bg-slate-900/90 border border-amber-500/30">
+                            <div class="flex items-center justify-between text-xs font-bold">
+                                <span class="text-amber-300 flex items-center gap-1.5"><i class="fa-solid fa-paintbrush text-amber-400"></i>🖼️ ストーリー準拠・画像生成プロンプト (9:16)</span>
+                                <button onclick="copyToClipboard('txtImagePromptJa', 'ストーリー画像生成プロンプト')" class="px-2.5 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white text-[11px] font-bold transition shadow">
+                                    <i class="fa-regular fa-copy"></i> 画像プロンプトをコピー
+                                </button>
+                            </div>
+                            <textarea id="txtImagePromptJa" readonly class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-[11px] font-mono text-amber-100 leading-relaxed h-28 focus:outline-none"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Japanese Prompt (Veo 3 15秒ストーリー動画 本番入力用) -->
                     <div class="space-y-1.5">
                         <div class="flex items-center justify-between text-xs font-bold">
-                            <span class="text-purple-300 font-bold flex items-center gap-1.5"><i class="fa-solid fa-wand-magic-sparkles text-purple-400"></i>Veo 3 入力プロンプト（日本語）</span>
-                            <button onclick="copyToClipboard('txtVeoJa', 'Veo 3 日本語プロンプト')" class="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold transition flex items-center gap-1.5 shadow-md shadow-purple-900/40">
-                                <i class="fa-regular fa-copy"></i> プロンプトをコピー
+                            <span class="text-purple-300 font-bold flex items-center gap-1.5"><i class="fa-solid fa-wand-magic-sparkles text-purple-400"></i>🎬 Veo 3 15秒ストーリー動画プロンプト（日本語・個別シナリオ完全準拠）</span>
+                            <button onclick="copyToClipboard('txtVeoJa', 'Veo 3 15秒動画プロンプト')" class="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-bold transition flex items-center gap-1.5 shadow-md shadow-purple-900/40">
+                                <i class="fa-regular fa-copy"></i> 動画プロンプトをコピー
                             </button>
                         </div>
-                        <textarea id="txtVeoJa" readonly class="w-full bg-slate-950 border border-purple-500/40 rounded-xl p-3 text-xs font-mono text-purple-100 leading-relaxed h-36 focus:outline-none focus:border-purple-400"></textarea>
+                        <textarea id="txtVeoJa" readonly class="w-full bg-slate-950 border border-purple-500/40 rounded-xl p-3 text-xs font-mono text-purple-100 leading-relaxed h-44 focus:outline-none focus:border-purple-400"></textarea>
                     </div>
 
                     <!-- Local Video Save Path -->
@@ -334,15 +364,15 @@
                     <div class="space-y-3 p-4 rounded-xl bg-slate-900/90 border border-purple-500/30">
                         <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                             <span class="text-xs font-bold text-purple-300 flex items-center gap-1.5">
-                                <i class="fa-solid fa-film text-purple-400"></i> 動画UP・ナレーション作成・合成フロー
+                                <i class="fa-solid fa-film text-purple-400"></i> 動画UP・15秒ナレーション作成・合成フロー
                             </span>
-                            <span id="veoStepBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-purple-950 text-purple-300 border border-purple-800 font-bold">制作アシスタント</span>
+                            <span id="veoStepBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-purple-950 text-purple-300 border border-purple-800 font-bold">15秒制作アシスタント</span>
                         </div>
 
                         <!-- 1. 動画ファイルUP (ドラッグ＆ドロップまたはファイル選択) -->
                         <div class="space-y-1.5">
                             <label class="text-[11px] font-bold text-slate-300 flex items-center justify-between">
-                                <span>① Veo 3動画ファイル（.mp4）をアップロード:</span>
+                                <span>① Veo 3動画ファイル（.mp4 / 15秒）をアップロード:</span>
                                 <span id="uploadStatusText" class="text-[10px] text-slate-400 font-mono">未選択</span>
                             </label>
                             <div id="dropZoneVideo" class="border-2 border-dashed border-slate-700 hover:border-purple-500 rounded-xl p-3 text-center cursor-pointer transition bg-slate-950/60" onclick="document.getElementById('fileInputVeoVideo').click()">
@@ -365,31 +395,38 @@
                             </div>
                         </div>
 
-                        <!-- 2. ナレーション音声作成ボタン -->
+                        <!-- 2. ナレーション原稿編集 ＆ 音声作成ボタン -->
                         <div class="pt-2 border-t border-slate-800 space-y-2">
-                            <div class="flex items-center justify-between text-xs font-bold text-slate-300">
-                                <span>② ナレーション音声（Microsoft Neural Voice）:</span>
+                            <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-bold text-slate-300">
                                 <div class="flex items-center gap-2">
+                                    <span>② 15秒ナレーション原稿 ＆ 音声生成（Microsoft Neural Voice）:</span>
+                                    <span id="lblNarrationStats" class="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700/60 font-mono">0文字 (約0.0秒)</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button type="button" onclick="copyToClipboard('txtNarrationJa', '15秒ナレーション原稿')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[11px]">
+                                        <i class="fa-regular fa-copy"></i> 原稿コピー
+                                    </button>
                                     <select id="voiceTypeSelect" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs rounded px-2 py-1 font-bold">
                                         <option value="female">👩 七海 (女性アナウンサー)</option>
-                                        <option value="male">👨 圭太 (男性建築士)</option>
+                                        <option value="male">👨 圭太 (男性ナレーター)</option>
                                         <option value="warm">🌸 七海 (柔らかなトーン)</option>
                                     </select>
                                     <button type="button" id="btnGenNarration" onclick="generateNarrationAudio()" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs shadow flex items-center gap-1 transition">
-                                        <i class="fa-solid fa-microphone-lines"></i> 🎙️ ナレーション作成
+                                        <i class="fa-solid fa-microphone-lines"></i> 🎙️ この原稿で音声作成
                                     </button>
                                 </div>
                             </div>
+                            <textarea id="txtNarrationJa" oninput="updateNarrationStats()" class="w-full bg-slate-950 border border-emerald-500/40 rounded-lg p-2.5 text-xs font-sans text-emerald-100 leading-relaxed h-20 focus:outline-none focus:border-emerald-400" placeholder="15秒ナレーション読み上げ原稿（直接編集して音声を再生成できます）"></textarea>
                             <div id="audioPreviewWrap" class="hidden p-2 rounded-lg bg-slate-950 border border-emerald-500/40 flex items-center justify-between gap-2">
                                 <audio id="audioPreviewPlayer" controls class="h-8 flex-1"></audio>
-                                <span class="text-[10px] font-bold text-emerald-400 shrink-0">✅ 音声準備完了</span>
+                                <span class="text-[10px] font-bold text-emerald-400 shrink-0">✅ 15秒対応音声準備完了</span>
                             </div>
                         </div>
 
                         <!-- 3. 動画とナレーションの合成ボタン ＆ 静止画サムネイル抽出ボタン -->
                         <div class="pt-2 border-t border-slate-800 flex flex-wrap items-center gap-2">
                             <button type="button" id="btnCombineVideo" onclick="combineVideoAndAudio()" class="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-xs shadow-lg shadow-purple-900/30 flex items-center justify-center gap-1.5 transition">
-                                <i class="fa-solid fa-clapperboard"></i> 🎬 動画と音声を合成（完成動画生成）
+                                <i class="fa-solid fa-clapperboard"></i> 🎬 15秒動画と音声を合成（完成動画生成）
                             </button>
                             <button type="button" id="btnExtractThumb" onclick="extractVideoThumbnail()" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-700 flex items-center gap-1.5 transition">
                                 <i class="fa-solid fa-image text-amber-400"></i> 🖼️ 静止画サムネイル抽出
@@ -499,6 +536,110 @@
                     </div>
                     <textarea id="txtThreadsPost" readonly class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs font-sans text-slate-200 h-44 focus:outline-none"></textarea>
                 </div>
+
+                <!-- 6. note 記事 ＆ コメント返信 Tab -->
+                <div id="paneNote" class="space-y-4 hidden">
+                    <!-- note Article Generator -->
+                    <div class="p-3.5 rounded-xl bg-slate-900/90 border border-amber-500/30 space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
+                            <span class="text-xs font-extrabold text-amber-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-pen-nib text-amber-400"></i> note 投稿用タイトル ＆ 記事本文（家づくりサポート係 署名入り）
+                            </span>
+                            <a href="https://note.com/" target="_blank" class="px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs flex items-center gap-1 shadow">
+                                <i class="fa-solid fa-up-right-from-square"></i> noteを開く
+                            </a>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex items-center justify-between text-xs font-bold">
+                                <span class="text-slate-300">記事タイトル</span>
+                                <button onclick="copyToClipboard('txtNoteTitle', 'note記事タイトル')" class="px-2.5 py-1 rounded bg-amber-600/30 text-amber-200 border border-amber-500/50 hover:bg-amber-600/50 transition">
+                                    <i class="fa-regular fa-copy"></i> タイトルをコピー
+                                </button>
+                            </div>
+                            <input type="text" id="txtNoteTitle" readonly class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs font-bold text-white focus:outline-none">
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex items-center justify-between text-xs font-bold">
+                                <span class="text-slate-300">記事本文（見出し・結論・15秒ストーリー・設計ポイント・リンク付き）</span>
+                                <button onclick="copyToClipboard('txtNoteBody', 'note記事本文')" class="px-2.5 py-1 rounded bg-amber-600/30 text-amber-200 border border-amber-500/50 hover:bg-amber-600/50 transition">
+                                    <i class="fa-regular fa-copy"></i> 本文をコピー
+                                </button>
+                            </div>
+                            <textarea id="txtNoteBody" readonly class="w-full bg-slate-950 border border-slate-700 rounded-lg p-3 text-xs font-sans text-slate-200 h-44 leading-relaxed focus:outline-none"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- note Comment Reply Generator (Item-specific) -->
+                    <div class="p-4 rounded-xl bg-amber-950/20 border-2 border-amber-500/50 space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                                <h4 class="text-xs font-black text-amber-300 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-comments text-amber-400"></i> 💬 この記事についた「スキ・フォロー・コメント」への返信文生成
+                                </h4>
+                                <p class="text-[11px] text-slate-400 mt-0.5">
+                                    💡 <b>なぜ返信が効果的？</b> noteではコメントへの丁寧な返信が「読者との信頼構築」「リピート購読・スキ率向上」「クリエイターおすすめ表示（SEO/アルゴリズム評価）」に直結します！いただいたコメントを下にコピペしてください。
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                            <div>
+                                <label class="text-[11px] font-bold text-slate-300 block mb-1">お相手の表示名（任意）:</label>
+                                <input type="text" id="txtModalNoteUser" placeholder="例: たなか さん（空欄でもOK）" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:border-amber-400 focus:outline-none">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="text-[11px] font-bold text-slate-300 block mb-1">アクション種別:</label>
+                                <select id="selModalNoteType" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-bold focus:border-amber-400 focus:outline-none">
+                                    <option value="comment">💬 記事へのコメント＋スキをいただいた</option>
+                                    <option value="question">❓ 間取り・家づくりの質問や相談コメントをいただいた</option>
+                                    <option value="like_follow">❤️ スキ・フォロー＆一言メッセージをいただいた</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-[11px] font-bold text-slate-300 block mb-1">いただいたコメント本文（コピペしてください）:</label>
+                            <textarea id="txtModalNoteComment" rows="2" placeholder="例: まさに今ランドリールームの広さで悩んでいたのでとても参考になりました！スキさせていただきました。" class="w-full bg-slate-950 border border-amber-500/40 rounded-lg p-2.5 text-xs text-white focus:border-amber-400 focus:outline-none"></textarea>
+                        </div>
+
+                        <div class="flex justify-end">
+                            <button type="button" onclick="generateModalNoteReplies()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-black text-xs shadow-lg shadow-amber-900/40 flex items-center gap-1.5 transition">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> 3パターンの返信文を生成する（家づくりサポート係）
+                            </button>
+                        </div>
+
+                        <!-- 3 Reply Outputs -->
+                        <div id="modalNoteRepliesWrap" class="grid grid-cols-1 gap-2.5 pt-2 border-t border-slate-800">
+                            <div class="space-y-1">
+                                <div class="flex items-center justify-between text-[11px] font-bold">
+                                    <span class="text-amber-300">🌟 パターン1：【推奨】共感＋この記事の黄金寸法・知見補足型（丁寧・信頼構築）</span>
+                                    <button onclick="copyToClipboard('txtModalReply1', '返信文（パターン1：共感＋知見補足）')" class="px-2.5 py-1 rounded bg-amber-600 hover:bg-amber-500 text-white font-bold transition">
+                                        <i class="fa-regular fa-copy"></i> コピー
+                                    </button>
+                                </div>
+                                <textarea id="txtModalReply1" rows="4" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-100 leading-relaxed focus:outline-none"></textarea>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex items-center justify-between text-[11px] font-bold">
+                                    <span class="text-cyan-300">📘 パターン2：疑問解消＋関連図解データベース案内型（回遊・ファン化促進）</span>
+                                    <button onclick="copyToClipboard('txtModalReply2', '返信文（パターン2：図解DB案内）')" class="px-2.5 py-1 rounded bg-cyan-600 hover:bg-cyan-500 text-white font-bold transition">
+                                        <i class="fa-regular fa-copy"></i> コピー
+                                    </button>
+                                </div>
+                                <textarea id="txtModalReply2" rows="4" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-100 leading-relaxed focus:outline-none"></textarea>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex items-center justify-between text-[11px] font-bold">
+                                    <span class="text-emerald-300">🍀 パターン3：シンプル＆温かな感謝型（スキ・フォロー・短文コメント向け）</span>
+                                    <button onclick="copyToClipboard('txtModalReply3', '返信文（パターン3：シンプル感謝）')" class="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition">
+                                        <i class="fa-regular fa-copy"></i> コピー
+                                    </button>
+                                </div>
+                                <textarea id="txtModalReply3" rows="3" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-100 leading-relaxed focus:outline-none"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Modal Footer Controls -->
@@ -522,6 +663,115 @@
                     <button onclick="navigateModal(1)" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-700 flex items-center gap-1">
                         次の知見 <i class="fa-solid fa-chevron-right"></i>
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- GLOBAL NOTE COMMENT REPLY GENERATOR MODAL (ヘッダーからいつでも起動可能) -->
+    <!-- ========================================================================= -->
+    <div id="noteReplyModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4" onclick="closeNoteReplyModal()">
+        <div class="bg-slate-900 border-2 border-amber-500/60 rounded-2xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
+            <!-- Header -->
+            <div class="p-4 border-b border-slate-800 bg-slate-850 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-black shadow">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm md:text-base font-black text-white flex items-center gap-2">
+                            note スキ・フォロー・コメント返信ジェネレーター
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">株式会社住ま居る 家づくりサポート係 統一対応</span>
+                        </h3>
+                        <p class="text-[11px] text-slate-400">いただいたコメントをコピペするだけで、400件の知見データベースから関連知識を自動検索し、心のこもった返信文を3パターン作成します。</p>
+                    </div>
+                </div>
+                <button onclick="closeNoteReplyModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="p-5 overflow-y-auto space-y-4 flex-1">
+                <!-- Advice Banner -->
+                <div class="p-3.5 rounded-xl bg-amber-950/30 border border-amber-500/40 flex items-start gap-3 text-xs">
+                    <i class="fa-solid fa-lightbulb text-amber-400 text-lg mt-0.5"></i>
+                    <div class="space-y-1 text-slate-200 leading-relaxed">
+                        <div class="font-extrabold text-amber-300">💡 noteでスキ・フォロー・コメントをもらった時、返信した方がいい理由</div>
+                        <p class="text-[11px] text-slate-300">
+                            <b>結論：ぜひ返信（コメント返し）することをおすすめします！</b><br>
+                            ① コメント欄が活発な記事はnoteのアルゴリズムで「読자満足度が高い記事」と評価され、おすすめ浮上率が上がります。<br>
+                            ② 感想だけでなく「具体的な寸法の補足」を添えて返信すると、他の読者がコメント欄を読んだ際にも信頼感が倍増します。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Input Form -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
+                        <label class="text-xs font-bold text-slate-300 block mb-1">① お相手のnote表示名（任意）</label>
+                        <input type="text" id="noteReplyUser" placeholder="例: さとみ さん（空欄でも可）" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:border-amber-400 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-300 block mb-1">② いただいたリアクション種別</label>
+                        <select id="noteReplyType" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold focus:border-amber-400 focus:outline-none">
+                            <option value="comment">💬 記事への感想コメント＋スキ</option>
+                            <option value="question">❓ 家づくり・間取りの具体的な質問コメント</option>
+                            <option value="like_follow">❤️ スキ・フォロー＆ショートメッセージ</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-300 block mb-1">③ 関連する知見（自動判定または選択）</label>
+                        <select id="noteReplyMatchedItem" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-amber-200 font-bold focus:border-amber-400 focus:outline-none">
+                            <option value="auto">🔍 コメント内容から自動マッチ（推奨）</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-slate-300 block mb-1">④ いただいたコメント本文（ここにコピペしてください）</label>
+                    <textarea id="noteReplyComment" rows="3" placeholder="例: いつも勉強になる記事をありがとうございます！フォローさせていただきました。我が家もコンセントの位置で迷っていたので、掃除機の動線の話すごく納得しました！" class="w-full bg-slate-950 border-2 border-amber-500/50 rounded-xl p-3 text-xs text-white focus:border-amber-400 focus:outline-none"></textarea>
+                </div>
+
+                <div class="flex items-center justify-between gap-3">
+                    <span id="lblNoteMatchInfo" class="text-[11px] text-cyan-300 font-bold"></span>
+                    <button type="button" onclick="generateNoteReplies()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-black text-xs shadow-lg shadow-amber-900/40 flex items-center gap-2 transition">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> 返信文を自動生成する
+                    </button>
+                </div>
+
+                <!-- Output Patterns -->
+                <div class="space-y-3 pt-2 border-t border-slate-800">
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between text-xs font-bold">
+                            <span class="text-amber-300">🌟 パターン1：【一番おすすめ】共感＋プロの設計アドバイス補足型</span>
+                            <button onclick="copyToClipboard('noteReplyOut1', 'note返信文（パターン1）')" class="px-3 py-1 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold transition flex items-center gap-1">
+                                <i class="fa-regular fa-copy"></i> この返信文をコピー
+                            </button>
+                        </div>
+                        <textarea id="noteReplyOut1" rows="4" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-slate-100 leading-relaxed focus:outline-none"></textarea>
+                    </div>
+
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between text-xs font-bold">
+                            <span class="text-cyan-300">📘 パターン2：お悩み解決＋図解データベース案内型（詳細を知りたい読者向け）</span>
+                            <button onclick="copyToClipboard('noteReplyOut2', 'note返信文（パターン2）')" class="px-3 py-1 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold transition flex items-center gap-1">
+                                <i class="fa-regular fa-copy"></i> この返信文をコピー
+                            </button>
+                        </div>
+                        <textarea id="noteReplyOut2" rows="4" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-slate-100 leading-relaxed focus:outline-none"></textarea>
+                    </div>
+
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between text-xs font-bold">
+                            <span class="text-emerald-300">🍀 パターン3：スキ・フォローへの温かな感謝＆応援型（短め・爽やか）</span>
+                            <button onclick="copyToClipboard('noteReplyOut3', 'note返信文（パターン3）')" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition flex items-center gap-1">
+                                <i class="fa-regular fa-copy"></i> この返信文をコピー
+                            </button>
+                        </div>
+                        <textarea id="noteReplyOut3" rows="3" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-slate-100 leading-relaxed focus:outline-none"></textarea>
+                    </div>
                 </div>
             </div>
         </div>
@@ -939,7 +1189,7 @@
             const imgElem = document.getElementById('modalSourceImg');
             const pathElem = document.getElementById('lblSourceImgFullPath');
             const badgeElem = document.getElementById('modalHasImageBadge');
-            const ABS_BASE_DIR = 'E:\\Dropbox\\■住ま居る\\■住ま居る共有\\ﾒﾀﾊﾞｰｽ展示場\\Antigravity\\public';
+            const ABS_BASE_DIR = 'D:\\Dropbox\\■住ま居る\\■住ま居る共有\\ﾒﾀﾊﾞｰｽ展示場\\Antigravity\\public';
 
             if (item.image) {
                 imgElem.src = item.image;
@@ -955,8 +1205,12 @@
                 badgeElem.className = 'text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 font-bold';
             }
 
-            // Populate fields
+            // Populate fields (15s Story, Image Prompt, Veo 3 15s Prompt, Narration, SNS, note)
+            document.getElementById('txtStorySummary').value = item.storySummary || '';
+            document.getElementById('txtImagePromptJa').value = item.imagePromptJa || '';
             document.getElementById('txtVeoJa').value = item.veoPromptJa || '';
+            document.getElementById('txtNarrationJa').value = item.narrationJa || '';
+            updateNarrationStats();
             document.getElementById('lblVeoPath').textContent = item.veoVideoPath || '';
 
             document.getElementById('txtYtTitle').value = item.youtubeTitle || '';
@@ -968,6 +1222,17 @@
             document.getElementById('txtXPost').value = item.xPost || '';
             document.getElementById('txtInstaCaption').value = item.instaCaption || '';
             document.getElementById('txtThreadsPost').value = item.threadsPost || '';
+
+            document.getElementById('txtNoteTitle').value = item.noteTitle || '';
+            document.getElementById('txtNoteBody').value = item.noteBody || '';
+
+            // Pre-populate default replies for this item in modal note tab
+            document.getElementById('txtModalNoteUser').value = '';
+            document.getElementById('txtModalNoteComment').value = '';
+            const defaultReplies = buildThreeReplyPatterns('', 'comment', '', item);
+            document.getElementById('txtModalReply1').value = defaultReplies.p1;
+            document.getElementById('txtModalReply2').value = defaultReplies.p2;
+            document.getElementById('txtModalReply3').value = defaultReplies.p3;
 
             document.getElementById('modalStatusSelect').value = item.status || 'unstarted';
 
@@ -1095,24 +1360,41 @@
             }
         }
 
+        function updateNarrationStats() {
+            const el = document.getElementById('txtNarrationJa');
+            const badge = document.getElementById('lblNarrationStats');
+            if (!el || !badge) return;
+            const text = (el.value || '').trim();
+            const chars = text.length;
+            const estSec = (chars / 7.2).toFixed(1);
+            badge.textContent = `${chars}文字 (約${estSec}秒 / 15秒目標)`;
+            if (chars >= 75 && chars <= 125) {
+                badge.className = 'text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700/60 font-mono';
+            } else {
+                badge.className = 'text-[10px] px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-700/60 font-mono';
+            }
+        }
+
         async function generateNarrationAudio() {
             if (activeModalIndex === -1) return;
             const item = allItems[activeModalIndex];
             const voice = document.getElementById('voiceTypeSelect').value;
+            const customText = document.getElementById('txtNarrationJa') ? document.getElementById('txtNarrationJa').value.trim() : '';
             const btn = document.getElementById('btnGenNarration');
 
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 生成中...';
-            showToast('🎙️ ナレーション音声を生成しています...');
+            showToast('🎙️ 15秒対応ナレーション音声を生成しています...');
 
             try {
                 const res = await fetch('/api/knowledge-video/generate-audio', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: item.id, voice: voice })
+                    body: JSON.stringify({ id: item.id, voice: voice, text: customText })
                 });
                 const data = await res.json();
                 if (data.success) {
+                    if (customText) item.narrationJa = customText;
                     const audioWrap = document.getElementById('audioPreviewWrap');
                     const audioPlayer = document.getElementById('audioPreviewPlayer');
                     audioWrap.classList.remove('hidden');
@@ -1123,7 +1405,7 @@
                     audioPlayer.src = cleanPath + '?t=' + Date.now();
                     audioPlayer.load();
                     audioPlayer.play().catch(() => {});
-                    showToast('✅ ナレーション音声の作成が完了しました！');
+                    showToast('✅ 15秒ナレーション音声の作成が完了しました！');
                 } else {
                     throw new Error(data.error || 'Audio gen failed');
                 }
@@ -1132,7 +1414,7 @@
                 showToast('ナレーション生成エラー: ' + err.message, true);
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-microphone-lines"></i> 🎙️ ナレーション作成';
+                btn.innerHTML = '<i class="fa-solid fa-microphone-lines"></i> 🎙️ この原稿で音声作成';
             }
         }
 
@@ -1144,7 +1426,7 @@
 
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 合成レンダリング中...';
-            showToast('🎬 FFmpegで動画と音声を合成結合しています...');
+            showToast('🎬 FFmpegで15秒動画と音声を合成結合しています...');
 
             try {
                 const res = await fetch('/api/knowledge-video/combine-video', {
@@ -1173,7 +1455,7 @@
                     link.href = vPath;
                     link.download = `${item.id}_final.mp4`;
                     player.play().catch(() => {});
-                    showToast('🎉 動画とナレーションの合成が完了しました！');
+                    showToast('🎉 15秒動画とナレーションの合成が完了しました！');
                 } else {
                     throw new Error(data.error || 'Combine failed');
                 }
@@ -1182,7 +1464,7 @@
                 showToast('合成エラー: ' + err.message, true);
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-clapperboard"></i> 🎬 動画と音声を合成（完成動画生成）';
+                btn.innerHTML = '<i class="fa-solid fa-clapperboard"></i> 🎬 15秒動画と音声を合成（完成動画生成）';
             }
         }
 
@@ -1241,10 +1523,11 @@
         }
 
         function setModalTab(tab) {
-            const tabs = ['veo', 'youtube', 'x', 'instagram', 'threads'];
+            const tabs = ['veo', 'youtube', 'x', 'instagram', 'threads', 'note'];
             tabs.forEach(t => {
                 const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
                 const pane = document.getElementById('pane' + t.charAt(0).toUpperCase() + t.slice(1));
+                if (!btn || !pane) return;
                 if (t === tab) {
                     btn.classList.add('border-b-2');
                     if (t === 'veo') btn.className = 'px-3.5 py-2 text-xs font-bold border-b-2 border-purple-500 text-purple-300 flex items-center gap-1.5 transition whitespace-nowrap';
@@ -1252,12 +1535,165 @@
                     else if (t === 'x') btn.className = 'px-3.5 py-2 text-xs font-bold border-b-2 border-slate-200 text-slate-100 flex items-center gap-1.5 transition whitespace-nowrap';
                     else if (t === 'instagram') btn.className = 'px-3.5 py-2 text-xs font-bold border-b-2 border-pink-500 text-pink-300 flex items-center gap-1.5 transition whitespace-nowrap';
                     else if (t === 'threads') btn.className = 'px-3.5 py-2 text-xs font-bold border-b-2 border-emerald-500 text-emerald-300 flex items-center gap-1.5 transition whitespace-nowrap';
+                    else if (t === 'note') btn.className = 'px-3.5 py-2 text-xs font-bold border-b-2 border-amber-500 text-amber-300 flex items-center gap-1.5 transition whitespace-nowrap';
                     pane.classList.remove('hidden');
                 } else {
                     btn.className = 'px-3.5 py-2 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 transition whitespace-nowrap';
                     pane.classList.add('hidden');
                 }
             });
+        }
+
+        // =========================================================================
+        // NOTE COMMENT REPLY GENERATOR (家づくりサポート係 統一対応)
+        // =========================================================================
+        function openNoteReplyModal() {
+            const sel = document.getElementById('noteReplyMatchedItem');
+            if (sel && sel.options.length <= 1 && allItems.length > 0) {
+                allItems.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.id;
+                    const qShort = item.question.length > 36 ? item.question.slice(0, 36) + '…' : item.question;
+                    opt.textContent = `[${item.id}] ${qShort}`;
+                    sel.appendChild(opt);
+                });
+            }
+            document.getElementById('noteReplyModal').classList.remove('hidden');
+            generateNoteReplies();
+        }
+
+        function closeNoteReplyModal() {
+            document.getElementById('noteReplyModal').classList.add('hidden');
+        }
+
+        function findBestKnowledgeMatch(commentText) {
+            if (!commentText || !commentText.trim() || allItems.length === 0) {
+                return activeModalIndex !== -1 ? allItems[activeModalIndex] : allItems[0];
+            }
+            const clean = commentText.trim();
+            let bestItem = allItems[0];
+            let bestScore = -1;
+
+            // Extract 2-char and 3-char tokens from comment for fast Japanese keyword matching
+            const tokens = [];
+            for (let i = 0; i < clean.length - 1; i++) {
+                const bi = clean.slice(i, i + 2);
+                if (!/[、。！？\s\n「」『』（）()]/.test(bi)) tokens.push(bi);
+            }
+
+            allItems.forEach(item => {
+                let score = 0;
+                const hayQ = (item.question || '') + ' ' + (item.categoryName || '') + ' ' + (item.dimension || '');
+                const hayBody = (item.shortAnswer || '') + ' ' + (item.details || '');
+                tokens.forEach(tk => {
+                    if (hayQ.includes(tk)) score += 3;
+                    else if (hayBody.includes(tk)) score += 1;
+                });
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestItem = item;
+                }
+            });
+            return bestItem;
+        }
+
+        function buildThreeReplyPatterns(userName, triggerType, commentText, matchedItem) {
+            const cleanUser = (userName || '').trim();
+            const greetingName = cleanUser
+                ? (cleanUser.endsWith('さん') || cleanUser.endsWith('様') ? `${cleanUser}、` : `${cleanUser}さん、`)
+                : '';
+
+            let reactionThank = '記事をお読みいただき、また温かいコメントと「スキ」をありがとうございます！';
+            if (triggerType === 'question') {
+                reactionThank = '記事をご覧いただき、また家づくりの大切なご質問・ご相談コメントをお寄せいただきありがとうございます！';
+            } else if (triggerType === 'like_follow') {
+                reactionThank = '「スキ」やフォロー、そして温かいメッセージをいただきありがとうございます！とても励みになります。';
+            }
+
+            // Extract empathetic echo from pasted comment if provided
+            let commentEcho = '';
+            const trimmedComment = (commentText || '').trim();
+            if (trimmedComment) {
+                const snippet = trimmedComment.replace(/\s+/g, ' ').slice(0, 48);
+                const suffix = trimmedComment.length > 48 ? '…' : '';
+                commentEcho = `「${snippet}${suffix}」とのご感想、まさに実際の家づくりでも多くの方が悩まれる大切なポイントですね。\n`;
+            }
+
+            const item = matchedItem || (allItems.length > 0 ? allItems[0] : null);
+            const qTitle = item ? item.question : '後悔しない間取りと温熱設計';
+            const shortAns = item ? item.shortAnswer : '毎日の家事動線と黄金寸法を事前に確認しておくことで、住んでからの快適性が大きく変わります。';
+            const dimBadge = item && item.dimension ? `（目安基準：${item.dimension}）` : '';
+            const topUrl = item && item.topUrl ? `https://www.t-smile.co.jp${item.topUrl}` : 'https://www.t-smile.co.jp/knowledge/';
+
+            const p1 = `${greetingName}${reactionThank}
+株式会社住ま居る 家づくりサポート係です。
+
+${commentEcho}今回の「${qTitle}」では、${shortAns}${dimBadge}という点をお伝えいたしました。
+図面を見ている段階では小さな差に見えても、毎日暮らす中での「動きやすさ・快適さ」に直結するポイントですので、少しでも家づくりのご参考になれば嬉しいです！
+
+これからも後悔しない家づくりの実用的な知見を発信してまいりますので、ぜひまた気軽にお立ち寄りください。
+（株式会社住ま居る 家づくりサポート係）`;
+
+            const p2 = `${greetingName}${reactionThank}
+株式会社住ま居る 家づくりサポート係です。
+
+${commentEcho}もし現在「${item ? item.categoryName : '間取りや温熱・省エネ設計'}」まわりでご検討中でしたら、判断基準となる寸法と図解をまとめた一覧ページも公開しておりますので、よろしければ家づくりノート代わりにご活用ください。
+▼ 図解データベースはこちら
+${topUrl}
+
+「こんな場合はどうなる？」といった疑問がございましたら、いつでもコメント欄でお気軽にお声がけくださいね！
+（株式会社住ま居る 家づくりサポート係）`;
+
+            const p3 = `${greetingName}${reactionThank}
+株式会社住ま居る 家づくりサポート係です。
+
+${trimmedComment ? '温かいお言葉をいただき、スタッフ一同大変嬉しく拝見いたしました！\n' : ''}これからも「建てる前に知っておきたい間取りの黄金寸法」や「一年中快適に暮らせる温熱・省エネの知恵」を分かりやすくお届けしてまいります。
+今後ともどうぞよろしくお願いいたします！
+（株式会社住ま居る 家づくりサポート係）`;
+
+            return { p1, p2, p3, item };
+        }
+
+        function generateNoteReplies() {
+            const userName = document.getElementById('noteReplyUser').value;
+            const triggerType = document.getElementById('noteReplyType').value;
+            const commentText = document.getElementById('noteReplyComment').value;
+            const selectedId = document.getElementById('noteReplyMatchedItem').value;
+
+            let matchedItem = null;
+            if (selectedId && selectedId !== 'auto') {
+                matchedItem = allItems.find(i => i.id === selectedId);
+            }
+            if (!matchedItem) {
+                matchedItem = findBestKnowledgeMatch(commentText);
+            }
+
+            const lblInfo = document.getElementById('lblNoteMatchInfo');
+            if (lblInfo && matchedItem) {
+                lblInfo.textContent = `🔗 参照した知見: [${matchedItem.id}] ${matchedItem.question}`;
+            }
+
+            const res = buildThreeReplyPatterns(userName, triggerType, commentText, matchedItem);
+            document.getElementById('noteReplyOut1').value = res.p1;
+            document.getElementById('noteReplyOut2').value = res.p2;
+            document.getElementById('noteReplyOut3').value = res.p3;
+            if (commentText && commentText.trim()) {
+                showToast('💬 いただいたコメントに合わせた返信文を3パターン生成しました！');
+            }
+        }
+
+        function generateModalNoteReplies() {
+            if (activeModalIndex === -1) return;
+            const item = allItems[activeModalIndex];
+            const userName = document.getElementById('txtModalNoteUser').value;
+            const triggerType = document.getElementById('selModalNoteType').value;
+            const commentText = document.getElementById('txtModalNoteComment').value;
+
+            const res = buildThreeReplyPatterns(userName, triggerType, commentText, item);
+            document.getElementById('txtModalReply1').value = res.p1;
+            document.getElementById('txtModalReply2').value = res.p2;
+            document.getElementById('txtModalReply3').value = res.p3;
+            showToast('💬 この記事専用のnote返信文を3パターン生成しました！');
         }
 
         // =========================================================================
@@ -1271,7 +1707,7 @@
             } else if (activeModalIndex !== -1 && allItems[activeModalIndex]) {
                 const item = allItems[activeModalIndex];
                 if (item.image) {
-                    const ABS_BASE_DIR = 'E:\\Dropbox\\■住ま居る\\■住ま居る共有\\ﾒﾀﾊﾞｰｽ展示場\\Antigravity\\public';
+                    const ABS_BASE_DIR = 'D:\\Dropbox\\■住ま居る\\■住ま居る共有\\ﾒﾀﾊﾞｰｽ展示場\\Antigravity\\public';
                     const normPath = item.image.split('/').join('\\');
                     p = ABS_BASE_DIR + (normPath.startsWith('\\') ? normPath : '\\' + normPath);
                 }

@@ -20,7 +20,7 @@ FINAL_BASE = os.path.join(BASE_DIR, 'public', 'videos', 'veo3', 'final')
 # 利用可能な最高峰Neural日本語音声モデル（Edge-TTS公式モデル）
 VOICES = {
     'female': 'ja-JP-NanamiNeural',   # 聞き取りやすく洗練された女性アナウンサー声
-    'male': 'ja-JP-KeitaNeural',       # 誠実で信頼感のある男性建築士声
+    'male': 'ja-JP-KeitaNeural',       # 誠実で信頼感のある男性ナレーター声
     'warm': 'ja-JP-NanamiNeural'       # 柔らかなトーン（七海・ナチュラル）
 }
 
@@ -39,6 +39,14 @@ async def generate_single_audio(item_id, voice_type='female', speed_rate='+10%',
         raise ValueError(f"Item not found: {item_id}")
 
     raw_text = custom_text or item.get('narrationJa') or item.get('question', '')
+    if custom_text and custom_text.strip() != item.get('narrationJa', ''):
+        item['narrationJa'] = custom_text.strip()
+        try:
+            with open(PORTAL_JSON, 'w', encoding='utf-8') as wf:
+                json.dump(data, wf, ensure_ascii=False, indent=2)
+        except Exception as e:
+            print(f"[VoiceGen Notice] Could not persist custom narration text: {e}")
+
     # 専門用語・単位・記号を自然なアナウンサー発音に変換
     narration_text = normalize_phonetics(raw_text)
     genre = item['genre']
@@ -69,7 +77,7 @@ async def generate_single_audio(item_id, voice_type='female', speed_rate='+10%',
         os.makedirs(out_final_dir, exist_ok=True)
         final_video_path = os.path.join(out_final_dir, f"{item_id}_final.mp4")
 
-        # 3. FFmpegで映像（10秒）と音声を結合 (-map 0:v:0 -map 1:a:0 で確実に音声を結合)
+        # 3. FFmpegで映像（15秒）と音声を結合 (-af apad で音声が15秒未満でも映像が途中で切れないように無音パディング)
         cmd = [
             'ffmpeg', '-y',
             '-i', raw_video_path,
@@ -77,6 +85,7 @@ async def generate_single_audio(item_id, voice_type='female', speed_rate='+10%',
             '-map', '0:v:0',
             '-map', '1:a:0',
             '-c:v', 'copy',
+            '-af', 'apad',
             '-c:a', 'aac',
             '-b:a', '192k',
             '-shortest',
@@ -157,7 +166,7 @@ async def combine_video_with_audio(item_id, voice_type='female'):
         except Exception as e:
             print(f"[Archive Notice] バックアップスキップ: {e}")
 
-    # 3. FFmpeg結合実行（直接 final_video_file へ出力することで、ファイルロックやmoveの競合を完全に回避）
+    # 3. FFmpeg結合実行（15秒の映像尺を途中で切らないよう -af apad で無音パディングして結合）
     cmd = [
         'ffmpeg', '-y',
         '-i', source_video,
@@ -165,6 +174,7 @@ async def combine_video_with_audio(item_id, voice_type='female'):
         '-map', '0:v:0',
         '-map', '1:a:0',
         '-c:v', 'copy',
+        '-af', 'apad',
         '-c:a', 'aac',
         '-b:a', '192k',
         '-shortest',
