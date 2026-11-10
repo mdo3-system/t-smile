@@ -1,7 +1,7 @@
 {
-  "version": "2.22.0",
+  "version": "2.23.0",
   "buildDate": "2026-11-10",
-  "releaseName": "Production Release v2.22.0 - 2026年11月住宅ローン最新金利・東和銀行反映・埼玉県63市町村助成金公式完全照合是正・創業32年改定",
+  "releaseName": "Production Release v2.23.0 - 住宅ローンSSOT単一情報源化・東和銀行公式URL完全一致是正・全19行比較表/グラフ同期",
   "components": {
     "madoriSketch": "2.6.4",
     "smileStudio": "2.7.0",
@@ -10,13 +10,23 @@
     "speedPlanner": "2.2.0",
     "knowledgeVideoPortal": "1.8.2",
     "subsidyNavi": "2.6.0",
-    "mortgageDiagnosis": "2.8.0",
+    "mortgageDiagnosis": "2.9.0",
     "thermalBot": "2.19.0",
     "plansSSG": "2.19.0",
     "domEngine": "1.2.1",
     "caseStudies": "2.19.0"
   },
   "changelog": [
+    {
+      "version": "2.23.0",
+      "date": "2026-11-10",
+      "title": "本番サーバー正式運用デプロイ v2.23.0（住宅ローン比較表・グラフの単一情報源SSOT統合・東和銀行公式URL/金利完全是正・GEMINI.md第14条制定）",
+      "changes": [
+        "【住宅ローン単一情報源（SSOT）統合】public/mortgage/index.html 内の比較一覧表（19行）および代表金利比較グラフ（13行）を JS配列 BANKS_DB から自動生成同期する構造に改め、表・グラフ・診断結果の二重管理齟齬を根絶",
+        "【東和銀行および全19行URL・金利の完全統一】東和銀行一覧表の旧URL（/personal/loan/jutaku/）・旧プラン名・旧金利を完全に一掃し、公式商品詳細（/juutakuloan/）および公式金利票（/rate/loan/）、変動1.625%〜1.875%へ100%統一。群馬・足利・auじぶん・ドコモSMTB等の表/グラフ不整合も同時に全面解消",
+        "【GEMINI.md 第14条（ネガティブ検証・実測証跡報告）制定】旧値0件証明と全箇所一致の自動検証プロセスを規約化"
+      ]
+    },
     {
       "version": "2.22.0",
       "date": "2026-11-10",
