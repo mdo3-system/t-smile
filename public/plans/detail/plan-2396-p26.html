@@ -111,7 +111,7 @@
           {
             "@type": "ListItem",
             "position": 2,
-            "name": "3D間取りプラン集（707選）",
+            "name": "3D間取りプラン集（703選）",
             "item": "https://t-smile.co.jp/plans/"
           },
           {
@@ -229,6 +229,116 @@
     .floor-gallery { margin-bottom: 2.5rem; }
     .floor-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
     .floor-card-title { font-size: 1.2rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
+    
+    /* 2D ⇄ 3D インタラクティブ比較スライダー ＆ タブ切替 UI */
+    .compare-mode-tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .mode-tab { background: #ffffff; border: 1px solid #cbd5e1; padding: 7px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; color: #475569; cursor: pointer; transition: all 0.2s; }
+    .mode-tab:hover { background: #f1f5f9; border-color: #94a3b8; }
+    .mode-tab.active { background: #0284c7; color: #ffffff; border-color: #0284c7; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25); }
+    
+    .compare-slider-container {
+      position: relative;
+      width: 100%;
+      height: 520px;
+      max-height: 70vh;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      user-select: none;
+      touch-action: pan-y;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      --slider-pos: 50%;
+    }
+    @media (max-width: 768px) {
+      .compare-slider-container { height: 340px; }
+    }
+    .slider-img {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: contain;
+      background: #ffffff;
+      pointer-events: none;
+    }
+    .slider-img.layer-3d { z-index: 1; }
+    .slider-img.layer-2d {
+      z-index: 2;
+      clip-path: polygon(0 0, var(--slider-pos, 50%) 0, var(--slider-pos, 50%) 100%, 0 100%);
+    }
+    .slider-handle {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: var(--slider-pos, 50%);
+      width: 4px;
+      background: #0284c7;
+      cursor: ew-resize;
+      z-index: 10;
+      transform: translateX(-50%);
+    }
+    .slider-handle::before {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0; left: -14px; right: -14px;
+      cursor: ew-resize;
+    }
+    .slider-btn {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: #0284c7;
+      color: #ffffff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 800;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.35);
+      border: 2px solid #ffffff;
+      cursor: ew-resize;
+    }
+    .layer-badge {
+      position: absolute;
+      bottom: 12px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
+      z-index: 5;
+      pointer-events: none;
+    }
+    .badge-2d {
+      left: 12px;
+      background: rgba(15, 23, 42, 0.75);
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .badge-3d {
+      right: 12px;
+      background: rgba(2, 132, 199, 0.85);
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .slider-caption {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+    .single-img-wrap {
+      text-align: center;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .single-img-wrap img {
+      max-width: 100%;
+      height: auto;
+      max-height: 520px;
+      object-fit: contain;
+    }
     .floor-imgs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; }
     .img-box { text-align: center; background: #ffffff; border-radius: 8px; padding: 10px; border: 1px solid #cbd5e1; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
     .img-box img { max-width: 100%; height: auto; max-height: 380px; object-fit: contain; border-radius: 4px; }
@@ -723,7 +833,7 @@
       <div class="nav-tier-bottom">
         <ul class="nav-links-tier nav-main-links">
           <li><a href="/" class="nav-link active" data-target="top">🏠 ホーム</a></li>
-          <li><a href="/plans/index.html" class="nav-link" style="color: #38bdf8; font-weight: 800;">📐 707プラン集</a></li>
+          <li><a href="/plans/index.html" class="nav-link" style="color: #38bdf8; font-weight: 800;">📐 703プラン集</a></li>
           <li><a href="/about/" class="nav-link" data-target="our-philosophy" style="cursor: pointer;">🏛️ こだわり（芳彩）</a></li>
           <li><a href="/schedule/" class="nav-link" style="color: #38bdf8; font-weight: 800;">📅 家づくり工程</a></li>
           <li><a href="/evidence/" class="nav-link" data-target="credlayer" style="color: #34d399; font-weight: 800; cursor: pointer;">🛡️ 信頼実証</a></li>
@@ -751,7 +861,7 @@
       <li><a class="mobile-nav-link highlight" href="/jfd-survey/" style="background: linear-gradient(135deg, #0f766e, #0d9488); color: #fff; font-weight: 800;">🛰️ JFD 3D点群測量と敷地調査（本物資料公開） ↗</a></li>
       <li><a class="mobile-nav-link highlight" href="/subsidy/index.html" style="background: linear-gradient(135deg, #047857, #10b981); color: #fff; font-weight: 800;">💰 AI補助金ナビ（市区町村別一括判定） ↗</a></li>
       <li><a class="mobile-nav-link highlight" href="/mortgage/index.html" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-weight: 800;">🏦 AI住宅ローン診断（金利・団信TOP5） ↗</a></li>
-      <li><a class="mobile-nav-link highlight" href="/plans/index.html">📐 AI 3Dプラン選定（707選）</a></li>
+      <li><a class="mobile-nav-link highlight" href="/plans/index.html">📐 AI 3Dプラン選定（703選）</a></li>
       <li><a class="mobile-nav-link highlight" href="https://lin.ee/8fdyyGu" target="_blank" rel="noopener noreferrer" style="background: #06c755; color: #fff; font-weight: 900;">💬 公式LINE（専任スタッフ直通・ID: @051vqxla） ↗</a></li>
       <li><a class="mobile-nav-link highlight" href="/madori-sketch/" target="_blank" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-weight: 800;">✏️ 3D手描き間取り工房 ↗</a></li>
       <li><a class="mobile-nav-link highlight" href="/smilestudio.html" target="_blank" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800;">🎨 AI 3Dパース工房（SmileStudio） ↗</a></li>
@@ -801,7 +911,7 @@
   <div class="plan-detail-wrap" style="margin-top: 1.5rem;">
     <!-- パンくずリスト（正規階層） -->
     <nav class="plan-crumb" aria-label="パンくずリスト">
-      <a href="/">🏠 ホーム</a> &gt; <a href="/plans/">3D間取りプラン集（707選）</a> &gt; <span>PLAN-2396-P26</span>
+      <a href="/">🏠 ホーム</a> &gt; <a href="/plans/">3D間取りプラン集（703選）</a> &gt; <span>PLAN-2396-P26</span>
     </nav>
 
     <!-- バッジ行 -->
@@ -934,35 +1044,89 @@
     <!-- フロア別図面 ＆ 3Dパースギャラリー -->
     <h2 style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-bottom: 0.8rem;">📐 フロア別 間取り原本図面 ＆ 3Dリアルパース</h2>
     <div class="floor-gallery">
-      <div class="floor-card">
+      <div class="floor-card" id="floor-card-plan-2396-p26_1f">
               <div class="floor-card-title">
                 <span>🏛️ 1F 間取り詳細</span>
                 <span style="font-size: 0.85rem; font-weight: 700; color: #64748b;">床面積: 61.69㎡</span>
               </div>
-              <div class="floor-imgs-grid">
-                <div class="img-box">
-                  <img src="/plans_zbuf/2396/PLAN-2396-P26_1F_2d.webp" alt="37.32坪 4LDK + 書斎 + 倉庫 (北玄関) 1F 平面図原本" loading="lazy" />
-                  <div class="img-box-label">📄 2D設計図面（平面原本）</div>
+
+              <!-- 表示モード切替タブ -->
+              <div class="compare-mode-tabs">
+                <button type="button" class="mode-tab active" onclick="switchFloorMode('plan-2396-p26_1f', 'slider', this)">🔍 重ね合わせスライダー</button>
+                <button type="button" class="mode-tab" onclick="switchFloorMode('plan-2396-p26_1f', '2d', this)">📄 2D図面原本</button>
+                <button type="button" class="mode-tab" onclick="switchFloorMode('plan-2396-p26_1f', '3d', this)">✨ 3Dパース</button>
+              </div>
+
+              <!-- スライダー比較ビュー -->
+              <div class="floor-view-panel view-slider" id="view-slider-plan-2396-p26_1f">
+                <div class="compare-slider-container" id="slider-plan-2396-p26_1f">
+                  <img src="/plans_zbuf/2396/PLAN-2396-P26_1F_3d.webp" class="slider-img layer-3d" alt="37.32坪 4LDK + 書斎 + 倉庫 (北玄関) 1F 3Dパース鳥瞰" loading="lazy" />
+                  <img src="/plans_zbuf/2396/PLAN-2396-P26_1F_2d.webp" class="slider-img layer-2d" alt="37.32坪 4LDK + 書斎 + 倉庫 (北玄関) 1F 平面図原本" loading="lazy" />
+                  <span class="layer-badge badge-2d">📄 2D図面原本</span>
+                  <span class="layer-badge badge-3d">✨ 3Dパース鳥瞰</span>
+                  <div class="slider-handle">
+                    <div class="slider-btn">⇄</div>
+                  </div>
                 </div>
-                <div class="img-box">
+                <div class="slider-caption">中央のスライダー（⇄）を左右に動かすと、2D図面原本と3Dパースを重ね合わせて見比べられます</div>
+              </div>
+
+              <!-- 2D単体ビュー -->
+              <div class="floor-view-panel view-2d" id="view-2d-plan-2396-p26_1f" style="display: none;">
+                <div class="single-img-wrap">
+                  <img src="/plans_zbuf/2396/PLAN-2396-P26_1F_2d.webp" alt="37.32坪 4LDK + 書斎 + 倉庫 (北玄関) 1F 平面図原本" loading="lazy" />
+                  <div class="img-box-label">📄 2D設計図面（平面原本・寸法線・部屋名付き）</div>
+                </div>
+              </div>
+
+              <!-- 3D単体ビュー -->
+              <div class="floor-view-panel view-3d" id="view-3d-plan-2396-p26_1f" style="display: none;">
+                <div class="single-img-wrap">
                   <img src="/plans_zbuf/2396/PLAN-2396-P26_1F_3d.webp" alt="37.32坪 4LDK + 書斎 + 倉庫 (北玄関) 1F 3Dパース鳥瞰" loading="lazy" />
-                  <div class="img-box-label">✨ 3Dリアルパース（鳥瞰ビュー）</div>
+                  <div class="img-box-label">✨ 3Dリアルパース（立体鳥瞰ビュー）</div>
                 </div>
               </div>
             </div>
-<div class="floor-card">
+<div class="floor-card" id="floor-card-plan-2396-p26_2f">
               <div class="floor-card-title">
                 <span>🏛️ 2F 間取り詳細</span>
                 <span style="font-size: 0.85rem; font-weight: 700; color: #64748b;">床面積: 61.69㎡</span>
               </div>
-              <div class="floor-imgs-grid">
-                <div class="img-box">
-                  <img src="/plans_zbuf/2396/PLAN-2396-P26_2F_2d.webp" alt="37.32坪 4LDK + 書斎 + 倉庫 (北玄関) 2F 平面図原本" loading="lazy" />
-                  <div class="img-box-label">📄 2D設計図面（平面原本）</div>
+
+              <!-- 表示モード切替タブ -->
+              <div class="compare-mode-tabs">
+                <button type="button" class="mode-tab active" onclick="switchFloorMode('plan-2396-p26_2f', 'slider', this)">🔍 重ね合わせスライダー</button>
+                <button type="button" class="mode-tab" onclick="switchFloorMode('plan-2396-p26_2f', '2d', this)">📄 2D図面原本</button>
+                <button type="button" class="mode-tab" onclick="switchFloorMode('plan-2396-p26_2f', '3d', this)">✨ 3Dパース</button>
+              </div>
+
+              <!-- スライダー比較ビュー -->
+              <div class="floor-view-panel view-slider" id="view-slider-plan-2396-p26_2f">
+                <div class="compare-slider-container" id="slider-plan-2396-p26_2f">
+                  <img src="/plans_zbuf/2396/PLAN-2396-P26_2F_3d.webp" class="slider-img layer-3d" alt="37.32坪 4LDK + 書斎 + 倉庫 (北玄関) 2F 3Dパース鳥瞰" loading="lazy" />
+                  <img src="/plans_zbuf/2396/PLAN-2396-P26_2F_2d.webp" class="slider-img layer-2d" alt="37.32坪 4LDK + 書斎 + 倉庫 (北玄関) 2F 平面図原本" loading="lazy" />
+                  <span class="layer-badge badge-2d">📄 2D図面原本</span>
+                  <span class="layer-badge badge-3d">✨ 3Dパース鳥瞰</span>
+                  <div class="slider-handle">
+                    <div class="slider-btn">⇄</div>
+                  </div>
                 </div>
-                <div class="img-box">
+                <div class="slider-caption">中央のスライダー（⇄）を左右に動かすと、2D図面原本と3Dパースを重ね合わせて見比べられます</div>
+              </div>
+
+              <!-- 2D単体ビュー -->
+              <div class="floor-view-panel view-2d" id="view-2d-plan-2396-p26_2f" style="display: none;">
+                <div class="single-img-wrap">
+                  <img src="/plans_zbuf/2396/PLAN-2396-P26_2F_2d.webp" alt="37.32坪 4LDK + 書斎 + 倉庫 (北玄関) 2F 平面図原本" loading="lazy" />
+                  <div class="img-box-label">📄 2D設計図面（平面原本・寸法線・部屋名付き）</div>
+                </div>
+              </div>
+
+              <!-- 3D単体ビュー -->
+              <div class="floor-view-panel view-3d" id="view-3d-plan-2396-p26_2f" style="display: none;">
+                <div class="single-img-wrap">
                   <img src="/plans_zbuf/2396/PLAN-2396-P26_2F_3d.webp" alt="37.32坪 4LDK + 書斎 + 倉庫 (北玄関) 2F 3Dパース鳥瞰" loading="lazy" />
-                  <div class="img-box-label">✨ 3Dリアルパース（鳥瞰ビュー）</div>
+                  <div class="img-box-label">✨ 3Dリアルパース（立体鳥瞰ビュー）</div>
                 </div>
               </div>
             </div>
@@ -1006,18 +1170,18 @@
           </div>
         </div>
 
-        <!-- STEP 2: 理想の広さ・動線・収納から選ぶ【707プラン比較】 -->
+        <!-- STEP 2: 理想の広さ・動線・収納から選ぶ【703プラン比較】 -->
         <div class="funnel-step-card step-card-featured">
           <div class="step-num-badge badge-featured">STEP 2</div>
           <div class="step-icon">📋</div>
           <h4 class="step-heading">広さ・動線・収納から選ぶ</h4>
           <p class="step-desc">
-            ご家族に必要な坪数（25坪〜40坪台）や家事ラク動線、収納率（12〜15%）を707プランから比較検討。理想の間取りを絞り込めます。<br>
+            ご家族に必要な坪数（25坪〜40坪台）や家事ラク動線、収納率（12〜15%）を703プランから比較検討。理想の間取りを絞り込めます。<br>
             <span style="font-size: 0.78rem; color: #94a3b8; display: inline-block; margin-top: 4px;">（※ こだわり派の方は「3D間取り工房」で立体編集も可能）</span>
           </p>
           <div class="step-btn-wrap">
             <a href="/plans/" class="funnel-btn-step btn-step-3d">
-              🔍 【37.32坪前後】の707プランを探す ➜
+              🔍 【37.32坪前後】の703プランを探す ➜
             </a>
           </div>
         </div>
@@ -1242,6 +1406,73 @@
         alert('家カルテへの保存に失敗しました: ' + e.message);
       }
     }
+
+    // 2D ⇄ 3D インタラクティブ比較スライダー ＆ タブ切替ロジック
+    function initPlanSliders() {
+      document.querySelectorAll('.compare-slider-container').forEach(container => {
+        let isDown = false;
+
+        function updateSlider(clientX) {
+          const rect = container.getBoundingClientRect();
+          let pos = (clientX - rect.left) / rect.width;
+          if (pos < 0.02) pos = 0.02;
+          if (pos > 0.98) pos = 0.98;
+          const pct = (pos * 100).toFixed(2) + '%';
+          container.style.setProperty('--slider-pos', pct);
+        }
+
+        const handle = container.querySelector('.slider-handle');
+        if (handle) {
+          handle.addEventListener('mousedown', (e) => {
+            isDown = true;
+            e.preventDefault();
+          });
+          handle.addEventListener('touchstart', () => {
+            isDown = true;
+          }, { passive: true });
+        }
+
+        window.addEventListener('mouseup', () => isDown = false);
+        window.addEventListener('touchend', () => isDown = false);
+
+        window.addEventListener('mousemove', (e) => {
+          if (isDown) updateSlider(e.clientX);
+        });
+        window.addEventListener('touchmove', (e) => {
+          if (!isDown || !e.touches[0]) return;
+          updateSlider(e.touches[0].clientX);
+        }, { passive: true });
+
+        container.addEventListener('click', (e) => {
+          if (e.target.closest('.slider-btn') || e.target.closest('.slider-handle')) return;
+          updateSlider(e.clientX);
+        });
+      });
+    }
+
+    function switchFloorMode(flId, mode, btnEl) {
+      const card = document.getElementById('floor-card-' + flId);
+      if (!card) return;
+
+      if (btnEl) {
+        card.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+        btnEl.classList.add('active');
+      }
+
+      const pSlider = document.getElementById('view-slider-' + flId);
+      const p2d = document.getElementById('view-2d-' + flId);
+      const p3d = document.getElementById('view-3d-' + flId);
+
+      if (pSlider) pSlider.style.display = (mode === 'slider') ? 'block' : 'none';
+      if (p2d) p2d.style.display = (mode === '2d') ? 'block' : 'none';
+      if (p3d) p3d.style.display = (mode === '3d') ? 'block' : 'none';
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPlanSliders);
+    } else {
+      initPlanSliders();
+    }
   </script>
     <!-- Footer with Semantic Internal Linking Sitemap (SEO PageRank Booster) -->
   <footer>
@@ -1390,7 +1621,7 @@
           <li><a href="/?cat=equipment#madori-consultation-bot" class="footer-madori-link" data-madori-cat="equipment" itemprop="url"><span itemprop="name">🔥 暖炉・設備・照明（薪ストーブ・間接照明）</span></a></li>
           <li><a href="/?cat=garden#madori-consultation-bot" class="footer-madori-link" data-madori-cat="garden" itemprop="url"><span itemprop="name">🌿 尺庭・デッキ（中庭テラス・日射採光外構）</span></a></li>
           <li><a href="/?cat=kaso#madori-consultation-bot" class="footer-madori-link" data-madori-cat="kaso" itemprop="url"><span itemprop="name">⛩️ 家相・風水（鬼門対策・現代科学の間取り）</span></a></li>
-          <li><a href="/plans/index.html" class="footer-madori-link" itemprop="url" style="color: #38bdf8; font-weight: 700;"><span itemprop="name">📐 707プラン集（間取り＆費用カタログ） ↗</span></a></li>
+          <li><a href="/plans/index.html" class="footer-madori-link" itemprop="url" style="color: #38bdf8; font-weight: 700;"><span itemprop="name">📐 703プラン集（間取り＆費用カタログ） ↗</span></a></li>
           <li><a href="/madori-consultation/" class="footer-madori-link" itemprop="url" style="color: #c4b5fd; font-weight: 700;"><span itemprop="name">💬 夫婦のAI間取り相談＆家づくりカルテ ↗</span></a></li>
           <li><a href="/knowledge/madori/" class="footer-madori-link" itemprop="url" style="color: #94a3b8; font-size: 0.8rem;"><span itemprop="name">📄 設計知見200選 総合記事版（SSGピラー） ↗</span></a></li>
         </ul>

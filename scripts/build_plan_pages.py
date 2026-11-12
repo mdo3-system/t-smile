@@ -147,7 +147,7 @@ PLAN_TEMPLATE = """<!DOCTYPE html>
           {
             "@type": "ListItem",
             "position": 2,
-            "name": "3D間取りプラン集（707選）",
+            "name": "3D間取りプラン集（__TOTAL_PLANS__選）",
             "item": "https://t-smile.co.jp/plans/"
           },
           {
@@ -265,6 +265,116 @@ PLAN_TEMPLATE = """<!DOCTYPE html>
     .floor-gallery { margin-bottom: 2.5rem; }
     .floor-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
     .floor-card-title { font-size: 1.2rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
+    
+    /* 2D ⇄ 3D インタラクティブ比較スライダー ＆ タブ切替 UI */
+    .compare-mode-tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .mode-tab { background: #ffffff; border: 1px solid #cbd5e1; padding: 7px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; color: #475569; cursor: pointer; transition: all 0.2s; }
+    .mode-tab:hover { background: #f1f5f9; border-color: #94a3b8; }
+    .mode-tab.active { background: #0284c7; color: #ffffff; border-color: #0284c7; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25); }
+    
+    .compare-slider-container {
+      position: relative;
+      width: 100%;
+      height: 520px;
+      max-height: 70vh;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      user-select: none;
+      touch-action: pan-y;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      --slider-pos: 50%;
+    }
+    @media (max-width: 768px) {
+      .compare-slider-container { height: 340px; }
+    }
+    .slider-img {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: contain;
+      background: #ffffff;
+      pointer-events: none;
+    }
+    .slider-img.layer-3d { z-index: 1; }
+    .slider-img.layer-2d {
+      z-index: 2;
+      clip-path: polygon(0 0, var(--slider-pos, 50%) 0, var(--slider-pos, 50%) 100%, 0 100%);
+    }
+    .slider-handle {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: var(--slider-pos, 50%);
+      width: 4px;
+      background: #0284c7;
+      cursor: ew-resize;
+      z-index: 10;
+      transform: translateX(-50%);
+    }
+    .slider-handle::before {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0; left: -14px; right: -14px;
+      cursor: ew-resize;
+    }
+    .slider-btn {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: #0284c7;
+      color: #ffffff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 800;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.35);
+      border: 2px solid #ffffff;
+      cursor: ew-resize;
+    }
+    .layer-badge {
+      position: absolute;
+      bottom: 12px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
+      z-index: 5;
+      pointer-events: none;
+    }
+    .badge-2d {
+      left: 12px;
+      background: rgba(15, 23, 42, 0.75);
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .badge-3d {
+      right: 12px;
+      background: rgba(2, 132, 199, 0.85);
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .slider-caption {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+    .single-img-wrap {
+      text-align: center;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .single-img-wrap img {
+      max-width: 100%;
+      height: auto;
+      max-height: 520px;
+      object-fit: contain;
+    }
     .floor-imgs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; }
     .img-box { text-align: center; background: #ffffff; border-radius: 8px; padding: 10px; border: 1px solid #cbd5e1; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
     .img-box img { max-width: 100%; height: auto; max-height: 380px; object-fit: contain; border-radius: 4px; }
@@ -714,7 +824,7 @@ PLAN_TEMPLATE = """<!DOCTYPE html>
   <div class="plan-detail-wrap" style="margin-top: 1.5rem;">
     <!-- パンくずリスト（正規階層） -->
     <nav class="plan-crumb" aria-label="パンくずリスト">
-      <a href="/">🏠 ホーム</a> &gt; <a href="/plans/">3D間取りプラン集（707選）</a> &gt; <span>__PLAN_ID__</span>
+      <a href="/">🏠 ホーム</a> &gt; <a href="/plans/">3D間取りプラン集（__TOTAL_PLANS__選）</a> &gt; <span>__PLAN_ID__</span>
     </nav>
 
     <!-- バッジ行 -->
@@ -888,18 +998,18 @@ PLAN_TEMPLATE = """<!DOCTYPE html>
           </div>
         </div>
 
-        <!-- STEP 2: 理想の広さ・動線・収納から選ぶ【707プラン比較】 -->
+        <!-- STEP 2: 理想の広さ・動線・収納から選ぶ【__TOTAL_PLANS__プラン比較】 -->
         <div class="funnel-step-card step-card-featured">
           <div class="step-num-badge badge-featured">STEP 2</div>
           <div class="step-icon">📋</div>
           <h4 class="step-heading">広さ・動線・収納から選ぶ</h4>
           <p class="step-desc">
-            ご家族に必要な坪数（25坪〜40坪台）や家事ラク動線、収納率（12〜15%）を707プランから比較検討。理想の間取りを絞り込めます。<br>
+            ご家族に必要な坪数（25坪〜40坪台）や家事ラク動線、収納率（12〜15%）を__TOTAL_PLANS__プランから比較検討。理想の間取りを絞り込めます。<br>
             <span style="font-size: 0.78rem; color: #94a3b8; display: inline-block; margin-top: 4px;">（※ こだわり派の方は「3D間取り工房」で立体編集も可能）</span>
           </p>
           <div class="step-btn-wrap">
             <a href="/plans/" class="funnel-btn-step btn-step-3d">
-              🔍 【__TOTAL_TSUBO__坪前後】の707プランを探す ➜
+              🔍 【__TOTAL_TSUBO__坪前後】の__TOTAL_PLANS__プランを探す ➜
             </a>
           </div>
         </div>
@@ -1110,6 +1220,73 @@ PLAN_TEMPLATE = """<!DOCTYPE html>
         alert('家カルテへの保存に失敗しました: ' + e.message);
       }
     }
+
+    // 2D ⇄ 3D インタラクティブ比較スライダー ＆ タブ切替ロジック
+    function initPlanSliders() {
+      document.querySelectorAll('.compare-slider-container').forEach(container => {
+        let isDown = false;
+
+        function updateSlider(clientX) {
+          const rect = container.getBoundingClientRect();
+          let pos = (clientX - rect.left) / rect.width;
+          if (pos < 0.02) pos = 0.02;
+          if (pos > 0.98) pos = 0.98;
+          const pct = (pos * 100).toFixed(2) + '%';
+          container.style.setProperty('--slider-pos', pct);
+        }
+
+        const handle = container.querySelector('.slider-handle');
+        if (handle) {
+          handle.addEventListener('mousedown', (e) => {
+            isDown = true;
+            e.preventDefault();
+          });
+          handle.addEventListener('touchstart', () => {
+            isDown = true;
+          }, { passive: true });
+        }
+
+        window.addEventListener('mouseup', () => isDown = false);
+        window.addEventListener('touchend', () => isDown = false);
+
+        window.addEventListener('mousemove', (e) => {
+          if (isDown) updateSlider(e.clientX);
+        });
+        window.addEventListener('touchmove', (e) => {
+          if (!isDown || !e.touches[0]) return;
+          updateSlider(e.touches[0].clientX);
+        }, { passive: true });
+
+        container.addEventListener('click', (e) => {
+          if (e.target.closest('.slider-btn') || e.target.closest('.slider-handle')) return;
+          updateSlider(e.clientX);
+        });
+      });
+    }
+
+    function switchFloorMode(flId, mode, btnEl) {
+      const card = document.getElementById('floor-card-' + flId);
+      if (!card) return;
+
+      if (btnEl) {
+        card.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+        btnEl.classList.add('active');
+      }
+
+      const pSlider = document.getElementById('view-slider-' + flId);
+      const p2d = document.getElementById('view-2d-' + flId);
+      const p3d = document.getElementById('view-3d-' + flId);
+
+      if (pSlider) pSlider.style.display = (mode === 'slider') ? 'block' : 'none';
+      if (p2d) p2d.style.display = (mode === '2d') ? 'block' : 'none';
+      if (p3d) p3d.style.display = (mode === '3d') ? 'block' : 'none';
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPlanSliders);
+    } else {
+      initPlanSliders();
+    }
   </script>
   __COMMON_FOOTER__
   <script src="/js/app.js"></script>
@@ -1207,17 +1384,28 @@ def build_plans_hub(plans):
             features.append('storage')
         feature_str = " ".join(features) if features else "all"
 
-        thumb = "/images/hero_kaguya_house.jpg"
-        if plan.get('floors') and plan['floors'][0].get('gemini_3d'):
-            thumb = plan['floors'][0]['gemini_3d']
-        elif plan.get('floors') and plan['floors'][0].get('clean_2d'):
-            thumb = plan['floors'][0]['clean_2d']
+        thumb_3d = ""
+        thumb_2d = ""
+        if plan.get('floors') and len(plan['floors']) > 0:
+            thumb_3d = plan['floors'][0].get('gemini_3d', '')
+            thumb_2d = plan['floors'][0].get('clean_2d', '')
+
+        default_thumb = thumb_3d or thumb_2d or "/images/hero_kaguya_house.jpg"
+        
+        toggle_html = ""
+        if thumb_3d and thumb_2d:
+            toggle_html = f"""
+              <div class="hub-thumb-toggle" onclick="event.preventDefault(); event.stopPropagation();">
+                <button type="button" class="hub-toggle-btn active" data-mode="3d" onclick="setHubCardView('{slug}', '3d', this)">3D</button>
+                <button type="button" class="hub-toggle-btn" data-mode="2d" onclick="setHubCardView('{slug}', '2d', this)">2D</button>
+              </div>"""
 
         card = f"""
         <article class="hub-plan-card" data-tsubo="{tsubo_cat}" data-floors="{floors}" data-dir="{clean_dir}" data-features="{feature_str}">
           <a href="/plans/detail/{slug}.html" class="hub-card-link">
             <div class="hub-thumb-wrap">
-              <img src="{thumb}" alt="{title} 3Dパース鳥瞰" loading="lazy" class="hub-thumb" />
+              <img src="{default_thumb}" data-src-3d="{thumb_3d}" data-src-2d="{thumb_2d}" alt="{title} 3Dパース鳥瞰" loading="lazy" class="hub-thumb" id="hub-thumb-{slug}" />
+              {toggle_html}
               <div class="hub-badges">
                 <span class="hub-badge hub-badge-tsubo">📐 {tsubo}坪</span>
                 <span class="hub-badge hub-badge-floor">{floors}階建</span>
@@ -1228,7 +1416,7 @@ def build_plans_hub(plans):
               <div class="hub-rooms-row">🚪 {rooms} ｜ 🍳 LDK {ldk}帖</div>
               <h2 class="hub-plan-title">{title}</h2>
               <div class="hub-footer">
-                <span class="hub-detail-btn">間取り原本 ＆ 3Dパースを見る ➜</span>
+                <span class="hub-detail-btn">間取り原本 ＆ スライダー比較を見る ➜</span>
               </div>
             </div>
           </a>
@@ -1244,15 +1432,15 @@ def build_plans_hub(plans):
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>3D住宅間取りプラン集707選｜埼玉の高気密高断熱注文住宅【株式会社住ま居る】</title>
-  <meta name="description" content="埼玉県全域（さいたま市・川口市・戸田市・越谷市・春日部市・鶴ヶ島・川越等）で建てる完全自由設計の3D住宅間取りプラン全707選。全棟耐震等級3（許容応力度計算）×HEAT20 G2/G3水準・全棟実測C値0.2〜0.6。平屋・2階建て・20坪台〜40坪台の間取り図面原本と3Dパースを完全公開。" />
-  <meta name="keywords" content="注文住宅 間取り 707選, 埼玉 間取りプラン, さいたま市 注文住宅, 川口市 注文住宅, 越谷市 注文住宅, 春日部市 注文住宅, 鶴ヶ島 注文住宅, 川越 注文住宅, 平屋 間取り, 30坪 間取り, 許容応力度計算, 高気密高断熱, 株式会社住ま居る" />
+  <title>3D住宅間取りプラン集{total_plans}選｜埼玉の高気密高断熱注文住宅【株式会社住ま居る】</title>
+  <meta name="description" content="埼玉県全域（さいたま市・川口市・戸田市・越谷市・春日部市・鶴ヶ島・川越等）で建てる完全自由設計の3D住宅間取りプラン全{total_plans}選。全棟耐震等級3（許容応力度計算）×HEAT20 G2/G3水準・全棟実測C値0.2〜0.6。平屋・2階建て・20坪台〜40坪台の間取り図面原本と3Dパースを完全公開。" />
+  <meta name="keywords" content="注文住宅 間取り {total_plans}選, 埼玉 間取りプラン, さいたま市 注文住宅, 川口市 注文住宅, 越谷市 注文住宅, 春日部市 注文住宅, 鶴ヶ島 注文住宅, 川越 注文住宅, 平屋 間取り, 30坪 間取り, 許容応力度計算, 高気密高断熱, 株式会社住ま居る" />
   <link rel="canonical" href="https://t-smile.co.jp/plans/" />
 
   <!-- OGP for Social Sharing -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="3D住宅間取りプラン集707選｜埼玉の高気密高断熱注文住宅【株式会社住ま居る】" />
-  <meta property="og:description" content="埼玉県鶴ヶ島・川越の注文住宅工務店「住ま居る」の3D間取りプラン集707選。全棟許容応力度計算耐震等級3×HEAT20 G2/G3。平屋から2階建てまで原本図面公開。" />
+  <meta property="og:title" content="3D住宅間取りプラン集{total_plans}選｜埼玉の高気密高断熱注文住宅【株式会社住ま居る】" />
+  <meta property="og:description" content="埼玉県鶴ヶ島・川越の注文住宅工務店「住ま居る」の3D間取りプラン集{total_plans}選。全棟許容応力度計算耐震等級3×HEAT20 G2/G3。平屋から2階建てまで原本図面公開。" />
   <meta property="og:image" content="https://t-smile.co.jp/images/hero_kaguya_house.jpg" />
   <meta property="og:url" content="https://t-smile.co.jp/plans/" />
   <meta property="og:site_name" content="株式会社住ま居る" />
@@ -1266,7 +1454,7 @@ def build_plans_hub(plans):
       {{
         "@type": "CollectionPage",
         "@id": "https://t-smile.co.jp/plans/#collection",
-        "name": "3D住宅間取りプラン集707選",
+        "name": "3D住宅間取りプラン集{total_plans}選",
         "description": "埼玉県内で建てる完全自由設計・超高気密高断熱注文住宅の3D間取りプランカタログ集。",
         "url": "https://t-smile.co.jp/plans/",
         "isPartOf": {{
@@ -1289,7 +1477,7 @@ def build_plans_hub(plans):
           {{
             "@type": "ListItem",
             "position": 2,
-            "name": "3D間取りプラン集（707選）",
+            "name": "3D間取りプラン集（{total_plans}選）",
             "item": "https://t-smile.co.jp/plans/"
           }}
         ]
@@ -1530,6 +1718,43 @@ def build_plans_hub(plans):
     .hub-badge-floor {{ background: rgba(16, 185, 129, 0.9); color: #ffffff; }}
     .hub-badge-dir {{ background: rgba(217, 119, 6, 0.9); color: #ffffff; }}
 
+    /* 2D / 3D ワンタップ切替ピル（カード右上） */
+    .hub-thumb-toggle {{
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 20px;
+      padding: 2px;
+      display: flex;
+      gap: 2px;
+      z-index: 6;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }}
+    .hub-toggle-btn {{
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      line-height: 1.2;
+    }}
+    .hub-toggle-btn.active {{
+      background: #0284c7;
+      color: #ffffff;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+    }}
+    .hub-toggle-btn:hover:not(.active) {{
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.12);
+    }}
+
     .hub-info {{
       padding: 1.1rem;
       display: flex;
@@ -1568,16 +1793,16 @@ def build_plans_hub(plans):
   <div class="hub-container" style="margin-top: 1.5rem;">
     <!-- パンくずリスト -->
     <nav class="hub-crumb" aria-label="パンくずリスト">
-      <a href="/">🏠 ホーム</a> &gt; <span>3D間取りプラン集（707選）</span>
+      <a href="/">🏠 ホーム</a> &gt; <span>3D間取りプラン集（{total_plans}選）</span>
     </nav>
 
     <!-- ヒーロー -->
     <header class="hub-hero">
       <span class="hub-hero-tag">🏛️ 全棟許容応力度計算 耐震等級3 × HEAT20 G2/G3水準 全棟実測C値0.2〜0.6</span>
-      <h1>埼玉の自由設計 3D住宅プラン集（全707選）</h1>
+      <h1>埼玉の自由設計 3D住宅プラン集（全{total_plans}選）</h1>
       <p>
         埼玉県鶴ヶ島市・川越市・坂戸市・東松山市を中心に創業32年・累計800棟の実績を持つ地域工務店「株式会社住ま居る」。<br>
-        20坪台の平屋から40坪超のゆとり住宅まで、専任建築士チームが手がけた全707プランの平面図原本および3Dリアルパース鳥瞰図を完全公開しています。
+        20坪台の平屋から40坪超のゆとり住宅まで、専任建築士チームが手がけた全{total_plans}プランの平面図原本および3Dリアルパース鳥瞰図を完全公開しています。
       </p>
     </header>
 
@@ -1765,6 +1990,34 @@ def build_plans_hub(plans):
         }}, 100);
       }}
     }})();
+
+    // 2D / 3D ワンタップ切替ピル操作ロジック
+    function setHubCardView(slug, mode, btn) {{
+      const thumb = document.getElementById('hub-thumb-' + slug);
+      if (!thumb) return;
+
+      const parent = btn.parentElement;
+      if (parent) {{
+        parent.querySelectorAll('.hub-toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }}
+
+      if (mode === '2d') {{
+        const src2d = thumb.getAttribute('data-src-2d');
+        if (src2d) {{
+          thumb.src = src2d;
+          thumb.style.objectFit = 'contain';
+          thumb.style.background = '#ffffff';
+        }}
+      }} else {{
+        const src3d = thumb.getAttribute('data-src-3d');
+        if (src3d) {{
+          thumb.src = src3d;
+          thumb.style.objectFit = 'cover';
+          thumb.style.background = '';
+        }}
+      }}
+    }}
   </script>
   <script src="/js/app.js"></script>
 </body>
@@ -1849,26 +2102,68 @@ def build_all_plans():
 
         # Floors HTML
         floors_cards = []
-        for fl in floors_data:
-            fl_name = fl.get('floor', '1F')
+        for fl_idx, fl in enumerate(floors_data):
+            fl_name = fl.get('floor', f'{fl_idx+1}F')
             fl_area = fl.get('area_sqm', '')
             img_2d = fl.get('clean_2d', '')
             img_3d = fl.get('gemini_3d', '')
+            fl_id = f"{id_slug}_{fl_name.lower().replace(' ', '_')}"
 
-            card_html = f"""<div class="floor-card">
+            if img_2d and img_3d:
+                card_html = f"""<div class="floor-card" id="floor-card-{fl_id}">
               <div class="floor-card-title">
                 <span>🏛️ {fl_name} 間取り詳細</span>
                 <span style="font-size: 0.85rem; font-weight: 700; color: #64748b;">床面積: {fl_area}㎡</span>
               </div>
-              <div class="floor-imgs-grid">
-                <div class="img-box">
+
+              <!-- 表示モード切替タブ -->
+              <div class="compare-mode-tabs">
+                <button type="button" class="mode-tab active" onclick="switchFloorMode('{fl_id}', 'slider', this)">🔍 重ね合わせスライダー</button>
+                <button type="button" class="mode-tab" onclick="switchFloorMode('{fl_id}', '2d', this)">📄 2D図面原本</button>
+                <button type="button" class="mode-tab" onclick="switchFloorMode('{fl_id}', '3d', this)">✨ 3Dパース</button>
+              </div>
+
+              <!-- スライダー比較ビュー -->
+              <div class="floor-view-panel view-slider" id="view-slider-{fl_id}">
+                <div class="compare-slider-container" id="slider-{fl_id}">
+                  <img src="{img_3d}" class="slider-img layer-3d" alt="{title} {fl_name} 3Dパース鳥瞰" loading="lazy" />
+                  <img src="{img_2d}" class="slider-img layer-2d" alt="{title} {fl_name} 平面図原本" loading="lazy" />
+                  <span class="layer-badge badge-2d">📄 2D図面原本</span>
+                  <span class="layer-badge badge-3d">✨ 3Dパース鳥瞰</span>
+                  <div class="slider-handle">
+                    <div class="slider-btn">⇄</div>
+                  </div>
+                </div>
+                <div class="slider-caption">中央のスライダー（⇄）を左右に動かすと、2D図面原本と3Dパースを重ね合わせて見比べられます</div>
+              </div>
+
+              <!-- 2D単体ビュー -->
+              <div class="floor-view-panel view-2d" id="view-2d-{fl_id}" style="display: none;">
+                <div class="single-img-wrap">
                   <img src="{img_2d}" alt="{title} {fl_name} 平面図原本" loading="lazy" />
-                  <div class="img-box-label">📄 2D設計図面（平面原本）</div>
+                  <div class="img-box-label">📄 2D設計図面（平面原本・寸法線・部屋名付き）</div>
                 </div>
-                <div class="img-box">
+              </div>
+
+              <!-- 3D単体ビュー -->
+              <div class="floor-view-panel view-3d" id="view-3d-{fl_id}" style="display: none;">
+                <div class="single-img-wrap">
                   <img src="{img_3d}" alt="{title} {fl_name} 3Dパース鳥瞰" loading="lazy" />
-                  <div class="img-box-label">✨ 3Dリアルパース（鳥瞰ビュー）</div>
+                  <div class="img-box-label">✨ 3Dリアルパース（立体鳥瞰ビュー）</div>
                 </div>
+              </div>
+            </div>"""
+            else:
+                fallback_img = img_2d or img_3d
+                label = "📄 2D設計図面原本" if img_2d else "✨ 3Dリアルパース"
+                card_html = f"""<div class="floor-card">
+              <div class="floor-card-title">
+                <span>🏛️ {fl_name} 間取り詳細</span>
+                <span style="font-size: 0.85rem; font-weight: 700; color: #64748b;">床面積: {fl_area}㎡</span>
+              </div>
+              <div class="single-img-wrap">
+                <img src="{fallback_img}" alt="{title} {fl_name}" loading="lazy" />
+                <div class="img-box-label">{label}</div>
               </div>
             </div>"""
             floors_cards.append(card_html)
@@ -1978,6 +2273,7 @@ def build_all_plans():
             "__STORAGE_RATIO__": str(storage_ratio),
             "__HOUSEWORK_STEPS__": str(housework_steps),
             "__DAYLIGHT_RATIO__": str(daylight_ratio),
+            "__TOTAL_PLANS__": str(len(plans)),
             "__COMMON_HEADER__": common_header,
             "__COMMON_FOOTER__": common_footer
         }
@@ -1988,7 +2284,7 @@ def build_all_plans():
         with open(file_path, 'w', encoding='utf-8') as out_f:
             out_f.write(html)
 
-    print(f"[SSG Plans] Successfully generated {len(generated_urls)} URLs (Hub + 707 plan pages) with rich AIO insights & FAQ schema!")
+    print(f"[SSG Plans] Successfully generated {len(generated_urls)} URLs (Hub + {len(plans)} plan pages) with rich AIO insights & FAQ schema!")
     return generated_urls
 
 if __name__ == '__main__':
