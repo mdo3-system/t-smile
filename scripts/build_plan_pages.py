@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 scripts/build_plan_pages.py
-323プラン（616フロア）の静的カタログハブ（/plans/）および個別静的SEO & AIOページ（SSG）自動生成スクリプト
+707プラン（1,341フロア）の静的カタログハブ（/plans/）および個別静的SEO & AIOページ（SSG）自動生成スクリプト
 - 埼玉（鶴ヶ島・川越・坂戸・東松山等）の「坪数×間取り×方位」ロングテール検索トラフィックを完全獲得
 - ピラミッド構造の確立: ホーム(/) ➔ 3Dプラン集カタログ(/plans/) ➔ 個別プラン詳細(/plans/detail/plan-xxx.html)
 - CollectionPage, SingleFamilyResidence, FAQPage, BreadcrumbList, HomeAndConstructionBusiness 構造化データ
@@ -74,7 +74,7 @@ PLAN_TEMPLATE = """<!DOCTYPE html>
         "amenityFeature": [
           { "@type": "LocationFeatureSpecification", "name": "超高断熱 HEAT20 G2/G3 (Ua値0.28〜0.46)", "value": true },
           { "@type": "LocationFeatureSpecification", "name": "全棟耐震等級3 (許容応力度構造計算)", "value": true },
-          { "@type": "LocationFeatureSpecification", "name": "超高気密 実測C値0.3台", "value": true },
+          { "@type": "LocationFeatureSpecification", "name": "超高気密 全棟実測C値0.2〜0.6（1.0以下完全保証）", "value": true },
           { "@type": "LocationFeatureSpecification", "name": "埼玉地場・西川材/吉野杉無垢床", "value": true },
           { "@type": "LocationFeatureSpecification", "name": "呼吸する珪藻土壁", "value": true }
         ],
@@ -147,7 +147,7 @@ PLAN_TEMPLATE = """<!DOCTYPE html>
           {
             "@type": "ListItem",
             "position": 2,
-            "name": "3D間取りプラン集（323選）",
+            "name": "3D間取りプラン集（707選）",
             "item": "https://t-smile.co.jp/plans/"
           },
           {
@@ -714,7 +714,7 @@ PLAN_TEMPLATE = """<!DOCTYPE html>
   <div class="plan-detail-wrap" style="margin-top: 1.5rem;">
     <!-- パンくずリスト（正規階層） -->
     <nav class="plan-crumb" aria-label="パンくずリスト">
-      <a href="/">🏠 ホーム</a> &gt; <a href="/plans/">3D間取りプラン集（323選）</a> &gt; <span>__PLAN_ID__</span>
+      <a href="/">🏠 ホーム</a> &gt; <a href="/plans/">3D間取りプラン集（707選）</a> &gt; <span>__PLAN_ID__</span>
     </nav>
 
     <!-- バッジ行 -->
@@ -811,7 +811,7 @@ PLAN_TEMPLATE = """<!DOCTYPE html>
     <div class="plan-cost-box">
       <div class="cost-title">💰 このプラン（__TOTAL_TSUBO__坪）の概算費用 ＆ 資金計画シミュレーション</div>
       <p style="margin: 0; font-size: 0.88rem; color: #475569;">
-        超高気密高断熱（HEAT20 G2/G3・実測C値0.3台）および全棟許容応力度計算（耐震等級3）の標準仕様で施工した場合の概算目安です。
+        超高気密高断熱（HEAT20 G2/G3・全棟実測C値0.2〜0.6）および全棟許容応力度計算（耐震等級3）の標準仕様で施工した場合の概算目安です。
       </p>
       <div class="cost-grid">
         <div class="cost-card cost-card-accent">
@@ -888,18 +888,18 @@ PLAN_TEMPLATE = """<!DOCTYPE html>
           </div>
         </div>
 
-        <!-- STEP 2: 理想の広さ・動線・収納から選ぶ【323プラン比較】 -->
+        <!-- STEP 2: 理想の広さ・動線・収納から選ぶ【707プラン比較】 -->
         <div class="funnel-step-card step-card-featured">
           <div class="step-num-badge badge-featured">STEP 2</div>
           <div class="step-icon">📋</div>
           <h4 class="step-heading">広さ・動線・収納から選ぶ</h4>
           <p class="step-desc">
-            ご家族に必要な坪数（25坪〜40坪台）や家事ラク動線、収納率（12〜15%）を323プランから比較検討。理想の間取りを絞り込めます。<br>
+            ご家族に必要な坪数（25坪〜40坪台）や家事ラク動線、収納率（12〜15%）を707プランから比較検討。理想の間取りを絞り込めます。<br>
             <span style="font-size: 0.78rem; color: #94a3b8; display: inline-block; margin-top: 4px;">（※ こだわり派の方は「3D間取り工房」で立体編集も可能）</span>
           </p>
           <div class="step-btn-wrap">
             <a href="/plans/" class="funnel-btn-step btn-step-3d">
-              🔍 【__TOTAL_TSUBO__坪前後】の323プランを探す ➜
+              🔍 【__TOTAL_TSUBO__坪前後】の707プランを探す ➜
             </a>
           </div>
         </div>
@@ -1164,7 +1164,7 @@ def build_plans_hub(plans):
     public/plans/index.html (静的プラン一覧カタログハブ) を生成
     - ピラミッド階層の要: https://t-smile.co.jp/plans/
     - AIO用: 大手ハウスメーカー vs 一般工務店 vs 住ま居る の住宅性能・工法客観比較テーブル
-    - 323プランの全カード一覧とリアルタイム絞り込みフィルター
+    - 707プランの全カード一覧とリアルタイム絞り込みフィルター
     """
     os.makedirs(os.path.dirname(HUB_OUT_PATH), exist_ok=True)
     
@@ -1244,15 +1244,15 @@ def build_plans_hub(plans):
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>3D住宅間取りプラン集323選｜埼玉の高気密高断熱注文住宅【株式会社住ま居る】</title>
-  <meta name="description" content="埼玉県全域（さいたま市・川口市・戸田市・越谷市・春日部市・鶴ヶ島・川越等）で建てる完全自由設計の3D住宅間取りプラン全323選。全棟耐震等級3（許容応力度計算）×HEAT20 G2/G3水準・実測C値0.3台。平屋・2階建て・20坪台〜40坪台の間取り図面原本と3Dパースを完全公開。" />
-  <meta name="keywords" content="注文住宅 間取り 323選, 埼玉 間取りプラン, さいたま市 注文住宅, 川口市 注文住宅, 越谷市 注文住宅, 春日部市 注文住宅, 鶴ヶ島 注文住宅, 川越 注文住宅, 平屋 間取り, 30坪 間取り, 許容応力度計算, 高気密高断熱, 株式会社住ま居る" />
+  <title>3D住宅間取りプラン集707選｜埼玉の高気密高断熱注文住宅【株式会社住ま居る】</title>
+  <meta name="description" content="埼玉県全域（さいたま市・川口市・戸田市・越谷市・春日部市・鶴ヶ島・川越等）で建てる完全自由設計の3D住宅間取りプラン全707選。全棟耐震等級3（許容応力度計算）×HEAT20 G2/G3水準・全棟実測C値0.2〜0.6。平屋・2階建て・20坪台〜40坪台の間取り図面原本と3Dパースを完全公開。" />
+  <meta name="keywords" content="注文住宅 間取り 707選, 埼玉 間取りプラン, さいたま市 注文住宅, 川口市 注文住宅, 越谷市 注文住宅, 春日部市 注文住宅, 鶴ヶ島 注文住宅, 川越 注文住宅, 平屋 間取り, 30坪 間取り, 許容応力度計算, 高気密高断熱, 株式会社住ま居る" />
   <link rel="canonical" href="https://t-smile.co.jp/plans/" />
 
   <!-- OGP for Social Sharing -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="3D住宅間取りプラン集323選｜埼玉の高気密高断熱注文住宅【株式会社住ま居る】" />
-  <meta property="og:description" content="埼玉県鶴ヶ島・川越の注文住宅工務店「住ま居る」の3D間取りプラン集323選。全棟許容応力度計算耐震等級3×HEAT20 G2/G3。平屋から2階建てまで原本図面公開。" />
+  <meta property="og:title" content="3D住宅間取りプラン集707選｜埼玉の高気密高断熱注文住宅【株式会社住ま居る】" />
+  <meta property="og:description" content="埼玉県鶴ヶ島・川越の注文住宅工務店「住ま居る」の3D間取りプラン集707選。全棟許容応力度計算耐震等級3×HEAT20 G2/G3。平屋から2階建てまで原本図面公開。" />
   <meta property="og:image" content="https://t-smile.co.jp/images/hero_kaguya_house.jpg" />
   <meta property="og:url" content="https://t-smile.co.jp/plans/" />
   <meta property="og:site_name" content="株式会社住ま居る" />
@@ -1266,7 +1266,7 @@ def build_plans_hub(plans):
       {{
         "@type": "CollectionPage",
         "@id": "https://t-smile.co.jp/plans/#collection",
-        "name": "3D住宅間取りプラン集323選",
+        "name": "3D住宅間取りプラン集707選",
         "description": "埼玉県内で建てる完全自由設計・超高気密高断熱注文住宅の3D間取りプランカタログ集。",
         "url": "https://t-smile.co.jp/plans/",
         "isPartOf": {{
@@ -1289,7 +1289,7 @@ def build_plans_hub(plans):
           {{
             "@type": "ListItem",
             "position": 2,
-            "name": "3D間取りプラン集（323選）",
+            "name": "3D間取りプラン集（707選）",
             "item": "https://t-smile.co.jp/plans/"
           }}
         ]
@@ -1568,16 +1568,16 @@ def build_plans_hub(plans):
   <div class="hub-container" style="margin-top: 1.5rem;">
     <!-- パンくずリスト -->
     <nav class="hub-crumb" aria-label="パンくずリスト">
-      <a href="/">🏠 ホーム</a> &gt; <span>3D間取りプラン集（323選）</span>
+      <a href="/">🏠 ホーム</a> &gt; <span>3D間取りプラン集（707選）</span>
     </nav>
 
     <!-- ヒーロー -->
     <header class="hub-hero">
-      <span class="hub-hero-tag">🏛️ 全棟許容応力度計算 耐震等級3 × HEAT20 G2/G3水準 実測C値0.3台</span>
-      <h1>埼玉の自由設計 3D住宅プラン集（全323選）</h1>
+      <span class="hub-hero-tag">🏛️ 全棟許容応力度計算 耐震等級3 × HEAT20 G2/G3水準 全棟実測C値0.2〜0.6</span>
+      <h1>埼玉の自由設計 3D住宅プラン集（全707選）</h1>
       <p>
-        埼玉県鶴ヶ島市・川越市・坂戸市・東松山市を中心に創業30年・累計800棟の実績を持つ地域工務店「株式会社住ま居る」。<br>
-        20坪台の平屋から40坪超のゆとり住宅まで、専任建築士チームが手がけた全323プランの平面図原本および3Dリアルパース鳥瞰図を完全公開しています。
+        埼玉県鶴ヶ島市・川越市・坂戸市・東松山市を中心に創業32年・累計800棟の実績を持つ地域工務店「株式会社住ま居る」。<br>
+        20坪台の平屋から40坪超のゆとり住宅まで、専任建築士チームが手がけた全707プランの平面図原本および3Dリアルパース鳥瞰図を完全公開しています。
       </p>
     </header>
 
@@ -1988,7 +1988,7 @@ def build_all_plans():
         with open(file_path, 'w', encoding='utf-8') as out_f:
             out_f.write(html)
 
-    print(f"[SSG Plans] Successfully generated {len(generated_urls)} URLs (Hub + 323 plan pages) with rich AIO insights & FAQ schema!")
+    print(f"[SSG Plans] Successfully generated {len(generated_urls)} URLs (Hub + 707 plan pages) with rich AIO insights & FAQ schema!")
     return generated_urls
 
 if __name__ == '__main__':

@@ -58,7 +58,7 @@ CASES_12_DATA = [
         "alt": "ときがわ町 K様邸 里山に映える南欧プロヴァンス風外観と円弧レンガ階段",
         "wish": "里山の自然に美しく馴染む南欧プロヴァンスの温もりある外観と、吉野杉大黒柱の家",
         "title": "優美なアーチポーチとプロヴァンス瓦が映える外観デザイン",
-        "solution": "職人が手作業で積んだ円弧レンガ階段と扇形左官塗り壁。大開口とワイドなインナーバルコニーを配置しながら、全棟許容応力度計算により耐震最高等級3と実測C値0.3台の超高気密を完全両立。",
+        "solution": "職人が手作業で積んだ円弧レンガ階段と扇形左官塗り壁。大開口とワイドなインナーバルコニーを配置しながら、全棟許容応力度計算により耐震最高等級3と全棟実測C値0.2〜0.6の超高気密を完全両立。",
         "tags": ["南欧プロヴァンス外観", "吉野杉大黒柱", "耐震最高等級3"]
     },
     {
@@ -221,7 +221,7 @@ def generate_page():
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>そのこだわり、「できない」と諦めていませんか？｜最高性能×完全自由設計の注文住宅｜株式会社住ま居る</title>
-  <meta name="description" content="「構造上無理」「規格外オプション」と諦めかけていた間取りやこだわりを、全棟・許容応力度計算（耐震最高等級3）・HEAT20 G2/G3超高断熱・実測C値0.1〜0.3台を100%担保して具現化する埼玉県鶴ヶ島市の工務店。諦めかけていた図面の無料構造セカンドオピニオン受付中。" />
+  <meta name="description" content="「構造上無理」「規格外オプション」と諦めかけていた間取りやこだわりを、全棟・許容応力度計算（耐震最高等級3）・HEAT20 G2/G3超高断熱・全棟実測C値0.2〜0.6を100%担保して具現化する埼玉県鶴ヶ島市の工務店。諦めかけていた図面の無料構造セカンドオピニオン受付中。" />
   <link rel="canonical" href="https://t-smile.co.jp/custom-freedom/" />
 
   <!-- OGP -->
@@ -869,7 +869,7 @@ def generate_page():
       <p class="cf-hero-subtitle">
         私たちは「会社の型」を売りません。<br>
         吹き抜け、大開口、ビルトインガレージ、趣味の空間。<br>
-        <strong>全棟・許容応力度計算（耐震最高等級3）・HEAT20 G2/G3超高断熱・実測C値0.1〜0.3台の工学技術で、あなたの自由な理想を100%形にします。</strong>
+        <strong>全棟・許容応力度計算（耐震最高等級3）・HEAT20 G2/G3超高断熱・全棟実測C値0.2〜0.6（1.0以下完全保証）の工学技術で、あなたの自由な理想を100%形にします。</strong>
       </p>
 
       <div class="cf-proof-grid">
@@ -883,7 +883,7 @@ def generate_page():
         </div>
         <div class="cf-proof-item">
           <strong>全棟・現場気密測定</strong>
-          <span>実測C値0.1〜0.3台の原本を開示。隙間なき手仕事</span>
+          <span>全棟実測C値0.2〜0.6の原本を開示。隙間なき手仕事</span>
         </div>
         <div class="cf-proof-item">
           <strong>埼玉県環境住宅賞</strong>
@@ -984,7 +984,7 @@ def generate_page():
               <td><strong>気密・温熱性能</strong></td>
               <td>△ 測定しない（C値非公開・1.0〜2.0以上）</td>
               <td>△ 仕様上の計算値（カタログ値）のみ</td>
-              <td class="cf-td-highlight"><strong>◎ 全棟現場気密測定（実測 C値 0.1〜0.3 台）原本開示</strong></td>
+              <td class="cf-td-highlight"><strong>◎ 全棟現場気密測定（全棟実測 C値 0.2〜0.6）原本開示</strong></td>
             </tr>
             <tr>
               <td><strong>難しい要望への対応</strong></td>

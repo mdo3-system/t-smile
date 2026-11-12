@@ -94,6 +94,38 @@ def sync_links():
                 except Exception as e:
                     print(f"  ❌ data内リンクエラー ({d_item}): {e}")
 
+    # sample_data ディレクトリの同期（JFD調査・サンプルPDF等）
+    pub_sample_dir = os.path.join(public_dir, 'sample_data')
+    root_sample_dir = os.path.join(base_dir, 'sample_data')
+    if os.path.exists(pub_sample_dir):
+        if not os.path.exists(root_sample_dir) and not os.path.islink(root_sample_dir):
+            try:
+                os.symlink(os.path.join('public', 'sample_data'), root_sample_dir)
+                print(f"  ✅ sample_data シンボリックリンク作成: sample_data -> public/sample_data")
+                created_count += 1
+            except Exception as e:
+                print(f"  ❌ sample_data リンク作成エラー: {e}")
+        elif os.path.isdir(root_sample_dir) and not os.path.islink(root_sample_dir):
+            # 実体ディレクトリが存在する場合は、その配下のファイルを同期
+            print(f"\n📂 public/sample_data から {root_sample_dir} への個別ファイル同期中...")
+            for s_root, s_dirs, s_files in os.walk(pub_sample_dir):
+                rel = os.path.relpath(s_root, pub_sample_dir)
+                target_sub = os.path.join(root_sample_dir, rel) if rel != '.' else root_sample_dir
+                os.makedirs(target_sub, exist_ok=True)
+                for sf in s_files:
+                    st_target = os.path.join(target_sub, sf)
+                    st_source = os.path.join(s_root, sf)
+                    if not os.path.exists(st_target) and not os.path.islink(st_target):
+                        try:
+                            # 相対パスでのシンボリックリンク
+                            rel_src = os.path.relpath(st_source, os.path.dirname(st_target))
+                            os.symlink(rel_src, st_target)
+                            print(f"  ✅ sample_data内リンク作成: {rel}/{sf}")
+                            created_count += 1
+                        except Exception as e:
+                            print(f"  ❌ sample_data内リンクエラー ({sf}): {e}")
+
+
     # .htaccess の同期（Xserver固有設定を壊さずにリダイレクト＆最適化ブロックを反映）
     htaccess_target = os.path.join(base_dir, '.htaccess')
     htaccess_source = os.path.join(public_dir, '.htaccess')

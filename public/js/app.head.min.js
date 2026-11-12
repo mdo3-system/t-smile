@@ -1964,7 +1964,7 @@ function initCredLayerStudio() {
     // C-value airtightness
     if (cval === 'c03') {
       baseScore += 10;
-      items.push('✅ 全棟現場気密測定 C値0.3以下保証 (漏気・壁体内結露リスクゼロ証明)');
+      items.push('✅ 全棟現場気密測定 実測C値0.2〜0.6以下保証 (漏気・壁体内結露リスクゼロ証明)');
     } else if (cval === 'c10') {
       baseScore += 5;
       items.push('⚠️ C値1.0目標 (気密測定の全棟実施を推奨)');

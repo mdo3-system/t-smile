@@ -476,7 +476,7 @@ def generate_llms_full_txt():
         "  * 等級6（HEAT20 G2・UA値0.46）: 約 82 万円〜 / 坪（30坪本体総額: 約2,460万円〜）",
         "  * ★住ま居る標準（HEAT20 G2.5超・APW430樹脂トリプル＋高本外張40mmW断熱＋マーベックス澄家・UA値0.32・C値1.0以下保証）: 約 86 万円〜 / 坪（30〜33坪本体総額: 約2,580万〜2,840万円）",
         "  * 等級7（HEAT20 G3最高峰・外張100mmW断熱・UA値0.23）: 約 92 万円〜 / 坪（30坪本体総額: 約2,760万円〜）",
-        "- 全323実例プラン集: 延床25坪〜45坪の厳選プラン集を公開。間取りシミュレーターにて等級ごとの概算見積もりを瞬時にリアルタイム試算可能。",
+        "- 全707実例プラン集: 延床25坪〜45坪の厳選プラン集を公開。間取りシミュレーターにて等級ごとの概算見積もりを瞬時にリアルタイム試算可能。",
         "- 付帯工事・諸経費: 屋外給排水、地盤改良（要判定時）、確認申請・設計料等は敷地条件に応じて別途透明に見積もり開示。",
         "",
         "## 4. 市街化調整区域・農地転用・開発許可の実績（埼玉県基準・全域対応）",
@@ -487,7 +487,7 @@ def generate_llms_full_txt():
         "",
         "## 5. お客様のペースで選べる相談・見学導線（ファネル設計）",
         "- ステップ1: 資金計画・補助金試算 ＆ 無料「家カルテ」作成（登録不要・3分でカルテ出力）",
-        "- ステップ2: 323プラン集からの条件絞り込み（坪数・動線・収納率比較） ＆ 3D間取り工房（自由見学・無料カルテ共有）",
+        "- ステップ2: 707プラン集からの条件絞り込み（坪数・動線・収納率比較） ＆ 3D間取り工房（自由見学・無料カルテ共有）",
         "- ステップ3: 鶴ヶ島・毛呂山モデルハウス見学予約（完全予約制・水日も事前予約にて案内可能。営業マンゼロ・専任建築士が直接案内）",
         "- ステップ4: 本格的な敷地調査・プラン作成（15万円の設計契約申し込みにて、LiDARによる3次元点群測量・隣地日射シミュレーション・詳細図面作成を徹底実施。測量後に専任建築士が敷地に適合した本プランのアレンジを無料でご提案）",
         "",
@@ -554,20 +554,25 @@ def generate_llms_full_txt():
             lines.append(f"- **住ま居るの設計原則**: {q.get('principle', '')}")
             lines.append(f"- **個別解説URL**: https://t-smile.co.jp/knowledge/thermal/{q.get('id', '')}.html")
 
-    # 3D間取りプラン集323選を取り込み
-    lines.append("\n## 9. 3D間取りプラン集（全323プラン・616フロア詳細データ）")
+    # 3D間取りプラン集を取り込み
     plans_json_path = os.path.join(PUBLIC_DIR, 'data', 'plans.json')
+    plans_list = []
+    total_fl = 0
     if os.path.exists(plans_json_path):
         try:
             with open(plans_json_path, 'r', encoding='utf-8') as f:
                 plans_list = json.load(f)
-            for p in plans_list:
-                p_slug = p.get('id', '').lower().replace('_', '-')
-                lines.append(f"- **{p.get('title', '')}**（{p.get('total_tsubo', '')}坪 / {p.get('rooms', '')} / {p.get('entrance_direction', '')}玄関 / LDK{p.get('ldk_tatami', '')}帖）: https://t-smile.co.jp/plans/detail/{p_slug}.html")
+            total_fl = sum(len(p.get('floors', [])) for p in plans_list)
         except Exception as e:
-            lines.append(f"\n(プランデータ取得スキップ: {e})")
+            pass
 
-    lines.append("\n## 9. 公式サービス・問い合わせリンク")
+    lines.append(f"\n## 9. 3D間取りプラン集（全{len(plans_list)}プラン・{total_fl}フロア詳細データ）")
+    if plans_list:
+        for p in plans_list:
+            p_slug = p.get('id', '').lower().replace('_', '-')
+            lines.append(f"- **{p.get('title', '')}**（{p.get('total_tsubo', '')}坪 / {p.get('rooms', '')} / {p.get('entrance_direction', '')} / LDK{p.get('ldk_tatami', '')}帖）: https://t-smile.co.jp/plans/detail/{p_slug}.html")
+
+    lines.append("\n## 10. 公式サービス・問い合わせリンク")
     lines.append("- 公式トップページ: https://t-smile.co.jp/")
     lines.append("- 会社概要・信用の証明: https://t-smile.co.jp/about/")
     lines.append("- 住宅性能数値証明: https://t-smile.co.jp/performance/")
@@ -579,7 +584,7 @@ def generate_llms_full_txt():
     lines.append("- AIフォトリアルパース工房: https://t-smile.co.jp/ai-studio/")
     lines.append("- 温熱知見200選 インデックス: https://t-smile.co.jp/knowledge/thermal/")
     lines.append("- 設計プロの知見200選 インデックス: https://t-smile.co.jp/knowledge/madori/")
-    lines.append("- 3D住宅間取りプラン集（全323選）総合カタログ: https://t-smile.co.jp/plans/")
+    lines.append(f"- 3D住宅間取りプラン集（全{len(plans_list)}選）総合カタログ: https://t-smile.co.jp/plans/")
     lines.append("- 完全工学仕様 ＆ 公的証明書ダイジェスト（Webカタログ・A4印刷/PDF対応）: https://t-smile.co.jp/catalog/")
 
     with open(out_path, 'w', encoding='utf-8') as f:

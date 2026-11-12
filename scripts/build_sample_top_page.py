@@ -70,7 +70,7 @@ def generate_sample_top():
               🛡️ 全棟許容応力度計算 耐震最高等級3
             </span>
             <span class="hero-brand-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); margin-bottom: 0; padding: 0.3rem 0.8rem; font-size: 0.78rem;">
-              ❄️ HEAT20 G2〜G3 × 実測C値0.1〜0.3台
+              ❄️ HEAT20 G2〜G3 × 全棟実測C値0.2〜0.6
             </span>
             <span class="hero-brand-tag" style="background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.35); margin-bottom: 0; padding: 0.3rem 0.8rem; font-size: 0.78rem;">
               🏆 埼玉県環境住宅賞受賞
@@ -100,12 +100,12 @@ def generate_sample_top():
             <p style="font-size: 0.92rem; line-height: 1.8; color: #cbd5e1; margin: 0 0 0.85rem 0;">
               多くのハウスメーカーや工務店は「当社の仕様はこれ」「標準プランはこちら」と、自分たちの型にお客様を押し込めようとします。<br>
               少し凝った間取りや自由なわがままを伝えた途端、<strong>「耐震計算が合わないので無理です」「規格外オプションで数百万円アップします」</strong>と諦めさせられていませんか？<br>
-              住ま居るは、全棟許容応力度計算（耐震最高等級3）・HEAT20 G2/G3超高断熱・実測C値0.1〜0.3台という最高峰の物理工学を100%担保した上で、あなたの“こだわり”を何一つ妥協せずに形にします。
+              住ま居るは、全棟許容応力度計算（耐震最高等級3）・HEAT20 G2/G3超高断熱・全棟実測C値0.2〜0.6という最高峰の物理工学を100%担保した上で、あなたの“こだわり”を何一つ妥協せずに形にします。
             </p>
             <p style="font-size: 0.90rem; line-height: 1.8; color: #94a3b8; margin: 0; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.8rem;">
               家を建てることは、工業製品やスペックを買うことではありません。<br>
               一生に一度、愛する家族と笑顔で過ごす<strong>「かけがえのない時間と命を守る場所」</strong>を育むことです。<br>
-              私たちは埼玉県鶴ヶ島市で30年、800家族の暮らしに寄り添い続けてきた地域工務店です。埼玉特有の厳しい夏の熱気を跳ね返す<strong>「屋根・外壁の遮熱工学」</strong>と、真冬もエアコン1台で心地よく過ごせる<strong>「HEAT20 G2〜G2.5の断熱気密（全棟実測C値0.3台・耐震等級3）」</strong>を両立。過剰な数値競争ではなく、埼玉の気候で本当に快適な住まいを熟練大工の手仕事でお届けします。
+              私たちは埼玉県鶴ヶ島市で32年、800家族の暮らしに寄り添い続けてきた地域工務店です。埼玉特有の厳しい夏の熱気を跳ね返す<strong>「屋根・外壁の遮熱工学」</strong>と、真冬もエアコン1台で心地よく過ごせる<strong>「HEAT20 G2〜G3の断熱気密（全棟実測C値0.2〜0.6・耐震等級3）」</strong>を両立。過剰な数値競争ではなく、埼玉の気候で本当に快適な住まいを熟練大工の手仕事でお届けします。
             </p>
           </div>
 

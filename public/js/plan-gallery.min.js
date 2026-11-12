@@ -1,7 +1,7 @@
 /**
  * ==========================================================================
  * AI間取り選別・相談スタジオ (3D住宅間取りプラン集 完全統合版)
- * 全323プラン(616フロア) × 条件選別ウィザード × 3D比較 × AIチャット相談改変
+ * 全707プラン(1,341フロア) × 条件選別ウィザード × 3D比較 × AIチャット相談改変
  * ==========================================================================
  */
 
@@ -32,7 +32,7 @@
   };
   let galleryDisplayCount = 12;
 
-  // 初期化（既存323プラン ＋ 間取り工房で作成・追加された共創プランの自動統合合算）
+  // 初期化（既存707プラン ＋ 間取り工房で作成・追加された共創プランの自動統合合算）
   async function init() {
     try {
       const res = await fetch('/data/plans.json');
@@ -65,7 +65,7 @@
       basePlans.forEach(p => { if (p && p.id && !comMap.has(p.id)) baseMap.set(p.id, p); });
       const uniqueBase = Array.from(baseMap.values());
 
-      // 新着共創プランを先頭に、続いて既存323プランを連結
+      // 新着共創プランを先頭に、続いて既存707プランを連結
       allPlans = [...uniqueCom, ...uniqueBase];
       const addedCount = uniqueCom.length;
       console.log(`[PlanStudio] Total active plans: ${allPlans.length} (Base: ${uniqueBase.length}, Community added: ${addedCount})`);
@@ -462,7 +462,7 @@
       { level: '4', name: '等級4', era: '建築物省エネ法 義務化基準', rate: 680000, spec: 'アルミ樹脂複合サッシ (UA値 0.87)', color: '#0284c7' },
       { level: '5', name: '等級5', era: 'ZEH水準 省エネ住宅', rate: 740000, spec: '高性能グラスウール＋樹脂サッシ (UA値 0.60)', color: '#0d9488' },
       { level: '6', name: '等級6', era: 'HEAT20 G2 快適基準', rate: 820000, spec: 'オール樹脂複層・高性能充填断熱 (UA値 0.46)', color: '#059669' },
-      { level: 'g25', name: '★住ま居る標準', era: 'HEAT20 G2.5 (許容応力度耐震3)', rate: 860000, spec: '樹脂トリプル＋付加断熱40mm (UA値 0.32・全棟C値1.0以下保証/実測0.3台) ｜ 西川材無垢＋珪藻土', color: '#d97706', isRecommended: true },
+      { level: 'g25', name: '★住ま居る標準', era: 'HEAT20 G2〜G3 (許容応力度耐震3)', rate: 860000, spec: '樹脂トリプル＋付加断熱40mm (UA値 0.32・全棟C値1.0以下保証/実測0.3台) ｜ 西川材無垢＋珪藻土', color: '#d97706', isRecommended: true },
       { level: '7', name: '等級7', era: 'HEAT20 G3 最高峰', rate: 930000, spec: '樹脂トリプル＋付加断熱100mm (UA値 0.23)', color: '#7c3aed' }
     ];
 
@@ -726,7 +726,7 @@
               </table>
             </div>
             <div style="font-size: 0.7rem; color: #64748b; margin-top: 6px; line-height: 1.4;">
-              ⚖️ <strong>【建築基準法・省エネ適合義務化】</strong> 2025年法改正により新築住宅は断熱等級4以上への適合が義務化されています（等級1〜3は新築不可のため対象外）。<br>💡 <strong>住ま居る標準（HEAT20 G2.5）</strong>は、全棟許容応力度計算による耐震等級3と全棟実測C値1.0以下保証（実績0.3台）を包括した究極の住み心地仕様です。
+              ⚖️ <strong>【建築基準法・省エネ適合義務化】</strong> 2025年法改正により新築住宅は断熱等級4以上への適合が義務化されています（等級1〜3は新築不可のため対象外）。<br>💡 <strong>住ま居る標準（HEAT20 G2〜G3）</strong>は、全棟許容応力度計算による耐震等級3と全棟実測C値1.0以下保証（実績0.3台）を包括した究極の住み心地仕様です。
             </div>
           </div>
 
@@ -936,7 +936,7 @@
       label: '吹き抜け ＆ パッシブ採光',
       desc: '1階と2階を縦に繋ぎ、高い位置の高窓（ハイサイドライト）から自然光を奥深くまで導く設計',
       dimension: '吹抜面積は6〜8帖が最適バランス。天井高5.2m前後に調光間接照明とシーリングファンを設置。',
-      pitfall: '一般的な断熱性の住宅では「冬寒く、夏2階がサウナ」になります。住ま居るはUA値0.32・全棟実測C値0.3台の超高気密高断熱のため、上下温度差1℃以内で年中快適です。',
+      pitfall: '一般的な断熱性の住宅では「冬寒く、夏2階がサウナ」になります。住ま居るはUA値0.32・全棟実測C値0.2〜0.6の超高気密高断熱のため、上下温度差1℃以内で年中快適です。',
       advice: '冬の暖かい日射熱（パッシブ熱）を床や珪藻土壁に蓄熱させ、無暖房でも室温20℃をキープできます。'
     },
     {
@@ -1311,7 +1311,7 @@
     });
   }
 
-  // 全323プラン自由検索アコーディオンの制御
+  // 全707プラン自由検索アコーディオンの制御
   function initAllPlansAccordion(cond) {
     const btnToggle = document.getElementById('btn-toggle-all-plans');
     const accordionWrap = document.getElementById('fp-all-plans-accordion');
@@ -1321,11 +1321,11 @@
       const isHidden = accordionWrap.style.display === 'none';
       if (isHidden) {
         accordionWrap.style.display = 'block';
-        btnToggle.textContent = '📚 全323プランの自由検索ギャラリーを閉じる ▲';
+        btnToggle.textContent = '📚 全707プランの自由検索ギャラリーを閉じる ▲';
         renderAccordionGallery();
       } else {
         accordionWrap.style.display = 'none';
-        btnToggle.textContent = '📚 全323プランの自由検索ギャラリーを開く（絞り込みサイドバー＋一覧） ▼';
+        btnToggle.textContent = '📚 全707プランの自由検索ギャラリーを開く（絞り込みサイドバー＋一覧） ▼';
       }
     };
   }
@@ -1341,7 +1341,7 @@
         <!-- 絞り込みサイドバー -->
         <aside class="pg-sidebar" style="top: 20px;">
           <div class="pg-sidebar-header">
-            <div class="pg-sidebar-title"><span>⚙️</span> 全323プラン自由検索</div>
+            <div class="pg-sidebar-title"><span>⚙️</span> 全707プラン自由検索</div>
             <button type="button" id="acc-btn-reset" class="pg-sidebar-reset">クリア</button>
           </div>
 
@@ -1698,7 +1698,7 @@
       </div>
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.9rem;">
         <div style="font-weight: 700; color: #0284c7; font-size: 0.88rem;">🛏️ 主寝室 / 個室群</div>
-        <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">樹脂トリプルサッシ(アルゴンガス) ｜ C値0.3気密施工 ｜ 遮音間仕切壁</div>
+        <div style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">樹脂トリプルサッシ(アルゴンガス) ｜ 実測C値0.2〜0.6気密施工 ｜ 遮音間仕切壁</div>
       </div>
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.9rem;">
         <div style="font-weight: 700; color: #0284c7; font-size: 0.88rem;">🧺 水回り ＆ 換気空調</div>
