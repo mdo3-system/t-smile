@@ -14,7 +14,7 @@
     "programName": "鶴ヶ島市ちかづく住まい応援金（多世代同居・近居住宅取得補助金）",
     "maxAmount": 1000000,
     "amountText": "最大 100 万円",
-    "desc": "市内で親と同居または直線1km以内に近居する世帯へ交付。基本額30万円に加え、市外転入加算（20万円）、子ども加算（1人10万円・最大30万円）、再エネ省エネ設備加算（上限10万円）、空き家バンク加算（10万円）により最大100万円交付。",
+    "desc": "親との同居または近居（1km以内）で新築住宅を取得する世帯へ最大100万円交付。基本額30万円に加え転入・子育て・省エネ加算あり。",
     "usageRate": 58,
     "statusText": "申請受付中（2026年度公募実施中）",
     "conditions": [
@@ -22,7 +22,8 @@
       "中学生以下の子を養育する世帯または40歳未満の若者夫婦",
       "転入・子ども・省エネ設備等で最大100万円加算"
     ],
-    "link": "https://www.city.tsurugashima.lg.jp/kurashi-tetsuduki/sumai/jyutaku/page011431.html"
+    "link": "https://www.city.tsurugashima.lg.jp/kurashi-tetsuduki/sumai/jyutaku/page011431.html",
+    "isClosed": false
   },
   {
     "key": "坂戸",
@@ -36,18 +37,19 @@
     ],
     "category": "多世代近居・子育て転入新築",
     "tierName": "坂戸市公式助成（都市整備部 住宅政策課）",
-    "programName": "坂戸市多世代近居住宅取得補助金制度",
+    "programName": "坂戸市わが家すまいる住宅取得奨励金",
     "maxAmount": 800000,
     "amountText": "最大 80 万円",
-    "desc": "市内に親が1年以上居住し、新たに市外から転入して近居する子育て世帯へ交付。基本額20万円＋転入加算20万円＋義務教育終了前の子扶養加算20万円＋新築住宅取得10万円＋市内施工業者（住ま居る対応）10万円で最大80万円。",
+    "desc": "市外からの転入子育て世帯や親との同居・近居で住宅を取得する世帯へ最大80万円を交付（取得・居住開始から3か月以内に申請）。",
     "usageRate": 52,
-    "statusText": "申請受付中（予算枠あり）",
+    "statusText": "申請受付中（取得・居住開始から3か月以内申請）",
     "conditions": [
       "親世帯が市内に1年以上在住",
       "市外転入・義務教育終了前の子を扶養",
       "新築取得＋市内施工業者で最大80万円"
     ],
-    "link": "https://www.city.sakado.lg.jp/soshiki/33/1409.html"
+    "link": "https://www.city.sakado.lg.jp/soshiki/37/37195.html",
+    "isClosed": false
   },
   {
     "key": "川越",
@@ -61,18 +63,19 @@
     ],
     "category": "スマートエネルギー機器導入",
     "tierName": "川越市公式助成（環境政策課・住宅課）",
-    "programName": "川越市住宅用省エネルギー機器等設置費補助金 ＆ 国県併用",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "自ら居住する川越市内の新築住宅に太陽光発電・蓄電池・HEMS等の省エネ機器を導入する際に交付。国の大型補助金（みらいエコ最大110万円）および埼玉県産木材（最大34万円）と合わせて新築時に最大約154万円を受給可能。",
+    "programName": "令和8年度川越市住宅用脱炭素化設備等導入奨励金（後期分）",
+    "maxAmount": 90000,
+    "amountText": "設備ごと定額（各3万円等・既存住宅のみ）",
+    "desc": "既存住宅への省エネ・脱炭素設備設置を支援。新築住宅への独自補助金は今年度実施なし（国・県補助金のみ併用可）。",
     "usageRate": 64,
-    "statusText": "申請受付中（公募中）",
+    "statusText": "受付終了（新築対象外・既存住宅のみ）",
     "conditions": [
       "自ら居住する川越市内の新築住宅",
       "対象省エネ設備（太陽光・蓄電池等）の設置",
       "市税滞納のないこと"
     ],
-    "link": "https://www.city.kawagoe.saitama.jp/kurashi/kankyo/1002642/1002702/1020760.html"
+    "link": "https://www.city.kawagoe.saitama.jp/kurashi/kankyo/1002642/1002702/1021924.html",
+    "isClosed": true
   },
   {
     "key": "東松山",
@@ -86,18 +89,19 @@
     ],
     "category": "住宅用省エネ設備導入",
     "tierName": "東松山市公式助成（環境課・住宅建築課）",
-    "programName": "東松山市住宅用省エネルギー設備等設置費補助金 ＆ 国県併用",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "東松山市内で自ら居住する新築住宅への太陽光・蓄電池等の省エネ設備導入支援。国の「みらいエコ（最大110万円）」と「埼玉県産木材（最大34万円）」と合算し、新築時に最大約154万円の交付が可能。",
+    "programName": "東松山市省エネ家電・住宅設備等買換・設置費補助金",
+    "maxAmount": 70000,
+    "amountText": "一律 7 万円（地域通貨・既存のみ）",
+    "desc": "既存住宅の省エネ設備設置等に一律7万円（地域通貨ボタン）を交付。新築住宅は国のGX志向型＋県産木材補助（計144万円）が中心。",
     "usageRate": 45,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（※既存住宅のみ対象）",
     "conditions": [
       "東松山市内に自ら居住する新築住宅",
       "対象省エネ設備を設置",
       "市税完納"
     ],
-    "link": "https://www.city.higashimatsuyama.lg.jp/soshiki/13/1699.html"
+    "link": "https://www.city.higashimatsuyama.lg.jp/soshiki/13/1699.html",
+    "isClosed": false
   },
   {
     "key": "さいたま",
@@ -116,18 +120,19 @@
     ],
     "category": "スマートホーム推進・断熱省エネ",
     "tierName": "さいたま市公式助成（環境局環境共生推進課）",
-    "programName": "さいたま市省エネ・断熱住宅普及促進補助金（スマートホーム推進）",
+    "programName": "さいたま市スマートホーム推進・ZEH等導入補助金",
     "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "ZEH水準以上の高断熱新築住宅や、太陽光・蓄電池・V2Hなどのスマートホーム設備設置に対する支援事業。国のみらいエコ（最大110万円）＋県産木材（最大34万円）と合算可能。",
+    "amountText": "ZEH上限 30 万円（受付終了）",
+    "desc": "ZEH・スマートホーム設備への市独自補助金は令和8年度の全区分で予算到達のため受付終了。国のGX志向型＋県産木材（144万円）を適用。",
     "usageRate": 58,
-    "statusText": "申請受付中（公募中）",
+    "statusText": "全区分受付終了（予算到達）",
     "conditions": [
       "さいたま市内での新築住宅",
       "ZEH基準以上の断熱・省エネ性能",
       "対象スマート機器の導入"
     ],
-    "link": "https://www.city.saitama.lg.jp/006/014/008/003/014/001/p120055.html"
+    "link": "https://www.city.saitama.lg.jp/001/009/015/010/002/p119491.html",
+    "isClosed": true
   },
   {
     "key": "ときがわ",
@@ -140,18 +145,19 @@
     ],
     "category": "移住定住住宅取得＋地域材利用加算",
     "tierName": "ときがわ町公式助成（建設環境課・産業観光課）",
-    "programName": "ときがわ町移住定住促進住宅取得奨励金 ＆ ときがわ材活用住宅助成",
-    "maxAmount": 800000,
-    "amountText": "最大 80 万円",
-    "desc": "町内での住宅新築・定住に対して基本額30万円＋子育て加算20万円（最大50万円）。さらに町内産木材（ときがわ材・西川材）を一定以上使用した場合に最大30万円が加算され、合計最大80万円を交付。",
+    "programName": "ときがわ町若者・子育て世代定住促進住宅取得奨励金",
+    "maxAmount": 1000000,
+    "amountText": "最大 100 万円（基本30万＋加算）",
+    "desc": "若者・子育て世代の新築住宅取得に30万円＋加算金を交付。自然豊かなときがわ町での定住・木の家づくりを応援。",
     "usageRate": 42,
-    "statusText": "申請受付中（2026年度公募）",
+    "statusText": "申請受付中（定住促進奨励金）",
     "conditions": [
       "ときがわ町内での新築住宅取得",
       "若者夫婦世帯または中学生以下の子を扶養",
       "ときがわ材活用でさらに加算"
     ],
-    "link": "https://www.town.tokigawa.lg.jp/info/1655"
+    "link": "https://www.town.tokigawa.lg.jp/info/2245",
+    "isClosed": false
   },
   {
     "key": "鳩山",
@@ -164,18 +170,19 @@
     ],
     "category": "多世代同居近居・新生活支援",
     "tierName": "鳩山町公式助成（まちづくり推進課）",
-    "programName": "鳩山町多世代同居・近居住宅取得等支援助成金",
-    "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "町内での三世代同居・近居を目的とした新築住宅取得および省エネ設備導入に対する支援制度。国の「みらいエコ（最大110万円）」と「埼玉県産木材（最大34万円）」と合算可能。",
+    "programName": "鳩山町子育て世帯移住・定住促進補助金",
+    "maxAmount": 400000,
+    "amountText": "一律 40 万円/世帯",
+    "desc": "子育て世帯の移住・定住に対し一律40万円/世帯を交付。町内での新築住宅取得を強力にサポート。",
     "usageRate": 40,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（子育て世帯移住・定住促進）",
     "conditions": [
       "鳩山町内での新築住宅取得",
       "町内親族との近居・同居",
       "町税完納"
     ],
-    "link": "https://www.town.hatoyama.saitama.jp/kurashi/sumai/jutaku/1458113401569.html"
+    "link": "https://www.town.hatoyama.saitama.jp/kurashi/sumai_hikkosi/page003315.html",
+    "isClosed": false
   },
   {
     "key": "毛呂山",
@@ -189,18 +196,19 @@
     ],
     "category": "多世代同居・近居住宅取得支援",
     "tierName": "毛呂山町公式助成（まちづくり整備課）",
-    "programName": "毛呂山町多世代同居・近居住宅取得等支援補助金",
-    "maxAmount": 400000,
-    "amountText": "最大 40 万円",
-    "desc": "親世帯と同居または町内に近居するために新築住宅を取得する子育て世帯へ交付。基本補助20万円＋町外転入加算10万円＋中学生以下の子扶養加算10万円で最大40万円。",
+    "programName": "毛呂山町定住促進住宅取得奨励金",
+    "maxAmount": 500000,
+    "amountText": "新築最大 50 万円（加算込み）",
+    "desc": "新築住宅取得に対し最大50万円（基本額＋各種加算）を交付。契約締結から2年以内に申請が必要。",
     "usageRate": 48,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（契約から2年以内申請）",
     "conditions": [
       "毛呂山町内での親族同居または近居新築",
       "中学生以下の子がいる世帯",
       "町税完納"
     ],
-    "link": "https://www.town.moroyama.saitama.jp/soshiki/machizukuriseibika/kenchiku_jutaku/3516.html"
+    "link": "https://www.town.moroyama.saitama.jp/soshikikarasagasu/kikakuzaiseika/kikakukakari/utilization_of_vacant_house/10008.html",
+    "isClosed": false
   },
   {
     "key": "越生",
@@ -214,18 +222,19 @@
     ],
     "category": "若者・子育て世代定住奨励金",
     "tierName": "越生町公式助成（企画財政課）",
-    "programName": "越生町若者・子育て世代定住奨励金（新築住宅取得支援）",
-    "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "町内に定住する意思をもって自ら居住する新築住宅を取得した若者夫婦・子育て世帯へ交付。国・県の補助金と合算受給可能。",
+    "programName": "越生町若者子育て世代定住促進住宅取得奨励金",
+    "maxAmount": 500000,
+    "amountText": "新築 50 万円（＋子1人5万円）",
+    "desc": "若者・子育て世代の新築住宅取得に50万円、子ども1人につき5万円を加算交付（取得から1年以内に申請）。",
     "usageRate": 38,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（取得から1年以内申請）",
     "conditions": [
       "夫婦いずれかが40歳未満または中学生以下の子を扶養",
       "越生町内に新築住宅を取得・住民登録",
       "町税完納"
     ],
-    "link": "https://www.town.ogose.saitama.jp/soshiki/kikakuzaisei/kikaku/teiju/1435284307374.html"
+    "link": "https://www.town.ogose.saitama.jp/kamei/kosodateshien/kodomo/gyomuannai/hojo/1650931329710.html",
+    "isClosed": false
   },
   {
     "key": "滑川",
@@ -239,18 +248,19 @@
     ],
     "category": "新築住宅取得奨励金",
     "tierName": "滑川町公式助成（総務課政策推進担当）",
-    "programName": "滑川町新築住宅等取得奨励金 ＆ 太陽光発電設置助成",
-    "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "子育て環境に定評のある滑川町内での新築住宅取得および省エネ設備導入に対する奨励金。国のみらいエコ＋県産木材と併用可。",
+    "programName": "滑川町地球温暖化対策設備等設置費補助金",
+    "maxAmount": 50000,
+    "amountText": "一律 5 万円",
+    "desc": "住宅用省エネ・創エネ設備の導入に対し一律5万円を交付。着工前の事前申請が必要、予算到達で終了。",
     "usageRate": 55,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（2026/4/1〜予算到達まで）",
     "conditions": [
       "滑川町内に自ら居住する新築住宅を取得",
       "転入・定住要件を満たす世帯",
       "町税滞納なし"
     ],
-    "link": "https://www.town.namegawa.saitama.jp/soshiki/somuka/seisakusuishintanto/teiju/1269.html"
+    "link": "https://www.town.namegawa.saitama.jp/soshikikarasagasu/kankyoka/gomi_kankyo_pet/3/1216.html",
+    "isClosed": false
   },
   {
     "key": "嵐山",
@@ -264,18 +274,19 @@
     ],
     "category": "マイホーム取得奨励金",
     "tierName": "嵐山町公式助成（まちづくり整備課）",
-    "programName": "嵐山町若者・子育て世代マイホーム取得奨励金",
-    "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "町内への定住促進と地域活性化のため、新築住宅を取得した40歳未満の若者夫婦または子育て世帯へ交付。",
+    "programName": "嵐山町住宅用省エネルギー設備等・リフォーム補助金",
+    "maxAmount": 50000,
+    "amountText": "一律 5 万円（リフォーム）",
+    "desc": "町内業者による住宅リフォーム・省エネ改修等に対し一律5万円を交付。",
     "usageRate": 43,
-    "statusText": "申請受付中",
+    "statusText": "令和8年度受付中（※リフォーム工事対象）",
     "conditions": [
       "自ら居住する嵐山町内の新築住宅",
       "40歳未満の夫婦または中学生以下の子を扶養",
       "町税完納"
     ],
-    "link": "https://www.town.ranzan.saitama.jp/0000003264.html"
+    "link": "https://www.town.ranzan.saitama.jp/0000006071.html",
+    "isClosed": false
   },
   {
     "key": "小川",
@@ -290,18 +301,19 @@
     ],
     "category": "多世代同居・木材活用住宅助成",
     "tierName": "小川町公式助成（都市建築課・にぎわい創生課）",
-    "programName": "小川町多世代同居・近居住まい支援助成金 ＆ 地域産木材加算",
-    "maxAmount": 400000,
-    "amountText": "最大 40 万円",
-    "desc": "小川町内での多世代同居・近居新築に最大30万円。さらに比企産木材・西川材の活用により最大10万円を加算。",
+    "programName": "小川町空き家利活用補助金",
+    "maxAmount": 600000,
+    "amountText": "加算込み最大 60 万円（空き家改修）",
+    "desc": "空き家バンク登録物件の改修・購入等に対し加算込み最大60万円を交付。",
     "usageRate": 41,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（※空き家バンク登録前提）",
     "conditions": [
       "小川町内に親と同居または近居する新築住宅",
       "中学生以下の子を養育または40歳未満夫婦",
       "町税完納"
     ],
-    "link": "https://www.town.ogawa.saitama.jp/0000002167.html"
+    "link": "https://www.town.ogawa.saitama.jp/gyosei/sosiki/13/4/1498.html",
+    "isClosed": false
   },
   {
     "key": "川島",
@@ -315,18 +327,19 @@
     ],
     "category": "多世代同居・近居住宅取得支援",
     "tierName": "川島町公式助成（政策推進課）",
-    "programName": "川島町多世代同居・近居推進住宅取得等補助金",
+    "programName": "川島町定住促進住宅取得支援事業（町要綱規定）",
     "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "親・子・孫の三世代同居または近居のために町内に新築住宅を取得する子育て世帯へ交付。",
+    "amountText": "最大 30 万円（※要綱PDF参照）",
+    "desc": "町の公式要綱に基づく住宅取得支援（詳細は町まち整備課窓口へ要綱PDFにて確認）。",
     "usageRate": 46,
-    "statusText": "申請受付中",
+    "statusText": "要綱規定あり（※詳細は町まち整備課窓口確認）",
     "conditions": [
       "町内に親世帯が居住し、近居・同居する新築住宅",
       "中学生以下の子がいる世帯",
       "町税完納"
     ],
-    "link": "https://www.town.kawajima.saitama.jp/2237.htm"
+    "link": "https://www.town.kawajima.saitama.jp/secure/12877/kai-nyuukyoyoukou.pdf",
+    "isClosed": false
   },
   {
     "key": "吉見",
@@ -340,18 +353,19 @@
     ],
     "category": "新エネルギーシステム等設置支援",
     "tierName": "吉見町公式助成（まち整備課）",
-    "programName": "吉見町住宅用新エネルギーシステム等設置費補助金",
+    "programName": "吉見町地球温暖化対策設備導入費補助金",
     "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "吉見町内での省エネ機器（太陽光発電・蓄電池等）導入助成。国の「みらいエコ（最大110万円）」＋「埼玉県産木材（最大34万円）」と合算可能。",
+    "amountText": "最大 10 万円（複数設備併用）",
+    "desc": "種別ごと5万円、太陽光や蓄電池など複数設備の併用で最大10万円を交付（着工前に申請が必要）。",
     "usageRate": 35,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（着工前申請・予算到達まで）",
     "conditions": [
       "吉見町内に住所を有する新築住宅",
       "対象省エネ設備の導入",
       "町税完納"
     ],
-    "link": "https://www.town.yoshimi.saitama.jp/soshiki/machiseibika/3/784.html"
+    "link": "https://www.town.yoshimi.saitama.jp/soshiki/kankyo/7/3953.html",
+    "isClosed": false
   },
   {
     "key": "日高",
@@ -365,18 +379,19 @@
     ],
     "category": "省エネ設備設置費助成",
     "tierName": "日高市公式助成（生活環境課）",
-    "programName": "日高市住宅用省エネルギー設備設置費補助金",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "住宅用太陽光発電・蓄電池・HEMS等の省エネ設備導入に対する助成。国のみらいエコ＋県産木材と併用可。",
+    "programName": "日高市太陽光発電設備等共同購入事業",
+    "maxAmount": 0,
+    "amountText": "共同購入事業（現金補助なし）",
+    "desc": "太陽光発電・蓄電池設備の共同購入事業（みんなのおうちに太陽光）を実施中。直接の現金補助金ではありません。",
     "usageRate": 45,
-    "statusText": "申請受付中",
+    "statusText": "参加登録受付中（2次募集2027/2/25まで）",
     "conditions": [
       "自ら居住する日高市内の住宅",
       "対象省エネ設備の設置",
       "市税完納"
     ],
-    "link": "https://www.city.hidaka.lg.jp/soshiki/shimin/seikatsukankyo/kankyo/hojyo/5751.html"
+    "link": "https://www.city.hidaka.lg.jp/soshiki/shiminseikatsu/kankyo/seikatsukankyo/kankyohozen/ondankataisaku/34577.html",
+    "isClosed": false
   },
   {
     "key": "飯能",
@@ -390,18 +405,19 @@
     ],
     "category": "西川材活用住宅支援＋多世代同居",
     "tierName": "飯能市公式助成（農林水産課・まちづくり推進課）",
-    "programName": "飯能市西川材活用住宅新築等補助金 ＆ 多世代同居住宅取得支援",
-    "maxAmount": 500000,
-    "amountText": "最大 50 万円",
-    "desc": "伝統の西川材（飯能産ヒノキ・スギ）を柱・梁などの構造材や内装材に使用した新築住宅へ助成。同居・近居支援と合わせて最大50万円受給可能。",
+    "programName": "飯能市西川材活用住宅等支援事業（令和8年度休止）",
+    "maxAmount": 0,
+    "amountText": "令和8年度休止中",
+    "desc": "西川材活用住宅補助金は令和8年度休止と市公式補助金一覧に明記。国・県補助金を優先適用。",
     "usageRate": 60,
-    "statusText": "申請受付中（2026年度公募）",
+    "statusText": "令和8年度事業休止（※市補助金一覧明記）",
     "conditions": [
       "飯能市内での新築住宅",
       "西川材使用率等の基準を満たすこと",
       "市登録木材取扱業者・施工店（住ま居る対応）"
     ],
-    "link": "https://www.city.hanno.lg.jp/soshikikarasagasu/norinsuisanka/norinshinko/1782.html"
+    "link": "https://www.city.hanno.lg.jp/sangyo_jigyoshamuke/6554.html",
+    "isClosed": true
   },
   {
     "key": "秩父",
@@ -415,18 +431,19 @@
     ],
     "category": "移住定住住宅取得＋秩父産木材助成",
     "tierName": "秩父市公式助成（移住相談センター・森づくり課）",
-    "programName": "秩父市移住・就業住宅取得支援事業 ＆ 秩父産木材活用助成",
-    "maxAmount": 1000000,
-    "amountText": "最大 100 万円",
-    "desc": "秩父市外からの移住定住に伴う新築住宅取得で最大50万円＋秩父産木材活用助成（最大50万円）により、合計最大100万円交付。",
+    "programName": "秩父市移住・就業等支援金",
+    "maxAmount": 2000000,
+    "amountText": "移住支援金 100 万円（加算最大200万）",
+    "desc": "東京圏からの移住世帯へ100万円、子育て加算等により最大200万円を交付。",
     "usageRate": 53,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（市公式移住サイト）",
     "conditions": [
       "市外からの転入または子育て世帯の新築",
       "秩父産木材を一定量以上使用",
       "市税完納"
     ],
-    "link": "https://www.city.chichibu.lg.jp/5070.html"
+    "link": "https://www.chichibu-iju.com/shienseido/index.html",
+    "isClosed": false
   },
   {
     "key": "所沢",
@@ -440,18 +457,19 @@
     ],
     "category": "スマートエネルギー製造利用促進",
     "tierName": "所沢市公式助成（マチごとエコタウン推進課）",
-    "programName": "所沢市スマートエネルギー製造・利用促進補助金",
-    "maxAmount": 150000,
-    "amountText": "最大 15 万円",
-    "desc": "高断熱住宅や創エネ・省エネ設備（太陽光発電・家庭用蓄電池・V2H等）の新築導入支援。国＋県と併用可能。",
+    "programName": "所沢市スマートハウス普及促進事業補助金",
+    "maxAmount": 390000,
+    "amountText": "最大 39 万円（太陽光15万＋蓄電池24万）",
+    "desc": "太陽光発電（上限15万円）＋蓄電池（上限24万円）の併用で最大39万円補助。期ごとに受付を実施。",
     "usageRate": 62,
-    "statusText": "申請受付中",
+    "statusText": "期ごと受付中（第3期ほか・非FIT終了）",
     "conditions": [
       "所沢市内の新築住宅",
       "対象スマートエネルギー設備の設置",
       "市税完納"
     ],
-    "link": "https://www.city.tokorozawa.saitama.jp/kurashi/seikatukankyo/kankyo/hojyo/smartenergy.html"
+    "link": "https://www.city.tokorozawa.saitama.jp/kurashi/seikatukankyo/kankyo/ekojyosei/sumatohausu.html",
+    "isClosed": false
   },
   {
     "key": "狭山",
@@ -465,18 +483,19 @@
     ],
     "category": "省エネルギー設備設置費補助",
     "tierName": "狭山市公式助成（環境課）",
-    "programName": "狭山市住宅用省エネルギー設備等設置費補助金",
+    "programName": "狭山市ゼロカーボンシティ推進設備等導入補助金",
     "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "自ら居住する狭山市内の住宅への太陽光発電・蓄電システム設置助成。国のみらいエコ（最大110万円）＋県産木材（最大34万円）と合算可能。",
+    "amountText": "単体最大 10 万円",
+    "desc": "住宅用創エネ・省エネ設備に対し設備ごと定額交付（単体最大10万円）。2026/4/27〜2027/3/12受付。",
     "usageRate": 49,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（2026/4/27〜2027/3/12）",
     "conditions": [
       "狭山市内の新築住宅",
       "対象省エネ設備の設置",
       "市税完納"
     ],
-    "link": "https://www.city.sayama.saitama.jp/kurashi/kankyo/kankyo/hojo_syouene.html"
+    "link": "https://www.city.sayama.saitama.jp/kurashi/ecopet/jyosei/hozyoseido.html",
+    "isClosed": false
   },
   {
     "key": "入間",
@@ -490,18 +509,19 @@
     ],
     "category": "多世代同居・近居等住宅取得支援",
     "tierName": "入間市公式助成（都市計画課）",
-    "programName": "入間市多世代同居・近居等住宅取得支援事業",
-    "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "親・子世帯が入間市内で同居または近居するために新築住宅を取得する場合に交付。国・県補助金と併用可。",
+    "programName": "入間市三世代同居・近居支援補助金（制度終了）",
+    "maxAmount": 0,
+    "amountText": "制度終了",
+    "desc": "過去に実施されていた三世代同居補助金はサンセット方式により終了済み。市独自の新築補助金はありません。",
     "usageRate": 47,
-    "statusText": "申請受付中",
+    "statusText": "制度終了（令和元〜3年度で終了済み）",
     "conditions": [
       "親世帯が市内に1年以上在住",
       "中学生以下の子を扶養する世帯",
       "市税完納"
     ],
-    "link": "https://www.city.iruma.saitama.jp/soshiki/toshikeikakuka/toshikeikakugyomu/sumai/2877.html"
+    "link": "",
+    "isClosed": true
   },
   {
     "key": "朝霞",
@@ -515,18 +535,19 @@
     ],
     "category": "住宅用省エネルギー設備設置助成",
     "tierName": "朝霞市公式助成（環境推進課）",
-    "programName": "朝霞市住宅用省エネルギー設備設置費補助金",
+    "programName": "朝霞市創エネ・省エネ設備等設置費補助金",
     "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "太陽光発電・家庭用蓄電池等の設置助成。国のみらいエコ（最大110万円）＋埼玉県産木材（最大34万円）と合わせて最大約154万円受給。",
+    "amountText": "戸建単体最大 10 万円（※既存のみ）",
+    "desc": "既存住宅への設備導入に戸建単体最大10万円を交付。着手前に事前申請が必要。",
     "usageRate": 58,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（2026/4/1〜2027/2/26・既存住宅）",
     "conditions": [
       "朝霞市内に自ら居住する新築住宅",
       "対象省エネ設備の設置",
       "市税完納"
     ],
-    "link": "https://www.city.asaka.lg.jp/soshiki/17/syouene.html"
+    "link": "https://www.city.asaka.lg.jp/soshiki/14/souenesyouene.html",
+    "isClosed": false
   },
   {
     "key": "志木",
@@ -540,18 +561,19 @@
     ],
     "category": "再生可能エネルギー等設備助成",
     "tierName": "志木市公式助成（環境推進課）",
-    "programName": "志木市住宅用再生可能エネルギー等設備設置費補助金",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "住宅用太陽光発電や蓄電池、HEMS設置を支援。国・県の補助金と合算可能。",
+    "programName": "志木市住宅用家庭用燃料電池システム（エネファーム）設置費補助金",
+    "maxAmount": 50000,
+    "amountText": "エネファーム定額 5 万円",
+    "desc": "エネファーム設置に対し定額5万円を交付（この1品目のみ対象、先着順）。",
     "usageRate": 51,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（2026/4/1〜2027/2/5・先着順）",
     "conditions": [
       "志木市内の新築住宅",
       "対象再エネ設備の導入",
       "市税滞納なし"
     ],
-    "link": "https://www.city.shiki.lg.jp/soshiki/17/1460.html"
+    "link": "https://www.city.shiki.lg.jp/soshiki/16/1206.html",
+    "isClosed": false
   },
   {
     "key": "和光",
@@ -565,18 +587,19 @@
     ],
     "category": "環境配慮型設備設置助成",
     "tierName": "和光市公式助成（環境課）",
-    "programName": "和光市住宅用環境配慮型設備設置費補助金",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "和光市内の住宅への省エネルギー設備（太陽光発電・蓄電池等）導入支援。国＋県と併用可。",
+    "programName": "和光市住宅用創エネ・省エネ機器等設置費補助金",
+    "maxAmount": 0,
+    "amountText": "個人最大 3 万円（受付終了）",
+    "desc": "今年度の全品目で予算到達のため受付終了。",
     "usageRate": 54,
-    "statusText": "申請受付中",
+    "statusText": "全品目受付終了（予算到達）",
     "conditions": [
       "和光市内の新築住宅",
       "対象環境設備の導入",
       "市税完納"
     ],
-    "link": "https://www.city.wako.lg.jp/kurashi/kankyo/1002577/1002581.html"
+    "link": "https://www.city.wako.lg.jp/kurashi/kankyo/1002939/1010172/1012015/1012389/index.html",
+    "isClosed": true
   },
   {
     "key": "新座",
@@ -590,18 +613,19 @@
     ],
     "category": "新・省エネルギー設備助成",
     "tierName": "新座市公式助成（環境課）",
-    "programName": "新座市住宅用新エネルギー・省エネルギー設備設置費補助金",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "新座市内の住宅に太陽光発電・蓄電池・エネファームを設置する場合に交付。国＋県と併用可。",
+    "programName": "新座市再生可能エネルギー等利用設備設置費補助金",
+    "maxAmount": 900000,
+    "amountText": "個人最大 90 万円（受付終了）",
+    "desc": "太陽光・蓄電池補助金の個人枠は予算残高0円に達したため受付終了（事業者枠のみ残あり）。",
     "usageRate": 59,
-    "statusText": "申請受付中",
+    "statusText": "個人枠受付終了（残高0円）",
     "conditions": [
       "新座市内の新築住宅",
       "対象設備の設置",
       "市税完納"
     ],
-    "link": "https://www.city.niiza.lg.jp/soshiki/14/syouene.html"
+    "link": "https://www.city.niiza.lg.jp/soshiki/15/taiyokohojokin.html",
+    "isClosed": true
   },
   {
     "key": "富士見",
@@ -615,18 +639,19 @@
     ],
     "category": "省エネルギー設備設置等助成",
     "tierName": "富士見市公式助成（環境課）",
-    "programName": "富士見市住宅用省エネルギー設備設置等補助金",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "住宅用太陽光発電・蓄電システム等の設置助成。国＋県と合算可能。",
+    "programName": "富士見市地球温暖化対策設備設置費補助金",
+    "maxAmount": 120000,
+    "amountText": "3設備合計で最大 12 万円",
+    "desc": "太陽光・蓄電池・HEMS等の3設備合計で最大12万円を交付。",
     "usageRate": 48,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（2026/6/1〜2027/2/15）",
     "conditions": [
       "富士見市内の新築住宅",
       "対象省エネ設備の設置",
       "市税完納"
     ],
-    "link": "https://www.city.fujimi.saitama.jp/kurashi_tetsuzuki/kankyo_gomi/kankyo/ondanka/syouene-setsubi.html"
+    "link": "https://www.city.fujimi.saitama.jp/shisei/09kankyou/2015-1202-1454-52/renewable_energy/ondankaboushfujimi.html",
+    "isClosed": false
   },
   {
     "key": "ふじみ野",
@@ -640,18 +665,19 @@
     ],
     "category": "スマートエネルギー設備設置助成",
     "tierName": "ふじみ野市公式助成（環境課）",
-    "programName": "ふじみ野市住宅用スマートエネルギー設備設置費補助金",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "自ら居住するふじみ野市内の住宅に太陽光発電・蓄電池・HEMSを導入する場合に助成。",
+    "programName": "ふじみ野市住宅用地球温暖化対策設備等設置費補助金",
+    "maxAmount": 70000,
+    "amountText": "単体最大 7 万円",
+    "desc": "地球温暖化対策設備設置に単体最大7万円を補助。2026/4/1〜2027/3/31受付。",
     "usageRate": 53,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（2026/4/1〜2027/3/31）",
     "conditions": [
       "ふじみ野市内の新築住宅",
       "対象スマートエネルギー設備の設置",
       "市税滞納なし"
     ],
-    "link": "https://www.city.fujimino.saitama.jp/soshiki/kankyoka/kankyosuishinkakari/kankyo/shoene/2418.html"
+    "link": "https://www.city.fujimino.saitama.jp/soshikiichiran/kankyoka/kankyokakari/oshirase/11859.html",
+    "isClosed": false
   },
   {
     "key": "三芳",
@@ -665,18 +691,19 @@
     ],
     "category": "省エネルギー設備設置助成",
     "tierName": "三芳町公式助成（環境課）",
-    "programName": "三芳町住宅用省エネルギー設備設置費補助金",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "町内住宅への太陽光発電・家庭用蓄電池等の設置助成。国＋県と合算受給可能。",
+    "programName": "三芳町住宅用太陽光発電設備等設置費補助金",
+    "maxAmount": 50000,
+    "amountText": "各設備 定額 5 万円",
+    "desc": "住宅用省エネ・再エネ設備に各設備定額5万円を交付。2026/6/1〜2027/3/15受付。",
     "usageRate": 44,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（2026/6/1〜2027/3/15）",
     "conditions": [
       "三芳町内の新築住宅",
       "対象省エネ設備の導入",
       "町税完納"
     ],
-    "link": "https://www.town.saitama-miyoshi.lg.jp/environment/clean_energy/hojyo.html"
+    "link": "https://www.town.saitama-miyoshi.lg.jp/life/gomi/taiyoukouhojokinn.html",
+    "isClosed": false
   },
   {
     "key": "熊谷",
@@ -690,18 +717,19 @@
     ],
     "category": "スマートエネルギー設備助成",
     "tierName": "熊谷市公式助成（環境政策課）",
-    "programName": "熊谷市住宅用スマートエネルギー設備設置費補助金",
+    "programName": "熊谷市再生可能エネルギー発電設備等設置費補助金",
     "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "ゼロカーボンシティ実現に向けた太陽光・蓄電池等への助成。国＋県と合算可能。",
+    "amountText": "単体最大 10 万円（地域電子マネー）",
+    "desc": "再生可能エネルギー設備導入に単体最大10万円（地域電子マネー「クマPAY」）を交付。",
     "usageRate": 52,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（2026/4/1〜2027/3/31）",
     "conditions": [
       "熊谷市内の新築住宅",
       "対象省エネ設備の設置",
       "市税完納"
     ],
-    "link": "https://www.city.kumagaya.lg.jp/kurashi/kankyo/hojyokin/smart_energy.html"
+    "link": "https://www.city.kumagaya.lg.jp/about/soshiki/kankyo/kankyoseisaku/kankyoseisakuhojo/06saienehojyo.html",
+    "isClosed": false
   },
   {
     "key": "行田",
@@ -715,18 +743,19 @@
     ],
     "category": "三世代同居・近居住宅取得支援",
     "tierName": "行田市公式助成（都市計画課）",
-    "programName": "行田市三世代同居・近居住宅取得等支援助成金",
-    "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "市外からの転入や三世代同居・近居に対する住宅取得支援。国のみらいエコ（最大110万円）＋県産木材（最大34万円）と合わせて最大約174万円受給可能。",
+    "programName": "行田市子育て世帯定住促進奨励金（制度廃止）",
+    "maxAmount": 0,
+    "amountText": "制度廃止",
+    "desc": "過去の子育て定住促進奨励金は令和2年9月30日で廃止済み。市独自の新築補助金はありません。",
     "usageRate": 50,
-    "statusText": "申請受付中",
+    "statusText": "制度廃止（令和2年9月30日廃止済み）",
     "conditions": [
       "三世代同居または近居を目的とする新築",
       "中学生以下の子を養育する世帯",
       "市税滞納のないこと"
     ],
-    "link": "https://www.city.gyoda.lg.jp/soshiki/kankyokeizaibu/kankyo/gyomu/hojyo/2324.html"
+    "link": "",
+    "isClosed": true
   },
   {
     "key": "加須",
@@ -740,18 +769,19 @@
     ],
     "category": "子育て世代マイホーム取得補助",
     "tierName": "加須市公式助成（都市計画課住宅担当）",
-    "programName": "加須市子育て世代マイホーム取得補助金",
+    "programName": "加須市三世代同居・近居住宅取得支援補助金",
     "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "加須市内に定住する意思をもって新築住宅を取得した中学生以下の子を養育する子育て世帯へ交付。",
+    "amountText": "最大 30 万円（市内事業者加算込み）",
+    "desc": "親と同居または近居するための住宅取得に最大30万円（市内事業者施工加算込み）を交付。",
     "usageRate": 49,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（先着順）",
     "conditions": [
       "中学生以下の子を養育する子育て世帯",
       "加須市内の新築住宅を取得・定住",
       "市税完納"
     ],
-    "link": "https://www.city.kazo.lg.jp/soshiki/toshiseibi/jutaku/3752.html"
+    "link": "https://www.city.kazo.lg.jp/soshiki/kosodate_shien/keizaitekisien/37932.html",
+    "isClosed": false
   },
   {
     "key": "本庄",
@@ -765,18 +795,19 @@
     ],
     "category": "定住促進住宅取得奨励金",
     "tierName": "本庄市公式助成（都市整備課住宅担当）",
-    "programName": "本庄市定住促進住宅取得奨励金（子育て・多世代同居支援）",
-    "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "本庄市内に自ら居住する新築住宅を取得した子育て世帯・若者夫婦世帯への奨励金。",
+    "programName": "本庄市若者定住・住まいづくり奨励金（事業終了）",
+    "maxAmount": 0,
+    "amountText": "事業終了",
+    "desc": "若者定住奨励金は令和4年度で終了と市公式回答に明記。国・県補助金を適用。",
     "usageRate": 46,
-    "statusText": "申請受付中",
+    "statusText": "事業終了（令和4年度をもって終了済み）",
     "conditions": [
       "新築住宅を取得し住民登録",
       "中学生以下の子がいる世帯または40歳未満夫婦",
       "市税完納"
     ],
-    "link": "https://www.city.honjo.lg.jp/soshiki/toshiseibi/jutaku/tantojoho/jutakushien/1435282498565.html"
+    "link": "https://www.city.honjo.lg.jp/soshiki/kikakuzaisei/hisyo/shichohenotegami/yoseraretagoikentokaito/1_machizukuri_gappei_machinokasseika_jichishinko_bosaibohannado/reiwa5nen_1/17203.html",
+    "isClosed": true
   },
   {
     "key": "羽生",
@@ -790,18 +821,19 @@
     ],
     "category": "三世代同居・近居住宅取得支援",
     "tierName": "羽生市公式助成（まちづくり政策課）",
-    "programName": "羽生市三世代同居・近居住宅取得等支援助成金",
-    "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "親・子・孫の三世代が羽生市内で同居または近居するために新築住宅を取得する場合に助成。",
+    "programName": "羽生市住宅用再生可能エネルギー発電設備等設置費補助金",
+    "maxAmount": 100000,
+    "amountText": "最大 10 万円（太陽光＋蓄電池併用）",
+    "desc": "太陽光発電＋蓄電池の併用設置で最大10万円を交付。申請受付中。",
     "usageRate": 44,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（公募実施中）",
     "conditions": [
       "三世代同居または直線1km以内の近居新築",
       "中学生以下の子を扶養",
       "市税完納"
     ],
-    "link": "https://www.city.hanyu.lg.jp/docs/2019032600029/"
+    "link": "https://www.city.hanyu.lg.jp/docs/2014122600060/",
+    "isClosed": false
   },
   {
     "key": "鴻巣",
@@ -815,18 +847,19 @@
     ],
     "category": "省エネルギー設備等設置補助",
     "tierName": "鴻巣市公式助成（環境課）",
-    "programName": "鴻巣市住宅用省エネルギー設備等設置費補助金",
+    "programName": "鴻巣市ゼロカーボンシティ推進設備等導入補助金",
     "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "自ら居住する鴻巣市内の新築住宅に太陽光発電・蓄電池等を設置する際に交付。国＋県と合算可能。",
+    "amountText": "最大 10 万円",
+    "desc": "住宅用ゼロカーボン推進設備の導入に最大10万円を補助。2026/4/1〜2027/2/26受付。",
     "usageRate": 50,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（2026/4/1〜2027/2/26）",
     "conditions": [
       "鴻巣市内の新築住宅",
       "対象省エネ設備の導入",
       "市税完納"
     ],
-    "link": "https://www.city.konosu.saitama.jp/soshiki/kankyo/1/1449557788484.html"
+    "link": "https://www.city.kounosu.saitama.jp/page/22570.html",
+    "isClosed": false
   },
   {
     "key": "深谷",
@@ -840,18 +873,19 @@
     ],
     "category": "定住促進住宅取得支援（渋沢栄一の里）",
     "tierName": "深谷市公式助成（都市計画課）",
-    "programName": "深谷市定住促進住宅取得補助金（子育て・若者世帯マイホーム支援）",
-    "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "市外からの転入や子育て世代による深谷市内での新築住宅取得に対する助成制度。",
+    "programName": "深谷市移住支援金（地域通貨negi交付）",
+    "maxAmount": 150000,
+    "amountText": "最大 15 万negi（地域通貨）",
+    "desc": "東京圏等からの移住者へ地域通貨「negi」最大15万円相当を交付（申請期限2027/2/26）。",
     "usageRate": 57,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（申請期限2027/2/26）",
     "conditions": [
       "市外転入または中学生以下の子を養育する世帯",
       "自ら居住する新築住宅を取得",
       "市税完納"
     ],
-    "link": "https://www.city.fukaya.saitama.jp/soshiki/toshiseibi/toshikeikaku/tantojoho/teiju_sumai/1418705917409.html"
+    "link": "https://www.city.fukaya.saitama.jp/soshiki/kikakuzaisei/kikaku/tanto/teijyuu/14197.html",
+    "isClosed": false
   },
   {
     "key": "上尾",
@@ -865,18 +899,19 @@
     ],
     "category": "省エネ設備設置費助成",
     "tierName": "上尾市公式助成（環境政策課）",
-    "programName": "上尾市省エネ設備設置費補助金",
+    "programName": "上尾市省エネルギー設備設置費補助金",
     "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "住宅用太陽光発電システム・蓄電池・エネファーム等の設置助成。国のみらいエコ＋県産木材と合算可。",
+    "amountText": "個人最大 10 万円（受付終了）",
+    "desc": "個人向け省エネ設備補助金は2026年11月10日に予算上限到達のため受付終了。",
     "usageRate": 61,
-    "statusText": "申請受付中",
+    "statusText": "受付終了（2026/11/10予算到達）",
     "conditions": [
       "上尾市内の新築住宅",
       "対象省エネ設備の設置",
       "市税完納"
     ],
-    "link": "https://www.city.ageo.lg.jp/site/kankyo/025114040101.html"
+    "link": "https://www.city.ageo.lg.jp/page/386012.html",
+    "isClosed": true
   },
   {
     "key": "草加",
@@ -891,18 +926,19 @@
     ],
     "category": "地球温暖化対策設備導入助成",
     "tierName": "草加市公式助成（くらし安全課環境係）",
-    "programName": "草加市住宅用地球温暖化対策設備導入補助金",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "住宅用太陽光発電・蓄電システム・HEMS等の導入補助。国＋県と併用可能。",
+    "programName": "草加市ゼロカーボンシティ推進補助金",
+    "maxAmount": 0,
+    "amountText": "1活動あたり 5 万円（受付終了）",
+    "desc": "予算1,000万円に到達したため今年度の申請受付を終了。",
     "usageRate": 53,
-    "statusText": "申請受付中",
+    "statusText": "受付終了（予算1,000万円到達）",
     "conditions": [
       "草加市内の新築住宅",
       "対象省エネ設備の設置",
       "市税完納"
     ],
-    "link": "https://www.city.soka.saitama.jp/cont/s1408/010/010/010/010/PAGE000000000000052327.html"
+    "link": "https://www.city.soka.saitama.jp/cont/s1701/020/020/010/PAGE000000000000051694.html",
+    "isClosed": true
   },
   {
     "key": "越谷",
@@ -916,18 +952,19 @@
     ],
     "category": "地球温暖化対策設備設置助成",
     "tierName": "越谷市公式助成（環境政策課）",
-    "programName": "越谷市住宅用地球温暖化対策設備設置費補助金",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "自ら居住する越谷市内の住宅への省エネルギー設備（太陽光発電・蓄電池等）設置助成。",
+    "programName": "越谷市ゼロカーボン推進補助金",
+    "maxAmount": 0,
+    "amountText": "個人最大 20 万円（受付終了）",
+    "desc": "ZEH・スマートハウス設備補助金は前期・後期ともに予算上限到達で受付終了。",
     "usageRate": 63,
-    "statusText": "申請受付中",
+    "statusText": "前期・後期とも受付終了",
     "conditions": [
       "越谷市内の新築住宅",
       "対象設備の設置",
       "市税完納"
     ],
-    "link": "https://www.city.koshigaya.saitama.jp/kurashi_shisei/kurashi/kankyo/ondankataisaku/kankyo-ondanka-hojo.html"
+    "link": "https://www.city.koshigaya.saitama.jp/kurashi_shisei/kurashi/kankyo/kankyoseisaku/zerocarbon.html",
+    "isClosed": true
   },
   {
     "key": "蕨",
@@ -941,18 +978,19 @@
     ],
     "category": "省エネルギーシステム設置助成",
     "tierName": "蕨市公式助成（安全安心推進課環境係）",
-    "programName": "蕨市住宅用新・省エネルギーシステム等設置費補助金",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "太陽光発電・蓄電池等の省エネ設備導入支援。国＋県と合算可能。",
+    "programName": "蕨市住宅用スマートエネルギー設備設置費補助金",
+    "maxAmount": 150000,
+    "amountText": "個人向け最大 15 万円",
+    "desc": "個人住宅向けスマートエネルギー設備導入に最大15万円を交付（※30万円は事業者・集合住宅用）。",
     "usageRate": 49,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（2026/4/1〜2027/2/4）",
     "conditions": [
       "蕨市内の新築住宅",
       "対象システムの設置",
       "市税完納"
     ],
-    "link": "https://www.city.warabi.saitama.jp/kurashi/kankyo/1002220/1002237.html"
+    "link": "https://www.city.warabi.saitama.jp/kurashi/kankyo/eco/1001349.html",
+    "isClosed": false
   },
   {
     "key": "戸田",
@@ -966,18 +1004,19 @@
     ],
     "category": "省エネルギー設備設置費補助",
     "tierName": "戸田市公式助成（環境課）",
-    "programName": "戸田市省エネルギー設備設置費等補助制度",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "戸田市内の住宅に太陽光発電・蓄電池等を設置する場合に交付。国＋県と併用可。",
+    "programName": "戸田市ゼロカーボン推進補助金",
+    "maxAmount": 50000,
+    "amountText": "単一設備最大 5 万円",
+    "desc": "住宅用ゼロカーボン設備導入に単一設備最大5万円を交付。",
     "usageRate": 56,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（2026/4/1〜2027/3/1）",
     "conditions": [
       "戸田市内の新築住宅",
       "対象省エネ設備の導入",
       "市税滞納なし"
     ],
-    "link": "https://www.city.toda.saitama.jp/soshiki/221/kankyo-hojo.html"
+    "link": "https://www.city.toda.saitama.jp/soshiki/212/kankyo-zero-carbon-hozyo.html",
+    "isClosed": false
   },
   {
     "key": "川口",
@@ -991,18 +1030,19 @@
     ],
     "category": "省エネ設備設置費補助",
     "tierName": "川口市公式助成（環境総務課）",
-    "programName": "川口市省エネ設備設置費補助金",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "住宅用太陽光発電・蓄電システム・エネファーム等の設置助成。国の大型補助金（みらいエコ等）＋埼玉県産木材と合算可能。",
+    "programName": "川口市住宅用地球温暖化対策設備設置費補助金",
+    "maxAmount": 160000,
+    "amountText": "市内業者活用時 上限 16 万円",
+    "desc": "市内施工業者を活用した省エネ設備設置等で最大16万円を交付。",
     "usageRate": 65,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（2026/5/11〜予算到達まで）",
     "conditions": [
       "川口市内の新築住宅",
       "対象省エネ設備の設置",
       "市税完納"
     ],
-    "link": "https://www.city.kawaguchi.lg.jp/soshiki/01090/030/1/4/21820.html"
+    "link": "https://www.city.kawaguchi.lg.jp/soshiki/01100/010/2/1/34382.html",
+    "isClosed": false
   },
   {
     "key": "桶川",
@@ -1017,17 +1057,18 @@
     "category": "スマートエネルギー設備助成",
     "tierName": "桶川市公式助成（環境課生活環境担当）",
     "programName": "桶川市スマートエネルギー設備設置費補助金",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "太陽光発電・蓄電システム等のスマートエネルギー機器導入支援。国＋県と併用可。",
+    "maxAmount": 0,
+    "amountText": "単一機器最大 10 万円（受付終了）",
+    "desc": "2026年6月11日に予算上限に達したため受付終了。",
     "usageRate": 47,
-    "statusText": "申請受付中",
+    "statusText": "受付終了（2026/6/11予算到達）",
     "conditions": [
       "桶川市内の新築住宅",
       "対象設備の設置",
       "市税完納"
     ],
-    "link": "https://www.city.okegawa.lg.jp/soshiki/kankyo/seikatsukankyo/kankyo/hojokin/smart_energy/2619.html"
+    "link": "https://www.city.okegawa.lg.jp/kurashi/gomi_kankyo/eco/14869.html",
+    "isClosed": true
   },
   {
     "key": "久喜",
@@ -1044,18 +1085,19 @@
     ],
     "category": "三世代同居住宅取得支援",
     "tierName": "久喜市公式助成（建築住宅課）",
-    "programName": "久喜市三世代同居住宅取得支援補助金",
-    "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "親・子・孫の三世代が同居するために久喜市内に新築住宅を取得する世帯へ交付。",
+    "programName": "久喜市ゼロカーボン推進補助金",
+    "maxAmount": 100000,
+    "amountText": "最大 10 万円",
+    "desc": "住宅用ゼロカーボン推進設備設置に最大10万円を補助（※加須市の三世代同居制度との取り違えを解消）。",
     "usageRate": 50,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（ゼロカーボン推進）",
     "conditions": [
       "三世代同居を目的とする新築住宅取得",
       "中学生以下の子を扶養",
       "市税完納"
     ],
-    "link": "https://www.city.kuki.lg.jp/kurashi/jutaku/sumai_shien/sandai_dokyo.html"
+    "link": "https://www.city.kuki.lg.jp/machizukuri/hozen/hojokin/1012797.html",
+    "isClosed": false
   },
   {
     "key": "北本",
@@ -1069,18 +1111,19 @@
     ],
     "category": "多世代同居・近居住宅取得補助",
     "tierName": "北本市公式助成（都市計画課住宅担当）",
-    "programName": "北本市多世代同居・近居住宅取得等補助金",
-    "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "親世帯と同居または北本市内に近居するために新築住宅を取得する子育て世帯へ交付。",
+    "programName": "北本市住宅用省エネルギー機器設置費補助金",
+    "maxAmount": 200000,
+    "amountText": "最大 20 万円（地中熱等）",
+    "desc": "住宅用省エネルギー機器設置に最大20万円を交付（※廃止された多世代同居制度から現行制度へ差し替え）。",
     "usageRate": 48,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（省エネ機器設置費）",
     "conditions": [
       "親世帯が市内に1年以上在住",
       "中学生以下の子を扶養する世帯",
       "市税完納"
     ],
-    "link": "https://www.city.kitamoto.lg.jp/kurashi/sumai/jutaku/hojo/4594.html"
+    "link": "https://www.city.kitamoto.lg.jp/mokutekikarasagasu/teatekyuhunado/sumai/19168.html",
+    "isClosed": false
   },
   {
     "key": "八潮",
@@ -1094,18 +1137,19 @@
     ],
     "category": "省エネルギー設備設置助成",
     "tierName": "八潮市公式助成（リサイクルプラザ環境課）",
-    "programName": "八潮市住宅用省エネルギー設備設置費補助金",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "自ら居住する八潮市内の住宅への太陽光発電・蓄電池等設置補助。国＋県と併用可。",
+    "programName": "八潮市住宅用太陽光発電設備等設置費補助金",
+    "maxAmount": 50000,
+    "amountText": "蓄電池・V2H 各 5 万円",
+    "desc": "蓄電池やV2Hシステム設置に各5万円を交付（本文は令和8年度版）。",
     "usageRate": 52,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（2026/4/1〜2027/3/23）",
     "conditions": [
       "八潮市内の新築住宅",
       "対象設備の導入",
       "市税完納"
     ],
-    "link": "https://www.city.yashio.lg.jp/kurashi/kankyo_gomi/kankyo/syouene_hojo.html"
+    "link": "https://www.city.yashio.lg.jp/kurashi/sumai_community/sumai/R7_taiyoko.html",
+    "isClosed": false
   },
   {
     "key": "春日部",
@@ -1120,18 +1164,19 @@
     ],
     "category": "住宅用省エネルギー設備設置等補助",
     "tierName": "春日部市公式助成（環境政策課）",
-    "programName": "春日部市住宅用省エネルギー設備設置等補助金",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "自ら居住する春日部市内の新築住宅への太陽光発電システム・家庭用蓄電池等の設置助成。国のみらいエコ（最大110万円）＋埼玉県産木材（最大34万円）と合算可能。",
+    "programName": "春日部市ゼロカーボンシティ推進設備等導入費補助金",
+    "maxAmount": 690000,
+    "amountText": "併用最大 69 万円（重点区域）",
+    "desc": "重点対策加速化事業区域で太陽光・蓄電池等の併用時に最大69万円補助（予算残り僅か）。",
     "usageRate": 53,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（残り僅か・交付申請12/28必着）",
     "conditions": [
       "春日部市内の新築住宅",
       "対象省エネ設備の設置",
       "市税完納"
     ],
-    "link": "https://www.city.kasukabe.lg.jp/kurashi_tetsuzuki/kankyo_gomi/shoenerugi/3719.html"
+    "link": "https://www.city.kasukabe.lg.jp/kurashi/kankyoshisaku/ondankataisaku/30495.html",
+    "isClosed": false
   },
   {
     "key": "三郷",
@@ -1145,18 +1190,19 @@
     ],
     "category": "環境配慮型設備設置助成",
     "tierName": "三郷市公式助成（クリーンライフ課）",
-    "programName": "三郷市住宅用環境配慮型設備設置等補助金",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "太陽光発電・蓄電システム等の導入助成。国のみらいエコ＋県産木材と合算可能。",
+    "programName": "三郷市クリーンエネルギー設備等設置費補助金",
+    "maxAmount": 0,
+    "amountText": "最大 10 万円（受付終了）",
+    "desc": "令和8年度はEV・PHEV対象。2026年8月18日に予算到達のため受付終了。",
     "usageRate": 55,
-    "statusText": "申請受付中",
+    "statusText": "受付終了（2026/8/18予算到達）",
     "conditions": [
       "三郷市内の新築住宅",
       "対象設備の設置",
       "市税完納"
     ],
-    "link": "https://www.city.misato.lg.jp/kurashi_tetsuzuki/kankyo_gomi/kankyo/1169.html"
+    "link": "https://www.city.misato.lg.jp/soshiki/shiminseikatsu/kurinraifu/8/12740.html",
+    "isClosed": true
   },
   {
     "key": "蓮田",
@@ -1170,18 +1216,19 @@
     ],
     "category": "省エネルギー設備設置助成",
     "tierName": "蓮田市公式助成（環境課環境保全担当）",
-    "programName": "蓮田市住宅用省エネルギー設備設置費補助金",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "自ら居住する蓮田市内の住宅への太陽光発電・蓄電池等導入支援。国＋県と合算可能。",
+    "programName": "蓮田市自然エネルギー活用住宅等支援事業補助金",
+    "maxAmount": 50000,
+    "amountText": "太陽光 上限 5 万円",
+    "desc": "太陽光発電設備設置に上限5万円を補助。2026/4/1〜2027/2/6受付。",
     "usageRate": 45,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（2026/4/1〜2027/2/6）",
     "conditions": [
       "蓮田市内の新築住宅",
       "対象省エネ設備の設置",
       "市税完納"
     ],
-    "link": "https://www.city.hasuda.saitama.jp/kankyo/kurashi/kankyo/hojo/syouene.html"
+    "link": "https://www.city.hasuda.saitama.jp/kankyo/machi/kankyo/hojo/sizenenerugihojokin2021.html",
+    "isClosed": false
   },
   {
     "key": "幸手",
@@ -1195,18 +1242,19 @@
     ],
     "category": "子育て世代マイホーム取得奨励金",
     "tierName": "幸手市公式助成（都市整備課住宅担当）",
-    "programName": "幸手市子育て世帯等マイホーム取得奨励金",
-    "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "市外からの転入や子育て世帯による幸手市内での新築住宅取得に対する奨励金。",
+    "programName": "幸手市新婚・子育て世帯定住奨励金（事業終了）",
+    "maxAmount": 0,
+    "amountText": "事業終了",
+    "desc": "令和7年度をもって事業終了と市公式ページに明記。国・県補助金を適用。",
     "usageRate": 46,
-    "statusText": "申請受付中",
+    "statusText": "事業終了（令和7年度をもって終了と公式明記）",
     "conditions": [
       "中学生以下の子を養育する世帯または40歳未満夫婦",
       "新築住宅を取得・定住",
       "市税完納"
     ],
-    "link": "https://www.city.satte.lg.jp/soshiki/toshiseibi/jutaku/3794.html"
+    "link": "https://www.city.satte.lg.jp/soshiki/seisaku/SettlementPromotion/10031.html",
+    "isClosed": true
   },
   {
     "key": "吉川",
@@ -1222,16 +1270,17 @@
     "tierName": "吉川市公式助成（環境課）",
     "programName": "吉川市住宅用スマートエネルギー設備設置費補助金",
     "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "住宅用太陽光発電・蓄電池・HEMS等の省エネ設備導入助成。国＋県と合算受給可能。",
+    "amountText": "太陽光＋蓄電池併用定額 10 万円",
+    "desc": "太陽光発電と蓄電池の併用設置で定額10万円を交付。",
     "usageRate": 49,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（公募実施中）",
     "conditions": [
       "吉川市内の新築住宅",
       "対象設備の導入",
       "市税完納"
     ],
-    "link": "https://www.city.yoshikawa.saitama.jp/index.cfm/24,63581,146,654,html"
+    "link": "https://www.city.yoshikawa.saitama.jp/index.cfm/23,59978,122,687,html",
+    "isClosed": false
   },
   {
     "key": "白岡",
@@ -1245,18 +1294,19 @@
     ],
     "category": "スマートエネルギー住宅普及促進",
     "tierName": "白岡市公式助成（環境課環境政策担当）",
-    "programName": "白岡市スマートエネルギー住宅普及促進補助金",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "太陽光発電・蓄電システム等の導入助成。国のみらいエコ＋県産木材と合算可能。",
+    "programName": "白岡市住宅用地球温暖化対策設備等設置費補助金",
+    "maxAmount": 0,
+    "amountText": "単体最大 5 万円（受付終了）",
+    "desc": "全機器区分において予算上限到達のため今年度の受付を終了。",
     "usageRate": 47,
-    "statusText": "申請受付中",
+    "statusText": "全機器受付終了（予算到達）",
     "conditions": [
       "白岡市内の新築住宅",
       "対象設備の設置",
       "市税完納"
     ],
-    "link": "https://www.city.shiraoka.lg.jp/soshiki/kankyoka/kankyo/smartenergy/3671.html"
+    "link": "https://www.city.shiraoka.lg.jp/soshiki/seikatsukeizaibu/kankyoka/1_2/8379.html",
+    "isClosed": true
   },
   {
     "key": "伊奈",
@@ -1271,18 +1321,19 @@
     ],
     "category": "新エネルギーシステム等設置助成",
     "tierName": "伊奈町公式助成（生活環境課）",
-    "programName": "伊奈町住宅用新エネルギーシステム等設置費補助金",
-    "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "太陽光発電・家庭用蓄電池等の設置助成。国＋県と併用可能。",
+    "programName": "伊奈町住宅用省エネルギー設備等設置費補助金",
+    "maxAmount": 10000,
+    "amountText": "設備の種類ごとに上限 1 万円（お買物券）",
+    "desc": "設備の種類ごとに上限1万円分の町内共通お買物券を交付。2026/4/1〜2027/3/10受付。",
     "usageRate": 48,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（2026/4/1〜2027/3/10）",
     "conditions": [
       "伊奈町内の新築住宅",
       "対象システムの導入",
       "町税完納"
     ],
-    "link": "https://www.town.saitama-ina.lg.jp/0000003058.html"
+    "link": "https://www.town.saitama-ina.lg.jp/0000009440.html",
+    "isClosed": false
   },
   {
     "key": "横瀬",
@@ -1297,18 +1348,19 @@
     ],
     "category": "移住定住促進住宅取得奨励金",
     "tierName": "横瀬町公式助成（振興課まち経営グループ）",
-    "programName": "横瀬町移住定住促進住宅取得奨励金 ＆ 秩父産木材活用助成",
-    "maxAmount": 500000,
-    "amountText": "最大 50 万円",
-    "desc": "横瀬町内に定住するために新築住宅を取得した世帯へ交付。秩父地域木材を活用した場合に加算。",
+    "programName": "横瀬町住宅リフォーム・省エネ等補助金",
+    "maxAmount": 200000,
+    "amountText": "省エネ改修最大 20 万円",
+    "desc": "住宅の省エネ改修等に対し最大20万円を補助（着工前の申請が必要）。",
     "usageRate": 41,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（着工前申請必須）",
     "conditions": [
       "横瀬町内に新築住宅を取得し住民登録",
       "5年以上定住の意思",
       "町税完納"
     ],
-    "link": "https://www.town.yokoze.saitama.jp/life/teiju/teiju-josei/"
+    "link": "https://www.town.yokoze.saitama.jp/kurashi/teate/1032",
+    "isClosed": false
   },
   {
     "key": "皆野",
@@ -1322,18 +1374,19 @@
     ],
     "category": "定住促進住宅取得奨励金",
     "tierName": "皆野町公式助成（みらい創造課）",
-    "programName": "皆野町定住促進住宅取得奨励金",
-    "maxAmount": 500000,
-    "amountText": "最大 50 万円",
-    "desc": "皆野町内での若者・子育て世帯の新築住宅取得に対する助成制度。国・県補助金と合算可能。",
+    "programName": "皆野町若者定住・子育て支援住宅取得奨励金",
+    "maxAmount": 1200000,
+    "amountText": "加算込み最大 120 万円（受付終了）",
+    "desc": "若者定住住宅取得奨励金は予算上限到達のため受付終了。",
     "usageRate": 39,
-    "statusText": "申請受付中",
+    "statusText": "受付終了（予算到達）",
     "conditions": [
       "町内に自ら居住する新築住宅を取得",
       "若者夫婦世帯または子育て世帯",
       "町税滞納なし"
     ],
-    "link": "https://www.town.minano.saitama.jp/kurashi/sumai/teiju-josei/"
+    "link": "https://www.town.minano.saitama.jp/section/kankou/18428/",
+    "isClosed": true
   },
   {
     "key": "長瀞",
@@ -1347,18 +1400,19 @@
     ],
     "category": "移住定住促進住宅取得支援",
     "tierName": "長瀞町公式助成（産業観光課）",
-    "programName": "長瀞町移住定住促進住宅取得補助金",
-    "maxAmount": 500000,
-    "amountText": "最大 50 万円",
-    "desc": "観光と自然豊かな長瀞町内への移住・定住を目的とした新築住宅取得支援事業。",
+    "programName": "長瀞町若者定住支援住宅取得補助金",
+    "maxAmount": 1000000,
+    "amountText": "最大 100 万円",
+    "desc": "若者世帯の新築住宅取得に最大100万円を補助（登記完了日から1年以内に申請）。",
     "usageRate": 40,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（登記完了日から1年以内申請）",
     "conditions": [
       "長瀞町内に新築住宅を取得・定住",
       "町外転入または子育て世帯",
       "町税完納"
     ],
-    "link": "https://www.town.nagatoro.saitama.jp/kurashi/sumai/teiju-hojo/"
+    "link": "https://www.town.nagatoro.saitama.jp/life/h30_teiju/",
+    "isClosed": false
   },
   {
     "key": "小鹿野",
@@ -1372,18 +1426,19 @@
     ],
     "category": "移住定住住宅取得等奨励金",
     "tierName": "小鹿野町公式助成（まちづくり観光課）",
-    "programName": "小鹿野町移住定住促進住宅取得等奨励金",
-    "maxAmount": 500000,
-    "amountText": "最大 50 万円",
-    "desc": "小鹿野町内での新築マイホーム取得支援。子育て世帯加算・町内木材活用加算あり。",
+    "programName": "小鹿野町若者・子育て定住促進住宅取得奨励金",
+    "maxAmount": 1000000,
+    "amountText": "加算込み 100 万円",
+    "desc": "若者・子育て世帯の住宅取得に基本額＋加算で最大100万円を交付。",
     "usageRate": 37,
-    "statusText": "申請受付中",
+    "statusText": "随時受付中（住まい助成金一覧）",
     "conditions": [
       "小鹿野町内での新築住宅取得",
       "定住の意思を有する世帯",
       "町税完納"
     ],
-    "link": "https://www.town.ogano.lg.jp/kurashi/sumai/teiju-shien/"
+    "link": "https://www.town.ogano.lg.jp/kurashi-tetsuzuki/sumai-sien/sumaizyoseikinitiran/",
+    "isClosed": false
   },
   {
     "key": "東秩父",
@@ -1397,18 +1452,19 @@
     ],
     "category": "若者定住住宅取得支援事業",
     "tierName": "東秩父村公式助成（村づくり推進課）",
-    "programName": "東秩父村若者定住住宅取得支援事業 ＆ 村産材活用加算",
-    "maxAmount": 600000,
-    "amountText": "最大 60 万円",
-    "desc": "埼玉県唯一の村・東秩父村内での新築住宅取得に対して基本額40万円＋村内産木材使用加算（最大20万円）で最大60万円交付。",
+    "programName": "東秩父村多世代同居・近居住宅取得支援補助金",
+    "maxAmount": 2000000,
+    "amountText": "最大 200 万円",
+    "desc": "村内での多世代同居・近居の新築住宅取得に対し最大200万円を交付。",
     "usageRate": 35,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（同居・近居促進要綱）",
     "conditions": [
       "東秩父村内に新築住宅を取得・居住",
       "若者夫婦または子育て世帯",
       "村税完納"
     ],
-    "link": "https://www.vill.higashichichibu.saitama.jp/soshiki/03/teiju-shien.html"
+    "link": "https://www.vill.higashichichibu.saitama.jp/soshiki/00/doukyokinnkyoyouko.html",
+    "isClosed": false
   },
   {
     "key": "美里",
@@ -1422,18 +1478,19 @@
     ],
     "category": "定住促進住宅取得奨励金",
     "tierName": "美里町公式助成（総務課政策企画担当）",
-    "programName": "美里町定住促進住宅取得等奨励金",
-    "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "美里町内に新築住宅を取得し定住する若者夫婦・子育て世帯への助成金。",
+    "programName": "美里町定住促進奨励金（要窓口確認）",
+    "maxAmount": 0,
+    "amountText": "町窓口確認（広報加算最大50万）",
+    "desc": "公式サイトに個別HTML制度ページなし（広報等で加算込み最大50万円記載、要窓口確認）。",
     "usageRate": 42,
-    "statusText": "申請受付中",
+    "statusText": "要窓口確認（公式個別ページなし）",
     "conditions": [
       "美里町内の新築住宅を取得",
       "40歳未満の夫婦または中学生以下の子を扶養",
       "町税完納"
     ],
-    "link": "https://www.town.saitama-misato.lg.jp/soshiki/somu/kikaku/teiju/1446690467771.html"
+    "link": "",
+    "isClosed": false
   },
   {
     "key": "神川",
@@ -1447,17 +1504,18 @@
     ],
     "category": "定住促進マイホーム取得等奨励金",
     "tierName": "神川町公式助成（総合政策課）",
-    "programName": "神川町定住促進マイホーム取得等奨励金",
+    "programName": "神川町結婚新生活・定住促進住宅取得支援金",
     "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "神川町内での新築住宅取得に対する支援。子育て世帯・若者世帯定住を推進。",
+    "amountText": "1世帯 30 万円",
+    "desc": "若者世帯等の定住住宅取得に対し1世帯30万円を支援（転入翌日から1年以内に申請）。",
     "usageRate": 38,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（転入翌日から1年以内申請）",
     "conditions": [
       "神川町内に新築住宅を取得し定住",
       "町税滞納のないこと"
     ],
-    "link": "https://www.town.kamikawa.saitama.jp/soshiki/soumu/kikaku/teijushien/2769.html"
+    "link": "https://www.town.kamikawa.saitama.jp/kosodate_kyouiku/kosodate/deai_kekkon_sinnseikatu/6920.html",
+    "isClosed": false
   },
   {
     "key": "上里",
@@ -1471,18 +1529,19 @@
     ],
     "category": "子育て・若者定住住宅取得奨励金",
     "tierName": "上里町公式助成（まち整備課）",
-    "programName": "上里町子育て・若者定住住宅取得奨励金",
-    "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "上里町内での新築住宅取得を支援。国・県の補助金と合算可能。",
+    "programName": "上里町移住・定住支援施策（住宅改修等商品券交付）",
+    "maxAmount": 50000,
+    "amountText": "住宅改修上限 5 万円（商品券）",
+    "desc": "新築住宅取得の奨励金はなし（住宅改修に対し上限5万円分の商品券交付制度あり）。",
     "usageRate": 45,
-    "statusText": "申請受付中",
+    "statusText": "移住・定住支援策まとめ（新築取得奨励金なし）",
     "conditions": [
       "自ら居住する上里町内の新築住宅",
       "中学生以下の子を養育または40歳未満夫婦",
       "町税完納"
     ],
-    "link": "https://www.town.kamisato.saitama.jp/3241.htm"
+    "link": "https://www.town.kamisato.saitama.jp/6797.htm",
+    "isClosed": false
   },
   {
     "key": "寄居",
@@ -1496,18 +1555,19 @@
     ],
     "category": "まちなか居住推進住宅取得補助",
     "tierName": "寄居町公式助成（都市計画課）",
-    "programName": "寄居町中心市街地まちなか居住推進住宅取得補助金 ＆ 省エネ助成",
-    "maxAmount": 500000,
-    "amountText": "最大 50 万円",
-    "desc": "寄居町内の居住誘導区域やまちなか区域での新築住宅取得支援（最大40万円＋省エネ設備加算10万円）。",
+    "programName": "寄居町まちなか居住推進住宅取得奨励金",
+    "maxAmount": 800000,
+    "amountText": "最大 80 万円（中古は半額）",
+    "desc": "まちなか区域での住宅取得に対し最大80万円（基本40万＋子育て等加算最大40万）を交付。",
     "usageRate": 47,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（2026/4/14〜2027/3/19）",
     "conditions": [
       "寄居町内の対象区域での新築取得",
       "転入・若者世帯要件",
       "町税完納"
     ],
-    "link": "https://www.town.yorii.saitama.jp/soshiki/13/machinaka-kyoju.html"
+    "link": "https://www.town.yorii.saitama.jp/soshiki/15/kyojyusokusin.html",
+    "isClosed": false
   },
   {
     "key": "宮代",
@@ -1521,18 +1581,19 @@
     ],
     "category": "子育て世代定住促進住宅取得助成",
     "tierName": "宮代町公式助成（町づくり推進課）",
-    "programName": "宮代町子育て世代定住促進住宅取得助成金",
-    "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "宮代町内に新築住宅を取得し定住する子育て世帯へ交付。国・県補助金と併用可。",
+    "programName": "宮代町住宅リフォーム補助金",
+    "maxAmount": 0,
+    "amountText": "リフォーム補助上限 10 万円（受付終了）",
+    "desc": "リフォーム補助金は予算上限到達のため受付終了。新築住宅への独自補助制度はありません。",
     "usageRate": 50,
-    "statusText": "申請受付中",
+    "statusText": "令和8年度受付終了（新築制度なし）",
     "conditions": [
       "中学生以下の子を養育する世帯",
       "宮代町内に新築住宅を取得・居住",
       "町税完納"
     ],
-    "link": "https://www.town.miyashiro.lg.jp/0000005721.html"
+    "link": "https://www.town.miyashiro.lg.jp/0000021224.html",
+    "isClosed": true
   },
   {
     "key": "杉戸",
@@ -1546,18 +1607,19 @@
     ],
     "category": "三世代同居・近居支援住宅取得助成",
     "tierName": "杉戸町公式助成（都市計画課）",
-    "programName": "杉戸町三世代同居・近居支援住宅取得助成金",
-    "maxAmount": 300000,
-    "amountText": "最大 30 万円",
-    "desc": "杉戸町内での親族同居・近居のために新築住宅を取得する子育て世帯へ交付。",
+    "programName": "杉戸町多世代同居・近居支援住宅取得補助金",
+    "maxAmount": 0,
+    "amountText": "1世帯 20 万（子3人以上 30 万円・受付終了）",
+    "desc": "令和8年度は実施予定なしと公式に明記。国・県補助金を適用。",
     "usageRate": 43,
-    "statusText": "申請受付中",
+    "statusText": "申請受付終了（令和8年度実施予定なし）",
     "conditions": [
       "三世代同居または近居新築",
       "中学生以下の子がいる世帯",
       "町税完納"
     ],
-    "link": "https://www.town.sugito.lg.jp/page/9361.html"
+    "link": "https://www.town.sugito.lg.jp/site/sugitogoto/18516.html",
+    "isClosed": true
   },
   {
     "key": "松伏",
@@ -1571,17 +1633,18 @@
     ],
     "category": "省エネルギー設備設置費助成",
     "tierName": "松伏町公式助成（環境経済課）",
-    "programName": "松伏町住宅用省エネルギー設備設置費補助金",
+    "programName": "松伏町住宅用太陽光発電設備等設置費補助金",
     "maxAmount": 100000,
-    "amountText": "最大 約10 万円",
-    "desc": "自ら居住する松伏町内の住宅への太陽光発電・蓄電システム等の設置助成。国＋県と合算可能。",
+    "amountText": "太陽光＋V2H併用最大 10 万円",
+    "desc": "太陽光発電・V2H等の設置に最大10万円を交付。2026/5/8〜2027/2/26受付、先着順。",
     "usageRate": 44,
-    "statusText": "申請受付中",
+    "statusText": "申請受付中（2026/5/8〜2027/2/26・先着順）",
     "conditions": [
       "松伏町内の新築住宅",
       "対象省エネ設備の導入",
       "町税完納"
     ],
-    "link": "https://www.town.matsubushi.lg.jp/www/contents/1491873111818/index.html"
+    "link": "https://www.town.matsubushi.lg.jp/0000000837.html",
+    "isClosed": false
   }
 ]

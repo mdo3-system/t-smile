@@ -1559,6 +1559,308 @@
     </div>
   </div>
 
+
+  <!-- ❓ よくあるご質問（FAQ）セクション: 構造化データ（FAQPage）14問と完全同期 -->
+  <section id="faq" class="faq-section" style="background: #f8fafc; padding: 4.5rem 1.5rem; border-top: 1px solid #e2e8f0;">
+    <style>
+      .faq-item {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        overflow: hidden;
+        transition: all 0.25s ease;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      }
+      .faq-item:hover {
+        border-color: #cbd5e1;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      }
+      .faq-item[open] {
+        border-color: #38bdf8;
+        box-shadow: 0 4px 16px rgba(2, 132, 199, 0.08);
+      }
+      .faq-question {
+        padding: 1.2rem 1.4rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+        font-size: 1rem;
+        color: #0f172a;
+        list-style: none;
+        user-select: none;
+      }
+      .faq-question::-webkit-details-marker {
+        display: none;
+      }
+      .faq-q-badge {
+        background: linear-gradient(135deg, #0284c7, #0369a1);
+        color: #ffffff;
+        font-size: 0.78rem;
+        font-weight: 900;
+        padding: 4px 10px;
+        border-radius: 6px;
+        flex-shrink: 0;
+        letter-spacing: 0.05em;
+      }
+      .faq-q-text {
+        flex: 1;
+        line-height: 1.5;
+      }
+      .faq-toggle-icon {
+        color: #94a3b8;
+        font-size: 0.8rem;
+        transition: transform 0.25s ease;
+        flex-shrink: 0;
+      }
+      .faq-item[open] .faq-toggle-icon {
+        transform: rotate(180deg);
+        color: #0284c7;
+      }
+      .faq-answer {
+        padding: 0 1.4rem 1.4rem 1.4rem;
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        border-top: 1px dashed #f1f5f9;
+        margin-top: 4px;
+        padding-top: 1rem;
+      }
+      .faq-a-badge {
+        background: #ecfdf5;
+        color: #059669;
+        font-size: 0.82rem;
+        font-weight: 900;
+        padding: 3px 9px;
+        border-radius: 6px;
+        border: 1px solid #a7f3d0;
+        flex-shrink: 0;
+      }
+      .faq-a-content {
+        flex: 1;
+        font-size: 0.93rem;
+        color: #334155;
+        line-height: 1.8;
+      }
+      .faq-a-content p {
+        margin: 0;
+      }
+      @media (max-width: 640px) {
+        .faq-question {
+          padding: 1rem;
+          font-size: 0.92rem;
+          gap: 10px;
+        }
+        .faq-answer {
+          padding: 0 1rem 1rem 1rem;
+          gap: 10px;
+        }
+        .faq-a-content {
+          font-size: 0.88rem;
+        }
+      }
+    </style>
+    <div style="max-width: 1000px; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 2.8rem;">
+        <span style="font-size: 0.8rem; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 4px 14px; border-radius: 20px; letter-spacing: 0.05em; display: inline-block;">Q&A ARCHIVE</span>
+        <h2 style="font-size: clamp(1.4rem, 3.2vw, 2.1rem); font-weight: 900; color: #0f172a; margin-top: 0.7rem; line-height: 1.35;">
+          家づくり・設計工学 よくあるご質問（FAQ）
+        </h2>
+        <p style="font-size: 0.92rem; color: #64748b; margin-top: 0.6rem; line-height: 1.7; max-width: 680px; margin-left: auto; margin-right: auto;">
+          高気密高断熱の実測性能から回遊動線・費用計画・設備選定まで、施主様から多く寄せられる14の重要疑問に工学視点で率直にお答えします。
+        </p>
+      </div>
+
+      <div class="faq-accordion-container">
+
+        <details class="faq-item" open>
+          <summary class="faq-question">
+            <span class="faq-q-badge">Q01</span>
+            <span class="faq-q-text">気密測定（C値測定）はやってもらえますか？費用はいくらで、いつ実施しますか？</span>
+            <span class="faq-toggle-icon">▼</span>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-badge">A</div>
+            <div class="faq-a-content">
+              <p>はい、住ま居るでは全棟で気密測定を実施しています。費用相場は専門技能者による測定で1回あたり5万〜10万円前後です。埼玉県なのでC値は1.0未満をお約束としており、吹付け断熱のため実質0.5未満になることが大半です。断熱気密工事直後の「中間時測定」を重視し、1.0未満を基本に弱点箇所を測定中に見つけ、実測C値0.2〜0.6まで追い込んでから次の工程に進みます。</p>
+            </div>
+          </div>
+        </details>
+        <details class="faq-item" >
+          <summary class="faq-question">
+            <span class="faq-q-badge">Q02</span>
+            <span class="faq-q-text">「エアコン1〜2台で家じゅう快適」は本当に可能ですか？理論と現場のリアルな違いは？</span>
+            <span class="faq-toggle-icon">▼</span>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-badge">A</div>
+            <div class="faq-a-content">
+              <p>理論上は2階6畳用1台で家全体が冷える計算でも、現場ではエアコン周囲の空気が冷えると動作を止めてしまう（サーモオフ）ため1階が冷えません。住ま居るでは扇風機の併用や、夏と冬の空気の動きの差を考慮し、故障リスクに備えて1階と2階で各1台（計2台体制）のバックアップ体制を推奨しています。</p>
+            </div>
+          </div>
+        </details>
+        <details class="faq-item" >
+          <summary class="faq-question">
+            <span class="faq-q-badge">Q03</span>
+            <span class="faq-q-text">基礎断熱と床断熱はどちらが良いですか？シロアリ（防蟻）対策はどうしますか？</span>
+            <span class="faq-toggle-icon">▼</span>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-badge">A</div>
+            <div class="faq-a-content">
+              <p>高気密高断熱住宅で床下エアコンや第1種熱交換換気を通す場合は『基礎断熱』が圧倒的に有利です。床下も室内空間として暖かく保てます。懸念されるシロアリ対策としては、防蟻成分を含有した断熱材の採用、基礎打ち継ぎ部の止水・防蟻コーキング、基礎外周の目視点検ルートの確保を標準工学設計として徹底しています。</p>
+            </div>
+          </div>
+        </details>
+        <details class="faq-item" >
+          <summary class="faq-question">
+            <span class="faq-q-badge">Q04</span>
+            <span class="faq-q-text">第1種熱交換換気と第3種換気はどちらを選ぶべきですか？光熱費の違いは？</span>
+            <span class="faq-toggle-icon">▼</span>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-badge">A</div>
+            <div class="faq-a-content">
+              <p>埼玉県の真冬の冷気・真夏の熱気と湿気を考慮すると、熱回収率70〜90%の第1種全熱交換換気（Panasonic・ダクト式等）が最も省エネで室温差を生みません。給気時にフィルターで花粉・PM2.5を除去できるメリットもあります。ただしダクト清掃やフィルター交換のメンテナンス性を考慮した設計が不可欠です。</p>
+            </div>
+          </div>
+        </details>
+        <details class="faq-item" >
+          <summary class="faq-question">
+            <span class="faq-q-badge">Q05</span>
+            <span class="faq-q-text">窓の選び方はどうすべきですか？南面と東西面で仕様を変える理由は？</span>
+            <span class="faq-toggle-icon">▼</span>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-badge">A</div>
+            <div class="faq-a-content">
+              <p>全方位同じガラスにするのは工学的に間違いです。冬の直達日射を取り入れて暖房費を削る『南面』は日射取得型Low-E複層またはトリプルガラス（APW430等）を採用し、夏場の過酷な西日・東日が入る『東西面』は日射遮蔽型Low-Eガラス＋外部アウターシェードや軒・庇で日射を遮蔽します。</p>
+            </div>
+          </div>
+        </details>
+        <details class="faq-item" >
+          <summary class="faq-question">
+            <span class="faq-q-badge">Q06</span>
+            <span class="faq-q-text">壁体内結露を防ぐための通気層工法と気密シートはどうなっていますか？</span>
+            <span class="faq-toggle-icon">▼</span>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-badge">A</div>
+            <div class="faq-a-content">
+              <p>室内側の水蒸気が壁体内に入り込まないよう、可変透湿気密シート（インテロ等）や防湿層を連続施工し、外壁側には15mm以上の外壁通気層を設けて万一の湿気を速やかに棟換気へ逃がす『通気工法』を全棟で厳格に実施しています。</p>
+            </div>
+          </div>
+        </details>
+        <details class="faq-item" >
+          <summary class="faq-question">
+            <span class="faq-q-badge">Q07</span>
+            <span class="faq-q-text">家事ラク回遊動線（玄関→パントリー→キッチン→ランドリー）の最適寸法は？</span>
+            <span class="faq-toggle-icon">▼</span>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-badge">A</div>
+            <div class="faq-a-content">
+              <p>玄関から土間SIC、パントリーを経てキッチンへ直行できる動線では、買い物袋を持ったままスムーズに移動できるよう通路幅850〜900mmを確保します。さらにキッチンからランドリールーム・洗面所へ2方向からアクセスできる回遊コアを配置することで、家事歩数を半分に短縮できます。</p>
+            </div>
+          </div>
+        </details>
+        <details class="faq-item" >
+          <summary class="faq-question">
+            <span class="faq-q-badge">Q08</span>
+            <span class="faq-q-text">ガス衣類乾燥機「乾太くん」と室内干しランドリーの配置のベストプラクティスは？</span>
+            <span class="faq-toggle-icon">▼</span>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-badge">A</div>
+            <div class="faq-a-content">
+              <p>洗濯機の上に置く専用台よりも、スペースが許せば『洗濯機 ｜ 乾太くん ｜ 収納』を横並びに配置し、幅700〜750mm・高さ850mmの造作作業カウンターを設けるのがベストです。乾太くんから取り出した洗濯物をその場で畳み、隣接するファミリークローゼットへダイレクトにしまえる動線が完成します。</p>
+            </div>
+          </div>
+        </details>
+        <details class="faq-item" >
+          <summary class="faq-question">
+            <span class="faq-q-badge">Q09</span>
+            <span class="faq-q-text">洗面所と脱衣室を完全分離するメリットは何ですか？</span>
+            <span class="faq-toggle-icon">▼</span>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-badge">A</div>
+            <div class="faq-a-content">
+              <p>誰かがお風呂に入っている時や着替え中でも、気兼ねなく洗面台で歯磨きやメイクができる点です。朝の身支度渋滞を完全解消でき、来客時にも生活感のある洗濯カゴや浴室を見せずに手洗いへ案内できる清潔で機能的な間取りとなります。</p>
+            </div>
+          </div>
+        </details>
+        <details class="faq-item" >
+          <summary class="faq-question">
+            <span class="faq-q-badge">Q10</span>
+            <span class="faq-q-text">海外製食洗機（ミーレ・ボッシュ等）の60cmタイプは戸建てに導入できますか？</span>
+            <span class="faq-toggle-icon">▼</span>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-badge">A</div>
+            <div class="faq-a-content">
+              <p>はい、住ま居るでは多数の施工実績があります。大容量60cmフロントオープンは鍋やフライパン、1日分の食器を一度に洗えるため家事時間を劇的に削減します。導入には単相200V専用電源、給排水立ち上げ位置の専用配管設計、ワークトップ高さ850mm以上の確保が必須となるため、基本設計段階から間取りに組み込みます。</p>
+            </div>
+          </div>
+        </details>
+        <details class="faq-item" >
+          <summary class="faq-question">
+            <span class="faq-q-badge">Q11</span>
+            <span class="faq-q-text">埼玉西部（鶴ヶ島・川越等）での駐車場計画とEV充電設備の注意点は？</span>
+            <span class="faq-toggle-icon">▼</span>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-badge">A</div>
+            <div class="faq-a-content">
+              <p>埼玉西部エリアでは夫婦各1台（計2台）が基本で、両親や来客用の予備1台を含めた計3台スペースまたはアプローチ兼用設計を推奨します。また将来の電気自動車（EV）普及を見据え、新築時に分電盤から屋外駐車場への200V充電用先行配管工事（実費数万円程度）を事前施工しておくことが極めて経済的です。</p>
+            </div>
+          </div>
+        </details>
+        <details class="faq-item" >
+          <summary class="faq-question">
+            <span class="faq-q-badge">Q12</span>
+            <span class="faq-q-text">家相や風水（鬼門・裏鬼門）と、現代の高気密高断熱設計は両立できますか？</span>
+            <span class="faq-toggle-icon">▼</span>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-badge">A</div>
+            <div class="faq-a-content">
+              <p>十分に両立可能です。家相の鬼門（北東）・裏鬼門（南西）に水回りや玄関を避ける教えは、昔の寒冷・腐敗しやすい衛生環境を避ける知恵でした。現代では高気密高断熱（部屋ごとの不快な温度差を抑制）と24h熱交換換気によって衛生面は担保しつつ、三合の吉方位や正中線・四隅線を外すゾーニングをミリ単位で調整して両立を図ります。</p>
+            </div>
+          </div>
+        </details>
+        <details class="faq-item" >
+          <summary class="faq-question">
+            <span class="faq-q-badge">Q13</span>
+            <span class="faq-q-text">なぜ契約前に「15万円の設計お申し込み」が必要なのですか？他社との違いは？</span>
+            <span class="faq-toggle-icon">▼</span>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-badge">A</div>
+            <div class="faq-a-content">
+              <p>契約後の「地盤改良や擁壁・水道引き込みで数百万円の追加費用が発生した」という住宅業界特有の予算オーバー事故を未然に防ぐためです。JFD社の高精度3次元点群測量と役所法規調査を契約前に徹底的に行い、敷地の真実を明らかにする実費費用です。万一契約に至らない場合でも、測量図面や敷地調査報告書一式をお施主様にお渡しするため費用は一切無駄になりません。</p>
+            </div>
+          </div>
+        </details>
+        <details class="faq-item" >
+          <summary class="faq-question">
+            <span class="faq-q-badge">Q14</span>
+            <span class="faq-q-text">AI間取りシミュレーターやパース作成は本当に無料ですか？会員登録は必要ですか？</span>
+            <span class="faq-toggle-icon">▼</span>
+          </summary>
+          <div class="faq-answer">
+            <div class="faq-a-badge">A</div>
+            <div class="faq-a-content">
+              <p>はい、完全無料・会員登録不要でどなたでも無制限にご利用いただけます。敷地や予算に縛られず、ご家族で自由に理想の間取りを描いていただけます。</p>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
     <!-- Footer with Semantic Internal Linking Sitemap (SEO PageRank Booster) -->
   <footer>
     <style>
