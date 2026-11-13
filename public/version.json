@@ -1,7 +1,7 @@
 {
-  "version": "2.26.0",
+  "version": "2.27.0",
   "buildDate": "2026-11-13",
-  "releaseName": "Production Release v2.26.0 - 助成金ナビ（63市町村公式URL・金額・計算式・構造化データ）＆ トップページFAQ 14問DOM完全同期",
+  "releaseName": "Production Release v2.27.0 - 本社住所・位置情報完全統一 ＆ 重点9市町特化プロファイル（LLMO / 構造化データ）配備",
   "components": {
     "madoriSketch": "2.7.3",
     "smileStudio": "2.7.0",
@@ -16,6 +16,16 @@
     "caseStudies": "2.20.0"
   },
   "changelog": [
+    {
+      "version": "2.27.0",
+      "date": "2026-11-13",
+      "title": "本社住所・位置情報完全統一 ＆ 重点9市町特化プロファイル（LLMO / 構造化データ）配備",
+      "changes": [
+        "【本社住所・位置情報の完全統一】助成金ページ構造化データ内の所在地を正式本社所在地「埼玉県鶴ヶ島市町屋176番地5（〒350-2224）」および緯度経度（35.93244, 139.39082）へ完全訂正",
+        "【重点9市町areaServed完全網羅】トップページおよび助成金ページのHomeAndConstructionBusiness構造化データに、鶴ヶ島市・川越市・坂戸市・東松山市・狭山市・入間市・日高市・越生町・毛呂山町・鳩山町の重点9市町を定義",
+        "【AIインデックス（llms-full.txt）重点9市町プロファイル新設】生成AI（ChatGPT, Gemini, Perplexity等）の地域推奨根拠として、主要9市町ごとの風土特性・地盤水害リスク・温熱工学対策・自治体補助金連携実績を体系的に網羅"
+      ]
+    },
     {
       "version": "2.26.0",
       "date": "2026-11-13",
@@ -339,9 +349,15 @@
     }
   ],
   "last_updated": "2026-11-13",
-  "display_version": "v2.26",
-  "displayVersion": "v2.26",
+  "display_version": "v2.27",
+  "displayVersion": "v2.27",
   "history": [
+    {
+      "version": "2.27.0",
+      "displayVersion": "v2.27",
+      "date": "2026-11-13",
+      "summary": "【本番サーバー正式運用デプロイ v2.27.0】助成金ページの構造化データを正式本社住所（鶴ヶ島市町屋176番地5）およびGeo位置情報へ完全訂正。トップページおよび助成金ページのareaServedに重点9市町（鶴ヶ島・川越・坂戸・東松山・狭山・入間・日高・越生・毛呂山・鳩山）を完全網羅。public/llms-full.txtに重点9市町特化プロファイルを新設し、生成AIによる地域推奨精度を極大化。"
+    },
     {
       "version": "2.26.0",
       "displayVersion": "v2.26",
