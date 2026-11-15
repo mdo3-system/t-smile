@@ -1,18 +1,19 @@
 /**
- * Smile MadoriSketch - Unified Input, Pointer & Manipulation Controller
- * (Single Responsibility Principle Refactoring)
+ * 住ま居る 3D間取り工房 - Unified Input, Pointer & Manipulation Controller
+ * (壁4種・部分削除・サッシ12種・空間6種・直方体・多角形柱・ものさし補助線・メモ注釈15種 統合制御)
  */
 
-// Ensure canvas2d reference
 if (typeof canvas2d === 'undefined' || !canvas2d) {
     var canvas2d = document.getElementById('canvas2d');
 }
+
 // ============================================================================
-// OVERLAP PREVENTION & SMART PLACEMENT FOR WINDOWS / DOORS
+// OVERLAP PREVENTION & SMART PLACEMENT FOR 12 SASH / DOOR TYPES
 // ============================================================================
 
 function checkOpeningOverlap(floorNum, x, y, orient, widthP, excludeId = null) {
     const fl = state.floors[floorNum];
+    if (!fl || !fl.openings) return false;
     const halfW = widthP / 2;
     const minA = (orient === 'h' ? x : y) - halfW;
     const maxA = (orient === 'h' ? x : y) + halfW;
@@ -28,7 +29,6 @@ function checkOpeningOverlap(floorNum, x, y, orient, widthP, excludeId = null) {
         const minB = (op.orient === 'h' ? op.x : op.y) - opW / 2;
         const maxB = (op.orient === 'h' ? op.x : op.y) + opW / 2;
 
-        // Overlap with 0.02P tolerance
         if (Math.max(minA, minB) < Math.min(maxA, maxB) - 0.02) {
             return true;
         }
@@ -38,8 +38,9 @@ function checkOpeningOverlap(floorNum, x, y, orient, widthP, excludeId = null) {
 
 function snapPointToNearestWallEdge(wx, wy) {
     const fl = state.floors[state.currentFloor];
+    if (!fl) return { x: snapP(wx), y: snapP(wy), orient: 'h', isExterior: true };
     let bestEdge = null;
-    let minDist = 1.0; // 吸着許容範囲（約1マス以内）
+    let minDist = 1.0;
 
     // 1. 壁セグメント（fl.walls）を最優先で探索
     if (fl.walls && fl.walls.length > 0) {
@@ -97,13 +98,31 @@ function snapPointToNearestWallEdge(wx, wy) {
         });
     }
 
-    return bestEdge || { x: snapP(wx), y: snapP(wy), orient: 'h' };
+    const res = bestEdge || { x: snapP(wx), y: snapP(wy), orient: 'h' };
+    // 外壁か内壁かの簡易判定（両側に部屋があるかどうか）
+    let roomsOnSideA = 0, roomsOnSideB = 0;
+    (fl.rooms || []).forEach(rm => {
+        if (rm.type === 'VOID' || rm.type === 'NAKANIWA') return;
+        const eps = 0.25;
+        if (res.orient === 'h') {
+            if (res.x >= rm.x + 0.05 && res.x <= rm.x + rm.w - 0.05) {
+                if (Math.abs(res.y - rm.y) < eps) roomsOnSideB++;
+                if (Math.abs(res.y - (rm.y + rm.h)) < eps) roomsOnSideA++;
+            }
+        } else {
+            if (res.y >= rm.y + 0.05 && res.y <= rm.y + rm.h - 0.05) {
+                if (Math.abs(res.x - rm.x) < eps) roomsOnSideB++;
+                if (Math.abs(res.x - (rm.x + rm.w)) < eps) roomsOnSideA++;
+            }
+        }
+    });
+    res.isExterior = !(roomsOnSideA > 0 && roomsOnSideB > 0);
+    return res;
 }
-
 
 function updateWindowPresetWidth(w) {
     state.subWindowWidth = w;
-    renderSubToolbar();
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
 }
 function updateWindowPresetHeight(h) {
     state.subWindowHeight = h;
@@ -112,20 +131,20 @@ function updateWindowPresetHeight(h) {
     } else {
         state.subWindowTopMm = (state.subWindowSillMm || 900) + h;
     }
-    renderSubToolbar();
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
 }
 function updateWindowTopHeight(t) {
     state.subWindowMountRef = 'top';
     state.subWindowTopMm = t;
     state.subWindowSillMm = Math.max(0, t - (state.subWindowHeight || 1100));
-    renderSubToolbar();
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
     showToast(`窓の天端を FL+${t}mm（窓台 FL+${state.subWindowSillMm}mm）に設定しました`);
 }
 function updateWindowSillHeight(s) {
     state.subWindowMountRef = 'bottom';
     state.subWindowSillMm = s;
     state.subWindowTopMm = s + (state.subWindowHeight || 1100);
-    renderSubToolbar();
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
     showToast(`窓の下端（窓台）を FL+${s}mm（天端 FL+${state.subWindowTopMm}mm）に設定しました`);
 }
 window.updateWindowPresetWidth = updateWindowPresetWidth;
@@ -135,56 +154,76 @@ window.updateWindowSillHeight = updateWindowSillHeight;
 
 function setSubDoorFit(fitId) {
     state.subDoorFit = fitId;
-    if (fitId === 'hiraki' || fitId === 'katabiki' || fitId === 'genkan_slide') {
+    state.subOpeningFit = fitId;
+    if (fitId === 'hiraki' || fitId === 'katabiraki' || fitId === 'katabiki' || fitId === 'hikido' || fitId === 'genkan_slide') {
         state.subDoorLeafCount = 1;
     } else if (fitId === 'hikichigai' && state.subDoorLeafCount === 1) {
         state.subDoorLeafCount = 2;
     } else if (fitId === 'hikiwake' && state.subDoorLeafCount % 2 !== 0) {
         state.subDoorLeafCount = 2;
     }
-    renderSubToolbar();
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
 }
 
 function placeOpeningAt(wx, wy) {
     const fl = state.floors[state.currentFloor];
     const pitch = state.modulePitch || 910;
-    const isWin = state.subOpeningCategory === 'window';
-    let widthMm, heightMm, sillMm, widthP, label, leafCount, leafWidthMm, doorFit;
+    const target = snapPointToNearestWallEdge(wx, wy);
 
-    if (isWin) {
+    const fitId = state.subOpeningFit || state.subDoorFit || 'hikichigai';
+    const sashSpec = (window.SASH_TYPES_12 && window.SASH_TYPES_12[fitId]) ? window.SASH_TYPES_12[fitId] : null;
+
+    // 窓専用の種別（FIX・出窓・すべり出し・上げ下げ）は常に窓、それ以外は外壁なら窓・内壁なら建具（または明示カテゴリ）
+    const windowOnlyFits = ['fix', 'demado', 'tatesuberi', 'yokosuberi', 'agesage'];
+    const doorOnlyFits = ['oredo', 'closet', 'oyako'];
+    let isWin = false;
+    if (windowOnlyFits.includes(fitId)) {
+        isWin = true;
+    } else if (doorOnlyFits.includes(fitId)) {
+        isWin = false;
+    } else if (state.subOpeningCategory === 'window') {
+        isWin = true;
+    } else if (state.subOpeningCategory === 'door') {
+        isWin = false;
+    } else {
+        isWin = !!target.isExterior;
+    }
+
+    let widthMm, heightMm, sillMm, widthP, label, leafCount, leafWidthMm, doorFit;
+    doorFit = fitId;
+
+    if (sashSpec) {
+        widthMm = isWin ? (state.subWindowWidth || sashSpec.defaultWMm || 1650) : (sashSpec.defaultWMm || 800);
+        heightMm = isWin ? (state.subWindowHeight || sashSpec.defaultHMm || 1100) : (state.subDoorHeight || 2000);
+        sillMm = isWin ? (state.subWindowSillMm !== undefined ? state.subWindowSillMm : (sashSpec.sillMm || 900)) : 0;
+        widthP = +(widthMm / pitch).toFixed(3);
+        leafCount = (fitId === 'hikichigai' || fitId === 'ryobiraki' || fitId === 'closet') ? 2 : 1;
+        leafWidthMm = Math.round(widthMm / leafCount);
+        label = `${sashSpec.label}${isWin ? '窓' : '建具'} (W${widthMm}×H${heightMm})`;
+    } else if (isWin) {
         widthMm = state.subWindowWidth || 1650;
         heightMm = state.subWindowHeight || 1100;
         const topMm = state.subWindowTopMm || 2000;
         sillMm = state.subWindowSillMm !== undefined ? state.subWindowSillMm : Math.max(0, topMm - heightMm);
         widthP = +(widthMm / pitch).toFixed(3);
         label = `窓 (W${widthMm}×H${heightMm})`;
-        doorFit = null;
-        leafCount = 1;
-        leafWidthMm = widthMm;
+        leafCount = 2;
+        leafWidthMm = widthMm / 2;
     } else {
-        doorFit = state.subDoorFit || 'hikichigai';
-        leafCount = state.subDoorLeafCount || 2;
+        leafCount = state.subDoorLeafCount || 1;
         leafWidthMm = state.subDoorLeafWidth || 800;
         heightMm = state.subDoorHeight || 2000;
         sillMm = 0;
-        
         let totalW = leafWidthMm * leafCount;
-        if (doorFit === 'hiraki' || doorFit === 'katabiki' || doorFit === 'genkan_slide') {
+        if (doorFit === 'hiraki' || doorFit === 'katabiraki' || doorFit === 'katabiki' || doorFit === 'hikido' || doorFit === 'genkan_slide') {
             totalW = leafWidthMm;
             leafCount = 1;
         }
         widthMm = totalW;
         widthP = +(widthMm / pitch).toFixed(3);
-        
-        const styleObj = (window.DOOR_SPECS && window.DOOR_SPECS.styles) ? window.DOOR_SPECS.styles.find(s => s.id === doorFit) : null;
-        const fitLabel = styleObj ? styleObj.label : '建具';
-        label = `${fitLabel} ${leafCount}枚 (W${widthMm}×H${heightMm})`;
+        label = `建具 (W${widthMm}×H${heightMm})`;
     }
 
-    // widthP 確定後にスナップ位置を探索
-    const target = snapPointToNearestWallEdge(wx, wy);
-
-    // 重複チェック
     if (checkOpeningOverlap(state.currentFloor, target.x, target.y, target.orient, widthP, null)) {
         showToast('同じ壁面上の既存の建具・窓と重なるため配置できません', true);
         return;
@@ -193,7 +232,8 @@ function placeOpeningAt(wx, wy) {
     const newOp = {
         id: uid(),
         category: isWin ? 'window' : 'door',
-        type: isWin ? 'WINDOW' : (doorFit === 'genkan_slide' ? 'ENTRANCE_DOOR' : (doorFit === 'hiraki' ? 'SWING_DOOR' : 'SLIDING_DOOR')),
+        type: isWin ? 'WINDOW' : (doorFit === 'katabiraki' || doorFit === 'hiraki' ? 'SWING_DOOR' : 'SLIDING_DOOR'),
+        sashType: fitId,
         doorFit: doorFit,
         leafCount: leafCount,
         leafWidthMm: leafWidthMm,
@@ -212,10 +252,10 @@ function placeOpeningAt(wx, wy) {
     fl.openings.push(newOp);
     state.selectedItem = { kind: 'opening', id: newOp.id, floor: state.currentFloor };
     saveHistorySnapshot();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    showToast(`${label} を配置しました（タップでサイズ変更・ドラッグ移動可能）`);
+    showToast(`${label} を壁に自動吸着配置しました`);
 }
 
 function flipLastOrSelectedOpening() {
@@ -227,47 +267,112 @@ function flipLastOrSelectedOpening() {
         op = fl.openings[fl.openings.length - 1];
     }
     if (op) {
-        if (!op.flip) {
-            op.flip = true;
-        } else {
-            const nextOrient = op.orient === 'h' ? 'v' : 'h';
-            if (!checkOpeningOverlap(state.currentFloor, op.x, op.y, nextOrient, op.widthP, op.id)) {
-                op.flip = false;
-                op.orient = nextOrient;
-            } else {
-                op.flip = false;
-            }
-        }
+        op.flip = !op.flip;
         saveHistorySnapshot();
-        showToast('建具の開閉方向・向きを切り替えました');
+        request2DRedraw();
+        if (typeof rebuild3DScene === 'function') rebuild3DScene();
+        showToast('建具の開閉方向（左右・内外）を反転しました');
     }
 }
 
 // ============================================================================
-// POINTER EVENTS (STYLUS PEN, TOUCH, SELECTION, MOVING & RESIZING)
+// PARTIAL WALL DELETION (壁の上をドラッグした区間だけを切り欠き分割削除)
+// ============================================================================
+
+function splitOrEraseWallSegment(fl, ptA, ptB) {
+    if (!fl || !fl.walls) return false;
+    const isDragHoriz = Math.abs(ptA.x - ptB.x) >= Math.abs(ptA.y - ptB.y);
+    const minDragX = Math.min(ptA.x, ptB.x);
+    const maxDragX = Math.max(ptA.x, ptB.x);
+    const minDragY = Math.min(ptA.y, ptB.y);
+    const maxDragY = Math.max(ptA.y, ptB.y);
+
+    let modified = false;
+    const nextWalls = [];
+
+    for (const wl of fl.walls) {
+        const isWlHoriz = Math.abs(wl.y1 - wl.y2) < 0.05;
+        if (isWlHoriz && isDragHoriz && Math.abs(wl.y1 - ptA.y) <= 0.45 && maxDragX - minDragX >= 0.2) {
+            const wMin = Math.min(wl.x1, wl.x2);
+            const wMax = Math.max(wl.x1, wl.x2);
+            const cutStart = Math.max(wMin, snapP(minDragX));
+            const cutEnd = Math.min(wMax, snapP(maxDragX));
+            if (cutEnd > cutStart + 0.05) {
+                modified = true;
+                if (cutStart > wMin + 0.05) {
+                    nextWalls.push({ ...wl, id: uid(), x1: wMin, y1: wl.y1, x2: cutStart, y2: wl.y1 });
+                }
+                if (wMax > cutEnd + 0.05) {
+                    nextWalls.push({ ...wl, id: uid(), x1: cutEnd, y1: wl.y1, x2: wMax, y2: wl.y1 });
+                }
+                continue;
+            }
+        } else if (!isWlHoriz && !isDragHoriz && Math.abs(wl.x1 - ptA.x) <= 0.45 && maxDragY - minDragY >= 0.2) {
+            const wMin = Math.min(wl.y1, wl.y2);
+            const wMax = Math.max(wl.y1, wl.y2);
+            const cutStart = Math.max(wMin, snapP(minDragY));
+            const cutEnd = Math.min(wMax, snapP(maxDragY));
+            if (cutEnd > cutStart + 0.05) {
+                modified = true;
+                if (cutStart > wMin + 0.05) {
+                    nextWalls.push({ ...wl, id: uid(), x1: wl.x1, y1: wMin, x2: wl.x1, y2: cutStart });
+                }
+                if (wMax > cutEnd + 0.05) {
+                    nextWalls.push({ ...wl, id: uid(), x1: wl.x1, y1: cutEnd, x2: wl.x1, y2: wMax });
+                }
+                continue;
+            }
+        }
+        nextWalls.push(wl);
+    }
+
+    if (modified) {
+        fl.walls = nextWalls;
+    }
+    return modified;
+}
+
+// ============================================================================
+// POINTER EVENTS (RULER GUIDES, WALLS, SPACES, MEMOS, SELECTION)
 // ============================================================================
 
 function updatePointerStatusBadge(e) {
     const badge = document.getElementById('pointerBadge');
     const txt = document.getElementById('pointerStatusText');
+    if (!badge || !txt) return;
     const pType = e.pointerType || 'mouse';
     const press = e.pressure ? e.pressure.toFixed(2) : '0.50';
     if (pType === 'pen') {
+        if (!state.penDetectedOnce) {
+            state.penDetectedOnce = true;
+            // 自動モード時：ペン入力を初検知したら自動的にパームリジェクションをONに切替
+            if (state.inputModeSetting === 'auto' && !state.stylusOnlyMode) {
+                state.stylusOnlyMode = true;
+                if (typeof syncPalmRejectionUI === 'function') syncPalmRejectionUI();
+                showToast('🖊️ スタイラスペンを検知しました！パームリジェクション（手のひら誤タッチ防止）を自動有効化しました');
+            }
+        }
         badge.className = 'inline-block w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse';
         txt.textContent = `ペン入力 (${state.gridDivisions}分割・筆圧:${press})`;
     } else if (pType === 'touch') {
         badge.className = 'inline-block w-2.5 h-2.5 rounded-full bg-sky-400';
-        txt.textContent = state.stylusOnlyMode ? '指タッチ: 画面移動' : `タッチ入力 (${state.gridDivisions}分割)`;
+        txt.textContent = state.stylusOnlyMode ? '指タッチ: 画面移動(手のひら防止中)' : `タッチ入力 (${state.gridDivisions}分割)`;
     } else {
         badge.className = 'inline-block w-2.5 h-2.5 rounded-full bg-emerald-400';
-        txt.textContent = `${state.gridDivisions}分割グリッド (${(state.modulePitch/state.gridDivisions).toFixed(0)}mm)`;
+        txt.textContent = `マウス入力 (${state.gridDivisions}分割・${(state.modulePitch / state.gridDivisions).toFixed(0)}mm)`;
     }
 }
 
+let activeTouchCount = 0;
+
 canvas2d.addEventListener('pointerdown', (e) => {
     e.preventDefault();
-    try { canvas2d.setPointerCapture(e.pointerId); } catch (_) {}
+    try { canvas2d.setPointerCapture(e.pointerId); } catch (_) { }
     updatePointerStatusBadge(e);
+
+    if (e.pointerType === 'touch') {
+        activeTouchCount++;
+    }
 
     const rect = canvas2d.getBoundingClientRect();
     const sx = e.clientX - rect.left;
@@ -275,9 +380,74 @@ canvas2d.addEventListener('pointerdown', (e) => {
     const worldPos = screenToWorldP(sx, sy);
     const snappedX = snapP(worldPos.x);
     const snappedY = snapP(worldPos.y);
+    state.lastHoverWorld = { x: snappedX, y: snappedY };
+
+    // 🖐️ パームリジェクション判定：
+    // 1. ペン専用モード時の指タッチ (e.pointerType === 'touch')
+    // 2. タブレットで手のひら（接触面積 width/height が 28px 超の大きな接触面）が触れた場合
+    // 3. 2本指以上のマルチタッチ
+    const isLargePalmTouch = (e.pointerType === 'touch' && ((e.width && e.width > 28) || (e.height && e.height > 28)));
+    if ((state.stylusOnlyMode && e.pointerType === 'touch') || isLargePalmTouch || activeTouchCount >= 2) {
+        state.dragAction = {
+            type: 'pan',
+            startSX: sx,
+            startSY: sy,
+            origCamX: state.cam2d.x,
+            origCamY: state.cam2d.y
+        };
+        return;
+    }
+
+    // 📏 1. ものさし（ルーラー）からの補助線引き出し・移動
+    if (state.rulerMode && !state.guidesLocked) {
+        if (sy <= 24 && sx > 24) {
+            const newG = { id: uid(), axis: 'h', pos: snappedY, posP: snappedY };
+            state.guides.push(newG);
+            state.selectedGuideId = newG.id;
+            state.selectedItem = { kind: 'guide', id: newG.id, floor: state.currentFloor };
+            state.dragAction = { type: 'guide', guide: newG };
+            request2DRedraw();
+            return;
+        }
+        if (sx <= 24 && sy > 24) {
+            const newG = { id: uid(), axis: 'v', pos: snappedX, posP: snappedX };
+            state.guides.push(newG);
+            state.selectedGuideId = newG.id;
+            state.selectedItem = { kind: 'guide', id: newG.id, floor: state.currentFloor };
+            state.dragAction = { type: 'guide', guide: newG };
+            request2DRedraw();
+            return;
+        }
+        // 既存補助線のヒットテスト
+        if (state.guides && state.guides.length > 0) {
+            for (const g of state.guides) {
+                const gPos = g.pos !== undefined ? g.pos : g.posP;
+                if (g.axis === 'h' && Math.abs(worldPos.y - gPos) < 0.25) {
+                    state.selectedGuideId = g.id;
+                    state.selectedItem = { kind: 'guide', id: g.id, floor: state.currentFloor };
+                    state.dragAction = { type: 'guide', guide: g };
+                    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+                    request2DRedraw();
+                    return;
+                }
+                if (g.axis === 'v' && Math.abs(worldPos.x - gPos) < 0.25) {
+                    state.selectedGuideId = g.id;
+                    state.selectedItem = { kind: 'guide', id: g.id, floor: state.currentFloor };
+                    state.dragAction = { type: 'guide', guide: g };
+                    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+                    request2DRedraw();
+                    return;
+                }
+            }
+        }
+    }
+
+    if (state.planLocked && state.paletteMode === 'build' && state.activeTool !== 'pan' && state.activeTool !== 'select') {
+        showToast('🔒「この図面をピン止めする」が有効です。編集するにはロックを解除してください', true);
+        return;
+    }
 
     const isTouchPan = (state.stylusOnlyMode && e.pointerType === 'touch') || state.activeTool === 'pan' || e.button === 1 || e.button === 2;
-
     if (isTouchPan) {
         state.dragAction = {
             type: 'pan',
@@ -292,40 +462,92 @@ canvas2d.addEventListener('pointerdown', (e) => {
     const fl = state.floors[state.currentFloor];
     const minStep = 1 / state.gridDivisions;
 
-    // Even when in 'opening' or 'fixture' tool, if user taps an already-selected item's handle or body, let them move/resize it
+    // 📝 2. メモ注釈モードのツール群
+    if (state.activeTool && state.activeTool.startsWith('memo_')) {
+        handleMemoPointerDown(state.activeTool, worldPos, snappedX, snappedY, e);
+        return;
+    }
+
+    // 3. 選択・移動・リサイズ判定
     if (state.activeTool === 'select' || state.activeTool === 'opening' || state.activeTool === 'fixture') {
         if (tryStartSelectOrModifyInteraction(worldPos.x, worldPos.y, state.activeTool !== 'select')) {
             return;
         }
     }
 
-    if (state.activeTool === 'room') {
+    // 4. 空間ツール（部屋、吹き抜け、玄関土間、小上り、畳、中庭、天井）
+    const spaceToolMap = {
+        'room': state.subRoomType || 'LDK',
+        'fukinuke': 'VOID',
+        'doma': 'DOMA',
+        'koagari': 'KOAGARI',
+        'tatami': 'TATAMI',
+        'nakaniwa': 'NAKANIWA',
+        'tenjo': 'TENJO'
+    };
+    if (spaceToolMap[state.activeTool]) {
         state.dragAction = {
             type: 'room',
+            roomType: spaceToolMap[state.activeTool],
             startX: snappedX,
             startY: snappedY,
             curX: snappedX + minStep * 2,
             curY: snappedY + minStep * 2
         };
         request2DRedraw();
-    } else if (state.activeTool === 'pillar' || (state.activeTool === 'wall' && state.subWallType === 'pillar')) {
+        return;
+    }
+
+    // 5. 3D直方体ツール
+    if (state.activeTool === 'box3d') {
+        state.dragAction = {
+            type: 'box3d',
+            startX: snappedX,
+            startY: snappedY,
+            curX: snappedX + 1.0,
+            curY: snappedY + 1.0
+        };
+        request2DRedraw();
+        return;
+    }
+
+    // 6. 多角形柱ツール
+    if (state.activeTool === 'poly_pillar') {
+        if (!state.polyPillarPoints) state.polyPillarPoints = [];
+        const pts = state.polyPillarPoints;
+        if (pts.length >= 3 && Math.hypot(pts[0].x - snappedX, pts[0].y - snappedY) < 0.35) {
+            finishPolyPillar();
+            return;
+        }
+        pts.push({ x: snappedX, y: snappedY });
+        state.polyPoints = pts;
+        showToast(`多角形柱の頂点 ${pts.length} 点目を追加しました（始点タップまたは完了ボタンで確定）`);
+        if (typeof renderSubToolbar === 'function') renderSubToolbar();
+        request2DRedraw();
+        return;
+    }
+
+    // 7. 独立柱ツール
+    if (state.activeTool === 'pillar' || (state.activeTool === 'wall' && state.subWallType === 'pillar')) {
         const pSize = state.subPillarSize || 150;
         const pShape = state.subPillarShape || 'square';
         const newPillar = { id: uid(), x: snappedX, y: snappedY, sizeMm: pSize, shape: pShape };
         fl.pillars.push(newPillar);
         state.selectedItem = { kind: 'pillar', id: newPillar.id, floor: state.currentFloor };
         saveHistorySnapshot();
-        renderPropertyInspector();
+        if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
         request2DRedraw();
         if (typeof rebuild3DScene === 'function') rebuild3DScene();
-        showToast(`独立柱 (${pShape === 'round' ? 'φ' : ''}${pSize}mm) を配置しました`);
+        showToast(`柱 (${pShape === 'round' ? '円柱φ' : '角柱'}${pSize}mm) を配置しました`);
         return;
-    } else if (state.activeTool === 'wall') {
-        // 壁の作成（PC: 端点-端点クリックで1本生成して完了 / iPad: ドラッグで1本生成）
+    }
+
+    // 8. 壁4種ツール（壁 / たれ壁 / 腰壁 / 上り框）
+    if (state.activeTool === 'wall') {
+        const wType = state.subWallType || 'wall';
         if (state.wallClickStart) {
             const x1 = state.wallClickStart.x;
             const y1 = state.wallClickStart.y;
-            // 直交スナップ（水平または垂直）
             const dx = Math.abs(snappedX - x1);
             const dy = Math.abs(snappedY - y1);
             const x2 = dx >= dy ? snappedX : x1;
@@ -338,13 +560,13 @@ canvas2d.addEventListener('pointerdown', (e) => {
                     y1: y1,
                     x2: x2,
                     y2: y2,
-                    wallType: 'auto'
+                    wallType: wType
                 });
                 saveHistorySnapshot();
                 if (typeof triggerAutoRoomDetection === 'function') triggerAutoRoomDetection();
-                showToast('壁を作成しました');
+                const wLabel = window.WALL_SUBTYPES?.[wType]?.label || '壁';
+                showToast(`${wLabel}を作成しました`);
             }
-            // 連続線にはせず、ここでリセット完了！次の壁はまた新しい始点から！
             state.wallClickStart = null;
             state.dragAction = null;
             request2DRedraw();
@@ -354,16 +576,15 @@ canvas2d.addEventListener('pointerdown', (e) => {
             state.wallClickStart = { x: snappedX, y: snappedY };
             state.dragAction = {
                 type: 'wall',
+                wallType: wType,
                 startX: snappedX,
                 startY: snappedY,
                 curX: snappedX,
                 curY: snappedY
             };
-            showToast('壁の始点を設定しました。終点をクリックまたはドラッグして壁を引いてください');
             request2DRedraw();
         }
     } else if (state.activeTool === 'stair') {
-        // 階段の配置処理（定型ポン置き または 自由パス入力）
         const stairMode = state.stairDrawMode || 'preset';
         if (stairMode === 'preset') {
             const presetType = state.stairPresetType || 'STRAIGHT';
@@ -377,84 +598,152 @@ canvas2d.addEventListener('pointerdown', (e) => {
     } else if (state.activeTool === 'opening') {
         placeOpeningAt(worldPos.x, worldPos.y);
     } else if (state.activeTool === 'fixture') {
-        const cat = state.subFixtureCategory || 'KITCHEN';
-        const pitch = state.modulePitch || 910;
-        let wMm, dMm, hMm, wP, hP, label, fxData = {};
-
-        if (cat === 'KITCHEN') {
-            const kType = state.subKitchenType || 'I';
-            hMm = state.subKitchenHeight || 850;
-            if (kType === 'I') {
-                wMm = state.subKitchenIWidth || 2550;
-                dMm = state.subKitchenIDepth || 650;
-                label = `I型キッチン (${wMm/10}×${dMm/10}cm)`;
-            } else if (kType === 'L') {
-                wMm = state.subKitchenLXWidth || 2550;
-                dMm = state.subKitchenLYWidth || 1950;
-                label = `L型キッチン (${wMm/10}×${dMm/10}cm)`;
-                fxData.lWidthX = wMm;
-                fxData.lWidthY = dMm;
-                fxData.lDepth = 650;
-            } else {
-                wMm = state.subKitchenIslandW || 2550;
-                dMm = state.subKitchenIslandD || 900;
-                label = `アイランド/ペニンシュラ (${wMm}×${dMm}mm)`;
-            }
-            wP = +(wMm / pitch).toFixed(3);
-            hP = +(dMm / pitch).toFixed(3);
-            fxData.kitchenType = kType;
-            fxData.kHeight = hMm;
-        } else if (cat === 'UB') {
-            const ubSpecs = window.UB_SPECS || { sizes: [] };
-            const curSize = ubSpecs.sizes.find(s => s.id === state.subUbSize) || { wMm: 1600, dMm: 1600, label: '1616' };
-            wMm = curSize.wMm;
-            dMm = curSize.dMm;
-            hMm = 2150;
-            wP = +(wMm / pitch).toFixed(3);
-            hP = +(dMm / pitch).toFixed(3);
-            label = `ユニットバス ${curSize.label}`;
-            fxData.ubSize = state.subUbSize || '1616';
-            fxData.ubPattern = state.subUbPattern || 'patternA';
-        } else if (cat === 'VANITY') {
-            wMm = state.subVanityWidth || 900;
-            dMm = state.subVanityDepth || 550;
-            hMm = state.subVanityHeight || 800;
-            wP = +(wMm / pitch).toFixed(3);
-            hP = +(dMm / pitch).toFixed(3);
-            label = `洗面化粧台 (W${wMm}mm)`;
-            fxData.vanityWidth = wMm;
-            fxData.vHeight = hMm;
-        } else if (cat === 'STANDALONE_COL') {
-            const newPillar = { id: uid(), x: snappedX, y: snappedY, sizeMm: 150 };
-            fl.pillars.push(newPillar);
-            state.selectedItem = { kind: 'pillar', id: newPillar.id, floor: state.currentFloor };
+        placeFixtureOnCanvas(snappedX, snappedY);
+    } else if (state.activeTool === 'pen') {
+        if (state.subStampSymbol) {
+            fl.stamps.push({
+                id: uid(),
+                text: state.subStampSymbol,
+                x: worldPos.x,
+                y: worldPos.y,
+                color: state.subPenColor
+            });
             saveHistorySnapshot();
-            showToast('独立柱（ポーチ・バルコニー脚）を配置しました');
-            return;
+            request2DRedraw();
         } else {
-            const ft = (window.FIXTURE_TYPES && window.FIXTURE_TYPES[cat]) || { wP: 1.0, hP: 1.0, label: '設備' };
-            wP = ft.wP;
-            hP = ft.hP;
-            wMm = Math.round(wP * pitch);
-            dMm = Math.round(hP * pitch);
-            hMm = 800;
-            label = ft.label;
+            const newStroke = {
+                id: uid(),
+                color: state.subPenColor,
+                size: state.subPenSize,
+                points: [{ x: worldPos.x, y: worldPos.y, p: e.pressure || 0.5 }]
+            };
+            fl.strokes.push(newStroke);
+            state.dragAction = { type: 'pen', stroke: newStroke };
+            request2DRedraw();
         }
+    } else if (state.activeTool === 'eraser') {
+        eraseAtPoint(worldPos.x, worldPos.y);
+        state.dragAction = {
+            type: 'eraser',
+            startX: worldPos.x,
+            startY: worldPos.y,
+            curX: worldPos.x,
+            curY: worldPos.y
+        };
+    }
+});
 
-// 🧱 設備・家具のインテリジェント壁面自動吸着スナップ（ARCHITREND ZERO準拠）
-// 壁芯（グリッド中心）ではなく、最も近い壁の内側仕上げ面（壁芯 - 壁厚半分）に自動吸着
+// 設備・家具の配置（検討③決定仕様：パレットから選んでタップするだけで壁に自動吸着配置）
+function placeFixtureOnCanvas(snappedX, snappedY) {
+    const fl = state.floors[state.currentFloor];
+    const cat = state.subFixtureCategory || 'KITCHEN';
+    const pitch = state.modulePitch || 910;
+    let wMm, dMm, hMm, wP, hP, label, fxData = {};
+
+    if (cat === 'KITCHEN') {
+        const kType = state.subKitchenType || 'I';
+        hMm = state.subKitchenHeight || 850;
+        if (kType === 'I') {
+            wMm = state.subKitchenIWidth || 2550;
+            dMm = state.subKitchenIDepth || 650;
+            label = `I型キッチン (${wMm / 10}×${dMm / 10}cm)`;
+        } else if (kType === 'L') {
+            wMm = state.subKitchenLXWidth || 2550;
+            dMm = state.subKitchenLYWidth || 1950;
+            label = `L型キッチン (${wMm / 10}×${dMm / 10}cm)`;
+            fxData.lWidthX = wMm;
+            fxData.lWidthY = dMm;
+            fxData.lDepth = 650;
+        } else {
+            wMm = state.subKitchenIslandW || 2550;
+            dMm = state.subKitchenIslandD || 900;
+            label = `アイランド/ペニンシュラ (${wMm}×${dMm}mm)`;
+        }
+        wP = +(wMm / pitch).toFixed(3);
+        hP = +(dMm / pitch).toFixed(3);
+        fxData.kitchenType = kType;
+        fxData.kHeight = hMm;
+    } else if (cat === 'UB') {
+        const ubSpecs = window.UB_SPECS || { sizes: [] };
+        const curSize = ubSpecs.sizes.find(s => s.id === state.subUbSize) || { wMm: 1600, dMm: 1600, label: '1616' };
+        wMm = curSize.wMm;
+        dMm = curSize.dMm;
+        hMm = 2150;
+        wP = +(wMm / pitch).toFixed(3);
+        hP = +(dMm / pitch).toFixed(3);
+        label = `ユニットバス ${curSize.label}`;
+        fxData.ubSize = state.subUbSize || '1616';
+        fxData.ubPattern = state.subUbPattern || 'patternA';
+    } else if (cat === 'VANITY') {
+        wMm = state.subVanityWidth || 900;
+        dMm = state.subVanityDepth || 550;
+        hMm = state.subVanityHeight || 800;
+        wP = +(wMm / pitch).toFixed(3);
+        hP = +(dMm / pitch).toFixed(3);
+        label = `洗面化粧台 (W${wMm}mm)`;
+        fxData.vanityWidth = wMm;
+        fxData.vHeight = hMm;
+    } else {
+        const ft = (window.FIXTURE_TYPES && window.FIXTURE_TYPES[cat]) || { wP: 1.0, hP: 1.0, label: '設備' };
+        wP = ft.wP;
+        hP = ft.hP;
+        wMm = Math.round(wP * pitch);
+        dMm = Math.round(hP * pitch);
+        hMm = ft.hMm || 800;
+        label = ft.label;
+    }
+
+    const rot = state.subFixtureRot || 0;
+    let finalWP = (rot === 90 || rot === 270) ? hP : wP;
+    let finalHP = (rot === 90 || rot === 270) ? wP : hP;
+
+    let placeX = snappedX;
+    let placeY = snappedY;
+    const wallSnap = findNearestWallForFixture(snappedX, snappedY, finalWP, finalHP);
+    if (wallSnap) {
+        placeX = wallSnap.x;
+        placeY = wallSnap.y;
+    }
+
+    const newFx = {
+        id: uid(),
+        type: cat,
+        category: cat,
+        x: placeX,
+        y: placeY,
+        w: finalWP,
+        h: finalHP,
+        wMm: (rot === 90 || rot === 270) ? dMm : wMm,
+        dMm: (rot === 90 || rot === 270) ? wMm : dMm,
+        hMm: hMm,
+        rot: rot,
+        label: label,
+        kHeight: fxData.kHeight || 850,
+        vHeight: fxData.vHeight || 800,
+        ubPattern: fxData.ubPattern || 'patternA',
+        fxData: fxData
+    };
+
+    fl.fixtures.push(newFx);
+    state.selectedItem = { kind: 'fixture', id: newFx.id, floor: state.currentFloor };
+    saveHistorySnapshot();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+    request2DRedraw();
+    if (typeof rebuild3DScene === 'function') rebuild3DScene();
+    showToast(`${label} を壁に自動吸着配置しました`);
+}
+
 function findNearestWallForFixture(curX, curY, wP, hP) {
     const fl = state.floors[state.currentFloor];
     if (!fl) return null;
-    const wallThickM = 0.13; // 130mm壁厚
+    const wallThickM = 0.13;
     const scaleP = (state.modulePitch || 910) / 1000;
-    const halfWallP = +((wallThickM / 2) / scaleP).toFixed(3); // 壁芯から仕上げ面までのオフセット（約0.07マス）
-    const snapDistanceThreshold = 1.35; // 吸着検知距離（マス単位）
+    const halfWallP = +((wallThickM / 2) / scaleP).toFixed(3);
+    const snapDistanceThreshold = 1.35;
 
     let bestSnap = null;
     let minDistance = snapDistanceThreshold;
 
-    // 1. fl.walls（手動壁・検出壁）を探索
     if (fl.walls && fl.walls.length > 0) {
         fl.walls.forEach(wl => {
             const isHoriz = Math.abs(wl.y1 - wl.y2) < 0.05;
@@ -466,10 +755,8 @@ function findNearestWallForFixture(curX, curY, wP, hP) {
                     if (distToWall < minDistance) {
                         minDistance = distToWall;
                         if (curY >= wl.y1) {
-                            // 壁の下側に配置（壁の南側仕上げ面に吸着）
                             bestSnap = { x: curX, y: +(wl.y1 + halfWallP).toFixed(3), side: 'top', wall: wl, rot: 0 };
                         } else {
-                            // 壁の上側に配置（壁の北側仕上げ面に吸着）
                             bestSnap = { x: curX, y: +(wl.y1 - halfWallP - hP).toFixed(3), side: 'bottom', wall: wl, rot: 180 };
                         }
                     }
@@ -482,10 +769,8 @@ function findNearestWallForFixture(curX, curY, wP, hP) {
                     if (distToWall < minDistance) {
                         minDistance = distToWall;
                         if (curX >= wl.x1) {
-                            // 壁の右側に配置（壁の東側仕上げ面に吸着）
                             bestSnap = { x: +(wl.x1 + halfWallP).toFixed(3), y: curY, side: 'left', wall: wl, rot: 90 };
                         } else {
-                            // 壁の左側に配置（壁の西側仕上げ面に吸着）
                             bestSnap = { x: +(wl.x1 - halfWallP - wP).toFixed(3), y: curY, side: 'right', wall: wl, rot: 270 };
                         }
                     }
@@ -494,7 +779,6 @@ function findNearestWallForFixture(curX, curY, wP, hP) {
         });
     }
 
-    // 2. fl.rooms の境界線も探索
     if (fl.rooms && fl.rooms.length > 0) {
         fl.rooms.forEach(rm => {
             const edges = [
@@ -509,11 +793,9 @@ function findNearestWallForFixture(curX, curY, wP, hP) {
                         const dist = Math.abs(curY - ed.y);
                         if (dist < minDistance) {
                             minDistance = dist;
-                            if (ed.side === 'top') {
-                                bestSnap = { x: curX, y: +(ed.y + halfWallP).toFixed(3), side: 'top', rot: 0 };
-                            } else {
-                                bestSnap = { x: curX, y: +(ed.y - halfWallP - hP).toFixed(3), side: 'bottom', rot: 180 };
-                            }
+                            bestSnap = ed.side === 'top'
+                                ? { x: curX, y: +(ed.y + halfWallP).toFixed(3), side: 'top', rot: 0 }
+                                : { x: curX, y: +(ed.y - halfWallP - hP).toFixed(3), side: 'bottom', rot: 180 };
                         }
                     }
                 } else {
@@ -521,100 +803,195 @@ function findNearestWallForFixture(curX, curY, wP, hP) {
                         const dist = Math.abs(curX - ed.x);
                         if (dist < minDistance) {
                             minDistance = dist;
-                            if (ed.side === 'left') {
-                                bestSnap = { x: +(ed.x + halfWallP).toFixed(3), y: curY, side: 'left', rot: 90 };
-                            } else {
-                                bestSnap = { x: +(ed.x - halfWallP - wP).toFixed(3), y: curY, side: 'right', rot: 270 };
-                            }
+                            bestSnap = ed.side === 'left'
+                                ? { x: +(ed.x + halfWallP).toFixed(3), y: curY, side: 'left', rot: 90 }
+                                : { x: +(ed.x - halfWallP - wP).toFixed(3), y: curY, side: 'right', rot: 270 };
                         }
                     }
                 }
             });
         });
     }
-
     return bestSnap;
 }
 
-        // 事前回転の適用
-        const rot = state.subFixtureRot || 0;
-        let finalWP = wP;
-        let finalHP = hP;
-        if (rot === 90 || rot === 270) {
-            finalWP = hP;
-            finalHP = wP;
-        }
+// 📝 メモ注釈ツールのポインターダウン処理
+function handleMemoPointerDown(tool, worldPos, snappedX, snappedY, e) {
+    const fl = state.floors[state.currentFloor];
+    if (!fl.memos) fl.memos = [];
 
-        // 壁面内法仕上げ面への自動吸着＆離れ寸法計算（壁芯配置の完全防止）
-        let placeX = snappedX;
-        let placeY = snappedY;
-        const align = state.subFixtureAlign || 'center';
-        const wallSnap = findNearestWallForFixture(snappedX, snappedY, finalWP, finalHP);
-        if (wallSnap) {
-            placeX = wallSnap.x;
-            placeY = wallSnap.y;
-            if (wallSnap.side === 'top' || wallSnap.side === 'bottom') {
-                if (align === 'left' && wallSnap.wall) placeX = wallSnap.wall.x1 + halfWallP;
-                else if (align === 'right' && wallSnap.wall) placeX = wallSnap.wall.x2 - halfWallP - finalWP;
-            } else {
-                if (align === 'left' && wallSnap.wall) placeY = wallSnap.wall.y1 + halfWallP;
-                else if (align === 'right' && wallSnap.wall) placeY = wallSnap.wall.y2 - halfWallP - finalHP;
+    if (tool === 'memo_select') {
+        // まず選択中の曲線メモの赤丸（●）頂点ヒット判定
+        if (state.selectedItem && state.selectedItem.kind === 'memo') {
+            const selMemo = fl.memos.find(m => m.id === state.selectedItem.id);
+            if (selMemo && selMemo.memoType === 'curve') {
+                const pts = [
+                    { key: 'p1', x: selMemo.x1, y: selMemo.y1 },
+                    { key: 'cp', x: selMemo.cx !== undefined ? selMemo.cx : (selMemo.x1 + selMemo.x2) / 2, y: selMemo.cy !== undefined ? selMemo.cy : (selMemo.y1 + selMemo.y2) / 2 - 1.0 },
+                    { key: 'p2', x: selMemo.x2, y: selMemo.y2 }
+                ];
+                for (const pt of pts) {
+                    if (Math.hypot(worldPos.x - pt.x, worldPos.y - pt.y) < 0.35) {
+                        state.dragAction = { type: 'memo_curve_vertex', memo: selMemo, vertexKey: pt.key };
+                        return;
+                    }
+                }
             }
         }
-
-        const newFx = {
-            id: uid(),
-            category: cat,
-            x: placeX,
-            y: placeY,
-            w: finalWP,
-            h: finalHP,
-            wMm: (rot === 90 || rot === 270) ? dMm : wMm,
-            dMm: (rot === 90 || rot === 270) ? wMm : dMm,
-            hMm: hMm,
-            rot: rot,
-            align: align,
-            clearanceMm: state.subFixtureClearanceMm || 0,
-            label: label,
-            kHeight: fxData.kHeight || 850,
-            vHeight: fxData.vHeight || 800,
-            ubPattern: fxData.ubPattern || 'patternA',
-            fxData: fxData
-        };
-
-        fl.fixtures.push(newFx);
-        state.selectedItem = { kind: 'fixture', id: newFx.id, floor: state.currentFloor };
-        saveHistorySnapshot();
-        if (typeof rebuild3DScene === 'function') rebuild3DScene();
-        showToast(`${label} を配置しました（タップで寸法変更・ドラッグ移動可能）`);
-    } else if (state.activeTool === 'pen') {
-        if (state.subStampSymbol) {
-            fl.stamps.push({
-                id: uid(),
-                text: state.subStampSymbol,
-                x: worldPos.x,
-                y: worldPos.y,
-                color: state.subPenColor
-            });
-            saveHistorySnapshot();
-        } else {
-            const newStroke = {
-                id: uid(),
-                color: state.subPenColor,
-                size: state.subPenSize,
-                points: [{ x: worldPos.x, y: worldPos.y, p: e.pressure || 0.5 }]
-            };
-            fl.strokes.push(newStroke);
-            state.dragAction = { type: 'pen', stroke: newStroke };
-            request2DRedraw();
+        // メモ要素のヒットテスト
+        for (let i = fl.memos.length - 1; i >= 0; i--) {
+            const m = fl.memos[i];
+            const mx = m.x !== undefined ? m.x : (m.x1 + m.x2) / 2;
+            const my = m.y !== undefined ? m.y : (m.y1 + m.y2) / 2;
+            if (Math.hypot(worldPos.x - mx, worldPos.y - my) < 0.75) {
+                state.selectedItem = { kind: 'memo', id: m.id, floor: state.currentFloor };
+                state.dragAction = { type: 'move_memo', memo: m, lastWX: worldPos.x, lastWY: worldPos.y };
+                if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+                request2DRedraw();
+                return;
+            }
         }
-    } else if (state.activeTool === 'eraser') {
-        eraseAtPoint(worldPos.x, worldPos.y);
-        state.dragAction = { type: 'eraser' };
+        state.selectedItem = null;
+        if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+        request2DRedraw();
+        return;
     }
-});
 
-// --- Unified Hit-Test for Selecting, Moving, and Resizing Openings, Fixtures, Pillars, and Rooms ---
+    if (tool === 'memo_delete') {
+        const before = fl.memos.length;
+        fl.memos = fl.memos.filter(m => {
+            const mx = m.x !== undefined ? m.x : (m.x1 + m.x2) / 2;
+            const my = m.y !== undefined ? m.y : (m.y1 + m.y2) / 2;
+            return Math.hypot(worldPos.x - mx, worldPos.y - my) > 0.65;
+        });
+        if (fl.memos.length !== before) {
+            saveHistorySnapshot();
+            request2DRedraw();
+            showToast('メモ注釈を削除しました');
+        }
+        return;
+    }
+
+    if (tool === 'memo_text') {
+        const txt = prompt('図面に配置するテキストを入力してください:', state.memoTextValue || '注記テキスト');
+        if (txt) {
+            state.memoTextValue = txt;
+            const newM = { id: uid(), memoType: 'text', x: worldPos.x, y: worldPos.y, text: txt, fontSize: state.memoFontSize || 13, color: state.subPenColor || '#1e293b' };
+            fl.memos.push(newM);
+            state.selectedItem = { kind: 'memo', id: newM.id, floor: state.currentFloor };
+            saveHistorySnapshot();
+            request2DRedraw();
+            showToast('テキスト注釈を配置しました');
+        }
+        return;
+    }
+
+    if (tool === 'memo_area') {
+        const newM = { id: uid(), memoType: 'area_table', x: snappedX, y: snappedY };
+        fl.memos.push(newM);
+        state.selectedItem = { kind: 'memo', id: newM.id, floor: state.currentFloor };
+        saveHistorySnapshot();
+        request2DRedraw();
+        showToast('面積表を図面上に配置しました');
+        return;
+    }
+
+    if (tool === 'memo_switch' || tool === 'memo_outlet' || tool === 'memo_light' || tool === 'memo_compass') {
+        const symMap = { 'memo_switch': 'switch', 'memo_outlet': 'outlet', 'memo_light': 'light_down', 'memo_compass': 'compass' };
+        const newM = { id: uid(), memoType: 'symbol', symbolId: symMap[tool], x: worldPos.x, y: worldPos.y, rot: 0, color: '#0f172a' };
+        fl.memos.push(newM);
+        state.selectedItem = { kind: 'memo', id: newM.id, floor: state.currentFloor };
+        saveHistorySnapshot();
+        request2DRedraw();
+        showToast('記号を配置しました');
+        return;
+    }
+
+    if (tool === 'memo_custom_sym') {
+        const cSyms = state.customSymbols || [];
+        const chosen = cSyms[0] || { label: '特記' };
+        const newM = { id: uid(), memoType: 'custom_sym', label: chosen.label, x: worldPos.x, y: worldPos.y, color: state.subPenColor || '#0f172a' };
+        fl.memos.push(newM);
+        state.selectedItem = { kind: 'memo', id: newM.id, floor: state.currentFloor };
+        saveHistorySnapshot();
+        request2DRedraw();
+        showToast(`オリジナル記号「${chosen.label}」を配置しました`);
+        return;
+    }
+
+    if (tool === 'memo_freehand' || tool === 'memo_marker') {
+        const isMarker = tool === 'memo_marker';
+        const newStroke = {
+            id: uid(),
+            color: isMarker ? 'rgba(250, 204, 21, 0.45)' : (state.subPenColor || '#ef4444'),
+            size: isMarker ? 14 : (state.subPenSize || 3),
+            points: [{ x: worldPos.x, y: worldPos.y, p: e.pressure || 0.5 }]
+        };
+        fl.strokes.push(newStroke);
+        state.dragAction = { type: 'pen', stroke: newStroke };
+        request2DRedraw();
+        return;
+    }
+
+    // 2点ドラッグ系メモ（memo_dim, memo_leader, memo_line, memo_curve, memo_ellipse）
+    const dragTypeMap = {
+        'memo_dim': 'dim',
+        'memo_leader': 'leader',
+        'memo_line': 'line',
+        'memo_curve': 'curve',
+        'memo_ellipse': 'ellipse'
+    };
+    const mType = dragTypeMap[tool];
+    if (mType) {
+        const newM = {
+            id: uid(),
+            memoType: mType,
+            x1: snappedX,
+            y1: snappedY,
+            x2: snappedX + 1.5,
+            y2: snappedY,
+            cx: snappedX + 0.75,
+            cy: snappedY - 0.8,
+            x: snappedX,
+            y: snappedY,
+            rx: 0.8,
+            ry: 0.5,
+            color: state.subPenColor || '#dc2626',
+            lineStyle: state.memoLineStyle || 'solid',
+            arrowStart: state.memoArrowStart || false,
+            arrowEnd: state.memoArrowEnd || (mType === 'leader'),
+            text: mType === 'leader' ? (state.memoTextValue || '引き出し注記') : ''
+        };
+        fl.memos.push(newM);
+        state.selectedItem = { kind: 'memo', id: newM.id, floor: state.currentFloor };
+        state.dragAction = { type: 'memo_drag_create', memo: newM };
+        request2DRedraw();
+    }
+}
+
+function finishPolyPillar() {
+    const fl = state.floors[state.currentFloor];
+    const pts = (state.polyPillarPoints && state.polyPillarPoints.length >= 3) ? state.polyPillarPoints : state.polyPoints;
+    if (!pts || pts.length < 3) {
+        showToast('多角形柱を作成するには3点以上の頂点をタップしてください', true);
+        return;
+    }
+    if (!fl.polyPillars) fl.polyPillars = [];
+    fl.polyPillars.push({
+        id: uid(),
+        points: JSON.parse(JSON.stringify(pts))
+    });
+    state.polyPillarPoints = [];
+    state.polyPoints = [];
+    saveHistorySnapshot();
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
+    request2DRedraw();
+    if (typeof rebuild3DScene === 'function') rebuild3DScene();
+    showToast('多角形柱を作成しました');
+}
+window.finishPolyPillar = finishPolyPillar;
+
+// --- Unified Hit-Test for Selecting, Moving, and Resizing ---
 function tryStartSelectOrModifyInteraction(wx, wy, onlyHitExistingOfSameToolType = false) {
     const fl = state.floors[state.currentFloor];
     const selObj = findSelectedObject();
@@ -622,7 +999,7 @@ function tryStartSelectOrModifyInteraction(wx, wy, onlyHitExistingOfSameToolType
 
     // 1. Check active selection's resize handles first
     if (selObj && state.selectedItem.floor === state.currentFloor) {
-        if (state.selectedItem.kind === 'room' || state.selectedItem.kind === 'fixture' || state.selectedItem.kind === 'stair') {
+        if (state.selectedItem.kind === 'room' || state.selectedItem.kind === 'fixture' || state.selectedItem.kind === 'stair' || state.selectedItem.kind === 'box3d') {
             const corners = [
                 { name: 'tl', cx: selObj.x, cy: selObj.y },
                 { name: 'tr', cx: selObj.x + selObj.w, cy: selObj.y },
@@ -660,7 +1037,7 @@ function tryStartSelectOrModifyInteraction(wx, wy, onlyHitExistingOfSameToolType
             if (hit) {
                 state.selectedItem = { kind: 'opening', id: op.id, floor: state.currentFloor };
                 state.dragAction = { type: 'move_opening', opening: op };
-                renderPropertyInspector();
+                if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
                 request2DRedraw();
                 return true;
             }
@@ -679,14 +1056,34 @@ function tryStartSelectOrModifyInteraction(wx, wy, onlyHitExistingOfSameToolType
                     offsetX: wx - fx.x,
                     offsetY: wy - fx.y
                 };
-                renderPropertyInspector();
+                if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
                 request2DRedraw();
                 return true;
             }
         }
     }
 
-    // 3b. Hit-test Dedicated Stairs (階段)
+    // 3b. Hit-test 3D Boxes (直方体)
+    if (!onlyHitExistingOfSameToolType || state.activeTool === 'box3d') {
+        const boxes = fl.boxes3d || [];
+        for (let i = boxes.length - 1; i >= 0; i--) {
+            const bx = boxes[i];
+            if (wx >= bx.x && wx <= bx.x + bx.w && wy >= bx.y && wy <= bx.y + bx.h) {
+                state.selectedItem = { kind: 'box3d', id: bx.id, floor: state.currentFloor };
+                state.dragAction = {
+                    type: 'move_box',
+                    target: bx,
+                    offsetX: wx - bx.x,
+                    offsetY: wy - bx.y
+                };
+                if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+                request2DRedraw();
+                return true;
+            }
+        }
+    }
+
+    // 3c. Hit-test Dedicated Stairs (階段)
     if (!onlyHitExistingOfSameToolType || state.activeTool === 'stair') {
         const stairs = fl.stairs || [];
         for (let i = stairs.length - 1; i >= 0; i--) {
@@ -699,7 +1096,7 @@ function tryStartSelectOrModifyInteraction(wx, wy, onlyHitExistingOfSameToolType
                     offsetX: wx - st.x,
                     offsetY: wy - st.y
                 };
-                renderPropertyInspector();
+                if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
                 request2DRedraw();
                 return true;
             }
@@ -714,7 +1111,7 @@ function tryStartSelectOrModifyInteraction(wx, wy, onlyHitExistingOfSameToolType
         if (Math.hypot(wx - pl.x, wy - pl.y) <= 0.38) {
             state.selectedItem = { kind: 'pillar', id: pl.id, floor: state.currentFloor };
             state.dragAction = { type: 'move_pillar', pillar: pl };
-            renderPropertyInspector();
+            if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
             request2DRedraw();
             return true;
         }
@@ -731,32 +1128,54 @@ function tryStartSelectOrModifyInteraction(wx, wy, onlyHitExistingOfSameToolType
                 offsetX: wx - rm.x,
                 offsetY: wy - rm.y
             };
-            renderPropertyInspector();
+            if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
             request2DRedraw();
             return true;
         }
     }
 
     state.selectedItem = null;
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
     return false;
 }
 
 canvas2d.addEventListener('pointermove', (e) => {
-    if (!state.dragAction) return;
-    e.preventDefault();
-    updatePointerStatusBadge(e);
-
     const rect = canvas2d.getBoundingClientRect();
     const sx = e.clientX - rect.left;
     const sy = e.clientY - rect.top;
     const worldPos = screenToWorldP(sx, sy);
     const snappedX = snapP(worldPos.x);
     const snappedY = snapP(worldPos.y);
+    state.lastHoverWorld = { x: snappedX, y: snappedY };
+
+    if (!state.dragAction) {
+        if (state.wallClickStart || (state.polyPoints && state.polyPoints.length > 0) || state.activeTool === 'fixture' || state.activeTool === 'pillar' || state.activeTool === 'stair') {
+            request2DRedraw();
+        }
+        return;
+    }
+    e.preventDefault();
+    updatePointerStatusBadge(e);
+
     const minSize = Math.max(0.25, 1 / state.gridDivisions);
 
     const drag = state.dragAction;
+
+    if (drag.type === 'guide') {
+        if (drag.guide.axis === 'h') {
+            drag.guide.pos = snappedY;
+            drag.guide.posP = snappedY;
+            drag.deleteOnRelease = (sy <= 20);
+        } else {
+            drag.guide.pos = snappedX;
+            drag.guide.posP = snappedX;
+            drag.deleteOnRelease = (sx <= 20);
+        }
+        if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+        request2DRedraw();
+        return;
+    }
 
     if (drag.type === 'pan') {
         const dx = (sx - drag.startSX) / state.cam2d.zoom;
@@ -764,7 +1183,7 @@ canvas2d.addEventListener('pointermove', (e) => {
         state.cam2d.x = drag.origCamX - dx;
         state.cam2d.y = drag.origCamY - dy;
         request2DRedraw();
-    } else if (drag.type === 'room') {
+    } else if (drag.type === 'room' || drag.type === 'box3d') {
         drag.curX = snappedX;
         drag.curY = snappedY;
         if (drag.curX === drag.startX) drag.curX += minSize;
@@ -785,14 +1204,52 @@ canvas2d.addEventListener('pointermove', (e) => {
         drag.stroke.points.push({ x: worldPos.x, y: worldPos.y, p: e.pressure || 0.5 });
         request2DRedraw();
     } else if (drag.type === 'eraser') {
+        drag.curX = worldPos.x;
+        drag.curY = worldPos.y;
         eraseAtPoint(worldPos.x, worldPos.y);
+        request2DRedraw();
+    } else if (drag.type === 'memo_drag_create') {
+        const m = drag.memo;
+        if (m.memoType === 'ellipse') {
+            m.x = (m.x1 + worldPos.x) / 2;
+            m.y = (m.y1 + worldPos.y) / 2;
+            m.rx = Math.max(0.25, Math.abs(worldPos.x - m.x1) / 2);
+            m.ry = Math.max(0.25, Math.abs(worldPos.y - m.y1) / 2);
+        } else {
+            m.x2 = snappedX;
+            m.y2 = snappedY;
+            if (m.memoType === 'curve') {
+                m.cx = (m.x1 + m.x2) / 2;
+                m.cy = (m.y1 + m.y2) / 2 - 0.8;
+            }
+        }
+        request2DRedraw();
+    } else if (drag.type === 'memo_curve_vertex') {
+        const m = drag.memo;
+        if (drag.vertexKey === 'p1') { m.x1 = worldPos.x; m.y1 = worldPos.y; }
+        else if (drag.vertexKey === 'cp') { m.cx = worldPos.x; m.cy = worldPos.y; }
+        else if (drag.vertexKey === 'p2') { m.x2 = worldPos.x; m.y2 = worldPos.y; }
+        request2DRedraw();
+    } else if (drag.type === 'move_memo') {
+        const m = drag.memo;
+        const dx = worldPos.x - drag.lastWX;
+        const dy = worldPos.y - drag.lastWY;
+        drag.lastWX = worldPos.x;
+        drag.lastWY = worldPos.y;
+        if (m.x !== undefined) { m.x += dx; m.y += dy; }
+        if (m.x1 !== undefined) {
+            m.x1 += dx; m.y1 += dy;
+            m.x2 += dx; m.y2 += dy;
+            if (m.cx !== undefined) { m.cx += dx; m.cy += dy; }
+        }
+        request2DRedraw();
     } else if (drag.type === 'move_box') {
         const t = drag.target;
         t.x = snapP(worldPos.x - drag.offsetX);
         t.y = snapP(worldPos.y - drag.offsetY);
         request2DRedraw();
-        rebuild3DScene();
-        renderPropertyInspector();
+        if (typeof rebuild3DScene === 'function') rebuild3DScene();
+        if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     } else if (drag.type === 'resize_box') {
         const t = drag.target;
         if (drag.corner.includes('r')) {
@@ -814,8 +1271,8 @@ canvas2d.addEventListener('pointermove', (e) => {
             t.y = ny;
         }
         request2DRedraw();
-        rebuild3DScene();
-        renderPropertyInspector();
+        if (typeof rebuild3DScene === 'function') rebuild3DScene();
+        if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     } else if (drag.type === 'move_opening') {
         const op = drag.opening;
         const candidate = snapPointToNearestWallEdge(worldPos.x, worldPos.y);
@@ -824,7 +1281,7 @@ canvas2d.addEventListener('pointermove', (e) => {
             op.y = candidate.y;
             op.orient = candidate.orient;
             request2DRedraw();
-            rebuild3DScene();
+            if (typeof rebuild3DScene === 'function') rebuild3DScene();
         }
     } else if (drag.type === 'resize_opening') {
         const op = drag.opening;
@@ -834,55 +1291,103 @@ canvas2d.addEventListener('pointermove', (e) => {
         const newW = Math.max(0.33, Math.min(4.0, snapP(distFromCenter * 2)));
         if (!checkOpeningOverlap(state.currentFloor, op.x, op.y, op.orient, newW, op.id)) {
             op.widthP = newW;
+            op.widthMm = Math.round(newW * (state.modulePitch || 910));
             request2DRedraw();
-            rebuild3DScene();
-            renderPropertyInspector();
+            if (typeof rebuild3DScene === 'function') rebuild3DScene();
+            if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
         }
     } else if (drag.type === 'move_pillar') {
         drag.pillar.x = snappedX;
         drag.pillar.y = snappedY;
         request2DRedraw();
-        rebuild3DScene();
+        if (typeof rebuild3DScene === 'function') rebuild3DScene();
     }
 });
 
-canvas2d.addEventListener('pointerup', () => {
+canvas2d.addEventListener('pointerup', (e) => {
+    if (e && e.pointerType === 'touch') {
+        activeTouchCount = Math.max(0, activeTouchCount - 1);
+    }
     if (!state.dragAction) return;
     const drag = state.dragAction;
     const fl = state.floors[state.currentFloor];
 
-    if (drag.type === 'room') {
+    if (drag.type === 'guide') {
+        if (drag.deleteOnRelease) {
+            state.guides = state.guides.filter(g => g.id !== drag.guide.id);
+            showToast('補助線を削除しました');
+        }
+        state.dragAction = null;
+        request2DRedraw();
+        return;
+    }
+
+    if (drag.type === 'eraser') {
+        if (drag.startX !== undefined && drag.curX !== undefined) {
+            if (splitOrEraseWallSegment(fl, { x: drag.startX, y: drag.startY }, { x: drag.curX, y: drag.curY })) {
+                saveHistorySnapshot();
+                if (typeof triggerAutoRoomDetection === 'function') triggerAutoRoomDetection();
+                if (typeof rebuild3DScene === 'function') rebuild3DScene();
+                showToast('ドラッグした区間の壁を切り欠き削除しました');
+            }
+        }
+    } else if (drag.type === 'room') {
         const x = Math.min(drag.startX, drag.curX);
         const y = Math.min(drag.startY, drag.curY);
         const w = Math.abs(drag.curX - drag.startX);
         const h = Math.abs(drag.curY - drag.startY);
         if (w >= 0.25 && h >= 0.25) {
+            const rType = drag.roomType || state.subRoomType || 'LDK';
+            const rSpec = ROOM_TYPES[rType] || ROOM_TYPES.LDK;
             const newRoom = {
                 id: uid(),
-                type: state.subRoomType,
+                type: rType,
                 x, y, w, h,
-                customName: ROOM_TYPES[state.subRoomType].label
+                customName: rSpec.label
             };
             fl.rooms.push(newRoom);
             state.selectedItem = { kind: 'room', id: newRoom.id, floor: state.currentFloor };
             saveHistorySnapshot();
+            if (typeof rebuild3DScene === 'function') rebuild3DScene();
+            if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
             showToast(`${newRoom.customName} (${(w * h / 2).toFixed(1)}帖) を作成しました`);
         }
+    } else if (drag.type === 'box3d') {
+        const x = Math.min(drag.startX, drag.curX);
+        const y = Math.min(drag.startY, drag.curY);
+        const w = Math.max(0.5, Math.abs(drag.curX - drag.startX));
+        const h = Math.max(0.5, Math.abs(drag.curY - drag.startY));
+        if (!fl.boxes3d) fl.boxes3d = [];
+        const newBox = {
+            id: uid(),
+            x, y, w, h,
+            hMm: state.subBoxHeightMm || 600,
+            levelMm: state.subBoxLevelMm || 0,
+            color: state.subBoxColor || '#cbd5e1',
+            label: `直方体 (H${state.subBoxHeightMm || 600}mm)`
+        };
+        fl.boxes3d.push(newBox);
+        state.selectedItem = { kind: 'box3d', id: newBox.id, floor: state.currentFloor };
+        saveHistorySnapshot();
+        if (typeof rebuild3DScene === 'function') rebuild3DScene();
+        showToast(`${newBox.label} を配置しました`);
     } else if (drag.type === 'wall') {
         if (drag.startX !== drag.curX || drag.startY !== drag.curY) {
+            const wType = drag.wallType || state.subWallType || 'wall';
             fl.walls.push({
                 id: uid(),
                 x1: drag.startX,
                 y1: drag.startY,
                 x2: drag.curX,
                 y2: drag.curY,
-                wallType: state.subWallType || 'exterior'
+                wallType: wType
             });
             state.wallClickStart = null;
             saveHistorySnapshot();
             if (typeof triggerAutoRoomDetection === 'function') triggerAutoRoomDetection();
             if (typeof rebuild3DScene === 'function') rebuild3DScene();
-            showToast('壁を作成しました');
+            const wLabel = window.WALL_SUBTYPES?.[wType]?.label || '壁';
+            showToast(`${wLabel}を作成しました`);
             request2DRedraw();
         }
     } else if (drag.type !== 'pan') {
@@ -890,8 +1395,16 @@ canvas2d.addEventListener('pointerup', () => {
     }
 
     state.dragAction = null;
-    renderSubToolbar();
-    renderPropertyInspector();
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+    request2DRedraw();
+});
+
+canvas2d.addEventListener('pointercancel', (e) => {
+    if (e && e.pointerType === 'touch') {
+        activeTouchCount = Math.max(0, activeTouchCount - 1);
+    }
+    state.dragAction = null;
     request2DRedraw();
 });
 
@@ -900,9 +1413,7 @@ canvas2d.addEventListener('wheel', (e) => {
     zoom2D(e.deltaY < 0 ? 1.1 : 0.9);
 }, { passive: false });
 
-// --- Selection & Eraser Helpers ---
-// (findSelectedObject is globally provided by /madori-sketch/js/core/app_state.js)
-
+// --- Selection & Inspector Handlers ---
 
 function updateSelectedStairShape(shapeType) {
     const obj = findSelectedObject();
@@ -918,19 +1429,18 @@ function updateSelectedStairShape(shapeType) {
     obj.label = `階段 (${shapeType === 'STRAIGHT' ? '直階段' : (shapeType === 'L_SHAPE' ? 'かね折れL型' : '折り返しU型')}・${obj.direction === 'UP' ? '上る' : '降りる'})`;
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
-    showToast(`階段タイプを「${shapeType === 'STRAIGHT' ? '直階段' : (shapeType === 'L_SHAPE' ? 'かね折れ' : '折り返し')}」に変更しました`);
+    showToast(`階段タイプを変更しました`);
 }
 
 function updateSelectedStairDir(dir) {
     const obj = findSelectedObject();
     if (!obj || state.selectedItem.kind !== 'stair') return;
     obj.direction = dir;
-    obj.label = `階段 (${obj.shapeType === 'STRAIGHT' ? '直階段' : (obj.shapeType === 'L_SHAPE' ? 'かね折れL型' : '折り返しU型')}・${dir === 'UP' ? '上る' : '降りる'})`;
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
     showToast(`階段の方向を「${dir === 'UP' ? '上る(UP)' : '降りる(DN)'}」に切り替えました`);
 }
@@ -942,9 +1452,9 @@ function updateSelectedStairSteps(steps) {
     obj.riserMm = Math.round(2730 / steps);
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
-    showToast(`階段段数を ${steps}段 (蹴上${obj.riserMm}mm) に変更しました`);
+    showToast(`階段段数を ${steps}段 に変更しました`);
 }
 
 function rotateSelectedStair() {
@@ -956,55 +1466,42 @@ function rotateSelectedStair() {
     obj.rotation = ((obj.rotation || 0) + 90) % 360;
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
-    showToast(`階段を90°回転しました`);
+    showToast('階段を90°回転しました');
 }
-
-window.updateSelectedStairShape = updateSelectedStairShape;
-window.updateSelectedStairDir = updateSelectedStairDir;
-window.updateSelectedStairSteps = updateSelectedStairSteps;
-window.rotateSelectedStair = rotateSelectedStair;
 
 function renameSelectedRoom() {
     const rm = findSelectedObject();
     if (!rm) return;
-    const presets = ['LDK', '主寝室', '洋室A', '洋室B', '子供室', '書斎', '和室', 'パントリー', 'WIC', '玄関ホール', '玄関ポーチ', 'ビルトインガレージ', '吹抜', 'バルコニー'];
+    const presets = ['LDK', '主寝室', '洋室A', '洋室B', '子供室', '書斎', '和室', 'パントリー', 'WIC', '玄関ホール', '玄関土間', '小上り', '中庭', '吹抜', 'バルコニー'];
     const idx = presets.indexOf(rm.customName);
     rm.customName = presets[(idx + 1) % presets.length];
     if (rm.customName === '吹抜') rm.type = 'VOID';
     else if (rm.customName === 'バルコニー') rm.type = 'BALCONY';
-    else if (rm.customName === '玄関ポーチ') rm.type = 'PORCH';
+    else if (rm.customName === '玄関土間') rm.type = 'DOMA';
+    else if (rm.customName === '小上り') rm.type = 'KOAGARI';
+    else if (rm.customName === '中庭') rm.type = 'NAKANIWA';
     saveHistorySnapshot();
-    updateAllMetricsAnd3D();
-    renderPropertyInspector();
+    if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
-    const isEx = isFloorAreaExcludedRoom(rm);
-    showToast(`部屋名を「${rm.customName}」に変更しました${isEx ? ' (延床面積から除外)' : ''}`);
+    showToast(`部屋名を「${rm.customName}」に変更しました`);
 }
 
-
-// ============================================================================
-// 窓・建具 インスペクタ寸法変更ハンドラ群
-// ============================================================================
-
-// ============================================================================
-// 住宅設備（キッチン・UB・洗面台）寸法更新ハンドラ群
-// ============================================================================
 function rotateSelectedFixture() {
     const fl = state.floors[state.currentFloor];
     if (!state.selectedItem || state.selectedItem.kind !== 'fixture') return;
     const fx = fl.fixtures.find(f => f.id === state.selectedItem.id);
     if (!fx) return;
 
-    // 幅と高さを入れ替え
     const tmp = fx.w; fx.w = fx.h; fx.h = tmp;
     const tmpMm = fx.wMm; fx.wMm = fx.dMm; fx.dMm = tmpMm;
     fx.rot = ((fx.rot || 0) + 90) % 360;
 
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
     showToast('設備を90度回転しました');
 }
@@ -1014,18 +1511,15 @@ function updateSelectedKitchenI(newW, newD, newH) {
     if (!state.selectedItem || state.selectedItem.kind !== 'fixture') return;
     const fx = fl.fixtures.find(f => f.id === state.selectedItem.id);
     if (!fx) return;
-
     const pitch = state.modulePitch || 910;
     if (newW) { fx.wMm = newW; fx.w = +(newW / pitch).toFixed(3); }
     if (newD) { fx.dMm = newD; fx.h = +(newD / pitch).toFixed(3); }
     if (newH) { fx.hMm = newH; }
-    fx.label = `I型キッチン (${fx.wMm/10}×${fx.dMm/10}cm)`;
-
+    fx.label = `I型キッチン (${fx.wMm / 10}×${fx.dMm / 10}cm)`;
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
-    showToast(`キッチン寸法を ${fx.wMm/10}cm × ${fx.dMm/10}cm に変更しました`);
 }
 
 function updateSelectedKitchenL(newX, newY, newH) {
@@ -1033,19 +1527,16 @@ function updateSelectedKitchenL(newX, newY, newH) {
     if (!state.selectedItem || state.selectedItem.kind !== 'fixture') return;
     const fx = fl.fixtures.find(f => f.id === state.selectedItem.id);
     if (!fx) return;
-
     const pitch = state.modulePitch || 910;
     if (!fx.fxData) fx.fxData = {};
     if (newX) { fx.fxData.lWidthX = newX; fx.wMm = newX; fx.w = +(newX / pitch).toFixed(3); }
     if (newY) { fx.fxData.lWidthY = newY; fx.dMm = newY; fx.h = +(newY / pitch).toFixed(3); }
     if (newH) { fx.hMm = newH; }
-    fx.label = `L型キッチン (${fx.wMm/10}×${fx.dMm/10}cm)`;
-
+    fx.label = `L型キッチン (${fx.wMm / 10}×${fx.dMm / 10}cm)`;
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
-    showToast(`L型キッチン寸法を変更しました`);
 }
 
 function updateSelectedKitchenIsland(newW, newD, newH) {
@@ -1053,18 +1544,15 @@ function updateSelectedKitchenIsland(newW, newD, newH) {
     if (!state.selectedItem || state.selectedItem.kind !== 'fixture') return;
     const fx = fl.fixtures.find(f => f.id === state.selectedItem.id);
     if (!fx) return;
-
     const pitch = state.modulePitch || 910;
     if (newW) { fx.wMm = newW; fx.w = +(newW / pitch).toFixed(3); }
     if (newD) { fx.dMm = newD; fx.h = +(newD / pitch).toFixed(3); }
     if (newH) { fx.hMm = newH; }
-    fx.label = `アイランド/ペニンシュラ (${fx.wMm}×${fx.dMm}mm)`;
-
+    fx.label = `アイランド (${fx.wMm}×${fx.dMm}mm)`;
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
-    showToast(`アイランド寸法を ${fx.wMm}×${fx.dMm}mm に変更しました`);
 }
 
 function changeSelectedKitchenType(newType) {
@@ -1072,11 +1560,9 @@ function changeSelectedKitchenType(newType) {
     if (!state.selectedItem || state.selectedItem.kind !== 'fixture') return;
     const fx = fl.fixtures.find(f => f.id === state.selectedItem.id);
     if (!fx) return;
-
     if (!fx.fxData) fx.fxData = {};
     fx.fxData.kitchenType = newType;
     const pitch = state.modulePitch || 910;
-
     if (newType === 'I') {
         fx.wMm = 2550; fx.dMm = 650; fx.hMm = 850;
         fx.w = +(2550 / pitch).toFixed(3); fx.h = +(650 / pitch).toFixed(3);
@@ -1089,12 +1575,11 @@ function changeSelectedKitchenType(newType) {
     } else {
         fx.wMm = 2550; fx.dMm = 900; fx.hMm = 850;
         fx.w = +(2550 / pitch).toFixed(3); fx.h = +(900 / pitch).toFixed(3);
-        fx.label = `アイランド/ペニンシュラ (2550×900mm)`;
+        fx.label = `アイランド (2550×900mm)`;
     }
-
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
 }
 
@@ -1103,11 +1588,9 @@ function updateSelectedUbSize(sizeId) {
     if (!state.selectedItem || state.selectedItem.kind !== 'fixture') return;
     const fx = fl.fixtures.find(f => f.id === state.selectedItem.id);
     if (!fx) return;
-
     const ubSpecs = window.UB_SPECS || { sizes: [] };
     const curSize = ubSpecs.sizes.find(s => s.id === sizeId);
     if (!curSize) return;
-
     const pitch = state.modulePitch || 910;
     fx.wMm = curSize.wMm;
     fx.dMm = curSize.dMm;
@@ -1116,12 +1599,10 @@ function updateSelectedUbSize(sizeId) {
     if (!fx.fxData) fx.fxData = {};
     fx.fxData.ubSize = sizeId;
     fx.label = `ユニットバス ${curSize.label}`;
-
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
-    showToast(`UBサイズを ${curSize.label} に変更しました`);
 }
 
 function updateSelectedUbPattern(patId) {
@@ -1129,15 +1610,13 @@ function updateSelectedUbPattern(patId) {
     if (!state.selectedItem || state.selectedItem.kind !== 'fixture') return;
     const fx = fl.fixtures.find(f => f.id === state.selectedItem.id);
     if (!fx) return;
-
     if (!fx.fxData) fx.fxData = {};
     fx.fxData.ubPattern = patId;
-
+    fx.ubPattern = patId;
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
-    showToast(`UB出入口を ${patId === 'patternA' ? '短手出入口' : '長手出入口'} に変更しました`);
 }
 
 function updateSelectedVanity(newW, newH) {
@@ -1145,7 +1624,6 @@ function updateSelectedVanity(newW, newH) {
     if (!state.selectedItem || state.selectedItem.kind !== 'fixture') return;
     const fx = fl.fixtures.find(f => f.id === state.selectedItem.id);
     if (!fx) return;
-
     const pitch = state.modulePitch || 910;
     if (newW) {
         fx.wMm = newW;
@@ -1155,12 +1633,10 @@ function updateSelectedVanity(newW, newH) {
         fx.label = `洗面化粧台 (W${newW}mm)`;
     }
     if (newH) { fx.hMm = newH; }
-
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
-    showToast(`洗面化粧台寸法を変更しました`);
 }
 
 function updateSelectedWindowSize(newWMm, newHMm) {
@@ -1176,25 +1652,18 @@ function updateSelectedWindowSize(newWMm, newHMm) {
             op.widthMm = newWMm;
             op.widthP = nextWidthP;
         } else {
-            showToast('幅を拡大すると隣接する建具・窓と重なるため変更できません', true);
-            renderPropertyInspector();
+            showToast('隣接する建具・窓と重なるため変更できません', true);
             return;
         }
     }
     if (newHMm !== null) {
         op.heightMm = newHMm;
-        if (op.heightMm >= 2000) {
-            op.sillMm = 0;
-        } else if (op.sillMm === 0) {
-            op.sillMm = Math.max(0, 2100 - op.heightMm);
-        }
+        if (op.heightMm >= 2000) op.sillMm = 0;
     }
-    op.label = `窓 (W${op.widthMm}×H${op.heightMm})`;
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
-    showToast(`窓寸法を W:${op.widthMm}mm × H:${op.heightMm}mm に変更しました`);
 }
 
 function updateSelectedOpeningSill(newSill) {
@@ -1213,15 +1682,8 @@ function updateSelectedDoorFit(fitId) {
     if (!state.selectedItem || state.selectedItem.kind !== 'opening') return;
     const op = fl.openings.find(o => o.id === state.selectedItem.id);
     if (!op) return;
-
     op.doorFit = fitId;
-    if (fitId === 'hiraki' || fitId === 'katabiki' || fitId === 'genkan_slide') {
-        op.leafCount = 1;
-    } else if (fitId === 'hikichigai' && op.leafCount === 1) {
-        op.leafCount = 2;
-    } else if (fitId === 'hikiwake' && op.leafCount % 2 !== 0) {
-        op.leafCount = 2;
-    }
+    op.sashType = fitId;
     recalcDoorDimensions(op);
 }
 
@@ -1230,13 +1692,7 @@ function updateSelectedDoorLeafCount(count) {
     if (!state.selectedItem || state.selectedItem.kind !== 'opening') return;
     const op = fl.openings.find(o => o.id === state.selectedItem.id);
     if (!op) return;
-
     op.leafCount = count;
-    if (count === 1 && (op.doorFit === 'hikichigai' || op.doorFit === 'hikiwake')) {
-        op.doorFit = 'katabiki';
-    } else if (count >= 2 && op.doorFit === 'hiraki') {
-        op.doorFit = 'hikichigai';
-    }
     recalcDoorDimensions(op);
 }
 
@@ -1245,7 +1701,6 @@ function updateSelectedDoorLeafWidth(leafW) {
     if (!state.selectedItem || state.selectedItem.kind !== 'opening') return;
     const op = fl.openings.find(o => o.id === state.selectedItem.id);
     if (!op) return;
-
     op.leafWidthMm = leafW;
     recalcDoorDimensions(op);
 }
@@ -1255,11 +1710,10 @@ function updateSelectedDoorHeight(h) {
     if (!state.selectedItem || state.selectedItem.kind !== 'opening') return;
     const op = fl.openings.find(o => o.id === state.selectedItem.id);
     if (!op) return;
-
     op.heightMm = h;
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
 }
 
@@ -1267,31 +1721,21 @@ function recalcDoorDimensions(op) {
     const pitch = state.modulePitch || 910;
     const count = op.leafCount || 1;
     const leafW = op.leafWidthMm || 800;
-    
     let totalW = leafW * count;
-    if (op.doorFit === 'hiraki' || op.doorFit === 'katabiki' || op.doorFit === 'genkan_slide') {
+    if (op.doorFit === 'hiraki' || op.doorFit === 'katabiraki' || op.doorFit === 'katabiki' || op.doorFit === 'hikido' || op.doorFit === 'genkan_slide') {
         totalW = leafW;
     }
-
     const nextWidthP = +(totalW / pitch).toFixed(3);
     if (!checkOpeningOverlap(state.currentFloor, op.x, op.y, op.orient, nextWidthP, op.id)) {
         op.widthMm = totalW;
         op.widthP = nextWidthP;
-    } else {
-        showToast('建具を拡大すると隣接する壁面要素と重なるため変更できません', true);
-        renderPropertyInspector();
-        return;
     }
-
-    const styleObj = (window.DOOR_SPECS && window.DOOR_SPECS.styles) ? window.DOOR_SPECS.styles.find(s => s.id === op.doorFit) : null;
-    const fitLabel = styleObj ? styleObj.label : '建具';
-    op.label = `${fitLabel} ${op.leafCount}枚 (W${op.widthMm}×H${op.heightMm}mm)`;
-
+    const sashSpec = window.SASH_TYPES_12?.[op.doorFit];
+    op.label = `${sashSpec ? sashSpec.label : '建具'} (W${op.widthMm}×H${op.heightMm}mm)`;
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
-    showToast(`建具を「${op.label}」に変更しました`);
 }
 
 function changeSelectedPillarSpec(sizeMm, shape) {
@@ -1302,18 +1746,12 @@ function changeSelectedPillarSpec(sizeMm, shape) {
     pl.sizeMm = sizeMm;
     pl.shape = shape;
     saveHistorySnapshot();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    showToast(`独立柱を ${shape === 'round' ? 'φ' : ''}${sizeMm}mm に変更しました`);
+    showToast(`柱を ${shape === 'round' ? '円柱φ' : '角柱'}${sizeMm}mm に変更しました`);
 }
 window.changeSelectedPillarSpec = changeSelectedPillarSpec;
-window.set3DFloorDisplay = function(mode) {
-    state.floorDisplay3D = mode;
-    if (typeof rebuild3DScene === 'function') rebuild3DScene();
-};
-window.setFloorDisplay3D = window.set3DFloorDisplay;
-
 
 function deleteSelectedItem() {
     if (!state.selectedItem) return;
@@ -1324,6 +1762,8 @@ function deleteSelectedItem() {
     else if (kind === 'opening') fl.openings = fl.openings.filter(o => o.id !== id);
     else if (kind === 'fixture') fl.fixtures = fl.fixtures.filter(f => f.id !== id);
     else if (kind === 'pillar') fl.pillars = fl.pillars.filter(p => p.id !== id);
+    else if (kind === 'box3d') fl.boxes3d = (fl.boxes3d || []).filter(b => b.id !== id);
+    else if (kind === 'memo') fl.memos = (fl.memos || []).filter(m => m.id !== id);
     else if (kind === 'stair') {
         fl.stairs = (fl.stairs || []).filter(s => s.id !== id);
         fl.fixtures = (fl.fixtures || []).filter(f => f.id !== id);
@@ -1332,7 +1772,7 @@ function deleteSelectedItem() {
     state.selectedItem = null;
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
     showToast('選択した要素を削除しました');
 }
@@ -1349,6 +1789,16 @@ function eraseAtPoint(wx, wy) {
     fl.strokes = fl.strokes.filter(st => !st.points.some(pt => Math.hypot(wx - pt.x, wy - pt.y) < 0.4));
     if (fl.strokes.length !== beforeStrokes) erased = true;
 
+    if (fl.memos) {
+        const beforeMemos = fl.memos.length;
+        fl.memos = fl.memos.filter(m => {
+            const mx = m.x !== undefined ? m.x : (m.x1 + m.x2) / 2;
+            const my = m.y !== undefined ? m.y : (m.y1 + m.y2) / 2;
+            return Math.hypot(wx - mx, wy - my) > 0.55;
+        });
+        if (fl.memos.length !== beforeMemos) erased = true;
+    }
+
     const beforeOps = fl.openings.length;
     fl.openings = fl.openings.filter(op => Math.hypot(wx - op.x, wy - op.y) > 0.5);
     if (fl.openings.length !== beforeOps) erased = true;
@@ -1356,6 +1806,12 @@ function eraseAtPoint(wx, wy) {
     const beforePillars = fl.pillars.length;
     fl.pillars = fl.pillars.filter(pl => Math.hypot(wx - pl.x, wy - pl.y) > 0.45);
     if (fl.pillars.length !== beforePillars) erased = true;
+
+    if (fl.boxes3d) {
+        const beforeBoxes = fl.boxes3d.length;
+        fl.boxes3d = fl.boxes3d.filter(bx => !(wx >= bx.x && wx <= bx.x + bx.w && wy >= bx.y && wy <= bx.y + bx.h));
+        if (fl.boxes3d.length !== beforeBoxes) erased = true;
+    }
 
     const beforeFix = fl.fixtures.length;
     fl.fixtures = fl.fixtures.filter(fx => !(wx >= fx.x && wx <= fx.x + fx.w && wy >= fx.y && wy <= fx.y + fx.h));
@@ -1367,11 +1823,12 @@ function eraseAtPoint(wx, wy) {
         if (fl.stairs.length !== beforeStairs) erased = true;
     }
 
+    // 壁の点タップ消去（ドラッグ消去は pointerup の splitOrEraseWallSegment で部分切り欠き処理）
     const beforeWalls = fl.walls.length;
     fl.walls = fl.walls.filter(wl => {
         const mx = (wl.x1 + wl.x2) / 2;
         const my = (wl.y1 + wl.y2) / 2;
-        return Math.hypot(wx - mx, wy - my) > 0.6;
+        return Math.hypot(wx - mx, wy - my) > 0.45;
     });
     if (fl.walls.length !== beforeWalls) erased = true;
 
@@ -1388,9 +1845,9 @@ function eraseAtPoint(wx, wy) {
 
     if (erased) {
         state.selectedItem = null;
-        renderPropertyInspector();
+        if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
         request2DRedraw();
-        rebuild3DScene();
+        if (typeof rebuild3DScene === 'function') rebuild3DScene();
     }
 }
 
@@ -1398,73 +1855,51 @@ function clearCurrentFloorStrokes() {
     const fl = state.floors[state.currentFloor];
     fl.strokes = [];
     fl.stamps = [];
+    fl.memos = [];
     saveHistorySnapshot();
-    showToast(`${state.currentFloor}F の手書き赤ペン・スタンプを消去しました`);
+    request2DRedraw();
+    showToast(`${state.currentFloor === 0 ? '地下' : state.currentFloor + '階'} の手書きペン・メモ注釈を消去しました`);
 }
 
-
 // ============================================================================
-// 階段作成システム（添付資料準拠の一辺ずつ描くパス入力 ＆ モーダル ＆ 3D生成）
+// 階段作成システム（ボックス階段 / オープン階段 / 手すり設定対応）
 // ============================================================================
-
-let stairModalCallback = null;
 
 function setStairDrawMode(mode) {
     state.stairDrawMode = mode;
     state.stairDrawingPoints = [];
     state.stairTempCurPoint = null;
-    renderSubToolbar();
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
     request2DRedraw();
 }
 
-function handleStairPointerDown(snappedX, snappedY, wx, wy) {
+function handleStairPointerDown(snappedX, snappedY) {
     if (state.stairDrawMode === 'preset') {
-        // プリセット配置モード
         placeStairPresetAt('U_SHAPE', snappedX, snappedY);
         return;
     }
-
-    // パス入力モード（添付資料準拠）
     if (!state.stairDrawingPoints) state.stairDrawingPoints = [];
     const pts = state.stairDrawingPoints;
 
     if (pts.length === 0) {
-        // 1点目: 始点を追加
         pts.push({ x: snappedX, y: snappedY });
-        showToast('始点を決定しました。次の角または終点をタップしてください');
+        showToast('階段の始点を決定しました。次の角または終点をタップしてください');
     } else {
         const lastPt = pts[pts.length - 1];
-        // 同じ点なら終点として確定
         if (Math.hypot(lastPt.x - snappedX, lastPt.y - snappedY) < 0.1) {
-            if (pts.length >= 2) {
-                openStairModal();
-            } else {
-                showToast('1マス以上の長さを指定してください');
-            }
+            if (pts.length >= 2) openStairModal();
             return;
         }
-
-        // 辺を追加（直交スナップ: XかYの長い方を採用）
         const dx = Math.abs(snappedX - lastPt.x);
         const dy = Math.abs(snappedY - lastPt.y);
         let nextX = snappedX, nextY = snappedY;
-        if (dx >= dy) {
-            nextY = lastPt.y;
-        } else {
-            nextX = lastPt.x;
-        }
-
+        if (dx >= dy) nextY = lastPt.y;
+        else nextX = lastPt.x;
         pts.push({ x: nextX, y: nextY });
-
-        // コの字（3辺＝4点）に達したら自動的にダイアログを開く
-        if (pts.length >= 4) {
-            openStairModal();
-        } else {
-            showToast(`${pts.length}点目を指定しました。終点をタップするか「階段作成」を押してください`);
-        }
+        if (pts.length >= 4) openStairModal();
+        else showToast(`${pts.length}点目を指定しました。終点をタップするか「階段作成」を押してください`);
     }
-
-    renderSubToolbar();
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
     request2DRedraw();
 }
 
@@ -1479,17 +1914,18 @@ function finishStairPathInput() {
 function cancelStairDrawing() {
     state.stairDrawingPoints = [];
     state.stairTempCurPoint = null;
-    renderSubToolbar();
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
     request2DRedraw();
-    showToast('階段入力をキャンセルしました');
 }
 
 function openStairModal() {
     const modal = document.getElementById('stairCreateModal');
     if (!modal) return;
     setStairModalDir(state.stairDirection || 'UP');
-    document.getElementById('modalStairWidth').value = state.stairWidthMm || 910;
-    document.getElementById('modalStairTurn').value = state.stairTurnType || 'turn_3';
+    const wEl = document.getElementById('modalStairWidth');
+    if (wEl) wEl.value = state.stairWidthMm || 910;
+    const tEl = document.getElementById('modalStairTurn');
+    if (tEl) tEl.value = state.stairTurnType || 'turn_3';
     modal.classList.remove('hidden');
     modal.classList.add('flex');
 }
@@ -1506,6 +1942,7 @@ function setStairModalDir(dir) {
     state.stairDirection = dir;
     const btnUp = document.getElementById('btnStairDirUp');
     const btnDown = document.getElementById('btnStairDirDown');
+    if (!btnUp || !btnDown) return;
     if (dir === 'UP') {
         btnUp.className = 'py-2.5 rounded-xl border font-bold text-sm flex items-center justify-center gap-1.5 transition bg-cyan-600 text-white border-cyan-400 shadow-lg shadow-cyan-900/40';
         btnDown.className = 'py-2.5 rounded-xl border font-bold text-sm flex items-center justify-center gap-1.5 transition bg-slate-800 text-slate-300 border-slate-700 hover:text-white';
@@ -1516,18 +1953,18 @@ function setStairModalDir(dir) {
 }
 
 function confirmCreateStairFromModal() {
-    const widthMm = parseInt(document.getElementById('modalStairWidth').value, 10) || 910;
-    const turnType = document.getElementById('modalStairTurn').value || 'turn_3';
+    const widthMm = parseInt(document.getElementById('modalStairWidth')?.value || '910', 10) || 910;
+    const turnType = document.getElementById('modalStairTurn')?.value || 'turn_3';
     const dir = state.stairDirection || 'UP';
 
     createStairFromPoints(state.stairDrawingPoints, widthMm, dir, turnType);
     closeStairModal();
     state.stairDrawingPoints = [];
     state.stairTempCurPoint = null;
-    renderSubToolbar();
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
     request2DRedraw();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    showToast('階段を作成しました（タップして寸法変更・詳細編集可能）');
+    showToast('階段を作成しました');
 }
 
 function createStairFromPoints(pts, widthMm, dir, turnType) {
@@ -1536,13 +1973,11 @@ function createStairFromPoints(pts, widthMm, dir, turnType) {
     const pitch = state.modulePitch || 910;
     const widthP = +(widthMm / pitch).toFixed(3);
 
-    // 形状タイプの判定（1辺: STRAIGHT, 2辺: L_SHAPE, 3辺以上: U_SHAPE）
     const segCount = pts.length - 1;
     let shapeType = 'STRAIGHT';
     if (segCount === 2) shapeType = 'L_SHAPE';
     else if (segCount >= 3) shapeType = 'U_SHAPE';
 
-    // バウンディングボックスの計算
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     pts.forEach(p => {
         minX = Math.min(minX, p.x);
@@ -1568,6 +2003,8 @@ function createStairFromPoints(pts, widthMm, dir, turnType) {
         widthMm: widthMm,
         direction: dir,
         turnType: turnType,
+        stairStyle: state.stairStyle || 'box',
+        stairHandrail: state.stairHandrail || 'both',
         steps: 14,
         treadMm: 220,
         riserMm: 200,
@@ -1580,62 +2017,48 @@ function createStairFromPoints(pts, widthMm, dir, turnType) {
     saveHistorySnapshot();
 }
 
-
 function setStairPresetType(t) {
     state.stairPresetType = t;
     state.stairPresetToPlace = t;
     state.stairDrawMode = 'preset';
-    renderSubToolbar();
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
     request2DRedraw();
-    showToast(`${t==='STRAIGHT'?'直階段':(t==='U_SHAPE'?'折り返し階段':'かね折れ階段')}を選択しました。配置したい場所をクリックしてください`);
 }
 function rotateStairPreset() {
     state.subStairRot = ((state.subStairRot || 0) + 90) % 360;
-    renderSubToolbar();
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
     request2DRedraw();
-    showToast(`階段の向きを ${state.subStairRot}° に回転しました`);
 }
 function toggleStairDirection() {
     state.subStairDirection = state.subStairDirection === 'DOWN' ? 'UP' : 'DOWN';
-    renderSubToolbar();
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
     request2DRedraw();
-    showToast(`階段の方向を「${state.subStairDirection==='DOWN'?'降りる(DOWN)':'上る(UP)'}」に切り替えました`);
 }
-window.setStairPresetType = setStairPresetType;
-window.rotateStairPreset = rotateStairPreset;
-window.toggleStairDirection = toggleStairDirection;
-
 function placeStairPreset(presetType) {
-    showToast('配置したい位置をクリックしてください');
     state.stairPresetToPlace = presetType;
     state.stairDrawMode = 'preset';
-    renderSubToolbar();
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
 }
-
 function placeStairPresetAt(presetType, x, y) {
     const type = state.stairPresetToPlace || presetType || 'U_SHAPE';
     const rot = state.subStairRot || 0;
     const dir = state.subStairDirection || 'UP';
     const turnSpec = state.stairTurnSpec || 'turn_3';
-    let pts = [];
 
-    // 回転前の基本パス (dx, dy)
     let localPts = [];
     if (type === 'STRAIGHT') {
         localPts = [{ x: 0, y: 0 }, { x: 0, y: 2.0 }];
     } else if (type === 'L_SHAPE') {
         localPts = [{ x: 0, y: 0 }, { x: 0, y: 1.5 }, { x: 1.5, y: 1.5 }];
     } else {
-        // U_SHAPE (折り返し / 1坪)
         localPts = [{ x: 0, y: 0 }, { x: 0, y: 1.5 }, { x: 1.0, y: 1.5 }, { x: 1.0, y: 0 }];
     }
 
-    // 90度単位の回転変換
     const rad = (rot * Math.PI) / 180;
     const cosR = Math.round(Math.cos(rad));
     const sinR = Math.round(Math.sin(rad));
 
-    pts = localPts.map(p => ({
+    const pts = localPts.map(p => ({
         x: x + (p.x * cosR - p.y * sinR),
         y: y + (p.x * sinR + p.y * cosR)
     }));
@@ -1643,49 +2066,27 @@ function placeStairPresetAt(presetType, x, y) {
     createStairFromPoints(pts, state.modulePitch || 910, dir, turnSpec);
     state.stairPresetToPlace = null;
     saveHistorySnapshot();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    showToast(`階段 (${type === 'STRAIGHT' ? '直階段' : (type === 'L_SHAPE' ? 'かね折れ' : '折り返し')}) を配置しました`);
+    showToast(`階段を配置しました`);
 }
 
 function updateStairProp(id, prop, val) {
     const fl = state.floors[state.currentFloor];
-    const fx = fl.fixtures.find(f => f.id === id);
-    if (!fx) return;
-    fx[prop] = val;
-    fx.label = `階段 (${fx.shapeType === 'STRAIGHT' ? '直階段' : (fx.shapeType === 'L_SHAPE' ? 'かね折れL型' : '折り返しU型')}・${fx.direction === 'UP' ? '上る' : '降りる'})`;
+    const st = (fl.stairs || []).find(s => s.id === id) || (fl.fixtures || []).find(f => f.id === id);
+    if (!st) return;
+    st[prop] = val;
     saveHistorySnapshot();
-    renderPropertyInspector();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    showToast('階段の設定を更新しました');
 }
 
-
-// 階段関数を window に公開（インライン onclick / モーダル対応）
-window.setStairDrawMode = setStairDrawMode;
-window.handleStairPointerDown = handleStairPointerDown;
-window.finishStairPathInput = finishStairPathInput;
-window.cancelStairDrawing = cancelStairDrawing;
-window.openStairModal = openStairModal;
-window.closeStairModal = closeStairModal;
-window.setStairModalDir = setStairModalDir;
-window.confirmCreateStairFromModal = confirmCreateStairFromModal;
-window.createStairFromPoints = createStairFromPoints;
-window.placeStairPreset = placeStairPreset;
-window.placeStairPresetAt = placeStairPresetAt;
-window.updateStairProp = updateStairProp;
-
-
-// Global Window Export for Backward Compatibility
+// Global Window Exports
 if (typeof window !== 'undefined') {
     window.checkOpeningOverlap = checkOpeningOverlap;
     window.snapPointToNearestWallEdge = snapPointToNearestWallEdge;
-    window.updateWindowPresetWidth = updateWindowPresetWidth;
-    window.updateWindowPresetHeight = updateWindowPresetHeight;
-    window.updateWindowTopHeight = updateWindowTopHeight;
-    window.updateWindowSillHeight = updateWindowSillHeight;
     window.setSubDoorFit = setSubDoorFit;
     window.placeOpeningAt = placeOpeningAt;
     window.flipLastOrSelectedOpening = flipLastOrSelectedOpening;
@@ -1712,7 +2113,6 @@ if (typeof window !== 'undefined') {
     window.updateSelectedDoorLeafWidth = updateSelectedDoorLeafWidth;
     window.updateSelectedDoorHeight = updateSelectedDoorHeight;
     window.recalcDoorDimensions = recalcDoorDimensions;
-    window.changeSelectedPillarSpec = changeSelectedPillarSpec;
     window.deleteSelectedItem = deleteSelectedItem;
     window.eraseAtPoint = eraseAtPoint;
     window.clearCurrentFloorStrokes = clearCurrentFloorStrokes;

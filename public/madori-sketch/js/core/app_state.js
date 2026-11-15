@@ -1,8 +1,8 @@
 /**
- * Smile MadoriSketch - Core App State & History Manager
- * (Single Responsibility Principle Refactoring)
+ * 住ま居る 3D間取り工房 (MadoriSketch)
+ * コア状態管理＆履歴マネージャー (Single Responsibility: Core App State & History Manager)
+ * 地下〜4階・下絵透過目アイコン・補助線(ものさし)・用紙範囲・壁4種・サッシ12種・メモ注釈・3Dカメラ撮影に対応
  */
-// --- Global App State ---
 window.setFloorDisplay3D = function(mode) {
     if (typeof state !== 'undefined') state.floorDisplay3D = mode;
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
@@ -10,38 +10,68 @@ window.setFloorDisplay3D = function(mode) {
 window.set3DFloorDisplay = window.setFloorDisplay3D;
 
 const state = {
-    currentPlanId: null,     // 同一間取りデータの継続編集・復元時は同一IDを維持して更新、新規作成時はnull
-    currentFloor: 1,         // 1, 2, or 3
-    onionSkin: true,         // Show lower floor trace
+    currentPlanId: null,
+    projectTitle: '07邸 吹抜けがある',
+    currentFloor: 1,         // 0 (地下), 1, 2, 3, 4
+    onionSkin: true,         // 下絵透過マスターフラグ
+    floorVisibility: {       // 各階タブの「👁️（目アイコン）」ON/OFF状態
+        0: false,
+        1: true,
+        2: false,
+        3: false,
+        4: false
+    },
     modulePitch: 910,        // 910mm or 1000mm
     gridDivisions: 2,        // 1, 2, 3, 4, 5, 6 divisions per 1P
     viewMode: 'split',       // '2d', 'split', '3d'
-    stylusOnlyMode: false,
+    birdEyePopupOpen: false, // 2Dモード時の右下3Dポップアップ表示フラグ
+    canvasTheme: 'light',    // 'light' (ホワイト方眼紙標準) or 'dark'
+    stylusOnlyMode: false,   // パームリジェクション（true: ペンで作図・指は画面移動のみ）
+    inputModeSetting: 'auto',// 'auto' (ペン検知時に自動パームリジェクション), 'pen_only', 'all'
+    penDetectedOnce: false,  // Apple Pencil / S-Pen / Surface Pen 検知済みフラグ
+    lastHoverWorld: { x: 3.5, y: 4.2 },
 
-    activeTool: 'wall',      // 'room', 'wall', 'opening', 'fixture', 'select', 'pen', 'eraser', 'pan'
+    // 左パレットの3大モード ('build': 壁/製品, 'memo': メモ注釈, 'photo': 写真/3D)
+    paletteMode: 'build',
+    planLocked: false,
+
+    // 補助線（ものさし）・画面ロック・用紙範囲
+    rulerMode: false,
+    guidesLocked: false,
+    guides: [],              // [{ id, axis: 'h'|'v', pos: number, posP: number, label: string }]
+    gridBounds: { minX: -2, maxX: 12, minY: -2, maxY: 12 },
+
+    // 現在選択中のツール
+    activeTool: 'wall',
     subRoomType: 'LDK',
-    subWallType: 'exterior',
+    subWallType: 'wall',         // 'wall', 'tarekabe', 'koshikabe', 'agarikamachi'
     subPillarSize: 150,          // 105, 120, 150, 200 mm
     subPillarShape: 'square',    // 'square', 'round'
-    wallClickStart: null,        // クリック＆クリック方式の壁始点 {x, y} // 'exterior', 'interior', 'pillar' (standalone column)
+    wallClickStart: null,
+    polyPoints: [],              // 多角形柱などの頂点入力一時配列
+    polyPillarPoints: [],        // 互換エイリアス
+
+    // サッシ・建具12種設定
+    subOpeningFit: 'hikichigai', // 12種ID ('hikichigai','katabiki','katahiraki','ryouhiraki','oyako','fix','oredo','closet','demado','tatesuberi','yokosuberi','agesage')
     subOpeningType: 'WINDOW',
-    subOpeningCategory: 'window', // 'window' or 'door'
+    subOpeningCategory: 'window',
     subWindowWidth: 1650,
     subWindowHeight: 1100,
-    subWindowMountRef: 'top',    // 'top' (天端基準) または 'bottom' (下端基準)
-    subWindowTopMm: 2000,        // 天端高 (FL+2000mm)
-    subWindowSillMm: 900,        // 下端高 (FL+900mm)
-    subFixtureRot: 0,            // 配置前設備の向き (0, 90, 180, 270)
-    subStairRot: 0,              // 配置前階段の向き (0, 90, 180, 270)
-    subStairDirection: 'UP',     // 'UP' または 'DOWN'
-    subDoorFit: 'hikichigai',     // 'hikichigai', 'hikikomi', 'hikiwake', 'katabiki', 'hiraki', 'genkan_slide'
+    subWindowMountRef: 'top',
+    subWindowTopMm: 2000,
+    subWindowSillMm: 900,
+    subDoorFit: 'hikichigai',
     subDoorLeafCount: 2,
     subDoorLeafWidth: 800,
     subDoorHeight: 2000,
+
+    // 設備・家具・直方体設定
+    subFixtureRot: 0,
+    subFixtureFlipX: false,
+    subFixtureFlipY: false,
     subFixtureType: 'KITCHEN',
-    subFixtureCategory: 'KITCHEN', // 'KITCHEN', 'UB', 'VANITY', 'TOILET_FIX', 'STAIR_STRAIGHT', 'STAIR_UTURN', 'CLOSET_UNIT', 'STANDALONE_COL'
-    // キッチン詳細
-    subKitchenType: 'I',           // 'I', 'L', 'ISLAND'
+    subFixtureCategory: 'KITCHEN',
+    subKitchenType: 'I',
     subKitchenIWidth: 2550,
     subKitchenIDepth: 650,
     subKitchenLXWidth: 2550,
@@ -49,51 +79,90 @@ const state = {
     subKitchenIslandW: 2550,
     subKitchenIslandD: 900,
     subKitchenHeight: 850,
-    // ユニットバス詳細
     subUbSize: '1616',
-    subUbPattern: 'patternA',      // 'patternA' (短手出入), 'patternB' (長手出入)
-    // 洗面化粧台詳細
+    subUbPattern: 'patternA',
     subVanityWidth: 900,
     subVanityDepth: 550,
     subVanityHeight: 800,
-    // 設備壁吸着・離れ寸法 (Phase 2)
-    subFixtureAlign: 'center',    // 'left', 'center', 'right' (吸着基点)
-    subFixtureClearanceMm: 0,     // 壁からの離れ (mm): 0, 50, 100, 150, 200
-    subPenColor: '#f43f5e',
-    subPenSize: 3,
+    subFixtureAlign: 'center',
+    subFixtureClearanceMm: 0,
+    // 直方体(四角)デフォルト
+    subBoxWidthMm: 910,
+    subBoxDepthMm: 455,
+    subBoxHeightMm: 750,
+    subBoxLevelMm: 0,
+
+    // 階段作成ステート（ボックス/オープン・手すり対応）
+    subStairRot: 0,
+    subStairDirection: 'UP',
+    stairDrawMode: 'preset',     // 'preset' or 'path'
+    stairPresetType: 'U_SHAPE',
+    stairDrawingPoints: [],
+    stairTempCurPoint: null,
+    stairWidthMm: 910,
+    stairDirection: 'UP',
+    stairTurnType: 'turn_3',
+    stairTurnSpec: 'turn_3',
+    stairStyle: 'box',           // 'box' (ボックス階段) or 'open' (オープン階段)
+    stairHandrail: 'both',       // 'none', 'left', 'right', 'both'
+    stairSteps: 14,
+
+    // メモ注釈設定 (第5章)
+    subPenColor: '#ef4444',
+    subPenSize: 2.5,
+    subLineDash: 'solid',        // 'solid' (実線), 'dashed' (点線), 'dashdot' (一点鎖線)
     subStampSymbol: null,
-    // 階段作成ステート
-    stairDrawMode: 'path',      // 'path' (一辺ずつ描く), 'preset' (定型ポン置き)
-    stairDrawingPoints: [],     // パス入力中の一時座標点配列 [{x, y}]
-    stairTempCurPoint: null,    // マウス追従中の現在座標点 {x, y}
-    stairWidthMm: 910,          // 階段幅 (mm)
-    stairDirection: 'UP',       // 'UP' (上る), 'DOWN' (降りる)
-    stairTurnType: 'turn_3',    // 'turn_3' (3段廻り), 'landing' (フラット踊り場)
-    stairSteps: 14,             // 標準14段
+    subSwitchCode: '●',
+    subOutletCode: '🔌2',
+    subLightCode: '○DL',
+    subCompassAngle: 0,
+    customSymbols: [
+        { id: 'cs_robo', label: 'ロボ掃除機', shape: 'rect' },
+        { id: 'cs_ev',   label: 'EV充電',     shape: 'circle' },
+        { id: 'cs_box',  label: '宅配BOX',    shape: 'rect' },
+        { id: 'cs_gas',  label: 'ガス栓',     shape: 'diamond' }
+    ],
+
+    // 3D画面・写真キャプチャ＆ペン書き込みリスト
+    snapshots: [],
+    activeSnapshotId: null,
 
     cam2d: {
-        x: 4.0,
-        y: 3.0,
+        x: 3.2,
+        y: 3.2,
         zoom: 46
     },
 
-    floorDisplay3D: 'all',   // 'all', '1f', '2f', '3f'
+    floorDisplay3D: 'all',   // 'all', '0f', '1f', '2f', '3f', '4f'
     showRoof3D: false,
     sunHour: 14,
 
-    // 3-Story Floor Plan Data Model
+    // 地下(0)〜4階までの5階層データモデル
     floors: {
-        1: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] },
-        2: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] },
-        3: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] }
+        0: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], strokes: [], stamps: [], memos: [], polyPillars: [], boxes3d: [] },
+        1: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], strokes: [], stamps: [], memos: [], polyPillars: [], boxes3d: [] },
+        2: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], strokes: [], stamps: [], memos: [], polyPillars: [], boxes3d: [] },
+        3: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], strokes: [], stamps: [], memos: [], polyPillars: [], boxes3d: [] },
+        4: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], strokes: [], stamps: [], memos: [], polyPillars: [], boxes3d: [] }
     },
 
     history: [],
     historyIndex: -1,
 
-    selectedItem: null,      // { kind: 'room'|'opening'|'fixture'|'pillar', id, floor }
+    selectedItem: null,      // { kind: 'room'|'wall'|'opening'|'fixture'|'pillar'|'stair'|'memo'|'guide'|'box3d', id, floor }
     dragAction: null
 };
+
+// ローカルストレージからオリジナル記号を復元
+try {
+    const savedSyms = localStorage.getItem('smile_madori_custom_symbols');
+    if (savedSyms) {
+        const parsed = JSON.parse(savedSyms);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+            state.customSymbols = parsed;
+        }
+    }
+} catch (e) {}
 
 function uid() {
     return 'id_' + Math.random().toString(36).substring(2, 9);
@@ -105,14 +174,16 @@ function showToast(msg, isWarning = false) {
     const box = document.getElementById('toastBox');
     const inner = document.getElementById('toastInner');
     const icon = document.getElementById('toastIcon');
-    document.getElementById('toastMsg').textContent = msg;
+    const msgEl = document.getElementById('toastMsg');
+    if (!box || !inner || !icon || !msgEl) return;
+    msgEl.textContent = msg;
 
     if (isWarning) {
         inner.className = 'bg-rose-950/95 border border-rose-500 text-rose-100 px-4 py-2 rounded-full shadow-2xl text-xs font-bold flex items-center gap-2';
         icon.className = 'fa-solid fa-triangle-exclamation text-rose-400';
     } else {
-        inner.className = 'bg-slate-900/95 border border-blue-500/50 text-white px-4 py-2 rounded-full shadow-2xl text-xs font-semibold flex items-center gap-2';
-        icon.className = 'fa-solid fa-circle-check text-blue-400';
+        inner.className = 'bg-slate-900/95 border border-amber-500/60 text-white px-4 py-2 rounded-full shadow-2xl text-xs font-semibold flex items-center gap-2';
+        icon.className = 'fa-solid fa-circle-check text-amber-400';
     }
 
     box.classList.remove('opacity-0');
@@ -126,14 +197,25 @@ function showToast(msg, isWarning = false) {
 
 // --- Ensure floor data integrity ---
 function ensureFloorsStructure() {
-    [1, 2, 3].forEach(f => {
+    [0, 1, 2, 3, 4].forEach(f => {
         if (!state.floors[f]) {
-            state.floors[f] = { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] };
+            state.floors[f] = { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], strokes: [], stamps: [], memos: [], polyPillars: [], boxes3d: [] };
         }
-        if (!state.floors[f].pillars) state.floors[f].pillars = [];
-        // Ensure every opening has explicit widthP, heightMm, sillMm
-        state.floors[f].openings.forEach(op => {
-            const def = OPENING_TYPES[op.type] || OPENING_TYPES.SWING_DOOR;
+        const fl = state.floors[f];
+        if (!fl.rooms) fl.rooms = [];
+        if (!fl.walls) fl.walls = [];
+        if (!fl.pillars) fl.pillars = [];
+        if (!fl.openings) fl.openings = [];
+        if (!fl.fixtures) fl.fixtures = [];
+        if (!fl.stairs) fl.stairs = [];
+        if (!fl.strokes) fl.strokes = [];
+        if (!fl.stamps) fl.stamps = [];
+        if (!fl.memos) fl.memos = [];
+        if (!fl.polyPillars) fl.polyPillars = [];
+        if (!fl.boxes3d) fl.boxes3d = [];
+
+        fl.openings.forEach(op => {
+            const def = (window.OPENING_TYPES && window.OPENING_TYPES[op.type]) || { widthP: 1.0, heightMm: 2000, sillMm: 0 };
             if (typeof op.widthP !== 'number') op.widthP = def.widthP;
             if (typeof op.heightMm !== 'number') op.heightMm = def.heightMm;
             if (typeof op.sillMm !== 'number') op.sillMm = def.sillMm;
@@ -141,152 +223,161 @@ function ensureFloorsStructure() {
     });
 }
 
-// --- History Management (Undo / Redo) ---
+// --- History Management (Undo / Redo via Top Bar Buttons) ---
 function saveHistorySnapshot() {
     ensureFloorsStructure();
-    const snapshot = JSON.stringify(state.floors);
+    const payload = {
+        floors: state.floors,
+        guides: state.guides
+    };
+    const snapshot = JSON.stringify(payload);
     if (state.historyIndex >= 0 && state.history[state.historyIndex] === snapshot) {
-        updateAllMetricsAnd3D();
-        renderPropertyInspector();
+        if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
+        if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
         return;
     }
     state.history = state.history.slice(0, state.historyIndex + 1);
     state.history.push(snapshot);
     if (state.history.length > 40) state.history.shift();
     state.historyIndex = state.history.length - 1;
-    updateAllMetricsAnd3D();
-    renderPropertyInspector();
+    if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
 }
 
 function undo() {
     if (state.historyIndex > 0) {
         state.historyIndex--;
-        state.floors = JSON.parse(state.history[state.historyIndex]);
+        const parsed = JSON.parse(state.history[state.historyIndex]);
+        state.floors = parsed.floors || parsed;
+        if (parsed.guides) state.guides = parsed.guides;
         ensureFloorsStructure();
         state.selectedItem = null;
-        updateAllMetricsAnd3D();
-        renderPropertyInspector();
-        showToast('元に戻しました (Undo)');
+        if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
+        if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+        showToast('↩ 元に戻しました (Undo)');
+    } else {
+        showToast('これ以上戻れません', true);
     }
 }
 
 function redo() {
     if (state.historyIndex < state.history.length - 1) {
         state.historyIndex++;
-        state.floors = JSON.parse(state.history[state.historyIndex]);
+        const parsed = JSON.parse(state.history[state.historyIndex]);
+        state.floors = parsed.floors || parsed;
+        if (parsed.guides) state.guides = parsed.guides;
         ensureFloorsStructure();
         state.selectedItem = null;
-        updateAllMetricsAnd3D();
-        renderPropertyInspector();
-        showToast('やり直しました (Redo)');
+        if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
+        if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+        showToast('↪ やり直しました (Redo)');
+    } else {
+        showToast('これ以上進めません', true);
     }
 }
 
-// --- Sample Plan 1: 3-Story Urban House with Standalone Porch/Balcony Columns ---
+// --- 標準サンプルプラン（お手本画像準拠：07邸 吹抜けがある 2階建てプラン） ---
 function loadSampleHousePlan() {
+    ensureFloorsStructure();
+    state.projectTitle = '07邸 吹抜けがある';
+    const titleInput = document.getElementById('planTitleInput') || document.getElementById('projectTitleInput');
+    if (titleInput) titleInput.value = state.projectTitle;
+
     state.floors = {
+        0: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], strokes: [], stamps: [], memos: [], polyPillars: [], boxes3d: [] },
         1: {
             rooms: [
-                { id: uid(), type: 'GENKAN',   x: 0, y: 3, w: 2, h: 2, customName: '玄関ホール' },
-                { id: uid(), type: 'PORCH',    x: 0, y: 5, w: 2, h: 1.5, customName: '玄関ポーチ' },
-                { id: uid(), type: 'YOSHITSU', x: 2, y: 3, w: 4, h: 3.5, customName: 'ビルトインガレージ' },
-                { id: uid(), type: 'YOSHITSU', x: 0, y: 0, w: 3, h: 3, customName: '洋室1 (書斎)' },
-                { id: uid(), type: 'SENMEN',   x: 3, y: 0, w: 1.5, h: 2, customName: '洗面室' },
-                { id: uid(), type: 'UB',       x: 4.5, y: 0, w: 1.5, h: 2, customName: 'UB1616' },
-                { id: uid(), type: 'TOILET',   x: 3, y: 2, w: 1.5, h: 1, customName: '1Fトイレ' },
-                { id: uid(), type: 'ROUKA',    x: 4.5, y: 2, w: 1.5, h: 1, customName: '廊下' }
+                { id: uid(), type: 'DOMA',     x: 0, y: 7, w: 1, h: 2, customName: '玄関土間' },
+                { id: uid(), type: 'GENKAN',   x: 1, y: 7, w: 1, h: 2, customName: 'ホール' },
+                { id: uid(), type: 'TOILET',   x: 0, y: 5, w: 1, h: 2, customName: 'トイレ' },
+                { id: uid(), type: 'SENMEN',   x: 3, y: 0, w: 2, h: 2, customName: '洗面脱衣' },
+                { id: uid(), type: 'UB',       x: 5, y: 0, w: 2, h: 2, customName: 'UB1616' },
+                { id: uid(), type: 'LDK',      x: 0, y: 0, w: 7, h: 9, customName: 'LDK' },
+                { id: uid(), type: 'WASHITSU', x: 2, y: 6, w: 3, h: 3, customName: 'タタミコーナー' }
             ],
-            walls: [],
+            walls: [
+                { id: uid(), x1: 1, y1: 7, x2: 1, y2: 9, wallType: 'agarikamachi' },
+                { id: uid(), x1: 3, y1: 2, x2: 5, y2: 2, wallType: 'koshikabe' }
+            ],
             pillars: [
-                // ポーチのコーナーを支える独立柱と2Fバルコニー下の独立柱
-                { id: uid(), x: 0, y: 6.5, sizeMm: 150 },
-                { id: uid(), x: 2, y: 6.5, sizeMm: 150 }
+                { id: uid(), x: 2, y: 6, sizeMm: 150, shape: 'square' }
             ],
             openings: [
-                { id: uid(), type: 'ENTRANCE_DOOR', x: 1.0, y: 5.0, orient: 'h', flip: false, widthP: 1.0, heightMm: 2200, sillMm: 0 },
-                { id: uid(), type: 'WIN_FULL',      x: 4.0, y: 6.5, orient: 'h', flip: false, widthP: 2.5, heightMm: 2100, sillMm: 0 },
-                { id: uid(), type: 'WIN_SLIDE',     x: 1.5, y: 0.0, orient: 'h', flip: false, widthP: 1.5, heightMm: 1100, sillMm: 900 },
-                { id: uid(), type: 'SWING_DOOR',    x: 1.5, y: 3.0, orient: 'h', flip: false, widthP: 1.0, heightMm: 2000, sillMm: 0 },
-                { id: uid(), type: 'SLIDING_DOOR',  x: 3.0, y: 1.0, orient: 'v', flip: false, widthP: 1.0, heightMm: 2000, sillMm: 0 }
+                { id: uid(), category: 'door', doorFit: 'oyako', type: 'ENTRANCE_DOOR', x: 0.0, y: 8.0, orient: 'v', flip: false, widthP: 1.3, widthMm: 1200, heightMm: 2200, sillMm: 0, leafCount: 2, isWin: false },
+                { id: uid(), category: 'window', doorFit: 'hikichigai', type: 'WIN_FULL', x: 5.5, y: 9.0, orient: 'h', flip: false, widthP: 2.0, widthMm: 1820, heightMm: 2000, sillMm: 0, leafCount: 2, isWin: true },
+                { id: uid(), category: 'window', doorFit: 'hikichigai', type: 'WIN_SLIDE', x: 1.5, y: 0.0, orient: 'h', flip: false, widthP: 1.8, widthMm: 1650, heightMm: 1100, sillMm: 900, leafCount: 2, isWin: true },
+                { id: uid(), category: 'window', doorFit: 'fix', type: 'WIN_SLIDE', x: 7.0, y: 4.5, orient: 'v', flip: false, widthP: 1.8, widthMm: 1650, heightMm: 1100, sillMm: 900, leafCount: 1, isWin: true },
+                { id: uid(), category: 'door', doorFit: 'katahiraki', type: 'SWING_DOOR', x: 1.0, y: 5.5, orient: 'v', flip: false, widthP: 0.88, widthMm: 800, heightMm: 2000, sillMm: 0, leafCount: 1, isWin: false },
+                { id: uid(), category: 'door', doorFit: 'katabiki', type: 'SLIDING_DOOR', x: 3.5, y: 2.0, orient: 'h', flip: false, widthP: 0.88, widthMm: 800, heightMm: 2000, sillMm: 0, leafCount: 1, isWin: false }
             ],
             fixtures: [
-                { id: uid(), type: 'UB_1616',        x: 4.5, y: 0.0, w: 1.5, h: 2.0, rot: 0 },
-                { id: uid(), type: 'VANITY',         x: 3.0, y: 0.0, w: 1.0, h: 0.5, rot: 0 },
-                { id: uid(), type: 'TOILET_FIX',     x: 3.2, y: 2.0, w: 0.5, h: 0.8, rot: 0 },
-                { id: uid(), type: 'STAIR_STRAIGHT', x: 0.0, y: 3.0, w: 1.0, h: 2.0, rot: 0 }
+                { id: uid(), category: 'UB', type: 'UB_1616', x: 5.0, y: 0.0, w: 2.0, h: 2.0, wMm: 1600, dMm: 1600, hMm: 2150, rot: 0, label: 'ユニットバス 1616', fxData: { ubSize: '1616', ubPattern: 'patternA' } },
+                { id: uid(), category: 'VANITY', type: 'VANITY', x: 3.1, y: 0.0, w: 1.0, h: 0.6, wMm: 900, dMm: 550, hMm: 800, rot: 0, label: '洗面化粧台 W900' },
+                { id: uid(), category: 'TOILET_FIX', type: 'TOILET_FIX', x: 0.1, y: 5.2, w: 0.8, h: 0.5, wMm: 750, dMm: 450, hMm: 780, rot: 0, label: 'トイレ便器' },
+                { id: uid(), category: 'KITCHEN', type: 'KITCHEN_I', x: 3.2, y: 2.2, w: 2.8, h: 0.71, wMm: 2550, dMm: 650, hMm: 850, rot: 0, label: 'I型キッチン (255×65cm)', fxData: { kitchenType: 'I', kHeight: 850 } }
+            ],
+            stairs: [
+                { id: uid(), kind: 'stair', type: 'STAIR', category: 'STAIR', shapeType: 'STRAIGHT', x: 0.0, y: 2.0, w: 1.0, h: 3.0, widthMm: 910, direction: 'UP', turnType: 'turn_3', stairStyle: 'box', handrail: 'both', steps: 14, riserMm: 195, treadMm: 220, label: '階段 (直階段・上る)' }
             ],
             strokes: [],
-            stamps: [{ id: uid(), text: '北', x: 6.8, y: 0.6, color: '#38bdf8' }]
+            stamps: [],
+            memos: [],
+            polyPillars: [],
+            boxes3d: []
         },
         2: {
             rooms: [
-                { id: uid(), type: 'LDK',     x: 0, y: 0, w: 6, h: 5, customName: '2F LDK' },
-                { id: uid(), type: 'TOILET',  x: 4.5, y: 5, w: 1.5, h: 1.5, customName: '2Fトイレ' },
-                { id: uid(), type: 'WIC',     x: 2, y: 5, w: 2.5, h: 1.5, customName: 'パントリー' },
-                { id: uid(), type: 'BALCONY', x: 0, y: 5, w: 2, h: 1.5, customName: '南バルコニー' }
+                { id: uid(), type: 'YOSHITSU', x: 0, y: 0, w: 4, h: 4, customName: '主寝室' },
+                { id: uid(), type: 'WIC',      x: 4, y: 0, w: 3, h: 2, customName: 'WIC' },
+                { id: uid(), type: 'ROUKA',    x: 0, y: 4, w: 4, h: 2, customName: '2Fホール' },
+                { id: uid(), type: 'VOID',     x: 4, y: 2, w: 3, h: 4, customName: '吹き抜け' },
+                { id: uid(), type: 'YOSHITSU', x: 0, y: 6, w: 3.5, h: 3, customName: '洋室A' },
+                { id: uid(), type: 'YOSHITSU', x: 3.5, y: 6, w: 3.5, h: 3, customName: '洋室B' },
+                { id: uid(), type: 'BALCONY',  x: 0, y: 9, w: 7, h: 1.5, customName: '南バルコニー' }
             ],
-            walls: [],
+            walls: [
+                { id: uid(), x1: 4, y1: 2, x2: 4, y2: 6, wallType: 'koshikabe' }
+            ],
             pillars: [],
             openings: [
-                { id: uid(), type: 'WIN_FULL',     x: 1.0, y: 5.0, orient: 'h', flip: false, widthP: 1.5, heightMm: 2000, sillMm: 0 },
-                { id: uid(), type: 'WIN_SLIDE',    x: 2.0, y: 0.0, orient: 'h', flip: false, widthP: 2.0, heightMm: 1100, sillMm: 900 },
-                { id: uid(), type: 'WIN_SLIDE',    x: 6.0, y: 2.5, orient: 'v', flip: false, widthP: 1.5, heightMm: 1100, sillMm: 900 },
-                { id: uid(), type: 'FOLD_DOOR',    x: 3.2, y: 5.0, orient: 'h', flip: false, widthP: 1.5, heightMm: 2000, sillMm: 0 },
-                { id: uid(), type: 'SWING_DOOR',   x: 5.0, y: 5.0, orient: 'h', flip: false, widthP: 1.0, heightMm: 2000, sillMm: 0 }
+                { id: uid(), category: 'window', doorFit: 'hikichigai', type: 'WIN_FULL', x: 1.8, y: 9.0, orient: 'h', flip: false, widthP: 1.8, widthMm: 1650, heightMm: 2000, sillMm: 0, leafCount: 2, isWin: true },
+                { id: uid(), category: 'window', doorFit: 'hikichigai', type: 'WIN_FULL', x: 5.2, y: 9.0, orient: 'h', flip: false, widthP: 1.8, widthMm: 1650, heightMm: 2000, sillMm: 0, leafCount: 2, isWin: true },
+                { id: uid(), category: 'door', doorFit: 'katahiraki', type: 'SWING_DOOR', x: 2.0, y: 4.0, orient: 'h', flip: false, widthP: 0.88, widthMm: 800, heightMm: 2000, sillMm: 0, leafCount: 1, isWin: false },
+                { id: uid(), category: 'door', doorFit: 'oredo', type: 'FOLD_DOOR', x: 4.0, y: 1.0, orient: 'v', flip: false, widthP: 1.5, widthMm: 1365, heightMm: 2000, sillMm: 0, leafCount: 2, isWin: false }
             ],
-            fixtures: [
-                { id: uid(), type: 'KITCHEN_ISLAND', x: 3.0, y: 1.0, w: 2.5, h: 1.0, rot: 0 },
-                { id: uid(), type: 'STAIR_STRAIGHT', x: 0.0, y: 3.0, w: 1.0, h: 2.0, rot: 0 },
-                { id: uid(), type: 'TOILET_FIX',     x: 5.0, y: 5.5, w: 0.5, h: 0.8, rot: 0 }
+            fixtures: [],
+            stairs: [
+                { id: uid(), kind: 'stair', type: 'STAIR', category: 'STAIR', shapeType: 'STRAIGHT', x: 0.0, y: 2.0, w: 1.0, h: 3.0, widthMm: 910, direction: 'DOWN', turnType: 'turn_3', stairStyle: 'box', handrail: 'both', steps: 14, riserMm: 195, treadMm: 220, label: '階段 (直階段・降りる)' }
             ],
             strokes: [],
-            stamps: []
+            stamps: [],
+            memos: [],
+            polyPillars: [],
+            boxes3d: []
         },
-        3: {
-            rooms: [
-                { id: uid(), type: 'YOSHITSU', x: 0, y: 0, w: 3.5, h: 3, customName: '主寝室' },
-                { id: uid(), type: 'WIC',      x: 3.5, y: 0, w: 2.5, h: 2, customName: 'WIC' },
-                { id: uid(), type: 'ROUKA',    x: 0, y: 3, w: 2.5, h: 2, customName: '3Fホール' },
-                { id: uid(), type: 'YOSHITSU', x: 2.5, y: 2, w: 3.5, h: 3, customName: '子供室' },
-                { id: uid(), type: 'BALCONY',  x: 0, y: 5, w: 6, h: 1.5, customName: 'ルーフバルコニー' }
-            ],
-            walls: [],
-            pillars: [],
-            openings: [
-                { id: uid(), type: 'WIN_FULL',   x: 4.2, y: 5.0, orient: 'h', flip: false, widthP: 2.0, heightMm: 2000, sillMm: 0 },
-                { id: uid(), type: 'WIN_SLIDE',  x: 1.7, y: 0.0, orient: 'h', flip: false, widthP: 1.5, heightMm: 1100, sillMm: 900 },
-                { id: uid(), type: 'SWING_DOOR', x: 1.8, y: 3.0, orient: 'h', flip: false, widthP: 1.0, heightMm: 2000, sillMm: 0 },
-                { id: uid(), type: 'SWING_DOOR', x: 2.5, y: 3.5, orient: 'v', flip: false, widthP: 1.0, heightMm: 2000, sillMm: 0 },
-                { id: uid(), type: 'FOLD_DOOR',  x: 3.5, y: 1.0, orient: 'v', flip: false, widthP: 1.0, heightMm: 2000, sillMm: 0 }
-            ],
-            fixtures: [
-                { id: uid(), type: 'STAIR_STRAIGHT', x: 0.0, y: 3.0, w: 1.0, h: 2.0, rot: 0 }
-            ],
-            strokes: [],
-            stamps: []
-        }
+        3: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], strokes: [], stamps: [], memos: [], polyPillars: [], boxes3d: [] },
+        4: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], strokes: [], stamps: [], memos: [], polyPillars: [], boxes3d: [] }
     };
     state.history = [];
     state.historyIndex = -1;
     saveHistorySnapshot();
-    reset2DCamera();
-    showToast('3階建てホワイトモデル（1F〜3F＋独立柱）を読み込みました');
+    if (typeof reset2DCamera === 'function') reset2DCamera();
+    showToast('モデルプラン「07邸 吹抜けがある」を読み込みました');
 }
 
 function loadSample2StoryPlan() {
     loadSampleHousePlan();
-    state.floors[3] = { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] };
-    if (state.currentFloor === 3) setFloor(1);
-    saveHistorySnapshot();
-    showToast('標準2階建てモデルを読み込みました');
 }
 
 function clearAllPlan() {
     state.floors = {
-        1: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] },
-        2: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] },
-        3: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] }
+        0: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], strokes: [], stamps: [], memos: [], polyPillars: [], boxes3d: [] },
+        1: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], strokes: [], stamps: [], memos: [], polyPillars: [], boxes3d: [] },
+        2: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], strokes: [], stamps: [], memos: [], polyPillars: [], boxes3d: [] },
+        3: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], strokes: [], stamps: [], memos: [], polyPillars: [], boxes3d: [] },
+        4: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], strokes: [], stamps: [], memos: [], polyPillars: [], boxes3d: [] }
     };
+    state.guides = [];
     state.selectedItem = null;
     saveHistorySnapshot();
     showToast('白紙キャンバスにリセットしました');
@@ -300,29 +391,36 @@ function request2DRedraw() {
 
 function findSelectedObject() {
     if (!state.selectedItem) return null;
+    if (state.selectedItem.kind === 'guide') {
+        return (state.guides || []).find(g => g.id === state.selectedItem.id) || null;
+    }
     const fl = state.floors[state.selectedItem.floor];
     if (!fl) return null;
     const id = state.selectedItem.id;
-    if (state.selectedItem.kind === 'room') return fl.rooms.find(r => r.id === id);
-    if (state.selectedItem.kind === 'opening') return fl.openings.find(o => o.id === id);
-    if (state.selectedItem.kind === 'fixture') return fl.fixtures.find(f => f.id === id);
-    if (state.selectedItem.kind === 'pillar') return fl.pillars.find(p => p.id === id);
-    if (state.selectedItem.kind === 'stair') return ((fl.stairs || []).find(s => s.id === id) || (fl.fixtures || []).find(f => f.id === id));
+    const k = state.selectedItem.kind;
+    if (k === 'room') return fl.rooms.find(r => r.id === id);
+    if (k === 'wall') return fl.walls.find(w => w.id === id);
+    if (k === 'opening') return fl.openings.find(o => o.id === id);
+    if (k === 'fixture') return fl.fixtures.find(f => f.id === id);
+    if (k === 'pillar') return fl.pillars.find(p => p.id === id);
+    if (k === 'stair') return ((fl.stairs || []).find(s => s.id === id) || (fl.fixtures || []).find(f => f.id === id));
+    if (k === 'memo') return (fl.memos || []).find(m => m.id === id) || (fl.stamps || []).find(s => s.id === id);
+    if (k === 'box3d') return (fl.boxes3d || []).find(b => b.id === id) || (fl.fixtures || []).find(f => f.id === id);
     return null;
 }
 
-// Global Window Export for Backward Compatibility
 if (typeof window !== 'undefined') {
     window.state = state;
+    window.uid = uid;
     window.showToast = showToast;
     window.ensureFloorsStructure = ensureFloorsStructure;
     window.saveHistorySnapshot = saveHistorySnapshot;
     window.undo = undo;
     window.redo = redo;
     window.loadSampleHousePlan = loadSampleHousePlan;
+    window.loadSample2StoryPlan = loadSample2StoryPlan;
     window.clearAllPlan = clearAllPlan;
     window.needs2DRedraw = needs2DRedraw;
     window.request2DRedraw = request2DRedraw;
     window.findSelectedObject = findSelectedObject;
 }
-

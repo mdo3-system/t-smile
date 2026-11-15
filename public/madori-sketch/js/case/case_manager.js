@@ -13,13 +13,13 @@ function updateCurrentPlanBadge() {
         badge.title = `現在編集中の案件ID【${state.currentPlanId}】。何度保存してもこの案件の最新版として上書き更新されます。別案件を作る場合は「新規案件」を押してください。`;
         badge.classList.remove('text-slate-400');
         badge.classList.add('text-amber-300');
-        try { localStorage.setItem('smile_active_project_id', state.currentPlanId); } catch(e) {}
+        try { localStorage.setItem('smile_active_project_id', state.currentPlanId); } catch (e) { }
     } else {
         txt.textContent = `案件: 新規案件 (未保存)`;
         badge.title = `まだ未保存の新規案件です。保存またはパース生成時に新しい案件IDが発行され、別案件として登録されます。`;
         badge.classList.remove('text-amber-300');
         badge.classList.add('text-slate-400');
-        try { localStorage.removeItem('smile_active_project_id'); } catch(e) {}
+        try { localStorage.removeItem('smile_active_project_id'); } catch (e) { }
     }
 }
 window.updateCurrentPlanBadge = updateCurrentPlanBadge;
@@ -63,7 +63,7 @@ function saveAsNewPlan() {
     // 新しい案件IDを即時発行して切り替え
     state.currentPlanId = 'PLAN-COMM-' + Date.now().toString(36).toUpperCase();
     updateCurrentPlanBadge();
-    
+
     // 家カルテおよび3Dプラン選定ライブラリへ新規登録
     if (typeof window.savePlanToCarte === 'function') {
         window.savePlanToCarte();
@@ -76,6 +76,8 @@ window.saveAsNewPlan = saveAsNewPlan;
 function toggleFullscreenMode() {
     const isCurrentlyFullscreen = document.body.classList.contains('is-fullscreen');
     const icon = document.getElementById('fullscreenIcon');
+    const lbl = document.getElementById('fullscreenBtnLabel');
+    const btn = document.getElementById('btnFullscreen');
     const floatingBtn = document.getElementById('btnExitFullscreenFloating');
     const floatingBar = document.getElementById('floatingFullscreenBar');
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
@@ -84,6 +86,8 @@ function toggleFullscreenMode() {
         // 全画面モードへ移行（CSSクラス付与でヘッダー・フッターを完全隠蔽）
         document.body.classList.add('is-fullscreen');
         if (icon) icon.className = 'fa-solid fa-compress';
+        if (lbl) lbl.textContent = '通常表示に戻す';
+        if (btn) btn.className = 'px-2.5 py-1 rounded bg-rose-600 hover:bg-rose-500 border border-rose-400 text-white text-xs font-extrabold flex items-center gap-1 shadow transition';
         if (floatingBar) floatingBar.style.display = 'inline-flex';
         else if (floatingBtn) floatingBtn.style.display = 'inline-flex';
         dismissFullscreenPrompt();
@@ -96,7 +100,7 @@ function toggleFullscreenMode() {
             });
         }
         if (typeof showToast === 'function') {
-            showToast('📐 全画面モードを開始しました（右上の「✕ 通常表示に戻す」ボタンで解除可能）');
+            showToast('📐 全画面モードを開始しました（上部の「通常表示に戻す」ボタンでいつでも解除できます）');
         }
         if (typeof handleResize === 'function') setTimeout(handleResize, 100);
     } else {
@@ -108,9 +112,13 @@ function toggleFullscreenMode() {
 function exitFullscreenMode() {
     document.body.classList.remove('is-fullscreen');
     const icon = document.getElementById('fullscreenIcon');
+    const lbl = document.getElementById('fullscreenBtnLabel');
+    const btn = document.getElementById('btnFullscreen');
     const floatingBtn = document.getElementById('btnExitFullscreenFloating');
     const floatingBar = document.getElementById('floatingFullscreenBar');
     if (icon) icon.className = 'fa-solid fa-expand';
+    if (lbl) lbl.textContent = '全画面';
+    if (btn) btn.className = 'px-2.5 py-1 rounded bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 text-zinc-200 text-xs font-bold flex items-center gap-1 transition';
     if (floatingBar) floatingBar.style.display = 'none';
     if (floatingBtn) floatingBtn.style.display = 'none';
 
@@ -118,7 +126,7 @@ function exitFullscreenMode() {
         document.exitFullscreen().catch(err => console.warn(err));
     }
     if (typeof showToast === 'function') {
-        showToast('通常表示に戻しました（ヘッダー・フッター復帰）');
+        showToast('通常表示に戻しました（サイトヘッダー・フッター復帰）');
     }
     if (typeof handleResize === 'function') setTimeout(handleResize, 100);
 }
