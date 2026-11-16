@@ -34,11 +34,16 @@ function createNewPlan() {
     }
 
     state.floors = {
-        1: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] },
-        2: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] },
-        3: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], strokes: [], stamps: [] }
+        0: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], boxes3d: [], strokes: [], stamps: [] },
+        1: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], boxes3d: [], strokes: [], stamps: [] },
+        2: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], boxes3d: [], strokes: [], stamps: [] },
+        3: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], boxes3d: [], strokes: [], stamps: [] },
+        4: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], boxes3d: [], strokes: [], stamps: [] }
     };
     state.currentPlanId = null; // 別案件として新規ID発行待ちに完全リセット
+    const titleInp = document.getElementById('planTitleInput');
+    if (titleInp) titleInp.value = '新規プラン';
+    if (typeof ensureFloorsStructure === 'function') ensureFloorsStructure();
     updateCurrentPlanBadge();
     state.selectedItem = null;
     state.currentFloor = 1;
@@ -46,6 +51,7 @@ function createNewPlan() {
     state.historyIndex = -1;
     setFloor(1);
     saveHistorySnapshot();
+    if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
     renderPropertyInspector();
     request2DRedraw();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();

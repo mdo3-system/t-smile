@@ -1,9 +1,9 @@
 {
-  "version": "2.31.0",
+  "version": "2.32.0",
   "buildDate": "2026-11-16",
-  "releaseName": "Production Release v2.31.0 - 3D間取り工房 v2.10 本番デプロイ（手動・自動部屋の重複生成防止＆内壁周長多角形化）",
+  "releaseName": "Production Release v2.32.0 - 3D間取り工房 v2.11 本番デプロイ（全画面モード時の復元モーダル最前面化・ヘッダー読込/新規ボタン・復元時面積/タイトル同期）",
   "components": {
-    "madoriSketch": "2.10.0",
+    "madoriSketch": "2.11.0",
     "smileStudio": "2.7.0",
     "styleMatcher": "1.0.0",
     "bubblePlan": "2.0.0",
@@ -16,6 +16,16 @@
     "caseStudies": "2.20.0"
   },
   "changelog": [
+    {
+      "version": "2.32.0",
+      "date": "2026-11-16",
+      "title": "3D間取り工房 v2.11 本番デプロイ（全画面モード時の復元モーダル最前面化＆ヘッダー「読込・復元」「新規」ボタン追加）",
+      "changes": [
+        "【全画面モード時のモーダル隠れ解消】#presetModal・#stairCreateModal を z-[100030]、#toastBox を z-[100040] へ引き上げ、全画面表示（z-index: 99999）でも確実に最前面に表示されるよう修正",
+        "【ヘッダー操作性向上】左上バーに「📂 読込・復元」ボタンと1クリック白紙開始の「＋ 新規」ボタンを配置",
+        "【新規作成・復元時の表示同期】createNewPlan() / restorePlanFromCarte() 実行時にプラン名入力欄・左下面積集計（updateAllMetricsAnd3D）が即時同期されるよう修正"
+      ]
+    },
     {
       "version": "2.31.0",
       "date": "2026-11-16",

@@ -113,10 +113,13 @@
             if (typeof state !== 'undefined') {
                 state.floors = JSON.parse(JSON.stringify(target.planData));
                 state.currentPlanId = target.id; // 同一プランIDを引き継ぎ
+                const titleInp = document.getElementById('planTitleInput');
+                if (titleInp && target.title) titleInp.value = target.title;
                 if (typeof window.updateCurrentPlanBadge === 'function') window.updateCurrentPlanBadge();
                 if (target.pitch && typeof setModulePitch === 'function') setModulePitch(target.pitch);
                 if (typeof ensureFloorsStructure === 'function') ensureFloorsStructure();
                 if (typeof saveHistorySnapshot === 'function') saveHistorySnapshot();
+                if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
                 if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
                 if (typeof request2DRedraw === 'function') request2DRedraw();
                 if (typeof rebuild3DScene === 'function') rebuild3DScene();
