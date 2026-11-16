@@ -71,12 +71,21 @@ function calcInteriorWallAreaM2(flNum) {
     const stdWallH = 2.40; // 室内有効天井高 2,400mm
     let wallArea = 0;
 
-    // 1. 部屋の四周内壁面積
+    // 1. 部屋の四周内壁面積（多角形頂点がある場合は実周長を使用）
     fl.rooms.forEach(rm => {
         if (isFloorAreaExcludedRoom(rm)) return;
-        const wM = (rm.w || 0) * pitchM;
-        const hM = (rm.h || 0) * pitchM;
-        const perimM = 2 * (wM + hM);
+        let perimM = 0;
+        if (Array.isArray(rm.points) && rm.points.length >= 3) {
+            for (let i = 0; i < rm.points.length; i++) {
+                const p1 = rm.points[i];
+                const p2 = rm.points[(i + 1) % rm.points.length];
+                perimM += Math.hypot((p2.x - p1.x) * pitchM, (p2.y - p1.y) * pitchM);
+            }
+        } else {
+            const wM = (rm.w || 0) * pitchM;
+            const hM = (rm.h || 0) * pitchM;
+            perimM = 2 * (wM + hM);
+        }
         wallArea += perimM * stdWallH;
     });
 

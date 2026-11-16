@@ -217,7 +217,24 @@ function triggerAutoRoomDetection() {
 
     const detected = window.RoomDetector.detectRoomsFromWalls(fl.walls, existingAutoRooms, state.modulePitch || 910);
 
-    fl.rooms = [...manualRooms, ...detected];
+    // 既存の手動部屋（オーバーレイ系を除く）と同一位置・同規模の自動検出部屋が重複生成されないよう除外
+    const overlayTypes = new Set(['VOID', 'TENJO', 'KOAGARI', 'TATAMI']);
+    const nonOverlayManuals = manualRooms.filter(mr => !overlayTypes.has((mr.type || '').toUpperCase()));
+    const dedupedDetected = detected.filter(ar => {
+        const ac = ar.centroid || { x: ar.x + ar.w / 2, y: ar.y + ar.h / 2 };
+        const aArea = (typeof getRoomAreaM2 === 'function') ? getRoomAreaM2(ar) : (ar.areaM2 || (ar.w * ar.h));
+        return !nonOverlayManuals.some(mr => {
+            const mc = mr.centroid || { x: mr.x + mr.w / 2, y: mr.y + mr.h / 2 };
+            const mArea = (typeof getRoomAreaM2 === 'function') ? getRoomAreaM2(mr) : (mr.areaM2 || (mr.w * mr.h));
+            const areaDiffRatio = aArea > 0 ? Math.abs(mArea - aArea) / aArea : 1;
+            if (areaDiffRatio > 0.25) return false;
+            if (Math.hypot(ac.x - mc.x, ac.y - mc.y) < 0.5) return true;
+            if (Array.isArray(ar.points) && ar.points.length >= 3 && window.RoomDetector.isPointInsidePolygon(mc, ar.points)) return true;
+            return (ac.x >= mr.x && ac.x <= mr.x + mr.w && ac.y >= mr.y && ac.y <= mr.y + mr.h);
+        });
+    });
+
+    fl.rooms = [...manualRooms, ...dedupedDetected];
 
     updateAllMetricsAnd3D();
     request2DRedraw();
