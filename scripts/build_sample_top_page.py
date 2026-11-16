@@ -146,7 +146,7 @@ def generate_sample_top():
             
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
               <a href="/plans/index.html" style="background: rgba(2, 132, 199, 0.25); border: 1px solid rgba(56, 189, 248, 0.4); color: #e0f2fe; padding: 0.62rem 0.7rem; border-radius: 8px; font-size: 0.82rem; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 4px; text-align: center;">
-                📐 323プラン集 ↗
+                📐 703プラン集 ↗
               </a>
               <button data-target="madori-consultation-bot" style="background: rgba(124, 58, 237, 0.25); border: 1px solid rgba(167, 139, 250, 0.4); color: #ede9fe; padding: 0.62rem 0.7rem; border-radius: 8px; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; text-align: center;">
                 💬 夫婦の家カルテ →

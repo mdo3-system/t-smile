@@ -292,7 +292,7 @@ def build_knowledge_pages_and_sitemap():
     except Exception as e:
         print(f"[WARN] Failed to generate case pages: {e}")
 
-    # 323プランの個別静的SEOページの生成とSitemapへの追加
+    # 703プランの個別静的SEOページの生成とSitemapへの追加
     plan_urls = []
     try:
         from scripts.build_plan_pages import build_all_plans
@@ -313,7 +313,7 @@ def build_knowledge_pages_and_sitemap():
     # サイトマップインデックス化 (sitemap-index.xml & 分割サイトマップ)
     # 1. sitemap-pages.xml     : トップ・固定LP・コアツール・施工実例
     # 2. sitemap-knowledge.xml : 温熱200選 ＆ 設計プロの知見200選（計400問）
-    # 3. sitemap-plans.xml     : 323プランカタログハブ & 全プラン個別詳細ページ
+    # 3. sitemap-plans.xml     : 703プランカタログハブ & 全プラン個別詳細ページ
     # 4. sitemap-index.xml     : Google Search Console登録用インデックス
     # 5. sitemap.xml           : 互換性のためのインデックスファイル
     # =========================================================================
@@ -616,7 +616,16 @@ def minify_js_assets():
 
     print(f"[PERF] Safely synced {copied_count} JS files to *.min.js (Syntax Protected)!")
 
+def sync_madori_manual_hook():
+    """間取り工房の修正・ビルド時に操作マニュアルデータとツール連動を自動検証・同期"""
+    try:
+        from scripts.sync_madori_manual import sync_and_verify_manual
+        sync_and_verify_manual()
+    except Exception as e:
+        print(f"[WARN] Failed to sync madori manual: {e}")
+
 if __name__ == '__main__':
+    sync_madori_manual_hook()
     minify_js_assets()
     build_index_html()
     build_knowledge_pages_and_sitemap()

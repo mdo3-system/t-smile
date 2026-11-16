@@ -12,7 +12,7 @@ paths = [
     ('plans/detail/plan-a34-s01.html', '3Dプラン詳細'),
     ('plans/plan_001_1F_2d.webp', 'WebPフロア図面画像'),
     ('data/saitama_63_subsidies.json', '補助金63市町村DB'),
-    ('data/plans.json', '323プランDB'),
+    ('data/plans.json', '703プランDB'),
     ('madori-sketch/', '3D間取り工房'),
     ('2021/', '旧WordPress過去資産')
 ]

@@ -673,6 +673,25 @@ function renderPropertyInspector() {
                 <div class="text-[11px] text-slate-400 mono-num">外接寸法: ${wMm}mm × ${hMm}mm / 実面積: ${areaM2.toFixed(2)}㎡</div>
             </div>
         `;
+    } else if (kind === 'wall') {
+        const lenMm = Math.round(Math.hypot(obj.x2 - obj.x1, obj.y2 - obj.y1) * pitch);
+        const curType = obj.wallType || 'wall';
+        const wallOpts = (window.WALL_SUBTYPES || []).map(w => `<option value="${w.id}" ${w.id === curType ? 'selected' : ''}>${w.label}</option>`).join('');
+        panel.innerHTML = `
+            <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-2">
+                <span class="text-xs font-bold text-white"><i class="fa-solid fa-grip-lines text-amber-400 mr-1"></i>壁線分 (${lenMm}mm)</span>
+                <div class="flex items-center gap-1">
+                    <button onclick="deleteSelectedItem()" class="px-2 py-1 rounded bg-rose-600/30 hover:bg-rose-600/50 text-[11px] text-rose-200 font-bold">削除</button>
+                    <button onclick="state.selectedItem=null;renderPropertyInspector();request2DRedraw();" class="text-slate-400 hover:text-white px-1.5"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <div class="space-y-2 text-xs">
+                <div class="flex items-center justify-between gap-2">
+                    <span class="text-slate-400">壁種別:</span>
+                    <select onchange="changeSelectedWallType(this.value)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold">${wallOpts}</select>
+                </div>
+            </div>
+        `;
     } else if (kind === 'pillar') {
         const curSize = obj.sizeMm || 150;
         const curShape = obj.shape || 'square';
@@ -691,6 +710,18 @@ function renderPropertyInspector() {
     }
 }
 window.renderPropertyInspector = renderPropertyInspector;
+
+function changeSelectedWallType(newWallType) {
+    const obj = findSelectedObject();
+    if (!obj || !state.selectedItem || state.selectedItem.kind !== 'wall') return;
+    obj.wallType = newWallType;
+    saveHistorySnapshot();
+    if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
+    request2DRedraw();
+    if (typeof rebuild3DScene === 'function') rebuild3DScene();
+    showToast('壁種別を変更しました');
+}
+window.changeSelectedWallType = changeSelectedWallType;
 
 // --- Inspector Update Helpers ---
 function updateSelectedOpeningFit12(fitId) {

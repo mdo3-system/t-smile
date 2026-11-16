@@ -327,7 +327,7 @@ def get_common_layout(title, description, canonical_url, og_image, breadcrumbs, 
       </p>
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
         <a href="/schedule/" class="lp-cta-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); font-weight: 800;">📅 家づくりスケジュール進捗シート ➜</a>
-        <a href="/plans/index.html" class="lp-cta-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); font-weight: 800;">📐 323プラン選別・実例検索 ➜</a>
+        <a href="/plans/index.html" class="lp-cta-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); font-weight: 800;">📐 703プラン選別・実例検索 ➜</a>
         <a href="/madori-consultation/" class="lp-cta-btn" style="background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: #fff; font-weight: 800;">💬 夫婦の家づくりカルテ ➜</a>
         <a href="/knowledge/thermal/" class="lp-cta-btn" style="background: linear-gradient(135deg, #059669, #10b981); font-weight: 800;">🌡️ 24h温熱換気AI相談 ➜</a>
       </div>
@@ -3636,7 +3636,7 @@ def generate_catalog_page():
             <li><strong>BELS最高ランク★★★★★評価書</strong> ＆ <strong>現場気密性能試験結果報告書原本（C値1.0以下保証）</strong></li>
             <li><strong>全棟許容応力度計算耐震等級3</strong> ＆ <strong>Tec-One/Presettor高耐力金物工法</strong></li>
             <li><strong>地上型3Dレーザースキャナ測量</strong> ＆ <strong>埼玉県基準の農地転用・市街化調整区域数百件の実績</strong></li>
-            <li><strong>断熱等性能等級別・323プラン連動の本体坪単価・総額目安</strong></li>
+            <li><strong>断熱等性能等級別・703プラン連動の本体坪単価・総額目安</strong></li>
           </ul>
         </div>
       </div>
@@ -3902,7 +3902,7 @@ def generate_catalog_page():
       </footer>
     </article>
 
-    <!-- ==================== P7: 価格・坪単価一覧 & 323プラン ==================== -->
+    <!-- ==================== P7: 価格・坪単価一覧 & 703プラン ==================== -->
     <article class="catalog-page">
       <div>
         <header class="page-header">
@@ -4062,7 +4062,7 @@ def generate_catalog_page():
             <span style="font-size: 0.68rem; font-weight: 800; color: #9333ea;">ステップ 1 ｜ 無料・登録不要</span>
             <div style="font-weight: 800; font-size: 0.8rem; color: #0f172a;">🤖 間取り相談 ＆ 家カルテ作成</div>
             <div style="font-size: 0.7rem; color: #64748b; line-height: 1.4; margin-top: 2px;">
-              323プランから厳選。家族構成やこだわりを入力し3分でカルテ出力。
+              703プランから厳選。家族構成やこだわりを入力し3分でカルテ出力。
             </div>
           </div>
           <div style="border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 10px; background: #fafafa;">

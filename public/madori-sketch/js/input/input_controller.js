@@ -280,6 +280,21 @@ function flipLastOrSelectedOpening() {
 // PARTIAL WALL DELETION (壁の上をドラッグした区間だけを切り欠き分割削除)
 // ============================================================================
 
+function distPointToSegment(px, py, x1, y1, x2, y2) {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const lenSq = dx * dx + dy * dy;
+    if (lenSq < 1e-8) return Math.hypot(px - x1, py - y1);
+    const t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / lenSq));
+    return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
+}
+
+function segmentsIntersect(ax, ay, bx, by, cx, cy, dx, dy) {
+    const ccw = (p1x, p1y, p2x, p2y, p3x, p3y) => (p3y - p1y) * (p2x - p1x) > (p2y - p1y) * (p3x - p1x);
+    return (ccw(ax, ay, cx, cy, dx, dy) !== ccw(bx, by, cx, cy, dx, dy)) &&
+           (ccw(ax, ay, bx, by, cx, cy) !== ccw(ax, ay, bx, by, dx, dy));
+}
+
 function splitOrEraseWallSegment(fl, ptA, ptB) {
     if (!fl || !fl.walls) return false;
     const isDragHoriz = Math.abs(ptA.x - ptB.x) >= Math.abs(ptA.y - ptB.y);
@@ -287,12 +302,14 @@ function splitOrEraseWallSegment(fl, ptA, ptB) {
     const maxDragX = Math.max(ptA.x, ptB.x);
     const minDragY = Math.min(ptA.y, ptB.y);
     const maxDragY = Math.max(ptA.y, ptB.y);
+    const dragLen = Math.hypot(ptB.x - ptA.x, ptB.y - ptA.y);
 
     let modified = false;
     const nextWalls = [];
 
     for (const wl of fl.walls) {
         const isWlHoriz = Math.abs(wl.y1 - wl.y2) < 0.05;
+        const isWlVert = Math.abs(wl.x1 - wl.x2) < 0.05;
         if (isWlHoriz && isDragHoriz && Math.abs(wl.y1 - ptA.y) <= 0.45 && maxDragX - minDragX >= 0.2) {
             const wMin = Math.min(wl.x1, wl.x2);
             const wMax = Math.max(wl.x1, wl.x2);
@@ -308,7 +325,7 @@ function splitOrEraseWallSegment(fl, ptA, ptB) {
                 }
                 continue;
             }
-        } else if (!isWlHoriz && !isDragHoriz && Math.abs(wl.x1 - ptA.x) <= 0.45 && maxDragY - minDragY >= 0.2) {
+        } else if (isWlVert && !isDragHoriz && Math.abs(wl.x1 - ptA.x) <= 0.45 && maxDragY - minDragY >= 0.2) {
             const wMin = Math.min(wl.y1, wl.y2);
             const wMax = Math.max(wl.y1, wl.y2);
             const cutStart = Math.max(wMin, snapP(minDragY));
@@ -321,6 +338,16 @@ function splitOrEraseWallSegment(fl, ptA, ptB) {
                 if (wMax > cutEnd + 0.05) {
                     nextWalls.push({ ...wl, id: uid(), x1: wl.x1, y1: cutEnd, x2: wl.x1, y2: wMax });
                 }
+                continue;
+            }
+        } else if (dragLen >= 0.2) {
+            // 斜め壁や壁を横切る消しゴムドラッグも消去対象に
+            const hitCross = segmentsIntersect(ptA.x, ptA.y, ptB.x, ptB.y, wl.x1, wl.y1, wl.x2, wl.y2);
+            const midX = (ptA.x + ptB.x) / 2;
+            const midY = (ptA.y + ptB.y) / 2;
+            const hitNear = distPointToSegment(midX, midY, wl.x1, wl.y1, wl.x2, wl.y2) <= 0.30;
+            if (hitCross || hitNear) {
+                modified = true;
                 continue;
             }
         }
@@ -1120,6 +1147,26 @@ function tryStartSelectOrModifyInteraction(wx, wy, onlyHitExistingOfSameToolType
         }
     }
 
+    // 4b. Hit-test Walls（点と線分の最短距離で壁を選択）
+    if (fl.walls && fl.walls.length > 0) {
+        let bestWall = null;
+        let bestDist = 0.28;
+        for (let i = fl.walls.length - 1; i >= 0; i--) {
+            const wl = fl.walls[i];
+            const d = distPointToSegment(wx, wy, wl.x1, wl.y1, wl.x2, wl.y2);
+            if (d <= bestDist) {
+                bestDist = d;
+                bestWall = wl;
+            }
+        }
+        if (bestWall) {
+            state.selectedItem = { kind: 'wall', id: bestWall.id, floor: state.currentFloor };
+            if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+            request2DRedraw();
+            return true;
+        }
+    }
+
     // 5. Hit-test Rooms（多角形内包判定＋重複時は小面積優先）
     const hitRooms = [];
     for (let i = fl.rooms.length - 1; i >= 0; i--) {
@@ -1874,6 +1921,10 @@ function deleteSelectedItem() {
     const id = state.selectedItem.id;
     const kind = state.selectedItem.kind;
     if (kind === 'room') fl.rooms = fl.rooms.filter(r => r.id !== id);
+    else if (kind === 'wall') {
+        fl.walls = (fl.walls || []).filter(w => w.id !== id);
+        if (typeof triggerAutoRoomDetection === 'function') triggerAutoRoomDetection();
+    }
     else if (kind === 'opening') fl.openings = fl.openings.filter(o => o.id !== id);
     else if (kind === 'fixture') fl.fixtures = fl.fixtures.filter(f => f.id !== id);
     else if (kind === 'pillar') fl.pillars = fl.pillars.filter(p => p.id !== id);
@@ -1938,14 +1989,25 @@ function eraseAtPoint(wx, wy) {
         if (fl.stairs.length !== beforeStairs) erased = true;
     }
 
-    // 壁の点タップ消去（ドラッグ消去は pointerup の splitOrEraseWallSegment で部分切り欠き処理）
-    const beforeWalls = fl.walls.length;
-    fl.walls = fl.walls.filter(wl => {
-        const mx = (wl.x1 + wl.x2) / 2;
-        const my = (wl.y1 + wl.y2) / 2;
-        return Math.hypot(wx - mx, wy - my) > 0.45;
-    });
-    if (fl.walls.length !== beforeWalls) erased = true;
+    // 壁の点タップ消去（中点だけでなく壁線分上のどこを押しても最短距離で消去）
+    let wallErased = false;
+    if (fl.walls && fl.walls.length > 0) {
+        let bestIdx = -1;
+        let bestDist = 0.38;
+        for (let i = fl.walls.length - 1; i >= 0; i--) {
+            const wl = fl.walls[i];
+            const d = distPointToSegment(wx, wy, wl.x1, wl.y1, wl.x2, wl.y2);
+            if (d <= bestDist) {
+                bestDist = d;
+                bestIdx = i;
+            }
+        }
+        if (bestIdx >= 0) {
+            fl.walls.splice(bestIdx, 1);
+            erased = true;
+            wallErased = true;
+        }
+    }
 
     if (!erased) {
         for (let i = fl.rooms.length - 1; i >= 0; i--) {
@@ -1960,6 +2022,8 @@ function eraseAtPoint(wx, wy) {
 
     if (erased) {
         state.selectedItem = null;
+        if (wallErased && typeof triggerAutoRoomDetection === 'function') triggerAutoRoomDetection();
+        saveHistorySnapshot();
         if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
         request2DRedraw();
         if (typeof rebuild3DScene === 'function') rebuild3DScene();

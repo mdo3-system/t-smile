@@ -1100,7 +1100,7 @@ function updateDashboardSavedPlans() {
         <div style="background: rgba(255, 255, 255, 0.04); border: 1px dashed rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 14px; text-align: center; font-size: 0.8rem; color: #94a3b8;">
           まだ保存された間取りプランはありません。<br>
           <a href="/plans/" target="_blank" style="color: #38bdf8; font-weight: 800; text-decoration: underline; display: inline-block; margin-top: 6px;">
-            323プラン集から選んで希望メモを添えて保存 ➜
+            703プラン集から選んで希望メモを添えて保存 ➜
           </a>
         </div>
       `;
