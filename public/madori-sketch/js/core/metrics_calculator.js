@@ -4,8 +4,32 @@
  * (Single Responsibility: Architectural Metrics & Wall Area / Alignment Calculator)
  */
 
+function getRoomAreaM2(rm) {
+    if (!rm) return 0;
+    const pitchM = (state.modulePitch || 910) / 1000;
+    if (Array.isArray(rm.points) && rm.points.length >= 3) {
+        let sum = 0;
+        for (let i = 0; i < rm.points.length; i++) {
+            const j = (i + 1) % rm.points.length;
+            sum += rm.points[i].x * rm.points[j].y - rm.points[j].x * rm.points[i].y;
+        }
+        const polyAreaM2 = Math.abs(sum) * 0.5 * pitchM * pitchM;
+        if (polyAreaM2 > 0) return polyAreaM2;
+    }
+    if (typeof rm.areaM2 === 'number' && rm.areaM2 > 0) {
+        return rm.areaM2;
+    }
+    if (rm.w && rm.h) {
+        return (rm.w * pitchM) * (rm.h * pitchM);
+    }
+    return 0;
+}
+window.getRoomAreaM2 = getRoomAreaM2;
+
 function isFloorAreaExcludedRoom(rm) {
     if (!rm) return false;
+    if (rm.excludeFloorArea === false) return false;
+    if (rm.excludeFloorArea === true) return true;
     const t = (rm.type || '').toUpperCase();
     const name = (rm.customName || rm.name || '').toLowerCase();
     // 吹抜・バルコニー・ポーチ・中庭・天井面・畳単体オーバーレイは延床面積二重計上から除外
@@ -26,15 +50,10 @@ function calcFloorAreaM2(flNum) {
     ensureFloorsStructure();
     const fl = state.floors[flNum];
     if (!fl) return 0;
-    const pitchM = (state.modulePitch || 910) / 1000;
     let sum = 0;
     fl.rooms.forEach(rm => {
         if (!isFloorAreaExcludedRoom(rm)) {
-            if (typeof rm.areaM2 === 'number' && rm.areaM2 > 0) {
-                sum += rm.areaM2;
-            } else if (rm.w && rm.h) {
-                sum += (rm.w * pitchM) * (rm.h * pitchM);
-            }
+            sum += getRoomAreaM2(rm);
         }
     });
     return sum;
@@ -169,6 +188,7 @@ function computeWallAlignmentRatio() {
 }
 
 if (typeof window !== 'undefined') {
+    window.getRoomAreaM2 = getRoomAreaM2;
     window.isFloorAreaExcludedRoom = isFloorAreaExcludedRoom;
     window.calcFloorAreaM2 = calcFloorAreaM2;
     window.calcInteriorWallAreaM2 = calcInteriorWallAreaM2;

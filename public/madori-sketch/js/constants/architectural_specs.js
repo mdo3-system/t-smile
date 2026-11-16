@@ -10,22 +10,29 @@
     // --- 部屋種別マスター定義 ---
     const ROOM_TYPES = {
         LDK: { label: 'LDK', color2d: '#fef3c7', stroke2d: '#d97706', floorType: 'wood', hasWall: true },
+        LIVING: { label: 'リビング', color2d: '#fef3c7', stroke2d: '#d97706', floorType: 'wood', hasWall: true },
+        DINING: { label: 'ダイニング', color2d: '#fef3c7', stroke2d: '#d97706', floorType: 'wood', hasWall: true },
+        KITCHEN_RM: { label: 'キッチン', color2d: '#e0f2fe', stroke2d: '#0284c7', floorType: 'wood', hasWall: true },
         YOSHITSU: { label: '洋室', color2d: '#ffedd5', stroke2d: '#ea580c', floorType: 'wood', hasWall: true },
         WASHITSU: { label: '和室', color2d: '#dcfce7', stroke2d: '#16a34a', floorType: 'tatami', hasWall: true },
         GENKAN: { label: '玄関', color2d: '#e2e8f0', stroke2d: '#475569', floorType: 'tile', hasWall: true },
         DOMA: { label: '玄関土間', color2d: '#cbd5e1', stroke2d: '#475569', floorType: 'doma', hasWall: false, levelMm: -180 },
         PORCH: { label: 'ポーチ', color2d: '#cbd5e1', stroke2d: '#64748b', floorType: 'porch', hasWall: false },
         ROUKA: { label: 'ホール・廊下', color2d: '#f3e8ff', stroke2d: '#9333ea', floorType: 'wood', hasWall: true },
-        SENMEN: { label: '洗面脱衣', color2d: '#e0f2fe', stroke2d: '#0284c7', floorType: 'tile', hasWall: true },
+        STAIR: { label: '階段室', color2d: '#f1f5f9', stroke2d: '#64748b', floorType: 'wood', hasWall: true },
+        SENMEN: { label: '洗面室', color2d: '#e0f2fe', stroke2d: '#0284c7', floorType: 'tile', hasWall: true },
+        DATSUI: { label: '脱衣室', color2d: '#e0f2fe', stroke2d: '#0284c7', floorType: 'tile', hasWall: true },
         UB: { label: '浴室(UB)', color2d: '#cffafe', stroke2d: '#0891b2', floorType: 'tile', hasWall: true },
         TOILET: { label: 'トイレ', color2d: '#fae8ff', stroke2d: '#c026d3', floorType: 'tile', hasWall: true },
         WIC: { label: '収納・WIC', color2d: '#f1f5f9', stroke2d: '#64748b', floorType: 'wood', hasWall: true },
+        STORAGE: { label: 'パントリー・納戸', color2d: '#f1f5f9', stroke2d: '#64748b', floorType: 'wood', hasWall: true },
         BALCONY: { label: 'バルコニー', color2d: '#ecfccb', stroke2d: '#65a30d', floorType: 'balcony', hasWall: 'balcony' },
         VOID: { label: '吹き抜け', color2d: '#f8fafc', stroke2d: '#0284c7', floorType: 'void', hasWall: false },
         NAKANIWA: { label: '中庭', color2d: '#ecfdf5', stroke2d: '#10b981', floorType: 'courtyard', hasWall: false },
         KOAGARI: { label: '小上り(+30cm)', color2d: '#fef9c3', stroke2d: '#ca8a04', floorType: 'koagari', hasWall: false, levelMm: 300 },
         TATAMI: { label: '畳スペース', color2d: '#dcfce7', stroke2d: '#15803d', floorType: 'tatami', hasWall: false },
-        TENJO: { label: '天井面', color2d: '#f1f5f9', stroke2d: '#94a3b8', floorType: 'ceiling', hasWall: false }
+        TENJO: { label: '天井面', color2d: '#f1f5f9', stroke2d: '#94a3b8', floorType: 'ceiling', hasWall: false },
+        OTHER: { label: '空間', color2d: '#f8fafc', stroke2d: '#64748b', floorType: 'wood', hasWall: true }
     };
 
     // --- 壁・境界線の種類 (4種 + 独立柱) ---

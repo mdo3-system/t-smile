@@ -267,7 +267,8 @@
             if (!exists) validFaces.push(f);
         });
 
-        // 部屋オブジェクトの生成
+        // 部屋オブジェクトの生成（既存部屋の名称・種別を多角形包含・重心一致で極力維持）
+        const usedExistingIds = new Set();
         const rooms = validFaces.map(face => {
             const centroid = computePolygonCentroid(face.pts);
             let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
@@ -287,18 +288,37 @@
 
             let matchedExisting = null;
             if (existingRooms && existingRooms.length > 0) {
-                matchedExisting = existingRooms.find(er => {
+                const candidates = existingRooms.filter(er => {
+                    if (usedExistingIds.has(er.id)) return false;
                     const ec = er.centroid || { x: er.x + er.w / 2, y: er.y + er.h / 2 };
-                    return dist(centroid, ec) < 0.7;
+                    if (dist(centroid, ec) < 0.7) return true;
+                    if (isPointInsidePolygon(ec, face.pts)) return true;
+                    if (Array.isArray(er.points) && er.points.length >= 3) {
+                        if (isPointInsidePolygon(centroid, er.points)) return true;
+                    } else if (centroid.x >= er.x && centroid.x <= er.x + er.w && centroid.y >= er.y && centroid.y <= er.y + er.h) {
+                        return true;
+                    }
+                    return false;
                 });
+
+                if (candidates.length > 0) {
+                    candidates.sort((a, b) => {
+                        const ca = a.centroid || { x: a.x + a.w / 2, y: a.y + a.h / 2 };
+                        const cb = b.centroid || { x: b.x + b.w / 2, y: b.y + b.h / 2 };
+                        return dist(centroid, ca) - dist(centroid, cb);
+                    });
+                    matchedExisting = candidates[0];
+                    usedExistingIds.add(matchedExisting.id);
+                }
             }
 
             const roomType = (matchedExisting && matchedExisting.type) || 'OTHER';
             const roomName = (matchedExisting && matchedExisting.name) || '';
+            const customName = (matchedExisting && matchedExisting.customName) || '';
             const color2d = (matchedExisting && matchedExisting.color2d) || 'rgba(226, 232, 240, 0.65)';
             const color3d = (matchedExisting && matchedExisting.color3d) || '#f1f5f9';
 
-            return {
+            const roomObj = {
                 id: (matchedExisting && matchedExisting.id) || ('room_' + Math.random().toString(36).substr(2, 9)),
                 kind: 'room',
                 type: roomType,
@@ -316,6 +336,11 @@
                 color2d: color2d,
                 color3d: color3d
             };
+            if (customName) roomObj.customName = customName;
+            if (matchedExisting && typeof matchedExisting.excludeFloorArea === 'boolean') {
+                roomObj.excludeFloorArea = matchedExisting.excludeFloorArea;
+            }
+            return roomObj;
         });
 
         return rooms;

@@ -186,55 +186,8 @@ function snapOpeningCenterToGrid(wx, wy, widthP) {
 }
 
 // 4. 住宅設備の壁吸着（左/中/右基点）＆ 離れ寸法計算
-function findNearestWallForFixture(fxX, fxY, fxW, fxH) {
-    const fl = state.floors[state.currentFloor];
-    const pitch = state.modulePitch || 910;
-    const clearanceP = (state.subFixtureClearanceMm || 0) / pitch;
-    const align = state.subFixtureAlign || 'center';
+// findNearestWallForFixture は input_controller.js の単一実装を使用
 
-    let nearest = null;
-    let minDist = 1.0; // 1.0マス（約910mm）以内の壁を自動吸着対象とする
-
-    // 既存の壁一覧から探索
-    fl.walls.forEach(wl => {
-        const isHoriz = Math.abs(wl.y1 - wl.y2) < 0.05;
-        if (isHoriz) {
-            // 水平壁
-            const minX = Math.min(wl.x1, wl.x2);
-            const maxX = Math.max(wl.x1, wl.x2);
-            if (fxX + fxW >= minX - 0.5 && fxX <= maxX + 0.5) {
-                const distTop = Math.abs(fxY - wl.y1);
-                const distBottom = Math.abs((fxY + fxH) - wl.y1);
-                if (distTop < minDist) {
-                    minDist = distTop;
-                    nearest = { wall: wl, side: 'top', y: wl.y1 + clearanceP, rot: 0 };
-                }
-                if (distBottom < minDist) {
-                    minDist = distBottom;
-                    nearest = { wall: wl, side: 'bottom', y: wl.y1 - fxH - clearanceP, rot: 0 };
-                }
-            }
-        } else {
-            // 垂直壁
-            const minY = Math.min(wl.y1, wl.y2);
-            const maxY = Math.max(wl.y1, wl.y2);
-            if (fxY + fxH >= minY - 0.5 && fxY <= maxY + 0.5) {
-                const distLeft = Math.abs(fxX - wl.x1);
-                const distRight = Math.abs((fxX + fxW) - wl.x1);
-                if (distLeft < minDist) {
-                    minDist = distLeft;
-                    nearest = { wall: wl, side: 'left', x: wl.x1 + clearanceP, rot: 0 };
-                }
-                if (distRight < minDist) {
-                    minDist = distRight;
-                    nearest = { wall: wl, side: 'right', x: wl.x1 - fxW - clearanceP, rot: 0 };
-                }
-            }
-        }
-    });
-
-    return nearest;
-}
 
 // グローバル公開
 window.createNewPlan = createNewPlan;
@@ -331,7 +284,6 @@ if (typeof window !== 'undefined') {
     window.toggleFullscreenMode = toggleFullscreenMode;
     window.dismissFullscreenPrompt = dismissFullscreenPrompt;
     window.snapOpeningCenterToGrid = snapOpeningCenterToGrid;
-    window.findNearestWallForFixture = findNearestWallForFixture;
     window.triggerAutoRoomDetection = triggerAutoRoomDetection;
     window.setRoomPresetName = setRoomPresetName;
     window.updateCustomRoomName = updateCustomRoomName;

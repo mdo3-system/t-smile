@@ -1,9 +1,9 @@
 {
-  "version": "2.29.0",
+  "version": "2.30.0",
   "buildDate": "2026-11-16",
-  "releaseName": "Production Release v2.29.0 - 3D間取り工房 v2.8 緊急修正本番配備（キャンバス入力修正・面積集計連動・保存トースト・バージョン統一）",
+  "releaseName": "Production Release v2.30.0 - 3D間取り工房 v2.9 本番デプロイ（多角形面積・和室選択・部屋名自由入力・種別保存・壁再検出保持・設備片側吸着）",
   "components": {
-    "madoriSketch": "2.8.0",
+    "madoriSketch": "2.9.0",
     "smileStudio": "2.7.0",
     "styleMatcher": "1.0.0",
     "bubblePlan": "2.0.0",
@@ -16,6 +16,17 @@
     "caseStudies": "2.20.0"
   },
   "changelog": [
+    {
+      "version": "2.30.0",
+      "date": "2026-11-16",
+      "title": "3D間取り工房 v2.9 本番デプロイ（多角形面積・和室ヒットテスト・部屋名自由入力＆種別保存・再検出保持・設備吸着改善）",
+      "changes": [
+        "【L字型部屋の面積二重計上解消＆多角形描画】getRoomAreaM2() で多角形（Shoelace公式）面積を優先し、2D塗りつぶし・重心ラベル・インスペクター表示を実面積へ統一",
+        "【部屋選択の多角形ヒットテスト】RoomDetector.isPointInsidePolygon() と小面積優先判定により、L字型玄関の外接矩形内にある和室を正確に選択できるよう修正",
+        "【部屋名自由入力・水回りチップ・種別保存・除外復帰】自由入力欄と24種チップ、未定義だった changeSelectedRoomType()、延床面積の算入/除外トグルを実装",
+        "【壁編集時の部屋名保持＆操作性改善】triggerAutoRoomDetection() での多角形重なり照合・customName引き継ぎ、room単クリック誤作成防止、設備中心基準の壁片側吸着、pointerleave時のプレビュー消去を実装"
+      ]
+    },
     {
       "version": "2.29.0",
       "date": "2026-11-16",

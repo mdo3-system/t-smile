@@ -359,44 +359,55 @@ function drawFloorOnionSkin(floorData, floorNum, isLight) {
 }
 
 function drawRoom2D(rm, isLight) {
-    const rt = ROOM_TYPES[rm.type] || ROOM_TYPES.LDK;
+    const rt = ROOM_TYPES[rm.type] || ROOM_TYPES.OTHER || ROOM_TYPES.LDK;
     const p1 = worldPToScreen(rm.x, rm.y);
     const wPx = rm.w * state.cam2d.zoom;
     const hPx = rm.h * state.cam2d.zoom;
+    const hasPoly = Array.isArray(rm.points) && rm.points.length >= 3;
+
+    const traceRoomShape = () => {
+        ctx.beginPath();
+        if (hasPoly) {
+            rm.points.forEach((pt, idx) => {
+                const sp = worldPToScreen(pt.x, pt.y);
+                if (idx === 0) ctx.moveTo(sp.x, sp.y);
+                else ctx.lineTo(sp.x, sp.y);
+            });
+            ctx.closePath();
+        } else {
+            ctx.rect(p1.x, p1.y, wPx, hPx);
+        }
+    };
 
     ctx.save();
 
     // お手本画像準拠：ホワイト方眼時はクリーンな白・薄トーン＋玄関土間はグレー＋吹き抜けは点線×
     if (rm.type === 'DOMA' || rm.type === 'PORCH') {
         ctx.fillStyle = '#cbd5e1';
-        ctx.fillRect(p1.x, p1.y, wPx, hPx);
     } else if (rm.type === 'VOID') {
         ctx.fillStyle = isLight ? 'rgba(241, 245, 249, 0.5)' : 'rgba(30, 41, 59, 0.6)';
-        ctx.fillRect(p1.x, p1.y, wPx, hPx);
     } else if (rm.type === 'KOAGARI') {
         ctx.fillStyle = 'rgba(254, 240, 138, 0.55)';
-        ctx.fillRect(p1.x, p1.y, wPx, hPx);
     } else if (rm.type === 'TATAMI' || rm.type === 'WASHITSU') {
         ctx.fillStyle = isLight ? 'rgba(220, 252, 231, 0.45)' : rt.color2d;
-        ctx.fillRect(p1.x, p1.y, wPx, hPx);
     } else if (rm.type === 'NAKANIWA') {
         ctx.fillStyle = 'rgba(209, 250, 229, 0.4)';
-        ctx.fillRect(p1.x, p1.y, wPx, hPx);
     } else if (rm.type === 'TENJO') {
         ctx.fillStyle = 'rgba(226, 232, 240, 0.45)';
-        ctx.fillRect(p1.x, p1.y, wPx, hPx);
     } else {
         ctx.fillStyle = isLight ? 'rgba(255, 255, 255, 0.65)' : rt.color2d;
-        ctx.fillRect(p1.x, p1.y, wPx, hPx);
     }
+    traceRoomShape();
+    ctx.fill();
 
     // 空間パターン描画
     if (rm.type === 'VOID') {
-        // 吹き抜け：四角の中に点線の「×」（お手本画像完全準拠）
+        // 吹き抜け：枠内に点線の「×」
         ctx.strokeStyle = isLight ? '#334155' : '#38bdf8';
         ctx.lineWidth = 1.4;
         ctx.setLineDash([4, 4]);
-        ctx.strokeRect(p1.x, p1.y, wPx, hPx);
+        traceRoomShape();
+        ctx.stroke();
         ctx.beginPath();
         ctx.moveTo(p1.x, p1.y); ctx.lineTo(p1.x + wPx, p1.y + hPx);
         ctx.moveTo(p1.x + wPx, p1.y); ctx.lineTo(p1.x, p1.y + hPx);
@@ -406,57 +417,76 @@ function drawRoom2D(rm, isLight) {
         // 畳の割付線
         ctx.strokeStyle = '#15803d';
         ctx.lineWidth = 1.3;
-        ctx.strokeRect(p1.x + 2, p1.y + 2, wPx - 4, hPx - 4);
-        ctx.beginPath();
-        ctx.moveTo(p1.x, p1.y + hPx / 2);
-        ctx.lineTo(p1.x + wPx, p1.y + hPx / 2);
-        ctx.moveTo(p1.x + wPx / 2, p1.y);
-        ctx.lineTo(p1.x + wPx / 2, p1.y + hPx);
-        ctx.stroke();
+        if (hasPoly) {
+            traceRoomShape();
+            ctx.stroke();
+        } else {
+            ctx.strokeRect(p1.x + 2, p1.y + 2, wPx - 4, hPx - 4);
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y + hPx / 2);
+            ctx.lineTo(p1.x + wPx, p1.y + hPx / 2);
+            ctx.moveTo(p1.x + wPx / 2, p1.y);
+            ctx.lineTo(p1.x + wPx / 2, p1.y + hPx);
+            ctx.stroke();
+        }
     } else if (rm.type === 'KOAGARI') {
         ctx.strokeStyle = '#ca8a04';
         ctx.lineWidth = 2;
-        ctx.strokeRect(p1.x, p1.y, wPx, hPx);
+        traceRoomShape();
+        ctx.stroke();
     } else if (rm.type === 'NAKANIWA') {
         ctx.strokeStyle = '#059669';
         ctx.lineWidth = 1.5;
         ctx.setLineDash([6, 3]);
-        ctx.strokeRect(p1.x, p1.y, wPx, hPx);
+        traceRoomShape();
+        ctx.stroke();
         ctx.setLineDash([]);
     } else if (rm.type === 'TENJO') {
         ctx.strokeStyle = '#64748b';
         ctx.lineWidth = 1.2;
         ctx.setLineDash([3, 3]);
-        ctx.strokeRect(p1.x, p1.y, wPx, hPx);
+        traceRoomShape();
+        ctx.stroke();
         ctx.setLineDash([]);
     }
 
-    // 壁枠描画（お手本画像準拠のシャープな黒壁複線表現）
-    if (rt.hasWall) {
+    // 壁枠描画（手動矩形部屋のみ外枠を描画。自動検出部屋は既存の壁線分があるため二重線にしない）
+    if (rt.hasWall && !rm.isAutoDetected) {
         const wallThickPx = Math.max(5, state.cam2d.zoom * 0.14);
         ctx.strokeStyle = '#0f172a';
         ctx.lineWidth = wallThickPx;
         ctx.lineJoin = 'miter';
-        ctx.strokeRect(p1.x, p1.y, wPx, hPx);
+        traceRoomShape();
+        ctx.stroke();
 
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = Math.max(1.2, wallThickPx * 0.32);
-        ctx.strokeRect(p1.x, p1.y, wPx, hPx);
+        traceRoomShape();
+        ctx.stroke();
     } else if (rm.type === 'DOMA' || rm.type === 'PORCH') {
         ctx.strokeStyle = '#334155';
         ctx.lineWidth = 2;
-        ctx.strokeRect(p1.x, p1.y, wPx, hPx);
+        traceRoomShape();
+        ctx.stroke();
     }
 
-    // 部屋名・畳数ラベル
-    const areaM2 = (rm.w * state.modulePitch / 1000) * (rm.h * state.modulePitch / 1000);
-    const tatamiJyo = (rm.w * rm.h) / 2;
-    const centerX = p1.x + wPx / 2;
-    const centerY = p1.y + hPx / 2;
+    // 部屋名・畳数ラベル（多角形面積・重心を優先使用）
+    const pitchM = (state.modulePitch || 910) / 1000;
+    const areaM2 = (typeof getRoomAreaM2 === 'function')
+        ? getRoomAreaM2(rm)
+        : (typeof rm.areaM2 === 'number' && rm.areaM2 > 0 ? rm.areaM2 : (rm.w * pitchM) * (rm.h * pitchM));
+    const tatamiJyo = areaM2 / (pitchM * pitchM * 2);
+    let centerX = p1.x + wPx / 2;
+    let centerY = p1.y + hPx / 2;
+    if (hasPoly && rm.centroid) {
+        const cp = worldPToScreen(rm.centroid.x, rm.centroid.y);
+        centerX = cp.x;
+        centerY = cp.y;
+    }
 
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    const title = rm.name || rm.customName || rt.label;
+    const title = rm.customName || rm.name || rt.label;
     if (title && wPx > 32 && hPx > 24) {
         ctx.fillStyle = isLight ? '#0f172a' : '#f8fafc';
         ctx.font = `bold ${Math.max(9, Math.min(13, state.cam2d.zoom * 0.26))}px "Noto Sans JP", sans-serif`;

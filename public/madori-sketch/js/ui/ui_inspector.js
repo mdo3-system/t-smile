@@ -35,6 +35,7 @@ window.setPaletteMode = setPaletteMode;
 function selectTool(toolName, subOption) {
     state.activeTool = toolName;
     state.wallClickStart = null;
+    state.lastHoverWorld = null;
     state.polyPoints = [];
     state.polyPillarPoints = [];
 
@@ -597,25 +598,79 @@ function renderPropertyInspector() {
             </div>
         `;
     } else if (kind === 'room') {
+        const pitchM = pitch / 1000;
         const wMm = Math.round(obj.w * pitch);
         const hMm = Math.round(obj.h * pitch);
-        const jyo = (obj.w * obj.h / 2).toFixed(1);
+        const areaM2 = (typeof getRoomAreaM2 === 'function')
+            ? getRoomAreaM2(obj)
+            : (typeof obj.areaM2 === 'number' && obj.areaM2 > 0 ? obj.areaM2 : (obj.w * pitchM) * (obj.h * pitchM));
+        const jyo = (areaM2 / (pitchM * pitchM * 2)).toFixed(1);
+        const curName = obj.customName || obj.name || '';
+        const safeName = curName.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const rt = ROOM_TYPES[obj.type] || ROOM_TYPES.OTHER || ROOM_TYPES.LDK;
+        const isExcluded = (typeof isFloorAreaExcludedRoom === 'function') ? isFloorAreaExcludedRoom(obj) : false;
         let rmOptions = Object.keys(ROOM_TYPES).map(k => `<option value="${k}" ${obj.type === k ? 'selected' : ''}>${ROOM_TYPES[k].label}</option>`).join('');
+
+        const quickChips = [
+            { label: 'LDK', type: 'LDK' },
+            { label: 'リビング', type: 'LIVING' },
+            { label: 'ダイニング', type: 'DINING' },
+            { label: 'キッチン', type: 'KITCHEN_RM' },
+            { label: '和室', type: 'WASHITSU' },
+            { label: '洋室', type: 'YOSHITSU' },
+            { label: '主寝室', type: 'YOSHITSU' },
+            { label: '子供室', type: 'YOSHITSU' },
+            { label: '書斎', type: 'YOSHITSU' },
+            { label: '玄関', type: 'GENKAN' },
+            { label: '玄関土間', type: 'DOMA' },
+            { label: 'ホール', type: 'ROUKA' },
+            { label: '廊下', type: 'ROUKA' },
+            { label: '階段', type: 'STAIR' },
+            { label: '洗面室', type: 'SENMEN' },
+            { label: '脱衣室', type: 'DATSUI' },
+            { label: '浴室', type: 'UB' },
+            { label: 'トイレ', type: 'TOILET' },
+            { label: 'WIC', type: 'WIC' },
+            { label: 'パントリー', type: 'STORAGE' },
+            { label: '納戸', type: 'STORAGE' },
+            { label: '吹抜', type: 'VOID' },
+            { label: 'バルコニー', type: 'BALCONY' },
+            { label: '中庭', type: 'NAKANIWA' }
+        ];
+        const chipHtml = quickChips.map(c => {
+            const active = curName === c.label ? 'bg-amber-500 text-slate-950 border-amber-400 font-bold' : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-600';
+            return `<button type="button" onclick="applyRoomNameChip('${c.label}', '${c.type}')" class="px-1.5 py-0.5 rounded border text-[10px] ${active}">${c.label}</button>`;
+        }).join('');
 
         panel.innerHTML = `
             <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-2">
-                <span class="text-xs font-bold text-white"><i class="fa-solid fa-vector-square text-amber-400 mr-1"></i>${obj.customName || obj.name || '空間'} (${jyo}帖)</span>
+                <span class="text-xs font-bold text-white"><i class="fa-solid fa-vector-square text-amber-400 mr-1"></i>${safeName || rt.label} (${jyo}帖 / ${areaM2.toFixed(1)}㎡)</span>
                 <div class="flex items-center gap-1">
                     <button onclick="deleteSelectedItem()" class="px-2 py-1 rounded bg-rose-600/30 text-[11px] text-rose-200 font-bold">削除</button>
                     <button onclick="state.selectedItem=null;renderPropertyInspector();request2DRedraw();" class="text-slate-400 hover:text-white px-1.5"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
             <div class="space-y-2 text-xs">
-                <div class="flex items-center justify-between gap-2">
-                    <select onchange="changeSelectedRoomType(this.value)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold">${rmOptions}</select>
-                    <button onclick="renameSelectedRoom()" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white border border-slate-600">名称変更</button>
+                <div>
+                    <label class="block text-[10px] text-slate-400 mb-1">部屋名（自由入力）</label>
+                    <div class="flex items-center gap-1.5">
+                        <input id="inpRoomCustomName" type="text" value="${safeName}" placeholder="例: 洗面室、階段、書斎..." oninput="updateSelectedRoomName(this.value, false)" onchange="updateSelectedRoomName(this.value, true)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold">
+                        <button type="button" onclick="renameSelectedRoom()" title="定型名を順送り" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 text-[11px]">順送り</button>
+                    </div>
                 </div>
-                <div class="text-[11px] text-slate-400 mono-num">寸法: ${wMm}mm × ${hMm}mm</div>
+                <div>
+                    <div class="text-[10px] text-slate-400 mb-1">よく使う部屋名</div>
+                    <div class="flex flex-wrap gap-1">${chipHtml}</div>
+                </div>
+                <div class="flex items-center justify-between gap-2 pt-1">
+                    <span class="text-[10px] text-slate-400 shrink-0">種別:</span>
+                    <select onchange="changeSelectedRoomType(this.value)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold">${rmOptions}</select>
+                </div>
+                <div class="flex items-center justify-between gap-2 pt-0.5">
+                    <span class="text-[10px] text-slate-400">延床面積の計算:</span>
+                    <button type="button" onclick="toggleSelectedRoomFloorArea()" class="px-2 py-1 rounded border text-[11px] font-bold ${isExcluded ? 'bg-slate-800 text-amber-300 border-amber-500/50' : 'bg-emerald-600/25 text-emerald-300 border-emerald-500/50'}">${isExcluded ? '除外中（クリックで算入に戻す）' : '算入中（クリックで除外）'}</button>
+                </div>
+                <div class="text-[11px] text-slate-400 mono-num">外接寸法: ${wMm}mm × ${hMm}mm / 実面積: ${areaM2.toFixed(2)}㎡</div>
             </div>
         `;
     } else if (kind === 'pillar') {

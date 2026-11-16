@@ -492,8 +492,8 @@ canvas2d.addEventListener('pointerdown', (e) => {
             roomType: spaceToolMap[state.activeTool],
             startX: snappedX,
             startY: snappedY,
-            curX: snappedX + minStep * 2,
-            curY: snappedY + minStep * 2
+            curX: snappedX,
+            curY: snappedY
         };
         request2DRedraw();
         return;
@@ -505,8 +505,8 @@ canvas2d.addEventListener('pointerdown', (e) => {
             type: 'box3d',
             startX: snappedX,
             startY: snappedY,
-            curX: snappedX + 1.0,
-            curY: snappedY + 1.0
+            curX: snappedX,
+            curY: snappedY
         };
         request2DRedraw();
         return;
@@ -744,6 +744,8 @@ function findNearestWallForFixture(curX, curY, wP, hP) {
 
     let bestSnap = null;
     let minDistance = snapDistanceThreshold;
+    const centerX = curX + wP / 2;
+    const centerY = curY + hP / 2;
 
     if (fl.walls && fl.walls.length > 0) {
         fl.walls.forEach(wl => {
@@ -752,10 +754,10 @@ function findNearestWallForFixture(curX, curY, wP, hP) {
                 const minWlX = Math.min(wl.x1, wl.x2);
                 const maxWlX = Math.max(wl.x1, wl.x2);
                 if (curX + wP >= minWlX - 0.4 && curX <= maxWlX + 0.4) {
-                    const distToWall = Math.abs(curY - wl.y1);
+                    const distToWall = Math.min(Math.abs(curY - wl.y1), Math.abs((curY + hP) - wl.y1), Math.abs(centerY - wl.y1));
                     if (distToWall < minDistance) {
                         minDistance = distToWall;
-                        if (curY >= wl.y1) {
+                        if (centerY >= wl.y1) {
                             bestSnap = { x: curX, y: +(wl.y1 + halfWallP).toFixed(3), side: 'top', wall: wl, rot: 0 };
                         } else {
                             bestSnap = { x: curX, y: +(wl.y1 - halfWallP - hP).toFixed(3), side: 'bottom', wall: wl, rot: 180 };
@@ -766,10 +768,10 @@ function findNearestWallForFixture(curX, curY, wP, hP) {
                 const minWlY = Math.min(wl.y1, wl.y2);
                 const maxWlY = Math.max(wl.y1, wl.y2);
                 if (curY + hP >= minWlY - 0.4 && curY <= maxWlY + 0.4) {
-                    const distToWall = Math.abs(curX - wl.x1);
+                    const distToWall = Math.min(Math.abs(curX - wl.x1), Math.abs((curX + wP) - wl.x1), Math.abs(centerX - wl.x1));
                     if (distToWall < minDistance) {
                         minDistance = distToWall;
-                        if (curX >= wl.x1) {
+                        if (centerX >= wl.x1) {
                             bestSnap = { x: +(wl.x1 + halfWallP).toFixed(3), y: curY, side: 'left', wall: wl, rot: 90 };
                         } else {
                             bestSnap = { x: +(wl.x1 - halfWallP - wP).toFixed(3), y: curY, side: 'right', wall: wl, rot: 270 };
@@ -791,20 +793,20 @@ function findNearestWallForFixture(curX, curY, wP, hP) {
             edges.forEach(ed => {
                 if (ed.isHoriz) {
                     if (curX + wP >= ed.x1 - 0.4 && curX <= ed.x2 + 0.4) {
-                        const dist = Math.abs(curY - ed.y);
+                        const dist = Math.min(Math.abs(curY - ed.y), Math.abs((curY + hP) - ed.y), Math.abs(centerY - ed.y));
                         if (dist < minDistance) {
                             minDistance = dist;
-                            bestSnap = ed.side === 'top'
+                            bestSnap = centerY >= ed.y
                                 ? { x: curX, y: +(ed.y + halfWallP).toFixed(3), side: 'top', rot: 0 }
                                 : { x: curX, y: +(ed.y - halfWallP - hP).toFixed(3), side: 'bottom', rot: 180 };
                         }
                     }
                 } else {
                     if (curY + hP >= ed.y1 - 0.4 && curY <= ed.y2 + 0.4) {
-                        const dist = Math.abs(curX - ed.x);
+                        const dist = Math.min(Math.abs(curX - ed.x), Math.abs((curX + wP) - ed.x), Math.abs(centerX - ed.x));
                         if (dist < minDistance) {
                             minDistance = dist;
-                            bestSnap = ed.side === 'left'
+                            bestSnap = centerX >= ed.x
                                 ? { x: +(ed.x + halfWallP).toFixed(3), y: curY, side: 'left', rot: 90 }
                                 : { x: +(ed.x - halfWallP - wP).toFixed(3), y: curY, side: 'right', rot: 270 };
                         }
@@ -1118,21 +1120,34 @@ function tryStartSelectOrModifyInteraction(wx, wy, onlyHitExistingOfSameToolType
         }
     }
 
-    // 5. Hit-test Rooms
+    // 5. Hit-test Rooms（多角形内包判定＋重複時は小面積優先）
+    const hitRooms = [];
     for (let i = fl.rooms.length - 1; i >= 0; i--) {
         const rm = fl.rooms[i];
-        if (wx >= rm.x && wx <= rm.x + rm.w && wy >= rm.y && wy <= rm.y + rm.h) {
-            state.selectedItem = { kind: 'room', id: rm.id, floor: state.currentFloor };
-            state.dragAction = {
-                type: 'move_box',
-                target: rm,
-                offsetX: wx - rm.x,
-                offsetY: wy - rm.y
-            };
-            if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
-            request2DRedraw();
-            return true;
+        let isHit = false;
+        if (Array.isArray(rm.points) && rm.points.length >= 3 && window.RoomDetector && typeof window.RoomDetector.isPointInsidePolygon === 'function') {
+            isHit = window.RoomDetector.isPointInsidePolygon({ x: wx, y: wy }, rm.points);
+        } else {
+            isHit = (wx >= rm.x && wx <= rm.x + rm.w && wy >= rm.y && wy <= rm.y + rm.h);
         }
+        if (isHit) {
+            const area = (typeof getRoomAreaM2 === 'function') ? getRoomAreaM2(rm) : (rm.areaM2 || (rm.w * rm.h));
+            hitRooms.push({ rm, area });
+        }
+    }
+    if (hitRooms.length > 0) {
+        hitRooms.sort((a, b) => a.area - b.area);
+        const rm = hitRooms[0].rm;
+        state.selectedItem = { kind: 'room', id: rm.id, floor: state.currentFloor };
+        state.dragAction = {
+            type: 'move_box',
+            target: rm,
+            offsetX: wx - rm.x,
+            offsetY: wy - rm.y
+        };
+        if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+        request2DRedraw();
+        return true;
     }
 
     state.selectedItem = null;
@@ -1401,10 +1416,16 @@ canvas2d.addEventListener('pointerup', (e) => {
     request2DRedraw();
 });
 
+canvas2d.addEventListener('pointerleave', () => {
+    state.lastHoverWorld = null;
+    if (!state.dragAction) request2DRedraw();
+});
+
 canvas2d.addEventListener('pointercancel', (e) => {
     if (e && e.pointerType === 'touch') {
         activeTouchCount = Math.max(0, activeTouchCount - 1);
     }
+    state.lastHoverWorld = null;
     state.dragAction = null;
     request2DRedraw();
 });
@@ -1494,19 +1515,93 @@ function rotateSelectedStair() {
 function renameSelectedRoom() {
     const rm = findSelectedObject();
     if (!rm) return;
-    const presets = ['LDK', '主寝室', '洋室A', '洋室B', '子供室', '書斎', '和室', 'パントリー', 'WIC', '玄関ホール', '玄関土間', '小上り', '中庭', '吹抜', 'バルコニー'];
-    const idx = presets.indexOf(rm.customName);
-    rm.customName = presets[(idx + 1) % presets.length];
-    if (rm.customName === '吹抜') rm.type = 'VOID';
-    else if (rm.customName === 'バルコニー') rm.type = 'BALCONY';
-    else if (rm.customName === '玄関土間') rm.type = 'DOMA';
-    else if (rm.customName === '小上り') rm.type = 'KOAGARI';
-    else if (rm.customName === '中庭') rm.type = 'NAKANIWA';
+    const presets = ['LDK', 'リビング', 'ダイニング', 'キッチン', '主寝室', '洋室', '子供室', '書斎', '和室', '玄関', '玄関土間', 'ホール', '廊下', '階段', '洗面室', '脱衣室', '浴室', 'トイレ', 'WIC', 'パントリー', '納戸', '小上り', '中庭', '吹抜', 'バルコニー'];
+    const curName = rm.customName || rm.name || '';
+    const idx = presets.indexOf(curName);
+    const nextName = presets[(idx + 1) % presets.length];
+    rm.customName = nextName;
+    rm.name = nextName;
+    if (nextName === '吹抜') rm.type = 'VOID';
+    else if (nextName === 'バルコニー') rm.type = 'BALCONY';
+    else if (nextName === '玄関土間') rm.type = 'DOMA';
+    else if (nextName === '小上り') rm.type = 'KOAGARI';
+    else if (nextName === '中庭') rm.type = 'NAKANIWA';
+    else if (['VOID', 'BALCONY', 'DOMA', 'KOAGARI', 'NAKANIWA', 'PORCH', 'TENJO', 'TATAMI'].includes(rm.type)) {
+        rm.type = 'OTHER';
+    }
     saveHistorySnapshot();
     if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
     if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
     showToast(`部屋名を「${rm.customName}」に変更しました`);
+}
+
+function updateSelectedRoomName(val, commit) {
+    const rm = findSelectedObject();
+    if (!rm || !state.selectedItem || state.selectedItem.kind !== 'room') return;
+    const trimmed = (val || '').trim();
+    rm.customName = trimmed;
+    rm.name = trimmed;
+    request2DRedraw();
+    if (commit) {
+        saveHistorySnapshot();
+        if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
+        if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+    }
+}
+
+function applyRoomNameChip(label, type) {
+    const rm = findSelectedObject();
+    if (!rm || !state.selectedItem || state.selectedItem.kind !== 'room') return;
+    rm.customName = label;
+    rm.name = label;
+    if (type) rm.type = type;
+    const excludedTypes = ['VOID', 'BALCONY', 'PORCH', 'NAKANIWA', 'TENJO', 'TATAMI', 'KOAGARI'];
+    if (!excludedTypes.includes(rm.type) && rm.excludeFloorArea === true) {
+        rm.excludeFloorArea = false;
+    } else if (!excludedTypes.includes(rm.type)) {
+        delete rm.excludeFloorArea;
+    }
+    saveHistorySnapshot();
+    if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+    request2DRedraw();
+    showToast(`部屋名を「${label}」に設定しました`);
+}
+
+function changeSelectedRoomType(newType) {
+    const rm = findSelectedObject();
+    if (!rm || !state.selectedItem || state.selectedItem.kind !== 'room') return;
+    const excludedTypes = ['VOID', 'BALCONY', 'PORCH', 'NAKANIWA', 'TENJO', 'TATAMI', 'KOAGARI'];
+    const wasExcludedType = excludedTypes.includes((rm.type || '').toUpperCase());
+    rm.type = newType;
+    const rt = (window.ROOM_TYPES && window.ROOM_TYPES[newType]) || null;
+    if (wasExcludedType && !excludedTypes.includes(newType)) {
+        const curName = (rm.customName || rm.name || '').toLowerCase();
+        if (curName.includes('吹抜') || curName.includes('バルコニー') || curName.includes('中庭') || curName.includes('ポーチ')) {
+            const fallbackLabel = rt ? rt.label : '空間';
+            rm.customName = fallbackLabel;
+            rm.name = fallbackLabel;
+        }
+        if (rm.excludeFloorArea === true) rm.excludeFloorArea = false;
+    }
+    saveHistorySnapshot();
+    if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+    request2DRedraw();
+    showToast(`部屋種別を「${rt ? rt.label : newType}」に変更しました`);
+}
+
+function toggleSelectedRoomFloorArea() {
+    const rm = findSelectedObject();
+    if (!rm || !state.selectedItem || state.selectedItem.kind !== 'room') return;
+    const curExcluded = (typeof isFloorAreaExcludedRoom === 'function') ? isFloorAreaExcludedRoom(rm) : false;
+    rm.excludeFloorArea = !curExcluded;
+    saveHistorySnapshot();
+    if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+    request2DRedraw();
+    showToast(rm.excludeFloorArea ? 'この空間を延床面積から除外しました' : 'この空間を延床面積に算入しました');
 }
 
 function rotateSelectedFixture() {
@@ -2118,6 +2213,10 @@ if (typeof window !== 'undefined') {
     window.updateSelectedStairSteps = updateSelectedStairSteps;
     window.rotateSelectedStair = rotateSelectedStair;
     window.renameSelectedRoom = renameSelectedRoom;
+    window.updateSelectedRoomName = updateSelectedRoomName;
+    window.applyRoomNameChip = applyRoomNameChip;
+    window.changeSelectedRoomType = changeSelectedRoomType;
+    window.toggleSelectedRoomFloorArea = toggleSelectedRoomFloorArea;
     window.rotateSelectedFixture = rotateSelectedFixture;
     window.updateSelectedKitchenI = updateSelectedKitchenI;
     window.updateSelectedKitchenL = updateSelectedKitchenL;
