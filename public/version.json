@@ -1,9 +1,9 @@
 {
-  "version": "2.33.0",
+  "version": "2.34.0",
   "buildDate": "2026-11-16",
-  "releaseName": "Production Release v2.33.0 - 3D間取り工房 v2.12 本番デプロイ（新規作成アプリ内確認モーダル化＆物件名保存・一覧・復元反映）",
+  "releaseName": "Production Release v2.34.0 - 3D間取り工房 v2.13 本番デプロイ（アーキトレンドFBX 3D読込＆屋根ON/OFF対応・バージョン照合単一化・更新時タイトル保持）",
   "components": {
-    "madoriSketch": "2.12.0",
+    "madoriSketch": "2.13.0",
     "smileStudio": "2.7.0",
     "styleMatcher": "1.0.0",
     "bubblePlan": "2.0.0",
@@ -16,6 +16,16 @@
     "caseStudies": "2.20.0"
   },
   "changelog": [
+    {
+      "version": "2.34.0",
+      "date": "2026-11-16",
+      "title": "3D間取り工房 v2.13 本番デプロイ（アーキトレンドFBX 3D読込＆屋根ON/OFF対応・更新通知照合修正・更新時タイトル保持）",
+      "changes": [
+        "【アーキトレンド .fbx 3Dモデル読み込み対応】FBXLoader を導入し、2D間取り・面積集計（state.floors）とは分離した外部CADレイヤー（cadFbxGroup）として3D表示、単位自動正規化・接地配置・屋根ON/OFFトグルを実装",
+        "【バージョン照合の単一化】window.MADORI_APP_VERSION と version.json（2.13.0）を一致させ、更新適用後に更新バッジが確実に非表示になるよう修正",
+        "【更新時の物件名完全保持】restorePlanFromCarte・executeCreateNewPlan・forceUpdateMadoriApp・restoreAutoBackupIfAvailable のすべてで state.projectTitle と #planTitleInput を双方向同期"
+      ]
+    },
     {
       "version": "2.33.0",
       "date": "2026-11-16",

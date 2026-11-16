@@ -63,6 +63,7 @@ function executeCreateNewPlan(saveBefore) {
         4: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], boxes3d: [], strokes: [], stamps: [] }
     };
     state.currentPlanId = null; // 別案件として新規ID発行待ちに完全リセット
+    state.projectTitle = '新規プラン';
     const titleInp = document.getElementById('planTitleInput');
     if (titleInp) titleInp.value = '新規プラン';
     if (typeof ensureFloorsStructure === 'function') ensureFloorsStructure();

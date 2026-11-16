@@ -1204,14 +1204,16 @@ window.showManualItem = showManualItem;
  * 🔄 アプリ化（PWA / ホーム画面追加）およびブラウザ用の強制最新版アップデート機構
  * 作図中のデータを一時自動退避した上でキャッシュを破棄し、最新バージョンを再取得します。
  */
-const CURRENT_MADORI_APP_VERSION = '2.8.0';
+const getCurrentMadoriAppVersion = () => (typeof window.MADORI_APP_VERSION === 'string' && window.MADORI_APP_VERSION) || '2.12.1';
 
 async function forceUpdateMadoriApp() {
     try {
         // 作図中のデータがあればセッションストレージへ自動バックアップ
         if (typeof state !== 'undefined' && state.floors) {
+            const curTitle = document.getElementById('planTitleInput')?.value?.trim() || state.projectTitle;
+            state.projectTitle = curTitle;
             sessionStorage.setItem('smile_madori_auto_backup', JSON.stringify({
-                projectTitle: state.projectTitle,
+                projectTitle: curTitle,
                 currentPlanId: state.currentPlanId,
                 currentFloor: state.currentFloor,
                 modulePitch: state.modulePitch,
@@ -1253,13 +1255,16 @@ async function checkMadoriAppUpdate() {
         const remoteVer = (vData.components && vData.components.madoriSketch) ? vData.components.madoriSketch : null;
         const btn = document.getElementById('btnAppUpdate');
         const badge = document.getElementById('badgeUpdateAvailable');
-        if (remoteVer && remoteVer !== CURRENT_MADORI_APP_VERSION) {
+        const currentVer = getCurrentMadoriAppVersion();
+        if (remoteVer && remoteVer !== currentVer) {
             if (btn) {
                 btn.className = 'px-2 py-1 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold border border-amber-200 shadow flex items-center gap-1 animate-pulse transition';
                 btn.title = `新しいバージョン (v${remoteVer}) が利用可能です！タップして最新版に更新`;
             }
             if (badge) badge.classList.remove('hidden');
             showToast(`✨ 新しいバージョン (v${remoteVer}) が配信されています。上部の「🔄 更新」ボタンで反映できます`);
+        } else if (badge) {
+            badge.classList.add('hidden');
         }
     } catch (e) {}
 }
@@ -1273,7 +1278,10 @@ function restoreAutoBackupIfAvailable() {
         const bak = JSON.parse(raw);
         if (bak && bak.floors && (Date.now() - (bak.savedAt || 0) < 120000)) {
             state.projectTitle = bak.projectTitle || state.projectTitle;
+            const titleInp = document.getElementById('planTitleInput');
+            if (titleInp && state.projectTitle) titleInp.value = state.projectTitle;
             state.currentPlanId = bak.currentPlanId || null;
+            if (typeof window.updateCurrentPlanBadge === 'function') window.updateCurrentPlanBadge();
             state.currentFloor = bak.currentFloor || 1;
             state.modulePitch = bak.modulePitch || 910;
             state.gridDivisions = bak.gridDivisions || 2;

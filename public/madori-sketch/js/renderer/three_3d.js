@@ -7,7 +7,9 @@
     'use strict';
 
 const canvas3d = document.getElementById('canvas3d');
-let scene3d, camera3d, renderer3d, buildingGroup, sunLight, ambientLight, hemiLight;
+let scene3d, camera3d, renderer3d, buildingGroup, cadFbxGroup, sunLight, ambientLight, hemiLight;
+let cadRoofMeshes = [];
+let cadRoofVisible = true;
 
 const orbit = {
     theta: Math.PI * 0.22,
@@ -806,4 +808,162 @@ window.buildPlanExportObject = buildPlanExportObject;
 window.syncPlanToCommunityLibrary = syncPlanToCommunityLibrary;
 window.approveAndPublishPlan = approveAndPublishPlan;
 window.export3DToPersStudio = export3DToPersStudio;
+
+// ============================================================================
+// アーキトレンド等 外部CAD 3Dモデル (.fbx) 読み込み ＆ 屋根ON/OFF制御
+// （2D間取り・面積集計 state.floors とは完全分離して描画）
+// ============================================================================
+function ensureCadFbxGroup() {
+    if (!scene3d) return null;
+    if (!cadFbxGroup) {
+        cadFbxGroup = new THREE.Group();
+        cadFbxGroup.name = 'cadFbxGroup';
+        scene3d.add(cadFbxGroup);
+    }
+    return cadFbxGroup;
+}
+
+function isCadRoofObject(obj) {
+    const roofRegex = /roof|屋根|軒|破風|瓦|コロニアル|棟|ガルバ|スレート|切妻|寄棟|片流れ|yane|noki|koya/i;
+    let cur = obj;
+    while (cur) {
+        if (cur.name && roofRegex.test(cur.name)) return true;
+        cur = cur.parent;
+    }
+    if (obj.material) {
+        const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+        for (const m of mats) {
+            if (m && m.name && roofRegex.test(m.name)) return true;
+        }
+    }
+    return false;
+}
+
+function updateCadRoofToggleUI() {
+    const wrap = document.getElementById('cadFbxControls');
+    const btn = document.getElementById('btnCadRoofToggle');
+    if (wrap) {
+        if (cadFbxGroup && cadFbxGroup.children.length > 0) wrap.classList.remove('hidden');
+        else wrap.classList.add('hidden');
+    }
+    if (btn) {
+        btn.textContent = cadRoofVisible ? '🏠 屋根: ON' : '🏠 屋根: OFF';
+        btn.className = cadRoofVisible
+            ? 'px-1.5 py-1 rounded bg-sky-600/80 hover:bg-sky-500 text-[10px] font-bold text-white transition'
+            : 'px-1.5 py-1 rounded bg-zinc-700 hover:bg-zinc-600 text-[10px] font-bold text-slate-300 transition';
+    }
+}
+
+function loadArchitrendFBXFromBuffer(arrayBuffer, fileName) {
+    if (typeof THREE === 'undefined' || typeof THREE.FBXLoader !== 'function') {
+        if (typeof showToast === 'function') showToast('FBXローダーが初期化されていません', true);
+        return false;
+    }
+    if (!scene3d && typeof init3DEngine === 'function') {
+        init3DEngine();
+    }
+    const grp = ensureCadFbxGroup();
+    if (!grp) return false;
+
+    const loader = new THREE.FBXLoader();
+    const fbxObj = loader.parse(arrayBuffer, '');
+
+    // 既存CADモデルをクリア
+    while (grp.children.length > 0) grp.remove(grp.children[0]);
+    cadRoofMeshes = [];
+    cadRoofVisible = true;
+
+    // 単位系（mm / cm / m）をバウンディングボックスから自動判定し 1m=1unit へ正規化
+    const rawBox = new THREE.Box3().setFromObject(fbxObj);
+    const rawSize = rawBox.getSize(new THREE.Vector3());
+    const maxDim = Math.max(rawSize.x, rawSize.y, rawSize.z);
+    let scaleFactor = 1.0;
+    if (maxDim > 120) scaleFactor = 0.001; // mm単位（例: 10000mm -> 10m）
+    else if (maxDim > 28) scaleFactor = 0.01; // cm単位
+    fbxObj.scale.setScalar(scaleFactor);
+    fbxObj.updateMatrixWorld(true);
+
+    // 接地（min.y = 0）＆ 原点中央寄せ
+    const normBox = new THREE.Box3().setFromObject(fbxObj);
+    const center = normBox.getCenter(new THREE.Vector3());
+    fbxObj.position.set(-center.x, -normBox.min.y, -center.z);
+    fbxObj.updateMatrixWorld(true);
+
+    fbxObj.traverse((child) => {
+        if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            if (isCadRoofObject(child)) {
+                cadRoofMeshes.push(child);
+            }
+        }
+    });
+
+    grp.add(fbxObj);
+
+    // カメラを建物サイズに合わせて自動フレーミング
+    const fitBox = new THREE.Box3().setFromObject(grp);
+    const fitSize = fitBox.getSize(new THREE.Vector3());
+    const fitCenter = fitBox.getCenter(new THREE.Vector3());
+    orbit.target.copy(fitCenter);
+    orbit.radius = Math.max(10, Math.max(fitSize.x, fitSize.y, fitSize.z) * 1.45);
+    if (typeof update3DCameraTransform === 'function') update3DCameraTransform();
+
+    if (typeof state !== 'undefined' && state.viewMode === '2d' && typeof setViewMode === 'function') {
+        setViewMode('2d3d');
+    }
+    updateCadRoofToggleUI();
+    if (typeof closePresetModal === 'function') closePresetModal();
+    if (typeof showToast === 'function') {
+        showToast(`📐 CAD 3Dモデル「${fileName || 'FBX'}」を読み込みました（屋根要素 ${cadRoofMeshes.length}件検出・面積集計には影響しません）`);
+    }
+    return true;
+}
+
+function importArchitrendFBX(e) {
+    const file = e && e.target && e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        try {
+            loadArchitrendFBXFromBuffer(ev.target.result, file.name);
+        } catch (err) {
+            console.error('[FBX Import Error]', err);
+            if (typeof showToast === 'function') showToast('FBX読み込みエラー: ' + err.message, true);
+        }
+    };
+    reader.readAsArrayBuffer(file);
+    e.target.value = '';
+}
+
+function toggleCadRoofVisibility() {
+    cadRoofVisible = !cadRoofVisible;
+    cadRoofMeshes.forEach(m => { m.visible = cadRoofVisible; });
+    updateCadRoofToggleUI();
+    if (typeof showToast === 'function') {
+        showToast(cadRoofVisible ? '🏠 CADモデルの屋根を表示しました' : '🏠 CADモデルの屋根を非表示にしました（内観・間取り確認用）');
+    }
+}
+
+function clearCadFbxModel() {
+    if (cadFbxGroup) {
+        while (cadFbxGroup.children.length > 0) cadFbxGroup.remove(cadFbxGroup.children[0]);
+    }
+    cadRoofMeshes = [];
+    cadRoofVisible = true;
+    updateCadRoofToggleUI();
+    if (typeof showToast === 'function') showToast('読み込んだCAD 3Dモデルを消去しました');
+}
+
+window.importArchitrendFBX = importArchitrendFBX;
+window.loadArchitrendFBXFromBuffer = loadArchitrendFBXFromBuffer;
+window.toggleCadRoofVisibility = toggleCadRoofVisibility;
+window.clearCadFbxModel = clearCadFbxModel;
+window.getCadFbxStats = function() {
+    return {
+        loaded: !!(cadFbxGroup && cadFbxGroup.children.length > 0),
+        roofMeshCount: cadRoofMeshes.length,
+        roofVisible: cadRoofVisible
+    };
+};
 })();

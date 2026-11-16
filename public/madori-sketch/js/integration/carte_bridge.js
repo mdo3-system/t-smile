@@ -119,6 +119,7 @@
             if (typeof state !== 'undefined') {
                 state.floors = JSON.parse(JSON.stringify(target.planData));
                 state.currentPlanId = target.id; // 同一プランIDを引き継ぎ
+                if (target.title) state.projectTitle = target.title;
                 const titleInp = document.getElementById('planTitleInput');
                 if (titleInp && target.title) titleInp.value = target.title;
                 if (typeof window.updateCurrentPlanBadge === 'function') window.updateCurrentPlanBadge();
