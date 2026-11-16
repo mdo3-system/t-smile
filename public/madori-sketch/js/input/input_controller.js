@@ -3,8 +3,9 @@
  * (壁4種・部分削除・サッシ12種・空間6種・直方体・多角形柱・ものさし補助線・メモ注釈15種 統合制御)
  */
 
-if (typeof canvas2d === 'undefined' || !canvas2d) {
-    var canvas2d = document.getElementById('canvas2d');
+// canvas2d は canvas_2d_renderer.js で let canvas2d として宣言済み（var再宣言によるSyntaxErrorを防止）
+if (!canvas2d) {
+    canvas2d = document.getElementById('canvas2d');
 }
 
 // ============================================================================
@@ -1406,6 +1407,25 @@ canvas2d.addEventListener('pointercancel', (e) => {
     }
     state.dragAction = null;
     request2DRedraw();
+});
+
+canvas2d.addEventListener('lostpointercapture', () => {
+    if (state.dragAction) {
+        state.dragAction = null;
+        request2DRedraw();
+    }
+});
+
+canvas2d.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+});
+
+window.addEventListener('blur', () => {
+    activeTouchCount = 0;
+    if (state.dragAction) {
+        state.dragAction = null;
+        request2DRedraw();
+    }
 });
 
 canvas2d.addEventListener('wheel', (e) => {

@@ -26,7 +26,7 @@
             
             // 延床面積と階数の取得
             const totalTsubo = options.totalTsubo || document.getElementById('areaTotal_tsubo')?.textContent || '0坪';
-            const totalM2 = options.totalM2 || document.getElementById('areaTotal_m2')?.textContent || '0㎡';
+            const totalM2 = options.totalM2 || document.getElementById('valTotalFloorArea')?.textContent || document.getElementById('areaTotal_m2')?.textContent || '0㎡';
             
             // 2Dキャンバスのサムネイル画像を取得
             let thumbUrl = '';
@@ -81,7 +81,10 @@
                 syncedCommunityPlan = window.syncPlanToCommunityLibrary(thumbUrl);
             }
             
-            alert(`🎉【間取りデータ安全保存完了】\n作成中の間取り（${totalTsubo}）を保存しました！（ID: ${activePlanId}）\n\n🔒【著作権と非公開の保護】\n作成されたプランの著作権はお客様に帰属し、無断で他者に一般公開されることはありません。\n※社内設計プールに安全保管され、当社の設計プロによる選別・監修を経て承認された優良プランのみが展示場ライブラリ（323選＋）に本登録されます。`);
+            if (typeof window.showToast === 'function') {
+                window.showToast(`💾 家カルテへ保存しました（${totalM2} / ID: ${activePlanId}）`);
+            }
+            alert(`🎉【間取りデータ安全保存完了】\n作成中の間取り（${totalM2} / ${totalTsubo}）を保存しました！（ID: ${activePlanId}）\n\n🔒【著作権と非公開の保護】\n作成されたプランの著作権はお客様に帰属し、無断で他者に一般公開されることはありません。\n※社内設計プールに安全保管され、当社の設計プロによる選別・監修を経て承認された優良プランのみが展示場ライブラリ（323選＋）に本登録されます。`);
             return true;
         } catch(e) {
             console.error('[CarteBridge] Error saving plan to carte:', e);

@@ -1149,7 +1149,7 @@ window.showManualItem = showManualItem;
  * 🔄 アプリ化（PWA / ホーム画面追加）およびブラウザ用の強制最新版アップデート機構
  * 作図中のデータを一時自動退避した上でキャッシュを破棄し、最新バージョンを再取得します。
  */
-const CURRENT_MADORI_APP_VERSION = '2.7.3';
+const CURRENT_MADORI_APP_VERSION = '2.8.0';
 
 async function forceUpdateMadoriApp() {
     try {
@@ -1195,7 +1195,7 @@ async function checkMadoriAppUpdate() {
         const res = await fetch('/version.json?t=' + Date.now(), { cache: 'no-store' });
         if (!res.ok) return;
         const vData = await res.json();
-        const remoteVer = (vData.components && vData.components.madoriSketch) || vData.version;
+        const remoteVer = (vData.components && vData.components.madoriSketch) ? vData.components.madoriSketch : null;
         const btn = document.getElementById('btnAppUpdate');
         const badge = document.getElementById('badgeUpdateAvailable');
         if (remoteVer && remoteVer !== CURRENT_MADORI_APP_VERSION) {

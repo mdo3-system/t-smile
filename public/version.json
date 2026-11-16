@@ -1,9 +1,9 @@
 {
-  "version": "2.28.0",
+  "version": "2.29.0",
   "buildDate": "2026-11-16",
-  "releaseName": "Production Release v2.28.0 - 3D間取り工房 v2.7（PWA・ペン入力・マニュアルモーダル）本番デプロイ ＆ 発音正規化辞書最新化",
+  "releaseName": "Production Release v2.29.0 - 3D間取り工房 v2.8 緊急修正本番配備（キャンバス入力修正・面積集計連動・保存トースト・バージョン統一）",
   "components": {
-    "madoriSketch": "2.7.3",
+    "madoriSketch": "2.8.0",
     "smileStudio": "2.7.0",
     "styleMatcher": "1.0.0",
     "bubblePlan": "2.0.0",
@@ -16,6 +16,16 @@
     "caseStudies": "2.20.0"
   },
   "changelog": [
+    {
+      "version": "2.29.0",
+      "date": "2026-11-16",
+      "title": "3D間取り工房 v2.8 本番デプロイ（キャンバス入力・面積集計・保存通知・バージョン整合修正）",
+      "changes": [
+        "【キャンバス入力不能の根本修正】input_controller.js での var canvas2d 重複宣言（SyntaxError）を解消し、マウス・ペン・タッチでの壁作図（ドラッグ＆2点クリック）・部屋選択・移動・削除・ズームが100%動作するよう修正。長押し/右クリック時のドラッグ残留防止も追加",
+        "【左下面積集計パネルの完全連動】metrics_calculator.js のID参照を index.html 実在ID（valCurFloorArea, valTotalFloorArea 等）へ統一し、白紙リセット時に即時 0.00㎡ へ更新されるよう修正",
+        "【保存トースト＆バージョン・用語統一】savePlanToCarte() のトースト通知追加、checkMadoriAppUpdate() の madoriSketch 専用バージョン比較化、左パレット「部屋作成」への用語統一を実施"
+      ]
+    },
     {
       "version": "2.28.0",
       "date": "2026-11-16",

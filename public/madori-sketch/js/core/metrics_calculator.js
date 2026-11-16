@@ -93,14 +93,14 @@ function updateAllMetricsAnd3D() {
         totalWallM2 += wa;
     });
 
-    // 1. 左パレット下部の「各階・全体の床と内壁の面積」パネル更新（お手本UI完全準拠）
+    // 1. 左パレット下部の「各階・全体の床と内壁の面積」パネル更新（index.html実在IDと完全一致）
     const curFl = state.currentFloor;
     const curFloorLabel = curFl === 0 ? '地下' : `${curFl}階`;
-    const elCurLabel = document.getElementById('paletteCurFloorLabel');
-    const elCurFloorM2 = document.getElementById('paletteCurFloorM2');
-    const elCurWallM2 = document.getElementById('paletteCurWallM2');
-    const elTotFloorM2 = document.getElementById('paletteTotalFloorM2');
-    const elTotWallM2 = document.getElementById('paletteTotalWallM2');
+    const elCurLabel = document.getElementById('lblCurFloorAreaTitle') || document.getElementById('paletteCurFloorLabel');
+    const elCurFloorM2 = document.getElementById('valCurFloorArea') || document.getElementById('paletteCurFloorM2');
+    const elCurWallM2 = document.getElementById('valCurWallArea') || document.getElementById('paletteCurWallM2');
+    const elTotFloorM2 = document.getElementById('valTotalFloorArea') || document.getElementById('paletteTotalFloorM2');
+    const elTotWallM2 = document.getElementById('valTotalWallArea') || document.getElementById('paletteTotalWallM2');
 
     if (elCurLabel) elCurLabel.textContent = curFloorLabel;
     if (elCurFloorM2) elCurFloorM2.textContent = `${floorAreas[curFl].toFixed(2)}㎡`;
