@@ -1,9 +1,9 @@
 {
-  "version": "2.32.0",
+  "version": "2.33.0",
   "buildDate": "2026-11-16",
-  "releaseName": "Production Release v2.32.0 - 3D間取り工房 v2.11 本番デプロイ（全画面モード時の復元モーダル最前面化・ヘッダー読込/新規ボタン・復元時面積/タイトル同期）",
+  "releaseName": "Production Release v2.33.0 - 3D間取り工房 v2.12 本番デプロイ（新規作成アプリ内確認モーダル化＆物件名保存・一覧・復元反映）",
   "components": {
-    "madoriSketch": "2.11.0",
+    "madoriSketch": "2.12.0",
     "smileStudio": "2.7.0",
     "styleMatcher": "1.0.0",
     "bubblePlan": "2.0.0",
@@ -16,6 +16,15 @@
     "caseStudies": "2.20.0"
   },
   "changelog": [
+    {
+      "version": "2.33.0",
+      "date": "2026-11-16",
+      "title": "3D間取り工房 v2.12 本番デプロイ（新規作成アプリ内確認モーダル化＆物件名保存・一覧・復元反映）",
+      "changes": [
+        "【新規作成ボタンの確実動作】ブラウザ標準 confirm() を廃止し、全画面対応のアプリ内確認モーダル #newPlanConfirmModal（z-[100035]）で「保存して新規作成／保存せず白紙で新規作成／キャンセル」を選べるよう修正",
+        "【物件名の保存・一覧・復元反映】savePlanToCarte() でプラン名入力欄（#planTitleInput）の名称を保存し、プラン一覧表示および復元時のタイトル欄へそのまま反映されるよう修正"
+      ]
+    },
     {
       "version": "2.32.0",
       "date": "2026-11-16",

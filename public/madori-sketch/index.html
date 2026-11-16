@@ -201,7 +201,7 @@
                     <a href="/" class="brand-link" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #ffffff;" title="住ま居る トップページへ">
                         <span style="font-size: 1.15rem;">🏡</span>
                         <span style="font-size: 1.05rem; font-weight: 900; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">家づくりAIラボ</span>
-                        <span style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 5px; border-radius: 4px; font-weight: 800;">3D間取り工房 v2.11</span>
+                        <span style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 5px; border-radius: 4px; font-weight: 800;">3D間取り工房 v2.12</span>
                     </a>
                     <div class="hidden xl:inline-flex items-center gap-1.5 text-[11px] text-slate-300 bg-black/30 border border-white/15 px-2 py-0.5 rounded">
                         <span class="text-sky-400 font-bold">施工エリア：埼玉県全域・一部東京都</span>
@@ -992,6 +992,37 @@
         </div>
     </div>
 
+    <!-- 新規作成確認モーダル（ネイティブconfirm()抑止対策・全画面対応） -->
+    <div id="newPlanConfirmModal" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-[100035] hidden items-center justify-center p-4">
+        <div class="glass-panel max-w-md w-full rounded-2xl border border-sky-500/50 p-5 shadow-2xl text-slate-100">
+            <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-3">
+                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-file-circle-plus text-sky-400"></i>
+                    <span>白紙から新規作成</span>
+                </h3>
+                <button type="button" onclick="closeNewPlanConfirmModal()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                現在編集中の図面を終了し、新しい別プランとして白紙キャンバスを開始します。よろしいですか？
+            </p>
+            <div class="space-y-2">
+                <button type="button" onclick="executeCreateNewPlan(true)" class="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    <span>現在の図面を保存してから新規作成</span>
+                </button>
+                <button type="button" onclick="executeCreateNewPlan(false)" class="w-full py-2.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition">
+                    <i class="fa-solid fa-file"></i>
+                    <span>保存せず白紙で新規作成</span>
+                </button>
+                <button type="button" onclick="closeNewPlanConfirmModal()" class="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold border border-slate-600 transition">
+                    キャンセル
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- ========================================================================= -->
     <!-- 🖥️ 全画面モード選択 ＆ iPad/タブレット「アプリ化（ホーム画面に追加）」案内モーダル -->
     <!-- ========================================================================= -->
@@ -1064,18 +1095,18 @@
     </div>
 
     <!-- 単一責任の原則 (SRP) に基づく分離モジュール群 -->
-    <script src="/madori-sketch/js/constants/manual_data.js?v=202611161127"></script>
-    <script src="/madori-sketch/js/constants/architectural_specs.js?v=202611161127"></script>
-    <script src="/madori-sketch/js/core/app_state.js?v=202611161127"></script>
-    <script src="/madori-sketch/js/core/metrics_calculator.js?v=202611161127"></script>
-    <script src="/madori-sketch/js/io/json_storage.js?v=202611161127"></script>
-    <script src="/madori-sketch/js/integration/carte_bridge.js?v=202611161127"></script>
-    <script src="/madori-sketch/js/geometry/room_detector.js?v=202611161127"></script>
-    <script src="/madori-sketch/js/renderer/three_3d.js?v=202611161127"></script>
-    <script src="/madori-sketch/js/renderer/canvas_2d_renderer.js?v=202611161127"></script>
-    <script src="/madori-sketch/js/ui/ui_inspector.js?v=202611161127"></script>
-    <script src="/madori-sketch/js/input/input_controller.js?v=202611161127"></script>
-    <script src="/madori-sketch/js/case/case_manager.js?v=202611161127"></script>
+    <script src="/madori-sketch/js/constants/manual_data.js?v=202611161201"></script>
+    <script src="/madori-sketch/js/constants/architectural_specs.js?v=202611161201"></script>
+    <script src="/madori-sketch/js/core/app_state.js?v=202611161201"></script>
+    <script src="/madori-sketch/js/core/metrics_calculator.js?v=202611161201"></script>
+    <script src="/madori-sketch/js/io/json_storage.js?v=202611161201"></script>
+    <script src="/madori-sketch/js/integration/carte_bridge.js?v=202611161201"></script>
+    <script src="/madori-sketch/js/geometry/room_detector.js?v=202611161201"></script>
+    <script src="/madori-sketch/js/renderer/three_3d.js?v=202611161201"></script>
+    <script src="/madori-sketch/js/renderer/canvas_2d_renderer.js?v=202611161201"></script>
+    <script src="/madori-sketch/js/ui/ui_inspector.js?v=202611161201"></script>
+    <script src="/madori-sketch/js/input/input_controller.js?v=202611161201"></script>
+    <script src="/madori-sketch/js/case/case_manager.js?v=202611161201"></script>
     <script>
         const ROOM_TYPES = window.ROOM_TYPES;
         const OPENING_TYPES = window.OPENING_TYPES;

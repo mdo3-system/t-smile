@@ -24,13 +24,35 @@ function updateCurrentPlanBadge() {
 }
 window.updateCurrentPlanBadge = updateCurrentPlanBadge;
 
-// 1. 新規案件作成（別案件として白紙開始）
+// 1. 新規案件作成（別案件として白紙開始：アプリ内確認モーダル対応）
 function createNewPlan() {
-    const hasData = state.floors[1].rooms.length > 0 || state.floors[1].walls.length > 0 || state.floors[1].fixtures.length > 0;
+    const fl1 = (state.floors && state.floors[1]) || {};
+    const fl2 = (state.floors && state.floors[2]) || {};
+    const hasData = (fl1.rooms && fl1.rooms.length > 0) || (fl1.walls && fl1.walls.length > 0) || (fl1.fixtures && fl1.fixtures.length > 0) ||
+                    (fl2.rooms && fl2.rooms.length > 0) || (fl2.walls && fl2.walls.length > 0) || (fl2.fixtures && fl2.fixtures.length > 0);
     if (hasData) {
-        if (!confirm('現在編集中の案件を終了し、別案件として新しく作図を開始しますか？\n※現在のプランを保存していない場合は「保存(更新)」してから新規作成してください。\n\n新規作成後は「新しい別案件」として保存・登録されます。')) {
+        const modal = document.getElementById('newPlanConfirmModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
             return;
         }
+    }
+    executeCreateNewPlan(false);
+}
+
+function closeNewPlanConfirmModal() {
+    const modal = document.getElementById('newPlanConfirmModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+}
+
+function executeCreateNewPlan(saveBefore) {
+    closeNewPlanConfirmModal();
+    if (saveBefore && typeof window.savePlanToCarte === 'function') {
+        window.savePlanToCarte({ silent: true });
     }
 
     state.floors = {
@@ -55,8 +77,12 @@ function createNewPlan() {
     renderPropertyInspector();
     request2DRedraw();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    showToast('✨ 新規案件として白紙キャンバスを作成しました（保存時は別プランとして登録されます）');
+    showToast(saveBefore ? '💾 前の図面を保存し、白紙キャンバスを新規作成しました' : '✨ 新規案件として白紙キャンバスを作成しました（保存時は別プランとして登録されます）');
 }
+
+window.createNewPlan = createNewPlan;
+window.closeNewPlanConfirmModal = closeNewPlanConfirmModal;
+window.executeCreateNewPlan = executeCreateNewPlan;
 
 // 2. 別案複製（現在の間取りを元に、新しい別案件B案として保存）
 function saveAsNewPlan() {

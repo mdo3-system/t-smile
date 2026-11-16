@@ -25,8 +25,11 @@
             if (!carte.customPlans) carte.customPlans = [];
             
             // 延床面積と階数の取得
-            const totalTsubo = options.totalTsubo || document.getElementById('areaTotal_tsubo')?.textContent || '0坪';
-            const totalM2 = options.totalM2 || document.getElementById('valTotalFloorArea')?.textContent || document.getElementById('areaTotal_m2')?.textContent || '0㎡';
+            const totalM2Num = (typeof calcFloorAreaM2 === 'function')
+                ? [0, 1, 2, 3, 4].reduce((s, f) => s + calcFloorAreaM2(f), 0)
+                : 0;
+            const totalTsubo = options.totalTsubo || (totalM2Num > 0 ? (totalM2Num / 3.305785).toFixed(1) + '坪' : (document.getElementById('areaTotal_tsubo')?.textContent || '0坪'));
+            const totalM2 = options.totalM2 || (totalM2Num > 0 ? totalM2Num.toFixed(2) + '㎡' : (document.getElementById('valTotalFloorArea')?.textContent || document.getElementById('areaTotal_m2')?.textContent || '0㎡'));
             
             // 2Dキャンバスのサムネイル画像を取得
             let thumbUrl = '';
@@ -50,10 +53,13 @@
                 if (typeof window.updateCurrentPlanBadge === 'function') window.updateCurrentPlanBadge();
             }
             const activePlanId = (typeof state !== 'undefined' && state.currentPlanId) ? state.currentPlanId : ('PLAN-COMM-' + Date.now().toString(36).toUpperCase());
+            const inputTitle = document.getElementById('planTitleInput')?.value?.trim() || (typeof state !== 'undefined' && state.planTitle ? String(state.planTitle).trim() : '');
+            const rawTitle = options.title || inputTitle;
+            const planTitle = (rawTitle && rawTitle !== '新規プラン') ? rawTitle : ('手描き3D間取りプラン (' + totalTsubo + ' / ' + totalM2 + ')');
 
             const planItem = {
                 id: activePlanId,
-                title: '手描き3D間取りプラン (' + totalTsubo + ' / ' + totalM2 + ')',
+                title: planTitle,
                 totalTsubo: totalTsubo,
                 totalM2: totalM2,
                 pitch: activePitch,
