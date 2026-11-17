@@ -19167,6 +19167,32 @@
       }
     }
   </script>
+  <script>
+    // 完成済み間取り工房JSON（plans_json_index.json）と連携し、「3D間取り工房で開く」ボタンを自動付与
+    (async function attachMadoriSketchLinks() {
+      try {
+        const res = await fetch('/data/plans_json_index.json?t=' + Date.now());
+        if (!res.ok) return;
+        const idx = await res.json();
+        const plansMap = (idx && idx.plans) ? idx.plans : {};
+        document.querySelectorAll('.hub-plan-card').forEach(card => {
+          const link = card.querySelector('a.hub-card-link');
+          if (!link) return;
+          const m = (link.getAttribute('href') || '').match(/\/plans\/detail\/(plan-[a-z0-9-]+)\.html/i);
+          if (!m) return;
+          const pid = m[1].toUpperCase();
+          if (!plansMap[pid] || card.querySelector('.hub-madori-btn')) return;
+          const btn = document.createElement('a');
+          btn.href = '/madori-sketch/?planId=' + encodeURIComponent(pid);
+          btn.target = '_blank';
+          btn.className = 'hub-madori-btn';
+          btn.style.cssText = 'display:block;margin:6px 12px 10px;padding:6px 10px;border-radius:8px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;font-size:12px;font-weight:800;text-align:center;text-decoration:none;';
+          btn.textContent = '✏️ 3D間取り工房で立体確認・編集 ↗';
+          card.appendChild(btn);
+        });
+      } catch (e) {}
+    })();
+  </script>
   <script src="/js/app.js"></script>
 </body>
 </html>

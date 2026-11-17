@@ -1,9 +1,9 @@
 {
-  "version": "2.36.0",
+  "version": "2.37.0",
   "buildDate": "2026-11-17",
-  "releaseName": "Production Release v2.36.0 - 3D間取り工房 v2.16 本番デプロイ（図面表題欄はみ出し防止・多角形部屋重なり控除・JSON読込タイトル改善＆部屋自動認識・目標面積QA照合パネル）",
+  "releaseName": "Production Release v2.37.0 - 3D間取り工房 v2.17 本番デプロイ（?planId=連携読込・3Dプラン選定連携DB・玄関土間DOMA＆上り框標準化・事前ローカル検算）",
   "components": {
-    "madoriSketch": "2.16.0",
+    "madoriSketch": "2.17.0",
     "smileStudio": "2.7.0",
     "styleMatcher": "1.0.0",
     "bubblePlan": "2.0.0",
@@ -16,6 +16,16 @@
     "caseStudies": "2.20.0"
   },
   "changelog": [
+    {
+      "version": "2.37.0",
+      "date": "2026-11-17",
+      "title": "3D間取り工房 v2.17（?planId=自動読込）＆ 3Dプラン選定連携DB構築・PLAN-2388-P01〜P03公開",
+      "changes": [
+        "【3Dプラン選定 ↔ 3D間取り工房 連携】?planId=PLAN-XXXX-PXX によるJSON自動読込と、plans/index.html 上の完成済みプランへの「3D間取り工房で立体確認・編集」リンク自動付与を実装",
+        "【連携DB・事前検算基盤】scripts/validate_madori_json.py（ポリゴン和集合面積・重なりゼロ・開口部壁上・DOMA/上り框検証）および scripts/sync_plans_json_db.py（plans_json_index.json / plans.json 同期）を構築",
+        "【PLAN-2388-P01〜P03 公開】玄関土間（DOMA）・上り框（agarikamachi）対応済みの3プランJSONを本番反映"
+      ]
+    },
     {
       "version": "2.36.0",
       "date": "2026-11-17",

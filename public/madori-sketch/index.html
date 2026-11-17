@@ -203,7 +203,7 @@
                     <a href="/" class="brand-link" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #ffffff;" title="住ま居る トップページへ">
                         <span style="font-size: 1.15rem;">🏡</span>
                         <span style="font-size: 1.05rem; font-weight: 900; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">家づくりAIラボ</span>
-                        <span style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 5px; border-radius: 4px; font-weight: 800;">3D間取り工房 v2.16</span>
+                        <span style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 5px; border-radius: 4px; font-weight: 800;">3D間取り工房 v2.17</span>
                     </a>
                     <div class="hidden xl:inline-flex items-center gap-1.5 text-[11px] text-slate-300 bg-black/30 border border-white/15 px-2 py-0.5 rounded">
                         <span class="text-sky-400 font-bold">施工エリア：埼玉県全域・一部東京都</span>
@@ -1227,20 +1227,20 @@
     </div>
 
     <!-- 単一責任の原則 (SRP) に基づく分離モジュール群 -->
-    <script>window.MADORI_APP_VERSION = '2.16.0';</script>
-    <script src="/madori-sketch/js/constants/manual_data.js?v=202611171009"></script>
-    <script src="/madori-sketch/js/constants/architectural_specs.js?v=202611171009"></script>
-    <script src="/madori-sketch/js/core/app_state.js?v=202611171009"></script>
-    <script src="/madori-sketch/js/core/metrics_calculator.js?v=202611171009"></script>
-    <script src="/madori-sketch/js/io/json_storage.js?v=202611171009"></script>
-    <script src="/madori-sketch/js/io/dxf_pdf_exporter.js?v=202611171009"></script>
-    <script src="/madori-sketch/js/integration/carte_bridge.js?v=202611171009"></script>
-    <script src="/madori-sketch/js/geometry/room_detector.js?v=202611171009"></script>
-    <script src="/madori-sketch/js/renderer/three_3d.js?v=202611171009"></script>
-    <script src="/madori-sketch/js/renderer/canvas_2d_renderer.js?v=202611171009"></script>
-    <script src="/madori-sketch/js/ui/ui_inspector.js?v=202611171009"></script>
-    <script src="/madori-sketch/js/input/input_controller.js?v=202611171009"></script>
-    <script src="/madori-sketch/js/case/case_manager.js?v=202611171009"></script>
+    <script>window.MADORI_APP_VERSION = '2.17.0';</script>
+    <script src="/madori-sketch/js/constants/manual_data.js?v=202611171443"></script>
+    <script src="/madori-sketch/js/constants/architectural_specs.js?v=202611171443"></script>
+    <script src="/madori-sketch/js/core/app_state.js?v=202611171443"></script>
+    <script src="/madori-sketch/js/core/metrics_calculator.js?v=202611171443"></script>
+    <script src="/madori-sketch/js/io/json_storage.js?v=202611171443"></script>
+    <script src="/madori-sketch/js/io/dxf_pdf_exporter.js?v=202611171443"></script>
+    <script src="/madori-sketch/js/integration/carte_bridge.js?v=202611171443"></script>
+    <script src="/madori-sketch/js/geometry/room_detector.js?v=202611171443"></script>
+    <script src="/madori-sketch/js/renderer/three_3d.js?v=202611171443"></script>
+    <script src="/madori-sketch/js/renderer/canvas_2d_renderer.js?v=202611171443"></script>
+    <script src="/madori-sketch/js/ui/ui_inspector.js?v=202611171443"></script>
+    <script src="/madori-sketch/js/input/input_controller.js?v=202611171443"></script>
+    <script src="/madori-sketch/js/case/case_manager.js?v=202611171443"></script>
     <script>
         const ROOM_TYPES = window.ROOM_TYPES;
         const OPENING_TYPES = window.OPENING_TYPES;
@@ -1359,6 +1359,38 @@
             if (typeof checkMadoriAppUpdate === 'function') {
                 setTimeout(checkMadoriAppUpdate, 800);
             }
+            // URLパラメータ ?planId=PLAN-XXXX-PXX で連携JSONを自動読込
+            (async function loadPlanFromUrlParam() {
+                try {
+                    const params = new URLSearchParams(window.location.search);
+                    const reqPlanId = (params.get('planId') || '').trim();
+                    if (!reqPlanId) return;
+                    const res = await fetch('/plans_json/' + encodeURIComponent(reqPlanId) + '.json?t=' + Date.now());
+                    if (!res.ok) return;
+                    const parsed = await res.json();
+                    if (parsed && parsed.floors && typeof state !== 'undefined') {
+                        state.floors = parsed.floors;
+                        if (parsed.guides) state.guides = parsed.guides;
+                        const loadedTitle = parsed.projectTitle || parsed.title || reqPlanId;
+                        state.projectTitle = loadedTitle;
+                        const titleInp = document.getElementById('planTitleInput');
+                        if (titleInp) titleInp.value = loadedTitle;
+                        state.currentPlanId = parsed.planId || reqPlanId;
+                        if (typeof window.updateCurrentPlanBadge === 'function') window.updateCurrentPlanBadge();
+                        if (typeof ensureFloorsStructure === 'function') ensureFloorsStructure();
+                        if (parsed.modulePitch && typeof setModulePitch === 'function') setModulePitch(parsed.modulePitch);
+                        if (parsed.gridDivisions && typeof setGridDivision === 'function') setGridDivision(parsed.gridDivisions);
+                        if (typeof saveHistorySnapshot === 'function') saveHistorySnapshot();
+                        if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
+                        if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+                        if (typeof request2DRedraw === 'function') request2DRedraw();
+                        if (typeof rebuild3DScene === 'function') rebuild3DScene();
+                        if (typeof showToast === 'function') showToast('📐 3Dプラン「' + loadedTitle + '」を読み込みました');
+                    }
+                } catch (err) {
+                    console.warn('[URL Plan Loader]', err);
+                }
+            })();
             handleResize();
             animateLoop();
             setTimeout(() => {
