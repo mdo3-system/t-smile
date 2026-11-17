@@ -44,8 +44,9 @@
     ];
 
     // --- サッシ・建具 12種類マスター (左パレット2列×6行) ---
+    // 実務標準：引き違い窓は居室腰窓 (W1650・H1300・FL+800) を既定とし、掃き出しや水回りはプリセットで1タップ切替可能に
     const SASH_TYPES_12 = [
-        { id: 'hikichigai', label: '引き違い', defaultWMm: 1650, defaultHMm: 2000, defaultSillMm: 0, leaves: 2, isWinDefault: true },
+        { id: 'hikichigai', label: '引き違い', defaultWMm: 1650, defaultHMm: 1300, defaultSillMm: 800, leaves: 2, isWinDefault: true },
         { id: 'katabiki', label: '引き戸', defaultWMm: 800, defaultHMm: 2000, defaultSillMm: 0, leaves: 1, isWinDefault: false },
         { id: 'katahiraki', label: '片開き', defaultWMm: 800, defaultHMm: 2000, defaultSillMm: 0, leaves: 1, isWinDefault: false },
         { id: 'ryouhiraki', label: '両開き', defaultWMm: 1600, defaultHMm: 2000, defaultSillMm: 0, leaves: 2, isWinDefault: false },
@@ -59,14 +60,28 @@
         { id: 'agesage', label: '上げ下げ窓', defaultWMm: 600, defaultHMm: 1100, defaultSillMm: 900, leaves: 1, isWinDefault: true }
     ];
 
+    // --- 開口部（窓・建具）用途別ワンタッププリセット (P1-3対応) ---
+    const OPENING_QUICK_PRESETS = [
+        { id: 'preset_living_win', label: '🏠 居室腰窓 (1650×1300/FL+800)', fit: 'hikichigai', category: 'window', wMm: 1650, hMm: 1300, sillMm: 800, leaves: 2 },
+        { id: 'preset_sweep_win', label: '☀️ 掃き出し窓 (1650×2000/FL+0)', fit: 'hikichigai', category: 'window', wMm: 1650, hMm: 2000, sillMm: 0, leaves: 2 },
+        { id: 'preset_wide_sweep', label: '🌅 大開口掃出 (2560×2000/FL+0)', fit: 'hikichigai', category: 'window', wMm: 2560, hMm: 2000, sillMm: 0, leaves: 2 },
+        { id: 'preset_wet_win', label: '🚿 水回り小窓 (800×900/FL+1100)', fit: 'hikichigai', category: 'window', wMm: 800, hMm: 900, sillMm: 1100, leaves: 2 },
+        { id: 'preset_high_win', label: '✨ 高窓FIX (1650×500/FL+1800)', fit: 'fix', category: 'window', wMm: 1650, hMm: 500, sillMm: 1800, leaves: 1 },
+        { id: 'preset_ent_910', label: '🚪 玄関ドア910 (910×2200/FL+0)', fit: 'katahiraki', category: 'door', wMm: 910, hMm: 2200, sillMm: 0, leaves: 1 },
+        { id: 'preset_ent_oyako', label: '🚪 玄関親子 (1200×2200/FL+0)', fit: 'oyako', category: 'door', wMm: 1200, hMm: 2200, sillMm: 0, leaves: 2 },
+        { id: 'preset_room_door', label: '🚪 室内片開 (800×2000/FL+0)', fit: 'katahiraki', category: 'door', wMm: 800, hMm: 2000, sillMm: 0, leaves: 1 },
+        { id: 'preset_room_slide', label: '🚪 室内引戸 (800×2000/FL+0)', fit: 'katabiki', category: 'door', wMm: 800, hMm: 2000, sillMm: 0, leaves: 1 },
+        { id: 'preset_wc_door', label: '🚽 トイレ・収納 (700×2000)', fit: 'katahiraki', category: 'door', wMm: 700, hMm: 2000, sillMm: 0, leaves: 1 }
+    ];
+
     // =========================================================================
     // 窓仕様 (Window Specifications)
     // =========================================================================
     const WINDOW_SPECS = {
-        widths: [260, 360, 600, 740, 800, 1190, 1200, 1500, 1600, 1650, 2250, 2510, 2560, 3470],
+        widths: [260, 360, 600, 700, 740, 780, 800, 910, 1190, 1200, 1500, 1600, 1650, 1820, 2250, 2510, 2560, 3470],
         heights: [300, 500, 700, 900, 1100, 1300, 1500, 1800, 2000, 2200, 2400],
         defaultWidth: 1650,
-        defaultHeight: 1100,
+        defaultHeight: 1300,
         color: '#0284c7'
     };
 
@@ -74,7 +89,7 @@
     // 内部建具・玄関仕様 (Door Specifications)
     // =========================================================================
     const DOOR_SPECS = {
-        leafWidths: [600, 700, 750, 800, 900, 1200, 1600, 1650],
+        leafWidths: [600, 700, 750, 780, 800, 850, 900, 910, 1000, 1200, 1365, 1600, 1650, 1820],
         heights: [1000, 1400, 1800, 2000, 2200, 2400],
         leafCounts: [1, 2, 3, 4],
         styles: [
@@ -222,6 +237,7 @@
     window.ROOM_TYPES = ROOM_TYPES;
     window.WALL_SUBTYPES = WALL_SUBTYPES;
     window.SASH_TYPES_12 = SASH_TYPES_12;
+    window.OPENING_QUICK_PRESETS = OPENING_QUICK_PRESETS;
     window.WINDOW_SPECS = WINDOW_SPECS;
     window.DOOR_SPECS = DOOR_SPECS;
     window.KITCHEN_SPECS = KITCHEN_SPECS;

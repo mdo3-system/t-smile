@@ -3,7 +3,7 @@
  * コア状態管理＆履歴マネージャー (Single Responsibility: Core App State & History Manager)
  * 地下〜4階・下絵透過目アイコン・補助線(ものさし)・用紙範囲・壁4種・サッシ12種・メモ注釈・3Dカメラ撮影に対応
  */
-window.setFloorDisplay3D = function(mode) {
+window.setFloorDisplay3D = function (mode) {
     if (typeof state !== 'undefined') state.floorDisplay3D = mode;
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
 };
@@ -35,11 +35,14 @@ const state = {
     paletteMode: 'build',
     planLocked: false,
 
-    // 補助線（ものさし）・画面ロック・用紙範囲
+    // 補助線（ものさし）・画面ロック・用紙範囲・プロ設計者モード
     rulerMode: false,
     guidesLocked: false,
     guides: [],              // [{ id, axis: 'h'|'v', pos: number, posP: number, label: string }]
     gridBounds: { minX: -2, maxX: 12, minY: -2, maxY: 12 },
+    designerMode: false,     // 設計者モード（通り芯X1/Y1表示・上下階ズレ照合・部屋別面積一覧常時表示）
+    diagonalWallMode: false, // 斜め壁作図モード（false=水平垂直直交スナップ、true=斜め自由・45°対応）
+    copiedOpeningSpec: null, // 建具・窓のコピー＆連続ペースト用スペック保持
 
     // 現在選択中のツール
     activeTool: 'wall',
@@ -56,10 +59,10 @@ const state = {
     subOpeningType: 'WINDOW',
     subOpeningCategory: 'window',
     subWindowWidth: 1650,
-    subWindowHeight: 1100,
+    subWindowHeight: 1300,
     subWindowMountRef: 'top',
-    subWindowTopMm: 2000,
-    subWindowSillMm: 900,
+    subWindowTopMm: 2100,
+    subWindowSillMm: 800,
     subDoorFit: 'hikichigai',
     subDoorLeafCount: 2,
     subDoorLeafWidth: 800,
@@ -118,9 +121,9 @@ const state = {
     subCompassAngle: 0,
     customSymbols: [
         { id: 'cs_robo', label: 'ロボ掃除機', shape: 'rect' },
-        { id: 'cs_ev',   label: 'EV充電',     shape: 'circle' },
-        { id: 'cs_box',  label: '宅配BOX',    shape: 'rect' },
-        { id: 'cs_gas',  label: 'ガス栓',     shape: 'diamond' }
+        { id: 'cs_ev', label: 'EV充電', shape: 'circle' },
+        { id: 'cs_box', label: '宅配BOX', shape: 'rect' },
+        { id: 'cs_gas', label: 'ガス栓', shape: 'diamond' }
     ],
 
     // 3D画面・写真キャプチャ＆ペン書き込みリスト
@@ -162,7 +165,7 @@ try {
             state.customSymbols = parsed;
         }
     }
-} catch (e) {}
+} catch (e) { }
 
 function uid() {
     return 'id_' + Math.random().toString(36).substring(2, 9);
@@ -287,12 +290,12 @@ function loadSampleHousePlan() {
         0: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], strokes: [], stamps: [], memos: [], polyPillars: [], boxes3d: [] },
         1: {
             rooms: [
-                { id: uid(), type: 'DOMA',     x: 0, y: 7, w: 1, h: 2, customName: '玄関土間' },
-                { id: uid(), type: 'GENKAN',   x: 1, y: 7, w: 1, h: 2, customName: 'ホール' },
-                { id: uid(), type: 'TOILET',   x: 0, y: 5, w: 1, h: 2, customName: 'トイレ' },
-                { id: uid(), type: 'SENMEN',   x: 3, y: 0, w: 2, h: 2, customName: '洗面脱衣' },
-                { id: uid(), type: 'UB',       x: 5, y: 0, w: 2, h: 2, customName: 'UB1616' },
-                { id: uid(), type: 'LDK',      x: 0, y: 0, w: 7, h: 9, customName: 'LDK' },
+                { id: uid(), type: 'DOMA', x: 0, y: 7, w: 1, h: 2, customName: '玄関土間' },
+                { id: uid(), type: 'GENKAN', x: 1, y: 7, w: 1, h: 2, customName: 'ホール' },
+                { id: uid(), type: 'TOILET', x: 0, y: 5, w: 1, h: 2, customName: 'トイレ' },
+                { id: uid(), type: 'SENMEN', x: 3, y: 0, w: 2, h: 2, customName: '洗面脱衣' },
+                { id: uid(), type: 'UB', x: 5, y: 0, w: 2, h: 2, customName: 'UB1616' },
+                { id: uid(), type: 'LDK', x: 0, y: 0, w: 7, h: 9, customName: 'LDK' },
                 { id: uid(), type: 'WASHITSU', x: 2, y: 6, w: 3, h: 3, customName: 'タタミコーナー' }
             ],
             walls: [
@@ -328,12 +331,12 @@ function loadSampleHousePlan() {
         2: {
             rooms: [
                 { id: uid(), type: 'YOSHITSU', x: 0, y: 0, w: 4, h: 4, customName: '主寝室' },
-                { id: uid(), type: 'WIC',      x: 4, y: 0, w: 3, h: 2, customName: 'WIC' },
-                { id: uid(), type: 'ROUKA',    x: 0, y: 4, w: 4, h: 2, customName: '2Fホール' },
-                { id: uid(), type: 'VOID',     x: 4, y: 2, w: 3, h: 4, customName: '吹き抜け' },
+                { id: uid(), type: 'WIC', x: 4, y: 0, w: 3, h: 2, customName: 'WIC' },
+                { id: uid(), type: 'ROUKA', x: 0, y: 4, w: 4, h: 2, customName: '2Fホール' },
+                { id: uid(), type: 'VOID', x: 4, y: 2, w: 3, h: 4, customName: '吹き抜け' },
                 { id: uid(), type: 'YOSHITSU', x: 0, y: 6, w: 3.5, h: 3, customName: '洋室A' },
                 { id: uid(), type: 'YOSHITSU', x: 3.5, y: 6, w: 3.5, h: 3, customName: '洋室B' },
-                { id: uid(), type: 'BALCONY',  x: 0, y: 9, w: 7, h: 1.5, customName: '南バルコニー' }
+                { id: uid(), type: 'BALCONY', x: 0, y: 9, w: 7, h: 1.5, customName: '南バルコニー' }
             ],
             walls: [
                 { id: uid(), x1: 4, y1: 2, x2: 4, y2: 6, wallType: 'koshikabe' }

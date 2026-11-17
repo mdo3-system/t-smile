@@ -1067,6 +1067,162 @@ function drawAutoDimensions2D(fl, isLight) {
     ctx.fillText(totalHMm.toLocaleString(), 0, 0);
     ctx.restore();
 
+    // --- 3. 通り芯記号（X1, X2... / Y1, Y2...）の描画（P2-2 ＆ P3-3対応） ---
+    const axisBubbleTopY = outerTopY - 22;
+    const axisBubbleLeftX = outerLeftX - 24;
+    const showFullAxisLines = !!state.designerMode;
+
+    // X通り芯 (X1, X2, ...)
+    for (let i = 0; i < xs.length; i++) {
+        const sx = worldPToScreen(xs[i], minY).x;
+        if (showFullAxisLines) {
+            ctx.save();
+            ctx.strokeStyle = isLight ? 'rgba(220, 38, 38, 0.25)' : 'rgba(248, 113, 113, 0.25)';
+            ctx.lineWidth = 0.9;
+            ctx.setLineDash([8, 3, 2, 3]);
+            ctx.beginPath();
+            ctx.moveTo(sx, axisBubbleTopY + 10);
+            ctx.lineTo(sx, pBotRight.y + 18);
+            ctx.stroke();
+            ctx.restore();
+        }
+        ctx.save();
+        ctx.fillStyle = isLight ? '#ffffff' : '#1e293b';
+        ctx.strokeStyle = isLight ? '#dc2626' : '#f87171';
+        ctx.lineWidth = 1.3;
+        ctx.beginPath();
+        ctx.arc(sx, axisBubbleTopY, 9.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = isLight ? '#dc2626' : '#fca5a5';
+        ctx.font = 'bold 9px "JetBrains Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`X${i + 1}`, sx, axisBubbleTopY);
+        ctx.restore();
+    }
+
+    // Y通り芯 (Y1, Y2, ...)
+    for (let j = 0; j < ys.length; j++) {
+        const sy = worldPToScreen(minX, ys[j]).y;
+        if (showFullAxisLines) {
+            ctx.save();
+            ctx.strokeStyle = isLight ? 'rgba(220, 38, 38, 0.25)' : 'rgba(248, 113, 113, 0.25)';
+            ctx.lineWidth = 0.9;
+            ctx.setLineDash([8, 3, 2, 3]);
+            ctx.beginPath();
+            ctx.moveTo(axisBubbleLeftX + 10, sy);
+            ctx.lineTo(pBotRight.x + 18, sy);
+            ctx.stroke();
+            ctx.restore();
+        }
+        ctx.save();
+        ctx.fillStyle = isLight ? '#ffffff' : '#1e293b';
+        ctx.strokeStyle = isLight ? '#dc2626' : '#f87171';
+        ctx.lineWidth = 1.3;
+        ctx.beginPath();
+        ctx.arc(axisBubbleLeftX, sy, 9.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = isLight ? '#dc2626' : '#fca5a5';
+        ctx.font = 'bold 9px "JetBrains Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`Y${j + 1}`, axisBubbleLeftX, sy);
+        ctx.restore();
+    }
+
+    // --- 4. 設計者モード時の「上下階壁揃い（直下率）色分け照合」＆「部屋別面積一覧表」（P2-2 & P3-3） ---
+    if (state.designerMode) {
+        drawDesignerOverlay2D(fl, isLight);
+    }
+
+    ctx.restore();
+}
+
+function drawDesignerOverlay2D(fl, isLight) {
+    const pitch = state.modulePitch || 910;
+    const refFloorNum = state.currentFloor === 1 ? 2 : 1;
+    const refFl = state.floors[refFloorNum];
+
+    // 1. 上下階の壁一致・ズレ照合ハイライト（緑＝直下・直上壁一致、オレンジ赤＝ズレ）
+    if (refFl && refFl.walls && refFl.walls.length > 0 && fl.walls && fl.walls.length > 0) {
+        ctx.save();
+        fl.walls.forEach(wl => {
+            if (wl.wallType === 'agarikamachi') return;
+            const isHoriz = Math.abs(wl.y1 - wl.y2) < 0.05;
+            const isVert = Math.abs(wl.x1 - wl.x2) < 0.05;
+            let matched = false;
+            refFl.walls.forEach(rw => {
+                if (isHoriz && Math.abs(rw.y1 - rw.y2) < 0.05 && Math.abs(rw.y1 - wl.y1) <= 0.12) {
+                    const oMin = Math.max(Math.min(wl.x1, wl.x2), Math.min(rw.x1, rw.x2));
+                    const oMax = Math.min(Math.max(wl.x1, wl.x2), Math.max(rw.x1, rw.x2));
+                    if (oMax - oMin >= 0.25) matched = true;
+                } else if (isVert && Math.abs(rw.x1 - rw.x2) < 0.05 && Math.abs(rw.x1 - wl.x1) <= 0.12) {
+                    const oMin = Math.max(Math.min(wl.y1, wl.y2), Math.min(rw.y1, rw.y2));
+                    const oMax = Math.min(Math.max(wl.y1, wl.y2), Math.max(rw.y1, rw.y2));
+                    if (oMax - oMin >= 0.25) matched = true;
+                }
+            });
+            const p1 = worldPToScreen(wl.x1, wl.y1);
+            const p2 = worldPToScreen(wl.x2, wl.y2);
+            ctx.strokeStyle = matched ? 'rgba(16, 185, 129, 0.65)' : 'rgba(249, 115, 22, 0.65)';
+            ctx.lineWidth = 9;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+        });
+        ctx.restore();
+    }
+
+    // 2. 画面右上（2Dキャンバス内）に「部屋別面積・帖数一覧表」を表示
+    const rect = canvas2d.getBoundingClientRect();
+    const rooms = (fl.rooms || []).filter(r => r.type !== 'TENJO');
+    if (rooms.length === 0) return;
+
+    const pitchM = pitch / 1000;
+    const rowH = 16;
+    const boxW = 215;
+    const boxH = 44 + Math.min(rooms.length, 22) * rowH;
+    const boxX = Math.max(12, rect.width - boxW - 12);
+    const boxY = 48;
+
+    ctx.save();
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.90)';
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 1.5;
+    ctx.fillRect(boxX, boxY, boxW, boxH);
+    ctx.strokeRect(boxX, boxY, boxW, boxH);
+
+    ctx.fillStyle = '#fbbf24';
+    ctx.font = 'bold 10px "Noto Sans JP", sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    const flName = state.currentFloor === 0 ? '地下' : `${state.currentFloor}階`;
+    const alignRatio = (typeof computeWallAlignmentRatio === 'function') ? computeWallAlignmentRatio() : 85;
+    ctx.fillText(`📐 設計者一覧 (${flName} / 壁直下率:${alignRatio}%)`, boxX + 8, boxY + 7);
+
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '9px "Noto Sans JP", sans-serif';
+    ctx.fillText('🟢緑壁=上下階一致  🟠橙壁=単独壁', boxX + 8, boxY + 22);
+
+    let yCursor = boxY + 38;
+    rooms.slice(0, 22).forEach((rm, idx) => {
+        const areaM2 = (typeof getRoomAreaM2 === 'function') ? getRoomAreaM2(rm) : ((rm.w * pitchM) * (rm.h * pitchM));
+        const jyo = (areaM2 / (pitchM * pitchM * 2)).toFixed(1);
+        const rName = rm.customName || rm.name || (ROOM_TYPES[rm.type] && ROOM_TYPES[rm.type].label) || `室${idx + 1}`;
+        const excl = (typeof isFloorAreaExcludedRoom === 'function' && isFloorAreaExcludedRoom(rm)) ? '(除外)' : '';
+        ctx.fillStyle = excl ? '#94a3b8' : '#f8fafc';
+        ctx.font = 'bold 10px "Noto Sans JP", monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText(`${idx + 1}. ${rName.slice(0, 8)}${excl}`, boxX + 8, yCursor);
+        ctx.textAlign = 'right';
+        ctx.fillStyle = excl ? '#94a3b8' : '#38bdf8';
+        ctx.fillText(`${jyo}帖 (${areaM2.toFixed(2)}㎡)`, boxX + boxW - 8, yCursor);
+        yCursor += rowH;
+    });
     ctx.restore();
 }
 
@@ -1429,9 +1585,11 @@ function drawWallActivePreview2D() {
         : (state.lastHoverWorld || state.wallClickStart);
     const dx = Math.abs(hoverPt.x - state.wallClickStart.x);
     const dy = Math.abs(hoverPt.y - state.wallClickStart.y);
-    const targetPt = dx >= dy
-        ? { x: hoverPt.x, y: state.wallClickStart.y }
-        : { x: state.wallClickStart.x, y: hoverPt.y };
+    const targetPt = state.diagonalWallMode
+        ? { x: hoverPt.x, y: hoverPt.y }
+        : (dx >= dy
+            ? { x: hoverPt.x, y: state.wallClickStart.y }
+            : { x: state.wallClickStart.x, y: hoverPt.y });
 
     const p1 = worldPToScreen(state.wallClickStart.x, state.wallClickStart.y);
     const p2 = worldPToScreen(targetPt.x, targetPt.y);
@@ -1571,6 +1729,24 @@ function drawSelectionHandles2D(isLight) {
         ctx.strokeStyle = '#f59e0b';
         ctx.lineWidth = 2.5;
         ctx.strokeRect(p.x - 10, p.y - 10, 20, 20);
+    } else if (kind === 'wall') {
+        const p1 = worldPToScreen(obj.x1, obj.y1);
+        const p2 = worldPToScreen(obj.x2, obj.y2);
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+        [p1, p2].forEach(pt => {
+            ctx.fillStyle = '#f59e0b';
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+        });
     }
     ctx.restore();
 }

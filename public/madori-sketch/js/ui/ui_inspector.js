@@ -200,9 +200,13 @@ function renderSubToolbar() {
     if (tool === 'wall') {
         const wSub = state.subWallType || 'wall';
         const names = { wall: '通常壁（外壁/内壁自動）', tarekabe: 'たれ壁（上部下がり壁・点線）', koshikabe: '腰壁（高さ1,000mm手すり壁）', agarikamachi: '上り框（玄関段差）' };
+        const diagActive = !!state.diagonalWallMode;
         container.innerHTML = `
             <span class="text-xs font-black text-amber-400 mr-1 shrink-0"><i class="fa-solid fa-pen-nib mr-1"></i>${names[wSub] || '壁'}:</span>
-            <span class="text-xs text-slate-200 shrink-0">始点から終点へ<b>ドラッグ</b>（または始点・終点タップ）で描画</span>
+            <button type="button" onclick="toggleDiagonalWallMode()" class="px-2 py-0.5 rounded text-[11px] font-bold border transition shrink-0 ${diagActive ? 'bg-amber-500 text-slate-950 border-amber-300 shadow' : 'bg-slate-800 text-slate-300 border-slate-600 hover:text-white'}" title="水平・垂直の直交スナップと、斜め壁（45°・自由角）作図を切り替えます">
+                <i class="fa-solid fa-slash mr-1"></i>${diagActive ? '📐 斜め壁ON' : '┼ 直交(水平/垂直)'}
+            </button>
+            <span class="text-xs text-slate-200 shrink-0 hidden sm:inline">始点〜終点ドラッグ（または2点クリック）で作図 ／ 既存壁は「編集」で数値移動・端点追随</span>
             <button onclick="openManualModal()" class="ml-auto px-2 py-0.5 rounded bg-amber-500/20 border border-amber-400/50 text-amber-300 text-[11px] font-bold shrink-0">📖 使い方</button>
         `;
     } else if (tool === 'pillar') {
@@ -225,22 +229,41 @@ function renderSubToolbar() {
     } else if (tool === 'opening') {
         const fit = state.subOpeningFit || 'hikichigai';
         const sashSpec = (window.SASH_TYPES_12 || []).find(s => s.id === fit) || { label: 'サッシ・建具' };
-        const wOpts = [360, 600, 740, 800, 1190, 1200, 1600, 1650, 2250, 2560].map(w =>
-            `<option value="${w}" ${state.subWindowWidth === w ? 'selected' : ''}>幅 W${w}mm</option>`
+        const wOpts = [360, 600, 700, 740, 780, 800, 850, 900, 910, 1000, 1190, 1200, 1365, 1600, 1650, 1820, 2250, 2560, 3470].map(w =>
+            `<option value="${w}" ${state.subWindowWidth === w ? 'selected' : ''}>幅 W${w}mm${w === 910 ? '(1P)' : (w === 1650 ? '(標準窓)' : (w === 800 ? '(標準戸)' : ''))}</option>`
         ).join('');
         const hOpts = [500, 700, 900, 1100, 1300, 1800, 2000, 2200, 2400].map(h =>
-            `<option value="${h}" ${state.subWindowHeight === h ? 'selected' : ''}>高 H${h}mm</option>`
+            `<option value="${h}" ${state.subWindowHeight === h ? 'selected' : ''}>高 H${h}mm${h === 1300 ? '(居室窓)' : (h === 2000 ? '(掃出/建具)' : '')}</option>`
         ).join('');
         const sillOpts = [0, 400, 800, 900, 1100, 1500, 1800].map(s =>
-            `<option value="${s}" ${state.subWindowSillMm === s ? 'selected' : ''}>下端 FL+${s}mm${s === 0 ? '(床/掃出)' : (s === 900 ? '(腰窓)' : '')}</option>`
+            `<option value="${s}" ${state.subWindowSillMm === s ? 'selected' : ''}>下端 FL+${s}mm${s === 0 ? '(床/掃出)' : (s === 800 || s === 900 ? '(腰窓)' : (s >= 1500 ? '(高窓)' : ''))}</option>`
         ).join('');
 
+        const presets = window.OPENING_QUICK_PRESETS || [];
+        const presetBtns = presets.map(pr => {
+            const isMatched = state.subOpeningFit === pr.fit && state.subWindowWidth === pr.wMm && state.subWindowHeight === pr.hMm && state.subWindowSillMm === pr.sillMm;
+            return `<button type="button" onclick="applyOpeningQuickPreset('${pr.id}')" class="px-2 py-0.5 rounded text-[10px] font-bold border transition shrink-0 ${isMatched ? 'bg-amber-500 text-slate-950 border-amber-300 shadow' : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-600'}">${pr.label}</button>`;
+        }).join('');
+
+        const copyBadge = state.copiedOpeningSpec
+            ? `<button type="button" onclick="clearCopiedOpeningSpec()" class="px-2 py-0.5 rounded bg-emerald-600 text-white text-[10px] font-extrabold border border-emerald-300 shadow shrink-0" title="クリックでコピー連続配置モードを解除">📋 コピー連続配置中: ${state.copiedOpeningSpec.label} (×解除)</button>`
+            : '';
+
         container.innerHTML = `
-            <span class="text-xs font-black text-amber-400 shrink-0">🚪 ${sashSpec.label}:</span>
-            <select onchange="state.subWindowWidth=parseInt(this.value);state.subDoorLeafWidth=Math.round(parseInt(this.value)/(state.subDoorLeafCount||1));" class="bg-slate-900 text-sky-200 border border-slate-700 rounded px-2 py-1 text-xs font-bold mono-num">${wOpts}</select>
-            <select onchange="state.subWindowHeight=parseInt(this.value);state.subDoorHeight=parseInt(this.value);" class="bg-slate-900 text-sky-200 border border-slate-700 rounded px-2 py-1 text-xs font-bold mono-num">${hOpts}</select>
-            <select onchange="state.subWindowSillMm=parseInt(this.value);" class="bg-slate-900 text-amber-200 border border-slate-700 rounded px-2 py-1 text-xs font-bold mono-num">${sillOpts}</select>
-            <span class="text-[11px] text-slate-300 hidden md:inline">壁の上をタップして配置（外壁＝窓サッシ / 内壁＝室内ドア自動判定）</span>
+            <div class="flex flex-col gap-1 w-full">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="text-xs font-black text-amber-400 shrink-0">🚪 ${sashSpec.label}:</span>
+                    <select onchange="state.subWindowWidth=parseInt(this.value);state.subDoorLeafWidth=Math.round(parseInt(this.value)/(state.subDoorLeafCount||1));state.copiedOpeningSpec=null;renderSubToolbar();" class="bg-slate-900 text-sky-200 border border-slate-700 rounded px-2 py-0.5 text-xs font-bold mono-num">${wOpts}</select>
+                    <select onchange="state.subWindowHeight=parseInt(this.value);state.subDoorHeight=parseInt(this.value);state.copiedOpeningSpec=null;renderSubToolbar();" class="bg-slate-900 text-sky-200 border border-slate-700 rounded px-2 py-0.5 text-xs font-bold mono-num">${hOpts}</select>
+                    <select onchange="state.subWindowSillMm=parseInt(this.value);state.copiedOpeningSpec=null;renderSubToolbar();" class="bg-slate-900 text-amber-200 border border-slate-700 rounded px-2 py-0.5 text-xs font-bold mono-num">${sillOpts}</select>
+                    ${copyBadge}
+                    <span class="text-[10px] text-slate-300 hidden xl:inline">壁をタップで配置（配置後に「壁端から◯mm」数値指定・コピーも可能）</span>
+                </div>
+                <div class="flex items-center gap-1 overflow-x-auto pb-0.5">
+                    <span class="text-[10px] font-bold text-amber-300 shrink-0">⚡定型プリセット:</span>
+                    ${presetBtns}
+                </div>
+            </div>
         `;
     } else if (tool === 'stair') {
         container.innerHTML = `
@@ -418,13 +441,20 @@ function renderPropertyInspector() {
         const curHMm = obj.heightMm || 2000;
         const curSill = obj.sillMm !== undefined ? obj.sillMm : 0;
         const sashOpts = (window.SASH_TYPES_12 || []).map(s => `<option value="${s.id}" ${s.id === curFit ? 'selected' : ''}>${s.label}</option>`).join('');
+        const hostSpan = (typeof getOpeningHostWallSpan === 'function') ? getOpeningHostWallSpan(obj) : null;
+        const startLabel = obj.orient === 'h' ? '壁左端から(mm)' : '壁上端から(mm)';
+        const endLabel = obj.orient === 'h' ? '壁右端から(mm)' : '壁下端から(mm)';
+        const distStartMm = hostSpan ? hostSpan.fromStartMm : 0;
+        const distEndMm = hostSpan ? hostSpan.fromEndMm : 0;
+        const hostLenMm = hostSpan ? hostSpan.wallLenMm : 0;
 
         panel.innerHTML = `
             <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-2.5">
                 <span class="text-xs font-bold text-white">🚪 サッシ・建具の編集</span>
                 <div class="flex items-center gap-1">
-                    <button onclick="deleteSelectedItem()" class="px-2 py-1 rounded bg-rose-600/30 hover:bg-rose-600/50 text-[11px] text-rose-200 font-bold"><i class="fa-solid fa-trash mr-1"></i>削除</button>
-                    <button onclick="state.selectedItem=null;renderPropertyInspector();request2DRedraw();" class="text-slate-400 hover:text-white px-1.5"><i class="fa-solid fa-xmark"></i></button>
+                    <button type="button" onclick="copySelectedOpeningForPaste()" class="px-2 py-1 rounded bg-emerald-600/30 hover:bg-emerald-600/50 text-[11px] text-emerald-200 font-bold" title="この窓・建具の仕様（種類・幅・高さ・下端）をコピーして他の壁に連続配置します"><i class="fa-solid fa-copy mr-1"></i>コピー配置</button>
+                    <button type="button" onclick="deleteSelectedItem()" class="px-2 py-1 rounded bg-rose-600/30 hover:bg-rose-600/50 text-[11px] text-rose-200 font-bold"><i class="fa-solid fa-trash mr-1"></i>削除</button>
+                    <button type="button" onclick="state.selectedItem=null;renderPropertyInspector();request2DRedraw();" class="text-slate-400 hover:text-white px-1.5"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
             <div class="space-y-2 text-xs">
@@ -435,18 +465,42 @@ function renderPropertyInspector() {
                 <div class="grid grid-cols-3 gap-1.5">
                     <div>
                         <label class="text-[10px] text-slate-400 block">幅 W(mm)</label>
-                        <input type="number" step="50" value="${curWMm}" onchange="updateSelectedWindowSize(parseInt(this.value), null)" class="w-full bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-white font-bold mono-num">
+                        <input type="number" step="10" value="${curWMm}" onchange="updateSelectedWindowSize(parseInt(this.value), null)" class="w-full bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-white font-bold mono-num">
                     </div>
                     <div>
                         <label class="text-[10px] text-slate-400 block">高さ H(mm)</label>
-                        <input type="number" step="100" value="${curHMm}" onchange="updateSelectedWindowSize(null, parseInt(this.value))" class="w-full bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-white font-bold mono-num">
+                        <input type="number" step="50" value="${curHMm}" onchange="updateSelectedWindowSize(null, parseInt(this.value))" class="w-full bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-white font-bold mono-num">
                     </div>
                     <div>
                         <label class="text-[10px] text-slate-400 block">下端 FL+(mm)</label>
-                        <input type="number" step="100" value="${curSill}" onchange="updateSelectedOpeningSill(parseInt(this.value))" class="w-full bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-amber-300 font-bold mono-num">
+                        <input type="number" step="50" value="${curSill}" onchange="updateSelectedOpeningSill(parseInt(this.value))" class="w-full bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-amber-300 font-bold mono-num">
                     </div>
                 </div>
-                <button onclick="flipLastOrSelectedOpening()" class="w-full py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs">
+                <div class="flex flex-wrap gap-1 pt-0.5">
+                    <button type="button" onclick="applyPresetToSelectedOpening('preset_living_win')" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[10px] text-sky-200">居室窓(1650×1300/FL800)</button>
+                    <button type="button" onclick="applyPresetToSelectedOpening('preset_sweep_win')" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[10px] text-amber-200">掃出(1650×2000/FL0)</button>
+                    <button type="button" onclick="applyPresetToSelectedOpening('preset_wet_win')" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[10px] text-emerald-200">小窓(800×900/FL1100)</button>
+                    <button type="button" onclick="applyPresetToSelectedOpening('preset_ent_910')" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[10px] text-rose-200">玄関910(910×2200)</button>
+                </div>
+                ${hostSpan ? `
+                <div class="p-2 rounded-lg bg-slate-900/90 border border-slate-700/80 space-y-1.5">
+                    <div class="flex items-center justify-between text-[10px] text-slate-400">
+                        <span>📏 壁端からの数値配置（壁長: ${hostLenMm}mm）</span>
+                        <button type="button" onclick="centerSelectedOpeningOnWall()" class="px-1.5 py-0.5 rounded bg-sky-600/30 hover:bg-sky-600/50 text-sky-200 font-bold">壁中央に配置</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-1.5">
+                        <div>
+                            <label class="text-[10px] text-slate-400 block">${startLabel}</label>
+                            <input type="number" step="10" value="${distStartMm}" onchange="setOpeningOffsetFromWallEnd('start', parseInt(this.value))" class="w-full bg-slate-950 border border-slate-700 rounded px-1.5 py-1 text-emerald-300 font-bold mono-num">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-slate-400 block">${endLabel}</label>
+                            <input type="number" step="10" value="${distEndMm}" onchange="setOpeningOffsetFromWallEnd('end', parseInt(this.value))" class="w-full bg-slate-950 border border-slate-700 rounded px-1.5 py-1 text-emerald-300 font-bold mono-num">
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
+                <button type="button" onclick="flipLastOrSelectedOpening()" class="w-full py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs">
                     <i class="fa-solid fa-repeat mr-1"></i>開閉向き反転（室内外・左右吊元切替）
                 </button>
             </div>
@@ -670,12 +724,28 @@ function renderPropertyInspector() {
                     <span class="text-[10px] text-slate-400">延床面積の計算:</span>
                     <button type="button" onclick="toggleSelectedRoomFloorArea()" class="px-2 py-1 rounded border text-[11px] font-bold ${isExcluded ? 'bg-slate-800 text-amber-300 border-amber-500/50' : 'bg-emerald-600/25 text-emerald-300 border-emerald-500/50'}">${isExcluded ? '除外中（クリックで算入に戻す）' : '算入中（クリックで除外）'}</button>
                 </div>
+                <div class="p-2 rounded-lg bg-slate-900/90 border border-slate-700/80 space-y-1.5">
+                    <div class="text-[10px] font-bold text-amber-300">📐 部屋の辺寸法を直接数値指定（隣接壁も自動追随）</div>
+                    <div class="grid grid-cols-2 gap-1.5">
+                        <div>
+                            <label class="text-[10px] text-slate-400 block">横幅 W(mm)</label>
+                            <input type="number" step="455" value="${wMm}" onchange="updateSelectedRoomDimensionsMm(parseInt(this.value), null)" class="w-full bg-slate-950 border border-slate-700 rounded px-1.5 py-1 text-white font-bold mono-num">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-slate-400 block">奥行 D(mm)</label>
+                            <input type="number" step="455" value="${hMm}" onchange="updateSelectedRoomDimensionsMm(null, parseInt(this.value))" class="w-full bg-slate-950 border border-slate-700 rounded px-1.5 py-1 text-white font-bold mono-num">
+                        </div>
+                    </div>
+                </div>
                 <div class="text-[11px] text-slate-400 mono-num">外接寸法: ${wMm}mm × ${hMm}mm / 実面積: ${areaM2.toFixed(2)}㎡</div>
             </div>
         `;
     } else if (kind === 'wall') {
         const lenMm = Math.round(Math.hypot(obj.x2 - obj.x1, obj.y2 - obj.y1) * pitch);
         const curType = obj.wallType || 'wall';
+        const isHoriz = Math.abs(obj.y1 - obj.y2) < 0.05;
+        const isVert = Math.abs(obj.x1 - obj.x2) < 0.05;
+        const dirHint = isHoriz ? '上下（Y方向）へ平行移動' : (isVert ? '左右（X方向）へ平行移動' : '平行移動');
         const wallOpts = (window.WALL_SUBTYPES || []).map(w => `<option value="${w.id}" ${w.id === curType ? 'selected' : ''}>${w.label}</option>`).join('');
         panel.innerHTML = `
             <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-2">
@@ -689,6 +759,25 @@ function renderPropertyInspector() {
                 <div class="flex items-center justify-between gap-2">
                     <span class="text-slate-400">壁種別:</span>
                     <select onchange="changeSelectedWallType(this.value)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold">${wallOpts}</select>
+                </div>
+                <div class="flex items-center justify-between gap-2">
+                    <span class="text-slate-400">長さ(mm):</span>
+                    <input type="number" step="10" value="${lenMm}" onchange="updateSelectedWallLengthMm(parseInt(this.value))" class="w-28 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white font-bold mono-num">
+                </div>
+                <div class="p-2 rounded-lg bg-slate-900/90 border border-slate-700/80 space-y-1.5">
+                    <div class="text-[10px] font-bold text-amber-300">↔ 壁の平行移動（接続壁・窓も自動追随 / 矢印キー対応）</div>
+                    <div class="grid grid-cols-4 gap-1">
+                        <button type="button" onclick="nudgeSelectedWallByMm(-910)" class="py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[10px] font-bold text-sky-300">-910</button>
+                        <button type="button" onclick="nudgeSelectedWallByMm(-455)" class="py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[10px] font-bold text-sky-200">-455</button>
+                        <button type="button" onclick="nudgeSelectedWallByMm(455)" class="py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[10px] font-bold text-amber-200">+455</button>
+                        <button type="button" onclick="nudgeSelectedWallByMm(910)" class="py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[10px] font-bold text-amber-300">+910</button>
+                    </div>
+                    <div class="flex items-center gap-1 pt-0.5">
+                        <input type="number" id="inpWallOffsetMm" step="10" value="455" class="flex-1 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-white font-bold mono-num" placeholder="移動量mm">
+                        <button type="button" onclick="nudgeSelectedWallByMm(-Math.abs(parseInt(document.getElementById('inpWallOffsetMm')?.value||455)))" class="px-2 py-1 rounded bg-sky-700 hover:bg-sky-600 text-white font-bold text-[10px]">${isHoriz ? '↑上へ' : '←左へ'}</button>
+                        <button type="button" onclick="nudgeSelectedWallByMm(Math.abs(parseInt(document.getElementById('inpWallOffsetMm')?.value||455)))" class="px-2 py-1 rounded bg-amber-600 hover:bg-amber-500 text-slate-950 font-extrabold text-[10px]">${isHoriz ? '↓下へ' : '→右へ'}</button>
+                    </div>
+                    <div class="text-[9px] text-slate-400">${dirHint}（キャンバス上で壁をドラッグしても移動できます）</div>
                 </div>
             </div>
         `;
@@ -967,6 +1056,122 @@ function toggleGuidesLock() {
 }
 window.toggleGuidesLock = toggleGuidesLock;
 
+function toggleDiagonalWallMode() {
+    state.diagonalWallMode = !state.diagonalWallMode;
+    renderSubToolbar();
+    request2DRedraw();
+    showToast(state.diagonalWallMode ? '📐 斜め壁モードON：自由な角度（45°スナップ対応）で壁を描画できます' : '┼ 直交壁モード：水平・垂直方向に自動スナップします');
+}
+window.toggleDiagonalWallMode = toggleDiagonalWallMode;
+
+function toggleDesignerMode() {
+    state.designerMode = !state.designerMode;
+    const btn = document.getElementById('btnDesignerMode');
+    if (btn) {
+        btn.className = state.designerMode
+            ? 'px-2 py-1 rounded bg-amber-500 text-slate-950 font-extrabold text-xs border border-amber-300 shadow flex items-center gap-1 transition'
+            : 'px-2 py-1 rounded bg-zinc-700 hover:bg-zinc-600 text-zinc-200 font-bold text-xs border border-zinc-600 flex items-center gap-1 transition';
+    }
+    request2DRedraw();
+    showToast(state.designerMode
+        ? '📐 設計者モードON：通り芯（X1,X2…/Y1,Y2…）・上下階壁揃い照合・部屋別面積一覧表を常時表示します'
+        : '設計者モードをOFFにしました');
+}
+window.toggleDesignerMode = toggleDesignerMode;
+
+function applyOpeningQuickPreset(presetId) {
+    const pr = (window.OPENING_QUICK_PRESETS || []).find(p => p.id === presetId);
+    if (!pr) return;
+    state.subOpeningFit = pr.fit;
+    state.subDoorFit = pr.fit;
+    state.subOpeningCategory = pr.category;
+    state.subWindowWidth = pr.wMm;
+    state.subWindowHeight = pr.hMm;
+    state.subWindowSillMm = pr.sillMm;
+    state.subDoorLeafCount = pr.leaves || 1;
+    state.subDoorLeafWidth = Math.round(pr.wMm / (pr.leaves || 1));
+    state.subDoorHeight = pr.hMm;
+    state.copiedOpeningSpec = null;
+
+    // 左パレットのボタンハイライトも連動更新
+    document.querySelectorAll('.tool-btn, .palette-tool-btn').forEach(btn => {
+        btn.classList.remove('active', 'active-orange');
+    });
+    const revMap = { katabiki: 'hikido', katahiraki: 'katabiraki', ryouhiraki: 'ryobiraki' };
+    const activeBtn = document.getElementById('tool_sash_' + (revMap[pr.fit] || pr.fit)) || document.getElementById('tool_sash_' + pr.fit);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    renderSubToolbar();
+    request2DRedraw();
+    showToast(`⚡ プリセット「${pr.label}」を選択しました（壁をタップして連続配置できます）`);
+}
+window.applyOpeningQuickPreset = applyOpeningQuickPreset;
+
+function applyPresetToSelectedOpening(presetId) {
+    const pr = (window.OPENING_QUICK_PRESETS || []).find(p => p.id === presetId);
+    const obj = findSelectedObject();
+    if (!pr || !obj || !state.selectedItem || state.selectedItem.kind !== 'opening') return;
+    const pitch = state.modulePitch || 910;
+    const nextWidthP = +(pr.wMm / pitch).toFixed(3);
+    if (typeof checkOpeningOverlap === 'function' && checkOpeningOverlap(state.currentFloor, obj.x, obj.y, obj.orient, nextWidthP, obj.id)) {
+        showToast('隣接する建具・窓と重なるため幅を変更できません', true);
+        return;
+    }
+    obj.doorFit = pr.fit;
+    obj.sashType = pr.fit;
+    obj.category = pr.category;
+    obj.isWin = (pr.category === 'window');
+    obj.widthMm = pr.wMm;
+    obj.widthP = nextWidthP;
+    obj.heightMm = pr.hMm;
+    obj.sillMm = pr.sillMm;
+    obj.leafCount = pr.leaves || 1;
+    obj.leafWidthMm = Math.round(pr.wMm / obj.leafCount);
+    obj.label = `${pr.label}`;
+    saveHistorySnapshot();
+    if (typeof rebuild3DScene === 'function') rebuild3DScene();
+    renderPropertyInspector();
+    request2DRedraw();
+    showToast(`選択中の開口部に「${pr.label}」を適用しました`);
+}
+window.applyPresetToSelectedOpening = applyPresetToSelectedOpening;
+
+function copySelectedOpeningForPaste() {
+    const obj = findSelectedObject();
+    if (!obj || !state.selectedItem || state.selectedItem.kind !== 'opening') return;
+    const sashSpec = (window.SASH_TYPES_12 || []).find(s => s.id === obj.doorFit);
+    const typeName = sashSpec ? sashSpec.label : (obj.isWin ? '窓' : '建具');
+    state.copiedOpeningSpec = {
+        doorFit: obj.doorFit || 'hikichigai',
+        sashType: obj.sashType || obj.doorFit || 'hikichigai',
+        category: obj.category || (obj.isWin ? 'window' : 'door'),
+        isWin: !!obj.isWin,
+        widthMm: obj.widthMm || 1650,
+        heightMm: obj.heightMm || 1300,
+        sillMm: obj.sillMm !== undefined ? obj.sillMm : 0,
+        leafCount: obj.leafCount || 1,
+        leafWidthMm: obj.leafWidthMm || obj.widthMm || 800,
+        flip: !!obj.flip,
+        label: `${typeName} W${obj.widthMm}×H${obj.heightMm}(FL+${obj.sillMm || 0})`
+    };
+    state.activeTool = 'opening';
+    state.subOpeningFit = state.copiedOpeningSpec.doorFit;
+    state.subWindowWidth = state.copiedOpeningSpec.widthMm;
+    state.subWindowHeight = state.copiedOpeningSpec.heightMm;
+    state.subWindowSillMm = state.copiedOpeningSpec.sillMm;
+    renderSubToolbar();
+    request2DRedraw();
+    showToast(`📋「${state.copiedOpeningSpec.label}」をコピーしました！配置したい壁を順番にタップしてください`);
+}
+window.copySelectedOpeningForPaste = copySelectedOpeningForPaste;
+
+function clearCopiedOpeningSpec() {
+    state.copiedOpeningSpec = null;
+    renderSubToolbar();
+    showToast('コピー連続配置モードを解除しました');
+}
+window.clearCopiedOpeningSpec = clearCopiedOpeningSpec;
+
 function expandGridBound(dir) {
     if (!state.gridBounds) state.gridBounds = { minX: -2, maxX: 12, minY: -2, maxY: 12 };
     if (dir === 'top') state.gridBounds.minY -= 4;
@@ -1235,13 +1440,25 @@ window.showManualItem = showManualItem;
  * 🔄 アプリ化（PWA / ホーム画面追加）およびブラウザ用の強制最新版アップデート機構
  * 作図中のデータを一時自動退避した上でキャッシュを破棄し、最新バージョンを再取得します。
  */
-const getCurrentMadoriAppVersion = () => (typeof window.MADORI_APP_VERSION === 'string' && window.MADORI_APP_VERSION) || '2.12.1';
+const getCurrentMadoriAppVersion = () => (typeof window.MADORI_APP_VERSION === 'string' && window.MADORI_APP_VERSION) || '2.15.0';
+
+function compareSemver(verA, verB) {
+    const parse = (v) => String(v || '0.0.0').replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+    const a = parse(verA);
+    const b = parse(verB);
+    for (let i = 0; i < 3; i++) {
+        if ((a[i] || 0) > (b[i] || 0)) return 1;
+        if ((a[i] || 0) < (b[i] || 0)) return -1;
+    }
+    return 0;
+}
 
 async function forceUpdateMadoriApp() {
     try {
-        // 作図中のデータがあればセッションストレージへ自動バックアップ
+        // 作図中のデータがあればセッションストレージへ自動バックアップ（物件タイトルも確実に保存）
         if (typeof state !== 'undefined' && state.floors) {
-            const curTitle = document.getElementById('planTitleInput')?.value?.trim() || state.projectTitle;
+            const titleEl = document.getElementById('planTitleInput');
+            const curTitle = (titleEl && titleEl.value && titleEl.value.trim()) ? titleEl.value.trim() : (state.projectTitle || '新規プラン');
             state.projectTitle = curTitle;
             sessionStorage.setItem('smile_madori_auto_backup', JSON.stringify({
                 projectTitle: curTitle,
@@ -1249,6 +1466,7 @@ async function forceUpdateMadoriApp() {
                 currentFloor: state.currentFloor,
                 modulePitch: state.modulePitch,
                 gridDivisions: state.gridDivisions,
+                designerMode: state.designerMode,
                 floors: state.floors,
                 guides: state.guides,
                 savedAt: Date.now()
@@ -1287,17 +1505,24 @@ async function checkMadoriAppUpdate() {
         const btn = document.getElementById('btnAppUpdate');
         const badge = document.getElementById('badgeUpdateAvailable');
         const currentVer = getCurrentMadoriAppVersion();
-        if (remoteVer && remoteVer !== currentVer) {
+
+        // リモート版が現在版より新しい場合のみ通知（同版や古いキャッシュ文字列での誤通知を完全防止）
+        if (remoteVer && compareSemver(remoteVer, currentVer) > 0) {
             if (btn) {
-                btn.className = 'px-2 py-1 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold border border-amber-200 shadow flex items-center gap-1 animate-pulse transition';
-                btn.title = `新しいバージョン (v${remoteVer}) が利用可能です！タップして最新版に更新`;
+                btn.className = 'relative px-2.5 py-1 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold border border-amber-200 shadow flex items-center gap-1 animate-pulse transition';
+                btn.title = `新しいバージョン (v${remoteVer}) が利用可能です！タップして最新版に更新（作図中データは保持されます）`;
+                btn.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i><span>v${remoteVer}へ更新</span><span id="badgeUpdateAvailable" class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-rose-500 border border-slate-900"></span>`;
             }
             if (badge) badge.classList.remove('hidden');
-            showToast(`✨ 新しいバージョン (v${remoteVer}) が配信されています。上部の「🔄 更新」ボタンで反映できます`);
-        } else if (badge) {
-            badge.classList.add('hidden');
+            showToast(`✨ 新しいバージョン (v${remoteVer}) が配信されています。上部の「🔄 v${remoteVer}へ更新」ボタンで即座に反映できます`);
+        } else {
+            if (badge) badge.classList.add('hidden');
+            if (btn) {
+                btn.className = 'relative px-2 py-1 rounded bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 text-emerald-300 hover:text-white text-xs font-bold flex items-center gap-1 transition';
+                btn.title = `現在のバージョン: v${currentVer}（最新です。タップでキャッシュクリア再読込）`;
+            }
         }
-    } catch (e) {}
+    } catch (e) { }
 }
 window.checkMadoriAppUpdate = checkMadoriAppUpdate;
 
@@ -1307,23 +1532,30 @@ function restoreAutoBackupIfAvailable() {
         if (!raw) return false;
         sessionStorage.removeItem('smile_madori_auto_backup');
         const bak = JSON.parse(raw);
-        if (bak && bak.floors && (Date.now() - (bak.savedAt || 0) < 120000)) {
-            state.projectTitle = bak.projectTitle || state.projectTitle;
+        if (bak && bak.floors && (Date.now() - (bak.savedAt || 0) < 300000)) {
+            state.projectTitle = bak.projectTitle || state.projectTitle || '新規プラン';
             const titleInp = document.getElementById('planTitleInput');
-            if (titleInp && state.projectTitle) titleInp.value = state.projectTitle;
+            if (titleInp) titleInp.value = state.projectTitle;
             state.currentPlanId = bak.currentPlanId || null;
             if (typeof window.updateCurrentPlanBadge === 'function') window.updateCurrentPlanBadge();
             state.currentFloor = bak.currentFloor || 1;
             state.modulePitch = bak.modulePitch || 910;
             state.gridDivisions = bak.gridDivisions || 2;
+            state.designerMode = !!bak.designerMode;
             state.floors = bak.floors;
             state.guides = bak.guides || [];
             ensureFloorsStructure();
             saveHistorySnapshot();
-            showToast('✅ 最新版への更新が完了し、編集中の図面データを復元しました！');
+            if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
+            // loadSampleHousePlan 等に上書きされないよう遅延でもう一度タイトル欄を確定同期
+            setTimeout(() => {
+                const inp = document.getElementById('planTitleInput');
+                if (inp && state.projectTitle) inp.value = state.projectTitle;
+            }, 60);
+            showToast(`✅ 最新版への更新が完了し、「${state.projectTitle}」の図面データを復元しました！`);
             return true;
         }
-    } catch (e) {}
+    } catch (e) { }
     return false;
 }
 window.restoreAutoBackupIfAvailable = restoreAutoBackupIfAvailable;
