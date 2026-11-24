@@ -1,0 +1,1682 @@
+{
+  "version": "1.0",
+  "modulePitch": 910,
+  "floors": {
+    "0": {
+      "rooms": [],
+      "walls": [],
+      "openings": [],
+      "stairs": []
+    },
+    "1": {
+      "rooms": [
+        {
+          "id": "1_r0",
+          "kind": "room",
+          "type": "DOMA",
+          "name": "玄関",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 0.0,
+              "y": 0.0
+            },
+            {
+              "x": 2.6671,
+              "y": 0.0
+            },
+            {
+              "x": 2.6671,
+              "y": 0.9624
+            },
+            {
+              "x": 0.0,
+              "y": 0.9624
+            }
+          ],
+          "x": 0.0,
+          "y": 0.0,
+          "w": 2.6671,
+          "h": 0.9624,
+          "centroid": {
+            "x": 1.3336,
+            "y": 0.4812
+          },
+          "areaM2": 2.13,
+          "tsubo": 0.64,
+          "jo": 1.3,
+          "color2d": "rgba(203, 213, 225, 0.8)",
+          "color3d": "#cbd5e1",
+          "customName": "玄関"
+        },
+        {
+          "id": "1_r1",
+          "kind": "room",
+          "type": "HALL",
+          "name": "ホール",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 2.6671,
+              "y": 0.0
+            },
+            {
+              "x": 6.2233,
+              "y": 0.0
+            },
+            {
+              "x": 6.2233,
+              "y": 0.9624
+            },
+            {
+              "x": 2.6671,
+              "y": 0.9624
+            }
+          ],
+          "x": 2.6671,
+          "y": 0.0,
+          "w": 3.5562,
+          "h": 0.9624,
+          "centroid": {
+            "x": 4.4452,
+            "y": 0.4812
+          },
+          "areaM2": 2.83,
+          "tsubo": 0.86,
+          "jo": 1.7,
+          "color2d": "rgba(241, 245, 249, 0.7)",
+          "color3d": "#f8fafc",
+          "customName": "ホール"
+        },
+        {
+          "id": "1_r7",
+          "kind": "room",
+          "type": "HALL",
+          "name": "床の間",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 6.2233,
+              "y": 0.0
+            },
+            {
+              "x": 9.7795,
+              "y": 0.0
+            },
+            {
+              "x": 9.7795,
+              "y": 0.9624
+            },
+            {
+              "x": 6.2233,
+              "y": 0.9624
+            }
+          ],
+          "x": 6.2233,
+          "y": 0.0,
+          "w": 3.5562,
+          "h": 0.9624,
+          "centroid": {
+            "x": 8.0014,
+            "y": 0.4812
+          },
+          "areaM2": 2.83,
+          "tsubo": 0.86,
+          "jo": 1.7,
+          "color2d": "rgba(241, 245, 249, 0.7)",
+          "color3d": "#f8fafc",
+          "customName": "床の間"
+        },
+        {
+          "id": "1_r2",
+          "kind": "room",
+          "type": "STAIR",
+          "name": "階段",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 0.0,
+              "y": 0.9624
+            },
+            {
+              "x": 2.7941,
+              "y": 0.9624
+            },
+            {
+              "x": 2.7941,
+              "y": 1.8811
+            },
+            {
+              "x": 0.0,
+              "y": 1.8811
+            }
+          ],
+          "x": 0.0,
+          "y": 0.9624,
+          "w": 2.7941,
+          "h": 0.9187,
+          "centroid": {
+            "x": 1.3971,
+            "y": 1.4218
+          },
+          "areaM2": 2.13,
+          "tsubo": 0.64,
+          "jo": 1.3,
+          "color2d": "rgba(241, 245, 249, 0.7)",
+          "color3d": "#f8fafc",
+          "customName": "階段"
+        },
+        {
+          "id": "1_r3",
+          "kind": "room",
+          "type": "STORAGE",
+          "name": "収納",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 2.7941,
+              "y": 0.9624
+            },
+            {
+              "x": 5.1226,
+              "y": 0.9624
+            },
+            {
+              "x": 5.1226,
+              "y": 1.8811
+            },
+            {
+              "x": 2.7941,
+              "y": 1.8811
+            }
+          ],
+          "x": 2.7941,
+          "y": 0.9624,
+          "w": 2.3285,
+          "h": 0.9187,
+          "centroid": {
+            "x": 3.9584,
+            "y": 1.4218
+          },
+          "areaM2": 1.77,
+          "tsubo": 0.54,
+          "jo": 1.1,
+          "color2d": "rgba(241, 245, 249, 0.7)",
+          "color3d": "#f8fafc",
+          "customName": "収納"
+        },
+        {
+          "id": "1_r4",
+          "kind": "room",
+          "type": "TOILET",
+          "name": "1階WC",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 5.1226,
+              "y": 0.9624
+            },
+            {
+              "x": 6.9854,
+              "y": 0.9624
+            },
+            {
+              "x": 6.9854,
+              "y": 1.8811
+            },
+            {
+              "x": 5.1226,
+              "y": 1.8811
+            }
+          ],
+          "x": 5.1226,
+          "y": 0.9624,
+          "w": 1.8628,
+          "h": 0.9187,
+          "centroid": {
+            "x": 6.054,
+            "y": 1.4218
+          },
+          "areaM2": 1.42,
+          "tsubo": 0.43,
+          "jo": 0.9,
+          "color2d": "rgba(254, 243, 199, 0.7)",
+          "color3d": "#fef3c7",
+          "customName": "1階WC"
+        },
+        {
+          "id": "1_r5",
+          "kind": "room",
+          "type": "WASHROOM",
+          "name": "洗面・脱衣所",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 6.9854,
+              "y": 0.9624
+            },
+            {
+              "x": 9.7795,
+              "y": 0.9624
+            },
+            {
+              "x": 9.7795,
+              "y": 1.8811
+            },
+            {
+              "x": 6.9854,
+              "y": 1.8811
+            }
+          ],
+          "x": 6.9854,
+          "y": 0.9624,
+          "w": 2.7941,
+          "h": 0.9187,
+          "centroid": {
+            "x": 8.3824,
+            "y": 1.4218
+          },
+          "areaM2": 2.13,
+          "tsubo": 0.64,
+          "jo": 1.3,
+          "color2d": "rgba(241, 245, 249, 0.7)",
+          "color3d": "#f8fafc",
+          "customName": "洗面・脱衣所"
+        },
+        {
+          "id": "1_r6",
+          "kind": "room",
+          "type": "BATH",
+          "name": "浴室",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 0.0,
+              "y": 1.8811
+            },
+            {
+              "x": 0.7038,
+              "y": 1.8811
+            },
+            {
+              "x": 0.7038,
+              "y": 6.7445
+            },
+            {
+              "x": 0.0,
+              "y": 6.7445
+            }
+          ],
+          "x": 0.0,
+          "y": 1.8811,
+          "w": 0.7038,
+          "h": 4.8634,
+          "centroid": {
+            "x": 0.3519,
+            "y": 4.3128
+          },
+          "areaM2": 2.83,
+          "tsubo": 0.86,
+          "jo": 1.7,
+          "color2d": "rgba(186, 230, 253, 0.7)",
+          "color3d": "#bae6fd",
+          "customName": "浴室"
+        },
+        {
+          "id": "1_r8",
+          "kind": "room",
+          "type": "STORAGE",
+          "name": "押入",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 0.7038,
+              "y": 1.8811
+            },
+            {
+              "x": 1.1436,
+              "y": 1.8811
+            },
+            {
+              "x": 1.1436,
+              "y": 6.7445
+            },
+            {
+              "x": 0.7038,
+              "y": 6.7445
+            }
+          ],
+          "x": 0.7038,
+          "y": 1.8811,
+          "w": 0.4398,
+          "h": 4.8634,
+          "centroid": {
+            "x": 0.9237,
+            "y": 4.3128
+          },
+          "areaM2": 1.77,
+          "tsubo": 0.54,
+          "jo": 1.1,
+          "color2d": "rgba(241, 245, 249, 0.7)",
+          "color3d": "#f8fafc",
+          "customName": "押入"
+        },
+        {
+          "id": "1_r9",
+          "kind": "room",
+          "type": "WASHITSU",
+          "name": "和室 6帖",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 1.1436,
+              "y": 1.8811
+            },
+            {
+              "x": 3.611,
+              "y": 1.8811
+            },
+            {
+              "x": 3.611,
+              "y": 6.7445
+            },
+            {
+              "x": 1.1436,
+              "y": 6.7445
+            }
+          ],
+          "x": 1.1436,
+          "y": 1.8811,
+          "w": 2.4674,
+          "h": 4.8634,
+          "centroid": {
+            "x": 2.3773,
+            "y": 4.3128
+          },
+          "areaM2": 9.94,
+          "tsubo": 3.01,
+          "jo": 6.0,
+          "color2d": "rgba(220, 252, 231, 0.7)",
+          "color3d": "#dcfce7",
+          "customName": "和室 6帖"
+        },
+        {
+          "id": "1_r10",
+          "kind": "room",
+          "type": "LDK",
+          "name": "LDK 15帖",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 3.611,
+              "y": 1.8811
+            },
+            {
+              "x": 9.7795,
+              "y": 1.8811
+            },
+            {
+              "x": 9.7795,
+              "y": 6.7445
+            },
+            {
+              "x": 3.611,
+              "y": 6.7445
+            }
+          ],
+          "x": 3.611,
+          "y": 1.8811,
+          "w": 6.1685,
+          "h": 4.8634,
+          "centroid": {
+            "x": 6.6953,
+            "y": 4.3128
+          },
+          "areaM2": 24.84,
+          "tsubo": 7.51,
+          "jo": 15.0,
+          "color2d": "rgba(226, 232, 240, 0.65)",
+          "color3d": "#f1f5f9",
+          "customName": "LDK 15帖"
+        }
+      ],
+      "walls": [
+        {
+          "id": "1_extN",
+          "kind": "wall",
+          "x1": 0,
+          "y1": 0,
+          "x2": 9.7795,
+          "y2": 0,
+          "wallType": "exterior",
+          "thickness": 0.12
+        },
+        {
+          "id": "1_extS",
+          "kind": "wall",
+          "x1": 0,
+          "y1": 6.7445,
+          "x2": 9.7795,
+          "y2": 6.7445,
+          "wallType": "exterior",
+          "thickness": 0.12
+        },
+        {
+          "id": "1_extW",
+          "kind": "wall",
+          "x1": 0,
+          "y1": 0,
+          "x2": 0,
+          "y2": 6.7445,
+          "wallType": "exterior",
+          "thickness": 0.12
+        },
+        {
+          "id": "1_extE",
+          "kind": "wall",
+          "x1": 9.7795,
+          "y1": 0,
+          "x2": 9.7795,
+          "y2": 6.7445,
+          "wallType": "exterior",
+          "thickness": 0.12
+        },
+        {
+          "id": "1_w0",
+          "kind": "wall",
+          "x1": 2.6671,
+          "y1": 0.0,
+          "x2": 2.6671,
+          "y2": 0.9624,
+          "wallType": "agarikamachi",
+          "thickness": 0.1
+        },
+        {
+          "id": "1_w1",
+          "kind": "wall",
+          "x1": 6.2233,
+          "y1": 0.0,
+          "x2": 6.2233,
+          "y2": 0.9624,
+          "wallType": "interior",
+          "thickness": 0.1
+        },
+        {
+          "id": "1_w2",
+          "kind": "wall",
+          "x1": 2.7941,
+          "y1": 0.9624,
+          "x2": 2.7941,
+          "y2": 1.8811,
+          "wallType": "interior",
+          "thickness": 0.1
+        },
+        {
+          "id": "1_w3",
+          "kind": "wall",
+          "x1": 5.1226,
+          "y1": 0.9624,
+          "x2": 5.1226,
+          "y2": 1.8811,
+          "wallType": "interior",
+          "thickness": 0.1
+        },
+        {
+          "id": "1_w4",
+          "kind": "wall",
+          "x1": 6.9854,
+          "y1": 0.9624,
+          "x2": 6.9854,
+          "y2": 1.8811,
+          "wallType": "interior",
+          "thickness": 0.1
+        },
+        {
+          "id": "1_w5",
+          "kind": "wall",
+          "x1": 0,
+          "y1": 0.9624,
+          "x2": 9.7795,
+          "y2": 0.9624,
+          "wallType": "interior",
+          "thickness": 0.1
+        },
+        {
+          "id": "1_w6",
+          "kind": "wall",
+          "x1": 0.7038,
+          "y1": 1.8811,
+          "x2": 0.7038,
+          "y2": 6.7445,
+          "wallType": "interior",
+          "thickness": 0.1
+        },
+        {
+          "id": "1_w7",
+          "kind": "wall",
+          "x1": 1.1436,
+          "y1": 1.8811,
+          "x2": 1.1436,
+          "y2": 6.7445,
+          "wallType": "interior",
+          "thickness": 0.1
+        },
+        {
+          "id": "1_w8",
+          "kind": "wall",
+          "x1": 3.611,
+          "y1": 1.8811,
+          "x2": 3.611,
+          "y2": 6.7445,
+          "wallType": "interior",
+          "thickness": 0.1
+        },
+        {
+          "id": "1_w9",
+          "kind": "wall",
+          "x1": 0,
+          "y1": 1.8811,
+          "x2": 9.7795,
+          "y2": 1.8811,
+          "wallType": "interior",
+          "thickness": 0.1
+        }
+      ],
+      "openings": [
+        {
+          "id": "1_op0",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 1092,
+          "x": 1.3336,
+          "y": 0,
+          "orient": "h",
+          "flip": false,
+          "widthMm": 1092,
+          "heightMm": 2100,
+          "sillMm": 0,
+          "widthP": 1.2,
+          "label": "建具 (W1092×H2100)",
+          "isWin": false
+        },
+        {
+          "id": "1_op1",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 525,
+          "x": 6.2233,
+          "y": 0.4812,
+          "orient": "v",
+          "flip": false,
+          "widthMm": 525,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.5775,
+          "label": "建具 (W525×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "1_op2",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 502,
+          "x": 2.7941,
+          "y": 1.4218,
+          "orient": "v",
+          "flip": false,
+          "widthMm": 502,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.5512,
+          "label": "建具 (W502×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "1_op3",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 502,
+          "x": 5.1226,
+          "y": 1.4218,
+          "orient": "v",
+          "flip": false,
+          "widthMm": 502,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.5512,
+          "label": "建具 (W502×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "1_op4",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 502,
+          "x": 6.9854,
+          "y": 1.4218,
+          "orient": "v",
+          "flip": false,
+          "widthMm": 502,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.5512,
+          "label": "建具 (W502×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "1_op5",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 728,
+          "x": 3.4228,
+          "y": 0.9624,
+          "orient": "h",
+          "flip": false,
+          "widthMm": 728,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.8,
+          "label": "建具 (W728×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "1_op6",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 728,
+          "x": 0.7038,
+          "y": 4.3128,
+          "orient": "v",
+          "flip": false,
+          "widthMm": 728,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.8,
+          "label": "建具 (W728×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "1_op7",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 728,
+          "x": 1.1436,
+          "y": 4.3128,
+          "orient": "v",
+          "flip": false,
+          "widthMm": 728,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.8,
+          "label": "建具 (W728×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "1_op8",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 728,
+          "x": 3.611,
+          "y": 4.3128,
+          "orient": "v",
+          "flip": false,
+          "widthMm": 728,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.8,
+          "label": "建具 (W728×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "1_op9",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 728,
+          "x": 3.4228,
+          "y": 1.8811,
+          "orient": "h",
+          "flip": false,
+          "widthMm": 728,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.8,
+          "label": "建具 (W728×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "1_op10",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 774,
+          "x": 0.7523,
+          "y": 0.9624,
+          "orient": "h",
+          "flip": false,
+          "widthMm": 774,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.85,
+          "label": "建具 (W774×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "1_op11",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 774,
+          "x": 8.275,
+          "y": 0.9624,
+          "orient": "h",
+          "flip": false,
+          "widthMm": 774,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.85,
+          "label": "建具 (W774×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "1_op12",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 774,
+          "x": 1.5045,
+          "y": 1.8811,
+          "orient": "h",
+          "flip": false,
+          "widthMm": 774,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.85,
+          "label": "建具 (W774×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "1_op13",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 774,
+          "x": 6.0182,
+          "y": 1.8811,
+          "orient": "h",
+          "flip": false,
+          "widthMm": 774,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.85,
+          "label": "建具 (W774×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "1_op14",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 774,
+          "x": 9.0272,
+          "y": 1.8811,
+          "orient": "h",
+          "flip": false,
+          "widthMm": 774,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.85,
+          "label": "建具 (W774×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "1_op15",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 774,
+          "x": 0.7038,
+          "y": 2.5759,
+          "orient": "v",
+          "flip": false,
+          "widthMm": 774,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.85,
+          "label": "建具 (W774×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "1_op16",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 774,
+          "x": 0.7038,
+          "y": 5.355,
+          "orient": "v",
+          "flip": false,
+          "widthMm": 774,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.85,
+          "label": "建具 (W774×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "1_op17",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 774,
+          "x": 3.611,
+          "y": 3.2706,
+          "orient": "v",
+          "flip": false,
+          "widthMm": 774,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.85,
+          "label": "建具 (W774×H2000)",
+          "isWin": false
+        }
+      ],
+      "stairs": [
+        {
+          "id": "1_st0",
+          "kind": "stair",
+          "type": "STAIR",
+          "category": "STAIR",
+          "shapeType": "STRAIGHT",
+          "points": [
+            {
+              "x": 4.8898,
+              "y": 0.0
+            },
+            {
+              "x": 6.3898,
+              "y": 0.0
+            },
+            {
+              "x": 6.3898,
+              "y": 0.9624
+            },
+            {
+              "x": 4.8898,
+              "y": 0.9624
+            }
+          ],
+          "widthMm": 876,
+          "steps": 14,
+          "treadMm": 220,
+          "riserMm": 200
+        }
+      ]
+    },
+    "2": {
+      "rooms": [
+        {
+          "id": "2_r5",
+          "kind": "room",
+          "type": "HALL",
+          "name": "2階廊下",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 0.0,
+              "y": 0.0
+            },
+            {
+              "x": 5.4449,
+              "y": 0.0
+            },
+            {
+              "x": 5.4449,
+              "y": 0.6674
+            },
+            {
+              "x": 0.0,
+              "y": 0.6674
+            }
+          ],
+          "x": 0.0,
+          "y": 0.0,
+          "w": 5.4449,
+          "h": 0.6674,
+          "centroid": {
+            "x": 2.7225,
+            "y": 0.3337
+          },
+          "areaM2": 3.01,
+          "tsubo": 0.91,
+          "jo": 1.8,
+          "color2d": "rgba(241, 245, 249, 0.7)",
+          "color3d": "#f8fafc",
+          "customName": "2階廊下"
+        },
+        {
+          "id": "2_r0",
+          "kind": "room",
+          "type": "STORAGE",
+          "name": "クローゼット",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 5.4449,
+              "y": 0.0
+            },
+            {
+              "x": 8.848,
+              "y": 0.0
+            },
+            {
+              "x": 8.848,
+              "y": 0.6674
+            },
+            {
+              "x": 5.4449,
+              "y": 0.6674
+            }
+          ],
+          "x": 5.4449,
+          "y": 0.0,
+          "w": 3.4031,
+          "h": 0.6674,
+          "centroid": {
+            "x": 7.1465,
+            "y": 0.3337
+          },
+          "areaM2": 1.88,
+          "tsubo": 0.57,
+          "jo": 1.1,
+          "color2d": "rgba(241, 245, 249, 0.7)",
+          "color3d": "#f8fafc",
+          "customName": "クローゼット"
+        },
+        {
+          "id": "2_r1",
+          "kind": "room",
+          "type": "STORAGE",
+          "name": "クローゼット",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 0.0,
+              "y": 0.6674
+            },
+            {
+              "x": 2.9493,
+              "y": 0.6674
+            },
+            {
+              "x": 2.9493,
+              "y": 1.4376
+            },
+            {
+              "x": 0.0,
+              "y": 1.4376
+            }
+          ],
+          "x": 0.0,
+          "y": 0.6674,
+          "w": 2.9493,
+          "h": 0.7701,
+          "centroid": {
+            "x": 1.4747,
+            "y": 1.0525
+          },
+          "areaM2": 1.88,
+          "tsubo": 0.57,
+          "jo": 1.1,
+          "color2d": "rgba(241, 245, 249, 0.7)",
+          "color3d": "#f8fafc",
+          "customName": "クローゼット"
+        },
+        {
+          "id": "2_r2",
+          "kind": "room",
+          "type": "STAIR",
+          "name": "階段",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 2.9493,
+              "y": 0.6674
+            },
+            {
+              "x": 6.4885,
+              "y": 0.6674
+            },
+            {
+              "x": 6.4885,
+              "y": 1.4376
+            },
+            {
+              "x": 2.9493,
+              "y": 1.4376
+            }
+          ],
+          "x": 2.9493,
+          "y": 0.6674,
+          "w": 3.5392,
+          "h": 0.7701,
+          "centroid": {
+            "x": 4.7189,
+            "y": 1.0525
+          },
+          "areaM2": 2.26,
+          "tsubo": 0.68,
+          "jo": 1.4,
+          "color2d": "rgba(241, 245, 249, 0.7)",
+          "color3d": "#f8fafc",
+          "customName": "階段"
+        },
+        {
+          "id": "2_r3",
+          "kind": "room",
+          "type": "TOILET",
+          "name": "2階WC",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 6.4885,
+              "y": 0.6674
+            },
+            {
+              "x": 8.848,
+              "y": 0.6674
+            },
+            {
+              "x": 8.848,
+              "y": 1.4376
+            },
+            {
+              "x": 6.4885,
+              "y": 1.4376
+            }
+          ],
+          "x": 6.4885,
+          "y": 0.6674,
+          "w": 2.3595,
+          "h": 0.7701,
+          "centroid": {
+            "x": 7.6683,
+            "y": 1.0525
+          },
+          "areaM2": 1.5,
+          "tsubo": 0.45,
+          "jo": 0.9,
+          "color2d": "rgba(254, 243, 199, 0.7)",
+          "color3d": "#fef3c7",
+          "customName": "2階WC"
+        },
+        {
+          "id": "2_r4",
+          "kind": "room",
+          "type": "STORAGE",
+          "name": "ウォークインクローゼット",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 0.0,
+              "y": 1.4376
+            },
+            {
+              "x": 0.4869,
+              "y": 1.4376
+            },
+            {
+              "x": 0.4869,
+              "y": 6.1021
+            },
+            {
+              "x": 0.0,
+              "y": 6.1021
+            }
+          ],
+          "x": 0.0,
+          "y": 1.4376,
+          "w": 0.4869,
+          "h": 4.6645,
+          "centroid": {
+            "x": 0.2435,
+            "y": 3.7698
+          },
+          "areaM2": 1.88,
+          "tsubo": 0.57,
+          "jo": 1.1,
+          "color2d": "rgba(241, 245, 249, 0.7)",
+          "color3d": "#f8fafc",
+          "customName": "ウォークインクローゼット"
+        },
+        {
+          "id": "2_r6",
+          "kind": "room",
+          "type": "WESTERN",
+          "name": "洋室 7.5帖",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 0.4869,
+              "y": 1.4376
+            },
+            {
+              "x": 3.7027,
+              "y": 1.4376
+            },
+            {
+              "x": 3.7027,
+              "y": 6.1021
+            },
+            {
+              "x": 0.4869,
+              "y": 6.1021
+            }
+          ],
+          "x": 0.4869,
+          "y": 1.4376,
+          "w": 3.2158,
+          "h": 4.6645,
+          "centroid": {
+            "x": 2.0948,
+            "y": 3.7698
+          },
+          "areaM2": 12.42,
+          "tsubo": 3.76,
+          "jo": 7.5,
+          "color2d": "rgba(241, 245, 249, 0.7)",
+          "color3d": "#f8fafc",
+          "customName": "洋室 7.5帖"
+        },
+        {
+          "id": "2_r7",
+          "kind": "room",
+          "type": "WESTERN",
+          "name": "洋室 12帖",
+          "isAutoDetected": false,
+          "points": [
+            {
+              "x": 3.7027,
+              "y": 1.4376
+            },
+            {
+              "x": 8.848,
+              "y": 1.4376
+            },
+            {
+              "x": 8.848,
+              "y": 6.1021
+            },
+            {
+              "x": 3.7027,
+              "y": 6.1021
+            }
+          ],
+          "x": 3.7027,
+          "y": 1.4376,
+          "w": 5.1453,
+          "h": 4.6645,
+          "centroid": {
+            "x": 6.2754,
+            "y": 3.7698
+          },
+          "areaM2": 19.87,
+          "tsubo": 6.01,
+          "jo": 12.0,
+          "color2d": "rgba(241, 245, 249, 0.7)",
+          "color3d": "#f8fafc",
+          "customName": "洋室 12帖"
+        }
+      ],
+      "walls": [
+        {
+          "id": "2_extN",
+          "kind": "wall",
+          "x1": 0,
+          "y1": 0,
+          "x2": 8.848,
+          "y2": 0,
+          "wallType": "exterior",
+          "thickness": 0.12
+        },
+        {
+          "id": "2_extS",
+          "kind": "wall",
+          "x1": 0,
+          "y1": 6.1021,
+          "x2": 8.848,
+          "y2": 6.1021,
+          "wallType": "exterior",
+          "thickness": 0.12
+        },
+        {
+          "id": "2_extW",
+          "kind": "wall",
+          "x1": 0,
+          "y1": 0,
+          "x2": 0,
+          "y2": 6.1021,
+          "wallType": "exterior",
+          "thickness": 0.12
+        },
+        {
+          "id": "2_extE",
+          "kind": "wall",
+          "x1": 8.848,
+          "y1": 0,
+          "x2": 8.848,
+          "y2": 6.1021,
+          "wallType": "exterior",
+          "thickness": 0.12
+        },
+        {
+          "id": "2_w0",
+          "kind": "wall",
+          "x1": 5.4449,
+          "y1": 0.0,
+          "x2": 5.4449,
+          "y2": 0.6674,
+          "wallType": "interior",
+          "thickness": 0.1
+        },
+        {
+          "id": "2_w1",
+          "kind": "wall",
+          "x1": 2.9493,
+          "y1": 0.6674,
+          "x2": 2.9493,
+          "y2": 1.4376,
+          "wallType": "interior",
+          "thickness": 0.1
+        },
+        {
+          "id": "2_w2",
+          "kind": "wall",
+          "x1": 6.4885,
+          "y1": 0.6674,
+          "x2": 6.4885,
+          "y2": 1.4376,
+          "wallType": "interior",
+          "thickness": 0.1
+        },
+        {
+          "id": "2_w3",
+          "kind": "wall",
+          "x1": 0,
+          "y1": 0.6674,
+          "x2": 8.848,
+          "y2": 0.6674,
+          "wallType": "interior",
+          "thickness": 0.1
+        },
+        {
+          "id": "2_w4",
+          "kind": "wall",
+          "x1": 0.4869,
+          "y1": 1.4376,
+          "x2": 0.4869,
+          "y2": 6.1021,
+          "wallType": "interior",
+          "thickness": 0.1
+        },
+        {
+          "id": "2_w5",
+          "kind": "wall",
+          "x1": 3.7027,
+          "y1": 1.4376,
+          "x2": 3.7027,
+          "y2": 6.1021,
+          "wallType": "interior",
+          "thickness": 0.1
+        },
+        {
+          "id": "2_w6",
+          "kind": "wall",
+          "x1": 0,
+          "y1": 1.4376,
+          "x2": 8.848,
+          "y2": 1.4376,
+          "wallType": "interior",
+          "thickness": 0.1
+        }
+      ],
+      "openings": [
+        {
+          "id": "2_op0",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 364,
+          "x": 5.4449,
+          "y": 0.3337,
+          "orient": "v",
+          "flip": false,
+          "widthMm": 364,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.4005,
+          "label": "建具 (W364×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "2_op1",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 420,
+          "x": 2.9493,
+          "y": 1.0525,
+          "orient": "v",
+          "flip": false,
+          "widthMm": 420,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.4621,
+          "label": "建具 (W420×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "2_op2",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 420,
+          "x": 6.4885,
+          "y": 1.0525,
+          "orient": "v",
+          "flip": false,
+          "widthMm": 420,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.4621,
+          "label": "建具 (W420×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "2_op3",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 728,
+          "x": 3.0968,
+          "y": 0.6674,
+          "orient": "h",
+          "flip": false,
+          "widthMm": 728,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.8,
+          "label": "建具 (W728×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "2_op4",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 728,
+          "x": 0.4869,
+          "y": 3.7698,
+          "orient": "v",
+          "flip": false,
+          "widthMm": 728,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.8,
+          "label": "建具 (W728×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "2_op5",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 728,
+          "x": 3.7027,
+          "y": 3.7698,
+          "orient": "v",
+          "flip": false,
+          "widthMm": 728,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.8,
+          "label": "建具 (W728×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "2_op6",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 728,
+          "x": 3.0968,
+          "y": 1.4376,
+          "orient": "h",
+          "flip": false,
+          "widthMm": 728,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.8,
+          "label": "建具 (W728×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "2_op7",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 774,
+          "x": 0.7373,
+          "y": 0.6674,
+          "orient": "h",
+          "flip": false,
+          "widthMm": 774,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.85,
+          "label": "建具 (W774×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "2_op8",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 774,
+          "x": 4.424,
+          "y": 0.6674,
+          "orient": "h",
+          "flip": false,
+          "widthMm": 774,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.85,
+          "label": "建具 (W774×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "2_op9",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 774,
+          "x": 7.3733,
+          "y": 0.6674,
+          "orient": "h",
+          "flip": false,
+          "widthMm": 774,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.85,
+          "label": "建具 (W774×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "2_op10",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 774,
+          "x": 1.4747,
+          "y": 1.4376,
+          "orient": "h",
+          "flip": false,
+          "widthMm": 774,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.85,
+          "label": "建具 (W774×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "2_op11",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 774,
+          "x": 5.1613,
+          "y": 1.4376,
+          "orient": "h",
+          "flip": false,
+          "widthMm": 774,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.85,
+          "label": "建具 (W774×H2000)",
+          "isWin": false
+        },
+        {
+          "id": "2_op12",
+          "category": "door",
+          "type": "SWING_DOOR",
+          "sashType": "katahiraki",
+          "doorFit": "katahiraki",
+          "leafCount": 1,
+          "leafWidthMm": 774,
+          "x": 8.1107,
+          "y": 1.4376,
+          "orient": "h",
+          "flip": false,
+          "widthMm": 774,
+          "heightMm": 2000,
+          "sillMm": 0,
+          "widthP": 0.85,
+          "label": "建具 (W774×H2000)",
+          "isWin": false
+        }
+      ],
+      "stairs": [
+        {
+          "id": "2_st0",
+          "kind": "stair",
+          "type": "STAIR",
+          "category": "STAIR",
+          "shapeType": "STRAIGHT",
+          "points": [
+            {
+              "x": 4.424,
+              "y": 0.0
+            },
+            {
+              "x": 5.924,
+              "y": 0.0
+            },
+            {
+              "x": 5.924,
+              "y": 0.6674
+            },
+            {
+              "x": 4.424,
+              "y": 0.6674
+            }
+          ],
+          "widthMm": 607,
+          "steps": 14,
+          "treadMm": 220,
+          "riserMm": 200
+        }
+      ]
+    },
+    "3": {
+      "rooms": [],
+      "walls": [],
+      "openings": [],
+      "stairs": []
+    },
+    "4": {
+      "rooms": [],
+      "walls": [],
+      "openings": [],
+      "stairs": []
+    }
+  }
+}

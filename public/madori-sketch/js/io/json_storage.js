@@ -6,7 +6,12 @@
 (function() {
     'use strict';
 
-    function exportJSON(projectData, toastFn) {
+    function notifyToast(toastFn, msg, isError) {
+        if (typeof toastFn === 'function') toastFn(msg, isError);
+        else if (typeof showToast === 'function') showToast(msg, isError);
+    }
+
+    function buildProjectData(projectData) {
         if (!projectData && typeof state !== 'undefined') {
             if (!state.currentPlanId) {
                 state.currentPlanId = 'PLAN-COMM-' + Date.now().toString(36).toUpperCase();
@@ -24,28 +29,86 @@
                 savedAt: new Date().toISOString()
             };
         }
-        const activePlanId = (typeof state !== 'undefined' && state.currentPlanId) ? state.currentPlanId : 'PLAN-COMM-UNKNOWN';
-        const safeTitle = ((projectData && (projectData.projectTitle || projectData.title)) || activePlanId).replace(/[\\/:*?"<>|]/g, '_');
+        return projectData;
+    }
 
-        const data = JSON.stringify(projectData, null, 2);
-        const blob = new Blob([data], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Smile_MadoriSketch_${safeTitle}_${new Date().toISOString().slice(0, 10)}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        
-        // 🎯 【次にやり変えるためにデータ保存したら登録】
+    function syncCarteAfterFileSave() {
+        if (typeof window.savePlanToCarte === 'function') {
+            return window.savePlanToCarte({ silent: true, skipToast: true });
+        }
         if (typeof window.syncPlanToCommunityLibrary === 'function') {
             window.syncPlanToCommunityLibrary();
         }
+        return true;
+    }
 
-        const msg = `💾【JSON保存 ＆ 3D選定ライブラリ同期】プラン「${safeTitle}」（ID: ${activePlanId}）を保存しました`;
-        if (typeof toastFn === 'function') toastFn(msg);
-        else if (typeof showToast === 'function') showToast(msg);
+    async function savePlanToOtherLocation(projectData, toastFn) {
+        projectData = buildProjectData(projectData);
+        const activePlanId = (typeof state !== 'undefined' && state.currentPlanId) ? state.currentPlanId : 'PLAN-COMM-UNKNOWN';
+        const safeTitle = ((projectData && (projectData.projectTitle || projectData.title)) || activePlanId).replace(/[\\/:*?"<>|]/g, '_');
+        const defaultFileName = `Smile_MadoriSketch_${safeTitle}_${new Date().toISOString().slice(0, 10)}.json`;
+        const data = JSON.stringify(projectData, null, 2);
+
+        if (typeof window.showSaveFilePicker === 'function') {
+            try {
+                const handle = await window.showSaveFilePicker({
+                    suggestedName: defaultFileName,
+                    types: [{
+                        description: '間取り工房プロジェクト (JSON)',
+                        accept: { 'application/json': ['.json'] }
+                    }]
+                });
+                const writable = await handle.createWritable();
+                await writable.write(data);
+                await writable.close();
+
+                // ファイル保存成功後にのみ家カルテへ同時保存
+                const carteSaved = syncCarteAfterFileSave();
+                const savedName = handle.name || defaultFileName;
+                const msg = carteSaved
+                    ? `💾【別場所保存 ＆ 家カルテ同時保存】「${savedName}」と家カルテに保存しました`
+                    : `💾【別場所保存】「${savedName}」を保存しました（家カルテ保存に失敗）`;
+                notifyToast(toastFn, msg, !carteSaved);
+                return true;
+            } catch (err) {
+                if (err && err.name === 'AbortError') {
+                    // キャンセル時は家カルテにも保存せず、保存全体を中止
+                    notifyToast(toastFn, '保存をキャンセルしました（家カルテへの保存も中止しました）');
+                    return false;
+                }
+                console.error('[JsonStorage] showSaveFilePicker failed:', err);
+                notifyToast(toastFn, 'ファイル保存に失敗しました（家カルテへの保存も中止しました）', true);
+                return false;
+            }
+        }
+
+        // iPad Safari等の非対応ブラウザ向けフォールバック（ダウンロード成功後に家カルテ同時保存）
+        try {
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = defaultFileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            const carteSaved = syncCarteAfterFileSave();
+            const msg = carteSaved
+                ? `💾【ファイル保存 ＆ 家カルテ同時保存】「${defaultFileName}」を保存し、家カルテにも同時保存しました`
+                : `💾【ファイル保存】「${defaultFileName}」を保存しました（家カルテ保存に失敗）`;
+            notifyToast(toastFn, msg, !carteSaved);
+            return true;
+        } catch (err) {
+            console.error('[JsonStorage] Blob download failed:', err);
+            notifyToast(toastFn, 'ファイル保存に失敗しました（家カルテへの保存も中止しました）', true);
+            return false;
+        }
+    }
+
+    function exportJSON(projectData, toastFn) {
+        return savePlanToOtherLocation(projectData, toastFn);
     }
 
     function importJSON(e, onLoadCallback, toastFn) {
@@ -120,6 +183,7 @@
     }
 
     // グローバル公開
+    window.savePlanToOtherLocation = savePlanToOtherLocation;
     window.exportJSON = exportJSON;
     window.importJSON = importJSON;
 })();

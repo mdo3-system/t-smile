@@ -87,14 +87,18 @@
                 syncedCommunityPlan = window.syncPlanToCommunityLibrary(thumbUrl);
             }
             
-            if (typeof window.showToast === 'function') {
+            if (!options.skipToast && typeof window.showToast === 'function') {
                 window.showToast(`💾 家カルテへ保存しました（${totalM2} / ID: ${activePlanId}）`);
             }
-            alert(`🎉【間取りデータ安全保存完了】\n作成中の間取り（${totalM2} / ${totalTsubo}）を保存しました！（ID: ${activePlanId}）\n\n🔒【著作権と非公開の保護】\n作成されたプランの著作権はお客様に帰属し、無断で他者に一般公開されることはありません。\n※社内設計プールに安全保管され、当社の設計プロによる選別・監修を経て承認された優良プランのみが展示場ライブラリ（323選＋）に本登録されます。`);
+            if (!options.silent) {
+                alert(`🎉【間取りデータ安全保存完了】\n作成中の間取り（${totalM2} / ${totalTsubo}）を保存しました！（ID: ${activePlanId}）\n\n🔒【著作権と非公開の保護】\n作成されたプランの著作権はお客様に帰属し、無断で他者に一般公開されることはありません。\n※社内設計プールに安全保管され、当社の設計プロによる選別・監修を経て承認された優良プランのみが展示場ライブラリ（323選＋）に本登録されます。`);
+            }
             return true;
         } catch(e) {
             console.error('[CarteBridge] Error saving plan to carte:', e);
-            alert('家カルテ保存エラー: ' + e.message);
+            if (!options.silent) {
+                alert('家カルテ保存エラー: ' + e.message);
+            }
             return false;
         }
     }

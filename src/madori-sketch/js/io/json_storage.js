@@ -8,25 +8,42 @@
 
     function exportJSON(projectData, toastFn) {
         if (!projectData && typeof state !== 'undefined') {
+            if (!state.currentPlanId) {
+                state.currentPlanId = 'PLAN-COMM-' + Date.now().toString(36).toUpperCase();
+            }
+            const curTitle = document.getElementById('planTitleInput')?.value?.trim() || state.projectTitle || '新規プラン';
+            state.projectTitle = curTitle;
             projectData = {
+                planId: state.currentPlanId,
+                projectTitle: curTitle,
+                title: curTitle,
                 modulePitch: state.modulePitch,
                 gridDivisions: state.gridDivisions,
                 floors: state.floors,
+                guides: state.guides || [],
                 savedAt: new Date().toISOString()
             };
         }
+        const activePlanId = (typeof state !== 'undefined' && state.currentPlanId) ? state.currentPlanId : 'PLAN-COMM-UNKNOWN';
+        const safeTitle = ((projectData && (projectData.projectTitle || projectData.title)) || activePlanId).replace(/[\\/:*?"<>|]/g, '_');
+
         const data = JSON.stringify(projectData, null, 2);
         const blob = new Blob([data], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `Smile_MadoriSketch_${new Date().toISOString().slice(0, 10)}.json`;
+        a.download = `Smile_MadoriSketch_${safeTitle}_${new Date().toISOString().slice(0, 10)}.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
         
-        const msg = 'プロジェクト間取りJSONを保存しました';
+        // 🎯 【次にやり変えるためにデータ保存したら登録】
+        if (typeof window.syncPlanToCommunityLibrary === 'function') {
+            window.syncPlanToCommunityLibrary();
+        }
+
+        const msg = `💾【JSON保存 ＆ 3D選定ライブラリ同期】プラン「${safeTitle}」（ID: ${activePlanId}）を保存しました`;
         if (typeof toastFn === 'function') toastFn(msg);
         else if (typeof showToast === 'function') showToast(msg);
     }
@@ -43,13 +60,29 @@
                         onLoadCallback(parsed);
                     } else if (typeof state !== 'undefined') {
                         state.floors = parsed.floors;
+                        if (parsed.guides) state.guides = parsed.guides;
+                        const loadedTitle = parsed.projectTitle || parsed.title || file.name.replace(/\.json$/i, '');
+                        if (loadedTitle) {
+                            state.projectTitle = loadedTitle;
+                            const titleInp = document.getElementById('planTitleInput');
+                            if (titleInp) titleInp.value = loadedTitle;
+                        }
+                        if (parsed.planId || parsed.id) {
+                            state.currentPlanId = parsed.planId || parsed.id; // 同一プランIDを引き継ぎ
+                            if (typeof window.updateCurrentPlanBadge === 'function') window.updateCurrentPlanBadge();
+                        }
                         if (typeof ensureFloorsStructure === 'function') ensureFloorsStructure();
                         if (parsed.modulePitch && typeof setModulePitch === 'function') setModulePitch(parsed.modulePitch);
                         if (parsed.gridDivisions && typeof setGridDivision === 'function') setGridDivision(parsed.gridDivisions);
                         if (typeof saveHistorySnapshot === 'function') saveHistorySnapshot();
+                        if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
+                        if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+                        if (typeof request2DRedraw === 'function') request2DRedraw();
+                        if (typeof rebuild3DScene === 'function') rebuild3DScene();
                         if (typeof closePresetModal === 'function') closePresetModal();
                     }
-                    const msg = 'プロジェクト間取りJSONを読み込みました';
+                    const activePlanId = (typeof state !== 'undefined' && state.currentPlanId) ? state.currentPlanId : '';
+                    const msg = `📂【JSON復元完了】間取り「${state.projectTitle || activePlanId}」を読み込みました`;
                     if (typeof toastFn === 'function') toastFn(msg);
                     else if (typeof showToast === 'function') showToast(msg);
                 }
