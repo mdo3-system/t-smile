@@ -885,34 +885,6 @@ function drawStair2D(st, isLight) {
             }
         }
     }
-        const isVert = hPx >= wPx;
-        const stepCount = steps || 14;
-        if (isVert) {
-            const stepH = hPx / stepCount;
-            for (let i = 1; i < stepCount; i++) {
-                const y = i * stepH;
-                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(wPx, y); ctx.stroke();
-            }
-            const fromY = dir === 'UP' ? hPx * 0.85 : hPx * 0.15;
-            const toY = dir === 'UP' ? hPx * 0.15 : hPx * 0.85;
-            ctx.fillStyle = '#0f172a';
-            ctx.beginPath(); ctx.arc(wPx / 2, fromY, 3.5, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.moveTo(wPx / 2, fromY); ctx.lineTo(wPx / 2, toY); ctx.stroke();
-            const arrowDy = dir === 'UP' ? 7 : -7;
-            ctx.beginPath(); ctx.moveTo(wPx / 2 - 4, toY + arrowDy); ctx.lineTo(wPx / 2, toY); ctx.lineTo(wPx / 2 + 4, toY + arrowDy); ctx.stroke();
-        } else {
-            const stepW = wPx / stepCount;
-            for (let i = 1; i < stepCount; i++) {
-                const x = i * stepW;
-                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, hPx); ctx.stroke();
-            }
-            const fromX = dir === 'UP' ? wPx * 0.15 : wPx * 0.85;
-            const toX = dir === 'UP' ? wPx * 0.85 : wPx * 0.15;
-            ctx.fillStyle = '#0f172a';
-            ctx.beginPath(); ctx.arc(fromX, hPx / 2, 3.5, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.moveTo(fromX, hPx / 2); ctx.lineTo(toX, hPx / 2); ctx.stroke();
-        }
-    }
 
     ctx.restore();
 }
