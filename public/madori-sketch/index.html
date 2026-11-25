@@ -172,6 +172,16 @@
             height: 100dvh !important;
             overflow: hidden !important;
         }
+        /* PWA / ホーム画面アプリ（スタンドアロン）時のステータスバー余白確保 */
+        @media (display-mode: standalone) {
+            body:not(.is-fullscreen) #madori-site-header {
+                padding-top: max(env(safe-area-inset-top, 0px), 30px) !important;
+            }
+        }
+        body.is-standalone:not(.is-fullscreen) #madori-site-header {
+            padding-top: max(env(safe-area-inset-top, 0px), 30px) !important;
+        }
+
         body.is-fullscreen .common-site-header,
         body.is-fullscreen #madori-site-header,
         body.is-fullscreen #fullscreenPromptBanner,
@@ -187,8 +197,8 @@
             width: 100vw !important;
             height: 100vh !important;
             height: 100dvh !important;
-            padding-top: env(safe-area-inset-top, 0px);
-            padding-bottom: env(safe-area-inset-bottom, 0px);
+            padding-top: max(env(safe-area-inset-top, 0px), 30px) !important;
+            padding-bottom: max(env(safe-area-inset-bottom, 0px), 8px) !important;
             z-index: 99999 !important;
         }
     </style>
@@ -203,7 +213,7 @@
                     <a href="/" class="brand-link" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #ffffff;" title="住ま居る トップページへ">
                         <span style="font-size: 1.15rem;">🏡</span>
                         <span style="font-size: 1.05rem; font-weight: 900; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">家づくりAIラボ</span>
-                        <span style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 5px; border-radius: 4px; font-weight: 800;">3D間取り工房 v2.29</span>
+                        <span style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 5px; border-radius: 4px; font-weight: 800;">3D間取り工房 v2.30</span>
                     </a>
                     <div class="hidden xl:inline-flex items-center gap-1.5 text-[11px] text-slate-300 bg-black/30 border border-white/15 px-2 py-0.5 rounded">
                         <span class="text-sky-400 font-bold">施工エリア：埼玉県全域・一部東京都</span>
@@ -1230,20 +1240,20 @@
     </div>
 
     <!-- 単一責任の原則 (SRP) に基づく分離モジュール群 -->
-    <script>window.MADORI_APP_VERSION = '2.29.0';</script>
-    <script src="/madori-sketch/js/constants/manual_data.js?v=202611251520"></script>
-    <script src="/madori-sketch/js/constants/architectural_specs.js?v=202611251520"></script>
-    <script src="/madori-sketch/js/core/app_state.js?v=202611251520"></script>
-    <script src="/madori-sketch/js/core/metrics_calculator.js?v=202611251520"></script>
-    <script src="/madori-sketch/js/io/json_storage.js?v=202611251520"></script>
-    <script src="/madori-sketch/js/io/dxf_pdf_exporter.js?v=202611251520"></script>
-    <script src="/madori-sketch/js/integration/carte_bridge.js?v=202611251520"></script>
-    <script src="/madori-sketch/js/geometry/room_detector.js?v=202611251520"></script>
-    <script src="/madori-sketch/js/renderer/three_3d.js?v=202611251520"></script>
-    <script src="/madori-sketch/js/renderer/canvas_2d_renderer.js?v=202611251520"></script>
-    <script src="/madori-sketch/js/ui/ui_inspector.js?v=202611251520"></script>
-    <script src="/madori-sketch/js/input/input_controller.js?v=202611251520"></script>
-    <script src="/madori-sketch/js/case/case_manager.js?v=202611251520"></script>
+    <script>window.MADORI_APP_VERSION = '2.30.0';</script>
+    <script src="/madori-sketch/js/constants/manual_data.js?v=202611251540"></script>
+    <script src="/madori-sketch/js/constants/architectural_specs.js?v=202611251540"></script>
+    <script src="/madori-sketch/js/core/app_state.js?v=202611251540"></script>
+    <script src="/madori-sketch/js/core/metrics_calculator.js?v=202611251540"></script>
+    <script src="/madori-sketch/js/io/json_storage.js?v=202611251540"></script>
+    <script src="/madori-sketch/js/io/dxf_pdf_exporter.js?v=202611251540"></script>
+    <script src="/madori-sketch/js/integration/carte_bridge.js?v=202611251540"></script>
+    <script src="/madori-sketch/js/geometry/room_detector.js?v=202611251540"></script>
+    <script src="/madori-sketch/js/renderer/three_3d.js?v=202611251540"></script>
+    <script src="/madori-sketch/js/renderer/canvas_2d_renderer.js?v=202611251540"></script>
+    <script src="/madori-sketch/js/ui/ui_inspector.js?v=202611251540"></script>
+    <script src="/madori-sketch/js/input/input_controller.js?v=202611251540"></script>
+    <script src="/madori-sketch/js/case/case_manager.js?v=202611251540"></script>
     <script>
         const ROOM_TYPES = window.ROOM_TYPES;
         const OPENING_TYPES = window.OPENING_TYPES;
@@ -1468,6 +1478,7 @@
             // PWA（ホーム画面に追加して起動）時は最初から自動で全画面モードにする。通常ブラウザ遷移時は全画面選択モーダルを表示
             const isStandalonePWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true || location.search.includes('standalone=1');
             if (isStandalonePWA) {
+                document.body.classList.add('is-standalone');
                 if (!document.body.classList.contains('is-fullscreen') && typeof toggleFullscreenMode === 'function') {
                     toggleFullscreenMode();
                 }
