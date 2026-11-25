@@ -795,6 +795,59 @@ function renderPropertyInspector() {
         const isVert = Math.abs(obj.x1 - obj.x2) < 0.05;
         const dirHint = isHoriz ? '上下（Y方向）へ平行移動' : (isVert ? '左右（X方向）へ平行移動' : '平行移動');
         const wallOpts = (window.WALL_SUBTYPES || []).map(w => `<option value="${w.id}" ${w.id === curType ? 'selected' : ''}>${w.label}</option>`).join('');
+
+        let heightUiHtml = '';
+        if (curType === 'koshikabe') {
+            const curH = obj.heightMm || 1000;
+            heightUiHtml = `
+                <div class="space-y-1 bg-amber-950/20 p-2 rounded border border-amber-500/30">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-amber-300 font-bold">腰壁高さ(mm):</span>
+                        <input type="number" step="50" min="400" max="1800" value="${curH}" onchange="updateSelectedWallHeightMm(parseInt(this.value))" class="w-24 bg-slate-900 border border-amber-500/50 rounded px-2 py-1 text-white font-bold mono-num">
+                    </div>
+                    <div class="flex items-center gap-1 justify-end pt-0.5">
+                        <button type="button" onclick="updateSelectedWallHeightMm(800)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curH===800?'border border-amber-400 text-amber-300 font-bold':''}">800</button>
+                        <button type="button" onclick="updateSelectedWallHeightMm(900)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curH===900?'border border-amber-400 text-amber-300 font-bold':''}">900</button>
+                        <button type="button" onclick="updateSelectedWallHeightMm(1000)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curH===1000?'border border-amber-400 text-amber-300 font-bold':''}">1000(標準)</button>
+                        <button type="button" onclick="updateSelectedWallHeightMm(1100)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curH===1100?'border border-amber-400 text-amber-300 font-bold':''}">1100</button>
+                        <button type="button" onclick="updateSelectedWallHeightMm(1200)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curH===1200?'border border-amber-400 text-amber-300 font-bold':''}">1200</button>
+                    </div>
+                </div>
+            `;
+        } else if (curType === 'tarekabe') {
+            const curDrop = obj.heightMm || 550;
+            heightUiHtml = `
+                <div class="space-y-1 bg-sky-950/20 p-2 rounded border border-sky-500/30">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-sky-300 font-bold">たれ下がり寸法(mm):</span>
+                        <input type="number" step="50" min="200" max="1500" value="${curDrop}" onchange="updateSelectedWallHeightMm(parseInt(this.value))" class="w-24 bg-slate-900 border border-sky-500/50 rounded px-2 py-1 text-white font-bold mono-num">
+                    </div>
+                    <div class="flex items-center gap-1 justify-end pt-0.5">
+                        <button type="button" onclick="updateSelectedWallHeightMm(300)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curDrop===300?'border border-sky-400 text-sky-300 font-bold':''}">300</button>
+                        <button type="button" onclick="updateSelectedWallHeightMm(450)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curDrop===450?'border border-sky-400 text-sky-300 font-bold':''}">450</button>
+                        <button type="button" onclick="updateSelectedWallHeightMm(550)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curDrop===550?'border border-sky-400 text-sky-300 font-bold':''}">550(標準)</button>
+                        <button type="button" onclick="updateSelectedWallHeightMm(600)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curDrop===600?'border border-sky-400 text-sky-300 font-bold':''}">600</button>
+                    </div>
+                </div>
+            `;
+        } else if (curType === 'wall') {
+            const curH = obj.heightMm || 2450;
+            heightUiHtml = `
+                <div class="space-y-1 bg-slate-800/50 p-2 rounded border border-slate-700">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-slate-300 font-bold">壁高さ(mm):</span>
+                        <input type="number" step="50" min="1500" max="4000" value="${curH}" onchange="updateSelectedWallHeightMm(parseInt(this.value))" class="w-24 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white font-bold mono-num">
+                    </div>
+                    <div class="flex items-center gap-1 justify-end pt-0.5">
+                        <button type="button" onclick="updateSelectedWallHeightMm(2400)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curH===2400?'border border-amber-400 text-amber-300 font-bold':''}">2400</button>
+                        <button type="button" onclick="updateSelectedWallHeightMm(2450)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curH===2450?'border border-amber-400 text-amber-300 font-bold':''}">2450(標準)</button>
+                        <button type="button" onclick="updateSelectedWallHeightMm(2500)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curH===2500?'border border-amber-400 text-amber-300 font-bold':''}">2500</button>
+                        <button type="button" onclick="updateSelectedWallHeightMm(2700)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curH===2700?'border border-amber-400 text-amber-300 font-bold':''}">2700(高天井)</button>
+                    </div>
+                </div>
+            `;
+        }
+
         panel.innerHTML = `
             <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-2">
                 <span class="text-xs font-bold text-white"><i class="fa-solid fa-grip-lines text-amber-400 mr-1"></i>壁線分 (${lenMm}mm)</span>
@@ -805,9 +858,10 @@ function renderPropertyInspector() {
             </div>
             <div class="space-y-2 text-xs">
                 <div class="flex items-center justify-between gap-2">
-                    <span class="text-slate-400">壁種別:</span>
+                    <span class="text-slate-400 font-bold">壁種別:</span>
                     <select onchange="changeSelectedWallType(this.value)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold">${wallOpts}</select>
                 </div>
+                ${heightUiHtml}
                 <div class="flex items-center justify-between gap-2">
                     <span class="text-slate-400">長さ(mm):</span>
                     <input type="number" step="10" value="${lenMm}" onchange="updateSelectedWallLengthMm(parseInt(this.value))" class="w-28 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white font-bold mono-num">
@@ -1078,13 +1132,33 @@ function changeSelectedWallType(newWallType) {
     const obj = findSelectedObject();
     if (!obj || !state.selectedItem || state.selectedItem.kind !== 'wall') return;
     obj.wallType = newWallType;
+    // 壁種別を切り替えた際は、新しい種別の標準高さを必ず再初期化
+    if (newWallType === 'koshikabe') obj.heightMm = 1000;
+    else if (newWallType === 'tarekabe') obj.heightMm = 550;
+    else if (newWallType === 'wall') obj.heightMm = 2450;
+    else if (newWallType === 'agarikamachi') obj.heightMm = 180;
     saveHistorySnapshot();
     if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
     request2DRedraw();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     showToast('壁種別を変更しました');
 }
 window.changeSelectedWallType = changeSelectedWallType;
+
+function updateSelectedWallHeightMm(heightMm) {
+    const obj = findSelectedObject();
+    if (!obj || !state.selectedItem || state.selectedItem.kind !== 'wall') return;
+    if (isNaN(heightMm) || heightMm <= 0) return;
+    obj.heightMm = heightMm;
+    saveHistorySnapshot();
+    if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
+    request2DRedraw();
+    if (typeof rebuild3DScene === 'function') rebuild3DScene();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+    showToast(`高さを${heightMm}mmに設定しました`);
+}
+window.updateSelectedWallHeightMm = updateSelectedWallHeightMm;
 
 // --- Inspector Update Helpers ---
 function updateSelectedOpeningFit12(fitId) {
@@ -1156,13 +1230,8 @@ function updateSelectedStairSpec(prop, val) {
     if (prop === 'widthMm') {
         const wMm = parseInt(val, 10) || 910;
         obj.widthMm = wMm;
-        const pitch = state.modulePitch || 910;
-        const widthP = +(wMm / pitch).toFixed(3);
-        if (obj.w <= obj.h) {
-            obj.w = widthP;
-        } else {
-            obj.h = widthP;
-        }
+        // 注意：obj.w / obj.h は階段全体の外接矩形（フライト全体の幅・奥行き）を表すため、
+        // 単一フライト有効幅 widthMm の変更で obj.w や obj.h を破壊的に上書きしてはならない。
     } else if (prop === 'turnType') {
         obj.turnType = val;
     } else if (prop === 'stairStyle') {

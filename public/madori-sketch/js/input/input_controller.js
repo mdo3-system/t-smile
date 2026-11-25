@@ -764,13 +764,18 @@ canvas2d.addEventListener('pointerdown', (e) => {
             }
 
             if (x1 !== x2 || y1 !== y2) {
+                let initH = 2450;
+                if (wType === 'koshikabe') initH = 1000;
+                else if (wType === 'tarekabe') initH = 550;
+                else if (wType === 'agarikamachi') initH = 180;
                 fl.walls.push({
                     id: uid(),
                     x1: x1,
                     y1: y1,
                     x2: x2,
                     y2: y2,
-                    wallType: wType
+                    wallType: wType,
+                    heightMm: initH
                 });
                 saveHistorySnapshot();
                 if (typeof triggerAutoRoomDetection === 'function') triggerAutoRoomDetection();
@@ -1525,8 +1530,18 @@ canvas2d.addEventListener('pointermove', (e) => {
         request2DRedraw();
     } else if (drag.type === 'move_box') {
         const t = drag.target;
+        const oldX = t.x;
+        const oldY = t.y;
         t.x = snapP(worldPos.x - drag.offsetX);
         t.y = snapP(worldPos.y - drag.offsetY);
+        const dx = t.x - oldX;
+        const dy = t.y - oldY;
+        if ((dx !== 0 || dy !== 0) && t.points && Array.isArray(t.points)) {
+            t.points.forEach(pt => {
+                pt.x = +(pt.x + dx).toFixed(3);
+                pt.y = +(pt.y + dy).toFixed(3);
+            });
+        }
         request2DRedraw();
         if (typeof rebuild3DScene === 'function') rebuild3DScene();
         if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
@@ -1654,13 +1669,18 @@ canvas2d.addEventListener('pointerup', (e) => {
     } else if (drag.type === 'wall') {
         if (drag.startX !== drag.curX || drag.startY !== drag.curY) {
             const wType = drag.wallType || state.subWallType || 'wall';
+            let initH = 2450;
+            if (wType === 'koshikabe') initH = 1000;
+            else if (wType === 'tarekabe') initH = 550;
+            else if (wType === 'agarikamachi') initH = 180;
             fl.walls.push({
                 id: uid(),
                 x1: drag.startX,
                 y1: drag.startY,
                 x2: drag.curX,
                 y2: drag.curY,
-                wallType: wType
+                wallType: wType,
+                heightMm: initH
             });
             state.wallClickStart = null;
             saveHistorySnapshot();
@@ -1772,10 +1792,22 @@ function updateSelectedStairSteps(steps) {
 function rotateSelectedStair() {
     const obj = findSelectedObject();
     if (!obj || state.selectedItem.kind !== 'stair') return;
-    const tmp = obj.w;
-    obj.w = obj.h;
-    obj.h = tmp;
+    const oldW = obj.w, oldH = obj.h;
+    const cx = obj.x + oldW / 2;
+    const cy = obj.y + oldH / 2;
+    obj.w = oldH;
+    obj.h = oldW;
+    obj.x = +(cx - obj.w / 2).toFixed(3);
+    obj.y = +(cy - obj.h / 2).toFixed(3);
     obj.rotation = ((obj.rotation || 0) + 90) % 360;
+    if (obj.points && Array.isArray(obj.points)) {
+        obj.points.forEach(pt => {
+            const rx = pt.x - cx;
+            const ry = pt.y - cy;
+            pt.x = +(cx - ry).toFixed(3);
+            pt.y = +(cy + rx).toFixed(3);
+        });
+    }
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
     if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
@@ -2278,7 +2310,9 @@ function setStairDrawMode(mode) {
 
 function handleStairPointerDown(snappedX, snappedY) {
     if (state.stairDrawMode === 'preset') {
-        placeStairPresetAt('U_SHAPE', snappedX, snappedY);
+        const pType = state.stairPresetType || 'STRAIGHT';
+        const tSpec = state.stairTurnSpec || 'turn_3';
+        placeStairPresetAt(pType, snappedX, snappedY, tSpec);
         return;
     }
     if (!state.stairDrawingPoints) state.stairDrawingPoints = [];

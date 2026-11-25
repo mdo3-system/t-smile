@@ -564,74 +564,101 @@ function rebuild3DScene() {
             }
         });
 
-        // 2. 壁4種（通常壁 / たれ壁 / 腰壁 / 上り框）
+        // 2. 壁4種（通常壁 / たれ壁 / 腰壁 / 上り框 ＆ 斜め壁対応 ＆ 高さ指定連動）
         flData.walls.forEach(wl => {
             const isHoriz = Math.abs(wl.y1 - wl.y2) < 0.05;
+            const isVert = Math.abs(wl.x1 - wl.x2) < 0.05;
             const wType = wl.wallType || 'wall';
             const floorTopY = baseY + slabHeight;
 
-            const startP = isHoriz ? Math.min(wl.x1, wl.x2) : Math.min(wl.y1, wl.y2);
-            const endP = isHoriz ? Math.max(wl.x1, wl.x2) : Math.max(wl.y1, wl.y2);
-            const fixedP = isHoriz ? wl.y1 : wl.x1;
-            const lenP = endP - startP;
-            if (lenP <= 0.04) return;
+            // 高さ指定（ミリメートル指定があればそれを最優先）
+            const waistH = wl.heightMm ? (wl.heightMm / 1000) : 1.00;
+            const dropH = wl.heightMm ? (wl.heightMm / 1000) : 0.55;
+            const actualWallH = wl.heightMm ? (wl.heightMm / 1000) : wallHeight;
 
-            if (wType === 'tarekabe') {
-                // たれ壁: 天井から550mm下がる上部壁
-                const dropH = 0.55;
-                const lenM = lenP * scaleP;
-                const midM = ((startP + endP) / 2) * scaleP;
-                const fixedM = fixedP * scaleP;
-                const geo = isHoriz
-                    ? new THREE.BoxGeometry(lenM + wallThick, dropH, wallThick)
-                    : new THREE.BoxGeometry(wallThick, dropH, lenM + wallThick);
-                addWhiteModelMesh(
-                    geo, matWhiteWall,
-                    isHoriz ? midM : fixedM,
-                    floorTopY + wallHeight - dropH / 2,
-                    isHoriz ? fixedM : midM,
-                    true
-                );
-            } else if (wType === 'koshikabe') {
-                // 腰壁: 床から1,000mmの手すり壁
-                const waistH = 1.00;
-                const lenM = lenP * scaleP;
-                const midM = ((startP + endP) / 2) * scaleP;
-                const fixedM = fixedP * scaleP;
-                const geo = isHoriz
-                    ? new THREE.BoxGeometry(lenM + wallThick, waistH, wallThick)
-                    : new THREE.BoxGeometry(wallThick, waistH, lenM + wallThick);
-                addWhiteModelMesh(
-                    geo, matWhiteWall,
-                    isHoriz ? midM : fixedM,
-                    floorTopY + waistH / 2,
-                    isHoriz ? fixedM : midM,
-                    true
-                );
-            } else if (wType === 'agarikamachi') {
-                // 上り框: 玄関段差見切り材
-                const kamachiH = 0.18;
-                const lenM = lenP * scaleP;
-                const midM = ((startP + endP) / 2) * scaleP;
-                const fixedM = fixedP * scaleP;
-                const geo = isHoriz
-                    ? new THREE.BoxGeometry(lenM, kamachiH, 0.12)
-                    : new THREE.BoxGeometry(0.12, kamachiH, lenM);
-                addWhiteModelMesh(
-                    geo, matDoorPanel,
-                    isHoriz ? midM : fixedM,
-                    baseY + kamachiH / 2 + 0.03,
-                    isHoriz ? fixedM : midM,
-                    true
-                );
+            if (isHoriz || isVert) {
+                const startP = isHoriz ? Math.min(wl.x1, wl.x2) : Math.min(wl.y1, wl.y2);
+                const endP = isHoriz ? Math.max(wl.x1, wl.x2) : Math.max(wl.y1, wl.y2);
+                const fixedP = isHoriz ? wl.y1 : wl.x1;
+                const lenP = endP - startP;
+                if (lenP <= 0.04) return;
+
+                if (wType === 'tarekabe') {
+                    // たれ壁: 天井から下がる上部壁
+                    const lenM = lenP * scaleP;
+                    const midM = ((startP + endP) / 2) * scaleP;
+                    const fixedM = fixedP * scaleP;
+                    const geo = isHoriz
+                        ? new THREE.BoxGeometry(lenM + wallThick, dropH, wallThick)
+                        : new THREE.BoxGeometry(wallThick, dropH, lenM + wallThick);
+                    addWhiteModelMesh(
+                        geo, matWhiteWall,
+                        isHoriz ? midM : fixedM,
+                        floorTopY + wallHeight - dropH / 2,
+                        isHoriz ? fixedM : midM,
+                        true
+                    );
+                } else if (wType === 'koshikabe') {
+                    // 腰壁: 床から立ち上がる手すり壁
+                    const lenM = lenP * scaleP;
+                    const midM = ((startP + endP) / 2) * scaleP;
+                    const fixedM = fixedP * scaleP;
+                    const geo = isHoriz
+                        ? new THREE.BoxGeometry(lenM + wallThick, waistH, wallThick)
+                        : new THREE.BoxGeometry(wallThick, waistH, lenM + wallThick);
+                    addWhiteModelMesh(
+                        geo, matWhiteWall,
+                        isHoriz ? midM : fixedM,
+                        floorTopY + waistH / 2,
+                        isHoriz ? fixedM : midM,
+                        true
+                    );
+                } else if (wType === 'agarikamachi') {
+                    // 上り框: 玄関段差見切り材
+                    const kamachiH = wl.heightMm ? (wl.heightMm / 1000) : 0.18;
+                    const lenM = lenP * scaleP;
+                    const midM = ((startP + endP) / 2) * scaleP;
+                    const fixedM = fixedP * scaleP;
+                    const geo = isHoriz
+                        ? new THREE.BoxGeometry(lenM, kamachiH, 0.12)
+                        : new THREE.BoxGeometry(0.12, kamachiH, lenM);
+                    const kamMesh = addWhiteModelMesh(
+                        geo, matDoorPanel,
+                        isHoriz ? midM : fixedM,
+                        baseY + kamachiH / 2 + 0.03,
+                        isHoriz ? fixedM : midM,
+                        true
+                    );
+                    if (kamMesh) kamMesh.userData.regionTag = 'agarikamachi';
+                } else {
+                    // 通常壁（開口部くり抜き付き・高さ指定連動）
+                    buildWallWithOpeningCutouts3D(
+                        isHoriz ? 'h' : 'v',
+                        fixedP, startP, endP,
+                        floorTopY, actualWallH, wallThick,
+                        flData.openings, scaleP, matWhiteWall
+                    );
+                }
             } else {
-                // 通常壁（開口部くり抜き付き）
-                buildWallWithOpeningCutouts3D(
-                    isHoriz ? 'h' : 'v',
-                    fixedP, startP, endP,
-                    floorTopY, wallHeight, wallThick,
-                    flData.openings, scaleP, matWhiteWall
-                );
+                // 斜め壁（自由角・45度斜め壁の3Dレンダリング）
+                const lenP = Math.hypot(wl.x2 - wl.x1, wl.y2 - wl.y1);
+                if (lenP <= 0.04) return;
+                const lenM = lenP * scaleP;
+                const midX = ((wl.x1 + wl.x2) / 2) * scaleP;
+                const midZ = ((wl.y1 + wl.y2) / 2) * scaleP;
+                const angle = Math.atan2(wl.y2 - wl.y1, wl.x2 - wl.x1);
+                let wH = actualWallH;
+                let wPosY = floorTopY + wH / 2;
+                if (wType === 'koshikabe') {
+                    wH = waistH;
+                    wPosY = floorTopY + waistH / 2;
+                } else if (wType === 'tarekabe') {
+                    wH = dropH;
+                    wPosY = floorTopY + wallHeight - dropH / 2;
+                }
+                const diagGeo = new THREE.BoxGeometry(lenM + wallThick, wH, wallThick);
+                const mesh = addWhiteModelMesh(diagGeo, matWhiteWall, midX, wPosY, midZ, true);
+                if (mesh) mesh.rotation.y = -angle;
             }
         });
 
@@ -882,7 +909,50 @@ function renderStair3D(fx, floorTopY, wallHeight, slabHeight, scaleP) {
     // ボックス階段は踏み板の下までソリッド、オープン階段は厚さ4.5cmのスケルトン踏板
     const treadThick = isOpenStair ? 0.045 : Math.max(0.05, stepH * 0.95);
 
-    if (fx.w <= fx.h) {
+    if (fx.shapeType === 'L_SHAPE' && fx.points && fx.points.length === 3) {
+        // L型階段（フリーハンド3点入力: p0=始点, p1=折れ角, p2=終点）
+        const p0 = fx.points[0], p1 = fx.points[1], p2 = fx.points[2];
+        const flightWidthM = (fx.widthMm || 910) / 1000;
+        const halfSteps = Math.floor(totalSteps / 2);
+
+        // 第1フライト (p0 -> p1)
+        const dx1 = p1.x - p0.x, dy1 = p1.y - p0.y;
+        const len1M = Math.hypot(dx1, dy1) * scaleP;
+        const angle1 = Math.atan2(dy1, dx1);
+        const stepLen1 = len1M / (halfSteps || 7);
+        for (let i = 0; i < halfSteps; i++) {
+            const sIdx = isDown ? (totalSteps - 1 - i) : i;
+            const curRiseY = floorTopY + (sIdx + 0.5) * stepH;
+            const dist = (i + 0.5) * stepLen1;
+            const stepX = (p0.x * scaleP) + Math.cos(angle1) * dist;
+            const stepZ = (p0.y * scaleP) + Math.sin(angle1) * dist;
+            const sGeo = new THREE.BoxGeometry(stepLen1 * 0.95, treadThick, flightWidthM * 0.96);
+            const m = addWhiteModelMesh(sGeo, stepMat, stepX, curRiseY, stepZ, true);
+            if (m) m.rotation.y = -angle1;
+        }
+
+        // 角の踊り場 / 廻り部 (p1)
+        const landingY = floorTopY + (halfSteps + 0.5) * stepH;
+        const landGeo = new THREE.BoxGeometry(flightWidthM, treadThick, flightWidthM);
+        addWhiteModelMesh(landGeo, stepMat, p1.x * scaleP, landingY, p1.y * scaleP, true);
+
+        // 第2フライト (p1 -> p2)
+        const dx2 = p2.x - p1.x, dy2 = p2.y - p1.y;
+        const len2M = Math.hypot(dx2, dy2) * scaleP;
+        const angle2 = Math.atan2(dy2, dx2);
+        const remSteps = totalSteps - halfSteps;
+        const stepLen2 = len2M / (remSteps || 7);
+        for (let j = 0; j < remSteps; j++) {
+            const sIdx = isDown ? (remSteps - 1 - j) : (halfSteps + j);
+            const curRiseY = floorTopY + (sIdx + 0.5) * stepH;
+            const dist = (j + 0.5) * stepLen2;
+            const stepX = (p1.x * scaleP) + Math.cos(angle2) * dist;
+            const stepZ = (p1.y * scaleP) + Math.sin(angle2) * dist;
+            const sGeo = new THREE.BoxGeometry(stepLen2 * 0.95, treadThick, flightWidthM * 0.96);
+            const m = addWhiteModelMesh(sGeo, stepMat, stepX, curRiseY, stepZ, true);
+            if (m) m.rotation.y = -angle2;
+        }
+    } else if (fx.w <= fx.h) {
         const stepDepth = dM / totalSteps;
         for (let i = 0; i < totalSteps; i++) {
             const sIdx = isDown ? (totalSteps - 1 - i) : i;

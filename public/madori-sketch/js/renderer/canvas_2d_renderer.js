@@ -664,67 +664,227 @@ function drawStair2D(st, isLight) {
     ctx.save();
     ctx.translate(p.x, p.y);
 
-    // 背景と外枠
-    ctx.fillStyle = isOpen ? 'rgba(255, 255, 255, 0.35)' : (isSelected ? '#fef3c7' : '#ffffff');
-    ctx.fillRect(0, 0, wPx, hPx);
+    if (shape === 'L_SHAPE') {
+        // L型階段（かね折れ階段）: 2フライト + 角踊り場
+        const flightW = Math.max(12, Math.min(wPx, hPx) * 0.5);
 
-    ctx.strokeStyle = isSelected ? '#f59e0b' : '#0f172a';
-    ctx.lineWidth = isSelected ? 2.5 : 1.5;
-    if (isOpen) ctx.setLineDash([4, 2]);
-    ctx.strokeRect(0, 0, wPx, hPx);
-    ctx.setLineDash([]);
+        // 折れ角 (cornerX, cornerY) の決定
+        let cX = 0, cY = 0;
+        let p0x = 0, p0y = hPx, p2x = wPx, p2y = 0;
+        let hasCustomPoints = false;
 
-    // 手すり二重線表現
-    if (handrail === 'left' || handrail === 'both') {
-        ctx.strokeStyle = '#475569';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(2, 2, 3, hPx - 4);
-    }
-    if (handrail === 'right' || handrail === 'both') {
-        ctx.strokeStyle = '#475569';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(wPx - 5, 2, 3, hPx - 4);
-    }
-
-    ctx.strokeStyle = '#334155';
-    ctx.lineWidth = 1;
-
-    if (shape === 'U_SHAPE') {
-        const isVert = hPx >= wPx;
-        if (isVert) {
-            const midX = wPx / 2;
-            const landingH = hPx * 0.3;
-            ctx.strokeRect(midX - 2, landingH, 4, hPx - landingH);
-            ctx.strokeRect(0, 0, wPx, landingH);
-            const flightH = hPx - landingH;
-            const stepH = flightH / 7;
-            for (let i = 1; i <= 6; i++) {
-                const y = landingH + i * stepH;
-                ctx.beginPath();
-                ctx.moveTo(0, y); ctx.lineTo(midX - 2, y);
-                ctx.moveTo(midX + 2, y); ctx.lineTo(wPx, y);
-                ctx.stroke();
-            }
-            // 昇降矢印
-            const startX = midX * 0.5, endX = midX * 1.5, bottomY = hPx * 0.88, topY = landingH * 0.5;
-            ctx.beginPath(); ctx.arc(startX, bottomY, 3, 0, Math.PI * 2); ctx.fillStyle = '#0f172a'; ctx.fill();
-            ctx.beginPath(); ctx.moveTo(startX, bottomY); ctx.lineTo(startX, topY); ctx.lineTo(endX, topY); ctx.lineTo(endX, bottomY); ctx.stroke();
+        if (st.points && st.points.length === 3) {
+            hasCustomPoints = true;
+            const p0 = st.points[0], p1 = st.points[1], p2 = st.points[2];
+            cX = (p1.x - curX) * state.cam2d.zoom;
+            cY = (p1.y - curY) * state.cam2d.zoom;
+            p0x = (p0.x - curX) * state.cam2d.zoom;
+            p0y = (p0.y - curY) * state.cam2d.zoom;
+            p2x = (p2.x - curX) * state.cam2d.zoom;
+            p2y = (p2.y - curY) * state.cam2d.zoom;
         } else {
-            const midY = hPx / 2;
-            const landingW = wPx * 0.3;
-            ctx.strokeRect(0, midY - 2, wPx - landingW, 4);
-            ctx.strokeRect(wPx - landingW, 0, landingW, hPx);
-            const flightW = wPx - landingW;
-            const stepW = flightW / 7;
-            for (let i = 1; i <= 6; i++) {
-                const x = i * stepW;
-                ctx.beginPath();
-                ctx.moveTo(x, 0); ctx.lineTo(x, midY - 2);
-                ctx.moveTo(x, midY + 2); ctx.lineTo(x, hPx);
-                ctx.stroke();
+            const rot = (st.rotation || 0) % 360;
+            if (rot === 90) { cX = wPx; cY = 0; p0x = 0; p0y = 0; p2x = wPx; p2y = hPx; }
+            else if (rot === 180) { cX = wPx; cY = hPx; p0x = wPx; p0y = 0; p2x = 0; p2y = hPx; }
+            else if (rot === 270) { cX = 0; cY = hPx; p0x = wPx; p0y = hPx; p2x = 0; p2y = 0; }
+            else { cX = 0; cY = 0; p0x = 0; p0y = hPx; p2x = wPx; p2y = 0; }
+        }
+
+        // 角の位置 (cX <= wPx/2, cY <= hPx/2 等) に応じた L字ポリゴン
+        const atLeft = cX <= wPx * 0.5;
+        const atTop = cY <= hPx * 0.5;
+
+        ctx.fillStyle = isOpen ? 'rgba(255, 255, 255, 0.35)' : (isSelected ? '#fef3c7' : '#ffffff');
+        ctx.strokeStyle = isSelected ? '#f59e0b' : '#0f172a';
+        ctx.lineWidth = isSelected ? 2.5 : 1.5;
+
+        ctx.beginPath();
+        if (atLeft && atTop) {
+            // 左上角
+            ctx.moveTo(0, 0); ctx.lineTo(wPx, 0); ctx.lineTo(wPx, flightW); ctx.lineTo(flightW, flightW); ctx.lineTo(flightW, hPx); ctx.lineTo(0, hPx);
+        } else if (!atLeft && atTop) {
+            // 右上角
+            ctx.moveTo(wPx, 0); ctx.lineTo(wPx, hPx); ctx.lineTo(wPx - flightW, hPx); ctx.lineTo(wPx - flightW, flightW); ctx.lineTo(0, flightW); ctx.lineTo(0, 0);
+        } else if (!atLeft && !atTop) {
+            // 右下角
+            ctx.moveTo(wPx, hPx); ctx.lineTo(0, hPx); ctx.lineTo(0, hPx - flightW); ctx.lineTo(wPx - flightW, hPx - flightW); ctx.lineTo(wPx - flightW, 0); ctx.lineTo(wPx, 0);
+        } else {
+            // 左下角
+            ctx.moveTo(0, hPx); ctx.lineTo(0, 0); ctx.lineTo(flightW, 0); ctx.lineTo(flightW, hPx - flightW); ctx.lineTo(wPx, hPx - flightW); ctx.lineTo(wPx, hPx);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // 角の踊り場ボックス
+        const cornerLeft = atLeft ? 0 : (wPx - flightW);
+        const cornerTop = atTop ? 0 : (hPx - flightW);
+        ctx.strokeRect(cornerLeft, cornerTop, flightW, flightW);
+
+        // 廻り部ライン
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 1;
+        if (st.turnType === 'turn_2') {
+            ctx.beginPath();
+            ctx.moveTo(cornerLeft, atTop ? cornerTop : (cornerTop + flightW));
+            ctx.lineTo(cornerLeft + flightW, atTop ? (cornerTop + flightW) : cornerTop);
+            ctx.stroke();
+        } else if (st.turnType === 'turn_3' || !st.turnType) {
+            ctx.beginPath();
+            ctx.moveTo(cornerLeft, cornerTop);
+            ctx.lineTo(cornerLeft + flightW, cornerTop + flightW * 0.5);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(cornerLeft, cornerTop);
+            ctx.lineTo(cornerLeft + flightW * 0.5, cornerTop + flightW);
+            ctx.stroke();
+        }
+
+        // 水平フライトのステップ段線
+        const hFlightLen = wPx - flightW;
+        if (hFlightLen > 10) {
+            const hSteps = 6;
+            const stepW = hFlightLen / hSteps;
+            const startX = atLeft ? flightW : 0;
+            const y1 = atTop ? 0 : (hPx - flightW);
+            const y2 = atTop ? flightW : hPx;
+            for (let i = 1; i < hSteps; i++) {
+                const x = startX + i * stepW;
+                ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x, y2); ctx.stroke();
             }
         }
+
+        // 垂直フライトのステップ段線
+        const vFlightLen = hPx - flightW;
+        if (vFlightLen > 10) {
+            const vSteps = 6;
+            const stepH = vFlightLen / vSteps;
+            const startY = atTop ? flightW : 0;
+            const x1 = atLeft ? 0 : (wPx - flightW);
+            const x2 = atLeft ? flightW : wPx;
+            for (let i = 1; i < vSteps; i++) {
+                const y = startY + i * stepH;
+                ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke();
+            }
+        }
+
+        // 昇降L字折れ矢印
+        const cornerMidX = cornerLeft + flightW * 0.5;
+        const cornerMidY = cornerTop + flightW * 0.5;
+        const arrowStartMidX = atLeft ? (atTop ? flightW * 0.5 : flightW * 0.5) : (wPx - flightW * 0.5);
+        const arrowStartMidY = atTop ? (hPx - 8) : 8;
+        const arrowEndMidX = atLeft ? (wPx - 8) : 8;
+        const arrowEndMidY = atTop ? (flightW * 0.5) : (hPx - flightW * 0.5);
+
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath(); ctx.arc(arrowStartMidX, arrowStartMidY, 3.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(arrowStartMidX, arrowStartMidY);
+        ctx.lineTo(cornerMidX, cornerMidY);
+        ctx.lineTo(arrowEndMidX, arrowEndMidY);
+        ctx.stroke();
+
+        ctx.beginPath();
+        const arrowDx = atLeft ? -6 : 6;
+        ctx.moveTo(arrowEndMidX + arrowDx, arrowEndMidY - 4);
+        ctx.lineTo(arrowEndMidX, arrowEndMidY);
+        ctx.lineTo(arrowEndMidX + arrowDx, arrowEndMidY + 4);
+        ctx.stroke();
+
     } else {
+        // 直階段・U字階段共通の矩形背景と外枠
+        ctx.fillStyle = isOpen ? 'rgba(255, 255, 255, 0.35)' : (isSelected ? '#fef3c7' : '#ffffff');
+        ctx.fillRect(0, 0, wPx, hPx);
+
+        ctx.strokeStyle = isSelected ? '#f59e0b' : '#0f172a';
+        ctx.lineWidth = isSelected ? 2.5 : 1.5;
+        if (isOpen) ctx.setLineDash([4, 2]);
+        ctx.strokeRect(0, 0, wPx, hPx);
+        ctx.setLineDash([]);
+
+        // 手すり二重線表現
+        if (handrail === 'left' || handrail === 'both') {
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(2, 2, 3, hPx - 4);
+        }
+        if (handrail === 'right' || handrail === 'both') {
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(wPx - 5, 2, 3, hPx - 4);
+        }
+
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 1;
+
+        if (shape === 'U_SHAPE') {
+            const isVert = hPx >= wPx;
+            if (isVert) {
+                const midX = wPx / 2;
+                const landingH = hPx * 0.3;
+                ctx.strokeRect(midX - 2, landingH, 4, hPx - landingH);
+                ctx.strokeRect(0, 0, wPx, landingH);
+                const flightH = hPx - landingH;
+                const stepH = flightH / 7;
+                for (let i = 1; i <= 6; i++) {
+                    const y = landingH + i * stepH;
+                    ctx.beginPath();
+                    ctx.moveTo(0, y); ctx.lineTo(midX - 2, y);
+                    ctx.moveTo(midX + 2, y); ctx.lineTo(wPx, y);
+                    ctx.stroke();
+                }
+                // 昇降矢印
+                const startX = midX * 0.5, endX = midX * 1.5, bottomY = hPx * 0.88, topY = landingH * 0.5;
+                ctx.beginPath(); ctx.arc(startX, bottomY, 3, 0, Math.PI * 2); ctx.fillStyle = '#0f172a'; ctx.fill();
+                ctx.beginPath(); ctx.moveTo(startX, bottomY); ctx.lineTo(startX, topY); ctx.lineTo(endX, topY); ctx.lineTo(endX, bottomY); ctx.stroke();
+            } else {
+                const midY = hPx / 2;
+                const landingW = wPx * 0.3;
+                ctx.strokeRect(0, midY - 2, wPx - landingW, 4);
+                ctx.strokeRect(wPx - landingW, 0, landingW, hPx);
+                const flightW = wPx - landingW;
+                const stepW = flightW / 7;
+                for (let i = 1; i <= 6; i++) {
+                    const x = i * stepW;
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0); ctx.lineTo(x, midY - 2);
+                    ctx.moveTo(x, midY + 2); ctx.lineTo(x, hPx);
+                    ctx.stroke();
+                }
+            }
+        } else {
+            // STRAIGHT 直階段
+            const isVert = hPx >= wPx;
+            const stepCount = steps || 14;
+            if (isVert) {
+                const stepH = hPx / stepCount;
+                for (let i = 1; i < stepCount; i++) {
+                    const y = i * stepH;
+                    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(wPx, y); ctx.stroke();
+                }
+                const fromY = dir === 'UP' ? hPx * 0.85 : hPx * 0.15;
+                const toY = dir === 'UP' ? hPx * 0.15 : hPx * 0.85;
+                ctx.fillStyle = '#0f172a';
+                ctx.beginPath(); ctx.arc(wPx / 2, fromY, 3.5, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.moveTo(wPx / 2, fromY); ctx.lineTo(wPx / 2, toY); ctx.stroke();
+                const arrowDy = dir === 'UP' ? 7 : -7;
+                ctx.beginPath(); ctx.moveTo(wPx / 2 - 4, toY + arrowDy); ctx.lineTo(wPx / 2, toY); ctx.lineTo(wPx / 2 + 4, toY + arrowDy); ctx.stroke();
+            } else {
+                const stepW = wPx / stepCount;
+                for (let i = 1; i < stepCount; i++) {
+                    const x = i * stepW;
+                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, hPx); ctx.stroke();
+                }
+                const fromX = dir === 'UP' ? wPx * 0.15 : wPx * 0.85;
+                const toX = dir === 'UP' ? wPx * 0.85 : wPx * 0.15;
+                ctx.fillStyle = '#0f172a';
+                ctx.beginPath(); ctx.arc(fromX, hPx / 2, 3.5, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.moveTo(fromX, hPx / 2); ctx.lineTo(toX, hPx / 2); ctx.stroke();
+                const arrowDx = dir === 'UP' ? -7 : 7;
+                ctx.beginPath(); ctx.moveTo(toX + arrowDx, hPx / 2 - 4); ctx.lineTo(toX, hPx / 2); ctx.lineTo(toX + arrowDx, hPx / 2 + 4); ctx.stroke();
+            }
+        }
+    }
         const isVert = hPx >= wPx;
         const stepCount = steps || 14;
         if (isVert) {
