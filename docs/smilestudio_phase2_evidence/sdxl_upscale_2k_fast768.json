@@ -1,0 +1,105 @@
+{
+  "1": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "RealVisXL_V5.0_fp16.safetensors"
+    }
+  },
+  "2": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "sdxl_vae.safetensors"
+    }
+  },
+  "3": {
+    "class_type": "UpscaleModelLoader",
+    "inputs": {
+      "model_name": "4x-UltraSharp.pth"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "p2_1024_for_2k.png"
+    }
+  },
+  "5": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "1",
+        1
+      ],
+      "text": "masterpiece, architectural interior photograph, fine natural wood grain texture, plaster wall micro texture, crisp window frame details, natural sunlight, ultra realistic, 8k"
+    }
+  },
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "1",
+        1
+      ],
+      "text": "blurry, artifacts, seams, grid pattern, oversharpened, plastic, cgi, watermark, text"
+    }
+  },
+  "7": {
+    "class_type": "UltimateSDUpscale",
+    "inputs": {
+      "image": [
+        "4",
+        0
+      ],
+      "model": [
+        "1",
+        0
+      ],
+      "positive": [
+        "5",
+        0
+      ],
+      "negative": [
+        "6",
+        0
+      ],
+      "vae": [
+        "2",
+        0
+      ],
+      "upscale_model": [
+        "3",
+        0
+      ],
+      "upscale_by": 2.0,
+      "seed": 1795512183,
+      "steps": 9,
+      "cfg": 5.0,
+      "sampler_name": "dpmpp_2m_sde",
+      "scheduler": "karras",
+      "denoise": 0.25,
+      "mode_type": "Linear",
+      "tile_width": 768,
+      "tile_height": 768,
+      "mask_blur": 16,
+      "tile_padding": 64,
+      "seam_fix_mode": "Half Tile",
+      "seam_fix_denoise": 0.2,
+      "seam_fix_width": 64,
+      "seam_fix_mask_blur": 16,
+      "seam_fix_padding": 32,
+      "force_uniform_tiles": true,
+      "tiled_decode": true,
+      "batch_size": 1
+    }
+  },
+  "8": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "7",
+        0
+      ],
+      "filename_prefix": "p2_2k_fast768"
+    }
+  }
+}

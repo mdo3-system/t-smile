@@ -184,3 +184,14 @@ public/plans_zbuf/
 public/plans/scan*_exact_crop_boxes_perfect.json
 public/data/plans.json.bak*
 
+# SmileStudio AI工房 秘密鍵・実行時キューデータ・バックアップ除外
+public/api/smilestudio/secret.php
+public/api/smilestudio/queue/jobs/
+public/api/smilestudio/queue/inputs/
+public/api/smilestudio/queue/outputs/*.png
+public/api/smilestudio/queue/outputs/*.jpg
+public/api/smilestudio/queue/outputs/*.webp
+public/api/smilestudio/queue/quotas/
+public/api/smilestudio/queue/poll.lock
+backups/
+

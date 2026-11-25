@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-11-24 19:37:07",
+  "version": "2.28.6",
+  "planId": "PLAN-2387-P01",
+  "viewPreset": "interior_1f_staged",
+  "depthRange": {
+    "mode": "interior",
+    "minRaw": 1,
+    "maxRaw": 209,
+    "uniqueLevels": 208,
+    "linearNearM": 0.25,
+    "linearFarM": 8.46
+  },
+  "furnitureToggleOffCheck": {
+    "btnTextOff": "🛋️ 3D家具: OFF",
+    "hasFurnitureMaskWhenOff": false
+  },
+  "regionMasks": [
+    {
+      "id": "furniture",
+      "coverageRatio": 0.1511,
+      "strength": 1,
+      "prompt": "crafted solid oak wooden dining table with chairs, comfortable minimalist linen sofa, warm interior styling, natural wood furniture"
+    }
+  ],
+  "basePrompt": "eye-level architectural interior photograph inside a bright modern Japanese custom home living dining room, warm solid yoshino cedar wood flooring, pristine white diatomaceous earth plaster walls, wooden interior doors, crafted solid oak dining table with four wooden chairs, cozy minimalist beige linen sofa and low coffee table on a woven rug, soft natural morning daylight, ultra realistic architectural photography, 8k",
+  "jobId": "912749b38af95d02fec212fcd8239fba",
+  "elapsedSec": 31.15,
+  "outputUrl": "/api/smilestudio/queue/outputs/out_e5f1e598b6f66f907cf4e357bba23797.png",
+  "files": {
+    "color": "p3c_interior_color.jpg",
+    "depth": "p3c_interior_depth.png",
+    "mask_furniture": "p3c_mask_furniture.png",
+    "output": "p3c_interior_staged_output.png"
+  }
+}

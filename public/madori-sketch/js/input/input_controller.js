@@ -1299,7 +1299,7 @@ function tryStartSelectOrModifyInteraction(wx, wy, onlyHitExistingOfSameToolType
     if (!onlyHitExistingOfSameToolType || state.activeTool === 'stair') {
         const stairs = fl.stairs || [];
         for (let i = stairs.length - 1; i >= 0; i--) {
-            const st = stairs[i];
+            const st = normalizeStairObject(stairs[i]);
             if (wx >= st.x && wx <= st.x + st.w && wy >= st.y && wy <= st.y + st.h) {
                 state.selectedItem = { kind: 'stair', id: st.id, floor: state.currentFloor };
                 state.dragAction = {
@@ -2442,37 +2442,96 @@ function placeStairPreset(presetType) {
     state.stairDrawMode = 'preset';
     if (typeof renderSubToolbar === 'function') renderSubToolbar();
 }
-function placeStairPresetAt(presetType, x, y) {
-    const type = state.stairPresetToPlace || presetType || 'U_SHAPE';
+function normalizeStairObject(st) {
+    if (!st) return st;
+    if ((st.x === undefined || st.w === undefined || isNaN(st.x) || isNaN(st.w)) && st.points && st.points.length >= 2) {
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        st.points.forEach(pt => {
+            minX = Math.min(minX, pt.x);
+            minY = Math.min(minY, pt.y);
+            maxX = Math.max(maxX, pt.x);
+            maxY = Math.max(maxY, pt.y);
+        });
+        st.x = minX;
+        st.y = minY;
+        const pitch = (state && state.modulePitch) ? state.modulePitch : 910;
+        const widthP = (st.widthMm || 910) / pitch;
+        st.w = +(Math.max(widthP, maxX - minX)).toFixed(3) || widthP;
+        st.h = +(Math.max(widthP, maxY - minY)).toFixed(3) || (widthP * 2);
+    }
+    if (st.stairHandrail && !st.handrail) st.handrail = st.stairHandrail;
+    if (st.handrail && !st.stairHandrail) st.stairHandrail = st.handrail;
+    return st;
+}
+window.normalizeStairObject = normalizeStairObject;
+
+function placeStairPresetAt(presetType, x, y, turnSpecParam) {
+    const type = state.stairPresetType || presetType || 'STRAIGHT';
     const rot = state.subStairRot || 0;
     const dir = state.subStairDirection || 'UP';
-    const turnSpec = state.stairTurnSpec || 'turn_3';
+    const turnSpec = turnSpecParam || state.stairTurnSpec || 'turn_3';
+    const widthMm = state.stairWidthMm || 910;
+    const pitch = state.modulePitch || 910;
+    const widthP = +(widthMm / pitch).toFixed(3);
 
-    let localPts = [];
+    // 階段種別に応じた幅・奥行きの設計
+    let w = widthP;
+    let h = +(widthP * 2).toFixed(3);
     if (type === 'STRAIGHT') {
-        localPts = [{ x: 0, y: 0 }, { x: 0, y: 2.0 }];
+        w = widthP;
+        h = +(widthP * 2).toFixed(3);
     } else if (type === 'L_SHAPE') {
-        localPts = [{ x: 0, y: 0 }, { x: 0, y: 1.5 }, { x: 1.5, y: 1.5 }];
-    } else {
-        localPts = [{ x: 0, y: 0 }, { x: 0, y: 1.5 }, { x: 1.0, y: 1.5 }, { x: 1.0, y: 0 }];
+        w = +(widthP * 1.5).toFixed(3);
+        h = +(widthP * 1.5).toFixed(3);
+    } else if (type === 'U_SHAPE') {
+        w = +(widthP * 2).toFixed(3);
+        h = +(widthP * 1.5).toFixed(3);
     }
 
-    const rad = (rot * Math.PI) / 180;
-    const cosR = Math.round(Math.cos(rad));
-    const sinR = Math.round(Math.sin(rad));
+    if (rot === 90 || rot === 270) {
+        const tmp = w; w = h; h = tmp;
+    }
 
-    const pts = localPts.map(p => ({
-        x: x + (p.x * cosR - p.y * sinR),
-        y: y + (p.x * sinR + p.y * cosR)
-    }));
+    const pts = [
+        { x: x, y: y },
+        { x: x + w, y: y },
+        { x: x + w, y: y + h },
+        { x: x, y: y + h }
+    ];
 
-    createStairFromPoints(pts, state.modulePitch || 910, dir, turnSpec);
-    state.stairPresetToPlace = null;
+    const fl = state.floors[state.currentFloor];
+    const newStair = {
+        id: uid(),
+        kind: 'stair',
+        type: 'STAIR',
+        category: 'STAIR',
+        shapeType: type,
+        points: pts,
+        x: x,
+        y: y,
+        w: w,
+        h: h,
+        widthMm: widthMm,
+        direction: dir,
+        turnType: turnSpec,
+        stairStyle: state.stairStyle || 'box',
+        stairHandrail: state.stairHandrail || 'both',
+        handrail: state.stairHandrail || 'both',
+        steps: 14,
+        treadMm: 220,
+        riserMm: 200,
+        label: `階段 (${type === 'STRAIGHT' ? '直階段' : (type === 'L_SHAPE' ? 'かね折れL型' : '折り返しU型')}・${dir === 'UP' ? '上る' : '降りる'})`
+    };
+
+    if (!fl.stairs) fl.stairs = [];
+    fl.stairs.push(newStair);
+    state.selectedItem = { kind: 'stair', id: newStair.id, floor: state.currentFloor };
+
     saveHistorySnapshot();
     if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    showToast(`階段を配置しました`);
+    showToast(`階段（${type === 'STRAIGHT' ? '直階段' : (type === 'L_SHAPE' ? 'かね折れ' : '折り返し')}・W${widthMm}mm）を配置しました`);
 }
 
 function updateStairProp(id, prop, val) {

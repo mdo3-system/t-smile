@@ -1,0 +1,73 @@
+{
+  "timestamp": "2026-11-24 18:24:57",
+  "condition": "business_apps_running_phase2",
+  "planId": "PLAN-2387-P01",
+  "cleanBackground": true,
+  "roomHints": {
+    "hasTatami": true,
+    "hasLdk": true,
+    "hasEntrance": true,
+    "roomNames": [
+      "玄関",
+      "ホール",
+      "洋室 12帖",
+      "和室 8帖",
+      "便所",
+      "収納",
+      "洗面所",
+      "浴室",
+      "LDK 17.5帖",
+      "和室 6帖",
+      "洋室",
+      "UB",
+      "押入"
+    ]
+  },
+  "depthRange": {
+    "minRaw": 1,
+    "maxRaw": 233,
+    "linearNearM": 10.15,
+    "linearFarM": 24.98
+  },
+  "seed": 1795512183,
+  "prompt": "3D cutaway architectural dollhouse isometric floorplan rendering of a modern Japanese custom house on a pure clean white studio background, green woven ryukyu tatami mat flooring in the right-side Japanese washitsu room, warm solid yoshino cedar wood flooring in the central LDK, clean white diatomaceous earth plaster walls, distinct wooden interior doors and open doorways, tasteful minimalist wooden dining table, cozy sofa, kitchen counter, soft natural daylight, ultra realistic architectural visualization, 8k",
+  "depth_plus_canny_1024": {
+    "prompt_id": "30d883c7-de36-4a1a-a4ee-a82696e84bc7",
+    "elapsed_sec": 28.09,
+    "vram_total_mib": 8188,
+    "vram_before_used_mib": 6819,
+    "vram_before_free_mib": 1131,
+    "vram_after_used_mib": 6361,
+    "vram_peak_used_mib": 7364,
+    "vram_min_free_mib": 586,
+    "vram_samples": 51,
+    "output_path": "C:\\ComfyUI\\output\\p2_depth_canny_1024_00001_.png",
+    "output_size": [
+      1024,
+      768
+    ]
+  },
+  "upscale_2k_fast768_steps9": {
+    "prompt_id": "8dd796e6-3c77-46fa-a8b7-d02fc65a09be",
+    "elapsed_sec": 84.66,
+    "vram_total_mib": 8188,
+    "vram_before_used_mib": 6361,
+    "vram_before_free_mib": 1589,
+    "vram_after_used_mib": 6336,
+    "vram_peak_used_mib": 7509,
+    "vram_min_free_mib": 441,
+    "vram_samples": 153,
+    "output_path": "C:\\ComfyUI\\output\\p2_2k_fast768_00001_.png",
+    "output_size": [
+      2048,
+      1536
+    ]
+  },
+  "total_1024_plus_2k_sec": 112.75,
+  "vram_threshold_evaluation": {
+    "current_agent_min_free_mib": 1000,
+    "depth_canny_1024_peak_used_mib": 7364,
+    "upscale_2k_peak_used_mib": 7509,
+    "vram_total_mib": 8188
+  }
+}

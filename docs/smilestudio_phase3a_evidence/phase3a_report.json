@@ -1,0 +1,61 @@
+{
+  "timestamp": "2026-11-24 19:20:19",
+  "version": "2.28.4",
+  "condition": "business_apps_running_phase3a",
+  "f5_renovation": {
+    "cpu_depth": {
+      "elapsed_sec": 0.55,
+      "width": 1264,
+      "height": 848,
+      "minRaw": 0,
+      "maxRaw": 255,
+      "uniqueLevels": 256,
+      "convention": "near_white_far_black",
+      "device": "cpu",
+      "model": "depth-anything/Depth-Anything-V2-Small-hf"
+    },
+    "benchmark": {
+      "elapsed_sec": 32.53,
+      "vram_total_mib": 8188,
+      "vram_before_free_mib": 1081,
+      "vram_peak_used_mib": 7565,
+      "vram_min_free_mib": 385,
+      "vram_samples": 58,
+      "output_path": "C:\\ComfyUI\\output\\p3a_reno_out_00001_.png",
+      "output_size": [
+        1024,
+        768
+      ]
+    }
+  },
+  "sketch_watercolor": {
+    "benchmark": {
+      "elapsed_sec": 29.15,
+      "vram_total_mib": 8188,
+      "vram_before_free_mib": 1976,
+      "vram_peak_used_mib": 7414,
+      "vram_min_free_mib": 536,
+      "vram_samples": 52,
+      "output_path": "C:\\ComfyUI\\output\\p3a_sketch_out_00001_.png",
+      "output_size": [
+        1024,
+        768
+      ]
+    }
+  },
+  "style_hotel": {
+    "benchmark": {
+      "elapsed_sec": 26.74,
+      "vram_total_mib": 8188,
+      "vram_before_free_mib": 1978,
+      "vram_peak_used_mib": 7392,
+      "vram_min_free_mib": 558,
+      "vram_samples": 48,
+      "output_path": "C:\\ComfyUI\\output\\p3a_hotel_out_00001_.png",
+      "output_size": [
+        1024,
+        768
+      ]
+    }
+  }
+}

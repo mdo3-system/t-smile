@@ -20,6 +20,18 @@ PLANS_DATA_PATH = os.path.join(PUBLIC_DIR, 'data', 'plans.json')
 OUT_DIR = os.path.join(PUBLIC_DIR, 'plans', 'detail')
 HUB_OUT_PATH = os.path.join(PUBLIC_DIR, 'plans', 'index.html')
 SRC_DIR = os.path.join(os.path.dirname(__file__), '..', 'src')
+VERIFIED_GEOMETRY_PATH = os.path.join(os.path.dirname(__file__), '..', 'data', 'verified_geometry_plans.json')
+
+def load_verified_geometry_plans():
+    """案1公開ルール：原図と幾何照合合格済みのプランID集合のみを返す単一情報源"""
+    if not os.path.exists(VERIFIED_GEOMETRY_PATH):
+        return set()
+    try:
+        with open(VERIFIED_GEOMETRY_PATH, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return set(str(x).strip() for x in (data.get('verified_plans') or []) if str(x).strip())
+    except Exception:
+        return set()
 
 def get_common_components():
     header_path = os.path.join(SRC_DIR, 'partials', 'header-nav.html')
@@ -959,6 +971,7 @@ PLAN_TEMPLATE = """<!DOCTYPE html>
     <div class="floor-gallery">
       __FLOORS_HTML__
     </div>
+    __MADORI_SKETCH_CTA__
 
     <!-- よくある質問（FAQ）ブロック -->
     <div class="plan-faq-section">
@@ -2232,9 +2245,24 @@ def build_all_plans():
         seo_description = f"{desc} 延床面積{sqm}㎡（{tsubo}坪）、{display_dir}、{rooms}、LDK{ldk}帖。本体約{cost_body_min}万円〜、月々返済約{monthly_pay}万円。埼玉県全域（さいたま市・川口市・戸田市・越谷市・春日部市・川越市・鶴ヶ島市等）対応の完全自由設計3D間取りプラン。"
         seo_keywords = f"注文住宅 間取り, {tsubo}坪 間取り, 注文住宅 概算費用, 月々返済額, {rooms}, {display_dir}, 埼玉 工務店, さいたま市 注文住宅, 川口市 注文住宅, 越谷市 注文住宅, 春日部市 注文住宅, 鶴ヶ島 注文住宅, 川越 注文住宅, 3Dパース, 株式会社住ま居る"
 
+        # 案1公開ルール：原図幾何照合に合格したプランにのみ図面直下へ「間取り工房で開く」ボタンを表示
+        verified_geo_set = load_verified_geometry_plans()
+        if plan_id in verified_geo_set:
+            madori_cta_html = (
+                f'<div style="margin: 0.5rem 0 2rem; padding: 14px 18px; border-radius: 12px; background: #ecfdf5; border: 1px solid #a7f3d0; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;">'
+                f'  <div style="font-size: 0.86rem; color: #065f46; font-weight: 700;">✨ この間取りは原本図面どおりの3D立体データに対応しています（編集・AIパース化まで無料）</div>'
+                f'  <a href="/madori-sketch/?planId={plan_id}" class="btn-open-madori-sketch" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 11px 22px; border-radius: 10px; background: linear-gradient(135deg, #059669, #0d9488); color: #ffffff; font-weight: 800; font-size: 0.94rem; text-decoration: none; box-shadow: 0 6px 18px rgba(5, 150, 105, 0.28);">'
+                f'    📐 この間取りを3D間取り工房で開く ↗'
+                f'  </a>'
+                f'</div>'
+            )
+        else:
+            madori_cta_html = ""
+
         # プレースホルダー置換 (確実・安全)
         html = PLAN_TEMPLATE
         replacements = {
+            "__MADORI_SKETCH_CTA__": madori_cta_html,
             "__SEO_TITLE__": seo_title,
             "__SEO_DESCRIPTION__": seo_description,
             "__SEO_KEYWORDS__": seo_keywords,

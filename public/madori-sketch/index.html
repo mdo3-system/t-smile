@@ -203,7 +203,7 @@
                     <a href="/" class="brand-link" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #ffffff;" title="住ま居る トップページへ">
                         <span style="font-size: 1.15rem;">🏡</span>
                         <span style="font-size: 1.05rem; font-weight: 900; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">家づくりAIラボ</span>
-                        <span style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 5px; border-radius: 4px; font-weight: 800;">3D間取り工房 v2.17</span>
+                        <span style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 5px; border-radius: 4px; font-weight: 800;">3D間取り工房 v2.29</span>
                     </a>
                     <div class="hidden xl:inline-flex items-center gap-1.5 text-[11px] text-slate-300 bg-black/30 border border-white/15 px-2 py-0.5 rounded">
                         <span class="text-sky-400 font-bold">施工エリア：埼玉県全域・一部東京都</span>
@@ -689,7 +689,7 @@
             </div>
 
             <!-- FLOATING PROPERTY INSPECTOR FOR SELECTED ITEM -->
-            <div id="propertyInspector" class="hidden absolute bottom-12 left-[162px] z-30 glass-panel p-3.5 rounded-2xl shadow-2xl border border-amber-500/50 w-80 sm:w-96 max-w-[calc(100vw-11rem)]">
+            <div id="propertyInspector" class="hidden absolute bottom-12 left-[162px] z-30 glass-panel p-3.5 rounded-2xl shadow-2xl border border-amber-500/50 w-80 sm:w-96 max-w-[calc(100vw-11rem)] transition-[top,left] duration-150 ease-out">
                 <!-- Populated dynamically when an item is selected -->
             </div>
 
@@ -763,6 +763,9 @@
                                 </div>
                                 <div class="border-t border-zinc-700/80 my-0.5"></div>
                             </div>
+                            <button id="btn3DFurnitureToggle" type="button" onclick="toggle3DFurnitureStaging()" class="w-full py-1 px-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-amber-200 border border-amber-400/30 font-bold text-[10px] shadow flex items-center justify-center gap-1 transition">
+                                <span>🛋️ 3D家具: ON</span>
+                            </button>
                             <button onclick="export3DToPersStudio()" class="w-full py-1.5 px-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-extrabold text-[10px] shadow flex items-center justify-center gap-1">
                                 <i class="fa-solid fa-wand-magic-sparkles text-amber-200"></i>
                                 <span>AI 3Dパース工房へ連携</span>
@@ -1227,20 +1230,20 @@
     </div>
 
     <!-- 単一責任の原則 (SRP) に基づく分離モジュール群 -->
-    <script>window.MADORI_APP_VERSION = '2.17.0';</script>
-    <script src="/madori-sketch/js/constants/manual_data.js?v=202611171443"></script>
-    <script src="/madori-sketch/js/constants/architectural_specs.js?v=202611171443"></script>
-    <script src="/madori-sketch/js/core/app_state.js?v=202611171443"></script>
-    <script src="/madori-sketch/js/core/metrics_calculator.js?v=202611171443"></script>
-    <script src="/madori-sketch/js/io/json_storage.js?v=202611171443"></script>
-    <script src="/madori-sketch/js/io/dxf_pdf_exporter.js?v=202611171443"></script>
-    <script src="/madori-sketch/js/integration/carte_bridge.js?v=202611171443"></script>
-    <script src="/madori-sketch/js/geometry/room_detector.js?v=202611171443"></script>
-    <script src="/madori-sketch/js/renderer/three_3d.js?v=202611171443"></script>
-    <script src="/madori-sketch/js/renderer/canvas_2d_renderer.js?v=202611171443"></script>
-    <script src="/madori-sketch/js/ui/ui_inspector.js?v=202611171443"></script>
-    <script src="/madori-sketch/js/input/input_controller.js?v=202611171443"></script>
-    <script src="/madori-sketch/js/case/case_manager.js?v=202611171443"></script>
+    <script>window.MADORI_APP_VERSION = '2.29.0';</script>
+    <script src="/madori-sketch/js/constants/manual_data.js?v=202611251520"></script>
+    <script src="/madori-sketch/js/constants/architectural_specs.js?v=202611251520"></script>
+    <script src="/madori-sketch/js/core/app_state.js?v=202611251520"></script>
+    <script src="/madori-sketch/js/core/metrics_calculator.js?v=202611251520"></script>
+    <script src="/madori-sketch/js/io/json_storage.js?v=202611251520"></script>
+    <script src="/madori-sketch/js/io/dxf_pdf_exporter.js?v=202611251520"></script>
+    <script src="/madori-sketch/js/integration/carte_bridge.js?v=202611251520"></script>
+    <script src="/madori-sketch/js/geometry/room_detector.js?v=202611251520"></script>
+    <script src="/madori-sketch/js/renderer/three_3d.js?v=202611251520"></script>
+    <script src="/madori-sketch/js/renderer/canvas_2d_renderer.js?v=202611251520"></script>
+    <script src="/madori-sketch/js/ui/ui_inspector.js?v=202611251520"></script>
+    <script src="/madori-sketch/js/input/input_controller.js?v=202611251520"></script>
+    <script src="/madori-sketch/js/case/case_manager.js?v=202611251520"></script>
     <script>
         const ROOM_TYPES = window.ROOM_TYPES;
         const OPENING_TYPES = window.OPENING_TYPES;
@@ -1325,6 +1328,70 @@
         }
         window.closeFullscreenModal = closeFullscreenModal;
 
+        function syncFullscreenUI(isFs) {
+            const bar = document.getElementById('floatingFullscreenBar');
+            const icon = document.getElementById('fullscreenIcon');
+            const label = document.getElementById('fullscreenBtnLabel');
+            if (isFs) {
+                document.body.classList.add('is-fullscreen');
+                if (bar) bar.style.display = 'flex';
+                if (icon) icon.className = 'fa-solid fa-compress';
+                if (label) label.textContent = '全画面終了';
+            } else {
+                document.body.classList.remove('is-fullscreen');
+                if (bar) bar.style.display = 'none';
+                if (icon) icon.className = 'fa-solid fa-expand';
+                if (label) label.textContent = '全画面';
+            }
+            if (typeof handleResize === 'function') {
+                handleResize();
+                setTimeout(handleResize, 120);
+            }
+        }
+
+        function exitFullscreenMode() {
+            syncFullscreenUI(false);
+            try {
+                const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+                if (fsEl) {
+                    if (document.exitFullscreen) {
+                        const p = document.exitFullscreen();
+                        if (p && typeof p.catch === 'function') p.catch(() => {});
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    }
+                }
+            } catch (_) {}
+        }
+        window.exitFullscreenMode = exitFullscreenMode;
+
+        function toggleFullscreenMode() {
+            const currentlyFs = document.body.classList.contains('is-fullscreen');
+            if (currentlyFs) {
+                exitFullscreenMode();
+                return;
+            }
+            syncFullscreenUI(true);
+            try {
+                const el = document.documentElement;
+                if (el.requestFullscreen) {
+                    const p = el.requestFullscreen();
+                    if (p && typeof p.catch === 'function') p.catch(() => {});
+                } else if (el.webkitRequestFullscreen) {
+                    el.webkitRequestFullscreen();
+                }
+            } catch (_) {}
+        }
+        window.toggleFullscreenMode = toggleFullscreenMode;
+
+        document.addEventListener('fullscreenchange', () => {
+            const nativeFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+            if (!nativeFs && document.body.classList.contains('is-fullscreen')) {
+                // ESCキー等でブラウザネイティブ全画面を終了した際もUI状態を同期
+                syncFullscreenUI(false);
+            }
+        });
+
         function startFullscreenFromModal() {
             closeFullscreenModal();
             if (!document.body.classList.contains('is-fullscreen') && typeof toggleFullscreenMode === 'function') {
@@ -1359,11 +1426,11 @@
             if (typeof checkMadoriAppUpdate === 'function') {
                 setTimeout(checkMadoriAppUpdate, 800);
             }
-            // URLパラメータ ?planId=PLAN-XXXX-PXX で連携JSONを自動読込
+            // URLパラメータ ?planId=PLAN-XXXX-PXX（エイリアス ?plan= も受理）で連携JSONを自動読込
             (async function loadPlanFromUrlParam() {
                 try {
                     const params = new URLSearchParams(window.location.search);
-                    const reqPlanId = (params.get('planId') || '').trim();
+                    const reqPlanId = (params.get('planId') || params.get('plan') || '').trim();
                     if (!reqPlanId) return;
                     const res = await fetch('/plans_json/' + encodeURIComponent(reqPlanId) + '.json?t=' + Date.now());
                     if (!res.ok) return;
@@ -1449,6 +1516,50 @@
             </div>
             <div class="pt-1 flex justify-end">
                 <button onclick="closeSaveDestinationModal()" class="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 border border-slate-700">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- iPad キーボード操作ヒントモーダル -->
+    <div id="keyboardHintModal" class="hidden fixed inset-0 z-[100035] bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4" onclick="if(event.target===this) closeKeyboardHintModal()">
+        <div class="bg-slate-900 border border-amber-500/50 rounded-2xl shadow-2xl max-w-md w-full p-5 text-slate-100 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="text-base font-extrabold flex items-center gap-2 text-amber-400">
+                    <i class="fa-regular fa-keyboard"></i>
+                    <span>iPadキーボードの移動・小型化テクニック</span>
+                </h3>
+                <button onclick="closeKeyboardHintModal()" class="text-slate-400 hover:text-white px-2 py-1 rounded">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="space-y-3 text-xs leading-relaxed text-slate-300">
+                <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl space-y-2">
+                    <div class="font-bold text-amber-300 flex items-center gap-1.5 text-sm">
+                        <i class="fa-solid fa-hand-scissors"></i>
+                        <span>① 2本指で「ピンチイン（つまむ）」</span>
+                    </div>
+                    <p class="text-slate-200">
+                        iPadのソフトウェアキーボード上で、<strong>2本指でキュッとつまむ（ピンチイン）</strong>と、キーボードがiPhoneサイズ（フローティングキーボード）に小型化します。
+                    </p>
+                    <p class="text-slate-200">
+                        小型化されたキーボードは、下部のバーをドラッグすることで<strong>画面内のどこへでも自由に移動</strong>できます！
+                    </p>
+                </div>
+                <div class="p-3 bg-sky-500/10 border border-sky-500/30 rounded-xl space-y-2">
+                    <div class="font-bold text-sky-300 flex items-center gap-1.5 text-sm">
+                        <i class="fa-solid fa-arrows-up-down-left-right"></i>
+                        <span>② モーダル上部の「ドラッグで移動」</span>
+                    </div>
+                    <p class="text-slate-200">
+                        サッシ編集モーダルの上部にある<strong>「ドラッグで移動」バー</strong>を指やスタイラスペンでドラッグすると、モーダル自体を画面上の好きな位置へ自由に動かせます。
+                    </p>
+                    <p class="text-slate-200">
+                        また、入力欄をタップすると<strong>自動的にキーボードの上部へスライド退避</strong>するほか、<strong>「上部へ／下部へ」ボタン</strong>でワンタップ移動も可能です。
+                    </p>
+                </div>
+            </div>
+            <div class="pt-1 flex justify-end">
+                <button onclick="closeKeyboardHintModal()" class="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-lg transition">閉じる</button>
             </div>
         </div>
     </div>

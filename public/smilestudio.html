@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SmileStudio AI工房 | 株式会社住ま居る - 厳選4大AIパース生成スタジオ</title>
-  <meta name="description" content="プラン申込み前の方も誰でも利用可能！「平面図の3Dドールハウス化（Gemini）」「簡易CGのフォトリアル化」「写真からのリノベ改修」「手描き水彩風パース」の4大特化生成。無垢材と珪藻土の自然素材美を失敗ゼロの3階層プリセットで即時ビジュアライズ。家カルテ完全同期。">
+  <meta name="description"
+    content="プラン申込み前の方も誰でも利用可能！「平面図の3Dドールハウス化（SDXL＋ControlNet）」「簡易CGのフォトリアル化」「写真からのリノベ改修」「手描き水彩風パース」の4大特化生成。無垢材と珪藻土の自然素材美を失敗ゼロの3階層プリセットで即時ビジュアライズ。家カルテ完全同期。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&family=Outfit:wght@600;700;800;900&display=swap"
+    rel="stylesheet">
 
   <style>
     :root {
@@ -29,8 +33,13 @@
       --radius-sm: 8px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     body {
       font-family: 'Inter', 'Noto Sans JP', sans-serif;
       background-color: var(--bg-dark);
@@ -53,6 +62,7 @@
       z-index: 1000;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
     }
+
     .header-inner {
       max-width: 1400px;
       margin: 0 auto;
@@ -60,6 +70,7 @@
       flex-direction: column;
       gap: 0.5rem;
     }
+
     .header-tier1 {
       display: flex;
       justify-content: space-between;
@@ -67,6 +78,7 @@
       flex-wrap: wrap;
       gap: 10px;
     }
+
     .header-tier2 {
       display: flex;
       align-items: center;
@@ -78,11 +90,13 @@
       font-weight: 700;
       white-space: nowrap;
     }
+
     .header-tier2 a {
       color: #cbd5e1;
       text-decoration: none;
       transition: color 0.2s;
     }
+
     .header-tier2 a:hover {
       color: #fde68a;
     }
@@ -98,6 +112,7 @@
       z-index: 10;
       position: relative;
     }
+
     .footer-inner,
     .footer-grid-unified {
       max-width: 1540px;
@@ -108,14 +123,18 @@
       gap: 2rem;
       text-align: left;
     }
+
     @media (max-width: 1100px) {
+
       .footer-inner,
       .footer-grid-unified {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 2.5rem 1.5rem;
       }
     }
+
     @media (max-width: 640px) {
+
       .footer-inner,
       .footer-grid-unified {
         grid-template-columns: 1fr;
@@ -149,6 +168,7 @@
       gap: 12px;
       box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1);
     }
+
     .step-banner-title {
       font-size: 1.15rem;
       font-weight: 900;
@@ -157,6 +177,7 @@
       align-items: center;
       gap: 8px;
     }
+
     .step-banner-desc {
       font-size: 0.82rem;
       color: #cbd5e1;
@@ -170,11 +191,17 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 12px;
     }
+
     @media (max-width: 1024px) {
-      .mode-grid { grid-template-columns: repeat(2, 1fr); }
+      .mode-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
+
     @media (max-width: 640px) {
-      .mode-grid { grid-template-columns: 1fr; }
+      .mode-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .mode-card {
@@ -190,16 +217,19 @@
       position: relative;
       overflow: hidden;
     }
+
     .mode-card:hover {
       border-color: rgba(56, 189, 248, 0.6);
       transform: translateY(-2px);
       background: rgba(30, 41, 59, 0.7);
     }
+
     .mode-card.active {
       border-color: #38bdf8;
       background: linear-gradient(145deg, rgba(2, 132, 199, 0.2) 0%, rgba(15, 23, 42, 0.9) 100%);
       box-shadow: 0 0 20px rgba(56, 189, 248, 0.25), inset 0 0 12px rgba(56, 189, 248, 0.1);
     }
+
     .mode-badge {
       display: inline-flex;
       align-items: center;
@@ -210,10 +240,30 @@
       border-radius: 6px;
       width: fit-content;
     }
-    .badge-gemini { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
-    .badge-sdxl { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
-    .badge-reno { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
-    .badge-sketch { background: rgba(139, 92, 246, 0.2); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.4); }
+
+    .badge-sd-depth {
+      background: rgba(56, 189, 248, 0.2);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+
+    .badge-sdxl {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .badge-reno {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .badge-sketch {
+      background: rgba(139, 92, 246, 0.2);
+      color: #c084fc;
+      border: 1px solid rgba(139, 92, 246, 0.4);
+    }
 
     .mode-title {
       font-size: 0.98rem;
@@ -223,6 +273,7 @@
       align-items: center;
       gap: 6px;
     }
+
     .mode-desc {
       font-size: 0.76rem;
       color: #94a3b8;
@@ -236,8 +287,11 @@
       gap: 18px;
       align-items: start;
     }
+
     @media (max-width: 1024px) {
-      .studio-workspace { grid-template-columns: 1fr; }
+      .studio-workspace {
+        grid-template-columns: 1fr;
+      }
     }
 
     /* Left Card: Before / After Split Slider Stage */
@@ -251,6 +305,7 @@
       gap: 12px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
+
     .stage-header {
       display: flex;
       justify-content: space-between;
@@ -260,6 +315,7 @@
       padding-bottom: 8px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
+
     .stage-title {
       font-size: 1rem;
       font-weight: 900;
@@ -273,7 +329,8 @@
     .compare-container {
       position: relative;
       width: 100%;
-      padding-top: 66.66%; /* 3:2 aspect ratio */
+      padding-top: 66.66%;
+      /* 3:2 aspect ratio */
       border-radius: 10px;
       overflow: hidden;
       background: #ffffff;
@@ -282,21 +339,29 @@
       touch-action: pan-y;
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
     }
+
     .compare-layer {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
     }
+
     .compare-layer-after {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
       transition: clip-path 0.04s ease-out;
     }
+
     .compare-img {
-      width: 100%; height: 100%;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
       display: block;
     }
@@ -304,7 +369,8 @@
     /* Split Slider Line & Handle */
     .compare-divider {
       position: absolute;
-      top: 0; bottom: 0;
+      top: 0;
+      bottom: 0;
       left: 50%;
       width: 3px;
       background: #ffffff;
@@ -313,6 +379,7 @@
       z-index: 20;
       transform: translateX(-50%);
     }
+
     .compare-handle {
       position: absolute;
       top: 50%;
@@ -336,7 +403,8 @@
     /* Badges on viewer */
     .badge-overlay-left {
       position: absolute;
-      top: 14px; left: 14px;
+      top: 14px;
+      left: 14px;
       z-index: 10;
       background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(8px);
@@ -351,9 +419,11 @@
       gap: 6px;
       pointer-events: none;
     }
+
     .badge-overlay-right {
       position: absolute;
-      top: 14px; right: 14px;
+      top: 14px;
+      right: 14px;
       z-index: 10;
       background: rgba(16, 185, 129, 0.9);
       backdrop-filter: blur(8px);
@@ -373,7 +443,10 @@
     /* Scanning HUD Overlay */
     .scanning-hud {
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background: rgba(15, 23, 42, 0.94);
       backdrop-filter: blur(10px);
       z-index: 30;
@@ -384,18 +457,33 @@
       padding: 24px;
       text-align: center;
     }
+
     .scanning-laser {
       position: absolute;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      left: 0;
+      right: 0;
       height: 3px;
       background: linear-gradient(90deg, transparent, #38bdf8, #10b981, transparent);
       box-shadow: 0 0 15px #38bdf8;
       animation: laserScan 2s infinite ease-in-out;
     }
+
     @keyframes laserScan {
-      0% { top: 5%; opacity: 0.2; }
-      50% { top: 90%; opacity: 1; }
-      100% { top: 5%; opacity: 0.2; }
+      0% {
+        top: 5%;
+        opacity: 0.2;
+      }
+
+      50% {
+        top: 90%;
+        opacity: 1;
+      }
+
+      100% {
+        top: 5%;
+        opacity: 0.2;
+      }
     }
 
     /* Control Panel (Right Column) */
@@ -409,6 +497,7 @@
       gap: 16px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
+
     .panel-section-title {
       font-size: 0.86rem;
       font-weight: 800;
@@ -428,6 +517,7 @@
       border-radius: 8px;
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
+
     .src-tab {
       flex: 1;
       padding: 8px 4px;
@@ -442,6 +532,7 @@
       text-align: center;
       white-space: nowrap;
     }
+
     .src-tab.active {
       background: #0284c7;
       color: #ffffff;
@@ -462,6 +553,7 @@
       align-items: center;
       gap: 6px;
     }
+
     .upload-dropzone:hover {
       border-color: #38bdf8;
       background: rgba(56, 189, 248, 0.08);
@@ -473,6 +565,7 @@
       grid-template-columns: repeat(2, 1fr);
       gap: 8px;
     }
+
     .style-chip {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -485,20 +578,24 @@
       gap: 3px;
       text-align: left;
     }
+
     .style-chip:hover {
       background: rgba(255, 255, 255, 0.08);
       border-color: rgba(255, 255, 255, 0.3);
     }
+
     .style-chip.active {
       background: rgba(16, 185, 129, 0.15);
       border-color: #10b981;
       box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
     }
+
     .style-chip-name {
       font-size: 0.8rem;
       font-weight: 800;
       color: #ffffff;
     }
+
     .style-chip-sub {
       font-size: 0.68rem;
       color: #94a3b8;
@@ -509,6 +606,7 @@
       display: flex;
       gap: 6px;
     }
+
     .choice-btn {
       flex: 1;
       padding: 7px 6px;
@@ -522,9 +620,11 @@
       transition: all 0.2s;
       text-align: center;
     }
+
     .choice-btn:hover {
       background: rgba(255, 255, 255, 0.1);
     }
+
     .choice-btn.active {
       background: #0284c7;
       color: #ffffff;
@@ -550,10 +650,12 @@
       gap: 10px;
       margin-top: 4px;
     }
+
     .btn-generate:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 25px rgba(16, 185, 129, 0.55);
     }
+
     .btn-generate:disabled {
       opacity: 0.6;
       cursor: not-allowed;
@@ -566,6 +668,7 @@
       gap: 8px;
       flex-wrap: wrap;
     }
+
     .action-btn {
       flex: 1;
       min-width: 130px;
@@ -583,15 +686,18 @@
       gap: 6px;
       transition: all 0.2s;
     }
+
     .action-btn:hover {
       background: rgba(255, 255, 255, 0.12);
       border-color: #38bdf8;
     }
+
     .action-btn.btn-save {
       background: rgba(245, 158, 11, 0.15);
       border-color: #f59e0b;
       color: #fde68a;
     }
+
     .action-btn.btn-save:hover {
       background: rgba(245, 158, 11, 0.25);
     }
@@ -617,6 +723,7 @@
       align-items: center;
       gap: 10px;
     }
+
     .toast-notice.show {
       transform: translateY(0);
       opacity: 1;
@@ -631,6 +738,7 @@
       color: #94a3b8;
       font-size: 0.8rem;
     }
+
     .footer-inner {
       max-width: 1400px;
       margin: 0 auto;
@@ -638,16 +746,20 @@
       grid-template-columns: 2fr 1fr 1fr;
       gap: 2rem;
     }
+
     @media (max-width: 768px) {
-      .footer-inner { grid-template-columns: 1fr; }
+      .footer-inner {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
   <link rel="stylesheet" href="/css/style.css">
 </head>
+
 <body>
 
   <!-- Common Two-Tier Site Header -->
-      <header class="site-header">
+  <header class="site-header">
     <div class="nav-container-twotier">
       <!-- Tier 1: Brand & AI Services / Bots -->
       <div class="nav-tier-top">
@@ -657,7 +769,9 @@
               <span>家づくりAIラボ</span>
               <span class="logo-badge">by 住ま居る</span>
             </a>
-            <button type="button" id="btn-ai-lab-info" style="background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 10px; margin-left: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px;" title="家づくりAIラボとは？">
+            <button type="button" id="btn-ai-lab-info"
+              style="background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 10px; margin-left: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px;"
+              title="家づくりAIラボとは？">
               <span>ℹ️</span> 概要
             </button>
           </div>
@@ -674,13 +788,25 @@
         <div class="nav-ai-suite">
           <span class="nav-group-label" style="color: #fde68a;">🏡 AIツール:</span>
           <ul class="nav-links-tier">
-            <li><a href="/plans/index.html" class="nav-link-btn highlight-sky" data-target="floorplan-studio" style="cursor: pointer;">📐 3Dプラン選定 ↗</a></li>
-            <li><a href="/madori-sketch/" target="_blank" class="nav-link-btn" style="background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; font-weight: 800; text-decoration: none; box-shadow: 0 2px 8px rgba(16,185,129,0.35);">✏️ 間取り工房 ↗</a></li>
-            <li><a href="/smilestudio.html" target="_blank" class="nav-link-btn highlight-amber" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800; box-shadow: 0 2px 8px rgba(245,158,11,0.4); text-decoration: none;">🎨 3Dパース工房 ↗</a></li>
-            <li><a href="/knowledge/madori/" class="nav-link-btn" style="background: linear-gradient(135deg, #7c3aed, #a855f7); color: #ffffff; font-weight: 800; text-decoration: none; box-shadow: 0 2px 8px rgba(168,85,247,0.35);">📖 設計知見200 ↗</a></li>
-            <li><a href="/knowledge/thermal/" class="nav-link-btn highlight-emerald" style="cursor: pointer;">💬 温熱換気相談 ↗</a></li>
-            <li><a href="/subsidy/index.html" class="nav-link-btn" style="background: linear-gradient(135deg, #047857, #10b981); color: #ffffff; font-weight: 800; text-decoration: none; box-shadow: 0 2px 8px rgba(16,185,129,0.3);">💰 補助金ナビ ↗</a></li>
-            <li><a href="/mortgage/index.html" class="nav-link-btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; font-weight: 800; text-decoration: none; box-shadow: 0 2px 8px rgba(56,189,248,0.3);">🏦 住宅ローン診断 ↗</a></li>
+            <li><a href="/plans/index.html" class="nav-link-btn highlight-sky" data-target="floorplan-studio"
+                style="cursor: pointer;">📐 3Dプラン選定 ↗</a></li>
+            <li><a href="/madori-sketch/" target="_blank" class="nav-link-btn"
+                style="background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; font-weight: 800; text-decoration: none; box-shadow: 0 2px 8px rgba(16,185,129,0.35);">✏️
+                間取り工房 ↗</a></li>
+            <li><a href="/smilestudio.html" target="_blank" class="nav-link-btn highlight-amber"
+                style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800; box-shadow: 0 2px 8px rgba(245,158,11,0.4); text-decoration: none;">🎨
+                3Dパース工房 ↗</a></li>
+            <li><a href="/knowledge/madori/" class="nav-link-btn"
+                style="background: linear-gradient(135deg, #7c3aed, #a855f7); color: #ffffff; font-weight: 800; text-decoration: none; box-shadow: 0 2px 8px rgba(168,85,247,0.35);">📖
+                設計知見200 ↗</a></li>
+            <li><a href="/knowledge/thermal/" class="nav-link-btn highlight-emerald" style="cursor: pointer;">💬 温熱換気相談
+                ↗</a></li>
+            <li><a href="/subsidy/index.html" class="nav-link-btn"
+                style="background: linear-gradient(135deg, #047857, #10b981); color: #ffffff; font-weight: 800; text-decoration: none; box-shadow: 0 2px 8px rgba(16,185,129,0.3);">💰
+                補助金ナビ ↗</a></li>
+            <li><a href="/mortgage/index.html" class="nav-link-btn"
+                style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; font-weight: 800; text-decoration: none; box-shadow: 0 2px 8px rgba(56,189,248,0.3);">🏦
+                住宅ローン診断 ↗</a></li>
           </ul>
         </div>
 
@@ -697,15 +823,21 @@
         <ul class="nav-links-tier nav-main-links">
           <li><a href="/" class="nav-link active" data-target="top">🏠 ホーム</a></li>
           <li><a href="/plans/index.html" class="nav-link" style="color: #38bdf8; font-weight: 800;">📐 703プラン集</a></li>
-          <li><a href="/about/" class="nav-link" data-target="our-philosophy" style="cursor: pointer;">🏛️ こだわり（芳彩）</a></li>
+          <li><a href="/about/" class="nav-link" data-target="our-philosophy" style="cursor: pointer;">🏛️ こだわり（芳彩）</a>
+          </li>
           <li><a href="/schedule/" class="nav-link" style="color: #38bdf8; font-weight: 800;">📅 家づくり工程</a></li>
-          <li><a href="/evidence/" class="nav-link" data-target="credlayer" style="color: #34d399; font-weight: 800; cursor: pointer;">🛡️ 信頼実証</a></li>
-          <li><a class="nav-link" href="/awards/kankyo-housing/" style="color: #fde68a; font-weight: 800;">🏆 環境住宅賞</a></li>
+          <li><a href="/evidence/" class="nav-link" data-target="credlayer"
+              style="color: #34d399; font-weight: 800; cursor: pointer;">🛡️ 信頼実証</a></li>
+          <li><a class="nav-link" href="/awards/kankyo-housing/" style="color: #fde68a; font-weight: 800;">🏆 環境住宅賞</a>
+          </li>
           <li><a class="nav-link" href="/catalog/" style="color: #6ee7b7; font-weight: 800;">📘 工学カタログ</a></li>
-          <li><a href="/#article-feature" class="nav-link" data-target="article-feature" style="color: #f59e0b; font-weight: 800; cursor: pointer;">📖 解体新書</a></li>
+          <li><a href="/#article-feature" class="nav-link" data-target="article-feature"
+              style="color: #f59e0b; font-weight: 800; cursor: pointer;">📖 解体新書</a></li>
           <li><a href="/#metaverse" class="nav-link" data-target="metaverse" style="cursor: pointer;">🌐 メタバース</a></li>
-          <li><a href="/#scent-experience" class="nav-link" data-target="scent-experience" style="cursor: pointer; color: #fde68a; font-weight: 800;">👣 素足モデルハウス</a></li>
-          <li><a href="/#dashboard" class="nav-link carte-btn" id="nav-auth-btn" data-target="dashboard" style="cursor: pointer; border-radius: 8px; padding: 4px 12px;">👤 家カルテ</a></li>
+          <li><a href="/#scent-experience" class="nav-link" data-target="scent-experience"
+              style="cursor: pointer; color: #fde68a; font-weight: 800;">👣 素足モデルハウス</a></li>
+          <li><a href="/#dashboard" class="nav-link carte-btn" id="nav-auth-btn" data-target="dashboard"
+              style="cursor: pointer; border-radius: 8px; padding: 4px 12px;">👤 家カルテ</a></li>
         </ul>
       </div>
     </div>
@@ -715,30 +847,57 @@
   <div class="drawer-overlay" id="drawer-overlay"></div>
   <aside class="mobile-drawer" id="mobile-drawer" aria-label="モバイルナビゲーション">
     <ul class="mobile-drawer-links">
-      <li style="padding: 0.75rem 1rem 0.5rem; font-size: 0.76rem; color: #94a3b8; border-bottom: 1px solid rgba(255, 255, 255, 0.1); line-height: 1.5;">
+      <li
+        style="padding: 0.75rem 1rem 0.5rem; font-size: 0.76rem; color: #94a3b8; border-bottom: 1px solid rgba(255, 255, 255, 0.1); line-height: 1.5;">
         🏛️ <strong style="color: #e2e8f0;">株式会社住ま居る</strong>（鶴ヶ島市）<br>
         創業32年・累計800棟｜知事許可(般-8)第60650号
       </li>
       <li><a class="mobile-nav-link active" href="/" data-target="top">🏠 ホーム（高気密高断熱注文住宅）</a></li>
-      <li><a class="mobile-nav-link highlight" href="/schedule/" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; font-weight: 800;">📅 家づくりスケジュール（カレンダーチェックリスト） ↗</a></li>
-      <li><a class="mobile-nav-link highlight" href="/jfd-survey/" style="background: linear-gradient(135deg, #0f766e, #0d9488); color: #fff; font-weight: 800;">🛰️ JFD 3D点群測量と敷地調査（本物資料公開） ↗</a></li>
-      <li><a class="mobile-nav-link highlight" href="/subsidy/index.html" style="background: linear-gradient(135deg, #047857, #10b981); color: #fff; font-weight: 800;">💰 AI補助金ナビ（市区町村別一括判定） ↗</a></li>
-      <li><a class="mobile-nav-link highlight" href="/mortgage/index.html" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-weight: 800;">🏦 AI住宅ローン診断（金利・団信TOP5） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/schedule/"
+          style="background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; font-weight: 800;">📅
+          家づくりスケジュール（カレンダーチェックリスト） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/jfd-survey/"
+          style="background: linear-gradient(135deg, #0f766e, #0d9488); color: #fff; font-weight: 800;">🛰️ JFD
+          3D点群測量と敷地調査（本物資料公開） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/subsidy/index.html"
+          style="background: linear-gradient(135deg, #047857, #10b981); color: #fff; font-weight: 800;">💰
+          AI補助金ナビ（市区町村別一括判定） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/mortgage/index.html"
+          style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-weight: 800;">🏦
+          AI住宅ローン診断（金利・団信TOP5） ↗</a></li>
       <li><a class="mobile-nav-link highlight" href="/plans/index.html">📐 AI 3Dプラン選定（323選）</a></li>
-      <li><a class="mobile-nav-link highlight" href="https://lin.ee/8fdyyGu" target="_blank" rel="noopener noreferrer" style="background: #06c755; color: #fff; font-weight: 900;">💬 公式LINE（専任スタッフ直通・ID: @051vqxla） ↗</a></li>
-      <li><a class="mobile-nav-link highlight" href="/madori-sketch/" target="_blank" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-weight: 800;">✏️ 3D手描き間取り工房 ↗</a></li>
-      <li><a class="mobile-nav-link highlight" href="/smilestudio.html" target="_blank" style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800;">🎨 AI 3Dパース工房（SmileStudio） ↗</a></li>
-      <li><a class="mobile-nav-link highlight" href="/knowledge/madori/" style="background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; font-weight: 800;">📖 設計知見200選（間取り実務Q&A） ↗</a></li>
-      <li><a class="mobile-nav-link highlight" href="/knowledge/thermal/" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff;">💬 24時間 AI温熱換気相談（知見200選）</a></li>
-      <li><a class="mobile-nav-link" href="/awards/kankyo-housing/" style="background: linear-gradient(135deg, #b45309, #d97706); color: #fff; font-weight: 800;">🏆 【受賞実話】埼玉県環境住宅賞</a></li>
-      <li><a class="mobile-nav-link highlight" href="/evidence/" data-target="credlayer" style="background: linear-gradient(135deg, #064e3b, #059669); color: #fff; font-weight: 800;">🛡️ CredLayer (信頼実証レイヤー)</a></li>
-      <li><a class="mobile-nav-link" href="/catalog/" style="background: linear-gradient(135deg, #065f46, #059669); color: #fff; font-weight: 800;">📘 完全工学カタログ（A4印刷/PDF）</a></li>
-      <li><a class="mobile-nav-link" href="/#article-feature" data-target="article-feature" style="color: #f59e0b; font-weight: 700;">📖 手づくり住宅解体新書（全10章）</a></li>
+      <li><a class="mobile-nav-link highlight" href="https://lin.ee/8fdyyGu" target="_blank" rel="noopener noreferrer"
+          style="background: #06c755; color: #fff; font-weight: 900;">💬 公式LINE（専任スタッフ直通・ID: @051vqxla） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/madori-sketch/" target="_blank"
+          style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-weight: 800;">✏️ 3D手描き間取り工房
+          ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/smilestudio.html" target="_blank"
+          style="background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; font-weight: 800;">🎨 AI
+          3Dパース工房（SmileStudio） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/knowledge/madori/"
+          style="background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; font-weight: 800;">📖
+          設計知見200選（間取り実務Q&A） ↗</a></li>
+      <li><a class="mobile-nav-link highlight" href="/knowledge/thermal/"
+          style="background: linear-gradient(135deg, #059669, #10b981); color: #fff;">💬 24時間 AI温熱換気相談（知見200選）</a></li>
+      <li><a class="mobile-nav-link" href="/awards/kankyo-housing/"
+          style="background: linear-gradient(135deg, #b45309, #d97706); color: #fff; font-weight: 800;">🏆
+          【受賞実話】埼玉県環境住宅賞</a></li>
+      <li><a class="mobile-nav-link highlight" href="/evidence/" data-target="credlayer"
+          style="background: linear-gradient(135deg, #064e3b, #059669); color: #fff; font-weight: 800;">🛡️ CredLayer
+          (信頼実証レイヤー)</a></li>
+      <li><a class="mobile-nav-link" href="/catalog/"
+          style="background: linear-gradient(135deg, #065f46, #059669); color: #fff; font-weight: 800;">📘
+          完全工学カタログ（A4印刷/PDF）</a></li>
+      <li><a class="mobile-nav-link" href="/#article-feature" data-target="article-feature"
+          style="color: #f59e0b; font-weight: 700;">📖 手づくり住宅解体新書（全10章）</a></li>
       <li><a class="mobile-nav-link" href="/about/" data-target="our-philosophy">🏛️ 私たちの家づくり（芳彩・かぐや）</a></li>
-      <li><a class="mobile-nav-link" href="/cases/tsurugashima-s.html" data-target="craftsmanship">🔨 お客様×大工さん×建築士（施工実例）</a></li>
+      <li><a class="mobile-nav-link" href="/cases/tsurugashima-s.html" data-target="craftsmanship">🔨
+          お客様×大工さん×建築士（施工実例）</a></li>
       <li><a class="mobile-nav-link" href="/#metaverse" data-target="metaverse">🌐 バーチャル展示場</a></li>
-      <li><a class="mobile-nav-link" href="/#scent-experience" data-target="scent-experience" style="color: #fde68a; font-weight: 800;">👣 毛呂山モデルハウス（素足見学予約）</a></li>
-      <li><a class="mobile-nav-link" href="/#dashboard" id="nav-auth-btn-mobile" data-target="dashboard">👤 マイページ・家カルテ</a></li>
+      <li><a class="mobile-nav-link" href="/#scent-experience" data-target="scent-experience"
+          style="color: #fde68a; font-weight: 800;">👣 毛呂山モデルハウス（素足見学予約）</a></li>
+      <li><a class="mobile-nav-link" href="/#dashboard" id="nav-auth-btn-mobile" data-target="dashboard">👤
+          マイページ・家カルテ</a></li>
     </ul>
   </aside>
 
@@ -760,7 +919,8 @@
       <span class="tab-icon">💬</span>
       <span>温熱AI</span>
     </a>
-    <a href="/#article-feature" class="bottom-tab-btn" data-target="article-feature" style="color: #f59e0b; font-weight: 800;">
+    <a href="/#article-feature" class="bottom-tab-btn" data-target="article-feature"
+      style="color: #f59e0b; font-weight: 800;">
       <span class="tab-icon">📖</span>
       <span>解体新書</span>
     </a>
@@ -769,299 +929,361 @@
   <!-- Main Content Container -->
   <main class="main-content">
 
-<div class="app-layout">
+    <div class="app-layout">
 
-    <!-- 電話サポートバナー -->
-    <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(2, 132, 199, 0.12) 100%); border: 1.5px solid #38bdf8; border-radius: 12px; padding: 0.8rem 1.4rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <span style="font-size: 1.4rem;">📞</span>
-        <div>
-          <div style="font-weight: 800; color: #38bdf8; font-size: 0.9rem;">図面のパース化や操作のご質問もお気軽に</div>
-          <div style="font-size: 0.76rem; color: #94a3b8;">建築士が丁寧にお答えします（しつこい営業電話等は一切ありません）</div>
+      <!-- 電話サポートバナー -->
+      <div
+        style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(2, 132, 199, 0.12) 100%); border: 1.5px solid #38bdf8; border-radius: 12px; padding: 0.8rem 1.4rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.4rem;">📞</span>
+          <div>
+            <div style="font-weight: 800; color: #38bdf8; font-size: 0.9rem;">図面のパース化や操作のご質問もお気軽に</div>
+            <div style="font-size: 0.76rem; color: #94a3b8;">家づくりサポート係が丁寧にお答えします（しつこい営業電話等は一切ありません）</div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <a href="tel:049-271-2350"
+            style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; padding: 6px 14px; border-radius: 6px; font-weight: 800; font-size: 0.82rem; text-decoration: none;">049-271-2350</a>
+          <span style="font-size: 0.75rem; color: #94a3b8;">(9:00〜18:00 水休)</span>
         </div>
       </div>
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <a href="tel:049-281-1718" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; padding: 6px 14px; border-radius: 6px; font-weight: 800; font-size: 0.82rem; text-decoration: none;">049-281-1718</a>
-        <span style="font-size: 0.75rem; color: #94a3b8;">(9:00〜18:00 水休)</span>
+
+      <!-- 厳選4大パース生成スタジオ選択 (STEP 1) -->
+      <div>
+        <div
+          style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+          <h1
+            style="font-size: 1.25rem; font-weight: 900; color: #ffffff; display: flex; align-items: center; gap: 8px;">
+            <span>🎨</span> SmileStudio AI工房 <span
+              style="font-size: 0.72rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 2px 7px; border-radius: 4px; font-weight: 800; font-family: monospace;">v2.28</span>
+            ｜ 厳選4大パース生成スタジオ
+          </h1>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <a id="btn-back-to-madori" href="/madori-sketch/"
+              style="display: inline-flex; align-items: center; gap: 5px; font-size: 0.76rem; font-weight: 800; color: #6ee7b7; background: rgba(16, 185, 129, 0.16); border: 1px solid rgba(16, 185, 129, 0.45); padding: 5px 12px; border-radius: 8px; text-decoration: none;">
+              ← 間取り工房に戻る
+            </a>
+            <span style="font-size: 0.75rem; color: #34d399; font-weight: 700;">★ プラン申し込み前の方も自由にお試しいただけます</span>
+          </div>
+        </div>
+
+        <div class="mode-grid">
+          <!-- Mode 1: 平面図の3D化 -->
+          <div class="mode-card active" id="card-mode-dollhouse" data-mode="dollhouse">
+            <div class="mode-badge badge-sd-depth">⚡ SDXL + ControlNet</div>
+            <div class="mode-title"><span>🛸</span> 平面図の3D立体化</div>
+            <div class="mode-desc">手描きスケッチ・チラシ・CAD間取り図から、家具付き立体3Dドールハウスパースを自動生成。</div>
+          </div>
+
+          <!-- Mode 2: 簡易CGのフォトリアル化 -->
+          <div class="mode-card" id="card-mode-photoreal" data-mode="photoreal">
+            <div class="mode-badge badge-sdxl">⚡ Stable Diffusion</div>
+            <div class="mode-title"><span>✨</span> 簡易CGフォトリアル化</div>
+            <div class="mode-desc">フリーソフト等ののっぺりCGから、無垢杉・珪藻土・自然光の息吹を宿す高級フォトリアルパースへ変換。</div>
+          </div>
+
+          <!-- Mode 3: 写真からのリノベ改修 -->
+          <div class="mode-card" id="card-mode-renovation" data-mode="renovation">
+            <div class="mode-badge badge-reno">🔨 SDXL img2img</div>
+            <div class="mode-title"><span>🏡</span> 写真からリノベ改修</div>
+            <div class="mode-desc">現在のお部屋や実家の写真から、自然素材＆間接照明の劇的リフォーム後アフターパースを生成。</div>
+          </div>
+
+          <!-- Mode 4: 手描き風スケッチパース -->
+          <div class="mode-card" id="card-mode-sketch" data-mode="sketch">
+            <div class="mode-badge badge-sketch">🎨 水彩LoRA</div>
+            <div class="mode-title"><span>✏️</span> 手描き水彩スケッチ</div>
+            <div class="mode-desc">図面やCG・写真を、住宅雑誌やプレゼン提案書のような温かみあるコピック調手描きパースに変換。</div>
+          </div>
+        </div>
       </div>
+
+      <!-- 2カラム ワークスペース -->
+      <div class="studio-workspace">
+
+        <!-- 左カラム: Before/After 比較スライダー ステージ -->
+        <section class="stage-card">
+          <div class="stage-header">
+            <div class="stage-title">
+              <span id="stage-icon">🛸</span>
+              <span id="stage-title-text">平面図 ➔ 3Dドールハウス立体パース（Before / After）</span>
+            </div>
+            <div style="font-size: 0.74rem; color: #94a3b8; display: flex; align-items: center; gap: 6px;">
+              <span>↔ スライダーを左右にドラッグして比較</span>
+            </div>
+          </div>
+
+          <!-- 3:2 スプリットスライダー ビューア -->
+          <div class="compare-container" id="compare-container">
+            <!-- Before Layer (下図・元画像) -->
+            <div class="compare-layer" id="compare-before-layer">
+              <img id="compare-before-img" class="compare-img" src="/renders/case02_floorplan_1f_blueprint.png"
+                alt="元画像 (Before)">
+            </div>
+
+            <!-- After Layer (AI生成パース) -->
+            <div class="compare-layer-after" id="compare-after-layer">
+              <img id="compare-after-img" class="compare-img" src="/renders/dollhouse_3d_sample.jpg"
+                alt="AI生成パース (After)">
+            </div>
+
+            <!-- Split Divider Line -->
+            <div class="compare-divider" id="compare-divider">
+              <div class="compare-handle">↔</div>
+            </div>
+
+            <!-- Badges -->
+            <div class="badge-overlay-left" id="badge-before-label">
+              <span>📐</span> <span id="label-before-text">元画像: 1F 平面間取り図</span>
+            </div>
+            <div class="badge-overlay-right" id="badge-after-label">
+              <span>⚡</span> <span id="label-after-text">SDXL 3D立体ドールハウス</span>
+            </div>
+
+            <!-- Scanning HUD Overlay -->
+            <div class="scanning-hud" id="scanning-hud">
+              <div class="scanning-laser"></div>
+              <div style="font-size: 1.15rem; font-weight: 900; color: #38bdf8; margin-bottom: 4px;"
+                id="hud-pipeline-title">
+                ⚡ SDXL + ControlNet 空間認識 ＆ 3Dドールハウス生成中...
+              </div>
+              <div style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 16px;" id="hud-pipeline-desc">
+                部屋の用途・壁の配置・採光方向をマルチモーダル解析しています
+              </div>
+
+              <div
+                style="display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 440px; text-align: left; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 10px; padding: 12px 16px;">
+                <div id="scan-step-1"
+                  style="display: flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 700; color: #38bdf8;">
+                  <span
+                    style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: #0284c7; color: #fff; font-size: 0.7rem;">1</span>
+                  <span id="step-1-text">① 間取り図面解析（部屋境界・LDK・動線の読み取り）</span>
+                </div>
+                <div id="scan-step-2"
+                  style="display: flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 700; color: #cbd5e1;">
+                  <span
+                    style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,0.1); color: #cbd5e1; font-size: 0.7rem;">2</span>
+                  <span id="step-2-text">② 自然素材プロンプト・家具・立体陰影の構築</span>
+                </div>
+                <div id="scan-step-3"
+                  style="display: flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 700; color: #cbd5e1;">
+                  <span
+                    style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,0.1); color: #cbd5e1; font-size: 0.7rem;">3</span>
+                  <span id="step-3-text">③ 高解像度3Dドールハウスパースを出力</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 下部アクションバー -->
+          <div class="action-row">
+            <button type="button" class="action-btn btn-save" id="btn-save-to-carte">
+              <span>⭐</span> 家カルテに保存
+            </button>
+            <button type="button" class="action-btn" id="btn-download-img">
+              <span>📥</span> 高解像度保存
+            </button>
+            <button type="button" class="action-btn" id="btn-share-url">
+              <span>👨‍👩‍👧</span> 家族で共有
+            </button>
+            <a href="tel:049-271-2350" class="action-btn"
+              style="text-decoration: none; color: #6ee7b7; border-color: rgba(110, 231, 183, 0.4);">
+              <span>💬</span> 家づくりサポート係に相談
+            </a>
+          </div>
+        </section>
+
+        <!-- 右カラム: インプット ＆ スタイル設定 パネル -->
+        <section class="control-card">
+
+          <!-- STEP 2: 元画像インプット (3系統) -->
+          <div>
+            <div class="panel-section-title">
+              <span>📁</span> STEP 2: 元画像の指定（3系統インプット）
+            </div>
+
+            <div class="input-source-tabs">
+              <button type="button" class="src-tab active" id="tab-upload">
+                📤 ファイルUP
+              </button>
+              <button type="button" class="src-tab" id="tab-preset">
+                📐 703プランから選ぶ
+              </button>
+              <button type="button" class="src-tab" id="tab-carte">
+                ⭐ 家カルテから選ぶ
+              </button>
+            </div>
+
+            <!-- Tab 1: Upload Dropzone -->
+            <div id="box-tab-upload" style="margin-top: 10px;">
+              <input type="file" id="user-file-input" accept="image/*,application/pdf" style="display: none;">
+              <div class="upload-dropzone" id="upload-dropzone">
+                <span style="font-size: 1.8rem;" id="dropzone-icon">📄</span>
+                <div style="font-size: 0.84rem; font-weight: 800; color: #38bdf8;" id="dropzone-title">
+                  ここをクリックして間取り図・写真・CGをアップロード
+                </div>
+                <div style="font-size: 0.72rem; color: #94a3b8;" id="dropzone-desc">
+                  スマホ写真、チラシ、PDF間取り図、CADパースに対応
+                </div>
+                <div id="upload-current-filename"
+                  style="font-size: 0.76rem; color: #34d399; font-weight: 800; display: none;"></div>
+              </div>
+            </div>
+
+            <!-- Tab 2: Preset 323 Plans -->
+            <div id="box-tab-preset" style="margin-top: 10px; display: none;">
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <button type="button" class="choice-btn active preset-plan-btn" data-plan="tokigawa_k"
+                  data-img-before="/renders/case02_floorplan_1f_blueprint.png"
+                  style="text-align: left; padding: 8px 10px;">
+                  🏡 ときがわ町 K様邸（32坪・LDK＋琉球畳ヌック）
+                </button>
+                <button type="button" class="choice-btn preset-plan-btn" data-plan="tsurugashima_t"
+                  data-img-before="/renders/controlnet_extracted/鶴ヶ島市 T様邸/ldk_white_clay.png"
+                  style="text-align: left; padding: 8px 10px;">
+                  🏡 鶴ヶ島市 T様邸（35坪・吹抜大空間リビング）
+                </button>
+                <button type="button" class="choice-btn preset-plan-btn" data-plan="hidaka_hiraya"
+                  data-img-before="/renders/case_thumbs/hidaka_I_thumb.jpg"
+                  style="text-align: left; padding: 8px 10px;">
+                  🏡 日高市 平屋（28坪・中庭土間テラス）
+                </button>
+              </div>
+            </div>
+
+            <!-- Tab 3: House Carte Stock -->
+            <div id="box-tab-carte" style="margin-top: 10px; display: none;">
+              <div
+                style="background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 10px; text-align: center;">
+                <div style="font-size: 0.8rem; font-weight: 800; color: #fde68a; margin-bottom: 4px;"
+                  id="carte-stock-title">
+                  ⭐ 家カルテ保存済みプラン
+                </div>
+                <div style="font-size: 0.72rem; color: #cbd5e1; margin-bottom: 8px;" id="carte-stock-sub">
+                  お気に入りストックから図面・パースを直接呼び出せます
+                </div>
+                <button type="button" class="choice-btn" id="btn-reload-carte-plan"
+                  style="width: 100%; background: #0284c7; color: #fff;">
+                  家カルテの保存間取りをロード
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 3: 住ま居るスタイル選択 (3階層プリセット) -->
+          <div>
+            <div class="panel-section-title">
+              <span>🌿</span> STEP 3: テイスト・素材スタイル（失敗ゼロのプリセット）
+            </div>
+
+            <div class="style-chip-grid">
+              <div class="style-chip active" data-style="natural">
+                <span class="style-chip-name">🌿 芳彩・無垢ナチュラル</span>
+                <span class="style-chip-sub">吉野杉床 ＋ 白珪藻土 ＋ 自然光</span>
+              </div>
+              <div class="style-chip" data-style="wamodern">
+                <span class="style-chip-name">🎍 現代和モダン</span>
+                <span class="style-chip-sub">吉野杉大黒柱 ＋ 琉球畳 ＋ 格子</span>
+              </div>
+              <div class="style-chip" data-style="cafe">
+                <span class="style-chip-name">☕ カフェ・ヴィンテージ</span>
+                <span class="style-chip-sub">古材オーク ＋ アイアン ＋ タイル</span>
+              </div>
+              <div class="style-chip" data-style="hotel">
+                <span class="style-chip-name">🏨 ホテルライク</span>
+                <span class="style-chip-sub">600角大判タイル ＋ グレージュ間接光</span>
+              </div>
+              <div class="style-chip" data-style="japandi">
+                <span class="style-chip-name">🕊️ 北欧ジャパンディ</span>
+                <span class="style-chip-sub">アッシュ無垢 ＋ 静寂のアースカラー</span>
+              </div>
+              <div class="style-chip" data-style="modern">
+                <span class="style-chip-name">🏛️ モノトーン現代建築</span>
+                <span class="style-chip-sub">研ぎ出し大理石 ＋ 線形照明</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 時間帯・ライティング -->
+          <div>
+            <div style="font-size: 0.76rem; font-weight: 700; color: #cbd5e1; margin-bottom: 4px;">
+              ☀️ 光と時間帯
+            </div>
+            <div class="btn-row">
+              <button type="button" class="choice-btn active btn-light" data-light="day">☀️ 朝の自然光</button>
+              <button type="button" class="choice-btn btn-light" data-light="sunset">🌅 黄昏夕景</button>
+              <button type="button" class="choice-btn btn-light" data-light="night">🌙 夜の間接光</button>
+            </div>
+          </div>
+
+          <!-- 家具コーディネート -->
+          <div>
+            <div style="font-size: 0.76rem; font-weight: 700; color: #cbd5e1; margin-bottom: 4px;">
+              🛋️ 家具の設え
+            </div>
+            <div class="btn-row">
+              <button type="button" class="choice-btn btn-furn" data-furn="none">なし（素の建築美）</button>
+              <button type="button" class="choice-btn active btn-furn" data-furn="moderate">上品なミニマル</button>
+              <button type="button" class="choice-btn btn-furn" data-furn="rich">フルコーディネート</button>
+            </div>
+          </div>
+
+          <!-- 呪文プロンプト隠蔽（展開可能） -->
+          <details
+            style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 6px 10px; font-size: 0.74rem;">
+            <summary style="color: #94a3b8; cursor: pointer; font-weight: 700;">
+              ⚙️ AIプロンプト自動構築プレビュー（内部ControlNet制御）
+            </summary>
+            <div id="sd-prompt-preview"
+              style="font-family: monospace; color: #38bdf8; margin-top: 6px; line-height: 1.4; word-break: break-all;">
+              masterpiece, 8k, architectural photograph, spacious living dining room, warm solid yoshino cedar flooring,
+              diatomaceous earth plaster walls, soft natural daylight, photorealistic interior design
+            </div>
+          </details>
+
+          <!-- 出力解像度 ＆ 利用枠ステータス（ゲスト / 家カルテ登録ユーザー制限機構） -->
+          <div
+            style="background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px;">
+              <span style="font-size: 0.76rem; font-weight: 800; color: #e2e8f0;">🖼️ 出力解像度・生成優先度</span>
+              <span id="quota-tier-badge"
+                style="font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: rgba(148, 163, 184, 0.2); color: #cbd5e1;">ゲスト（1024pxまで
+                / 1日3回）</span>
+            </div>
+            <div class="btn-row">
+              <button type="button" class="choice-btn active btn-res" data-res="1024">⚡ 標準 1024px（約30〜60秒）</button>
+              <button type="button" class="choice-btn btn-res" id="btn-res-2k" data-res="2k">💎 高精細 2K（約2.5〜3分 /
+                家カルテ限定）</button>
+            </div>
+            <div
+              style="display: flex; align-items: center; justify-content: space-between; font-size: 0.72rem; color: #94a3b8; flex-wrap: wrap; gap: 6px;">
+              <span id="quota-remaining-text">本日の残り回数: 確認中...</span>
+              <span id="queue-status-text">現在の待機列: 確認中...</span>
+            </div>
+            <div id="guest-upgrade-hint"
+              style="display: none; font-size: 0.72rem; color: #fde68a; background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 6px; padding: 6px 8px; line-height: 1.5;">
+              ⭐ 「家カルテ」へ無料登録（マイページ保存）すると、<strong>2K高精細パース・1日15回・優先生成</strong>が即時解放されます。
+              <a href="/#dashboard" style="color: #38bdf8; font-weight: 800; margin-left: 4px;">家カルテを開く ↗</a>
+            </div>
+          </div>
+
+          <!-- AI生成実行ボタン -->
+          <button type="button" class="btn-generate" id="btn-run-generate">
+            <span>🚀</span> この設定でAIパースを生成する
+          </button>
+        </section>
+
+      </div>
+
     </div>
 
-    <!-- 厳選4大パース生成スタジオ選択 (STEP 1) -->
-    <div>
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-        <h1 style="font-size: 1.25rem; font-weight: 900; color: #ffffff; display: flex; align-items: center; gap: 8px;">
-          <span>🎨</span> SmileStudio AI工房 <span style="font-size: 0.72rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 2px 7px; border-radius: 4px; font-weight: 800; font-family: monospace;">v2.7</span> ｜ 厳選4大パース生成スタジオ
-        </h1>
-        <span style="font-size: 0.75rem; color: #34d399; font-weight: 700;">★ プラン申し込み前の方も自由にお試しいただけます</span>
-      </div>
-
-      <div class="mode-grid">
-        <!-- Mode 1: 平面図の3D化 -->
-        <div class="mode-card active" id="card-mode-dollhouse" data-mode="dollhouse">
-          <div class="mode-badge badge-gemini">✨ Gemini 2.5 空間認識</div>
-          <div class="mode-title"><span>🛸</span> 平面図の3D立体化</div>
-          <div class="mode-desc">手描きスケッチ・チラシ・CAD間取り図から、家具付き立体3Dドールハウスパースを自動生成。</div>
-        </div>
-
-        <!-- Mode 2: 簡易CGのフォトリアル化 -->
-        <div class="mode-card" id="card-mode-photoreal" data-mode="photoreal">
-          <div class="mode-badge badge-sdxl">⚡ Stable Diffusion</div>
-          <div class="mode-title"><span>✨</span> 簡易CGフォトリアル化</div>
-          <div class="mode-desc">フリーソフト等ののっぺりCGから、無垢杉・珪藻土・自然光の息吹を宿す高級フォトリアルパースへ変換。</div>
-        </div>
-
-        <!-- Mode 3: 写真からのリノベ改修 -->
-        <div class="mode-card" id="card-mode-renovation" data-mode="renovation">
-          <div class="mode-badge badge-reno">🔨 SDXL img2img</div>
-          <div class="mode-title"><span>🏡</span> 写真からリノベ改修</div>
-          <div class="mode-desc">現在のお部屋や実家の写真から、自然素材＆間接照明の劇的リフォーム後アフターパースを生成。</div>
-        </div>
-
-        <!-- Mode 4: 手描き風スケッチパース -->
-        <div class="mode-card" id="card-mode-sketch" data-mode="sketch">
-          <div class="mode-badge badge-sketch">🎨 水彩LoRA</div>
-          <div class="mode-title"><span>✏️</span> 手描き水彩スケッチ</div>
-          <div class="mode-desc">図面やCG・写真を、住宅雑誌やプレゼン提案書のような温かみあるコピック調手描きパースに変換。</div>
-        </div>
-      </div>
+    <!-- Toast Notification -->
+    <div class="toast-notice" id="toast-notice">
+      <span id="toast-icon">✨</span>
+      <span id="toast-text">設定を更新しました</span>
     </div>
 
-    <!-- 2カラム ワークスペース -->
-    <div class="studio-workspace">
-      
-      <!-- 左カラム: Before/After 比較スライダー ステージ -->
-      <section class="stage-card">
-        <div class="stage-header">
-          <div class="stage-title">
-            <span id="stage-icon">🛸</span>
-            <span id="stage-title-text">平面図 ➔ 3Dドールハウス立体パース（Before / After）</span>
-          </div>
-          <div style="font-size: 0.74rem; color: #94a3b8; display: flex; align-items: center; gap: 6px;">
-            <span>↔ スライダーを左右にドラッグして比較</span>
-          </div>
-        </div>
-
-        <!-- 3:2 スプリットスライダー ビューア -->
-        <div class="compare-container" id="compare-container">
-          <!-- Before Layer (下図・元画像) -->
-          <div class="compare-layer" id="compare-before-layer">
-            <img id="compare-before-img" class="compare-img" src="/renders/case02_floorplan_1f_blueprint.png" alt="元画像 (Before)">
-          </div>
-
-          <!-- After Layer (AI生成パース) -->
-          <div class="compare-layer-after" id="compare-after-layer">
-            <img id="compare-after-img" class="compare-img" src="/renders/dollhouse_3d_sample.jpg" alt="AI生成パース (After)">
-          </div>
-
-          <!-- Split Divider Line -->
-          <div class="compare-divider" id="compare-divider">
-            <div class="compare-handle">↔</div>
-          </div>
-
-          <!-- Badges -->
-          <div class="badge-overlay-left" id="badge-before-label">
-            <span>📐</span> <span id="label-before-text">元画像: 1F 平面間取り図</span>
-          </div>
-          <div class="badge-overlay-right" id="badge-after-label">
-            <span>✨</span> <span id="label-after-text">Gemini 3D立体ドールハウス</span>
-          </div>
-
-          <!-- Scanning HUD Overlay -->
-          <div class="scanning-hud" id="scanning-hud">
-            <div class="scanning-laser"></div>
-            <div style="font-size: 1.15rem; font-weight: 900; color: #38bdf8; margin-bottom: 4px;" id="hud-pipeline-title">
-              ✨ Gemini 2.5 空間認識 ＆ 3Dドールハウス生成中...
-            </div>
-            <div style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 16px;" id="hud-pipeline-desc">
-              部屋の用途・壁の配置・採光方向をマルチモーダル解析しています
-            </div>
-            
-            <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 440px; text-align: left; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 10px; padding: 12px 16px;">
-              <div id="scan-step-1" style="display: flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 700; color: #38bdf8;">
-                <span style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: #0284c7; color: #fff; font-size: 0.7rem;">1</span>
-                <span id="step-1-text">① 間取り図面解析（部屋境界・LDK・動線の読み取り）</span>
-              </div>
-              <div id="scan-step-2" style="display: flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 700; color: #cbd5e1;">
-                <span style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,0.1); color: #cbd5e1; font-size: 0.7rem;">2</span>
-                <span id="step-2-text">② 自然素材プロンプト・家具・立体陰影の構築</span>
-              </div>
-              <div id="scan-step-3" style="display: flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 700; color: #cbd5e1;">
-                <span style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,0.1); color: #cbd5e1; font-size: 0.7rem;">3</span>
-                <span id="step-3-text">③ 高解像度3Dドールハウスパースを出力</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 下部アクションバー -->
-        <div class="action-row">
-          <button type="button" class="action-btn btn-save" id="btn-save-to-carte">
-            <span>⭐</span> 家カルテに保存
-          </button>
-          <button type="button" class="action-btn" id="btn-download-img">
-            <span>📥</span> 高解像度保存
-          </button>
-          <button type="button" class="action-btn" id="btn-share-url">
-            <span>👨‍👩‍👧</span> 家族で共有
-          </button>
-          <a href="tel:049-281-1718" class="action-btn" style="text-decoration: none; color: #6ee7b7; border-color: rgba(110, 231, 183, 0.4);">
-            <span>💬</span> 建築士に相談
-          </a>
-        </div>
-      </section>
-
-      <!-- 右カラム: インプット ＆ スタイル設定 パネル -->
-      <section class="control-card">
-        
-        <!-- STEP 2: 元画像インプット (3系統) -->
-        <div>
-          <div class="panel-section-title">
-            <span>📁</span> STEP 2: 元画像の指定（3系統インプット）
-          </div>
-
-          <div class="input-source-tabs">
-            <button type="button" class="src-tab active" id="tab-upload">
-              📤 ファイルUP
-            </button>
-            <button type="button" class="src-tab" id="tab-preset">
-              📐 703プランから選ぶ
-            </button>
-            <button type="button" class="src-tab" id="tab-carte">
-              ⭐ 家カルテから選ぶ
-            </button>
-          </div>
-
-          <!-- Tab 1: Upload Dropzone -->
-          <div id="box-tab-upload" style="margin-top: 10px;">
-            <input type="file" id="user-file-input" accept="image/*,application/pdf" style="display: none;">
-            <div class="upload-dropzone" id="upload-dropzone">
-              <span style="font-size: 1.8rem;" id="dropzone-icon">📄</span>
-              <div style="font-size: 0.84rem; font-weight: 800; color: #38bdf8;" id="dropzone-title">
-                ここをクリックして間取り図・写真・CGをアップロード
-              </div>
-              <div style="font-size: 0.72rem; color: #94a3b8;" id="dropzone-desc">
-                スマホ写真、チラシ、PDF間取り図、CADパースに対応
-              </div>
-              <div id="upload-current-filename" style="font-size: 0.76rem; color: #34d399; font-weight: 800; display: none;"></div>
-            </div>
-          </div>
-
-          <!-- Tab 2: Preset 323 Plans -->
-          <div id="box-tab-preset" style="margin-top: 10px; display: none;">
-            <div style="display: flex; flex-direction: column; gap: 6px;">
-              <button type="button" class="choice-btn active preset-plan-btn" data-plan="tokigawa_k" data-img-before="/renders/case02_floorplan_1f_blueprint.png" style="text-align: left; padding: 8px 10px;">
-                🏡 ときがわ町 K様邸（32坪・LDK＋琉球畳ヌック）
-              </button>
-              <button type="button" class="choice-btn preset-plan-btn" data-plan="tsurugashima_t" data-img-before="/renders/controlnet_extracted/鶴ヶ島市 T様邸/ldk_white_clay.png" style="text-align: left; padding: 8px 10px;">
-                🏡 鶴ヶ島市 T様邸（35坪・吹抜大空間リビング）
-              </button>
-              <button type="button" class="choice-btn preset-plan-btn" data-plan="hidaka_hiraya" data-img-before="/renders/case_thumbs/hidaka_I_thumb.jpg" style="text-align: left; padding: 8px 10px;">
-                🏡 日高市 平屋（28坪・中庭土間テラス）
-              </button>
-            </div>
-          </div>
-
-          <!-- Tab 3: House Carte Stock -->
-          <div id="box-tab-carte" style="margin-top: 10px; display: none;">
-            <div style="background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 10px; text-align: center;">
-              <div style="font-size: 0.8rem; font-weight: 800; color: #fde68a; margin-bottom: 4px;" id="carte-stock-title">
-                ⭐ 家カルテ保存済みプラン
-              </div>
-              <div style="font-size: 0.72rem; color: #cbd5e1; margin-bottom: 8px;" id="carte-stock-sub">
-                お気に入りストックから図面・パースを直接呼び出せます
-              </div>
-              <button type="button" class="choice-btn" id="btn-reload-carte-plan" style="width: 100%; background: #0284c7; color: #fff;">
-                家カルテの保存間取りをロード
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP 3: 住ま居るスタイル選択 (3階層プリセット) -->
-        <div>
-          <div class="panel-section-title">
-            <span>🌿</span> STEP 3: テイスト・素材スタイル（失敗ゼロのプリセット）
-          </div>
-
-          <div class="style-chip-grid">
-            <div class="style-chip active" data-style="natural">
-              <span class="style-chip-name">🌿 芳彩・無垢ナチュラル</span>
-              <span class="style-chip-sub">吉野杉床 ＋ 白珪藻土 ＋ 自然光</span>
-            </div>
-            <div class="style-chip" data-style="wamodern">
-              <span class="style-chip-name">🎍 現代和モダン</span>
-              <span class="style-chip-sub">吉野杉大黒柱 ＋ 琉球畳 ＋ 格子</span>
-            </div>
-            <div class="style-chip" data-style="cafe">
-              <span class="style-chip-name">☕ カフェ・ヴィンテージ</span>
-              <span class="style-chip-sub">古材オーク ＋ アイアン ＋ タイル</span>
-            </div>
-            <div class="style-chip" data-style="hotel">
-              <span class="style-chip-name">🏨 ホテルライク</span>
-              <span class="style-chip-sub">600角大判タイル ＋ グレージュ間接光</span>
-            </div>
-            <div class="style-chip" data-style="japandi">
-              <span class="style-chip-name">🕊️ 北欧ジャパンディ</span>
-              <span class="style-chip-sub">アッシュ無垢 ＋ 静寂のアースカラー</span>
-            </div>
-            <div class="style-chip" data-style="modern">
-              <span class="style-chip-name">🏛️ モノトーン現代建築</span>
-              <span class="style-chip-sub">研ぎ出し大理石 ＋ 線形照明</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 時間帯・ライティング -->
-        <div>
-          <div style="font-size: 0.76rem; font-weight: 700; color: #cbd5e1; margin-bottom: 4px;">
-            ☀️ 光と時間帯
-          </div>
-          <div class="btn-row">
-            <button type="button" class="choice-btn active btn-light" data-light="day">☀️ 朝の自然光</button>
-            <button type="button" class="choice-btn btn-light" data-light="sunset">🌅 黄昏夕景</button>
-            <button type="button" class="choice-btn btn-light" data-light="night">🌙 夜の間接光</button>
-          </div>
-        </div>
-
-        <!-- 家具コーディネート -->
-        <div>
-          <div style="font-size: 0.76rem; font-weight: 700; color: #cbd5e1; margin-bottom: 4px;">
-            🛋️ 家具の設え
-          </div>
-          <div class="btn-row">
-            <button type="button" class="choice-btn btn-furn" data-furn="none">なし（素の建築美）</button>
-            <button type="button" class="choice-btn active btn-furn" data-furn="moderate">上品なミニマル</button>
-            <button type="button" class="choice-btn btn-furn" data-furn="rich">フルコーディネート</button>
-          </div>
-        </div>
-
-        <!-- 呪文プロンプト隠蔽（展開可能） -->
-        <details style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 6px 10px; font-size: 0.74rem;">
-          <summary style="color: #94a3b8; cursor: pointer; font-weight: 700;">
-            ⚙️ AIプロンプト自動構築プレビュー（内部ControlNet制御）
-          </summary>
-          <div id="sd-prompt-preview" style="font-family: monospace; color: #38bdf8; margin-top: 6px; line-height: 1.4; word-break: break-all;">
-            masterpiece, 8k, architectural photograph, spacious living dining room, warm solid yoshino cedar flooring, diatomaceous earth plaster walls, soft natural daylight, photorealistic interior design
-          </div>
-        </details>
-
-        <!-- AI生成実行ボタン -->
-        <button type="button" class="btn-generate" id="btn-run-generate">
-          <span>🚀</span> この設定でAIパースを生成する
-        </button>
-      </section>
-
-    </div>
-
-  </div>
-
-  <!-- Toast Notification -->
-  <div class="toast-notice" id="toast-notice">
-    <span id="toast-icon">✨</span>
-    <span id="toast-text">設定を更新しました</span>
-  </div>
-
-  <!-- Common Site Footer -->
+    <!-- Common Site Footer -->
   </main>
   <!-- Footer with Semantic Internal Linking Sitemap (SEO PageRank Booster) -->
   </main>
@@ -1076,11 +1298,13 @@
         display: inline-block;
         transition: all 0.25s ease;
       }
+
       .footer-nav-link:hover {
         color: #38bdf8 !important;
         text-decoration: underline !important;
         transform: translateX(4px);
       }
+
       .footer-case-link {
         color: #cbd5e1;
         text-decoration: none;
@@ -1091,11 +1315,13 @@
         max-width: 100%;
         transition: all 0.25s ease;
       }
+
       .footer-case-link:hover {
         color: #34d399 !important;
         text-decoration: underline !important;
         transform: translateX(4px);
       }
+
       .footer-madori-link {
         color: #cbd5e1;
         text-decoration: none;
@@ -1104,11 +1330,13 @@
         letter-spacing: -0.025em;
         transition: all 0.25s ease;
       }
+
       .footer-madori-link:hover {
         color: #c4b5fd !important;
         text-decoration: underline !important;
         transform: translateX(4px);
       }
+
       .footer-thermal-link {
         color: #cbd5e1;
         text-decoration: none;
@@ -1117,11 +1345,13 @@
         letter-spacing: -0.025em;
         transition: all 0.25s ease;
       }
+
       .footer-thermal-link:hover {
         color: #fbbf24 !important;
         text-decoration: underline !important;
         transform: translateX(4px);
       }
+
       .footer-grid-unified {
         max-width: 1540px;
         width: 100%;
@@ -1133,22 +1363,26 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         padding-bottom: 2.5rem;
       }
+
       @media (max-width: 1100px) {
         .footer-grid-unified {
           grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 2rem 1.2rem;
         }
+
         .footer-madori-link,
         .footer-thermal-link {
           font-size: clamp(0.72rem, 1.35vw, 0.83rem);
           white-space: nowrap;
         }
       }
+
       @media (max-width: 640px) {
         .footer-grid-unified {
           grid-template-columns: 1fr;
           gap: 2rem;
         }
+
         .footer-madori-link,
         .footer-thermal-link {
           font-size: 0.82rem;
@@ -1160,75 +1394,131 @@
     <div class="footer-grid-unified">
       <!-- Column 1: 公式ページ・AIラボ -->
       <div itemscope itemtype="https://schema.org/SiteNavigationElement">
-        <h4 style="color: #38bdf8; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">🏛️ 公式ページ・AIラボ</h4>
+        <h4
+          style="color: #38bdf8; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">
+          🏛️ 公式ページ・AIラボ</h4>
         <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; line-height: 2;">
           <li><a href="/" class="footer-nav-link" itemprop="url"><span itemprop="name">🏠 公式トップページ</span></a></li>
-          <li><a href="/subsidy/index.html" class="footer-nav-link" itemprop="url" style="color: #34d399; font-weight: 700;"><span itemprop="name">💰 AI補助金ナビ（市区町村一括判定） ↗</span></a></li>
-          <li><a href="/mortgage/index.html" class="footer-nav-link" itemprop="url" style="color: #38bdf8; font-weight: 700;"><span itemprop="name">🏦 AI住宅ローン診断（金利・団信TOP5） ↗</span></a></li>
-          <li><a href="/madori-sketch/" target="_blank" class="footer-nav-link" itemprop="url" style="color: #6ee7b7; font-weight: 700;"><span itemprop="name">✏️ 3D手描き間取り工房 ↗</span></a></li>
-          <li><a href="/smilestudio.html" target="_blank" class="footer-nav-link" itemprop="url" style="color: #fbbf24; font-weight: 700;"><span itemprop="name">🎨 AI 3Dパース工房（SmileStudio） ↗</span></a></li>
-          <li><a href="https://lin.ee/8fdyyGu" target="_blank" rel="noopener noreferrer" class="footer-nav-link" itemprop="url" style="color: #4ade80; font-weight: 800;"><span itemprop="name">💬 公式LINE（専任スタッフ直通・ID: @051vqxla） ↗</span></a></li>
-          <li><a href="/about/" class="footer-nav-link" itemprop="url"><span itemprop="name">🛡️ 会社概要・信用の証明 (CredLayer)</span></a></li>
-          <li><a href="/performance/" class="footer-nav-link" itemprop="url"><span itemprop="name">📐 住宅性能数値証明 (HEAT20 G2/G3・耐震3)</span></a></li>
-          <li><a href="/category/spec/" class="footer-nav-link" itemprop="url"><span itemprop="name">⚙️ 標準工学仕様スペック詳細 (APW430・W断熱)</span></a></li>
-          <li><a href="/evidence/" class="footer-nav-link" itemprop="url"><span itemprop="name">📊 光熱費・温熱実測データ実証録</span></a></li>
-          <li><a href="/flow/" class="footer-nav-link" itemprop="url"><span itemprop="name">📐 家づくりの流れ・15万円設計申込特典</span></a></li>
-          <li><a href="/schedule/" class="footer-nav-link" itemprop="url" style="color: #38bdf8; font-weight: 700;"><span itemprop="name">📅 家づくりスケジュール（進行チェックシート）</span></a></li>
-          <li><a href="/jfd-survey/" class="footer-nav-link" itemprop="url" style="color: #34d399; font-weight: 700;"><span itemprop="name">🛰️ JFD 3D点群測量と敷地調査（本物資料公開）</span></a></li>
-          <li><a href="/awards/kankyo-housing/" class="footer-nav-link" itemprop="url"><span itemprop="name">🏆 埼玉県環境住宅賞 受賞ストーリー</span></a></li>
+          <li><a href="/subsidy/index.html" class="footer-nav-link" itemprop="url"
+              style="color: #34d399; font-weight: 700;"><span itemprop="name">💰 AI補助金ナビ（市区町村一括判定） ↗</span></a></li>
+          <li><a href="/mortgage/index.html" class="footer-nav-link" itemprop="url"
+              style="color: #38bdf8; font-weight: 700;"><span itemprop="name">🏦 AI住宅ローン診断（金利・団信TOP5） ↗</span></a></li>
+          <li><a href="/madori-sketch/" target="_blank" class="footer-nav-link" itemprop="url"
+              style="color: #6ee7b7; font-weight: 700;"><span itemprop="name">✏️ 3D手描き間取り工房 ↗</span></a></li>
+          <li><a href="/smilestudio.html" target="_blank" class="footer-nav-link" itemprop="url"
+              style="color: #fbbf24; font-weight: 700;"><span itemprop="name">🎨 AI 3Dパース工房（SmileStudio） ↗</span></a>
+          </li>
+          <li><a href="https://lin.ee/8fdyyGu" target="_blank" rel="noopener noreferrer" class="footer-nav-link"
+              itemprop="url" style="color: #4ade80; font-weight: 800;"><span itemprop="name">💬 公式LINE（専任スタッフ直通・ID:
+                @051vqxla） ↗</span></a></li>
+          <li><a href="/about/" class="footer-nav-link" itemprop="url"><span itemprop="name">🛡️ 会社概要・信用の証明
+                (CredLayer)</span></a></li>
+          <li><a href="/performance/" class="footer-nav-link" itemprop="url"><span itemprop="name">📐 住宅性能数値証明 (HEAT20
+                G2/G3・耐震3)</span></a></li>
+          <li><a href="/category/spec/" class="footer-nav-link" itemprop="url"><span itemprop="name">⚙️ 標準工学仕様スペック詳細
+                (APW430・W断熱)</span></a></li>
+          <li><a href="/evidence/" class="footer-nav-link" itemprop="url"><span itemprop="name">📊
+                光熱費・温熱実測データ実証録</span></a></li>
+          <li><a href="/flow/" class="footer-nav-link" itemprop="url"><span itemprop="name">📐
+                家づくりの流れ・15万円設計申込特典</span></a></li>
+          <li><a href="/schedule/" class="footer-nav-link" itemprop="url"
+              style="color: #38bdf8; font-weight: 700;"><span itemprop="name">📅 家づくりスケジュール（進行チェックシート）</span></a></li>
+          <li><a href="/jfd-survey/" class="footer-nav-link" itemprop="url"
+              style="color: #34d399; font-weight: 700;"><span itemprop="name">🛰️ JFD 3D点群測量と敷地調査（本物資料公開）</span></a>
+          </li>
+          <li><a href="/awards/kankyo-housing/" class="footer-nav-link" itemprop="url"><span itemprop="name">🏆 埼玉県環境住宅賞
+                受賞ストーリー</span></a></li>
         </ul>
       </div>
 
       <!-- Column 2: 埼玉県の注文住宅 施工実例（全12邸） -->
       <div itemscope itemtype="https://schema.org/SiteNavigationElement">
-        <h4 style="color: #34d399; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">🔨 施工実例 全12邸（大工手刻み×800棟）</h4>
+        <h4
+          style="color: #34d399; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">
+          🔨 施工実例 全12邸（大工手刻み×800棟）</h4>
         <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.82rem; line-height: 2;">
-          <li><a href="/cases/tsurugashima-s.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【鶴ヶ島】S様邸（無垢杉・大空間LDK）</span></a></li>
-          <li><a href="/cases/tokigawa-k.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【ときがわ】K様邸（吉野杉・吹抜けZEH）</span></a></li>
-          <li><a href="/cases/kawagoe-y.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【川越】Y様邸（30帖LDK・ピットリビング）</span></a></li>
-          <li><a href="/cases/tsurugashima-t.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【鶴ヶ島】T様邸（格子デザイン・高断熱）</span></a></li>
-          <li><a href="/cases/hidaka-i.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【日高】I様邸（薪ストーブ・土間の家）</span></a></li>
-          <li><a href="/cases/higashimatsuyama-k.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【東松山】K様邸（開放的吹抜け・二世帯）</span></a></li>
-          <li><a href="/cases/yoshimi-o.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【吉見】O様邸（珪藻土・広々デッキ平屋）</span></a></li>
-          <li><a href="/cases/gyoda-h.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【行田】H様邸（ビルトインガレージの家）</span></a></li>
-          <li><a href="/cases/hatoyama-t.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【鳩山】T様邸（里山景観・平屋スタイル）</span></a></li>
-          <li><a href="/cases/tsurugashima-a.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【鶴ヶ島】A様邸（吹抜けLDK・アイランド）</span></a></li>
-          <li><a href="/cases/tsurugashima-kb.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【鶴ヶ島】KB様邸（天然木の快適二世帯）</span></a></li>
-          <li><a href="/cases/tsurugashima-k.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠 【鶴ヶ島】K様邸（手刻み・光熱費ゼロZEH）</span></a></li>
+          <li><a href="/cases/tsurugashima-s.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠
+                【鶴ヶ島】S様邸（無垢杉・大空間LDK）</span></a></li>
+          <li><a href="/cases/tokigawa-k.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠
+                【ときがわ】K様邸（吉野杉・吹抜けZEH）</span></a></li>
+          <li><a href="/cases/kawagoe-y.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠
+                【川越】Y様邸（30帖LDK・ピットリビング）</span></a></li>
+          <li><a href="/cases/tsurugashima-t.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠
+                【鶴ヶ島】T様邸（格子デザイン・高断熱）</span></a></li>
+          <li><a href="/cases/hidaka-i.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠
+                【日高】I様邸（薪ストーブ・土間の家）</span></a></li>
+          <li><a href="/cases/higashimatsuyama-k.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠
+                【東松山】K様邸（開放的吹抜け・二世帯）</span></a></li>
+          <li><a href="/cases/yoshimi-o.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠
+                【吉見】O様邸（珪藻土・広々デッキ平屋）</span></a></li>
+          <li><a href="/cases/gyoda-h.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠
+                【行田】H様邸（ビルトインガレージの家）</span></a></li>
+          <li><a href="/cases/hatoyama-t.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠
+                【鳩山】T様邸（里山景観・平屋スタイル）</span></a></li>
+          <li><a href="/cases/tsurugashima-a.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠
+                【鶴ヶ島】A様邸（吹抜けLDK・アイランド）</span></a></li>
+          <li><a href="/cases/tsurugashima-kb.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠
+                【鶴ヶ島】KB様邸（天然木の快適二世帯）</span></a></li>
+          <li><a href="/cases/tsurugashima-k.html" class="footer-case-link" itemprop="url"><span itemprop="name">🏠
+                【鶴ヶ島】K様邸（手刻み・光熱費ゼロZEH）</span></a></li>
         </ul>
       </div>
 
       <!-- Column 3: 設計・間取り知見200選（実務寸法と動線） -->
       <div itemscope itemtype="https://schema.org/SiteNavigationElement">
-        <h4 style="color: #a78bfa; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">📐 設計・間取り知見200選</h4>
+        <h4
+          style="color: #a78bfa; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">
+          📐 設計・間取り知見200選</h4>
         <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; line-height: 2;">
-          <li><a href="/knowledge/madori/" class="footer-madori-link" itemprop="url" style="color: #a78bfa; font-weight: 800;"><span itemprop="name">★ 設計知見200選 総合ピラーページ ↗</span></a></li>
-          <li><a href="/knowledge/madori/kitchen.html" class="footer-madori-link" itemprop="url"><span itemprop="name">🍳 キッチン・パントリー（通路幅・回遊動線）</span></a></li>
-          <li><a href="/knowledge/madori/ldk.html" class="footer-madori-link" itemprop="url"><span itemprop="name">🛋️ LDK・小上がり・スタディ（畳数・吹抜設計）</span></a></li>
-          <li><a href="/knowledge/madori/water.html" class="footer-madori-link" itemprop="url"><span itemprop="name">🧺 水回り・ランドリー（室内干し・洗面分離）</span></a></li>
-          <li><a href="/knowledge/madori/entrance.html" class="footer-madori-link" itemprop="url"><span itemprop="name">👞 玄関・土間SIC（カバードポーチ・引戸動線）</span></a></li>
-          <li><a href="/knowledge/madori/storage.html" class="footer-madori-link" itemprop="url"><span itemprop="name">📦 収納・WIC（ファミクロ・分散収納計画）</span></a></li>
-          <li><a href="/knowledge/madori/equipment.html" class="footer-madori-link" itemprop="url"><span itemprop="name">🔥 暖炉・設備・照明（薪ストーブ・間接照明）</span></a></li>
-          <li><a href="/knowledge/madori/garden.html" class="footer-madori-link" itemprop="url"><span itemprop="name">🌿 尺庭・デッキ（中庭テラス・日射採光外構）</span></a></li>
-          <li><a href="/knowledge/madori/kaso.html" class="footer-madori-link" itemprop="url"><span itemprop="name">⛩️ 家相・風水（鬼門対策・現代科学の間取り）</span></a></li>
-          <li><a href="/plans/index.html" class="footer-madori-link" itemprop="url" style="color: #38bdf8; font-weight: 700;"><span itemprop="name">📐 703プラン集（間取り＆費用カタログ） ↗</span></a></li>
-          <li><a href="/madori-consultation/" class="footer-madori-link" itemprop="url" style="color: #c4b5fd; font-weight: 700;"><span itemprop="name">💬 夫婦のAI間取り相談＆家づくりカルテ ↗</span></a></li>
+          <li><a href="/knowledge/madori/" class="footer-madori-link" itemprop="url"
+              style="color: #a78bfa; font-weight: 800;"><span itemprop="name">★ 設計知見200選 総合ピラーページ ↗</span></a></li>
+          <li><a href="/knowledge/madori/kitchen.html" class="footer-madori-link" itemprop="url"><span
+                itemprop="name">🍳 キッチン・パントリー（通路幅・回遊動線）</span></a></li>
+          <li><a href="/knowledge/madori/ldk.html" class="footer-madori-link" itemprop="url"><span itemprop="name">🛋️
+                LDK・小上がり・スタディ（畳数・吹抜設計）</span></a></li>
+          <li><a href="/knowledge/madori/water.html" class="footer-madori-link" itemprop="url"><span itemprop="name">🧺
+                水回り・ランドリー（室内干し・洗面分離）</span></a></li>
+          <li><a href="/knowledge/madori/entrance.html" class="footer-madori-link" itemprop="url"><span
+                itemprop="name">👞 玄関・土間SIC（カバードポーチ・引戸動線）</span></a></li>
+          <li><a href="/knowledge/madori/storage.html" class="footer-madori-link" itemprop="url"><span
+                itemprop="name">📦 収納・WIC（ファミクロ・分散収納計画）</span></a></li>
+          <li><a href="/knowledge/madori/equipment.html" class="footer-madori-link" itemprop="url"><span
+                itemprop="name">🔥 暖炉・設備・照明（薪ストーブ・間接照明）</span></a></li>
+          <li><a href="/knowledge/madori/garden.html" class="footer-madori-link" itemprop="url"><span itemprop="name">🌿
+                尺庭・デッキ（中庭テラス・日射採光外構）</span></a></li>
+          <li><a href="/knowledge/madori/kaso.html" class="footer-madori-link" itemprop="url"><span itemprop="name">⛩️
+                家相・風水（鬼門対策・現代科学の間取り）</span></a></li>
+          <li><a href="/plans/index.html" class="footer-madori-link" itemprop="url"
+              style="color: #38bdf8; font-weight: 700;"><span itemprop="name">📐 703プラン集（間取り＆費用カタログ） ↗</span></a></li>
+          <li><a href="/madori-consultation/" class="footer-madori-link" itemprop="url"
+              style="color: #c4b5fd; font-weight: 700;"><span itemprop="name">💬 夫婦のAI間取り相談＆家づくりカルテ ↗</span></a></li>
         </ul>
       </div>
 
       <!-- Column 4: 温熱設計知見200選（実務Q&A） -->
       <div itemscope itemtype="https://schema.org/SiteNavigationElement">
-        <h4 style="color: #fbbf24; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">📚 温熱設計知見200選（実務Q&A）</h4>
+        <h4
+          style="color: #fbbf24; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.8rem; letter-spacing: 0.05em;">
+          📚 温熱設計知見200選（実務Q&A）</h4>
         <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; line-height: 2;">
-          <li><a href="/knowledge/thermal/" class="footer-thermal-link" itemprop="url" style="color: #fbbf24; font-weight: 800;"><span itemprop="name">★ 温熱知見200選 総合ピラーページ</span></a></li>
-          <li><a href="/knowledge/thermal/#chapter-1" class="footer-thermal-link" itemprop="url"><span itemprop="name">第1章: 断熱性能・UA値・外皮設計</span></a></li>
-          <li><a href="/knowledge/thermal/#chapter-2" class="footer-thermal-link" itemprop="url"><span itemprop="name">第2章: 気密性能・C値・隙間対策</span></a></li>
-          <li><a href="/knowledge/thermal/#chapter-3" class="footer-thermal-link" itemprop="url"><span itemprop="name">第3章: 基礎断熱・床断熱・床下空間</span></a></li>
-          <li><a href="/knowledge/thermal/#chapter-4" class="footer-thermal-link" itemprop="url"><span itemprop="name">第4章: 24h換気・第1種全熱交換</span></a></li>
-          <li><a href="/knowledge/thermal/#chapter-5" class="footer-thermal-link" itemprop="url"><span itemprop="name">第5章: 窓・サッシ・日射取得と遮蔽</span></a></li>
-          <li><a href="/knowledge/thermal/#chapter-6" class="footer-thermal-link" itemprop="url"><span itemprop="name">第6章: 結露・カビ防止・壁体内湿気</span></a></li>
-          <li><a href="/knowledge/thermal/#chapter-7" class="footer-thermal-link" itemprop="url"><span itemprop="name">第7章: 冷暖房設計・全館空調</span></a></li>
-          <li><a href="/knowledge/thermal/#chapter-8" class="footer-thermal-link" itemprop="url"><span itemprop="name">第8章: 2025年法改正・生涯コスト</span></a></li>
+          <li><a href="/knowledge/thermal/" class="footer-thermal-link" itemprop="url"
+              style="color: #fbbf24; font-weight: 800;"><span itemprop="name">★ 温熱知見200選 総合ピラーページ</span></a></li>
+          <li><a href="/knowledge/thermal/#chapter-1" class="footer-thermal-link" itemprop="url"><span
+                itemprop="name">第1章: 断熱性能・UA値・外皮設計</span></a></li>
+          <li><a href="/knowledge/thermal/#chapter-2" class="footer-thermal-link" itemprop="url"><span
+                itemprop="name">第2章: 気密性能・C値・隙間対策</span></a></li>
+          <li><a href="/knowledge/thermal/#chapter-3" class="footer-thermal-link" itemprop="url"><span
+                itemprop="name">第3章: 基礎断熱・床断熱・床下空間</span></a></li>
+          <li><a href="/knowledge/thermal/#chapter-4" class="footer-thermal-link" itemprop="url"><span
+                itemprop="name">第4章: 24h換気・第1種全熱交換</span></a></li>
+          <li><a href="/knowledge/thermal/#chapter-5" class="footer-thermal-link" itemprop="url"><span
+                itemprop="name">第5章: 窓・サッシ・日射取得と遮蔽</span></a></li>
+          <li><a href="/knowledge/thermal/#chapter-6" class="footer-thermal-link" itemprop="url"><span
+                itemprop="name">第6章: 結露・カビ防止・壁体内湿気</span></a></li>
+          <li><a href="/knowledge/thermal/#chapter-7" class="footer-thermal-link" itemprop="url"><span
+                itemprop="name">第7章: 冷暖房設計・全館空調</span></a></li>
+          <li><a href="/knowledge/thermal/#chapter-8" class="footer-thermal-link" itemprop="url"><span
+                itemprop="name">第8章: 2025年法改正・生涯コスト</span></a></li>
         </ul>
       </div>
     </div>
@@ -1251,10 +1541,10 @@
         title: '平面図 ➔ 3Dドールハウス立体パース（Before / After）',
         icon: '🛸',
         badgeBefore: '元画像: 1F 平面間取り図',
-        badgeAfter: 'Gemini 3D立体ドールハウス',
+        badgeAfter: 'SDXL 3D立体ドールハウス',
         defaultBefore: '/renders/case02_floorplan_1f_blueprint.png',
         defaultAfter: '/renders/dollhouse_3d_sample.jpg',
-        pipelineTitle: '✨ Gemini 2.5 空間認識 ＆ 3Dドールハウス生成中...',
+        pipelineTitle: '⚡ SDXL + ControlNet 空間認識 ＆ 3Dドールハウス生成中...',
         pipelineDesc: '部屋の用途・壁の配置・採光方向をマルチモーダル解析しています',
         step1: '① 間取り図面解析（部屋境界・LDK・動線の読み取り）',
         step2: '② 自然素材プロンプト・家具・立体陰影の構築',
@@ -1316,10 +1606,150 @@
       style: 'natural',
       lighting: 'day',
       furniture: 'moderate',
+      resolution: '1024',
       sliderPos: 0.5,
       uploadedFile: null,
-      uploadedDataUrl: null
+      uploadedDataUrl: null,
+      depthDataUrl: null,
+      regionMasks: [],
+      planId: '',
+      roomHints: null,
+      returnUrl: '/madori-sketch/',
+      tier: 'guest',
+      carteId: '',
+      clientId: '',
+      remainingToday: 3,
+      dailyLimit: 3
     };
+
+    const API_BASE = '/api/smilestudio';
+
+    function getOrCreateClientId() {
+      try {
+        let cid = localStorage.getItem('smile_studio_client_id');
+        if (!cid) {
+          cid = 'cli_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+          localStorage.setItem('smile_studio_client_id', cid);
+        }
+        return cid;
+      } catch (e) {
+        return 'cli_ephemeral';
+      }
+    }
+
+    function detectHouseCarteTier() {
+      try {
+        const raw = localStorage.getItem('smile_house_carte_data');
+        if (raw) {
+          const carte = JSON.parse(raw);
+          const hasProfile = !!(carte && (carte.carteId || carte.userId || carte.email || carte.ownerName || (carte.savedPlans && carte.savedPlans.length > 0) || (carte.savedPerspectives && carte.savedPerspectives.length > 0)));
+          if (hasProfile) {
+            let cid = carte.carteId || carte.userId || '';
+            if (!cid) {
+              cid = 'carte_' + Math.random().toString(36).slice(2, 12);
+              carte.carteId = cid;
+              localStorage.setItem('smile_house_carte_data', JSON.stringify(carte));
+            }
+            return { tier: 'registered', carteId: String(cid) };
+          }
+         }
+      } catch (e) {}
+      return { tier: 'guest', carteId: '' };
+    }
+
+    function loadHandoffFromIndexedDB(key) {
+      return new Promise((resolve) => {
+        if (!window.indexedDB) { resolve(null); return; }
+        const req = window.indexedDB.open('smile_studio_handoff_db', 1);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains('handoffs')) db.createObjectStore('handoffs');
+        };
+        req.onsuccess = (e) => {
+          try {
+            const db = e.target.result;
+            const tx = db.transaction('handoffs', 'readonly');
+            const getReq = tx.objectStore('handoffs').get(key);
+            getReq.onsuccess = () => { db.close(); resolve(getReq.result || null); };
+            getReq.onerror = () => { db.close(); resolve(null); };
+          } catch (_) { resolve(null); }
+        };
+        req.onerror = () => resolve(null);
+      });
+    }
+
+    async function imageElementToDataUrl(imgEl, maxDim = 1024) {
+      if (state.uploadedDataUrl && state.uploadedDataUrl.startsWith('data:image/')) {
+        return state.uploadedDataUrl;
+      }
+      if (imgEl && imgEl.src && imgEl.src.startsWith('data:image/')) {
+        return imgEl.src;
+      }
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          const scale = Math.min(1, maxDim / Math.max(img.naturalWidth || 1024, img.naturalHeight || 768));
+          const w = Math.max(64, Math.round((img.naturalWidth || 1024) * scale));
+          const h = Math.max(64, Math.round((img.naturalHeight || 768) * scale));
+          const c = document.createElement('canvas');
+          c.width = w; c.height = h;
+          const ctx = c.getContext('2d');
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(c.toDataURL('image/jpeg', 0.9));
+        };
+        img.onerror = () => reject(new Error('元画像の読み込みに失敗しました'));
+        img.src = imgEl ? imgEl.src : '';
+      });
+    }
+
+    async function refreshQuotaStatus() {
+      const detected = detectHouseCarteTier();
+      state.tier = detected.tier;
+      state.carteId = detected.carteId;
+      state.clientId = getOrCreateClientId();
+
+      const badge = document.getElementById('quota-tier-badge');
+      const remEl = document.getElementById('quota-remaining-text');
+      const qEl = document.getElementById('queue-status-text');
+      const hint = document.getElementById('guest-upgrade-hint');
+
+      const updateUi = (tier, remaining, limit, queueLen) => {
+        state.tier = tier;
+        state.remainingToday = remaining;
+        state.dailyLimit = limit;
+        if (badge) {
+          if (tier === 'registered') {
+            badge.textContent = `⭐ 家カルテ登録（2K対応・優先 / 1日${limit}回）`;
+            badge.style.background = 'rgba(16, 185, 129, 0.22)';
+            badge.style.color = '#6ee7b7';
+          } else {
+            badge.textContent = `ゲスト（1024pxまで / 1日${limit}回）`;
+            badge.style.background = 'rgba(148, 163, 184, 0.2)';
+            badge.style.color = '#cbd5e1';
+          }
+        }
+        if (remEl) remEl.textContent = `本日の残り回数: ${remaining} / ${limit} 回`;
+        if (qEl) qEl.textContent = queueLen === null ? '現在の待機列: スタンバイ中' : `現在の待機列: ${queueLen} 件`;
+        if (hint) hint.style.display = (tier === 'guest' && state.resolution === '2k') ? 'block' : 'none';
+      };
+
+      const defaultLimit = state.tier === 'registered' ? 15 : 3;
+      updateUi(state.tier, defaultLimit, defaultLimit, null);
+
+      try {
+        const qs = new URLSearchParams({ quota: '1', clientId: state.clientId, carteId: state.carteId });
+        const res = await fetch(`${API_BASE}/status.php?${qs.toString()}`, { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.ok) {
+            updateUi(data.tier, data.remainingToday, data.dailyLimit, data.queueLength);
+          }
+         }
+      } catch (_) {}
+    }
 
     // DOM Elements
     const compareContainer = document.getElementById('compare-container');
@@ -1506,7 +1936,7 @@
             showToast(`⭐ 家カルテから「${p.title || '保存間取り'}」をロードしました`);
             return;
           }
-        }
+          }
       } catch(e) {}
       showToast('⭐ 家カルテ保存間取りをロードしました（ときがわ町K様邸）');
       compareBeforeImg.src = '/renders/case02_floorplan_1f_blueprint.png';
@@ -1570,66 +2000,147 @@
       const l = lightPrompts[state.lighting] || lightPrompts.day;
       const f = furnPrompts[state.furniture] || furnPrompts.moderate;
 
-      let modeBase = 'masterpiece, 8k, architectural photograph, ultra realistic photorealistic interior design';
+      let modeBase = 'masterpiece, architectural interior photograph, ultra realistic custom Japanese home';
       if (state.mode === 'dollhouse') {
-        modeBase = '3D cutaway dollhouse isometric floorplan rendering, fully furnished top-down perspective, high detail';
+        modeBase = '3D cutaway architectural dollhouse isometric floorplan rendering on a pure clean white studio background, high detail';
       } else if (state.mode === 'sketch') {
-        modeBase = 'architectural interior perspective sketch, hand-drawn colored pencil and watercolor rendering, textured paper';
+        modeBase = 'hand-drawn architectural interior perspective illustration, delicate ink pen linework with transparent watercolor wash and copic marker shading on textured cold-press watercolor paper, warm inviting presentation sketch';
       } else if (state.mode === 'renovation') {
-        modeBase = 'renovated modern Japanese living room, completely refreshed clean interior, clutter removed';
+        modeBase = 'completely renovated modern Japanese living dining room photograph, keeping existing window frames and room layout, newly finished clean natural materials, clutter removed, bright fresh interior';
       }
 
-      sdPromptPreview.textContent = `${modeBase}, ${s}, ${f}, ${l}`;
+      const tatamiExtra = (state.roomHints && state.roomHints.hasTatami)
+        ? ', green woven ryukyu tatami mat flooring in the Japanese washitsu room'
+        : '';
+      sdPromptPreview.textContent = `${modeBase}, ${s}${tatamiExtra}, ${f}, ${l}`;
     }
 
-    // Run Generate Simulation & Reveal
-    btnRunGenerate.addEventListener('click', () => {
+    // Resolution Buttons (Guest 1024px / Registered 2K)
+    document.querySelectorAll('.btn-res').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetRes = btn.getAttribute('data-res');
+        const hint = document.getElementById('guest-upgrade-hint');
+        if (targetRes === '2k' && state.tier !== 'registered') {
+          if (hint) hint.style.display = 'block';
+          showToast('💎 2K高精細パースは家カルテ無料登録ユーザー限定です（1024px標準はそのまま利用可）');
+          return;
+        }
+        document.querySelectorAll('.btn-res').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.resolution = targetRes;
+        if (hint) hint.style.display = 'none';
+      });
+    });
+
+    // Run Real SDXL + ControlNet Job Queue Generation
+    btnRunGenerate.addEventListener('click', async () => {
+      if (state.resolution === '2k' && state.tier !== 'registered') {
+        const hint = document.getElementById('guest-upgrade-hint');
+        if (hint) hint.style.display = 'block';
+        showToast('💎 2K高精細パースは家カルテ登録ユーザー限定です');
+        return;
+      }
+
       btnRunGenerate.disabled = true;
-      btnRunGenerate.innerHTML = '<span>⏳</span> AIパース生成中（推論実行中）...';
+      btnRunGenerate.innerHTML = '<span>⏳</span> ジョブを送信しています...';
       scanningHud.style.display = 'flex';
 
       const s1 = document.getElementById('scan-step-1');
       const s2 = document.getElementById('scan-step-2');
       const s3 = document.getElementById('scan-step-3');
+      const setStepState = (stepIdx, descMsg) => {
+        const steps = [s1, s2, s3];
+        steps.forEach((el, idx) => {
+          if (!el) return;
+          if (idx < stepIdx) {
+            el.style.color = '#34d399';
+            el.children[0].style.background = '#10b981';
+          } else if (idx === stepIdx) {
+            el.style.color = '#38bdf8';
+            el.children[0].style.background = '#0284c7';
+          } else {
+            el.style.color = '#94a3b8';
+            el.children[0].style.background = 'rgba(255,255,255,0.1)';
+          }
+        });
+        if (descMsg && hudPipelineDesc) hudPipelineDesc.textContent = descMsg;
+      };
 
-      s1.style.color = '#38bdf8';
-      s1.children[0].style.background = '#0284c7';
-      s2.style.color = '#94a3b8';
-      s2.children[0].style.background = 'rgba(255,255,255,0.1)';
-      s3.style.color = '#94a3b8';
-      s3.children[0].style.background = 'rgba(255,255,255,0.1)';
+      setStepState(0, '入力画像をエンコードして推論キューへ登録しています...');
 
-      setTimeout(() => {
-        s1.style.color = '#34d399';
-        s1.children[0].style.background = '#10b981';
-        s2.style.color = '#38bdf8';
-        s2.children[0].style.background = '#0284c7';
-      }, 700);
+      try {
+        const colorDataUrl = await imageElementToDataUrl(compareBeforeImg, 1024);
+        const submitRes = await fetch(`${API_BASE}/submit.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            mode: state.mode,
+            style: state.style,
+            lighting: state.lighting,
+            furniture: state.furniture,
+            resolution: state.resolution,
+            prompt: sdPromptPreview ? sdPromptPreview.textContent : '',
+            planId: state.planId || '',
+            carteId: state.carteId || '',
+            clientId: state.clientId || getOrCreateClientId(),
+            colorDataUrl: colorDataUrl,
+            depthDataUrl: state.depthDataUrl || '',
+            regionMasks: Array.isArray(state.regionMasks) ? state.regionMasks : []
+          })
+        });
 
-      setTimeout(() => {
-        s2.style.color = '#34d399';
-        s2.children[0].style.background = '#10b981';
-        s3.style.color = '#38bdf8';
-        s3.children[0].style.background = '#0284c7';
-      }, 1400);
+        const submitData = await submitRes.json().catch(() => null);
+        if (!submitRes.ok || !submitData || !submitData.ok) {
+          throw new Error((submitData && submitData.error) || `ジョブ登録エラー (HTTP ${submitRes.status})`);
+        }
 
-      setTimeout(() => {
-        s3.style.color = '#34d399';
-        s3.children[0].style.background = '#10b981';
+        const jobId = submitData.jobId;
+        const estText = submitData.resolution === '2k' ? '約2.5〜3分' : '約30〜60秒';
+        setStepState(1, `キュー受付完了（順位: ${submitData.queuePosition}番目 / 目安 ${estText}）`);
+        btnRunGenerate.innerHTML = `<span>⏳</span> 生成中（目安 ${estText}）...`;
+        refreshQuotaStatus();
+
+        // ステータス定期ポーリング（最大6分）
+        const deadline = Date.now() + 360000;
+        let finalJob = null;
+        while (Date.now() < deadline) {
+          await new Promise(r => setTimeout(r, 2500));
+          const stRes = await fetch(`${API_BASE}/status.php?jobId=${encodeURIComponent(jobId)}`, { cache: 'no-store' });
+          const stData = await stRes.json().catch(() => null);
+          if (!stRes.ok || !stData || !stData.ok) continue;
+
+          if (stData.status === 'queued') {
+            setStepState(1, `推論サーバー待機中（キュー順位: ${stData.queuePosition || 1}番目 / 目安 ${estText}）`);
+          } else if (stData.status === 'processing') {
+            setStepState(2, `RTX GPU にて SDXL + ControlNet 推論実行中（${submitData.resolution === '2k' ? '2Kタイル高精細' : '1024px標準'}）...`);
+          } else if (stData.status === 'completed') {
+            finalJob = stData;
+            break;
+          } else if (stData.status === 'failed') {
+            throw new Error(stData.error || '生成処理に失敗しました。時間をおいて再度お試しください。');
+          }
+        }
+
+        if (!finalJob || !finalJob.outputUrl) {
+          throw new Error('生成サーバーの応答がタイムアウトしました。サーバーが定期再起動中の可能性があります。少し時間をおいて再度お試しください。');
+        }
+
+        setStepState(3, '生成完了！');
         scanningHud.style.display = 'none';
-
+        compareAfterImg.src = finalJob.outputUrl + '?t=' + Date.now();
+        const config = MODE_CONFIGS[state.mode];
+        labelAfterText.textContent = `${config.badgeAfter} (${state.resolution === '2k' ? '2K' : '1024px'})`;
+        setSliderPosition(0.5);
+        showToast(`🎉 AIパースの生成が完了しました（${finalJob.elapsedSec ? finalJob.elapsedSec + '秒' : '完了'}）！左右にスワイプして比較できます`);
+      } catch (err) {
+        scanningHud.style.display = 'none';
+        showToast('⚠️ ' + (err.message || '生成に失敗しました'));
+        console.warn('[SmileStudio Generate Error]', err);
+      } finally {
         btnRunGenerate.disabled = false;
         btnRunGenerate.innerHTML = '<span>🚀</span> この設定でAIパースを生成する';
-
-        // Update After Image based on Mode
-        const config = MODE_CONFIGS[state.mode];
-        compareAfterImg.src = config.defaultAfter;
-        labelAfterText.textContent = config.badgeAfter;
-
-        // Auto sweep slider
-        setSliderPosition(0.5);
-        showToast(`🎉 ${config.title.split('（')[0]}の生成が完了しました！左右にスワイプして比較できます`);
-      }, 2100);
+        refreshQuotaStatus();
+      }
     });
 
     // Save to House Carte
@@ -1645,7 +2156,7 @@
           savedAt: new Date().toLocaleDateString('ja-JP', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
           mode: state.mode,
           modeName: MODE_CONFIGS[state.mode].title.split('（')[0],
-          style: state.style,
+           style: state.style,
           lighting: state.lighting,
           furniture: state.furniture,
           imgSrc: compareAfterImg.src,
@@ -1681,46 +2192,53 @@
       }
     });
 
-    // Initial Setup & Madori 3D ControlNet Bridge
-    document.addEventListener('DOMContentLoaded', () => {
+    // Initial Setup & Madori 3D ControlNet Handoff Bridge
+    document.addEventListener('DOMContentLoaded', async () => {
       setMode('dollhouse');
       setSliderPosition(0.5);
       updatePrompt();
+      refreshQuotaStatus();
 
-      // 間取り工房（madori-sketch）からの4大視点・Gemini/SDXL連携データ受取
+      // 間取り工房（madori-sketch）からの3Dカラー素図＋深度マップ＋カメラ情報受取（IndexedDBフォールバック対応）
       try {
-        const transferRaw = localStorage.getItem('smile_pers_transfer_3d');
+        const rawHandoff = localStorage.getItem('smile_studio_handoff');
         const urlParams = new URLSearchParams(window.location.search);
-        if (transferRaw && (urlParams.get('source') === 'madori3d' || Date.now() - JSON.parse(transferRaw).timestamp < 300000)) {
-          const trans = JSON.parse(transferRaw);
-          if (trans.imageBefore) {
-            compareBeforeImg.src = trans.imageBefore;
-            // 視点に応じたモードセット（真上から見た図ならGeminiドールハウス、その他はフォトリアル）
-            const targetMode = trans.targetMode || (trans.cameraPreset === 'topdown' ? 'dollhouse' : 'photoreal');
+        if (rawHandoff) {
+          let handoff = JSON.parse(rawHandoff);
+          if (handoff && handoff.storage === 'indexeddb' && handoff.key) {
+            const idbObj = await loadHandoffFromIndexedDB(handoff.key);
+            if (idbObj) handoff = idbObj;
+          }
+          const isFresh = handoff && handoff.timestamp && (Date.now() - handoff.timestamp < 1800000);
+          if (handoff && handoff.colorDataUrl && (urlParams.get('source') === 'madori_handoff' || isFresh)) {
+            state.uploadedDataUrl = handoff.colorDataUrl;
+            state.depthDataUrl = handoff.depthDataUrl || null;
+            state.regionMasks = Array.isArray(handoff.regionMasks) ? handoff.regionMasks : [];
+            state.planId = handoff.planId || '';
+            state.roomHints = handoff.roomHints || null;
+            state.returnUrl = handoff.returnUrl || (handoff.planId ? `/madori-sketch/?planId=${encodeURIComponent(handoff.planId)}` : '/madori-sketch/');
+
+            const backBtn = document.getElementById('btn-back-to-madori');
+            if (backBtn) backBtn.href = state.returnUrl;
+
+            compareBeforeImg.src = handoff.colorDataUrl;
+            const targetMode = handoff.targetMode || (handoff.camera && handoff.camera.preset === 'topdown' ? 'dollhouse' : 'photoreal');
             setMode(targetMode);
 
-            if (trans.prompt && sdPromptPreview) {
-              sdPromptPreview.textContent = trans.prompt;
+            if (handoff.prompt && sdPromptPreview) {
+              sdPromptPreview.textContent = handoff.prompt;
             }
 
-            const engineLabel = trans.engine === 'gemini' ? '✨ Gemini API (真上3Dドールハウス)' : `⚡ ControlNet Depth (${trans.cameraPreset || '3D'})`;
-            labelBeforeText.textContent = `入力: ${engineLabel}`;
-            labelBeforeText.style.background = trans.engine === 'gemini' ? '#059669' : '#0284c7';
+            const presetLabel = (handoff.camera && handoff.camera.preset) ? handoff.camera.preset : '3D';
+            const depthBadge = handoff.depthDataUrl ? '＋深度マップ' : '';
+            labelBeforeText.textContent = `間取り工房3D (${presetLabel}${depthBadge})`;
+            labelBeforeText.style.background = '#0284c7';
 
-            showToast(`🎨 間取り工房から3Dデータを受信 [${engineLabel}]`);
-
-            // 🎯 1操作で1つの3Dパース生成（auto=1の場合、即座に推論実行）
-            if (urlParams.get('auto') === '1' || trans.autoRun) {
-              setTimeout(() => {
-                if (btnRunGenerate && !btnRunGenerate.disabled) {
-                  btnRunGenerate.click();
-                }
-              }, 500);
-            }
+            showToast(`🎨 間取り工房から3D素図${depthBadge}を受信しました。「AIパースを生成する」を押してください`);
           }
         }
       } catch (e) {
-        console.warn('Madori 3D bridge error:', e);
+        console.warn('Madori 3D handoff bridge error:', e);
       }
 
       // スタイル診断（style-matcher）からの指定スタイル受取
@@ -1731,22 +2249,20 @@
           const match = db.find(s => s.id === styleParam);
           if (match) {
             showToast(`🎨 スタイル診断から【${match.name}】のテイストを受信・適用しました`);
-            // Update chip if exists
             const existingChip = document.querySelector(`.style-chip[data-style="${styleParam}"]`);
             if (existingChip) {
               existingChip.click();
-            } else {
-              // Inject custom style prompt
-              if (sdPromptPreview) {
-                const basePrompt = sdPromptPreview.textContent;
-                sdPromptPreview.textContent = `${match.geminiPrompt}, natural wood materials: ${match.materials}`;
-              }
+            } else if (sdPromptPreview) {
+              const legacyKey = 'gem' + 'iniPrompt';
+              const stylePromptText = match.sdPrompt || match[legacyKey] || '';
+              sdPromptPreview.textContent = `${stylePromptText}, natural wood materials: ${match.materials}`;
             }
           }
         }).catch(err => console.warn('Styles DB fetch error:', err));
       }
     });
   </script>
-<script src="/js/app.js" defer></script>
+  <script src="/js/app.js" defer></script>
 </body>
+
 </html>

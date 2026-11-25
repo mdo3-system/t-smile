@@ -630,9 +630,30 @@ function drawStandalonePillar2D(pl, isLight) {
 }
 
 function drawStair2D(st, isLight) {
-    const p = worldPToScreen(st.x, st.y);
-    const wPx = st.w * state.cam2d.zoom;
-    const hPx = st.h * state.cam2d.zoom;
+    if (!st) return;
+    // points から x, y, w, h の自動補完フォールバック
+    if ((st.x === undefined || st.w === undefined) && st.points && st.points.length >= 2) {
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        st.points.forEach(pt => {
+            minX = Math.min(minX, pt.x);
+            minY = Math.min(minY, pt.y);
+            maxX = Math.max(maxX, pt.x);
+            maxY = Math.max(maxY, pt.y);
+        });
+        st.x = minX;
+        st.y = minY;
+        const widthP = (st.widthMm || 910) / (state.modulePitch || 910);
+        st.w = +(Math.max(widthP, maxX - minX)).toFixed(3) || widthP;
+        st.h = +(Math.max(widthP, maxY - minY)).toFixed(3) || (widthP * 2);
+    }
+    const curX = (st.x !== undefined && !isNaN(st.x)) ? st.x : 0;
+    const curY = (st.y !== undefined && !isNaN(st.y)) ? st.y : 0;
+    const curW = (st.w !== undefined && !isNaN(st.w)) ? st.w : 1;
+    const curH = (st.h !== undefined && !isNaN(st.h)) ? st.h : 2;
+
+    const p = worldPToScreen(curX, curY);
+    const wPx = curW * state.cam2d.zoom;
+    const hPx = curH * state.cam2d.zoom;
     const isSelected = state.selectedItem && state.selectedItem.kind === 'stair' && state.selectedItem.id === st.id;
     const shape = st.shapeType || 'U_SHAPE';
     const dir = st.direction || 'UP';

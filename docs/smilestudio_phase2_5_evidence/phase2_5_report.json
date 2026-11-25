@@ -1,0 +1,67 @@
+{
+  "timestamp": "2026-11-24 18:44:21",
+  "planId": "PLAN-2387-P01",
+  "condition": "business_apps_running_phase2_5",
+  "bird_1f_tatami_test": {
+    "depthRange": {
+      "mode": "exterior",
+      "minRaw": 1,
+      "maxRaw": 233,
+      "uniqueLevels": 233,
+      "linearNearM": 10.15,
+      "linearFarM": 24.98
+    },
+    "benchmark": {
+      "prompt_id": "e54e7137-ae3d-4fc6-8b1e-f51aa3de7320",
+      "elapsed_sec": 23.09,
+      "vram_total_mib": 8188,
+      "vram_before_used_mib": 6391,
+      "vram_before_free_mib": 1559,
+      "vram_after_used_mib": 6353,
+      "vram_peak_used_mib": 7326,
+      "vram_min_free_mib": 624,
+      "vram_samples": 42,
+      "output_path": "C:\\ComfyUI\\output\\p25_bird_out_00002_.png",
+      "output_size": [
+        1024,
+        768
+      ]
+    },
+    "files": {
+      "color": "p25_bird_color.jpg",
+      "depth": "p25_bird_depth.png",
+      "output": "p25_bird_output.png"
+    }
+  },
+  "interior_eyelevel_test": {
+    "depthRange": {
+      "mode": "interior",
+      "minRaw": 1,
+      "maxRaw": 193,
+      "uniqueLevels": 192,
+      "linearNearM": 0.25,
+      "linearFarM": 8.46
+    },
+    "benchmark": {
+      "prompt_id": "c3090533-9292-4a7c-8c11-6dfc29622838",
+      "elapsed_sec": 23.07,
+      "vram_total_mib": 8188,
+      "vram_before_used_mib": 6353,
+      "vram_before_free_mib": 1597,
+      "vram_after_used_mib": 6304,
+      "vram_peak_used_mib": 7348,
+      "vram_min_free_mib": 602,
+      "vram_samples": 42,
+      "output_path": "C:\\ComfyUI\\output\\p25_interior_out_00002_.png",
+      "output_size": [
+        1024,
+        768
+      ]
+    },
+    "files": {
+      "color": "p25_interior_color.jpg",
+      "depth": "p25_interior_depth.png",
+      "output": "p25_interior_output.png"
+    }
+  }
+}

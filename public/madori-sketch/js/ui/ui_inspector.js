@@ -266,23 +266,50 @@ function renderSubToolbar() {
             </div>
         `;
     } else if (tool === 'stair') {
+        const isFree = state.stairDrawMode === 'free';
         container.innerHTML = `
             <div class="flex items-center gap-1.5 flex-wrap">
-                <button onclick="setStairPresetType('STRAIGHT')" class="sub-chip px-2 py-1 rounded text-xs font-bold border ${(state.stairPresetType || 'STRAIGHT') === 'STRAIGHT' ? 'active' : 'bg-slate-900 border-slate-700 text-slate-300'}">直階段</button>
-                <button onclick="setStairPresetType('U_SHAPE')" class="sub-chip px-2 py-1 rounded text-xs font-bold border ${state.stairPresetType === 'U_SHAPE' ? 'active' : 'bg-slate-900 border-slate-700 text-slate-300'}">折り返し(コの字)</button>
-                <button onclick="setStairPresetType('L_SHAPE')" class="sub-chip px-2 py-1 rounded text-xs font-bold border ${state.stairPresetType === 'L_SHAPE' ? 'active' : 'bg-slate-900 border-slate-700 text-slate-300'}">かね折れ(L字)</button>
-                <button onclick="rotateStairPreset()" class="px-2 py-1 rounded bg-slate-800 border border-slate-600 text-amber-300 text-xs font-bold"><i class="fa-solid fa-rotate-right"></i> 90°回転(${state.subStairRot || 0}°)</button>
-                <button onclick="toggleStairDirection()" class="px-2 py-1 rounded bg-slate-800 border border-slate-600 text-cyan-300 text-xs font-bold">${state.subStairDirection === 'DOWN' ? '⬇ 降りる' : '⬆ 上る'}</button>
-                <select onchange="state.stairStyle=this.value;" class="bg-slate-900 text-emerald-300 border border-slate-700 rounded px-2 py-1 text-xs font-bold">
-                    <option value="box" ${state.stairStyle === 'box' ? 'selected' : ''}>ボックス階段</option>
-                    <option value="open" ${state.stairStyle === 'open' ? 'selected' : ''}>オープン階段</option>
-                </select>
-                <select onchange="state.stairHandrail=this.value;" class="bg-slate-900 text-amber-200 border border-slate-700 rounded px-2 py-1 text-xs font-bold">
-                    <option value="both" ${state.stairHandrail === 'both' ? 'selected' : ''}>手すり: 両方</option>
-                    <option value="left" ${state.stairHandrail === 'left' ? 'selected' : ''}>手すり: 左</option>
-                    <option value="right" ${state.stairHandrail === 'right' ? 'selected' : ''}>手すり: 右</option>
-                    <option value="none" ${state.stairHandrail === 'none' ? 'selected' : ''}>手すり: なし</option>
-                </select>
+                <!-- モード切替タブ: 定型ポン置き / 一辺ずつ描く（マニュアル完全同期） -->
+                <div class="flex items-center rounded-lg bg-slate-950 p-0.5 border border-slate-700 mr-1 shadow-inner">
+                    <button type="button" onclick="setStairDrawMode('preset')" class="px-2 py-0.5 rounded text-[11px] font-bold transition ${!isFree ? 'bg-cyan-600 text-white shadow' : 'text-slate-400 hover:text-white'}">定型ポン置き</button>
+                    <button type="button" onclick="setStairDrawMode('free')" class="px-2 py-0.5 rounded text-[11px] font-bold transition ${isFree ? 'bg-cyan-600 text-white shadow' : 'text-slate-400 hover:text-white'}">一辺ずつ描く</button>
+                </div>
+                ${isFree ? `
+                    <span class="text-xs text-amber-300 font-bold flex items-center gap-1"><i class="fa-solid fa-pen"></i>図面上をタップして角を指定（2点以上で作成）</span>
+                    ${(state.stairDrawingPoints && state.stairDrawingPoints.length >= 2) ? `
+                        <button type="button" onclick="openStairModal()" class="px-2.5 py-1 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow flex items-center gap-1"><i class="fa-solid fa-check"></i>階段作成 (${state.stairDrawingPoints.length}点)</button>
+                    ` : ''}
+                    ${(state.stairDrawingPoints && state.stairDrawingPoints.length > 0) ? `
+                        <button type="button" onclick="cancelStairDrawing()" class="px-2 py-0.5 rounded bg-slate-800 text-slate-400 hover:text-white text-xs border border-slate-700">リセット</button>
+                    ` : ''}
+                ` : `
+                    <button type="button" onclick="setStairPresetType('STRAIGHT')" class="sub-chip px-2 py-1 rounded text-xs font-bold border ${(state.stairPresetType || 'STRAIGHT') === 'STRAIGHT' ? 'active' : 'bg-slate-900 border-slate-700 text-slate-300'}">直階段</button>
+                    <button type="button" onclick="setStairPresetType('U_SHAPE')" class="sub-chip px-2 py-1 rounded text-xs font-bold border ${state.stairPresetType === 'U_SHAPE' ? 'active' : 'bg-slate-900 border-slate-700 text-slate-300'}">折り返し(コの字)</button>
+                    <button type="button" onclick="setStairPresetType('L_SHAPE')" class="sub-chip px-2 py-1 rounded text-xs font-bold border ${state.stairPresetType === 'L_SHAPE' ? 'active' : 'bg-slate-900 border-slate-700 text-slate-300'}">かね折れ(L字)</button>
+                    <button type="button" onclick="rotateStairPreset()" class="px-2 py-1 rounded bg-slate-800 border border-slate-600 text-amber-300 text-xs font-bold"><i class="fa-solid fa-rotate-right"></i> 90°回転(${state.subStairRot || 0}°)</button>
+                    <button type="button" onclick="toggleStairDirection()" class="px-2 py-1 rounded bg-slate-800 border border-slate-600 text-cyan-300 text-xs font-bold">${state.subStairDirection === 'DOWN' ? '⬇ 降りる' : '⬆ 上る'}</button>
+                    <select onchange="state.stairWidthMm=parseInt(this.value,10);if(typeof renderSubToolbar==='function')renderSubToolbar();" class="bg-slate-900 text-cyan-300 border border-slate-700 rounded px-2 py-1 text-xs font-bold" title="階段幅">
+                        <option value="910" ${(state.stairWidthMm || 910) === 910 ? 'selected' : ''}>幅: 910mm</option>
+                        <option value="1000" ${state.stairWidthMm === 1000 ? 'selected' : ''}>幅: 1000mm</option>
+                        <option value="780" ${state.stairWidthMm === 780 ? 'selected' : ''}>幅: 780mm</option>
+                    </select>
+                    <select onchange="state.stairTurnSpec=this.value;" class="bg-slate-900 text-amber-300 border border-slate-700 rounded px-2 py-1 text-xs font-bold" title="廻り部仕様">
+                        <option value="turn_3" ${(state.stairTurnSpec || 'turn_3') === 'turn_3' ? 'selected' : ''}>3段廻り</option>
+                        <option value="turn_2" ${state.stairTurnSpec === 'turn_2' ? 'selected' : ''}>2段廻り</option>
+                        <option value="turn_4" ${state.stairTurnSpec === 'turn_4' ? 'selected' : ''}>4段廻り</option>
+                        <option value="landing" ${state.stairTurnSpec === 'landing' ? 'selected' : ''}>踊り場</option>
+                    </select>
+                    <select onchange="state.stairStyle=this.value;" class="bg-slate-900 text-emerald-300 border border-slate-700 rounded px-2 py-1 text-xs font-bold" title="階段仕様">
+                        <option value="box" ${state.stairStyle === 'box' ? 'selected' : ''}>ボックス階段</option>
+                        <option value="open" ${state.stairStyle === 'open' ? 'selected' : ''}>オープン階段</option>
+                    </select>
+                    <select onchange="state.stairHandrail=this.value;state.handrail=this.value;" class="bg-slate-900 text-amber-200 border border-slate-700 rounded px-2 py-1 text-xs font-bold" title="手すり">
+                        <option value="both" ${(state.stairHandrail || 'both') === 'both' ? 'selected' : ''}>手すり: 両方</option>
+                        <option value="left" ${state.stairHandrail === 'left' ? 'selected' : ''}>手すり: 左</option>
+                        <option value="right" ${state.stairHandrail === 'right' ? 'selected' : ''}>手すり: 右</option>
+                        <option value="none" ${state.stairHandrail === 'none' ? 'selected' : ''}>手すり: なし</option>
+                    </select>
+                `}
             </div>
         `;
     } else if (tool === 'fixture') {
@@ -432,6 +459,7 @@ function renderPropertyInspector() {
                 </div>
             </div>
         `;
+        injectInspectorDragHandle(panel);
         return;
     }
 
@@ -575,45 +603,64 @@ function renderPropertyInspector() {
             </div>
         `;
     } else if (kind === 'stair') {
-        const curType = obj.shapeType || 'U_SHAPE';
+        const curType = obj.shapeType || 'STRAIGHT';
         const curDir = obj.direction || 'UP';
         const curStyle = obj.stairStyle || 'box';
-        const curRail = obj.handrail || 'both';
+        const curRail = obj.stairHandrail || obj.handrail || 'both';
+        const curWidth = obj.widthMm || 910;
+        const curTurn = obj.turnType || 'turn_3';
 
         panel.innerHTML = `
             <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-2">
-                <span class="text-xs font-bold text-amber-300"><i class="fa-solid fa-stairs mr-1.5"></i>階段の仕様・手すり編集</span>
+                <span class="text-xs font-bold text-amber-300"><i class="fa-solid fa-stairs mr-1.5"></i>階段の仕様・寸法・手すり編集</span>
                 <div class="flex items-center gap-1">
-                    <button onclick="deleteSelectedItem()" class="px-2 py-1 rounded bg-rose-600/30 text-[11px] text-rose-200 font-bold">削除</button>
-                    <button onclick="state.selectedItem=null;renderPropertyInspector();request2DRedraw();" class="text-slate-400 hover:text-white px-1.5"><i class="fa-solid fa-xmark"></i></button>
+                    <button type="button" onclick="deleteSelectedItem()" class="px-2 py-1 rounded bg-rose-600/30 text-[11px] text-rose-200 font-bold hover:bg-rose-600/50"><i class="fa-solid fa-trash mr-1"></i>削除</button>
+                    <button type="button" onclick="state.selectedItem=null;renderPropertyInspector();request2DRedraw();" class="text-slate-400 hover:text-white px-1.5"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
             <div class="space-y-2 text-xs">
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="text-[10px] text-slate-400 block">階段タイプ</label>
+                        <label class="text-[10px] text-slate-400 block font-bold">階段タイプ</label>
                         <select onchange="updateSelectedStairShape(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white font-bold">
-                            <option value="U_SHAPE" ${curType === 'U_SHAPE' ? 'selected' : ''}>折り返し(コの字)</option>
-                            <option value="STRAIGHT" ${curType === 'STRAIGHT' ? 'selected' : ''}>直階段(I型)</option>
-                            <option value="L_SHAPE" ${curType === 'L_SHAPE' ? 'selected' : ''}>かね折れ(L型)</option>
+                            <option value="STRAIGHT" ${curType === 'STRAIGHT' ? 'selected' : ''}>直階段 (I型)</option>
+                            <option value="U_SHAPE" ${curType === 'U_SHAPE' ? 'selected' : ''}>折り返し (コの字)</option>
+                            <option value="L_SHAPE" ${curType === 'L_SHAPE' ? 'selected' : ''}>かね折れ (L型)</option>
                         </select>
                     </div>
                     <div>
-                        <label class="text-[10px] text-slate-400 block">昇降方向</label>
+                        <label class="text-[10px] text-slate-400 block font-bold">昇降方向</label>
                         <select onchange="updateSelectedStairDir(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-amber-300 font-bold">
                             <option value="UP" ${curDir === 'UP' ? 'selected' : ''}>⬆ 上る (UP)</option>
                             <option value="DOWN" ${curDir === 'DOWN' ? 'selected' : ''}>⬇ 降りる (DN)</option>
                         </select>
                     </div>
                     <div>
-                        <label class="text-[10px] text-slate-400 block">階段構造仕様</label>
+                        <label class="text-[10px] text-slate-400 block font-bold">階段幅 (マニュアル準拠)</label>
+                        <select onchange="updateSelectedStairSpec('widthMm', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-cyan-300 font-bold">
+                            <option value="910" ${curWidth === 910 ? 'selected' : ''}>910 mm (標準)</option>
+                            <option value="1000" ${curWidth === 1000 ? 'selected' : ''}>1000 mm (広幅)</option>
+                            <option value="780" ${curWidth === 780 ? 'selected' : ''}>780 mm (コンパクト)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-slate-400 block font-bold">廻り部仕様 (マニュアル準拠)</label>
+                        <select onchange="updateSelectedStairSpec('turnType', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-amber-300 font-bold">
+                            <option value="turn_3" ${curTurn === 'turn_3' ? 'selected' : ''}>3段廻り (標準30°)</option>
+                            <option value="turn_2" ${curTurn === 'turn_2' ? 'selected' : ''}>2段廻り (45°)</option>
+                            <option value="turn_4" ${curTurn === 'turn_4' ? 'selected' : ''}>4段廻り (22.5°)</option>
+                            <option value="landing" ${curTurn === 'landing' ? 'selected' : ''}>フラット踊り場</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-slate-400 block font-bold">階段構造仕様</label>
                         <select onchange="updateSelectedStairSpec('stairStyle', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-emerald-300 font-bold">
                             <option value="box" ${curStyle === 'box' ? 'selected' : ''}>ボックス階段</option>
                             <option value="open" ${curStyle === 'open' ? 'selected' : ''}>オープン階段</option>
                         </select>
                     </div>
                     <div>
-                        <label class="text-[10px] text-slate-400 block">手すり配置</label>
+                        <label class="text-[10px] text-slate-400 block font-bold">手すり配置</label>
                         <select onchange="updateSelectedStairSpec('handrail', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-sky-300 font-bold">
                             <option value="both" ${curRail === 'both' ? 'selected' : ''}>両方あり</option>
                             <option value="left" ${curRail === 'left' ? 'selected' : ''}>左のみ</option>
@@ -622,8 +669,9 @@ function renderPropertyInspector() {
                         </select>
                     </div>
                 </div>
-                <button onclick="rotateSelectedStair()" class="w-full py-1.5 rounded-lg bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 font-bold text-xs">
-                    <i class="fa-solid fa-rotate mr-1"></i>向きを90°回転
+                <button type="button" onclick="rotateSelectedStair()" class="w-full py-1.5 rounded-lg bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 font-bold text-xs flex items-center justify-center gap-1.5 transition">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>階段の向きを90°回転</span>
                 </button>
             </div>
         `;
@@ -797,8 +845,234 @@ function renderPropertyInspector() {
             </div>
         `;
     }
+
+    // ドラッグハンドルバーを先頭に注入し、リスナーと位置を適用
+    injectInspectorDragHandle(panel);
 }
 window.renderPropertyInspector = renderPropertyInspector;
+
+// =========================================================================
+// PROPERTY INSPECTOR DRAGGABLE & KEYBOARD AVOIDANCE (for iPad & Mobile/PC)
+// =========================================================================
+let inspectorCustomPos = null; // { left: number, top: number, isTop: boolean, isCustom: boolean }
+let isDraggingInspector = false;
+let dragStartPointer = { x: 0, y: 0 };
+let dragStartPos = { left: 0, top: 0 };
+
+function getInspectorHeaderHtml() {
+    const isTop = inspectorCustomPos ? inspectorCustomPos.isTop : false;
+    return `
+        <div id="inspectorDragHandle" class="flex items-center justify-between pb-1.5 mb-2 border-b border-slate-700/80 cursor-grab active:cursor-grabbing select-none text-[11px] text-slate-300" style="touch-action: none;">
+            <div class="flex items-center gap-1.5 font-bold text-amber-400">
+                <i class="fa-solid fa-grip-vertical text-amber-400"></i>
+                <span class="text-slate-200">ドラッグで移動</span>
+            </div>
+            <div class="flex items-center gap-1">
+                <button type="button" onclick="toggleInspectorPosition()" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-sky-300 hover:text-white text-[10px] font-bold flex items-center gap-1 border border-slate-700 shadow-sm" title="画面の上部／下部へワンタップ移動">
+                    <i class="fa-solid fa-arrows-up-down"></i> <span id="lblInspectorPos">${isTop ? '下部へ' : '上部へ'}</span>
+                </button>
+                <button type="button" onclick="resetInspectorPosition()" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[10px] border border-slate-700 shadow-sm" title="初期位置にリセット">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </button>
+                <button type="button" onclick="showKeyboardHintModal()" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 text-[10px] font-bold border border-amber-500/40 shadow-sm flex items-center gap-1" title="iPadキーボード操作のヒント">
+                    <i class="fa-regular fa-keyboard"></i> <span>ヒント</span>
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+function applyInspectorPosition(panel) {
+    if (!panel) return;
+    if (inspectorCustomPos && inspectorCustomPos.isCustom) {
+        panel.style.bottom = 'auto';
+        panel.style.top = `${inspectorCustomPos.top}px`;
+        panel.style.left = `${inspectorCustomPos.left}px`;
+    } else {
+        panel.style.bottom = '';
+        panel.style.top = '';
+        panel.style.left = '';
+    }
+}
+
+function toggleInspectorPosition() {
+    const panel = document.getElementById('propertyInspector');
+    if (!panel) return;
+    const isTop = inspectorCustomPos ? inspectorCustomPos.isTop : false;
+    const parent = panel.offsetParent || document.body;
+    const parentRect = parent.getBoundingClientRect();
+    const panelRect = panel.getBoundingClientRect();
+    
+    const curLeft = inspectorCustomPos && inspectorCustomPos.isCustom ? inspectorCustomPos.left : (panel.offsetLeft || 162);
+    
+    if (!isTop) {
+        // Move to Top
+        const targetTop = 16;
+        inspectorCustomPos = {
+            left: Math.max(10, Math.min(curLeft, parentRect.width - panelRect.width - 10)),
+            top: targetTop,
+            isTop: true,
+            isCustom: true
+        };
+    } else {
+        // Move to Bottom
+        const targetTop = Math.max(16, parentRect.height - panelRect.height - 48);
+        inspectorCustomPos = {
+            left: Math.max(10, Math.min(curLeft, parentRect.width - panelRect.width - 10)),
+            top: targetTop,
+            isTop: false,
+            isCustom: true
+        };
+    }
+    applyInspectorPosition(panel);
+    const lbl = document.getElementById('lblInspectorPos');
+    if (lbl) lbl.textContent = inspectorCustomPos.isTop ? '下部へ' : '上部へ';
+}
+window.toggleInspectorPosition = toggleInspectorPosition;
+
+function resetInspectorPosition() {
+    const panel = document.getElementById('propertyInspector');
+    inspectorCustomPos = null;
+    if (panel) {
+        panel.style.bottom = '';
+        panel.style.top = '';
+        panel.style.left = '';
+        const lbl = document.getElementById('lblInspectorPos');
+        if (lbl) lbl.textContent = '上部へ';
+    }
+}
+window.resetInspectorPosition = resetInspectorPosition;
+
+function liftInspectorAboveKeyboard() {
+    const panel = document.getElementById('propertyInspector');
+    if (!panel) return;
+    const rect = panel.getBoundingClientRect();
+    const vh = window.innerHeight;
+    // パネルの下端が画面下半分（キーボード領域: 55%以降）にあれば自動で上部へリフトアップ
+    if (rect.bottom > vh * 0.55) {
+        const parent = panel.offsetParent || document.body;
+        const parentRect = parent.getBoundingClientRect();
+        const panelRect = panel.getBoundingClientRect();
+        const curLeft = inspectorCustomPos && inspectorCustomPos.isCustom ? inspectorCustomPos.left : (panel.offsetLeft || 162);
+        inspectorCustomPos = {
+            left: Math.max(10, Math.min(curLeft, parentRect.width - panelRect.width - 10)),
+            top: 16,
+            isTop: true,
+            isCustom: true
+        };
+        applyInspectorPosition(panel);
+        const lbl = document.getElementById('lblInspectorPos');
+        if (lbl) lbl.textContent = '下部へ';
+    }
+}
+window.liftInspectorAboveKeyboard = liftInspectorAboveKeyboard;
+
+function showKeyboardHintModal() {
+    const modal = document.getElementById('keyboardHintModal');
+    if (modal) modal.classList.remove('hidden');
+}
+window.showKeyboardHintModal = showKeyboardHintModal;
+
+function closeKeyboardHintModal() {
+    const modal = document.getElementById('keyboardHintModal');
+    if (modal) modal.classList.add('hidden');
+}
+window.closeKeyboardHintModal = closeKeyboardHintModal;
+
+function initInspectorDraggable(panel) {
+    if (!panel || panel.__draggableInited) return;
+    panel.__draggableInited = true;
+
+    // input, select, textarea にフォーカスが入った際のキーボード回避
+    panel.addEventListener('focusin', (e) => {
+        if (['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) {
+            liftInspectorAboveKeyboard();
+        }
+    });
+
+    const onPointerDown = (e) => {
+        const handle = e.target.closest('#inspectorDragHandle');
+        if (!handle) return;
+        // ボタン類をクリックした場合はドラッグ開始しない
+        if (e.target.closest('button')) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        isDraggingInspector = true;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        dragStartPointer = { x: clientX, y: clientY };
+
+        const parent = panel.offsetParent || document.body;
+        const curLeft = panel.offsetLeft;
+        const curTop = panel.offsetTop;
+        dragStartPos = { left: curLeft, top: curTop };
+
+        panel.style.bottom = 'auto';
+        panel.style.top = `${curTop}px`;
+        panel.style.left = `${curLeft}px`;
+        panel.style.transition = 'none';
+
+        const onPointerMove = (ev) => {
+            if (!isDraggingInspector) return;
+            ev.preventDefault();
+            ev.stopPropagation();
+
+            const moveX = ev.touches ? ev.touches[0].clientX : ev.clientX;
+            const moveY = ev.touches ? ev.touches[0].clientY : ev.clientY;
+            const dx = moveX - dragStartPointer.x;
+            const dy = moveY - dragStartPointer.y;
+
+            const parentRect = parent.getBoundingClientRect();
+            const panelRect = panel.getBoundingClientRect();
+            const parentWidth = parentRect.width;
+            const parentHeight = parentRect.height;
+
+            const newLeft = Math.max(8, Math.min(dragStartPos.left + dx, parentWidth - panelRect.width - 8));
+            const newTop = Math.max(8, Math.min(dragStartPos.top + dy, parentHeight - panelRect.height - 8));
+
+            panel.style.left = `${newLeft}px`;
+            panel.style.top = `${newTop}px`;
+
+            inspectorCustomPos = {
+                left: newLeft,
+                top: newTop,
+                isTop: newTop < parentHeight * 0.4,
+                isCustom: true
+            };
+            const lbl = document.getElementById('lblInspectorPos');
+            if (lbl) lbl.textContent = inspectorCustomPos.isTop ? '下部へ' : '上部へ';
+        };
+
+        const onPointerUp = (ev) => {
+            isDraggingInspector = false;
+            panel.style.transition = '';
+            window.removeEventListener('mousemove', onPointerMove);
+            window.removeEventListener('mouseup', onPointerUp);
+            window.removeEventListener('touchmove', onPointerMove);
+            window.removeEventListener('touchend', onPointerUp);
+            window.removeEventListener('touchcancel', onPointerUp);
+        };
+
+        window.addEventListener('mousemove', onPointerMove, { passive: false });
+        window.addEventListener('mouseup', onPointerUp);
+        window.addEventListener('touchmove', onPointerMove, { passive: false });
+        window.addEventListener('touchend', onPointerUp);
+        window.addEventListener('touchcancel', onPointerUp);
+    };
+
+    panel.addEventListener('mousedown', onPointerDown);
+    panel.addEventListener('touchstart', onPointerDown, { passive: false });
+}
+
+function injectInspectorDragHandle(panel) {
+    if (!panel) return;
+    panel.insertAdjacentHTML('afterbegin', getInspectorHeaderHtml());
+    initInspectorDraggable(panel);
+    applyInspectorPosition(panel);
+}
+
 
 function changeSelectedWallType(newWallType) {
     const obj = findSelectedObject();
@@ -878,12 +1152,53 @@ window.updateSelectedBox3D = updateSelectedBox3D;
 
 function updateSelectedStairSpec(prop, val) {
     const obj = findSelectedObject();
-    if (!obj || state.selectedItem.kind !== 'stair') return;
-    obj[prop] = val;
+    if (!obj || !state.selectedItem || state.selectedItem.kind !== 'stair') return;
+    if (prop === 'widthMm') {
+        const wMm = parseInt(val, 10) || 910;
+        obj.widthMm = wMm;
+        const pitch = state.modulePitch || 910;
+        const widthP = +(wMm / pitch).toFixed(3);
+        if (obj.w <= obj.h) {
+            obj.w = widthP;
+        } else {
+            obj.h = widthP;
+        }
+    } else if (prop === 'turnType') {
+        obj.turnType = val;
+    } else if (prop === 'stairStyle') {
+        obj.stairStyle = val;
+    } else if (prop === 'handrail') {
+        obj.stairHandrail = val;
+        obj.handrail = val;
+    } else {
+        obj[prop] = val;
+    }
     saveHistorySnapshot();
+    request2DRedraw();
+    if (typeof rebuild3DScene === 'function') rebuild3DScene();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     showToast('階段仕様を更新しました');
 }
 window.updateSelectedStairSpec = updateSelectedStairSpec;
+
+function setStairDrawMode(mode) {
+    state.stairDrawMode = mode;
+    state.stairDrawingPoints = [];
+    state.stairTempCurPoint = null;
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
+    request2DRedraw();
+    showToast(mode === 'free' ? '階段：一辺ずつ描くモード（図面上をタップして角を指定）' : '階段：定型ポン置きモード');
+}
+window.setStairDrawMode = setStairDrawMode;
+
+function cancelStairDrawing() {
+    state.stairDrawingPoints = [];
+    state.stairTempCurPoint = null;
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
+    request2DRedraw();
+    showToast('階段の頂点指定をリセットしました');
+}
+window.cancelStairDrawing = cancelStairDrawing;
 
 function objMemoUpdateText(val) {
     const obj = findSelectedObject();

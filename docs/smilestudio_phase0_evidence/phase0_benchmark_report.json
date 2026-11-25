@@ -1,0 +1,106 @@
+{
+  "timestamp": "2026-11-24 16:43:20",
+  "condition": "business_apps_running",
+  "system_stats": {
+    "system": {
+      "os": "win32",
+      "ram_total": 68390989824,
+      "ram_free": 19944960000,
+      "comfyui_version": "0.46.0",
+      "required_frontend_version": "1.59.11",
+      "installed_templates_version": "0.11.118",
+      "required_templates_version": "0.11.118",
+      "comfy_package_versions": [
+        {
+          "name": "comfyui-frontend-package",
+          "installed": "1.59.11",
+          "required": "1.59.11"
+        },
+        {
+          "name": "comfyui-workflow-templates",
+          "installed": "0.11.118",
+          "required": "0.11.118"
+        },
+        {
+          "name": "comfyui-embedded-docs",
+          "installed": "0.5.17",
+          "required": "0.5.17"
+        },
+        {
+          "name": "comfy-aimdo",
+          "installed": "0.6.0",
+          "required": "0.6.0"
+        },
+        {
+          "name": "comfy-kitchen",
+          "installed": "0.2.42",
+          "required": "0.2.42"
+        }
+      ],
+      "python_version": "3.10.8 (tags/v3.10.8:aaaf517, Oct 11 2022, 16:50:30) [MSC v.1933 64 bit (AMD64)]",
+      "pytorch_version": "2.14.1+cu126",
+      "embedded_python": false,
+      "deploy_environment": "local-git",
+      "argv": [
+        "main.py",
+        "--listen",
+        "127.0.0.1",
+        "--port",
+        "8188",
+        "--lowvram",
+        "--force-fp16"
+      ]
+    },
+    "devices": [
+      {
+        "name": "cuda:0 NVIDIA GeForce RTX 4060 Ti : cudaMallocAsync",
+        "type": "cuda",
+        "index": 0,
+        "vram_total": 8585216000,
+        "vram_free": 5572744796,
+        "torch_vram_total": 33554432,
+        "torch_vram_free": 22632028
+      }
+    ]
+  },
+  "runs": {
+    "standard_1024": {
+      "workflow": "sdxl_depth_1024.json",
+      "prompt_id": "afaadd30-5be8-49f0-81e0-2b200749d800",
+      "status": "success",
+      "elapsed_sec": 0.3,
+      "vram_total_mib": 8188,
+      "vram_before_mib": 6473,
+      "vram_after_mib": 6472,
+      "vram_peak_mib": 6473,
+      "vram_samples": 1,
+      "output_files": [
+        "C:\\ComfyUI\\output\\phase0_1024_00001_.png"
+      ],
+      "output_size": [
+        1024,
+        768
+      ]
+    },
+    "upscale_2k": {
+      "workflow": "sdxl_upscale_2k.json",
+      "prompt_id": "d368f283-dc77-470b-b6fd-1db97129d019",
+      "status": "success",
+      "elapsed_sec": 145.5,
+      "vram_total_mib": 8188,
+      "vram_before_mib": 6472,
+      "vram_after_mib": 6761,
+      "vram_peak_mib": 7504,
+      "vram_samples": 259,
+      "output_files": [
+        "C:\\ComfyUI\\output\\phase0_2k_00001_.png"
+      ],
+      "output_size": [
+        2048,
+        1536
+      ],
+      "seam_crop": "C:\\ComfyUI\\benchmark_results\\bench_2k_seam_crop.png"
+    }
+  },
+  "total_1024_plus_2k_sec": 145.8
+}
