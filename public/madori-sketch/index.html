@@ -252,7 +252,7 @@
                             style="font-size: 1.05rem; font-weight: 900; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">家づくりAIラボ</span>
                         <span
                             style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 5px; border-radius: 4px; font-weight: 800;">3D間取り工房
-                            v2.33</span>
+                            v2.34</span>
                     </a>
                     <div
                         class="hidden xl:inline-flex items-center gap-1.5 text-[11px] text-slate-300 bg-black/30 border border-white/15 px-2 py-0.5 rounded">
@@ -293,21 +293,38 @@
         <!-- ========================================================================= -->
         <header id="madori-app-header"
             class="h-11 bg-zinc-700 border-b border-zinc-800 px-2 flex items-center justify-between z-30 shrink-0 gap-1.5 overflow-x-auto">
-            <!-- Left: Home / Plan Title / Pin Lock -->
-            <div class="flex items-center gap-1.5 shrink-0">
-                <button onclick="openPresetModal()" title="プラン一覧・家カルテ復元・JSON読込"
-                    class="h-8 px-2 rounded bg-zinc-800 hover:bg-zinc-600 border border-amber-500/50 flex items-center justify-center gap-1 text-amber-300 text-[11px] font-bold shadow-inner whitespace-nowrap">
-                    <i class="fa-solid fa-folder-open text-xs text-amber-400"></i>
-                    <span class="hidden sm:inline">読込・復元</span>
-                </button>
-                <button onclick="createNewPlan()" title="白紙から新規作成（別プランとして開始）"
-                    class="h-8 px-2 rounded bg-sky-700/80 hover:bg-sky-600 border border-sky-400/50 flex items-center justify-center gap-1 text-white text-[11px] font-bold shadow-inner whitespace-nowrap">
-                    <i class="fa-solid fa-file-circle-plus text-xs text-sky-200"></i>
-                    <span class="hidden sm:inline">新規</span>
-                </button>
-                <div class="flex flex-col bg-zinc-800/90 border border-zinc-600 rounded px-2 py-0.5 min-w-[125px]">
+            <!-- Left: File / Save / New / Export Unified Group + Plan Title / Pin Lock -->
+            <div class="flex items-center gap-1 shrink-0">
+                <div class="flex items-center gap-1 bg-zinc-800 p-0.5 rounded border border-zinc-600">
+                    <button onclick="openPresetModal()" title="プラン一覧・家カルテ復元・JSON/FBX読込"
+                        class="h-7 px-2 rounded bg-zinc-700 hover:bg-zinc-600 border border-amber-500/50 flex items-center justify-center gap-1 text-amber-300 text-[11px] font-bold shadow-inner whitespace-nowrap">
+                        <i class="fa-solid fa-folder-open text-xs text-amber-400"></i>
+                        <span class="hidden sm:inline">読込・復元</span>
+                    </button>
+                    <button onclick="openSaveDestinationModal()" title="保存先を選択（家カルテ / 別の場所へJSON保存＋家カルテ同時保存）"
+                        class="h-7 px-2 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold flex items-center justify-center gap-1 whitespace-nowrap">
+                        <i class="fa-solid fa-floppy-disk text-xs"></i>
+                        <span class="hidden sm:inline">保存</span>
+                    </button>
+                    <button onclick="createNewPlan()" title="白紙から新規作成（別プランとして開始）"
+                        class="h-7 px-2 rounded bg-sky-700/80 hover:bg-sky-600 border border-sky-400/50 flex items-center justify-center gap-1 text-white text-[11px] font-bold shadow-inner whitespace-nowrap">
+                        <i class="fa-solid fa-file-circle-plus text-xs text-sky-200"></i>
+                        <span class="hidden sm:inline">新規</span>
+                    </button>
+                    <button onclick="exportDXF()" title="Jw_cad等のCAD向けにレイヤ分けされたDXF図面データ（単位mm）を書き出します"
+                        class="h-7 px-2 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold flex items-center justify-center gap-1 whitespace-nowrap">
+                        <i class="fa-solid fa-compass-drafting text-xs"></i>
+                        <span class="hidden xl:inline">DXF</span>
+                    </button>
+                    <button onclick="openScalePdfModal()" title="A3/A4・縮尺指定（1/50, 1/60, 1/100）のタイトル欄・面積表つき図面PDFを出力します"
+                        class="h-7 px-2 rounded bg-amber-600 hover:bg-amber-500 text-slate-950 text-[11px] font-extrabold flex items-center justify-center gap-1 whitespace-nowrap">
+                        <i class="fa-solid fa-file-pdf text-xs"></i>
+                        <span class="hidden xl:inline">縮尺PDF</span>
+                    </button>
+                </div>
+                <div class="flex flex-col bg-zinc-800/90 border border-zinc-600 rounded px-2 py-0.5 min-w-[120px]">
                     <input id="planTitleInput" type="text" value="07邸 吹抜けがある" onchange="updatePlanTitle(this.value)"
-                        class="bg-transparent text-[11px] font-bold text-white focus:outline-none w-32"
+                        class="bg-transparent text-[11px] font-bold text-white focus:outline-none w-28"
                         title="物件名称・プラン名（タップして編集可能）" />
                     <span id="txtCaseId" class="text-[9px] text-amber-300 font-mono leading-none">新規プラン</span>
                 </div>
@@ -382,25 +399,10 @@
                 </button>
             </div>
 
-            <!-- Right Controls: SaveFormat / DXF / PDF / Undo-Redo / Ruler / DesignerMode / Grid 1-6 / Manual / Fullscreen -->
+            <!-- Right Controls: Camera Sketch / Undo-Redo / Ruler / DesignerMode / Grid 1-6 / Manual / Fullscreen -->
             <div class="flex items-center gap-1.5 shrink-0">
-                <!-- 保存形式・家カルテ保存・DXF書き出し・縮尺PDF出力 -->
+                <!-- 画面カメラ撮影（保存・新規・DXF・縮尺PDFはヘッダー左側に統一） -->
                 <div class="flex items-center gap-1 bg-zinc-800 p-0.5 rounded border border-zinc-600">
-                    <button onclick="openSaveDestinationModal()" title="保存先を選択（家カルテ / 別の場所へ保存＋家カルテ同時保存）"
-                        class="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1">
-                        <i class="fa-solid fa-arrow-up-from-bracket"></i>
-                        <span class="hidden md:inline">保存</span>
-                    </button>
-                    <button onclick="exportDXF()" title="Jw_cad・ARCHITREND等のCAD向けにレイヤ分けされたDXF図面データ（単位mm）を書き出します"
-                        class="px-2 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-1">
-                        <i class="fa-solid fa-compass-drafting"></i>
-                        <span class="hidden xl:inline">DXF</span>
-                    </button>
-                    <button onclick="openScalePdfModal()" title="A3/A4・縮尺指定（1/50, 1/60, 1/100）のタイトル欄・面積表つき図面PDFを出力します"
-                        class="px-2 py-1 rounded bg-amber-600 hover:bg-amber-500 text-slate-950 text-xs font-extrabold flex items-center gap-1">
-                        <i class="fa-solid fa-file-pdf"></i>
-                        <span class="hidden xl:inline">縮尺PDF</span>
-                    </button>
                     <button onclick="captureCurrentScreenForSketch()" title="画面をカメラ撮影してペン書き込み・画像保存"
                         class="px-2 py-1 rounded bg-zinc-700 hover:bg-zinc-600 text-amber-300 text-xs font-bold flex items-center gap-1">
                         <i class="fa-solid fa-camera"></i>
@@ -696,6 +698,18 @@
                                 </svg>
                                 <span class="text-[8px] leading-none">上げ下げ</span>
                             </button>
+                            <button id="tool_sash_kaikou" onclick="selectTool('opening', 'kaikou')"
+                                class="tool-btn py-1.5 px-0.5 rounded flex flex-col items-center gap-1"
+                                title="階段登りきりや通路用の扉なし開口（壁をくり抜いて通り抜け可能にします）">
+                                <svg width="30" height="14" viewBox="0 0 30 14" stroke="currentColor" fill="none"
+                                    stroke-width="1.5">
+                                    <line x1="5" y1="2" x2="5" y2="12" />
+                                    <line x1="25" y1="2" x2="25" y2="12" />
+                                    <line x1="5" y1="4" x2="25" y2="4" stroke-dasharray="2,2" />
+                                    <line x1="5" y1="10" x2="25" y2="10" stroke-dasharray="2,2" />
+                                </svg>
+                                <span class="text-[8px] leading-none text-cyan-200">開口のみ</span>
+                            </button>
                         </div>
 
                         <!-- その他ツール (階段 / 設備・家具 / 吹き抜け / 玄関土間 / 小上り / 畳 / 中庭 / 直方体 / 部屋枠) -->
@@ -745,6 +759,12 @@
                                 class="tool-btn py-1.5 px-0.5 rounded flex flex-col items-center gap-1">
                                 <i class="fa-solid fa-cube text-xs text-indigo-300"></i>
                                 <span class="text-[9px] leading-none">直方体</span>
+                            </button>
+                            <button id="tool_room_stair" onclick="selectTool('room', 'STAIR')"
+                                class="tool-btn py-1.5 px-0.5 rounded flex flex-col items-center gap-1"
+                                title="2階の階段室（2階床面積に算入しつつ3Dの2階床スラブを自動開口し、周囲に壁・腰壁・開口部を設置可能）">
+                                <i class="fa-solid fa-stairs text-xs text-amber-300"></i>
+                                <span class="text-[9px] leading-none text-amber-200">階段室</span>
                             </button>
                             <button id="tool_room" onclick="selectTool('room')"
                                 class="tool-btn py-1.5 px-0.5 rounded flex flex-col items-center gap-1">
@@ -1029,6 +1049,40 @@
                                 <button id="btnCam_section" onclick="set3DCameraPreset('section')"
                                     class="px-1.5 py-1 rounded bg-zinc-800 hover:bg-amber-500 hover:text-slate-950 text-[10px] font-bold text-slate-200 transition">🔪
                                     断面図</button>
+                            </div>
+
+                            <!-- 基礎高さ・土台水切り 3D設定パネル -->
+                            <div class="border-t border-zinc-700/80 my-0.5"></div>
+                            <div class="bg-zinc-900/90 p-1.5 rounded-lg border border-zinc-700/90 space-y-1">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] font-bold text-amber-300">🧱 基礎高・水切り</span>
+                                    <button id="btnMizukiriToggle3D" type="button" onclick="toggleMizukiri3D()"
+                                        class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-600 text-white border border-emerald-400 shadow transition"
+                                        title="基礎天端と1F外壁下端の間の土台水切り板金の表示ON/OFF">水切り: ON</button>
+                                </div>
+                                <div class="flex items-center justify-between gap-1">
+                                    <span class="text-[9px] text-slate-300 shrink-0">基礎高:</span>
+                                    <select id="selFoundationHeight3D" onchange="updateFoundationHeight3D(this.value)"
+                                        class="flex-1 bg-zinc-950 border border-zinc-700 rounded px-1 py-0.5 text-[10px] text-cyan-300 font-bold">
+                                        <option value="0">0mm (なし)</option>
+                                        <option value="300">300mm (低基礎)</option>
+                                        <option value="400" selected>400mm (標準)</option>
+                                        <option value="450">450mm (高基礎)</option>
+                                        <option value="500">500mm</option>
+                                        <option value="600">600mm (深基礎)</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center justify-between gap-1">
+                                    <span class="text-[9px] text-slate-300 shrink-0">水切り色:</span>
+                                    <select id="selMizukiriColor3D" onchange="updateMizukiriColor3D(this.value)"
+                                        class="flex-1 bg-zinc-950 border border-zinc-700 rounded px-1 py-0.5 text-[10px] text-slate-200 font-bold">
+                                        <option value="#334155" selected>ダークグレー</option>
+                                        <option value="#1e293b">ブラック</option>
+                                        <option value="#94a3b8">シルバー</option>
+                                        <option value="#785c44">ブロンズ</option>
+                                        <option value="#e2e8f0">ホワイト</option>
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="border-t border-zinc-700/80 my-0.5"></div>
@@ -1444,49 +1498,46 @@
                     <i class="fa-solid fa-chevron-right text-emerald-400 text-xs"></i>
                 </button>
 
-                <button onclick="clearAllPlan(); closePresetModal();"
-                    class="w-full p-2.5 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 border border-rose-500/40 flex items-center justify-between text-left transition">
-                    <div>
-                        <div class="text-xs font-bold text-rose-200">白紙から新規作成 (全階クリア)</div>
-                        <div class="text-[10px] text-slate-400 mt-0.5">すべての部屋・壁・建具・設備・メモ注釈を消去してゼロから作図します</div>
-                    </div>
-                    <i class="fa-solid fa-trash-can text-rose-400 text-xs"></i>
-                </button>
-
                 <div class="border-t border-slate-700 pt-2 mt-2">
                     <label class="flex items-center gap-2 text-[11px] text-slate-300 cursor-pointer select-none mb-2">
                         <input id="chkAutoDetectRoomsOnImport" type="checkbox" checked
                             class="rounded border-slate-600 bg-slate-800 text-emerald-500">
                         <span>JSON読込時に部屋が空の階は壁から部屋を自動認識する（壁のみJSON対応）</span>
                     </label>
+                    <!-- iPad等でDropboxフォルダを開かずに703プラン番号またはJSON文字列から即座に読み込めるダイレクト入力バー -->
+                    <div class="bg-slate-900/90 border border-emerald-500/40 rounded-xl p-2 mb-2.5">
+                        <div class="text-[10px] font-bold text-emerald-300 mb-1 flex items-center gap-1">
+                            <i class="fa-solid fa-bolt"></i>
+                            <span>プラン番号（703プラン）またはJSON直接貼付で即読込（Dropbox不要）</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <input id="directPlanIdInput" type="text" placeholder="例: 2387-P01 / PLAN-2404-P05 / JSON貼付"
+                                onkeydown="if(event.key==='Enter'){event.preventDefault();loadServerPlanById(this.value);}"
+                                class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-bold placeholder-slate-500">
+                            <button type="button" onclick="loadServerPlanById(document.getElementById('directPlanIdInput').value)"
+                                class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shrink-0 shadow">
+                                読込
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                    <button onclick="exportJSON()"
-                        class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-600 flex items-center justify-center gap-1">
-                        <i class="fa-solid fa-download text-sky-400"></i><span>JSON保存</span>
-                    </button>
+                <div class="grid grid-cols-2 gap-2">
+                    <div
+                        class="relative overflow-hidden py-2 px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-emerald-500/60 flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-upload text-emerald-400"></i><span>JSONファイル読込</span>
+                        <input id="jsonFileInput" type="file" onchange="importJSON(event)" onclick="this.value=''"
+                            style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;"
+                            title="JSONファイルを選択（iPad/Dropbox完全対応）">
+                    </div>
                     <label
-                        class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-600 flex items-center justify-center gap-1 cursor-pointer">
-                        <i class="fa-solid fa-upload text-emerald-400"></i><span>JSON読込</span>
-                        <input type="file" accept=".json,application/json,text/plain,*/*" onchange="importJSON(event)"
-                            class="hidden">
-                    </label>
-                    <button onclick="closePresetModal(); exportDXF();"
-                        class="py-1.5 px-2 rounded-lg bg-indigo-900/60 hover:bg-indigo-800/80 text-xs font-bold text-indigo-200 border border-indigo-500/50 flex items-center justify-center gap-1"
-                        title="Jw_cad / ARCHITREND 用 DXFファイル（単位mm・レイヤ分け済）を書き出し">
-                        <i class="fa-solid fa-compass-drafting text-indigo-300"></i><span>DXF出力</span>
-                    </button>
-                    <button onclick="closePresetModal(); openScalePdfModal();"
-                        class="py-1.5 px-2 rounded-lg bg-amber-600/30 hover:bg-amber-600/50 text-xs font-bold text-amber-200 border border-amber-500/50 flex items-center justify-center gap-1"
-                        title="A3/A4・縮尺指定の図面PDF出力">
-                        <i class="fa-solid fa-file-pdf text-amber-300"></i><span>縮尺PDF</span>
-                    </button>
-                    <label
-                        class="py-1.5 px-2 rounded-lg bg-sky-900/50 hover:bg-sky-800/70 text-xs font-semibold text-sky-200 border border-sky-500/50 flex items-center justify-center gap-1 cursor-pointer"
-                        title="アーキトレンド等から書き出した3D FBXモデルを読み込みます（屋根ON/OFF対応・面積集計に影響しません）">
-                        <i class="fa-solid fa-cube text-sky-400"></i><span>FBX読込</span>
+                        class="py-2 px-3 rounded-lg bg-sky-900/50 hover:bg-sky-800/70 text-xs font-semibold text-sky-200 border border-sky-500/50 flex items-center justify-center gap-1.5 cursor-pointer"
+                        title="3D FBXモデルを読み込みます（屋根ON/OFF対応・面積集計に影響しません）">
+                        <i class="fa-solid fa-cube text-sky-400"></i><span>3D FBX読込</span>
                         <input type="file" accept=".fbx" onchange="importArchitrendFBX(event)" class="hidden">
                     </label>
+                </div>
+                <div class="text-[10px] text-slate-400 text-center pt-1">
+                    ※「保存（家カルテ・JSON）」「新規作成」「DXF」「縮尺PDF」は上部ヘッダー左側の統一ボタンからいつでも実行できます
                 </div>
             </div>
         </div>
@@ -1723,20 +1774,20 @@
     </div>
 
     <!-- 単一責任の原則 (SRP) に基づく分離モジュール群 -->
-    <script>window.MADORI_APP_VERSION = '2.33.0';</script>
-    <script src="/madori-sketch/js/constants/manual_data.js?v=202611260951"></script>
-    <script src="/madori-sketch/js/constants/architectural_specs.js?v=202611260951"></script>
-    <script src="/madori-sketch/js/core/app_state.js?v=202611260951"></script>
-    <script src="/madori-sketch/js/core/metrics_calculator.js?v=202611260951"></script>
-    <script src="/madori-sketch/js/io/json_storage.js?v=202611260951"></script>
-    <script src="/madori-sketch/js/io/dxf_pdf_exporter.js?v=202611260951"></script>
-    <script src="/madori-sketch/js/integration/carte_bridge.js?v=202611260951"></script>
-    <script src="/madori-sketch/js/geometry/room_detector.js?v=202611260951"></script>
-    <script src="/madori-sketch/js/renderer/three_3d.js?v=202611260951"></script>
-    <script src="/madori-sketch/js/renderer/canvas_2d_renderer.js?v=202611260951"></script>
-    <script src="/madori-sketch/js/ui/ui_inspector.js?v=202611260951"></script>
-    <script src="/madori-sketch/js/input/input_controller.js?v=202611260951"></script>
-    <script src="/madori-sketch/js/case/case_manager.js?v=202611260951"></script>
+    <script>window.MADORI_APP_VERSION = '2.34.0';</script>
+    <script src="/madori-sketch/js/constants/manual_data.js?v=202611261645"></script>
+    <script src="/madori-sketch/js/constants/architectural_specs.js?v=202611261645"></script>
+    <script src="/madori-sketch/js/core/app_state.js?v=202611261645"></script>
+    <script src="/madori-sketch/js/core/metrics_calculator.js?v=202611261645"></script>
+    <script src="/madori-sketch/js/io/json_storage.js?v=202611261645"></script>
+    <script src="/madori-sketch/js/io/dxf_pdf_exporter.js?v=202611261645"></script>
+    <script src="/madori-sketch/js/integration/carte_bridge.js?v=202611261645"></script>
+    <script src="/madori-sketch/js/geometry/room_detector.js?v=202611261645"></script>
+    <script src="/madori-sketch/js/renderer/three_3d.js?v=202611261645"></script>
+    <script src="/madori-sketch/js/renderer/canvas_2d_renderer.js?v=202611261645"></script>
+    <script src="/madori-sketch/js/ui/ui_inspector.js?v=202611261645"></script>
+    <script src="/madori-sketch/js/input/input_controller.js?v=202611261645"></script>
+    <script src="/madori-sketch/js/case/case_manager.js?v=202611261645"></script>
     <script>
         const ROOM_TYPES = window.ROOM_TYPES;
         const OPENING_TYPES = window.OPENING_TYPES;
@@ -1940,6 +1991,7 @@
                         if (typeof ensureFloorsStructure === 'function') ensureFloorsStructure();
                         if (parsed.modulePitch && typeof setModulePitch === 'function') setModulePitch(parsed.modulePitch);
                         if (parsed.gridDivisions && typeof setGridDivision === 'function') setGridDivision(parsed.gridDivisions);
+                        if (typeof window.syncUpperFloorStairs === 'function') window.syncUpperFloorStairs();
                         if (typeof saveHistorySnapshot === 'function') saveHistorySnapshot();
                         if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
                         if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
@@ -1982,7 +2034,7 @@
 
     <!-- 保存先選択モーダル -->
     <div id="saveDestinationModal"
-        class="hidden fixed inset-0 z-[95] bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4"
+        class="hidden fixed inset-0 z-[100038] bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4"
         onclick="if(event.target===this) closeSaveDestinationModal()">
         <div
             class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-w-md w-full p-5 text-slate-100 space-y-4">

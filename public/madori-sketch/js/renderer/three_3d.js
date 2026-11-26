@@ -365,7 +365,17 @@ function addWhiteModelMesh(geo, mat, x, y, z, addEdges = true) {
     return mesh;
 }
 
-function buildWallWithOpeningCutouts3D(orient, fixedCoordP, startP, endP, baseY, wallHeight, wallThick, floorOpenings, scaleP, matWall) {
+/**
+ * 1階・2階などの外壁・通常壁を開口部くり抜き付きで立体化する。
+ * - wallBottomY: 壁メッシュの下端Y座標（スラブ側面も覆う場合は baseY、通常は floorTopY）
+ * - wallHeight: 壁メッシュの総高さ（壁下端 wallBottomY から壁上端までの高さ）
+ * - floorTopY: その階の床仕上げ天端Y座標（サッシ・ドアの sillMm 基準高さ）
+ */
+function buildWallWithOpeningCutouts3D(orient, fixedCoordP, startP, endP, wallBottomY, wallHeight, wallThick, floorOpenings, scaleP, matWall, floorTopY = null) {
+    const refFloorTopY = (floorTopY !== null && floorTopY !== undefined) ? floorTopY : wallBottomY;
+    const slabOffset = Math.max(0, refFloorTopY - wallBottomY);
+    const wallTopY = wallBottomY + wallHeight;
+
     const relevantOps = floorOpenings.filter(op => {
         if (op.orient !== orient) return false;
         const opFixed = orient === 'h' ? op.y : op.x;
@@ -385,10 +395,12 @@ function buildWallWithOpeningCutouts3D(orient, fixedCoordP, startP, endP, baseY,
 
         if (orient === 'h') {
             const geo = new THREE.BoxGeometry(lenM + wallThick, hSeg, wallThick);
-            addWhiteModelMesh(geo, matWall, midM, yBottom + hSeg / 2, fixedM, true);
+            const m = addWhiteModelMesh(geo, matWall, midM, yBottom + hSeg / 2, fixedM, true);
+            if (m) m.userData.regionTag = 'wall';
         } else {
             const geo = new THREE.BoxGeometry(wallThick, hSeg, lenM + wallThick);
-            addWhiteModelMesh(geo, matWall, fixedM, yBottom + hSeg / 2, midM, true);
+            const m = addWhiteModelMesh(geo, matWall, fixedM, yBottom + hSeg / 2, midM, true);
+            if (m) m.userData.regionTag = 'wall';
         }
     };
 
@@ -399,27 +411,232 @@ function buildWallWithOpeningCutouts3D(orient, fixedCoordP, startP, endP, baseY,
         const opEnd = Math.min(endP, opCenter + wP / 2);
 
         if (opStart > cursorP) {
-            addSolidSegment(cursorP, opStart, baseY, wallHeight);
+            addSolidSegment(cursorP, opStart, wallBottomY, wallHeight);
         }
 
         const sillM = (op.sillMm || 0) / 1000;
         const hM = (op.heightMm || 2000) / 1000;
-        if (sillM > 0.02 && wallHeight > sillM) {
-            addSolidSegment(opStart, opEnd, baseY, Math.min(sillM, wallHeight));
+        // 窓・建具ともに床仕上げ天端（refFloorTopY + sillM）から高さ hM を正確にくり抜く
+        const cutBottomY = refFloorTopY + sillM;
+        const cutTopY = refFloorTopY + sillM + hM;
+
+        // 開口下部の壁（床スラブ側面＋窓台下の腰壁）
+        const lowerH = Math.min(wallHeight, Math.max(0, cutBottomY - wallBottomY));
+        if (lowerH > 0.02) {
+            addSolidSegment(opStart, opEnd, wallBottomY, lowerH);
         }
 
-        const topStart = sillM + hM;
-        if (wallHeight > topStart + 0.02) {
-            addSolidSegment(opStart, opEnd, baseY + topStart, wallHeight - topStart);
+        // 開口上部の下がり壁（マグサ上〜壁上端まで）
+        if (wallTopY > cutTopY + 0.02) {
+            addSolidSegment(opStart, opEnd, cutTopY, wallTopY - cutTopY);
         }
 
         cursorP = opEnd;
     });
 
     if (cursorP < endP) {
-        addSolidSegment(cursorP, endP, baseY, wallHeight);
+        addSolidSegment(cursorP, endP, wallBottomY, wallHeight);
     }
 }
+
+/**
+ * 1階外周の基礎（コンクリート立ち上がり）および土台水切り（水切り板金）を3D生成する
+ */
+function buildFoundationAndMizukiri3D(fl1Data, scaleP, wallThick, slabHeight) {
+    if (!fl1Data) return;
+    const foundHMm = (typeof state !== 'undefined' && state.foundationHeightMm !== undefined) ? Number(state.foundationHeightMm) : 400;
+    const foundH = Math.max(0, foundHMm / 1000);
+    const showMizukiri = (typeof state !== 'undefined' && state.showMizukiri3D !== undefined) ? !!state.showMizukiri3D : true;
+    const mizukiriHex = (typeof state !== 'undefined' && state.mizukiriColor) ? state.mizukiriColor : '#334155';
+
+    // 地面とグリッドをGL（基礎下端 Y = -foundH）へ同期
+    if (window.groundMesh3d) {
+        window.groundMesh3d.position.y = -foundH - 0.02;
+    }
+    if (window.gridHelper3d) {
+        window.gridHelper3d.position.y = -foundH - 0.005;
+    }
+
+    if (foundH <= 0.005 && !showMizukiri) return;
+
+    const matFoundation = new THREE.MeshLambertMaterial({ color: 0x94a3b8 });
+    const matMizukiri = new THREE.MeshLambertMaterial({ color: new THREE.Color(mizukiriHex) });
+
+    const foundThick = wallThick + 0.02; // 基礎幅 160mm (壁厚140mm + 20mm)
+    const mizuHeight = 0.036;            // 水切り板金高さ 36mm
+    const mizuThick = wallThick + 0.038; // 外壁面から外へ約19mm張り出す水切りプロファイル
+
+    // 1. 各部屋スラブ下のベタ基礎・立ち上がりベース（部屋がある場合）
+    if (foundH > 0.005 && Array.isArray(fl1Data.rooms) && fl1Data.rooms.length > 0) {
+        fl1Data.rooms.forEach(rm => {
+            if (!rm || rm.type === 'VOID' || rm.type === 'NAKANIWA' || rm.type === 'TENJO') return;
+            const wM = rm.w * scaleP;
+            const hM = rm.h * scaleP;
+            const cx = (rm.x + rm.w / 2) * scaleP;
+            const cz = (rm.y + rm.h / 2) * scaleP;
+            const fGeo = new THREE.BoxGeometry(wM + wallThick * 0.9, foundH, hM + wallThick * 0.9);
+            const fMesh = addWhiteModelMesh(fGeo, matFoundation, cx, -foundH / 2, cz, true);
+            if (fMesh) fMesh.userData.regionTag = 'foundation';
+        });
+    }
+
+    // 2. 1階の通常壁セグメント（または壁がない場合は部屋外周）から外周壁を特定して基礎立ち上がり＆土台水切りを生成
+    const wallSegments = [];
+    const normalWalls = (fl1Data.walls || []).filter(w => !w.wallType || w.wallType === 'wall');
+
+    if (normalWalls.length > 0) {
+        normalWalls.forEach(wl => {
+            const isHoriz = Math.abs(wl.y1 - wl.y2) < 0.05;
+            const isVert = Math.abs(wl.x1 - wl.x2) < 0.05;
+            if (isHoriz || isVert) {
+                const startP = isHoriz ? Math.min(wl.x1, wl.x2) : Math.min(wl.y1, wl.y2);
+                const endP = isHoriz ? Math.max(wl.x1, wl.x2) : Math.max(wl.y1, wl.y2);
+                const fixedP = isHoriz ? wl.y1 : wl.x1;
+                if (endP - startP > 0.05) {
+                    wallSegments.push({ orient: isHoriz ? 'h' : 'v', fixedP, startP, endP });
+                }
+            }
+        });
+    } else if (Array.isArray(fl1Data.rooms) && fl1Data.rooms.length > 0) {
+        fl1Data.rooms.forEach(rm => {
+            if (!rm || rm.type === 'VOID' || rm.type === 'NAKANIWA' || rm.type === 'TENJO') return;
+            wallSegments.push(
+                { orient: 'h', fixedP: rm.y, startP: rm.x, endP: rm.x + rm.w },
+                { orient: 'h', fixedP: rm.y + rm.h, startP: rm.x, endP: rm.x + rm.w },
+                { orient: 'v', fixedP: rm.x, startP: rm.y, endP: rm.y + rm.h },
+                { orient: 'v', fixedP: rm.x + rm.w, startP: rm.y, endP: rm.y + rm.h }
+            );
+        });
+    }
+
+    // 外壁判定ヘルパー：その壁セグメントの片側だけに部屋（または建物範囲端）があるか判定
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    wallSegments.forEach(s => {
+        if (s.orient === 'h') {
+            minX = Math.min(minX, s.startP); maxX = Math.max(maxX, s.endP);
+            minY = Math.min(minY, s.fixedP); maxY = Math.max(maxY, s.fixedP);
+        } else {
+            minY = Math.min(minY, s.startP); maxY = Math.max(maxY, s.endP);
+            minX = Math.min(minX, s.fixedP); maxX = Math.max(maxX, s.fixedP);
+        }
+    });
+
+    const isExteriorWallSeg = (seg) => {
+        const rooms = (fl1Data.rooms || []).filter(r => r && r.type !== 'VOID' && r.type !== 'NAKANIWA' && r.type !== 'TENJO');
+        if (rooms.length >= 1) {
+            const mid = (seg.startP + seg.endP) / 2;
+            const probeOffset = 0.25;
+            const pA = seg.orient === 'h' ? { x: mid, y: seg.fixedP - probeOffset } : { x: seg.fixedP - probeOffset, y: mid };
+            const pB = seg.orient === 'h' ? { x: mid, y: seg.fixedP + probeOffset } : { x: seg.fixedP + probeOffset, y: mid };
+            const inRoom = (pt) => rooms.some(r => pt.x >= r.x - 0.05 && pt.x <= r.x + r.w + 0.05 && pt.y >= r.y - 0.05 && pt.y <= r.y + r.h + 0.05);
+            const hasA = inRoom(pA);
+            const hasB = inRoom(pB);
+            if (hasA !== hasB) return true;
+            if (hasA && hasB) return false;
+        }
+        // 部屋が未定義（壁のみ作図中）の場合は外周バウンディングボックス上の壁を外壁とみなす
+        if (seg.orient === 'h') {
+            return Math.abs(seg.fixedP - minY) < 0.15 || Math.abs(seg.fixedP - maxY) < 0.15;
+        } else {
+            return Math.abs(seg.fixedP - minX) < 0.15 || Math.abs(seg.fixedP - maxX) < 0.15;
+        }
+    };
+
+    wallSegments.forEach(seg => {
+        const isExt = isExteriorWallSeg(seg);
+        const lenM = (seg.endP - seg.startP) * scaleP;
+        const midM = ((seg.startP + seg.endP) / 2) * scaleP;
+        const fixedM = seg.fixedP * scaleP;
+
+        // 布基礎立ち上がり（外壁および主要壁下）
+        if (foundH > 0.005 && (isExt || !(fl1Data.rooms && fl1Data.rooms.length > 0))) {
+            const fGeo = seg.orient === 'h'
+                ? new THREE.BoxGeometry(lenM + foundThick, foundH, foundThick)
+                : new THREE.BoxGeometry(foundThick, foundH, lenM + foundThick);
+            const fMesh = addWhiteModelMesh(
+                fGeo,
+                matFoundation,
+                seg.orient === 'h' ? midM : fixedM,
+                -foundH / 2,
+                seg.orient === 'h' ? fixedM : midM,
+                true
+            );
+            if (fMesh) fMesh.userData.regionTag = 'foundation';
+        }
+
+        // 土台水切り板金（外壁の下端 Y = 0.0m に連続配置）
+        if (showMizukiri && isExt) {
+            const mGeo = seg.orient === 'h'
+                ? new THREE.BoxGeometry(lenM + mizuThick, mizuHeight, mizuThick)
+                : new THREE.BoxGeometry(mizuThick, mizuHeight, lenM + mizuThick);
+            const mMesh = addWhiteModelMesh(
+                mGeo,
+                matMizukiri,
+                seg.orient === 'h' ? midM : fixedM,
+                mizuHeight * 0.35,
+                seg.orient === 'h' ? fixedM : midM,
+                false
+            );
+            if (mMesh) mMesh.userData.regionTag = 'mizukiri';
+        }
+    });
+}
+
+function updateFoundationHeight3D(heightMm) {
+    const val = Math.max(0, Math.min(1200, parseInt(heightMm, 10) || 0));
+    state.foundationHeightMm = val;
+    syncFoundationAndMizukiriUI();
+    if (typeof saveHistorySnapshot === 'function') saveHistorySnapshot();
+    rebuild3DScene();
+    if (typeof showToast === 'function') {
+        showToast(val > 0 ? `🧱 3D基礎高さを GL+${val}mm に設定しました` : '🧱 3D基礎表示を OFF (0mm) にしました');
+    }
+}
+window.updateFoundationHeight3D = updateFoundationHeight3D;
+
+function toggleMizukiri3D(forceVal) {
+    state.showMizukiri3D = (forceVal !== undefined) ? !!forceVal : !state.showMizukiri3D;
+    syncFoundationAndMizukiriUI();
+    if (typeof saveHistorySnapshot === 'function') saveHistorySnapshot();
+    rebuild3DScene();
+    if (typeof showToast === 'function') {
+        showToast(state.showMizukiri3D ? '📏 土台水切り（水切り板金）を3D表示しました' : '📏 土台水切りを非表示にしました');
+    }
+}
+window.toggleMizukiri3D = toggleMizukiri3D;
+
+function updateMizukiriColor3D(hexColor) {
+    if (!hexColor) return;
+    state.mizukiriColor = hexColor;
+    state.showMizukiri3D = true;
+    syncFoundationAndMizukiriUI();
+    if (typeof saveHistorySnapshot === 'function') saveHistorySnapshot();
+    rebuild3DScene();
+    if (typeof showToast === 'function') {
+        showToast('🎨 土台水切りのカラーを変更しました');
+    }
+}
+window.updateMizukiriColor3D = updateMizukiriColor3D;
+
+function syncFoundationAndMizukiriUI() {
+    const selFound = document.getElementById('selFoundationHeight3D');
+    if (selFound && state.foundationHeightMm !== undefined) {
+        selFound.value = String(state.foundationHeightMm);
+    }
+    const btnMizu = document.getElementById('btnMizukiriToggle3D');
+    if (btnMizu) {
+        const isOn = state.showMizukiri3D !== false;
+        btnMizu.className = isOn
+            ? 'px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-600 text-white border border-emerald-400 shadow transition'
+            : 'px-2 py-0.5 rounded text-[10px] font-bold bg-zinc-800 text-slate-400 border border-zinc-700 hover:text-white transition';
+        btnMizu.textContent = isOn ? '水切り: ON' : '水切り: OFF';
+    }
+    const selColor = document.getElementById('selMizukiriColor3D');
+    if (selColor && state.mizukiriColor) {
+        selColor.value = state.mizukiriColor;
+    }
+}
+window.syncFoundationAndMizukiriUI = syncFoundationAndMizukiriUI;
 
 let cachedTatamiTexture = null;
 function getTatamiCanvasTexture() {
@@ -514,9 +731,10 @@ function rebuild3DScene() {
         if (!flData) return;
         const baseY = (flNum === 0 ? -1 : (flNum - 1)) * (wallHeight + slabHeight);
 
-        // 1. 空間要素・床スラブ（通常居室、玄関土間、小上り、畳、吹き抜け、中庭、天井）
+        // 1. 空間要素・床スラブ（通常居室、玄関土間、小上り、畳、吹き抜け、中庭、天井、2階以上の階段室開口）
         flData.rooms.forEach(rm => {
-            if (rm.type === 'VOID' || rm.type === 'NAKANIWA') return; // 吹き抜け・中庭は床スラブなし
+            // 吹き抜け・中庭・および2階以上の「階段室(STAIR)」は床スラブを抜いて下階階段の昇降空間を開口する（2階床面積には算入維持）
+            if (rm.type === 'VOID' || rm.type === 'NAKANIWA' || (flNum >= 2 && rm.type === 'STAIR')) return;
 
             const wM = rm.w * scaleP;
             const hM = rm.h * scaleP;
@@ -553,18 +771,19 @@ function rebuild3DScene() {
             }
 
             const rt = (window.ROOM_TYPES && window.ROOM_TYPES[rm.type]) || { hasWall: true };
-            if (!rm.isAutoDetected && rt.hasWall && flData.walls.length === 0) {
+            const hasNormalWallsOnFloor = (flData.walls || []).some(w => !w.wallType || w.wallType === 'wall');
+            if (!rm.isAutoDetected && rt.hasWall && !hasNormalWallsOnFloor) {
                 const isBalcony = rm.type === 'BALCONY';
+                const wY = isBalcony ? (baseY + slabHeight) : baseY;
                 const hWall = isBalcony ? 1.10 : (wallHeight + slabHeight);
-                const wY = baseY + slabHeight;
-                buildWallWithOpeningCutouts3D('h', rm.y, rm.x, rm.x + rm.w, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall);
-                buildWallWithOpeningCutouts3D('h', rm.y + rm.h, rm.x, rm.x + rm.w, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall);
-                buildWallWithOpeningCutouts3D('v', rm.x, rm.y, rm.y + rm.h, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall);
-                buildWallWithOpeningCutouts3D('v', rm.x + rm.w, rm.y, rm.y + rm.h, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall);
+                buildWallWithOpeningCutouts3D('h', rm.y, rm.x, rm.x + rm.w, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight);
+                buildWallWithOpeningCutouts3D('h', rm.y + rm.h, rm.x, rm.x + rm.w, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight);
+                buildWallWithOpeningCutouts3D('v', rm.x, rm.y, rm.y + rm.h, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight);
+                buildWallWithOpeningCutouts3D('v', rm.x + rm.w, rm.y, rm.y + rm.h, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight);
             }
         });
 
-        // 2. 壁4種（通常壁 / たれ壁 / 腰壁 / 上り框 ＆ 斜め壁対応 ＆ 高さ指定連動）
+        // 2. 壁4種（通常壁 / たれ壁 / 腰壁 / 上り框 ＆ 斜め壁対応 ＆ 高さ指定連動 ＆ 1F-2Fシームレス連結）
         flData.walls.forEach(wl => {
             const isHoriz = Math.abs(wl.y1 - wl.y2) < 0.05;
             const isVert = Math.abs(wl.x1 - wl.x2) < 0.05;
@@ -575,6 +794,9 @@ function rebuild3DScene() {
             const waistH = wl.heightMm ? (wl.heightMm / 1000) : 1.00;
             const dropH = wl.heightMm ? (wl.heightMm / 1000) : 0.55;
             const actualWallH = wl.heightMm ? (wl.heightMm / 1000) : wallHeight;
+            // 通常壁はスラブ下端(baseY)から立ち上げてスラブ側面(slabHeight)も覆い、1F壁上端(2.63m)と2F壁下端(2.63m)を隙間ゼロでシームレスに連結する
+            const seamlessWallBottomY = baseY;
+            const seamlessWallTotalH = actualWallH + slabHeight;
 
             if (isHoriz || isVert) {
                 const startP = isHoriz ? Math.min(wl.x1, wl.x2) : Math.min(wl.y1, wl.y2);
@@ -631,12 +853,13 @@ function rebuild3DScene() {
                     );
                     if (kamMesh) kamMesh.userData.regionTag = 'agarikamachi';
                 } else {
-                    // 通常壁（開口部くり抜き付き・高さ指定連動）
+                    // 通常壁（開口部くり抜き付き・床スラブ側面カバー＆上下階シームレス連結）
                     buildWallWithOpeningCutouts3D(
                         isHoriz ? 'h' : 'v',
                         fixedP, startP, endP,
-                        floorTopY, actualWallH, wallThick,
-                        flData.openings, scaleP, matWhiteWall
+                        seamlessWallBottomY, seamlessWallTotalH, wallThick,
+                        flData.openings, scaleP, matWhiteWall,
+                        floorTopY
                     );
                 }
             } else {
@@ -647,8 +870,8 @@ function rebuild3DScene() {
                 const midX = ((wl.x1 + wl.x2) / 2) * scaleP;
                 const midZ = ((wl.y1 + wl.y2) / 2) * scaleP;
                 const angle = Math.atan2(wl.y2 - wl.y1, wl.x2 - wl.x1);
-                let wH = actualWallH;
-                let wPosY = floorTopY + wH / 2;
+                let wH = seamlessWallTotalH;
+                let wPosY = seamlessWallBottomY + wH / 2;
                 if (wType === 'koshikabe') {
                     wH = waistH;
                     wPosY = floorTopY + waistH / 2;
@@ -688,6 +911,8 @@ function rebuild3DScene() {
 
         // 4. サッシ・建具12種の3Dフレーム
         flData.openings.forEach(op => {
+            // 「開口のみ(扉なし: kaikou)」は壁のくり抜きのみで建具パネルを生成しない（階段室登りきりやウォークスルー開口用）
+            if (op.doorFit === 'kaikou' || op.sashType === 'kaikou') return;
             const ot = (window.OPENING_TYPES && window.OPENING_TYPES[op.type]) ? window.OPENING_TYPES[op.type] : { widthP: 1.0, heightMm: 2000, isWin: false };
             const wM = (op.widthP || ot.widthP) * scaleP;
             const hM = (op.heightMm || ot.heightMm) / 1000;
@@ -711,16 +936,33 @@ function rebuild3DScene() {
             );
         });
 
-        // 5. 設備・家具 & 3D直方体
+        // 5. 設備・家具 & 3D直方体（L型キッチンの2ウィング立体造形対応）
         const floorTopY = baseY + slabHeight;
         flData.fixtures.forEach(fx => {
             const wM = fx.w * scaleP;
             const dM = fx.h * scaleP;
-            const cx = (fx.x + fx.w / 2) * scaleP;
-            const cz = (fx.y + fx.h / 2) * scaleP;
             const kH = (fx.kHeight || fx.hMm || 850) / 1000;
-            const tGeo = new THREE.BoxGeometry(wM * 0.94, kH, dM * 0.94);
-            addWhiteModelMesh(tGeo, matWhiteFixture, cx, floorTopY + kH / 2, cz, true);
+            const isKitchenL = fx.type === 'KITCHEN_L' || fx.category === 'KITCHEN_L' || (fx.fxData && fx.fxData.kitchenType === 'L');
+            if (isKitchenL) {
+                const cDepthM = Math.min(Math.min(wM, dM) * 0.48, ((fx.fxData && fx.fxData.lDepth) ? fx.fxData.lDepth : 650) / 1000);
+                const x0 = fx.x * scaleP;
+                const z0 = fx.y * scaleP;
+                // 横ウィング (幅 wM × 奥行 cDepthM)
+                const wingHZ = fx.flipY ? (z0 + dM - cDepthM / 2) : (z0 + cDepthM / 2);
+                const geoH = new THREE.BoxGeometry(wM * 0.96, kH, cDepthM * 0.96);
+                addWhiteModelMesh(geoH, matWhiteFixture, x0 + wM / 2, floorTopY + kH / 2, wingHZ, true);
+                // 縦ウィング (幅 cDepthM × 残り奥行 dM - cDepthM)
+                const remDM = Math.max(0.1, dM - cDepthM);
+                const wingVX = fx.flipX ? (x0 + wM - cDepthM / 2) : (x0 + cDepthM / 2);
+                const wingVZ = fx.flipY ? (z0 + remDM / 2) : (z0 + cDepthM + remDM / 2);
+                const geoV = new THREE.BoxGeometry(cDepthM * 0.96, kH, remDM * 0.96);
+                addWhiteModelMesh(geoV, matWhiteFixture, wingVX, floorTopY + kH / 2, wingVZ, true);
+            } else {
+                const cx = (fx.x + fx.w / 2) * scaleP;
+                const cz = (fx.y + fx.h / 2) * scaleP;
+                const tGeo = new THREE.BoxGeometry(wM * 0.94, kH, dM * 0.94);
+                addWhiteModelMesh(tGeo, matWhiteFixture, cx, floorTopY + kH / 2, cz, true);
+            }
         });
 
         (flData.boxes3d || []).forEach(bx => {
@@ -740,6 +982,11 @@ function rebuild3DScene() {
             renderStair3D(st, floorTopY, wallHeight, slabHeight, scaleP);
         });
     });
+
+    // 6.5. 1階の基礎（基礎高さ設定連動）および土台水切り（水切り板金ON/OFF・カラー連動）を3D生成
+    if (floorsToBuild.includes(1) && state.floors[1]) {
+        buildFoundationAndMizukiri3D(state.floors[1], scaleP, wallThick, slabHeight);
+    }
 
     // 7. 簡易3D家具ステージング（独立グループ・state.floors/面積集計には一切非干渉）
     buildFurnitureStaging3D(floorsToBuild, scaleP, slabHeight, wallHeight);
@@ -871,6 +1118,8 @@ window.toggle3DFurnitureStaging = toggle3DFurnitureStaging;
 
 function renderStair3D(fx, floorTopY, wallHeight, slabHeight, scaleP) {
     if (!fx) return;
+    // 立面不出力 (no3DOutput) がONの階段（上の階に自動投影された複写階段など）は3Dメッシュを出力しない
+    if (fx.no3DOutput || fx.hide3D) return;
     if ((fx.x === undefined || fx.w === undefined) && fx.points && fx.points.length >= 2) {
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
         fx.points.forEach(pt => {

@@ -88,7 +88,7 @@ function selectTool(toolName, subOption) {
             'ptool_op_' + uk
         );
     } else if (toolName === 'room' && subOption) {
-        candidates.push('tool_room', 'ptool_rm_' + subOption);
+        candidates.push('tool_room_' + subOption.toLowerCase(), 'tool_room', 'ptool_rm_' + subOption);
     }
     candidates.push('tool_' + toolName, 'ptool_' + toolName);
 
@@ -303,7 +303,8 @@ function renderSubToolbar() {
         `;
     } else if (tool === 'fixture') {
         const catList = [
-            { id: 'KITCHEN', icon: '🍳', label: 'キッチン' },
+            { id: 'KITCHEN', icon: '🍳', label: 'I型キッチン' },
+            { id: 'KITCHEN_L', icon: '🍳', label: 'L型キッチン' },
             { id: 'UB', icon: '🛁', label: 'バス(UB)' },
             { id: 'VANITY', icon: '🪞', label: '洗面台' },
             { id: 'TOILET_FIX', icon: '🚽', label: 'トイレ' },
@@ -317,7 +318,7 @@ function renderSubToolbar() {
         ];
         let btns = catList.map(c => {
             const isAct = (state.subFixtureCategory || 'KITCHEN') === c.id;
-            return `<button onclick="state.subFixtureCategory='${c.id}';state.subFixtureType='${c.id}';renderSubToolbar();" class="px-2 py-1 rounded text-xs font-bold transition shrink-0 ${isAct ? 'bg-amber-500 text-slate-950 shadow' : 'bg-slate-800 text-slate-300 hover:text-white'}">${c.icon}${c.label}</button>`;
+            return `<button onclick="state.subFixtureCategory='${c.id}';state.subFixtureType='${c.id}';state.subKitchenType=(('${c.id}'==='KITCHEN_L')?'L':'I');renderSubToolbar();" class="px-2 py-1 rounded text-xs font-bold transition shrink-0 ${isAct ? 'bg-amber-500 text-slate-950 shadow' : 'bg-slate-800 text-slate-300 hover:text-white'}">${c.icon}${c.label}</button>`;
         }).join('');
 
         container.innerHTML = `
@@ -498,6 +499,7 @@ function renderPropertyInspector() {
                     <button type="button" onclick="applyPresetToSelectedOpening('preset_sweep_win')" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[10px] text-amber-200">掃出(1650×2000/FL0)</button>
                     <button type="button" onclick="applyPresetToSelectedOpening('preset_wet_win')" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[10px] text-emerald-200">小窓(800×900/FL1100)</button>
                     <button type="button" onclick="applyPresetToSelectedOpening('preset_ent_910')" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[10px] text-rose-200">玄関910(910×2200)</button>
+                    <button type="button" onclick="applyPresetToSelectedOpening('preset_stair_open')" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 border border-cyan-500/60 text-[10px] text-cyan-200">階段登りきり開口(扉なし)</button>
                 </div>
                 ${hostSpan ? `
                 <div class="p-2 rounded-lg bg-slate-900/90 border border-slate-700/80 space-y-1.5">
@@ -526,6 +528,9 @@ function renderPropertyInspector() {
         const curWMm = obj.wMm || Math.round(obj.w * pitch);
         const curDMm = obj.dMm || Math.round(obj.h * pitch);
         const curHMm = obj.hMm || 850;
+        const fCat = obj.category || obj.type || '';
+        const isKitchen = fCat === 'KITCHEN' || fCat === 'KITCHEN_L' || fCat.startsWith('KITCHEN');
+        const curKType = (obj.fxData && obj.fxData.kitchenType) ? obj.fxData.kitchenType : (fCat === 'KITCHEN_L' ? 'L' : 'I');
 
         panel.innerHTML = `
             <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-2.5">
@@ -537,13 +542,31 @@ function renderPropertyInspector() {
                 </div>
             </div>
             <div class="space-y-2 text-xs">
+                ${isKitchen ? `
+                <div class="p-2 rounded-lg bg-slate-900/90 border border-amber-500/40 space-y-1.5">
+                    <div class="text-[10px] font-bold text-amber-300">🍳 キッチン形状切替 (I型 / L型 / アイランド)</div>
+                    <div class="grid grid-cols-3 gap-1">
+                        <button type="button" onclick="changeSelectedKitchenType('I')" class="py-1 rounded border text-[11px] font-bold ${curKType === 'I' ? 'bg-amber-500 text-slate-950 border-amber-300' : 'bg-slate-800 text-slate-300 border-slate-700'}">I型キッチン</button>
+                        <button type="button" onclick="changeSelectedKitchenType('L')" class="py-1 rounded border text-[11px] font-bold ${curKType === 'L' ? 'bg-amber-500 text-slate-950 border-amber-300' : 'bg-slate-800 text-slate-300 border-slate-700'}">L型キッチン</button>
+                        <button type="button" onclick="changeSelectedKitchenType('ISLAND')" class="py-1 rounded border text-[11px] font-bold ${curKType === 'ISLAND' ? 'bg-amber-500 text-slate-950 border-amber-300' : 'bg-slate-800 text-slate-300 border-slate-700'}">アイランド</button>
+                    </div>
+                    ${curKType === 'L' ? `
+                    <div class="flex flex-wrap gap-1 pt-0.5">
+                        <button type="button" onclick="updateSelectedKitchenL(2550, 1820, null)" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[10px] text-amber-200">2550×1820</button>
+                        <button type="button" onclick="updateSelectedKitchenL(2400, 1650, null)" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[10px] text-amber-200">2400×1650</button>
+                        <button type="button" onclick="updateSelectedKitchenL(2100, 1650, null)" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[10px] text-amber-200">2100×1650</button>
+                        <button type="button" onclick="updateSelectedKitchenL(1820, 1820, null)" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[10px] text-amber-200">1820×1820</button>
+                    </div>
+                    ` : ''}
+                </div>
+                ` : ''}
                 <div class="grid grid-cols-3 gap-1.5">
                     <div>
-                        <label class="text-[10px] text-slate-400 block">幅 W(mm)</label>
+                        <label class="text-[10px] text-slate-400 block">${curKType === 'L' ? '長辺 W(mm)' : '幅 W(mm)'}</label>
                         <input type="number" step="50" value="${curWMm}" onchange="updateSelectedFixtureDims(parseInt(this.value), null, null)" class="w-full bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-white font-bold mono-num">
                     </div>
                     <div>
-                        <label class="text-[10px] text-slate-400 block">奥行 D(mm)</label>
+                        <label class="text-[10px] text-slate-400 block">${curKType === 'L' ? '短辺 D(mm)' : '奥行 D(mm)'}</label>
                         <input type="number" step="50" value="${curDMm}" onchange="updateSelectedFixtureDims(null, parseInt(this.value), null)" class="w-full bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-white font-bold mono-num">
                     </div>
                     <div>
@@ -726,6 +749,27 @@ function renderPropertyInspector() {
                         </select>
                     </div>
                 </div>
+
+                <!-- 平面不出力 / 立面不出力 設定＆下階連動ステータス -->
+                <div class="p-2 rounded-xl bg-slate-900/95 border border-slate-700/80 space-y-1.5">
+                    <div class="flex items-center justify-between text-[10px]">
+                        <span class="font-bold text-amber-300"><i class="fa-solid fa-eye-slash mr-1"></i>出力制御（平面不出力 / 立面不出力）</span>
+                        ${obj.linkedFromFloor !== undefined ? `<span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">${obj.linkedFromFloor === 0 ? '地下' : obj.linkedFromFloor + '階'}から自動複写</span>` : `<span class="text-slate-400">${curDir === 'UP' ? '上の階へ自動表示中' : '単階表示'}</span>`}
+                    </div>
+                    <div class="grid grid-cols-2 gap-1.5">
+                        <button type="button" onclick="updateSelectedStairSpec('no2DOutput', ${!obj.no2DOutput})"
+                            class="py-1.5 px-2 rounded-lg border font-bold text-[11px] flex items-center justify-center gap-1 transition ${obj.no2DOutput ? 'bg-rose-600/35 text-rose-200 border-rose-400 shadow' : 'bg-slate-800 text-slate-300 border-slate-700 hover:text-white'}">
+                            <i class="fa-solid ${obj.no2DOutput ? 'fa-square-check' : 'fa-square'}"></i>
+                            <span>平面不出力 ${obj.no2DOutput ? 'ON' : 'OFF'}</span>
+                        </button>
+                        <button type="button" onclick="updateSelectedStairSpec('no3DOutput', ${!obj.no3DOutput})"
+                            class="py-1.5 px-2 rounded-lg border font-bold text-[11px] flex items-center justify-center gap-1 transition ${obj.no3DOutput ? 'bg-amber-500/30 text-amber-200 border-amber-400 shadow' : 'bg-slate-800 text-slate-300 border-slate-700 hover:text-white'}">
+                            <i class="fa-solid ${obj.no3DOutput ? 'fa-square-check' : 'fa-square'}"></i>
+                            <span>立面不出力 ${obj.no3DOutput ? 'ON' : 'OFF'}</span>
+                        </button>
+                    </div>
+                </div>
+
                 <button type="button" onclick="rotateSelectedStair()" class="w-full py-1.5 rounded-lg bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 font-bold text-xs flex items-center justify-center gap-1.5 transition">
                     <i class="fa-solid fa-rotate-right"></i>
                     <span>階段全体の向きを90°回転 (${obj.rotation || 0}°)</span>
@@ -784,11 +828,14 @@ function renderPropertyInspector() {
             { label: '玄関土間', type: 'DOMA' },
             { label: 'ホール', type: 'ROUKA' },
             { label: '廊下', type: 'ROUKA' },
+            { label: '階段室', type: 'STAIR' },
             { label: '階段', type: 'STAIR' },
             { label: '洗面室', type: 'SENMEN' },
             { label: '脱衣室', type: 'DATSUI' },
             { label: '浴室', type: 'UB' },
             { label: 'トイレ', type: 'TOILET' },
+            { label: 'クローゼット', type: 'CLOSET' },
+            { label: '収納', type: 'SHUNO' },
             { label: 'WIC', type: 'WIC' },
             { label: 'パントリー', type: 'STORAGE' },
             { label: '納戸', type: 'STORAGE' },
@@ -1262,10 +1309,24 @@ function updateSelectedFixtureDims(wMm, dMm, hMm) {
     const obj = findSelectedObject();
     if (!obj || state.selectedItem.kind !== 'fixture') return;
     const pitch = state.modulePitch || 910;
-    if (wMm) { obj.wMm = wMm; obj.w = +(wMm / pitch).toFixed(3); }
-    if (dMm) { obj.dMm = dMm; obj.h = +(dMm / pitch).toFixed(3); }
+    if (wMm) {
+        obj.wMm = wMm;
+        obj.w = +(wMm / pitch).toFixed(3);
+        if (obj.fxData && obj.fxData.kitchenType === 'L') obj.fxData.lWidthX = wMm;
+    }
+    if (dMm) {
+        obj.dMm = dMm;
+        obj.h = +(dMm / pitch).toFixed(3);
+        if (obj.fxData && obj.fxData.kitchenType === 'L') obj.fxData.lWidthY = dMm;
+    }
     if (hMm) { obj.hMm = hMm; }
+    if (obj.type === 'KITCHEN_L' || obj.category === 'KITCHEN_L' || (obj.fxData && obj.fxData.kitchenType === 'L')) {
+        obj.label = `L型キッチン (${Math.round((obj.wMm || 2550) / 10)}×${Math.round((obj.dMm || 1820) / 10)}cm)`;
+    }
     saveHistorySnapshot();
+    request2DRedraw();
+    if (typeof rebuild3DScene === 'function') rebuild3DScene();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
 }
 window.updateSelectedFixtureDims = updateSelectedFixtureDims;
 
@@ -1371,8 +1432,16 @@ function updateSelectedStairSpec(prop, val) {
     } else if (prop === 'handrail') {
         obj.stairHandrail = val;
         obj.handrail = val;
+    } else if (prop === 'no2DOutput' || prop === 'no3DOutput') {
+        obj[prop] = !!val;
     } else {
         obj[prop] = val;
+    }
+    if (prop !== 'no2DOutput' && prop !== 'no3DOutput') {
+        if (obj.linkedFromStairId && typeof window.syncLinkedStairBackToSource === 'function') {
+            window.syncLinkedStairBackToSource(obj);
+        }
+        if (typeof window.syncUpperFloorStairs === 'function') window.syncUpperFloorStairs();
     }
     saveHistorySnapshot();
     request2DRedraw();
@@ -1449,6 +1518,7 @@ window.addOffsetGuideFromSelected = addOffsetGuideFromSelected;
 
 // --- 階層切替（地下〜4階）＆ 目アイコン（👁️ 下絵透過）制御 ---
 function setFloor(fl) {
+    if (typeof window.syncUpperFloorStairs === 'function') window.syncUpperFloorStairs();
     state.currentFloor = fl;
     state.selectedItem = null;
     [0, 1, 2, 3, 4].forEach(n => {

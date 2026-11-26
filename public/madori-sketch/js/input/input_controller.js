@@ -214,7 +214,7 @@ function placeOpeningAt(wx, wy) {
 
     // 窓専用の種別（FIX・出窓・すべり出し・上げ下げ）は常に窓、それ以外は外壁なら窓・内壁なら建具（または明示カテゴリ）
     const windowOnlyFits = ['fix', 'demado', 'tatesuberi', 'yokosuberi', 'agesage'];
-    const doorOnlyFits = ['oredo', 'closet', 'oyako'];
+    const doorOnlyFits = ['oredo', 'closet', 'oyako', 'kaikou'];
     let isWin = false;
     if (windowOnlyFits.includes(fitId)) {
         isWin = true;
@@ -855,8 +855,8 @@ function placeFixtureOnCanvas(snappedX, snappedY) {
     const pitch = state.modulePitch || 910;
     let wMm, dMm, hMm, wP, hP, label, fxData = {};
 
-    if (cat === 'KITCHEN') {
-        const kType = state.subKitchenType || 'I';
+    if (cat === 'KITCHEN' || cat === 'KITCHEN_L') {
+        const kType = cat === 'KITCHEN_L' ? 'L' : (state.subKitchenType || 'I');
         hMm = state.subKitchenHeight || 850;
         if (kType === 'I') {
             wMm = state.subKitchenIWidth || 2550;
@@ -864,7 +864,7 @@ function placeFixtureOnCanvas(snappedX, snappedY) {
             label = `I型キッチン (${wMm / 10}×${dMm / 10}cm)`;
         } else if (kType === 'L') {
             wMm = state.subKitchenLXWidth || 2550;
-            dMm = state.subKitchenLYWidth || 1950;
+            dMm = state.subKitchenLYWidth || 1820;
             label = `L型キッチン (${wMm / 10}×${dMm / 10}cm)`;
             fxData.lWidthX = wMm;
             fxData.lWidthY = dMm;
@@ -1698,6 +1698,12 @@ canvas2d.addEventListener('pointerup', (e) => {
             showToast('壁を平行移動し、接続する壁と建具を追随させました');
         }
     } else if (drag.type !== 'pan') {
+        if ((drag.type === 'move_box' || drag.type === 'resize_box') && drag.target && drag.target.kind === 'stair') {
+            if (drag.target.linkedFromStairId && typeof window.syncLinkedStairBackToSource === 'function') {
+                window.syncLinkedStairBackToSource(drag.target);
+            }
+            if (typeof window.syncUpperFloorStairs === 'function') window.syncUpperFloorStairs();
+        }
         saveHistorySnapshot();
     }
 
@@ -1780,6 +1786,10 @@ function updateSelectedStairShape(shapeType) {
             window.syncStairModularBounds(obj);
         }
     }
+    if (obj.linkedFromStairId && typeof window.syncLinkedStairBackToSource === 'function') {
+        window.syncLinkedStairBackToSource(obj);
+    }
+    if (typeof window.syncUpperFloorStairs === 'function') window.syncUpperFloorStairs();
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
     if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
@@ -1791,6 +1801,7 @@ function updateSelectedStairDir(dir) {
     const obj = findSelectedObject();
     if (!obj || state.selectedItem.kind !== 'stair') return;
     obj.direction = dir;
+    if (typeof window.syncUpperFloorStairs === 'function') window.syncUpperFloorStairs();
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
     if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
@@ -1803,6 +1814,10 @@ function updateSelectedStairSteps(steps) {
     if (!obj || state.selectedItem.kind !== 'stair') return;
     obj.steps = steps;
     obj.riserMm = Math.round(2730 / steps);
+    if (obj.linkedFromStairId && typeof window.syncLinkedStairBackToSource === 'function') {
+        window.syncLinkedStairBackToSource(obj);
+    }
+    if (typeof window.syncUpperFloorStairs === 'function') window.syncUpperFloorStairs();
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
     if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
@@ -1829,6 +1844,10 @@ function rotateSelectedStair() {
             pt.y = +(cy + rx).toFixed(3);
         });
     }
+    if (obj.linkedFromStairId && typeof window.syncLinkedStairBackToSource === 'function') {
+        window.syncLinkedStairBackToSource(obj);
+    }
+    if (typeof window.syncUpperFloorStairs === 'function') window.syncUpperFloorStairs();
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
     if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
@@ -1839,7 +1858,7 @@ function rotateSelectedStair() {
 function renameSelectedRoom() {
     const rm = findSelectedObject();
     if (!rm) return;
-    const presets = ['LDK', 'リビング', 'ダイニング', 'キッチン', '主寝室', '洋室', '子供室', '書斎', '和室', '玄関', '玄関土間', 'ホール', '廊下', '階段', '洗面室', '脱衣室', '浴室', 'トイレ', 'WIC', 'パントリー', '納戸', '小上り', '中庭', '吹抜', 'バルコニー'];
+    const presets = ['LDK', 'リビング', 'ダイニング', 'キッチン', '主寝室', '洋室', '子供室', '書斎', '和室', '玄関', '玄関土間', 'ホール', '廊下', '階段', '階段室', '洗面室', '脱衣室', '浴室', 'トイレ', 'クローゼット', '収納', 'WIC', 'パントリー', '納戸', '小上り', '中庭', '吹抜', 'バルコニー'];
     const curName = rm.customName || rm.name || '';
     const idx = presets.indexOf(curName);
     const nextName = presets[(idx + 1) % presets.length];
@@ -1850,6 +1869,9 @@ function renameSelectedRoom() {
     else if (nextName === '玄関土間') rm.type = 'DOMA';
     else if (nextName === '小上り') rm.type = 'KOAGARI';
     else if (nextName === '中庭') rm.type = 'NAKANIWA';
+    else if (nextName === '階段' || nextName === '階段室') rm.type = 'STAIR';
+    else if (nextName === 'クローゼット') rm.type = 'CLOSET';
+    else if (nextName === '収納') rm.type = 'SHUNO';
     else if (['VOID', 'BALCONY', 'DOMA', 'KOAGARI', 'NAKANIWA', 'PORCH', 'TENJO', 'TATAMI'].includes(rm.type)) {
         rm.type = 'OTHER';
     }
@@ -2003,15 +2025,21 @@ function changeSelectedKitchenType(newType) {
     fx.fxData.kitchenType = newType;
     const pitch = state.modulePitch || 910;
     if (newType === 'I') {
+        fx.type = 'KITCHEN';
+        fx.category = 'KITCHEN';
         fx.wMm = 2550; fx.dMm = 650; fx.hMm = 850;
         fx.w = +(2550 / pitch).toFixed(3); fx.h = +(650 / pitch).toFixed(3);
         fx.label = `I型キッチン (255×65cm)`;
     } else if (newType === 'L') {
-        fx.wMm = 2550; fx.dMm = 1950; fx.hMm = 850;
-        fx.fxData.lWidthX = 2550; fx.fxData.lWidthY = 1950; fx.fxData.lDepth = 650;
-        fx.w = +(2550 / pitch).toFixed(3); fx.h = +(1950 / pitch).toFixed(3);
-        fx.label = `L型キッチン (255×195cm)`;
+        fx.type = 'KITCHEN_L';
+        fx.category = 'KITCHEN_L';
+        fx.wMm = 2550; fx.dMm = 1820; fx.hMm = 850;
+        fx.fxData.lWidthX = 2550; fx.fxData.lWidthY = 1820; fx.fxData.lDepth = 650;
+        fx.w = +(2550 / pitch).toFixed(3); fx.h = +(1820 / pitch).toFixed(3);
+        fx.label = `L型キッチン (255×182cm)`;
     } else {
+        fx.type = 'KITCHEN';
+        fx.category = 'KITCHEN';
         fx.wMm = 2550; fx.dMm = 900; fx.hMm = 850;
         fx.w = +(2550 / pitch).toFixed(3); fx.h = +(900 / pitch).toFixed(3);
         fx.label = `アイランド (2550×900mm)`;
@@ -2021,6 +2049,10 @@ function changeSelectedKitchenType(newType) {
     if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
 }
+window.changeSelectedKitchenType = changeSelectedKitchenType;
+window.updateSelectedKitchenL = updateSelectedKitchenL;
+window.updateSelectedKitchenI = updateSelectedKitchenI;
+window.updateSelectedKitchenIsland = updateSelectedKitchenIsland;
 
 function updateSelectedUbSize(sizeId) {
     const fl = state.floors[state.currentFloor];
@@ -2208,8 +2240,15 @@ function deleteSelectedItem() {
     else if (kind === 'box3d') fl.boxes3d = (fl.boxes3d || []).filter(b => b.id !== id);
     else if (kind === 'memo') fl.memos = (fl.memos || []).filter(m => m.id !== id);
     else if (kind === 'stair') {
+        const targetSt = (fl.stairs || []).find(s => s.id === id);
+        if (targetSt && targetSt.linkedFromStairId && targetSt.linkedFromFloor !== undefined) {
+            const srcFl = state.floors[targetSt.linkedFromFloor];
+            const srcSt = srcFl && Array.isArray(srcFl.stairs) ? srcFl.stairs.find(s => s.id === targetSt.linkedFromStairId) : null;
+            if (srcSt) srcSt.suppressUpperAutoCopy = true;
+        }
         fl.stairs = (fl.stairs || []).filter(s => s.id !== id);
         fl.fixtures = (fl.fixtures || []).filter(f => f.id !== id);
+        if (typeof window.syncUpperFloorStairs === 'function') window.syncUpperFloorStairs();
     }
 
     state.selectedItem = null;
@@ -2689,6 +2728,7 @@ function createStairFromPoints(pts, widthMm, dir, turnType, customSteps, landing
 
     fl.stairs = fl.stairs || [];
     fl.stairs.push(newStair);
+    if (typeof window.syncUpperFloorStairs === 'function') window.syncUpperFloorStairs();
     state.selectedItem = { kind: 'stair', id: newStair.id, floor: state.currentFloor };
     saveHistorySnapshot();
 }
@@ -2799,6 +2839,7 @@ function placeStairPresetAt(presetType, x, y, turnSpecParam) {
 
     if (!fl.stairs) fl.stairs = [];
     fl.stairs.push(newStair);
+    if (typeof window.syncUpperFloorStairs === 'function') window.syncUpperFloorStairs();
     state.selectedItem = { kind: 'stair', id: newStair.id, floor: state.currentFloor };
 
     saveHistorySnapshot();

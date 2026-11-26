@@ -139,6 +139,10 @@ const state = {
     floorDisplay3D: 'all',   // 'all', '0f', '1f', '2f', '3f', '4f'
     showRoof3D: false,
     sunHour: 14,
+    foundationHeightMm: 400, // 基礎高さ (GL〜基礎天端 mm: 標準400mm, 0=なし〜800mm)
+    showMizukiri3D: true,    // 土台水切り板金の3D表示 ON/OFF
+    mizukiriColor: '#334155',// 土台水切りカラー ('#334155' ダークグレー, '#1e293b' ブラック, '#94a3b8' シルバー, '#785c44' ブロンズ, '#e2e8f0' ホワイト)
+    seamlessExteriorWall3D: true, // 1F・2F外壁の上下階シームレス連結表示
 
     // 地下(0)〜4階までの5階層データモデル
     floors: {
@@ -363,6 +367,7 @@ function loadSampleHousePlan() {
     };
     state.history = [];
     state.historyIndex = -1;
+    if (typeof window.syncUpperFloorStairs === 'function') window.syncUpperFloorStairs();
     saveHistorySnapshot();
     if (typeof reset2DCamera === 'function') reset2DCamera();
     showToast('モデルプラン「07邸 吹抜けがある」を読み込みました');

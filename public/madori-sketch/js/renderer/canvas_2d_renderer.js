@@ -1189,8 +1189,112 @@ function syncStairModularBounds(st) {
 }
 window.syncStairModularBounds = syncStairModularBounds;
 
+/**
+ * 下の階で描いた「上に登る階段 (direction: UP)」を自動で上の階に表示・同期するエンジン
+ * ・上の階へ投影された連動階段は既定で「立面不出力 (no3DOutput: true)」「平面不出力: OFF (no2DOutput: false)」となり、
+ *   2階の平面図には同じ位置・形状で表示されつつ、3Dでは1階から登ってくる階段メッシュと二重にならない。
+ * ・プロパティで「平面不出力」「立面不出力」を個別にON/OFF可能。
+ */
+function syncUpperFloorStairs() {
+    if (typeof state === 'undefined' || !state.floors) return;
+    const floorOrder = [0, 1, 2, 3];
+    for (const f of floorOrder) {
+        const lowerFl = state.floors[f];
+        const upperFl = state.floors[f + 1];
+        if (!lowerFl || !upperFl) continue;
+        if (!Array.isArray(lowerFl.stairs)) lowerFl.stairs = [];
+        if (!Array.isArray(upperFl.stairs)) upperFl.stairs = [];
+
+        // 下の階の「上に登る階段 (UP)」かつ自身が連動コピーでない階段を抽出
+        const sourceUpStairs = lowerFl.stairs.filter(s =>
+            s && !s.linkedFromStairId && (s.direction || 'UP') === 'UP' && !s.suppressUpperAutoCopy
+        );
+        const validSourceIds = new Set(sourceUpStairs.map(s => s.id));
+
+        // 削除された、またはDNに変更された元階段の連動コピーを上の階から除去
+        upperFl.stairs = upperFl.stairs.filter(us => {
+            if (us && us.linkedFromFloor === f && us.linkedFromStairId) {
+                return validSourceIds.has(us.linkedFromStairId);
+            }
+            return true;
+        });
+
+        // 各UP階段を上の階へ自動同期（すでに上の階の同一座標に手動階段が存在する場合はそれを連動化または重複生成を回避）
+        sourceUpStairs.forEach(src => {
+            let linked = upperFl.stairs.find(us => us && us.linkedFromStairId === src.id);
+            if (!linked) {
+                const samePosStair = upperFl.stairs.find(us =>
+                    us && !us.linkedFromStairId &&
+                    Math.abs((us.x || 0) - (src.x || 0)) < 0.15 &&
+                    Math.abs((us.y || 0) - (src.y || 0)) < 0.15
+                );
+                if (samePosStair) {
+                    linked = samePosStair;
+                    linked.linkedFromStairId = src.id;
+                    linked.linkedFromFloor = f;
+                    if (linked.no3DOutput === undefined) linked.no3DOutput = true;
+                    if (linked.no2DOutput === undefined) linked.no2DOutput = false;
+                } else {
+                    linked = JSON.parse(JSON.stringify(src));
+                    linked.id = 'stair_upper_' + src.id;
+                    linked.linkedFromStairId = src.id;
+                    linked.linkedFromFloor = f;
+                    linked.no3DOutput = true;   // 上の階の複写階段は既定で立面不出力(3D二重描画防止)
+                    linked.no2DOutput = false;  // 平面図には既定で表示
+                    upperFl.stairs.push(linked);
+                }
+            } else {
+                const keepId = linked.id;
+                const keepNo2D = !!linked.no2DOutput;
+                const keepNo3D = linked.no3DOutput !== undefined ? !!linked.no3DOutput : true;
+                const syncedProps = [
+                    'shapeType', 'patternKey', 'isModular', 'landingTop', 'rotation',
+                    'i1Steps', 'c1Steps', 'c1Dir', 'i2Steps', 'c2Steps', 'c2Dir', 'i3Steps',
+                    'x', 'y', 'w', 'h', 'widthMm', 'direction', 'turnType',
+                    'stairStyle', 'stairHandrail', 'handrail', 'steps', 'treadMm', 'riserMm', 'label'
+                ];
+                syncedProps.forEach(k => {
+                    if (src[k] !== undefined) linked[k] = src[k];
+                });
+                if (src.points) linked.points = JSON.parse(JSON.stringify(src.points));
+                linked.id = keepId;
+                linked.linkedFromStairId = src.id;
+                linked.linkedFromFloor = f;
+                linked.no2DOutput = keepNo2D;
+                linked.no3DOutput = keepNo3D;
+            }
+        });
+    }
+}
+window.syncUpperFloorStairs = syncUpperFloorStairs;
+
+/**
+ * 上の階で連動階段の位置や段数・形状を編集した際、下の階の元階段へ逆同期するヘルパー
+ */
+function syncLinkedStairBackToSource(st) {
+    if (!st || !st.linkedFromStairId || st.linkedFromFloor === undefined) return;
+    const srcFl = state.floors && state.floors[st.linkedFromFloor];
+    if (!srcFl || !Array.isArray(srcFl.stairs)) return;
+    const src = srcFl.stairs.find(s => s && s.id === st.linkedFromStairId);
+    if (!src) return;
+    const syncedProps = [
+        'shapeType', 'patternKey', 'isModular', 'landingTop', 'rotation',
+        'i1Steps', 'c1Steps', 'c1Dir', 'i2Steps', 'c2Steps', 'c2Dir', 'i3Steps',
+        'x', 'y', 'w', 'h', 'widthMm', 'turnType',
+        'stairStyle', 'stairHandrail', 'handrail', 'steps', 'treadMm', 'riserMm'
+    ];
+    syncedProps.forEach(k => {
+        if (st[k] !== undefined) src[k] = st[k];
+    });
+    if (st.points) src.points = JSON.parse(JSON.stringify(st.points));
+}
+window.syncLinkedStairBackToSource = syncLinkedStairBackToSource;
+
 function drawStair2D(st, isLight) {
     if (!st) return;
+    const isSelected = state.selectedItem && state.selectedItem.kind === 'stair' && state.selectedItem.id === st.id;
+    // 平面不出力 (no2DOutput) がONの場合：未選択時は2D平面図に一切描画しない（選択中のみ編集用ゴースト枠を表示）
+    if ((st.no2DOutput || st.hide2D) && !isSelected) return;
     if ((st.x === undefined || st.w === undefined) && st.points && st.points.length >= 2) {
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
         st.points.forEach(pt => {
@@ -1216,13 +1320,15 @@ function drawStair2D(st, isLight) {
     const curY = (st.y !== undefined && !isNaN(st.y)) ? st.y : 0;
     const zoom = state.cam2d.zoom;
     const p = worldPToScreen(curX, curY);
-    const isSelected = state.selectedItem && state.selectedItem.kind === 'stair' && state.selectedItem.id === st.id;
     const dir = st.direction || 'UP';
     const isOpen = st.stairStyle === 'open';
     const handrail = st.handrail || st.stairHandrail || 'both';
 
     ctx.save();
     ctx.translate(p.x, p.y);
+    if (st.no2DOutput || st.hide2D) {
+        ctx.globalAlpha = 0.35;
+    }
 
     // 1. 各ブロックの背景塗潰し（建築CAD木目ベージュ調）
     ctx.fillStyle = isOpen ? 'rgba(237, 213, 180, 0.45)' : (isSelected ? '#fde68a' : '#edd5b4');
@@ -1356,7 +1462,54 @@ function drawFixture2D(fx, isLight) {
     ctx.strokeStyle = isSelected ? '#f59e0b' : '#334155';
     ctx.lineWidth = isSelected ? 2.5 : 1.3;
 
-    if (cat === 'KITCHEN' || (cat && cat.startsWith('KITCHEN'))) {
+    if (cat === 'KITCHEN_L' || (fx.fxData && fx.fxData.kitchenType === 'L')) {
+        // L型キッチン（6頂点L字ポリゴン＋コーナー目地＋シンク＋3口コンロ）
+        const pitch = state.modulePitch || 910;
+        const depthMm = (fx.fxData && fx.fxData.lDepth) ? fx.fxData.lDepth : 650;
+        const depthP = depthMm / pitch;
+        const dPx = Math.min(Math.min(wPx, hPx) * 0.48, Math.max(12, depthP * state.cam2d.zoom));
+
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(wPx, 0);
+        ctx.lineTo(wPx, dPx);
+        ctx.lineTo(dPx, dPx);
+        ctx.lineTo(dPx, hPx);
+        ctx.lineTo(0, hPx);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // コーナー接合部ライン
+        ctx.beginPath();
+        ctx.moveTo(dPx, 0);
+        ctx.lineTo(dPx, dPx);
+        ctx.moveTo(0, dPx);
+        ctx.lineTo(dPx, dPx);
+        ctx.stroke();
+
+        // 横ウィング（上辺）にシンクを描画
+        const wingXLen = wPx - dPx;
+        if (wingXLen > 24 && dPx > 14) {
+            const sinkW = Math.min(wingXLen * 0.55, 38);
+            const sinkH = dPx * 0.64;
+            const sinkX = dPx + (wingXLen - sinkW) * 0.45;
+            const sinkY = (dPx - sinkH) / 2;
+            ctx.strokeRect(sinkX, sinkY, sinkW, sinkH);
+        }
+        // 縦ウィング（左辺）に3口コンロを描画
+        const wingYLen = hPx - dPx;
+        if (wingYLen > 20 && dPx > 14) {
+            const stoveX = dPx / 2;
+            const stoveY = dPx + wingYLen * 0.52;
+            const r = Math.min(4.0, dPx * 0.16);
+            ctx.beginPath();
+            ctx.arc(stoveX - r * 0.8, stoveY - r * 1.2, r, 0, Math.PI * 2);
+            ctx.arc(stoveX - r * 0.8, stoveY + r * 1.2, r, 0, Math.PI * 2);
+            ctx.arc(stoveX + r * 1.1, stoveY, r * 0.85, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+    } else if (cat === 'KITCHEN' || (cat && cat.startsWith('KITCHEN'))) {
         ctx.fillRect(0, 0, wPx, hPx);
         ctx.strokeRect(0, 0, wPx, hPx);
         if (wPx > 40 && hPx > 18) {
@@ -1523,6 +1676,21 @@ function drawOpening2D(op, isLight) {
         ctx.moveTo(-lenPx / 2, -2); ctx.lineTo(lenPx / 2, -2);
         ctx.moveTo(-lenPx / 2, 2 * dir); ctx.lineTo(0, 2 * dir);
         ctx.stroke();
+    } else if (fit === 'kaikou') {
+        // 開口のみ（扉なし・階段登りきり通路・下がり壁開口）
+        ctx.beginPath();
+        ctx.moveTo(-lenPx / 2, -4.5); ctx.lineTo(-lenPx / 2, 4.5);
+        ctx.moveTo(lenPx / 2, -4.5); ctx.lineTo(lenPx / 2, 4.5);
+        ctx.stroke();
+        ctx.save();
+        ctx.setLineDash([3, 3]);
+        ctx.lineWidth = 0.9;
+        ctx.strokeStyle = isSelected ? '#f59e0b' : '#64748b';
+        ctx.beginPath();
+        ctx.moveTo(-lenPx / 2, -3.5); ctx.lineTo(lenPx / 2, -3.5);
+        ctx.moveTo(-lenPx / 2, 3.5); ctx.lineTo(lenPx / 2, 3.5);
+        ctx.stroke();
+        ctx.restore();
     } else {
         // 引き違い（標準サッシ・引き違い戸）
         ctx.strokeRect(-lenPx / 2, -3.5, lenPx, 7);
@@ -2375,7 +2543,7 @@ function updateBirdEyeMiniPreview() {
             window.renderer3d.render(window.scene3d, window.camera3d);
             mCtx.drawImage(glCanvas, 0, 0, W, H);
             return;
-        } catch (e) {}
+        } catch (e) { }
     }
 
     // フォールバック：アイソメ鳥瞰ワイヤー描画
