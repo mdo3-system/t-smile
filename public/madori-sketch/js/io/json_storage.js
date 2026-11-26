@@ -1,7 +1,7 @@
 /**
  * 住ま居る 3D間取りスケッチ工房 (MadoriSketch)
  * JSONストレージモジュール (Single Responsibility: JSON Project Import/Export)
- * 作図プロジェクトのJSON保存・復元を担当
+ * 作図プロジェクトのJSON保存・復元、Dropboxハングアップ回避用のクラウド同期・ドラッグ＆ドロップ・クリップボード貼付復元を担当
  */
 (function() {
     'use strict';
@@ -18,15 +18,27 @@
             }
             const curTitle = document.getElementById('planTitleInput')?.value?.trim() || state.projectTitle || '新規プラン';
             state.projectTitle = curTitle;
+            const totalM2Num = (typeof calcFloorAreaM2 === 'function')
+                ? [0, 1, 2, 3, 4].reduce((s, f) => s + calcFloorAreaM2(f), 0)
+                : 0;
+            const totalTsubo = totalM2Num > 0 ? (totalM2Num / 3.305785).toFixed(1) + '坪' : '';
+            const totalM2 = totalM2Num > 0 ? totalM2Num.toFixed(2) + '㎡' : '';
+            const isReg = (typeof window.isHouseCarteRegisteredUser === 'function') ? window.isHouseCarteRegisteredUser() : false;
+
             projectData = {
                 planId: state.currentPlanId,
                 projectTitle: curTitle,
                 title: curTitle,
+                totalTsubo: totalTsubo,
+                totalM2: totalM2,
                 modulePitch: state.modulePitch,
                 gridDivisions: state.gridDivisions,
                 foundationHeightMm: state.foundationHeightMm !== undefined ? state.foundationHeightMm : 400,
                 showMizukiri3D: state.showMizukiri3D !== undefined ? state.showMizukiri3D : true,
                 mizukiriColor: state.mizukiriColor || '#334155',
+                isRegisteredCarte: isReg,
+                agreedToShareAndPublish: !isReg,
+                sharedWith: '株式会社住ま居る 家づくりサポート係',
                 floors: state.floors,
                 guides: state.guides || [],
                 savedAt: new Date().toISOString()
@@ -46,6 +58,12 @@
     }
 
     async function savePlanToOtherLocation(projectData, toastFn) {
+        // 家カルテ未登録ユーザーの場合、データ共有・間取り選定登録公開への同意を確認
+        if (typeof window.verifySaveConsentOrAlert === 'function') {
+            const consent = window.verifySaveConsentOrAlert();
+            if (!consent.allowed) return false;
+        }
+
         projectData = buildProjectData(projectData);
         const activePlanId = (typeof state !== 'undefined' && state.currentPlanId) ? state.currentPlanId : 'PLAN-COMM-UNKNOWN';
         const safeTitle = ((projectData && (projectData.projectTitle || projectData.title)) || activePlanId).replace(/[\\/:*?"<>|]/g, '_');
@@ -65,27 +83,24 @@
                 await writable.write(data);
                 await writable.close();
 
-                // ファイル保存成功後にのみ家カルテへ同時保存
+                // ファイル保存成功後に家カルテ・クラウド復元リスト・間取り選定へ同時保存
                 const carteSaved = syncCarteAfterFileSave();
                 const savedName = handle.name || defaultFileName;
                 const msg = carteSaved
-                    ? `💾【別場所保存 ＆ 家カルテ同時保存】「${savedName}」と家カルテに保存しました`
-                    : `💾【別場所保存】「${savedName}」を保存しました（家カルテ保存に失敗）`;
+                    ? `💾【別場所保存 ＆ 家カルテ・クラウド同時保存】「${savedName}」を保存しました（次回はDropboxを開かずに「読込・復元」一覧から1タップで復元できます）`
+                    : `💾【別場所保存】「${savedName}」を保存しました`;
                 notifyToast(toastFn, msg, !carteSaved);
                 return true;
             } catch (err) {
                 if (err && err.name === 'AbortError') {
-                    // キャンセル時は家カルテにも保存せず、保存全体を中止
                     notifyToast(toastFn, '保存をキャンセルしました（家カルテへの保存も中止しました）');
                     return false;
                 }
-                console.error('[JsonStorage] showSaveFilePicker failed:', err);
-                notifyToast(toastFn, 'ファイル保存に失敗しました（家カルテへの保存も中止しました）', true);
-                return false;
+                console.warn('[JsonStorage] showSaveFilePicker failed, falling back to Blob download:', err);
             }
         }
 
-        // iPad Safari等の非対応ブラウザ向けフォールバック（ダウンロード成功後に家カルテ同時保存）
+        // iPad Safari等の非対応環境、またはピッカー失敗時の確実なダウンロード＋クラウド＆家カルテ同時保存
         try {
             const blob = new Blob([data], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -99,13 +114,13 @@
 
             const carteSaved = syncCarteAfterFileSave();
             const msg = carteSaved
-                ? `💾【ファイル保存 ＆ 家カルテ同時保存】「${defaultFileName}」を保存し、家カルテにも同時保存しました`
-                : `💾【ファイル保存】「${defaultFileName}」を保存しました（家カルテ保存に失敗）`;
+                ? `💾【ファイル保存 ＆ 家カルテ・クラウド同時保存】「${defaultFileName}」を保存しました（次回は「読込・復元」の一覧から1タップで復元可能です）`
+                : `💾【ファイル保存】「${defaultFileName}」を保存しました`;
             notifyToast(toastFn, msg, !carteSaved);
             return true;
         } catch (err) {
             console.error('[JsonStorage] Blob download failed:', err);
-            notifyToast(toastFn, 'ファイル保存に失敗しました（家カルテへの保存も中止しました）', true);
+            notifyToast(toastFn, 'ファイル保存に失敗しました', true);
             return false;
         }
     }
@@ -121,10 +136,12 @@
         }
         // ラップ形式・単一階層形式の自動正規化
         if (!parsed.floors) {
-            if (parsed.data && parsed.data.floors) {
+            if (parsed.planData && typeof parsed.planData === 'object') {
+                parsed = Object.assign({}, parsed, { floors: parsed.planData });
+            } else if (parsed.data && parsed.data.floors) {
                 parsed = parsed.data;
             } else if (parsed.rawHouseData && parsed.rawHouseData.floors) {
-                parsed = parsed.rawHouseData;
+                parsed = Object.assign({}, parsed, { floors: parsed.rawHouseData.floors });
             } else if (parsed['1'] && (Array.isArray(parsed['1'].rooms) || Array.isArray(parsed['1'].walls))) {
                 parsed = { floors: parsed };
             } else if (Array.isArray(parsed.rooms) || Array.isArray(parsed.walls)) {
@@ -204,16 +221,23 @@
             try { if (typeof request2DRedraw === 'function') request2DRedraw(); } catch (e) { console.warn(e); }
             try { if (typeof rebuild3DScene === 'function') rebuild3DScene(); } catch (e) { console.warn(e); }
             try { if (typeof closePresetModal === 'function') closePresetModal(); } catch (e) { console.warn(e); }
+
+            // 読み込んだプランも次回以降ワンタップ復元できるよう家カルテ＆クラウドリストへ静かに同期キャッシュ
+            try {
+                if (typeof window.savePlanToCarte === 'function') {
+                    window.savePlanToCarte({ silent: true, skipToast: true, title: state.projectTitle });
+                }
+            } catch (_) {}
         }
         const activePlanId = (typeof state !== 'undefined' && state.currentPlanId) ? state.currentPlanId : '';
-        const msg = `📂【JSON復元完了】間取り「${(typeof state !== 'undefined' && state.projectTitle) || activePlanId || sourceFileName || 'プラン'}」を読み込みました`;
+        const msg = `📂【間取り復元完了】「${(typeof state !== 'undefined' && state.projectTitle) || activePlanId || sourceFileName || 'プラン'}」を読み込みました`;
         notifyToast(toastFn, msg, false);
         return true;
     }
 
     function parseAndApplyJSONText(rawText, fileName, onLoadCallback, toastFn) {
         if (!rawText || typeof rawText !== 'string') {
-            notifyToast(toastFn, `ファイル「${fileName || ''}」が空です（Dropbox上でクラウド未ダウンロードの可能性があります）`, true);
+            notifyToast(toastFn, `ファイル「${fileName || ''}」が空です（Dropboxのファイル選択ではなく、上の「保存済みプラン一覧」または「プラン番号入力」からワンタップで読み込めます）`, true);
             return false;
         }
         const cleaned = rawText.replace(/^\uFEFF/, '').trim();
@@ -228,32 +252,27 @@
         return applyLoadedProjectData(parsed, fileName, onLoadCallback, toastFn);
     }
 
-    function importJSON(e, onLoadCallback, toastFn) {
-        const inputEl = e && e.target ? e.target : null;
-        const file = (inputEl && inputEl.files && inputEl.files[0]) ? inputEl.files[0] : null;
+    function readFileObjectAsJSON(file, onLoadCallback, toastFn, resetInputFn) {
         if (!file) return;
         const fileName = file.name || 'plan.json';
+        const doneReset = () => { if (typeof resetInputFn === 'function') resetInputFn(); };
 
-        // 同一ファイルの再選択でも onchange が確実に発火するよう input.value をリセット
-        const resetInput = () => {
-            try { if (inputEl) inputEl.value = ''; } catch (_) {}
-        };
-
-        // iOS/iPadOS File Provider (Dropbox等) ストリーム読込に強い file.text() を優先し、FileReader をフォールバックに使用
-        if (typeof file.text === 'function') {
-            file.text().then(text => {
-                resetInput();
+        // 1. ArrayBuffer -> TextDecoder('utf-8') 読込（iOS/Windows Dropbox クラウドプロバイダで最もハングしにくいバイナリストリーム方式）
+        if (typeof file.arrayBuffer === 'function') {
+            file.arrayBuffer().then(buf => {
+                doneReset();
+                const text = new TextDecoder('utf-8').decode(buf);
                 parseAndApplyJSONText(text, fileName, onLoadCallback, toastFn);
-            }).catch(err => {
-                console.warn('[JsonStorage] file.text() failed, falling back to FileReader:', err);
+            }).catch(() => {
+                // 2. フォールバック: FileReader
                 const reader = new FileReader();
                 reader.onload = (ev) => {
-                    resetInput();
+                    doneReset();
                     parseAndApplyJSONText(ev.target.result, fileName, onLoadCallback, toastFn);
                 };
                 reader.onerror = () => {
-                    resetInput();
-                    notifyToast(toastFn, `Dropbox等からのファイル読込に失敗しました（「${fileName}」を一度端末へダウンロードしてから選択してください）`, true);
+                    doneReset();
+                    notifyToast(toastFn, `Dropboxからの読込がOS側でブロックされました。「読込・復元」画面上部の『保存済み一覧』または『プラン番号・JSON直接貼付』をご利用ください`, true);
                 };
                 reader.readAsText(file, 'UTF-8');
             });
@@ -262,14 +281,51 @@
 
         const reader = new FileReader();
         reader.onload = (ev) => {
-            resetInput();
+            doneReset();
             parseAndApplyJSONText(ev.target.result, fileName, onLoadCallback, toastFn);
         };
         reader.onerror = () => {
-            resetInput();
-            notifyToast(toastFn, `Dropbox等からのファイル読込に失敗しました（「${fileName}」を一度端末へダウンロードしてから選択してください）`, true);
+            doneReset();
+            notifyToast(toastFn, `Dropboxからの読込がOS側でブロックされました。「読込・復元」画面上部の『保存済み一覧』または『プラン番号・JSON直接貼付』をご利用ください`, true);
         };
         reader.readAsText(file, 'UTF-8');
+    }
+
+    function importJSON(e, onLoadCallback, toastFn) {
+        const inputEl = e && e.target ? e.target : null;
+        const file = (inputEl && inputEl.files && inputEl.files[0]) ? inputEl.files[0] : (e && e.files && e.files[0] ? e.files[0] : null);
+        if (!file) return;
+        const resetInput = () => {
+            try { if (inputEl) inputEl.value = ''; } catch (_) {}
+        };
+        readFileObjectAsJSON(file, onLoadCallback, toastFn, resetInput);
+    }
+
+    /**
+     * クリップボードにコピーされたJSONテキスト、またはテキスト欄の文字列からワンタップで復元（Dropboxピッカー不要）
+     */
+    async function pasteAndRestoreJSONFromClipboard(toastFn) {
+        try {
+            const inp = document.getElementById('directPlanIdInput');
+            if (inp && inp.value && inp.value.trim().startsWith('{')) {
+                return parseAndApplyJSONText(inp.value.trim(), '貼付JSON', null, toastFn);
+            }
+            if (navigator.clipboard && typeof navigator.clipboard.readText === 'function') {
+                const clipText = (await navigator.clipboard.readText() || '').trim();
+                if (clipText.startsWith('{')) {
+                    if (inp) inp.value = clipText.slice(0, 120) + '...';
+                    return parseAndApplyJSONText(clipText, 'クリップボードJSON', null, toastFn);
+                } else if (clipText) {
+                    if (inp) inp.value = clipText;
+                    return loadServerPlanById(clipText, toastFn);
+                }
+            }
+            notifyToast(toastFn, '上の入力欄にプラン番号（例: 2387-P01）またはJSONテキストを貼り付けて「読込」を押してください', true);
+            return false;
+        } catch (err) {
+            notifyToast(toastFn, '上の入力欄にプラン番号またはJSONテキストを長押しペーストして「読込」を押してください', true);
+            return false;
+        }
     }
 
     async function loadServerPlanById(rawPlanId, toastFn) {
@@ -279,17 +335,31 @@
             if (inp) query = inp.value.trim();
         }
         if (!query) {
-            notifyToast(toastFn, 'プラン番号（例: 2387-P01 または PLAN-2404-P05）を入力してください', true);
+            notifyToast(toastFn, 'プラン番号（例: 2387-P01 または PLAN-COMM-...）を入力するか、上の「保存済み一覧」から選んでください', true);
             return false;
         }
         // JSONテキストが直接貼り付けられた場合はそのままパース
         if (query.startsWith('{') && query.endsWith('}')) {
             return parseAndApplyJSONText(query, '貼り付けJSON', null, toastFn);
         }
+
+        // 1. まずローカルまたはクラウド保存済みプラン（PLAN-COMM-等）に一致するか検索
         let normId = query.toUpperCase().replace(/\.JSON$/i, '').trim();
         if (!normId.startsWith('PLAN-')) {
             normId = 'PLAN-' + normId;
         }
+
+        try {
+            const cloudRes = await fetch('/api/madori_plans_storage.php?action=get&planId=' + encodeURIComponent(normId) + '&t=' + Date.now());
+            if (cloudRes.ok) {
+                const cData = await cloudRes.json();
+                if (cData && cData.ok && cData.plan) {
+                    return applyLoadedProjectData(cData.plan, normId + '.json', null, toastFn);
+                }
+            }
+        } catch (_) {}
+
+        // 2. 703プラン集カタログ (/plans_json/) から検索
         try {
             const res = await fetch('/plans_json/' + encodeURIComponent(normId) + '.json?t=' + Date.now());
             if (!res.ok) {
@@ -305,10 +375,41 @@
         }
     }
 
+    /**
+     * 画面全体および読込モーダルへの JSON ファイルドラッグ＆ドロップ対応
+     * （Dropboxアプリやエクスプローラーから直接ファイルをドロップするだけでOSピッカーを開かずに即読込）
+     */
+    function initGlobalJsonDragAndDrop() {
+        window.addEventListener('dragover', (e) => {
+            if (e.dataTransfer && Array.from(e.dataTransfer.types || []).includes('Files')) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+            }
+        });
+        window.addEventListener('drop', (e) => {
+            if (!e.dataTransfer || !e.dataTransfer.files || e.dataTransfer.files.length === 0) return;
+            const file = e.dataTransfer.files[0];
+            if (!file) return;
+            const name = (file.name || '').toLowerCase();
+            if (name.endsWith('.json') || file.type === 'application/json') {
+                e.preventDefault();
+                readFileObjectAsJSON(file, null, null, null);
+            } else if (name.endsWith('.fbx') && typeof window.loadArchitrendFBXFromBuffer === 'function') {
+                e.preventDefault();
+                file.arrayBuffer().then(buf => window.loadArchitrendFBXFromBuffer(buf, file.name));
+            }
+        });
+    }
+
+    if (typeof window !== 'undefined') {
+        initGlobalJsonDragAndDrop();
+    }
+
     // グローバル公開
     window.savePlanToOtherLocation = savePlanToOtherLocation;
     window.exportJSON = exportJSON;
     window.importJSON = importJSON;
     window.loadServerPlanById = loadServerPlanById;
+    window.pasteAndRestoreJSONFromClipboard = pasteAndRestoreJSONFromClipboard;
     window.applyLoadedProjectData = applyLoadedProjectData;
 })();

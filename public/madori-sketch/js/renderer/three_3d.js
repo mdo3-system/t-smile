@@ -1003,7 +1003,7 @@
                 const hasNormalWallsOnFloor = (flData.walls || []).some(w => !w.wallType || w.wallType === 'wall');
                 if (!rm.isAutoDetected && rt.hasWall && (!hasNormalWallsOnFloor || isBalcony)) {
                     if (isBalcony) {
-                        // バルコニー部屋の手すり壁：他にその辺に壁（koshikabe/wall）が引かれていない辺のみ自動生成し、キャンチ辺は下に400mm伸ばす
+                        // バルコニー部屋の腰壁（手すり壁）：1Fの壁位置（baseY＝1F外壁上端ライン、さらにキャンチ跳ね出し辺は床下400mm位置）まで下端を伸ばして1F壁と隙間なく連結する
                         const balEdges = [
                             { orient: 'h', fixedP: rm.y, sP: rm.x, eP: rm.x + rm.w },
                             { orient: 'h', fixedP: rm.y + rm.h, sP: rm.x, eP: rm.x + rm.w },
@@ -1024,7 +1024,8 @@
                             });
                             if (hasExplicitWallOnEdge) return;
                             const isCant = isBalconyCantileverWall3D(flNum, flData, ed.orient, ed.fixedP, ed.sP, ed.eP);
-                            const dropDown = isCant ? 0.40 : 0.0;
+                            // キャンチ箇所は床下400mm(0.40m)、1F壁直上箇所もスラブ厚(slabHeight=0.18m)分を下へ伸ばして1F壁上端(baseY)まで隙間ゼロで連結
+                            const dropDown = (flNum >= 2) ? (isCant ? 0.40 : slabHeight) : 0.0;
                             const wY = baseY + slabHeight - dropDown;
                             const hWall = 1.10 + dropDown;
                             buildWallWithOpeningCutouts3D(ed.orient, ed.fixedP, ed.sP, ed.eP, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight);
@@ -1078,9 +1079,20 @@
                             true
                         );
                     } else if (wType === 'koshikabe') {
-                        // 腰壁: 床から立ち上がる手すり壁（2階以上でバルコニーのキャンチ箇所にある腰壁は下に400mm伸ばす）
+                        // 腰壁: 床から立ち上がる手すり壁
+                        // 2階以上のバルコニー・外周の腰壁は、1Fの壁位置（baseY＝1F壁上端、さらにキャンチ跳ね出し箇所は床下400mm位置）まで下端を伸ばして1F壁と隙間なく連結する
                         const isCantilever = isBalconyCantileverWall3D(flNum, flData, isHoriz ? 'h' : 'v', fixedP, startP, endP);
-                        const cantDropM = isCantilever ? 0.40 : 0.0;
+                        const touchesBalconyRoom = (flNum >= 2 && Array.isArray(flData.rooms)) && flData.rooms.some(r => {
+                            if (!r) return false;
+                            const rType = String(r.type || '').toUpperCase();
+                            const rName = String(r.customName || r.name || '');
+                            if (rType !== 'BALCONY' && !/バルコニー|ベランダ/.test(rName)) return false;
+                            const midP = (startP + endP) / 2;
+                            const wx = isHoriz ? midP : fixedP;
+                            const wy = isHoriz ? fixedP : midP;
+                            return wx >= r.x - 0.35 && wx <= r.x + r.w + 0.35 && wy >= r.y - 0.35 && wy <= r.y + r.h + 0.35;
+                        });
+                        const cantDropM = isCantilever ? 0.40 : ((flNum >= 2 && touchesBalconyRoom) ? slabHeight : 0.0);
                         const totalWaistH = waistH + cantDropM;
                         const waistBottomY = floorTopY - cantDropM;
                         const lenM = lenP * scaleP;
@@ -1097,7 +1109,7 @@
                             true
                         );
                         if (kMesh) {
-                            kMesh.userData.regionTag = isCantilever ? 'koshikabe_cantilever' : 'koshikabe';
+                            kMesh.userData.regionTag = isCantilever ? 'koshikabe_cantilever' : (touchesBalconyRoom ? 'koshikabe_balcony' : 'koshikabe');
                         }
                     } else if (wType === 'agarikamachi') {
                         // 上り框: 玄関段差見切り材
@@ -1137,8 +1149,9 @@
                     let wH = seamlessWallTotalH;
                     let wPosY = seamlessWallBottomY + wH / 2;
                     if (wType === 'koshikabe') {
-                        wH = waistH;
-                        wPosY = floorTopY + waistH / 2;
+                        const diagDrop = (flNum >= 2) ? slabHeight : 0.0;
+                        wH = waistH + diagDrop;
+                        wPosY = (floorTopY - diagDrop) + wH / 2;
                     } else if (wType === 'tarekabe') {
                         wH = dropH;
                         wPosY = floorTopY + wallHeight - dropH / 2;
@@ -1674,7 +1687,8 @@
         }
     }
 
-    function buildPlanExportObject(perspectiveImgUrl) {
+    function buildPlanExportObject(perspectiveImgUrl, extraMeta) {
+        extraMeta = extraMeta || {};
         const fl1 = (state.floors && state.floors[1]) ? state.floors[1] : { rooms: [], fixtures: [], stairs: [] };
         const fl2 = (state.floors && state.floors[2]) ? state.floors[2] : { rooms: [], fixtures: [], stairs: [] };
         const fl3 = (state.floors && state.floors[3]) ? state.floors[3] : { rooms: [], fixtures: [], stairs: [] };
@@ -1708,7 +1722,8 @@
         if (typeof window.updateCurrentPlanBadge === 'function') window.updateCurrentPlanBadge();
         const planId = state.currentPlanId;
         const floorCount = fl3.rooms.length > 0 ? 3 : (fl2.rooms.length > 0 ? 2 : 1);
-        const title = state.planTitle || `${totalTsubo}坪 3D共創プラン (${floorCount === 1 ? '平屋' : floorCount + '階建'})`;
+        const title = document.getElementById('planTitleInput')?.value?.trim() || state.projectTitle || state.planTitle || `${totalTsubo}坪 3D共創プラン (${floorCount === 1 ? '平屋' : floorCount + '階建'})`;
+        const isGuestPublic = extraMeta.agreedToShareAndPublish !== undefined ? !!extraMeta.agreedToShareAndPublish : true;
 
         return {
             id: planId,
@@ -1723,23 +1738,25 @@
             kitchen_type: '対面型',
             rooms: '3LDK',
             tags: ['共創プラン', '対面型キッチン'],
-            description: `3D間取り工房で作成された注文住宅プラン（${totalTsubo}坪）。`,
+            description: `3D間取り工房で作成・共有された注文住宅プラン（${totalTsubo}坪）。`,
             floors: [
                 { floor: '1F', area_sqm: +a1.toFixed(2), clean_2d: clean2DUrl, gemini_3d: perspectiveImgUrl || clean2DUrl },
                 ...(floorCount >= 2 ? [{ floor: '2F', area_sqm: +a2.toFixed(2), clean_2d: clean2DUrl, gemini_3d: perspectiveImgUrl || clean2DUrl }] : [])
             ],
             rawHouseData: JSON.parse(JSON.stringify({ floors: state.floors })),
             isCommunityPlan: true,
-            status: 'pending',
-            copyright: 'ユーザー本人に帰属',
+            agreedToShareAndPublish: isGuestPublic,
+            status: isGuestPublic ? 'published' : 'pending',
+            sharedWith: '株式会社住ま居る 家づくりサポート係',
+            copyright: 'ユーザー本人に帰属（株式会社住ま居る 家づくりサポート係とのデータ共有および3D間取りプラン選定への登録・公開に同意済）',
             updated_at: new Date().toLocaleDateString('ja-JP'),
             created_at: new Date().toLocaleDateString('ja-JP')
         };
     }
 
-    function syncPlanToCommunityLibrary(customPersUrl) {
+    function syncPlanToCommunityLibrary(customPersUrl, extraMeta) {
         try {
-            const commPlan = buildPlanExportObject(customPersUrl);
+            const commPlan = buildPlanExportObject(customPersUrl, extraMeta);
             let localPlans = [];
             try {
                 const rawL = localStorage.getItem('smile_community_plans');
