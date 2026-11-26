@@ -118,27 +118,34 @@ function draw2DCanvas() {
     // 5a. 部屋・空間要素（吹き抜け、玄関土間、小上り、畳、中庭、天井）
     fl.rooms.forEach(rm => drawRoom2D(rm, isLight));
 
-    // 5b. 壁セグメント（壁、たれ壁、腰壁、上り框）
+    // 5b. 階段（ボックス階段 / オープン階段 / 手すり）
+    if (fl.stairs && fl.stairs.length) {
+        fl.stairs.forEach(st => drawStair2D(st, isLight));
+    }
+
+    // 5b-2. 上の階における「部屋のプロパティ・範囲優先」マスク処理：
+    // 下の階の階段の1〜2段目など上の階に干渉しない部分に床（収納・クローゼット・廊下・居室等）を貼った場合、
+    // 部屋の範囲を優先して該当段数を床で覆い隠し、部屋名・範囲を優先表示する
+    if (fl.stairs && fl.stairs.length > 0 && fl.rooms && fl.rooms.length > 0) {
+        drawUpperFloorRoomMaskOverStairs2D(fl, W, H, isLight);
+    }
+
+    // 5c. 壁セグメント（壁、たれ壁、腰壁、上り框）
     fl.walls.forEach(wl => drawWallSegment2D(wl, isLight));
 
-    // 5c. 多角形柱 & 独立柱
+    // 5d. 多角形柱 & 独立柱
     if (fl.polyPillars && fl.polyPillars.length > 0) {
         fl.polyPillars.forEach(pp => drawPolyPillar2D(pp, isLight));
     }
     fl.pillars.forEach(pl => drawStandalonePillar2D(pl, isLight));
 
-    // 5d. 四角（3D直方体）& 設備・家具
+    // 5e. 四角（3D直方体）& 設備・家具
     if (fl.boxes3d && fl.boxes3d.length > 0) {
         fl.boxes3d.forEach(bx => drawBox3DItem2D(bx, isLight));
     }
     fl.fixtures.forEach(fx => drawFixture2D(fx, isLight));
 
-    // 5e. 階段（ボックス階段 / オープン階段 / 手すり）
-    if (fl.stairs && fl.stairs.length) {
-        fl.stairs.forEach(st => drawStair2D(st, isLight));
-    }
-
-    // 5f. サッシ・建具（全12種類）
+    // 5f. サッシ・建具（全13種類）
     fl.openings.forEach(op => drawOpening2D(op, isLight));
 
     // 5g. 外周2段自動寸法線（区間寸法＋総寸法：お手本画像完全準拠）
@@ -1445,25 +1452,187 @@ function drawStair2D(st, isLight) {
     ctx.restore();
 }
 
+/**
+ * 部屋が「階段を覆い隠す床貼り部屋」かどうかの共通判定ヘルパー
+ * - 階段室(STAIR)・吹抜(VOID)・中庭(NAKANIWA)・天井(TENJO)は階段開口空間のため被覆しない
+ * - 下の階から複写された階段（または2階以上の階段）に対して、1〜2段目などの上に床として貼られた
+ *   「収納」「クローゼット」「トイレ」「廊下・ホール」「洋室」等の部屋範囲を優先する
+ */
+function isStairOpenRoom(rm) {
+    if (!rm) return false;
+    const rType = String(rm.type || '').toUpperCase();
+    if (rType === 'STAIR' || rType === 'VOID' || rType === 'NAKANIWA' || rType === 'TENJO') return true;
+    const rName = String(rm.customName || rm.name || '');
+    if (/階段|吹抜|吹き抜け|中庭/.test(rName)) return true;
+    return false;
+}
+window.isStairOpenRoom = isStairOpenRoom;
+
+function getRoomsMaskingUpperStair(fl, st) {
+    if (!fl || !Array.isArray(fl.rooms) || !st) return [];
+    const isUpperOrLinked = (st.linkedFromStairId !== undefined && st.linkedFromStairId !== null)
+        || (state.currentFloor >= 2 && st.direction === 'DOWN');
+    if (!isUpperOrLinked) return [];
+
+    // 階段が現在選択中でかつ階段ツール使用中の場合は全体を確認できるようマスクしない
+    const isStairActivelyEdited = state.activeTool === 'stair'
+        && state.selectedItem && state.selectedItem.kind === 'stair' && state.selectedItem.id === st.id;
+    if (isStairActivelyEdited) return [];
+
+    const sx0 = (st.x !== undefined && !isNaN(st.x)) ? st.x : 0;
+    const sy0 = (st.y !== undefined && !isNaN(st.y)) ? st.y : 0;
+    const sw = (st.w !== undefined && !isNaN(st.w)) ? st.w : 1;
+    const sh = (st.h !== undefined && !isNaN(st.h)) ? st.h : 2;
+    const sx1 = sx0 + sw;
+    const sy1 = sy0 + sh;
+    const stairArea = Math.max(0.01, sw * sh);
+
+    const hasExplicitStairOpenRoomOnFloor = fl.rooms.some(r => {
+        if (!isStairOpenRoom(r)) return false;
+        const ox = Math.max(0, Math.min(sx1, r.x + r.w) - Math.max(sx0, r.x));
+        const oy = Math.max(0, Math.min(sy1, r.y + r.h) - Math.max(sy0, r.y));
+        return (ox * oy) > 0.02;
+    });
+
+    return fl.rooms.filter(rm => {
+        if (!rm || isStairOpenRoom(rm)) return false;
+        const rx0 = rm.x, ry0 = rm.y, rx1 = rm.x + rm.w, ry1 = rm.y + rm.h;
+        const ox = Math.max(0, Math.min(sx1, rx1) - Math.max(sx0, rx0));
+        const oy = Math.max(0, Math.min(sy1, ry1) - Math.max(sy0, ry0));
+        const overlapArea = ox * oy;
+        if (overlapArea <= 0.01) return false;
+
+        // もしこの階に「階段室」や「吹抜」が明示的に定義されている場合は、それ以外の全ての床貼り部屋を優先して階段をマスクする
+        if (hasExplicitStairOpenRoomOnFloor) return true;
+
+        // 階段室が未定義でも、階段の一部分（例：登りはじめ1〜3段目など、重なり面積が階段全体の85%未満）に重なる部屋（収納・クローゼット・廊下等）は優先してマスクする
+        if (overlapArea < stairArea * 0.85) return true;
+
+        // 部屋自体が収納・クローゼット・トイレ・洗面等の小部屋（4.5帖以下）で階段の上に配置された場合も部屋を優先
+        const rmAreaP = rm.w * rm.h;
+        const rType = String(rm.type || '').toUpperCase();
+        if (['CLOSET', 'SHUNO', 'STORAGE', 'WIC', 'TOILET', 'SENMEN', 'DATSUI'].includes(rType) && rmAreaP <= 4.5) {
+            return true;
+        }
+        return false;
+    });
+}
+window.getRoomsMaskingUpperStair = getRoomsMaskingUpperStair;
+
+function drawUpperFloorRoomMaskOverStairs2D(fl, W, H, isLight) {
+    const maskedRoomSet = new Set();
+    const maskedRooms = [];
+    (fl.stairs || []).forEach(st => {
+        const rooms = getRoomsMaskingUpperStair(fl, st);
+        rooms.forEach(rm => {
+            if (!maskedRoomSet.has(rm.id)) {
+                maskedRoomSet.add(rm.id);
+                maskedRooms.push(rm);
+            }
+        });
+    });
+    if (maskedRooms.length === 0) return;
+
+    maskedRooms.forEach(rm => {
+        const p1 = worldPToScreen(rm.x, rm.y);
+        const wPx = rm.w * state.cam2d.zoom;
+        const hPx = rm.h * state.cam2d.zoom;
+        const hasPoly = Array.isArray(rm.points) && rm.points.length >= 3;
+
+        ctx.save();
+        ctx.beginPath();
+        if (hasPoly) {
+            rm.points.forEach((pt, idx) => {
+                const sp = worldPToScreen(pt.x, pt.y);
+                if (idx === 0) ctx.moveTo(sp.x, sp.y);
+                else ctx.lineTo(sp.x, sp.y);
+            });
+            ctx.closePath();
+        } else {
+            ctx.rect(p1.x, p1.y, wPx, hPx);
+        }
+        ctx.clip();
+
+        // 1. クリップ領域内の階段描画をキャンパス背景色で完全に消去し、方眼グリッドを復元
+        ctx.fillStyle = isLight ? '#ffffff' : '#0b1120';
+        ctx.fillRect(p1.x - 4, p1.y - 4, wPx + 8, hPx + 8);
+        drawGrid2D(W, H, isLight);
+        ctx.restore();
+
+        // 2. 部屋（床色・枠・部屋名・帖数ラベル）を最優先で再描画
+        drawRoom2D(rm, isLight);
+    });
+}
+
+/**
+ * L型キッチンの回転角 rot (0/90/180/270) および flipX/flipY から、
+ * L字コーナー（2つのウィングの交点・配置基準角）が外接矩形のどの角にあるかを返す単一情報源ヘルパー
+ * - rot = 0°   : 北西角 (左上 cornerRight=false, cornerBottom=false)
+ * - rot = 90°  : 北東角 (右上 cornerRight=true,  cornerBottom=false)
+ * - rot = 180° : 南東角 (右下 cornerRight=true,  cornerBottom=true)
+ * - rot = 270° : 南西角 (左下 cornerRight=false, cornerBottom=true)
+ */
+function resolveKitchenLCornerState(fxOrRot, flipX = false, flipY = false) {
+    let rawRot = 0;
+    let fxFlipX = !!flipX;
+    let fxFlipY = !!flipY;
+    if (fxOrRot && typeof fxOrRot === 'object') {
+        rawRot = fxOrRot.rot || 0;
+        fxFlipX = !!fxOrRot.flipX;
+        fxFlipY = !!fxOrRot.flipY;
+    } else if (typeof fxOrRot === 'number') {
+        rawRot = fxOrRot;
+    }
+    const rot = ((rawRot % 360) + 360) % 360;
+    let cornerRight = (rot === 90 || rot === 180);
+    let cornerBottom = (rot === 180 || rot === 270);
+    if (fxFlipX) cornerRight = !cornerRight;
+    if (fxFlipY) cornerBottom = !cornerBottom;
+    const cornerLabel = (!cornerRight && !cornerBottom) ? '↖北西角(0°)'
+        : (cornerRight && !cornerBottom) ? '↗北東角(90°)'
+        : (cornerRight && cornerBottom) ? '↘南東角(180°)'
+        : '↙南西角(270°)';
+    return { rot, cornerRight, cornerBottom, cornerLabel };
+}
+window.resolveKitchenLCornerState = resolveKitchenLCornerState;
+
 function drawFixture2D(fx, isLight) {
     const p = worldPToScreen(fx.x, fx.y);
     const wPx = fx.w * state.cam2d.zoom;
     const hPx = fx.h * state.cam2d.zoom;
     const isSelected = state.selectedItem && state.selectedItem.kind === 'fixture' && state.selectedItem.id === fx.id;
     const cat = fx.category || fx.type;
+    const isKitchenL = cat === 'KITCHEN_L' || (fx.fxData && fx.fxData.kitchenType === 'L');
+    const rot = (((fx.rot || 0) % 360) + 360) % 360;
+    const isRot90or270 = (rot === 90 || rot === 270);
+    // 90°/270°回転時は fx.w (画面X幅) と fx.h (画面Y奥行) が入れ替わっているため、
+    // 回転後ローカル座標系では未回転の器具本来サイズ (localW = 器具正面幅, localH = 器具奥行) で描画する！
+    const localW = isRot90or270 ? hPx : wPx;
+    const localH = isRot90or270 ? wPx : hPx;
 
     ctx.save();
-    ctx.translate(p.x + wPx / 2, p.y + hPx / 2);
-    if (fx.flipX) ctx.scale(-1, 1);
-    if (fx.flipY) ctx.scale(1, -1);
-    ctx.translate(-wPx / 2, -hPx / 2);
+    if (isKitchenL) {
+        // L型キッチンは rot (0/90/180/270) および flipX/flipY からコーナー位置を算出し、そのコーナーを原点にL字を描画する
+        const cState = resolveKitchenLCornerState(fx);
+        ctx.translate(p.x + wPx / 2, p.y + hPx / 2);
+        ctx.scale(cState.cornerRight ? -1 : 1, cState.cornerBottom ? -1 : 1);
+        ctx.translate(-wPx / 2, -hPx / 2);
+    } else {
+        ctx.translate(p.x + wPx / 2, p.y + hPx / 2);
+        if (rot !== 0) {
+            ctx.rotate((rot * Math.PI) / 180);
+        }
+        if (fx.flipX) ctx.scale(-1, 1);
+        if (fx.flipY) ctx.scale(1, -1);
+        ctx.translate(-localW / 2, -localH / 2);
+    }
 
     ctx.fillStyle = isSelected ? '#fef3c7' : '#ffffff';
     ctx.strokeStyle = isSelected ? '#f59e0b' : '#334155';
     ctx.lineWidth = isSelected ? 2.5 : 1.3;
 
-    if (cat === 'KITCHEN_L' || (fx.fxData && fx.fxData.kitchenType === 'L')) {
-        // L型キッチン（6頂点L字ポリゴン＋コーナー目地＋シンク＋3口コンロ）
+    if (isKitchenL) {
+        // L型キッチン（6頂点L字ポリゴン＋コーナー目地＋シンク＋3口コンロ＋選択時のコーナー配置基準点●）
         const pitch = state.modulePitch || 910;
         const depthMm = (fx.fxData && fx.fxData.lDepth) ? fx.fxData.lDepth : 650;
         const depthP = depthMm / pitch;
@@ -1488,7 +1657,7 @@ function drawFixture2D(fx, isLight) {
         ctx.lineTo(dPx, dPx);
         ctx.stroke();
 
-        // 横ウィング（上辺）にシンクを描画
+        // 横ウィングにシンクを描画
         const wingXLen = wPx - dPx;
         if (wingXLen > 24 && dPx > 14) {
             const sinkW = Math.min(wingXLen * 0.55, 38);
@@ -1497,7 +1666,7 @@ function drawFixture2D(fx, isLight) {
             const sinkY = (dPx - sinkH) / 2;
             ctx.strokeRect(sinkX, sinkY, sinkW, sinkH);
         }
-        // 縦ウィング（左辺）に3口コンロを描画
+        // 縦ウィングに3口コンロを描画
         const wingYLen = hPx - dPx;
         if (wingYLen > 20 && dPx > 14) {
             const stoveX = dPx / 2;
@@ -1509,15 +1678,22 @@ function drawFixture2D(fx, isLight) {
             ctx.arc(stoveX + r * 1.1, stoveY, r * 0.85, 0, Math.PI * 2);
             ctx.stroke();
         }
+        // コーナー配置基準点（赤い●印）をL字の外角原点 (0,0) に明示表示
+        if (isSelected) {
+            ctx.fillStyle = '#ef4444';
+            ctx.beginPath();
+            ctx.arc(3, 3, 4.5, 0, Math.PI * 2);
+            ctx.fill();
+        }
     } else if (cat === 'KITCHEN' || (cat && cat.startsWith('KITCHEN'))) {
-        ctx.fillRect(0, 0, wPx, hPx);
-        ctx.strokeRect(0, 0, wPx, hPx);
-        if (wPx > 40 && hPx > 18) {
-            const sinkW = Math.min(wPx * 0.35, 42);
-            const sinkH = hPx * 0.65;
-            ctx.strokeRect(6, (hPx - sinkH) / 2, sinkW, sinkH);
-            const stoveX = wPx - Math.min(wPx * 0.32, 36);
-            const stoveY = hPx / 2;
+        ctx.fillRect(0, 0, localW, localH);
+        ctx.strokeRect(0, 0, localW, localH);
+        if (localW > 36 && localH > 14) {
+            const sinkW = Math.min(localW * 0.35, 42);
+            const sinkH = localH * 0.65;
+            ctx.strokeRect(6, (localH - sinkH) / 2, sinkW, sinkH);
+            const stoveX = localW - Math.min(localW * 0.32, 36);
+            const stoveY = localH / 2;
             ctx.beginPath();
             ctx.arc(stoveX + 8, stoveY - 4, 4, 0, Math.PI * 2);
             ctx.arc(stoveX + 8, stoveY + 4, 4, 0, Math.PI * 2);
@@ -1525,44 +1701,76 @@ function drawFixture2D(fx, isLight) {
             ctx.stroke();
         }
     } else if (cat === 'UB') {
-        ctx.fillRect(0, 0, wPx, hPx);
-        ctx.strokeRect(0, 0, wPx, hPx);
-        const tubH = hPx * 0.46;
+        ctx.fillRect(0, 0, localW, localH);
+        ctx.strokeRect(0, 0, localW, localH);
+        const tubH = localH * 0.46;
         ctx.beginPath();
-        ctx.roundRect(4, 4, wPx - 8, tubH, 6);
+        ctx.roundRect(4, 4, Math.max(4, localW - 8), Math.max(4, tubH), 6);
         ctx.stroke();
         ctx.beginPath();
-        ctx.roundRect(8, 7, wPx - 16, tubH - 6, 4);
+        ctx.roundRect(8, 7, Math.max(4, localW - 16), Math.max(4, tubH - 6), 4);
         ctx.stroke();
     } else if (cat === 'VANITY') {
-        ctx.fillRect(0, 0, wPx, hPx);
-        ctx.strokeRect(0, 0, wPx, hPx);
-        if (wPx > 20 && hPx > 14) {
+        ctx.fillRect(0, 0, localW, localH);
+        ctx.strokeRect(0, 0, localW, localH);
+        if (localW > 18 && localH > 12) {
             ctx.beginPath();
-            ctx.ellipse(wPx / 2, hPx / 2, Math.min(wPx * 0.32, 16), Math.min(hPx * 0.32, 10), 0, 0, Math.PI * 2);
+            ctx.ellipse(localW / 2, localH * 0.54, Math.min(localW * 0.34, 16), Math.min(localH * 0.32, 10), 0, 0, Math.PI * 2);
+            ctx.stroke();
+            // 水栓カラン小丸
+            ctx.beginPath();
+            ctx.arc(localW / 2, localH * 0.16, 2.2, 0, Math.PI * 2);
             ctx.stroke();
         }
     } else if (cat === 'TOILET_FIX') {
-        ctx.strokeRect(0, 0, wPx, hPx * 0.3);
+        // トイレ便器：背面(y=0側)にロータンク矩形、手前(y=localH側)に楕円便器ボウルを潰れなしで描画
+        const tankH = localH * 0.28;
+        ctx.fillRect(localW * 0.06, 0, localW * 0.88, tankH);
+        ctx.strokeRect(localW * 0.06, 0, localW * 0.88, tankH);
         ctx.beginPath();
-        ctx.ellipse(wPx / 2, hPx * 0.65, wPx * 0.36, hPx * 0.32, 0, 0, Math.PI * 2);
+        ctx.ellipse(localW / 2, localH * 0.64, localW * 0.38, localH * 0.33, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
+        // 内リム線
+        if (localW > 14 && localH > 20) {
+            ctx.beginPath();
+            ctx.ellipse(localW / 2, localH * 0.66, localW * 0.24, localH * 0.21, 0, 0, Math.PI * 2);
+            ctx.stroke();
+        }
     } else {
-        ctx.fillRect(0, 0, wPx, hPx);
-        ctx.strokeRect(0, 0, wPx, hPx);
-        if (wPx > 26 && hPx > 16) {
+        ctx.fillRect(0, 0, localW, localH);
+        ctx.strokeRect(0, 0, localW, localH);
+        // ソファやベッド等は背面（y=0側）に背もたれ・ヘッドボード二重線を描画して向きを一目でわかるようにする
+        if (cat === 'SOFA' || cat === 'BED_DOUBLE' || cat === 'BED_SINGLE' || cat === 'CUPBOARD' || cat === 'CLOSET_UNIT') {
+            ctx.beginPath();
+            const backBand = Math.max(3, Math.min(8, localH * 0.16));
+            ctx.moveTo(0, backBand);
+            ctx.lineTo(localW, backBand);
+            ctx.stroke();
+        }
+        if (localW > 20 && localH > 14) {
             ctx.save();
-            if (fx.flipX) ctx.scale(-1, 1);
+            // 文字は回転・反転を打ち消して常に水平正立で読みやすく描画
+            ctx.translate(localW / 2, localH / 2);
             if (fx.flipY) ctx.scale(1, -1);
+            if (fx.flipX) ctx.scale(-1, 1);
+            if (rot !== 0) ctx.rotate((-rot * Math.PI) / 180);
             ctx.fillStyle = '#1e293b';
             ctx.font = 'bold 9px "Noto Sans JP", sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             const lbl = (fx.label || (FIXTURE_TYPES[cat] && FIXTURE_TYPES[cat].label) || '設備').split('(')[0];
-            ctx.fillText(lbl, (fx.flipX ? -1 : 1) * wPx / 2, (fx.flipY ? -1 : 1) * hPx / 2);
+            ctx.fillText(lbl, 0, 0);
             ctx.restore();
         }
+    }
+
+    // 選択時は背面壁吸着基準点（ローカル上辺中央 (localW/2, 2)）に赤い●印を表示
+    if (isSelected && !isKitchenL) {
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(localW / 2, 2.5, 4.2, 0, Math.PI * 2);
+        ctx.fill();
     }
 
     ctx.restore();
@@ -1670,12 +1878,51 @@ function drawOpening2D(op, isLight) {
         ctx.moveTo(-lenPx / 2, 0);
         ctx.lineTo(lenPx / 2, 0);
         ctx.stroke();
-    } else if (fit === 'katabiki' || fit === 'genkan_slide') {
-        // 引き戸（片引き）
+    } else if (fit === 'katabiki' || fit === 'hikido' || fit === 'genkan_slide') {
+        // 片引き戸（1枚扉パネル＋破線引き込みレール＋引手＋スライド方向矢印）：引違い（2枚障子）と一目で識別可能にする
+        const mainStroke = isSelected ? '#f59e0b' : '#0f172a';
+        // 1. 枠の両端縦枠（柱チリ受け枠）
         ctx.beginPath();
-        ctx.moveTo(-lenPx / 2, -2); ctx.lineTo(lenPx / 2, -2);
-        ctx.moveTo(-lenPx / 2, 2 * dir); ctx.lineTo(0, 2 * dir);
+        ctx.moveTo(-lenPx / 2, -4.5); ctx.lineTo(-lenPx / 2, 4.5);
+        ctx.moveTo(lenPx / 2, -4.5); ctx.lineTo(lenPx / 2, 4.5);
         ctx.stroke();
+
+        // 2. 引き込みレール側（全幅のガイドレール破線）
+        ctx.save();
+        ctx.setLineDash([2.5, 2.5]);
+        ctx.lineWidth = 1.0;
+        ctx.strokeStyle = isSelected ? '#f59e0b' : '#64748b';
+        ctx.beginPath();
+        ctx.moveTo(-lenPx / 2, -2.2 * dir);
+        ctx.lineTo(lenPx / 2, -2.2 * dir);
+        ctx.stroke();
+        ctx.restore();
+
+        // 3. 1枚の扉パネル本体（片側54%を占める厚み付き実線ボックス＋引手）
+        const panelStart = dir > 0 ? (-lenPx / 2) : (-lenPx * 0.04);
+        const panelW = lenPx * 0.54;
+        const panelY = (1.6 * dir) - 1.6;
+        ctx.fillStyle = isSelected ? '#fef3c7' : '#bae6fd';
+        ctx.fillRect(panelStart, panelY, panelW, 3.2);
+        ctx.strokeStyle = mainStroke;
+        ctx.lineWidth = isSelected ? 2.2 : 1.5;
+        ctx.strokeRect(panelStart, panelY, panelW, 3.2);
+
+        // 4. スライド開閉方向を示す小矢印（扉から開放側へ向かう矢印）
+        if (lenPx >= 18) {
+            const arrowY = -3.8 * dir;
+            const arrowX1 = dir > 0 ? (-lenPx * 0.15) : (lenPx * 0.15);
+            const arrowX2 = dir > 0 ? (lenPx * 0.28) : (-lenPx * 0.28);
+            const headSign = dir > 0 ? 1 : -1;
+            ctx.beginPath();
+            ctx.lineWidth = 1.1;
+            ctx.moveTo(arrowX1, arrowY);
+            ctx.lineTo(arrowX2, arrowY);
+            ctx.lineTo(arrowX2 - 3.5 * headSign, arrowY - 2.2);
+            ctx.moveTo(arrowX2, arrowY);
+            ctx.lineTo(arrowX2 - 3.5 * headSign, arrowY + 2.2);
+            ctx.stroke();
+        }
     } else if (fit === 'kaikou') {
         // 開口のみ（扉なし・階段登りきり通路・下がり壁開口）
         ctx.beginPath();
@@ -2236,54 +2483,141 @@ function drawFixtureHoverPreview2D() {
     const cat = state.subFixtureCategory || 'KITCHEN';
     const pitch = state.modulePitch || 910;
     let baseW = 2.0, baseH = 0.7;
+    const isKitchenL = (cat === 'KITCHEN_L') || (cat === 'KITCHEN' && state.subKitchenType === 'L');
 
-    if (cat === 'KITCHEN') {
-        baseW = (state.subKitchenIWidth || 2550) / pitch;
-        baseH = (state.subKitchenIDepth || 650) / pitch;
+    if (isKitchenL) {
+        baseW = (state.subKitchenLXWidth || 2550) / pitch;
+        baseH = (state.subKitchenLYWidth || 1820) / pitch;
+    } else if (cat === 'KITCHEN') {
+        if (state.subKitchenType === 'ISLAND') {
+            baseW = (state.subKitchenIslandW || 2550) / pitch;
+            baseH = (state.subKitchenIslandD || 900) / pitch;
+        } else {
+            baseW = (state.subKitchenIWidth || 2550) / pitch;
+            baseH = (state.subKitchenIDepth || 650) / pitch;
+        }
     } else if (cat === 'UB') {
-        baseW = 1.76; baseH = 1.76;
+        const ubSpecs = window.UB_SPECS || { sizes: [] };
+        const curSize = ubSpecs.sizes.find(s => s.id === state.subUbSize) || { wMm: 1600, dMm: 1600 };
+        baseW = +(curSize.wMm / pitch).toFixed(3);
+        baseH = +(curSize.dMm / pitch).toFixed(3);
     } else if (cat === 'VANITY') {
         baseW = (state.subVanityWidth || 900) / pitch;
-        baseH = 0.6;
-    } else if (cat === 'TOILET_FIX') {
-        baseW = 0.8; baseH = 0.5;
+        baseH = (state.subVanityDepth || 550) / pitch;
     } else if (FIXTURE_TYPES[cat]) {
         baseW = FIXTURE_TYPES[cat].wP;
         baseH = FIXTURE_TYPES[cat].hP;
     }
 
-    const rot = state.subFixtureRot || 0;
-    const wP = (rot === 90 || rot === 270) ? baseH : baseW;
-    const hP = (rot === 90 || rot === 270) ? baseW : baseH;
+    let rot = (((state.subFixtureRot || 0) % 360) + 360) % 360;
+    let wP = (rot === 90 || rot === 270) ? baseH : baseW;
+    let hP = (rot === 90 || rot === 270) ? baseW : baseH;
 
     let placeX = state.lastHoverWorld.x;
     let placeY = state.lastHoverWorld.y;
+    let snappedToWall = false;
 
     if (typeof findNearestWallForFixture === 'function') {
-        const snapWallInfo = findNearestWallForFixture(placeX, placeY, wP, hP);
+        const snapWallInfo = findNearestWallForFixture(placeX, placeY, wP, hP, isKitchenL, rot, cat);
         if (snapWallInfo) {
-            if (snapWallInfo.side === 'top' || snapWallInfo.side === 'bottom') placeY = snapWallInfo.y;
-            else placeX = snapWallInfo.x;
+            snappedToWall = true;
+            placeX = snapWallInfo.x;
+            placeY = snapWallInfo.y;
+            if (snapWallInfo.autoRot !== undefined && !state.subFixtureRotManual) {
+                rot = snapWallInfo.autoRot;
+                wP = (rot === 90 || rot === 270) ? baseH : baseW;
+                hP = (rot === 90 || rot === 270) ? baseW : baseH;
+                const resnap = findNearestWallForFixture(state.lastHoverWorld.x, state.lastHoverWorld.y, wP, hP, isKitchenL, rot, cat);
+                if (resnap) {
+                    placeX = resnap.x;
+                    placeY = resnap.y;
+                }
+            }
         }
     }
 
     const p = worldPToScreen(placeX, placeY);
     const wPx = wP * state.cam2d.zoom;
     const hPx = hP * state.cam2d.zoom;
+    const isRot90or270 = (rot === 90 || rot === 270);
+    const localW = isRot90or270 ? hPx : wPx;
+    const localH = isRot90or270 ? wPx : hPx;
 
     ctx.save();
-    ctx.fillStyle = 'rgba(245, 158, 11, 0.25)';
+    ctx.fillStyle = 'rgba(245, 158, 11, 0.28)';
     ctx.strokeStyle = '#f59e0b';
     ctx.lineWidth = 2;
     ctx.setLineDash([4, 2]);
-    ctx.fillRect(p.x, p.y, wPx, hPx);
-    ctx.strokeRect(p.x, p.y, wPx, hPx);
 
-    ctx.setLineDash([]);
-    ctx.fillStyle = '#ef4444';
-    ctx.beginPath();
-    ctx.arc(p.x + wPx / 2, p.y + hPx / 2, 4.5, 0, Math.PI * 2);
-    ctx.fill();
+    if (isKitchenL) {
+        const cState = resolveKitchenLCornerState(rot, state.subFixtureFlipX, state.subFixtureFlipY);
+        const depthP = 650 / pitch;
+        const dPx = Math.min(Math.min(wPx, hPx) * 0.48, Math.max(12, depthP * state.cam2d.zoom));
+
+        ctx.save();
+        ctx.translate(p.x + wPx / 2, p.y + hPx / 2);
+        ctx.scale(cState.cornerRight ? -1 : 1, cState.cornerBottom ? -1 : 1);
+        ctx.translate(-wPx / 2, -hPx / 2);
+
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(wPx, 0);
+        ctx.lineTo(wPx, dPx);
+        ctx.lineTo(dPx, dPx);
+        ctx.lineTo(dPx, hPx);
+        ctx.lineTo(0, hPx);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // コーナー配置基準点（赤い●印）
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(3, 3, 5.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        // 基準角ラベル
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 10px "Noto Sans JP", sans-serif';
+        ctx.fillText(`基準:${cState.cornerLabel}`, p.x + 6, p.y + hPx / 2);
+    } else {
+        ctx.save();
+        ctx.translate(p.x + wPx / 2, p.y + hPx / 2);
+        if (rot !== 0) ctx.rotate((rot * Math.PI) / 180);
+        if (state.subFixtureFlipX) ctx.scale(-1, 1);
+        if (state.subFixtureFlipY) ctx.scale(1, -1);
+        ctx.translate(-localW / 2, -localH / 2);
+
+        if (cat === 'TOILET_FIX') {
+            const tankH = localH * 0.28;
+            ctx.fillRect(localW * 0.06, 0, localW * 0.88, tankH);
+            ctx.strokeRect(localW * 0.06, 0, localW * 0.88, tankH);
+            ctx.beginPath();
+            ctx.ellipse(localW / 2, localH * 0.64, localW * 0.38, localH * 0.33, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+        } else {
+            ctx.fillRect(0, 0, localW, localH);
+            ctx.strokeRect(0, 0, localW, localH);
+        }
+
+        // 背面基準点（赤い●印）をローカル上辺中央に描画
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(localW / 2, 2.5, 4.8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 9px "Noto Sans JP", sans-serif';
+        const rotLabel = { 0: '↑北背(0°)', 90: '→東背(90°)', 180: '↓南背(180°)', 270: '←西背(270°)' }[rot] || `${rot}°`;
+        ctx.fillText(`${rotLabel}${snappedToWall ? '・壁吸着' : ''}`, p.x + 3, p.y - 4);
+    }
     ctx.restore();
 }
 

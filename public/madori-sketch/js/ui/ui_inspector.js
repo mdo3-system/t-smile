@@ -318,14 +318,33 @@ function renderSubToolbar() {
         ];
         let btns = catList.map(c => {
             const isAct = (state.subFixtureCategory || 'KITCHEN') === c.id;
-            return `<button onclick="state.subFixtureCategory='${c.id}';state.subFixtureType='${c.id}';state.subKitchenType=(('${c.id}'==='KITCHEN_L')?'L':'I');renderSubToolbar();" class="px-2 py-1 rounded text-xs font-bold transition shrink-0 ${isAct ? 'bg-amber-500 text-slate-950 shadow' : 'bg-slate-800 text-slate-300 hover:text-white'}">${c.icon}${c.label}</button>`;
+            return `<button onclick="state.subFixtureCategory='${c.id}';state.subFixtureType='${c.id}';state.subKitchenType=(('${c.id}'==='KITCHEN_L')?'L':'I');state.subFixtureRotManual=false;renderSubToolbar();" class="px-2 py-1 rounded text-xs font-bold transition shrink-0 ${isAct ? 'bg-amber-500 text-slate-950 shadow' : 'bg-slate-800 text-slate-300 hover:text-white'}">${c.icon}${c.label}</button>`;
         }).join('');
+
+        const curRot = (((state.subFixtureRot || 0) % 360) + 360) % 360;
+        const isSubKL = (state.subFixtureCategory === 'KITCHEN_L') || (state.subFixtureCategory === 'KITCHEN' && state.subKitchenType === 'L');
+        const snapOn = state.subFixtureWallSnap !== false;
+        const orientBtns = `
+            <div class="inline-flex items-center gap-0.5 bg-slate-900 border border-amber-500/40 rounded px-1 py-0.5 shrink-0">
+                <span class="text-[10px] text-amber-300 font-bold mr-0.5">${isSubKL ? '基準角:' : '向き:'}</span>
+                <button type="button" onclick="rotateFixturePreset(0)" class="px-1.5 py-0.5 rounded text-[10px] font-bold ${curRot === 0 ? 'bg-amber-500 text-slate-950' : 'text-slate-300 hover:text-white'}">${isSubKL ? '↖北西' : '↑北背(0°)'}</button>
+                <button type="button" onclick="rotateFixturePreset(90)" class="px-1.5 py-0.5 rounded text-[10px] font-bold ${curRot === 90 ? 'bg-amber-500 text-slate-950' : 'text-slate-300 hover:text-white'}">${isSubKL ? '↗北東' : '→東背(90°)'}</button>
+                <button type="button" onclick="rotateFixturePreset(180)" class="px-1.5 py-0.5 rounded text-[10px] font-bold ${curRot === 180 ? 'bg-amber-500 text-slate-950' : 'text-slate-300 hover:text-white'}">${isSubKL ? '↘南東' : '↓南背(180°)'}</button>
+                <button type="button" onclick="rotateFixturePreset(270)" class="px-1.5 py-0.5 rounded text-[10px] font-bold ${curRot === 270 ? 'bg-amber-500 text-slate-950' : 'text-slate-300 hover:text-white'}">${isSubKL ? '↙南西' : '←西背(270°)'}</button>
+            </div>
+        `;
+        const snapBtn = `
+            <button type="button" onclick="toggleFixtureWallSnap()" class="px-2 py-1 rounded text-xs font-bold border transition shrink-0 ${snapOn ? 'bg-emerald-600/30 border-emerald-400 text-emerald-200' : 'bg-slate-800 border-slate-600 text-slate-300'}" title="壁際で自動吸着するか、グリッド上の任意の位置に自由配置するかを切り替えます">
+                ${snapOn ? '🧲 壁吸着:ON' : '✋ 自由配置'}
+            </button>
+        `;
 
         container.innerHTML = `
             <div class="flex items-center gap-1 overflow-x-auto py-0.5">
-                <button onclick="rotateFixturePreset()" class="px-2 py-1 rounded bg-amber-500/20 border border-amber-400/50 text-amber-300 text-xs font-bold shrink-0"><i class="fa-solid fa-rotate-right"></i> ${state.subFixtureRot || 0}°</button>
+                <button type="button" onclick="rotateFixturePreset()" class="px-2 py-1 rounded bg-amber-500/20 border border-amber-400/50 text-amber-300 text-xs font-bold shrink-0"><i class="fa-solid fa-rotate-right"></i> 90°回転(${curRot}°)</button>
+                ${orientBtns}
+                ${snapBtn}
                 ${btns}
-                <span class="text-[11px] text-amber-300 font-bold ml-1 shrink-0">💡 図面上をタップで壁に自動吸着配置</span>
             </div>
         `;
     } else if (tool === 'box3d') {
@@ -560,13 +579,22 @@ function renderPropertyInspector() {
                     ` : ''}
                 </div>
                 ` : ''}
+                <div class="p-2 rounded-lg bg-slate-900/90 border border-cyan-500/30 space-y-1">
+                    <div class="text-[10px] font-bold text-cyan-300">📐 向き・配置基準 (赤い●印の位置・90°回転でW×D自動切替)</div>
+                    <div class="grid grid-cols-4 gap-1">
+                        <button type="button" onclick="setSelectedFixtureRotation(0)" class="py-1 rounded border text-[10px] font-bold ${(((obj.rot || 0) % 360) === 0 && !obj.flipX && !obj.flipY) ? 'bg-cyan-500 text-slate-950 border-cyan-300' : 'bg-slate-800 text-slate-300 border-slate-700'}">${curKType === 'L' ? '↖北西(0°)' : '↑北背(0°)'}</button>
+                        <button type="button" onclick="setSelectedFixtureRotation(90)" class="py-1 rounded border text-[10px] font-bold ${(((obj.rot || 0) % 360) === 90 && !obj.flipX && !obj.flipY) ? 'bg-cyan-500 text-slate-950 border-cyan-300' : 'bg-slate-800 text-slate-300 border-slate-700'}">${curKType === 'L' ? '↗北東(90°)' : '→東背(90°)'}</button>
+                        <button type="button" onclick="setSelectedFixtureRotation(180)" class="py-1 rounded border text-[10px] font-bold ${(((obj.rot || 0) % 360) === 180 && !obj.flipX && !obj.flipY) ? 'bg-cyan-500 text-slate-950 border-cyan-300' : 'bg-slate-800 text-slate-300 border-slate-700'}">${curKType === 'L' ? '↘南東(180°)' : '↓南背(180°)'}</button>
+                        <button type="button" onclick="setSelectedFixtureRotation(270)" class="py-1 rounded border text-[10px] font-bold ${(((obj.rot || 0) % 360) === 270 && !obj.flipX && !obj.flipY) ? 'bg-cyan-500 text-slate-950 border-cyan-300' : 'bg-slate-800 text-slate-300 border-slate-700'}">${curKType === 'L' ? '↙南西(270°)' : '←西背(270°)'}</button>
+                    </div>
+                </div>
                 <div class="grid grid-cols-3 gap-1.5">
                     <div>
-                        <label class="text-[10px] text-slate-400 block">${curKType === 'L' ? '長辺 W(mm)' : '幅 W(mm)'}</label>
+                        <label class="text-[10px] text-slate-400 block">${curKType === 'L' ? '横幅 W(mm)' : '横幅 W(X方向mm)'}</label>
                         <input type="number" step="50" value="${curWMm}" onchange="updateSelectedFixtureDims(parseInt(this.value), null, null)" class="w-full bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-white font-bold mono-num">
                     </div>
                     <div>
-                        <label class="text-[10px] text-slate-400 block">${curKType === 'L' ? '短辺 D(mm)' : '奥行 D(mm)'}</label>
+                        <label class="text-[10px] text-slate-400 block">${curKType === 'L' ? '縦幅 D(mm)' : '縦奥行 D(Y方向mm)'}</label>
                         <input type="number" step="50" value="${curDMm}" onchange="updateSelectedFixtureDims(null, parseInt(this.value), null)" class="w-full bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-white font-bold mono-num">
                     </div>
                     <div>
@@ -1269,6 +1297,7 @@ function updateSelectedOpeningFit12(fitId) {
     const obj = findSelectedObject();
     if (!obj || state.selectedItem.kind !== 'opening') return;
     obj.doorFit = fitId;
+    obj.sashType = fitId;
     const spec = (window.SASH_TYPES_12 || []).find(s => s.id === fitId);
     if (spec) {
         obj.isWin = spec.isWinDefault;
@@ -1276,6 +1305,9 @@ function updateSelectedOpeningFit12(fitId) {
         obj.leafCount = spec.leaves;
     }
     saveHistorySnapshot();
+    request2DRedraw();
+    if (typeof rebuild3DScene === 'function') rebuild3DScene();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     showToast(`建具種類を「${spec ? spec.label : fitId}」に変更しました`);
 }
 window.updateSelectedOpeningFit12 = updateSelectedOpeningFit12;
@@ -1286,6 +1318,9 @@ function flipSelectedFixture(axis) {
     if (axis === 'x') obj.flipX = !obj.flipX;
     else obj.flipY = !obj.flipY;
     saveHistorySnapshot();
+    request2DRedraw();
+    if (typeof rebuild3DScene === 'function') rebuild3DScene();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     showToast(`設備を${axis === 'x' ? '左右' : '上下'}反転しました`);
 }
 window.flipSelectedFixture = flipSelectedFixture;

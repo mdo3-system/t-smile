@@ -908,16 +908,30 @@ function placeFixtureOnCanvas(snappedX, snappedY) {
         label = ft.label;
     }
 
-    const rot = state.subFixtureRot || 0;
+    let rot = (((state.subFixtureRot || 0) % 360) + 360) % 360;
     let finalWP = (rot === 90 || rot === 270) ? hP : wP;
     let finalHP = (rot === 90 || rot === 270) ? wP : hP;
+    const isKitchenL = (cat === 'KITCHEN_L') || (fxData && fxData.kitchenType === 'L');
 
     let placeX = snappedX;
     let placeY = snappedY;
-    const wallSnap = findNearestWallForFixture(snappedX, snappedY, finalWP, finalHP);
+    let didWallSnap = false;
+    const wallSnap = findNearestWallForFixture(snappedX, snappedY, finalWP, finalHP, isKitchenL, rot, cat);
     if (wallSnap) {
+        didWallSnap = true;
         placeX = wallSnap.x;
         placeY = wallSnap.y;
+        if (wallSnap.autoRot !== undefined && !state.subFixtureRotManual) {
+            rot = wallSnap.autoRot;
+            finalWP = (rot === 90 || rot === 270) ? hP : wP;
+            finalHP = (rot === 90 || rot === 270) ? wP : hP;
+            // 新しい finalWP / finalHP で壁またはコーナー座標を再計算してピタッと吸着させる
+            const resnap = findNearestWallForFixture(snappedX, snappedY, finalWP, finalHP, isKitchenL, rot, cat);
+            if (resnap) {
+                placeX = resnap.x;
+                placeY = resnap.y;
+            }
+        }
     }
 
     const newFx = {
@@ -930,8 +944,12 @@ function placeFixtureOnCanvas(snappedX, snappedY) {
         h: finalHP,
         wMm: (rot === 90 || rot === 270) ? dMm : wMm,
         dMm: (rot === 90 || rot === 270) ? wMm : dMm,
+        baseWMm: wMm,
+        baseDMm: dMm,
         hMm: hMm,
         rot: rot,
+        flipX: !!state.subFixtureFlipX,
+        flipY: !!state.subFixtureFlipY,
         label: label,
         kHeight: fxData.kHeight || 850,
         vHeight: fxData.vHeight || 800,
@@ -945,91 +963,106 @@ function placeFixtureOnCanvas(snappedX, snappedY) {
     if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    showToast(`${label} を壁に自動吸着配置しました`);
+    showToast(didWallSnap ? `${label} を壁に吸着配置しました` : `${label} を指定位置に配置しました`);
 }
 
-function findNearestWallForFixture(curX, curY, wP, hP) {
+function findNearestWallForFixture(curX, curY, wP, hP, isCornerFixture = false, currentRot = 0, fixtureCategory = '') {
     const fl = state.floors[state.currentFloor];
     if (!fl) return null;
+    if (state.subFixtureWallSnap === false) return null;
+
+    // ダイニングセット・ソファ・ベッド・アイランドキッチン等の自立家具は、部屋中央へ意図通り置けるよう壁際ごく近く(0.28P)以外は強制吸着しない
+    const cat = fixtureCategory || state.subFixtureCategory || '';
+    const isIslandKitchen = (cat === 'KITCHEN' && state.subKitchenType === 'ISLAND');
+    const isFreestandingFurniture = isIslandKitchen || ['DINING_SET', 'SOFA', 'BED_DOUBLE', 'BED_SINGLE', 'DESK'].includes(cat);
+
     const wallThickM = 0.13;
     const scaleP = (state.modulePitch || 910) / 1000;
     const halfWallP = +((wallThickM / 2) / scaleP).toFixed(3);
-    const snapDistanceThreshold = 1.35;
+    const snapDistanceThreshold = isCornerFixture ? 0.95 : (isFreestandingFurniture ? 0.25 : 0.45);
 
-    let bestSnap = null;
-    let minDistance = snapDistanceThreshold;
+    let bestHoriz = null;
+    let minHorizDist = snapDistanceThreshold;
+    let bestVert = null;
+    let minVertDist = snapDistanceThreshold;
+
     const centerX = curX + wP / 2;
     const centerY = curY + hP / 2;
+
+    const checkHorizEdge = (edgeY, x1, x2, wallRef) => {
+        const minX = Math.min(x1, x2);
+        const maxX = Math.max(x1, x2);
+        if (curX + wP >= minX - 0.35 && curX <= maxX + 0.35) {
+            const dist = Math.min(Math.abs(curY - edgeY), Math.abs((curY + hP) - edgeY), Math.abs(centerY - edgeY));
+            if (dist < minHorizDist) {
+                minHorizDist = dist;
+                if (centerY >= edgeY) {
+                    bestHoriz = { x: curX, y: +(edgeY + halfWallP).toFixed(3), side: 'top', wall: wallRef, rot: 0, autoRot: 0, dist };
+                } else {
+                    bestHoriz = { x: curX, y: +(edgeY - halfWallP - hP).toFixed(3), side: 'bottom', wall: wallRef, rot: 180, autoRot: 180, dist };
+                }
+            }
+        }
+    };
+
+    const checkVertEdge = (edgeX, y1, y2, wallRef) => {
+        const minY = Math.min(y1, y2);
+        const maxY = Math.max(y1, y2);
+        if (curY + hP >= minY - 0.35 && curY <= maxY + 0.35) {
+            const dist = Math.min(Math.abs(curX - edgeX), Math.abs((curX + wP) - edgeX), Math.abs(centerX - edgeX));
+            if (dist < minVertDist) {
+                minVertDist = dist;
+                if (centerX >= edgeX) {
+                    // 西壁(左壁)に背面を付ける = 270°回転 (背面が左壁側、正面が右向き)
+                    bestVert = { x: +(edgeX + halfWallP).toFixed(3), y: curY, side: 'left', wall: wallRef, rot: 270, autoRot: 270, dist };
+                } else {
+                    // 東壁(右壁)に背面を付ける = 90°回転 (背面が右壁側、正面が左向き)
+                    bestVert = { x: +(edgeX - halfWallP - wP).toFixed(3), y: curY, side: 'right', wall: wallRef, rot: 90, autoRot: 90, dist };
+                }
+            }
+        }
+    };
 
     if (fl.walls && fl.walls.length > 0) {
         fl.walls.forEach(wl => {
             const isHoriz = Math.abs(wl.y1 - wl.y2) < 0.05;
-            if (isHoriz) {
-                const minWlX = Math.min(wl.x1, wl.x2);
-                const maxWlX = Math.max(wl.x1, wl.x2);
-                if (curX + wP >= minWlX - 0.4 && curX <= maxWlX + 0.4) {
-                    const distToWall = Math.min(Math.abs(curY - wl.y1), Math.abs((curY + hP) - wl.y1), Math.abs(centerY - wl.y1));
-                    if (distToWall < minDistance) {
-                        minDistance = distToWall;
-                        if (centerY >= wl.y1) {
-                            bestSnap = { x: curX, y: +(wl.y1 + halfWallP).toFixed(3), side: 'top', wall: wl, rot: 0 };
-                        } else {
-                            bestSnap = { x: curX, y: +(wl.y1 - halfWallP - hP).toFixed(3), side: 'bottom', wall: wl, rot: 180 };
-                        }
-                    }
-                }
-            } else {
-                const minWlY = Math.min(wl.y1, wl.y2);
-                const maxWlY = Math.max(wl.y1, wl.y2);
-                if (curY + hP >= minWlY - 0.4 && curY <= maxWlY + 0.4) {
-                    const distToWall = Math.min(Math.abs(curX - wl.x1), Math.abs((curX + wP) - wl.x1), Math.abs(centerX - wl.x1));
-                    if (distToWall < minDistance) {
-                        minDistance = distToWall;
-                        if (centerX >= wl.x1) {
-                            bestSnap = { x: +(wl.x1 + halfWallP).toFixed(3), y: curY, side: 'left', wall: wl, rot: 90 };
-                        } else {
-                            bestSnap = { x: +(wl.x1 - halfWallP - wP).toFixed(3), y: curY, side: 'right', wall: wl, rot: 270 };
-                        }
-                    }
-                }
-            }
+            const isVert = Math.abs(wl.x1 - wl.x2) < 0.05;
+            if (isHoriz) checkHorizEdge(wl.y1, wl.x1, wl.x2, wl);
+            else if (isVert) checkVertEdge(wl.x1, wl.y1, wl.y2, wl);
         });
     }
 
     if (fl.rooms && fl.rooms.length > 0) {
         fl.rooms.forEach(rm => {
-            const edges = [
-                { isHoriz: true, y: rm.y, x1: rm.x, x2: rm.x + rm.w, side: 'top' },
-                { isHoriz: true, y: rm.y + rm.h, x1: rm.x, x2: rm.x + rm.w, side: 'bottom' },
-                { isHoriz: false, x: rm.x, y1: rm.y, y2: rm.y + rm.h, side: 'left' },
-                { isHoriz: false, x: rm.x + rm.w, y1: rm.y, y2: rm.y + rm.h, side: 'right' }
-            ];
-            edges.forEach(ed => {
-                if (ed.isHoriz) {
-                    if (curX + wP >= ed.x1 - 0.4 && curX <= ed.x2 + 0.4) {
-                        const dist = Math.min(Math.abs(curY - ed.y), Math.abs((curY + hP) - ed.y), Math.abs(centerY - ed.y));
-                        if (dist < minDistance) {
-                            minDistance = dist;
-                            bestSnap = centerY >= ed.y
-                                ? { x: curX, y: +(ed.y + halfWallP).toFixed(3), side: 'top', rot: 0 }
-                                : { x: curX, y: +(ed.y - halfWallP - hP).toFixed(3), side: 'bottom', rot: 180 };
-                        }
-                    }
-                } else {
-                    if (curY + hP >= ed.y1 - 0.4 && curY <= ed.y2 + 0.4) {
-                        const dist = Math.min(Math.abs(curX - ed.x), Math.abs((curX + wP) - ed.x), Math.abs(centerX - ed.x));
-                        if (dist < minDistance) {
-                            minDistance = dist;
-                            bestSnap = centerX >= ed.x
-                                ? { x: +(ed.x + halfWallP).toFixed(3), y: curY, side: 'left', rot: 90 }
-                                : { x: +(ed.x - halfWallP - wP).toFixed(3), y: curY, side: 'right', rot: 270 };
-                        }
-                    }
-                }
-            });
+            checkHorizEdge(rm.y, rm.x, rm.x + rm.w, null);
+            checkHorizEdge(rm.y + rm.h, rm.x, rm.x + rm.w, null);
+            checkVertEdge(rm.x, rm.y, rm.y + rm.h, null);
+            checkVertEdge(rm.x + rm.w, rm.y, rm.y + rm.h, null);
         });
     }
-    return bestSnap;
+
+    // L型キッチンなどのコーナー設備：水平壁（上/下）と垂直壁（左/右）の両方が近くにあれば2面同時吸着（コーナー吸着）！
+    if (isCornerFixture && bestHoriz && bestVert) {
+        // 吸着した壁コーナーの向き（左上=0°, 右上=90°, 右下=180°, 左下=270°）を算出
+        let autoRot = currentRot || 0;
+        if (bestHoriz.side === 'top' && bestVert.side === 'left') autoRot = 0;       // ↖北西角
+        else if (bestHoriz.side === 'top' && bestVert.side === 'right') autoRot = 90;  // ↗北東角
+        else if (bestHoriz.side === 'bottom' && bestVert.side === 'right') autoRot = 180; // ↘南東角
+        else if (bestHoriz.side === 'bottom' && bestVert.side === 'left') autoRot = 270;  // ↙南西角
+
+        return {
+            x: bestVert.x,
+            y: bestHoriz.y,
+            side: `${bestHoriz.side}_${bestVert.side}`,
+            rot: autoRot,
+            autoRot: autoRot
+        };
+    }
+
+    if (bestHoriz && bestVert) {
+        return bestHoriz.dist <= bestVert.dist ? bestHoriz : bestVert;
+    }
+    return bestHoriz || bestVert;
 }
 
 // 📝 メモ注釈ツールのポインターダウン処理
@@ -1301,11 +1334,25 @@ function tryStartSelectOrModifyInteraction(wx, wy, onlyHitExistingOfSameToolType
     }
 
     // 3c. Hit-test Dedicated Stairs (階段)
+    // ※上の階で階段の1〜2段目などの上に床（収納・クローゼット・廊下・居室等）が貼られている範囲では、
+    //   階段ツール選択中を除き「部屋のプロパティ・範囲」の選択を優先する
     if (!onlyHitExistingOfSameToolType || state.activeTool === 'stair') {
         const stairs = fl.stairs || [];
         for (let i = stairs.length - 1; i >= 0; i--) {
             const st = normalizeStairObject(stairs[i]);
             if (wx >= st.x && wx <= st.x + st.w && wy >= st.y && wy <= st.y + st.h) {
+                if (state.activeTool !== 'stair' && typeof window.getRoomsMaskingUpperStair === 'function') {
+                    const maskingRooms = window.getRoomsMaskingUpperStair(fl, st);
+                    const coveredByFloorRoom = maskingRooms.some(rm => {
+                        if (Array.isArray(rm.points) && rm.points.length >= 3 && window.RoomDetector && typeof window.RoomDetector.isPointInsidePolygon === 'function') {
+                            return window.RoomDetector.isPointInsidePolygon({ x: wx, y: wy }, rm.points);
+                        }
+                        return (wx >= rm.x && wx <= rm.x + rm.w && wy >= rm.y && wy <= rm.y + rm.h);
+                    });
+                    if (coveredByFloorRoom) {
+                        continue; // この座標は上の階の部屋（床）範囲が優先されるため、Step 5の部屋選択へ委譲
+                    }
+                }
                 state.selectedItem = { kind: 'stair', id: st.id, floor: state.currentFloor };
                 state.dragAction = {
                     type: 'move_box',
@@ -1532,8 +1579,20 @@ canvas2d.addEventListener('pointermove', (e) => {
         const t = drag.target;
         const oldX = t.x;
         const oldY = t.y;
-        t.x = snapP(worldPos.x - drag.offsetX);
-        t.y = snapP(worldPos.y - drag.offsetY);
+        let nextX = snapP(worldPos.x - drag.offsetX);
+        let nextY = snapP(worldPos.y - drag.offsetY);
+        // 設備・家具をドラッグ移動中も壁・部屋コーナーにスマート吸着（壁自動吸着ONかつ壁際0.35P以内に近づいた場合）
+        if (state.selectedItem && state.selectedItem.kind === 'fixture' && state.subFixtureWallSnap !== false) {
+            const isKL = t.type === 'KITCHEN_L' || t.category === 'KITCHEN_L' || (t.fxData && t.fxData.kitchenType === 'L');
+            const wallSnap = findNearestWallForFixture(nextX, nextY, t.w, t.h, isKL, t.rot || 0, t.category || t.type);
+            if (wallSnap) {
+                const maxSnapDelta = isKL ? 0.48 : 0.35;
+                if (Math.abs(wallSnap.x - nextX) <= maxSnapDelta) nextX = wallSnap.x;
+                if (Math.abs(wallSnap.y - nextY) <= maxSnapDelta) nextY = wallSnap.y;
+            }
+        }
+        t.x = nextX;
+        t.y = nextY;
         const dx = t.x - oldX;
         const dy = t.y - oldY;
         if ((dx !== 0 || dy !== 0) && t.points && Array.isArray(t.points)) {
@@ -1950,21 +2009,88 @@ function toggleSelectedRoomFloorArea() {
     showToast(rm.excludeFloorArea ? 'この空間を延床面積から除外しました' : 'この空間を延床面積に算入しました');
 }
 
+function toggleFixtureWallSnap() {
+    state.subFixtureWallSnap = state.subFixtureWallSnap === false ? true : false;
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
+    request2DRedraw();
+    showToast(state.subFixtureWallSnap ? '🧲 壁・コーナー自動吸着を ON にしました' : '✋ 壁自動吸着を OFF（自由グリッド配置）にしました');
+}
+window.toggleFixtureWallSnap = toggleFixtureWallSnap;
+
+function rotateFixturePreset(targetDeg) {
+    if (typeof targetDeg === 'number') {
+        state.subFixtureRot = ((targetDeg % 360) + 360) % 360;
+    } else {
+        state.subFixtureRot = (((state.subFixtureRot || 0) + 90) % 360);
+    }
+    state.subFixtureRotManual = true;
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
+    request2DRedraw();
+    const isSubKL = (state.subFixtureCategory === 'KITCHEN_L') || (state.subFixtureCategory === 'KITCHEN' && state.subKitchenType === 'L');
+    const dirNames = isSubKL
+        ? { 0: '↖北西角(0°)', 90: '↗北東角(90°)', 180: '↘南東角(180°)', 270: '↙南西角(270°)' }
+        : { 0: '↑北壁背(0°)', 90: '→東壁背(90°)', 180: '↓南壁背(180°)', 270: '←西壁背(270°)' };
+    showToast(`配置向きを ${dirNames[state.subFixtureRot] || (state.subFixtureRot + '°')} に変更しました`);
+}
+window.rotateFixturePreset = rotateFixturePreset;
+
+function setSelectedFixtureRotation(targetDeg) {
+    const fl = state.floors[state.currentFloor];
+    if (!state.selectedItem || state.selectedItem.kind !== 'fixture') return;
+    const fx = fl.fixtures.find(f => f.id === state.selectedItem.id);
+    if (!fx) return;
+
+    const pitch = state.modulePitch || 910;
+    const oldRot = (((fx.rot || 0) % 360) + 360) % 360;
+    const newRot = (((targetDeg || 0) % 360) + 360) % 360;
+    const wasVert = (oldRot === 90 || oldRot === 270);
+    const isVert = (newRot === 90 || newRot === 270);
+
+    if (!fx.wMm) fx.wMm = Math.round(fx.w * pitch);
+    if (!fx.dMm) fx.dMm = Math.round(fx.h * pitch);
+
+    if (wasVert !== isVert) {
+        const cx = fx.x + fx.w / 2;
+        const cy = fx.y + fx.h / 2;
+        const tmp = fx.w; fx.w = fx.h; fx.h = tmp;
+        const tmpMm = fx.wMm; fx.wMm = fx.dMm; fx.dMm = tmpMm;
+        fx.x = +(cx - fx.w / 2).toFixed(3);
+        fx.y = +(cy - fx.h / 2).toFixed(3);
+    }
+    fx.rot = newRot;
+    fx.flipX = false;
+    fx.flipY = false;
+
+    // 回転後に近くの壁・コーナーがあれば吸着位置を微調整（壁自動吸着ON時）
+    const isKL = fx.type === 'KITCHEN_L' || fx.category === 'KITCHEN_L' || (fx.fxData && fx.fxData.kitchenType === 'L');
+    if (state.subFixtureWallSnap !== false) {
+        const wallSnap = findNearestWallForFixture(fx.x, fx.y, fx.w, fx.h, isKL, fx.rot, fx.category || fx.type);
+        if (wallSnap) {
+            const maxSnap = isKL ? 0.65 : 0.42;
+            if (Math.abs(wallSnap.x - fx.x) <= maxSnap) fx.x = wallSnap.x;
+            if (Math.abs(wallSnap.y - fx.y) <= maxSnap) fx.y = wallSnap.y;
+        }
+    }
+
+    saveHistorySnapshot();
+    if (typeof rebuild3DScene === 'function') rebuild3DScene();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+    request2DRedraw();
+    const dirNames = isKL
+        ? { 0: '↖北西角(0°)', 90: '↗北東角(90°)', 180: '↘南東角(180°)', 270: '↙南西角(270°)' }
+        : { 0: '↑北壁背(0°)', 90: '→東壁背(90°)', 180: '↓南壁背(180°)', 270: '←西壁背(270°)' };
+    showToast(`向きを ${dirNames[newRot] || (newRot + '°')}（W${fx.wMm}×D${fx.dMm}mm）に変更しました`);
+}
+window.setSelectedFixtureRotation = setSelectedFixtureRotation;
+
 function rotateSelectedFixture() {
     const fl = state.floors[state.currentFloor];
     if (!state.selectedItem || state.selectedItem.kind !== 'fixture') return;
     const fx = fl.fixtures.find(f => f.id === state.selectedItem.id);
     if (!fx) return;
 
-    const tmp = fx.w; fx.w = fx.h; fx.h = tmp;
-    const tmpMm = fx.wMm; fx.wMm = fx.dMm; fx.dMm = tmpMm;
-    fx.rot = ((fx.rot || 0) + 90) % 360;
-
-    saveHistorySnapshot();
-    if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
-    request2DRedraw();
-    showToast('設備を90度回転しました');
+    const nextRot = (((fx.rot || 0) + 90) % 360);
+    setSelectedFixtureRotation(nextRot);
 }
 
 function updateSelectedKitchenI(newW, newD, newH) {
@@ -1973,10 +2099,19 @@ function updateSelectedKitchenI(newW, newD, newH) {
     const fx = fl.fixtures.find(f => f.id === state.selectedItem.id);
     if (!fx) return;
     const pitch = state.modulePitch || 910;
-    if (newW) { fx.wMm = newW; fx.w = +(newW / pitch).toFixed(3); }
-    if (newD) { fx.dMm = newD; fx.h = +(newD / pitch).toFixed(3); }
+    const isVert = (((fx.rot || 0) % 360) === 90 || ((fx.rot || 0) % 360) === 270);
+    const curLocalW = isVert ? (fx.dMm || Math.round(fx.h * pitch)) : (fx.wMm || Math.round(fx.w * pitch));
+    const curLocalD = isVert ? (fx.wMm || Math.round(fx.w * pitch)) : (fx.dMm || Math.round(fx.h * pitch));
+    const targetLocalW = newW || curLocalW;
+    const targetLocalD = newD || curLocalD;
+    fx.baseWMm = targetLocalW;
+    fx.baseDMm = targetLocalD;
+    fx.wMm = isVert ? targetLocalD : targetLocalW;
+    fx.dMm = isVert ? targetLocalW : targetLocalD;
+    fx.w = +(fx.wMm / pitch).toFixed(3);
+    fx.h = +(fx.dMm / pitch).toFixed(3);
     if (newH) { fx.hMm = newH; }
-    fx.label = `I型キッチン (${fx.wMm / 10}×${fx.dMm / 10}cm)`;
+    fx.label = `I型キッチン (${targetLocalW / 10}×${targetLocalD / 10}cm)`;
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
     if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
@@ -1990,8 +2125,17 @@ function updateSelectedKitchenL(newX, newY, newH) {
     if (!fx) return;
     const pitch = state.modulePitch || 910;
     if (!fx.fxData) fx.fxData = {};
-    if (newX) { fx.fxData.lWidthX = newX; fx.wMm = newX; fx.w = +(newX / pitch).toFixed(3); }
-    if (newY) { fx.fxData.lWidthY = newY; fx.dMm = newY; fx.h = +(newY / pitch).toFixed(3); }
+    const isVert = (((fx.rot || 0) % 360) === 90 || ((fx.rot || 0) % 360) === 270);
+    if (newX) {
+        fx.fxData.lWidthX = newX;
+        if (isVert) { fx.dMm = newX; fx.h = +(newX / pitch).toFixed(3); }
+        else { fx.wMm = newX; fx.w = +(newX / pitch).toFixed(3); }
+    }
+    if (newY) {
+        fx.fxData.lWidthY = newY;
+        if (isVert) { fx.wMm = newY; fx.w = +(newY / pitch).toFixed(3); }
+        else { fx.dMm = newY; fx.h = +(newY / pitch).toFixed(3); }
+    }
     if (newH) { fx.hMm = newH; }
     fx.label = `L型キッチン (${fx.wMm / 10}×${fx.dMm / 10}cm)`;
     saveHistorySnapshot();
@@ -2006,10 +2150,17 @@ function updateSelectedKitchenIsland(newW, newD, newH) {
     const fx = fl.fixtures.find(f => f.id === state.selectedItem.id);
     if (!fx) return;
     const pitch = state.modulePitch || 910;
-    if (newW) { fx.wMm = newW; fx.w = +(newW / pitch).toFixed(3); }
-    if (newD) { fx.dMm = newD; fx.h = +(newD / pitch).toFixed(3); }
+    const isVert = (((fx.rot || 0) % 360) === 90 || ((fx.rot || 0) % 360) === 270);
+    const curLocalW = isVert ? (fx.dMm || Math.round(fx.h * pitch)) : (fx.wMm || Math.round(fx.w * pitch));
+    const curLocalD = isVert ? (fx.wMm || Math.round(fx.w * pitch)) : (fx.dMm || Math.round(fx.h * pitch));
+    const targetLocalW = newW || curLocalW;
+    const targetLocalD = newD || curLocalD;
+    fx.wMm = isVert ? targetLocalD : targetLocalW;
+    fx.dMm = isVert ? targetLocalW : targetLocalD;
+    fx.w = +(fx.wMm / pitch).toFixed(3);
+    fx.h = +(fx.dMm / pitch).toFixed(3);
     if (newH) { fx.hMm = newH; }
-    fx.label = `アイランド (${fx.wMm}×${fx.dMm}mm)`;
+    fx.label = `アイランド (${targetLocalW}×${targetLocalD}mm)`;
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
     if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
@@ -2024,24 +2175,25 @@ function changeSelectedKitchenType(newType) {
     if (!fx.fxData) fx.fxData = {};
     fx.fxData.kitchenType = newType;
     const pitch = state.modulePitch || 910;
+    const isVert = (((fx.rot || 0) % 360) === 90 || ((fx.rot || 0) % 360) === 270);
     if (newType === 'I') {
         fx.type = 'KITCHEN';
         fx.category = 'KITCHEN';
-        fx.wMm = 2550; fx.dMm = 650; fx.hMm = 850;
-        fx.w = +(2550 / pitch).toFixed(3); fx.h = +(650 / pitch).toFixed(3);
+        fx.wMm = isVert ? 650 : 2550; fx.dMm = isVert ? 2550 : 650; fx.hMm = 850;
+        fx.w = +(fx.wMm / pitch).toFixed(3); fx.h = +(fx.dMm / pitch).toFixed(3);
         fx.label = `I型キッチン (255×65cm)`;
     } else if (newType === 'L') {
         fx.type = 'KITCHEN_L';
         fx.category = 'KITCHEN_L';
-        fx.wMm = 2550; fx.dMm = 1820; fx.hMm = 850;
+        fx.wMm = isVert ? 1820 : 2550; fx.dMm = isVert ? 2550 : 1820; fx.hMm = 850;
         fx.fxData.lWidthX = 2550; fx.fxData.lWidthY = 1820; fx.fxData.lDepth = 650;
-        fx.w = +(2550 / pitch).toFixed(3); fx.h = +(1820 / pitch).toFixed(3);
+        fx.w = +(fx.wMm / pitch).toFixed(3); fx.h = +(fx.dMm / pitch).toFixed(3);
         fx.label = `L型キッチン (255×182cm)`;
     } else {
         fx.type = 'KITCHEN';
         fx.category = 'KITCHEN';
-        fx.wMm = 2550; fx.dMm = 900; fx.hMm = 850;
-        fx.w = +(2550 / pitch).toFixed(3); fx.h = +(900 / pitch).toFixed(3);
+        fx.wMm = isVert ? 900 : 2550; fx.dMm = isVert ? 2550 : 900; fx.hMm = 850;
+        fx.w = +(fx.wMm / pitch).toFixed(3); fx.h = +(fx.dMm / pitch).toFixed(3);
         fx.label = `アイランド (2550×900mm)`;
     }
     saveHistorySnapshot();
@@ -2063,10 +2215,11 @@ function updateSelectedUbSize(sizeId) {
     const curSize = ubSpecs.sizes.find(s => s.id === sizeId);
     if (!curSize) return;
     const pitch = state.modulePitch || 910;
-    fx.wMm = curSize.wMm;
-    fx.dMm = curSize.dMm;
-    fx.w = +(curSize.wMm / pitch).toFixed(3);
-    fx.h = +(curSize.dMm / pitch).toFixed(3);
+    const isVert = (((fx.rot || 0) % 360) === 90 || ((fx.rot || 0) % 360) === 270);
+    fx.wMm = isVert ? curSize.dMm : curSize.wMm;
+    fx.dMm = isVert ? curSize.wMm : curSize.dMm;
+    fx.w = +(fx.wMm / pitch).toFixed(3);
+    fx.h = +(fx.dMm / pitch).toFixed(3);
     if (!fx.fxData) fx.fxData = {};
     fx.fxData.ubSize = sizeId;
     fx.label = `ユニットバス ${curSize.label}`;
@@ -2096,9 +2249,15 @@ function updateSelectedVanity(newW, newH) {
     const fx = fl.fixtures.find(f => f.id === state.selectedItem.id);
     if (!fx) return;
     const pitch = state.modulePitch || 910;
+    const isVert = (((fx.rot || 0) % 360) === 90 || ((fx.rot || 0) % 360) === 270);
     if (newW) {
-        fx.wMm = newW;
-        fx.w = +(newW / pitch).toFixed(3);
+        if (isVert) {
+            fx.dMm = newW;
+            fx.h = +(newW / pitch).toFixed(3);
+        } else {
+            fx.wMm = newW;
+            fx.w = +(newW / pitch).toFixed(3);
+        }
         if (!fx.fxData) fx.fxData = {};
         fx.fxData.vanityWidth = newW;
         fx.label = `洗面化粧台 (W${newW}mm)`;

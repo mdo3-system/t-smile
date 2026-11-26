@@ -70,6 +70,8 @@ const state = {
 
     // 設備・家具・直方体設定
     subFixtureRot: 0,
+    subFixtureRotManual: false,
+    subFixtureWallSnap: true,
     subFixtureFlipX: false,
     subFixtureFlipY: false,
     subFixtureType: 'KITCHEN',
@@ -320,7 +322,7 @@ function loadSampleHousePlan() {
             fixtures: [
                 { id: uid(), category: 'UB', type: 'UB_1616', x: 5.0, y: 0.0, w: 2.0, h: 2.0, wMm: 1600, dMm: 1600, hMm: 2150, rot: 0, label: 'ユニットバス 1616', fxData: { ubSize: '1616', ubPattern: 'patternA' } },
                 { id: uid(), category: 'VANITY', type: 'VANITY', x: 3.1, y: 0.0, w: 1.0, h: 0.6, wMm: 900, dMm: 550, hMm: 800, rot: 0, label: '洗面化粧台 W900' },
-                { id: uid(), category: 'TOILET_FIX', type: 'TOILET_FIX', x: 0.1, y: 5.2, w: 0.8, h: 0.5, wMm: 750, dMm: 450, hMm: 780, rot: 0, label: 'トイレ便器' },
+                { id: uid(), category: 'TOILET_FIX', type: 'TOILET_FIX', x: 0.1, y: 5.2, w: 0.50, h: 0.85, wMm: 455, dMm: 774, hMm: 780, rot: 0, label: 'トイレ便器' },
                 { id: uid(), category: 'KITCHEN', type: 'KITCHEN_I', x: 3.2, y: 2.2, w: 2.8, h: 0.71, wMm: 2550, dMm: 650, hMm: 850, rot: 0, label: 'I型キッチン (255×65cm)', fxData: { kitchenType: 'I', kHeight: 850 } }
             ],
             stairs: [
