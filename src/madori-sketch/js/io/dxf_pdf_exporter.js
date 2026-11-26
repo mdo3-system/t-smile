@@ -703,19 +703,38 @@
         const dateStr = new Date().toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
         const flStr = flNum === 0 ? '地下1階平面図' : `${flNum}階平面図`;
 
+        const rightText = `用紙: ${paper}横 ｜ 縮尺: S=${scaleLabel} ｜ モジュール: ${pitch}mm ｜ 作成日: ${dateStr} ｜ 株式会社住ま居る（家づくりサポート係）`;
         sCtx.fillStyle = '#0f172a';
-        sCtx.font = 'bold 24px "Noto Sans JP", sans-serif';
-        sCtx.textAlign = 'left';
-        sCtx.textBaseline = 'middle';
-        sCtx.fillText(`工事名称：${planTitle}   [${flStr}]`, mPx + 28, tbY + tbH / 2);
-
         sCtx.font = 'bold 17px "Noto Sans JP", monospace';
         sCtx.textAlign = 'right';
-        sCtx.fillText(
-            `用紙: ${paper}横 ｜ 縮尺: S=${scaleLabel} ｜ モジュール: ${pitch}mm ｜ 作成日: ${dateStr} ｜ 株式会社住ま居る（家づくりサポート係）`,
-            mPx + tbW - 20,
-            tbY + tbH / 2
-        );
+        sCtx.textBaseline = 'middle';
+        const rightW = sCtx.measureText(rightText).width;
+        sCtx.fillText(rightText, mPx + tbW - 20, tbY + tbH / 2);
+
+        const maxLeftW = Math.max(120, tbW - rightW - 72);
+        let leftText = `工事名称：${planTitle}   [${flStr}]`;
+        let fontSize = 24;
+        sCtx.font = `bold ${fontSize}px "Noto Sans JP", sans-serif`;
+        while (fontSize > 15 && sCtx.measureText(leftText).width > maxLeftW) {
+            fontSize -= 1;
+            sCtx.font = `bold ${fontSize}px "Noto Sans JP", sans-serif`;
+        }
+        if (sCtx.measureText(leftText).width > maxLeftW) {
+            const suffix = `… [${flStr}]`;
+            let base = `工事名称：${planTitle}`;
+            while (base.length > 6 && sCtx.measureText(base + suffix).width > maxLeftW) {
+                base = base.slice(0, -1);
+            }
+            leftText = base + suffix;
+        }
+
+        sCtx.save();
+        sCtx.beginPath();
+        sCtx.rect(mPx + 18, tbY + 2, maxLeftW + 14, tbH - 4);
+        sCtx.clip();
+        sCtx.textAlign = 'left';
+        sCtx.fillText(leftText, mPx + 28, tbY + tbH / 2);
+        sCtx.restore();
 
         const imgDataUrl = sheetCanvas.toDataURL('image/png');
 

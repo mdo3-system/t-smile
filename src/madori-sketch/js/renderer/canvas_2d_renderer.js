@@ -629,109 +629,818 @@ function drawStandalonePillar2D(pl, isLight) {
     ctx.restore();
 }
 
+// ============================================================================
+// モジュール式階段エンジン (I1 -> C1 -> I2 -> C2 -> I3) - 2D/3D/UI 単一情報源
+// ============================================================================
+
+const STAIR_PATTERN_PRESETS = {
+    'U_6TURN': {
+        key: 'U_6TURN',
+        label: '① コの字 6段廻り (I1:4+廻3+廻3+I3:3)',
+        shortLabel: '① コの字(6段廻り)',
+        shapeType: 'U_SHAPE',
+        i1Steps: 4, c1Steps: 3, c1Dir: 'right',
+        i2Steps: 0, c2Steps: 3, c2Dir: 'right',
+        i3Steps: 3
+    },
+    'STRAIGHT': {
+        key: 'STRAIGHT',
+        label: '② 直階段 I型 (13段)',
+        shortLabel: '② 直階段(I型)',
+        shapeType: 'STRAIGHT',
+        i1Steps: 13, c1Steps: 0, c1Dir: 'right',
+        i2Steps: 0, c2Steps: 0, c2Dir: 'right',
+        i3Steps: 0
+    },
+    'L_TOP_TURN': {
+        key: 'L_TOP_TURN',
+        label: '③ 上部廻りL型 (I1:10+上3段廻り登りきり)',
+        shortLabel: '③ 上廻りL型(10+3)',
+        shapeType: 'L_SHAPE',
+        i1Steps: 10, c1Steps: 3, c1Dir: 'right',
+        i2Steps: 0, c2Steps: 0, c2Dir: 'right',
+        i3Steps: 0
+    },
+    'CRANK_BOTH_TURN': {
+        key: 'CRANK_BOTH_TURN',
+        label: '④ 上下両端廻り (下3段廻り+I2:7+上3段廻り)',
+        shortLabel: '④ 上下廻り(3+7+3)',
+        shapeType: 'U_SHAPE',
+        i1Steps: 0, c1Steps: 3, c1Dir: 'right',
+        i2Steps: 7, c2Steps: 3, c2Dir: 'right',
+        i3Steps: 0
+    },
+    'L_PLUS_TOP_TURN': {
+        key: 'L_PLUS_TOP_TURN',
+        label: '⑤ L型＋上部廻り (I1:4+廻3+I2:4+上3段廻り)',
+        shortLabel: '⑤ L型+上廻り(4+3+4+3)',
+        shapeType: 'L_SHAPE',
+        i1Steps: 4, c1Steps: 3, c1Dir: 'right',
+        i2Steps: 4, c2Steps: 3, c2Dir: 'left',
+        i3Steps: 0
+    },
+    'L_LANDING_TOP': {
+        key: 'L_LANDING_TOP',
+        label: '⑥ 1段踊り場登りきり (I1:5+1段踊り場)',
+        shortLabel: '⑥ 1段踊り場登りきり',
+        shapeType: 'L_SHAPE',
+        i1Steps: 5, c1Steps: 1, c1Dir: 'both',
+        i2Steps: 0, c2Steps: 0, c2Dir: 'right',
+        i3Steps: 0
+    },
+    'L_STANDARD': {
+        key: 'L_STANDARD',
+        label: '⑦ 標準かね折れL型 (I1:5+3段廻り+I2:5)',
+        shortLabel: '⑦ 標準L型(5+3+5)',
+        shapeType: 'L_SHAPE',
+        i1Steps: 5, c1Steps: 3, c1Dir: 'right',
+        i2Steps: 5, c2Steps: 0, c2Dir: 'right',
+        i3Steps: 0
+    },
+    'U_LANDING': {
+        key: 'U_LANDING',
+        label: '⑧ 大踊り場コの字 (I1:6+踊1+踊1+I3:6)',
+        shortLabel: '⑧ 大踊り場コの字',
+        shapeType: 'U_SHAPE',
+        i1Steps: 6, c1Steps: 1, c1Dir: 'right',
+        i2Steps: 0, c2Steps: 1, c2Dir: 'right',
+        i3Steps: 6
+    }
+};
+window.STAIR_PATTERN_PRESETS = STAIR_PATTERN_PRESETS;
+
+function stairTurnStepsFromSpec(spec) {
+    if (spec === 'landing' || spec === 'turn_1' || spec === 1 || spec === '1') return 1;
+    if (spec === 'turn_2' || spec === 2 || spec === '2') return 2;
+    if (spec === 'turn_4' || spec === 4 || spec === '4') return 4;
+    if (spec === 'none' || spec === 0 || spec === '0') return 0;
+    return 3;
+}
+window.stairTurnStepsFromSpec = stairTurnStepsFromSpec;
+
+function getStairModularConfig(st) {
+    if (!st) return { i1Steps: 13, c1Steps: 0, c1Dir: 'right', i2Steps: 0, c2Steps: 0, c2Dir: 'right', i3Steps: 0, totalSteps: 13, isLegacyStraight: false };
+
+    if (st.i1Steps !== undefined || st.isModular) {
+        let i1 = Math.max(0, parseInt(st.i1Steps ?? 0, 10) || 0);
+        let c1 = Math.max(0, Math.min(4, parseInt(st.c1Steps ?? 0, 10) || 0));
+        let c1Dir = st.c1Dir || 'right';
+        let i2 = Math.max(0, parseInt(st.i2Steps ?? 0, 10) || 0);
+        let c2 = Math.max(0, Math.min(4, parseInt(st.c2Steps ?? 0, 10) || 0));
+        let c2Dir = st.c2Dir || 'right';
+        let i3 = Math.max(0, parseInt(st.i3Steps ?? 0, 10) || 0);
+        if (i1 + c1 + i2 + c2 + i3 <= 0) {
+            i1 = st.steps || 13;
+        }
+        return {
+            i1Steps: i1, c1Steps: c1, c1Dir: c1Dir,
+            i2Steps: i2, c2Steps: c2, c2Dir: c2Dir,
+            i3Steps: i3,
+            totalSteps: i1 + c1 + i2 + c2 + i3,
+            isLegacyStraight: false
+        };
+    }
+
+    if (st.patternKey && STAIR_PATTERN_PRESETS[st.patternKey]) {
+        const pr = STAIR_PATTERN_PRESETS[st.patternKey];
+        const total = pr.i1Steps + pr.c1Steps + pr.i2Steps + pr.c2Steps + pr.i3Steps;
+        return {
+            i1Steps: pr.i1Steps, c1Steps: pr.c1Steps, c1Dir: pr.c1Dir,
+            i2Steps: pr.i2Steps, c2Steps: pr.c2Steps, c2Dir: pr.c2Dir,
+            i3Steps: pr.i3Steps, totalSteps: total, isLegacyStraight: false
+        };
+    }
+
+    const shape = st.shapeType || 'STRAIGHT';
+    const tSteps = stairTurnStepsFromSpec(st.turnType);
+
+    if (shape === 'L_SHAPE') {
+        let c1Dir = st.c1Dir || 'right';
+        if (!st.c1Dir && st.points && st.points.length === 3) {
+            const p0 = st.points[0], p1 = st.points[1], p2 = st.points[2];
+            const v1x = p1.x - p0.x, v1y = p1.y - p0.y;
+            const v2x = p2.x - p1.x, v2y = p2.y - p1.y;
+            const cross = v1x * v2y - v1y * v2x;
+            if (Math.abs(cross) > 0.01) c1Dir = cross < 0 ? 'left' : 'right';
+        }
+        const isLandingTop = !!(st.landingTop || st.isLandingTop);
+        if (isLandingTop) {
+            const i1 = st.steps || 5;
+            return {
+                i1Steps: i1, c1Steps: tSteps, c1Dir: c1Dir,
+                i2Steps: 0, c2Steps: 0, c2Dir: 'right',
+                i3Steps: 0, totalSteps: i1 + tSteps, isLegacyStraight: false
+            };
+        } else {
+            const tot = st.steps || 13;
+            const rem = Math.max(2, tot - tSteps);
+            const i1 = Math.ceil(rem / 2);
+            const i2 = Math.floor(rem / 2);
+            return {
+                i1Steps: i1, c1Steps: tSteps, c1Dir: c1Dir,
+                i2Steps: i2, c2Steps: 0, c2Dir: 'right',
+                i3Steps: 0, totalSteps: i1 + tSteps + i2, isLegacyStraight: false
+            };
+        }
+    } else if (shape === 'U_SHAPE') {
+        if (st.turnType === 'landing' || st.turnType === 'turn_1') {
+            return {
+                i1Steps: 6, c1Steps: 1, c1Dir: 'right',
+                i2Steps: 0, c2Steps: 1, c2Dir: 'right',
+                i3Steps: 6, totalSteps: 14, isLegacyStraight: false
+            };
+        }
+        return {
+            i1Steps: 4, c1Steps: tSteps, c1Dir: 'right',
+            i2Steps: 0, c2Steps: tSteps, c2Dir: 'right',
+            i3Steps: 3, totalSteps: 4 + tSteps * 2 + 3, isLegacyStraight: false
+        };
+    } else {
+        const sCount = st.steps || 14;
+        return {
+            i1Steps: sCount, c1Steps: 0, c1Dir: 'right',
+            i2Steps: 0, c2Steps: 0, c2Dir: 'right',
+            i3Steps: 0, totalSteps: sCount, isLegacyStraight: true
+        };
+    }
+}
+window.getStairModularConfig = getStairModularConfig;
+
+function computeStairModularLayout(st) {
+    const pitch = (typeof state !== 'undefined' && state.modulePitch) ? state.modulePitch : 910;
+    const W = +((st && st.widthMm ? st.widthMm : 910) / pitch).toFixed(4) || 1.0;
+    const cfg = getStairModularConfig(st);
+
+    // 1段あたりの踏面長: モジュラー階段は 910mm = 4段 (0.25P = 227.5mm) を基準とする
+    const stdTreadP = +(W * 0.25).toFixed(4);
+
+    const turnRight = (d) => ({ x: -d.y, y: d.x });
+    const turnLeft = (d) => ({ x: d.y, y: -d.x });
+    const turnByDir = (d, dirStr) => {
+        if (dirStr === 'right') return turnRight(d);
+        if (dirStr === 'left') return turnLeft(d);
+        return { x: d.x, y: d.y };
+    };
+
+    // 基準回転角の決定
+    let rot = (((st && st.rotation ? st.rotation : 0) % 360) + 360) % 360;
+    if (cfg.isLegacyStraight && st && st.w > st.h && !st.rotation) {
+        rot = 90;
+    } else if (st && st.rotation === undefined && !st.isModular && st.points && st.points.length === 3 && st.shapeType === 'L_SHAPE') {
+        const p0 = st.points[0], p1 = st.points[1];
+        const dx = p1.x - p0.x, dy = p1.y - p0.y;
+        if (Math.abs(dy) >= Math.abs(dx)) {
+            rot = dy <= 0 ? 0 : 180;
+        } else {
+            rot = dx >= 0 ? 90 : 270;
+        }
+    }
+
+    let dBase = { x: 0, y: -1 }; // 0deg: 上(北)向き
+    if (rot === 90) dBase = { x: 1, y: 0 };
+    else if (rot === 180) dBase = { x: 0, y: 1 };
+    else if (rot === 270) dBase = { x: -1, y: 0 };
+
+    // I1 === 0 かつ C1 > 0 の場合 (パターン④: 下部廻りから直接入り、I2が基準方向 dBase へ進む)
+    let dCur = { x: dBase.x, y: dBase.y };
+    if (cfg.i1Steps === 0 && cfg.c1Steps > 0) {
+        if (cfg.c1Dir === 'right') dCur = turnLeft(dBase);
+        else if (cfg.c1Dir === 'left') dCur = turnRight(dBase);
+    }
+
+    const rawBlocks = [];
+    let cursor = { x: 0, y: 0 };
+
+    const pushStraightBlock = (id, stepCount) => {
+        if (stepCount <= 0) return;
+        let len = +(stepCount * stdTreadP).toFixed(4);
+        if (cfg.isLegacyStraight && st && st.w && st.h) {
+            len = Math.max(st.w, st.h);
+        }
+        const pIn = { x: cursor.x, y: cursor.y };
+        const pOut = { x: cursor.x + dCur.x * len, y: cursor.y + dCur.y * len };
+        const center = { x: (pIn.x + pOut.x) * 0.5, y: (pIn.y + pOut.y) * 0.5 };
+        rawBlocks.push({
+            id, kind: 'straight', steps: stepCount,
+            len, width: W,
+            dIn: { ...dCur }, dOut: { ...dCur },
+            pIn, pOut, center
+        });
+        cursor = pOut;
+    };
+
+    const pushCornerBlock = (id, stepCount, turnDir) => {
+        if (stepCount <= 0) return;
+        const pIn = { x: cursor.x, y: cursor.y };
+        const center = { x: pIn.x + dCur.x * (W * 0.5), y: pIn.y + dCur.y * (W * 0.5) };
+        const dNext = turnByDir(dCur, turnDir);
+        const pOut = { x: center.x + dNext.x * (W * 0.5), y: center.y + dNext.y * (W * 0.5) };
+        rawBlocks.push({
+            id, kind: 'corner', steps: stepCount, turnDir: turnDir || 'right',
+            len: W, width: W,
+            dIn: { ...dCur }, dOut: { ...dNext },
+            pIn, pOut, center
+        });
+        cursor = pOut;
+        dCur = dNext;
+    };
+
+    pushStraightBlock('I1', cfg.i1Steps);
+    pushCornerBlock('C1', cfg.c1Steps, cfg.c1Dir);
+    pushStraightBlock('I2', cfg.i2Steps);
+    pushCornerBlock('C2', cfg.c2Steps, cfg.c2Dir);
+    pushStraightBlock('I3', cfg.i3Steps);
+
+    if (rawBlocks.length === 0) {
+        pushStraightBlock('I1', 13);
+    }
+
+    // 外接バウンディングボックスの算出と (0,0) 正規化
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    rawBlocks.forEach(b => {
+        const hx = (Math.abs(b.dIn.x) * b.len + Math.abs(b.dIn.y) * b.width) * 0.5;
+        const hy = (Math.abs(b.dIn.y) * b.len + Math.abs(b.dIn.x) * b.width) * 0.5;
+        b.x0 = b.center.x - hx;
+        b.x1 = b.center.x + hx;
+        b.y0 = b.center.y - hy;
+        b.y1 = b.center.y + hy;
+        minX = Math.min(minX, b.x0);
+        minY = Math.min(minY, b.y0);
+        maxX = Math.max(maxX, b.x1);
+        maxY = Math.max(maxY, b.y1);
+    });
+
+    const shift = (pt) => ({ x: +(pt.x - minX).toFixed(4), y: +(pt.y - minY).toFixed(4) });
+    const totalW = +Math.max(0.25, maxX - minX).toFixed(4);
+    const totalH = +Math.max(0.25, maxY - minY).toFixed(4);
+
+    const riserLines = [];
+    const winderRays = [];
+    const wallEdges = [];
+    const innerDoubleLines = [];
+    const stepPolygons3D = [];
+    const insetP = +(W * 0.065).toFixed(4);
+
+    let globalStepIdx = 0;
+
+    rawBlocks.forEach((b, idx) => {
+        b.center = shift(b.center);
+        b.pIn = shift(b.pIn);
+        b.pOut = shift(b.pOut);
+        b.x0 = +(b.x0 - minX).toFixed(4);
+        b.x1 = +(b.x1 - minX).toFixed(4);
+        b.y0 = +(b.y0 - minY).toFixed(4);
+        b.y1 = +(b.y1 - minY).toFixed(4);
+
+        const dIn = b.dIn;
+        const nL = turnLeft(dIn);
+        const nR = turnRight(dIn);
+
+        if (b.kind === 'straight') {
+            const BL = { x: b.pIn.x + nL.x * (W * 0.5), y: b.pIn.y + nL.y * (W * 0.5) };
+            const BR = { x: b.pIn.x + nR.x * (W * 0.5), y: b.pIn.y + nR.y * (W * 0.5) };
+            const FL = { x: b.pOut.x + nL.x * (W * 0.5), y: b.pOut.y + nL.y * (W * 0.5) };
+            const FR = { x: b.pOut.x + nR.x * (W * 0.5), y: b.pOut.y + nR.y * (W * 0.5) };
+            b.poly = [BL, BR, FR, FL];
+
+            // 両脇の壁ライン + 二重線
+            wallEdges.push({ p1: BL, p2: FL, normal: nR, side: 'left' });
+            wallEdges.push({ p1: BR, p2: FR, normal: nL, side: 'right' });
+            innerDoubleLines.push({
+                p1: { x: BL.x + nR.x * insetP, y: BL.y + nR.y * insetP },
+                p2: { x: FL.x + nR.x * insetP, y: FL.y + nR.y * insetP },
+                side: 'left'
+            });
+            innerDoubleLines.push({
+                p1: { x: BR.x + nL.x * insetP, y: BR.y + nL.y * insetP },
+                p2: { x: FR.x + nL.x * insetP, y: FR.y + nL.y * insetP },
+                side: 'right'
+            });
+
+            // 段鼻線と3D踏板ポリゴン
+            for (let k = 0; k <= b.steps; k++) {
+                const t = k / b.steps;
+                const qx = b.pIn.x + dIn.x * (b.len * t);
+                const qy = b.pIn.y + dIn.y * (b.len * t);
+                const sL = { x: qx + nL.x * (W * 0.5), y: qy + nL.y * (W * 0.5) };
+                const sR = { x: qx + nR.x * (W * 0.5), y: qy + nR.y * (W * 0.5) };
+                riserLines.push({ p1: sL, p2: sR });
+
+                if (k < b.steps) {
+                    const tNext = (k + 1) / b.steps;
+                    const qnx = b.pIn.x + dIn.x * (b.len * tNext);
+                    const qny = b.pIn.y + dIn.y * (b.len * tNext);
+                    const nLpt = { x: qnx + nL.x * (W * 0.5), y: qny + nL.y * (W * 0.5) };
+                    const nRpt = { x: qnx + nR.x * (W * 0.5), y: qny + nR.y * (W * 0.5) };
+                    stepPolygons3D.push({
+                        stepIndex: globalStepIdx++,
+                        kind: 'straight',
+                        points: [sL, sR, nRpt, nLpt]
+                    });
+                }
+            }
+        } else {
+            // Corner / Landing Block (W x W)
+            const BL = { x: b.center.x - dIn.x * (W * 0.5) + nL.x * (W * 0.5), y: b.center.y - dIn.y * (W * 0.5) + nL.y * (W * 0.5) };
+            const BR = { x: b.center.x - dIn.x * (W * 0.5) + nR.x * (W * 0.5), y: b.center.y - dIn.y * (W * 0.5) + nR.y * (W * 0.5) };
+            const FL = { x: b.center.x + dIn.x * (W * 0.5) + nL.x * (W * 0.5), y: b.center.y + dIn.y * (W * 0.5) + nL.y * (W * 0.5) };
+            const FR = { x: b.center.x + dIn.x * (W * 0.5) + nR.x * (W * 0.5), y: b.center.y + dIn.y * (W * 0.5) + nR.y * (W * 0.5) };
+            b.poly = [BL, BR, FR, FL];
+
+            // 入口側の段鼻線
+            riserLines.push({ p1: BL, p2: BR });
+
+            const isLastBlock = (idx === rawBlocks.length - 1);
+            const tDir = b.turnDir || 'right';
+
+            if (tDir === 'right') {
+                // 右折: 左辺(BL->FL)と前辺(FL->FR)が外壁、右辺(BR->FR)が出口段鼻
+                riserLines.push({ p1: BR, p2: FR });
+                wallEdges.push({ p1: BL, p2: FL, normal: nR, side: 'left' });
+                wallEdges.push({ p1: FL, p2: FR, normal: { x: -dIn.x, y: -dIn.y }, side: 'front' });
+                const cornerMiter = { x: FL.x + nR.x * insetP - dIn.x * insetP, y: FL.y + nR.y * insetP - dIn.y * insetP };
+                innerDoubleLines.push({
+                    p1: { x: BL.x + nR.x * insetP, y: BL.y + nR.y * insetP },
+                    p2: cornerMiter,
+                    side: 'left'
+                });
+                innerDoubleLines.push({
+                    p1: cornerMiter,
+                    p2: { x: FR.x - dIn.x * insetP, y: FR.y - dIn.y * insetP },
+                    side: 'front'
+                });
+            } else if (tDir === 'left') {
+                // 左折: 右辺(BR->FR)と前辺(FR->FL)が外壁、左辺(BL->FL)が出口段鼻
+                riserLines.push({ p1: BL, p2: FL });
+                wallEdges.push({ p1: BR, p2: FR, normal: nL, side: 'right' });
+                wallEdges.push({ p1: FR, p2: FL, normal: { x: -dIn.x, y: -dIn.y }, side: 'front' });
+                const cornerMiter = { x: FR.x + nL.x * insetP - dIn.x * insetP, y: FR.y + nL.y * insetP - dIn.y * insetP };
+                innerDoubleLines.push({
+                    p1: { x: BR.x + nL.x * insetP, y: BR.y + nL.y * insetP },
+                    p2: cornerMiter,
+                    side: 'right'
+                });
+                innerDoubleLines.push({
+                    p1: cornerMiter,
+                    p2: { x: FL.x - dIn.x * insetP, y: FL.y - dIn.y * insetP },
+                    side: 'front'
+                });
+            } else if (tDir === 'both') {
+                // 左右両側開放 (登りきり両側出口): 左辺・右辺ともに出口、前辺(FL->FR)のみ外壁
+                riserLines.push({ p1: BL, p2: FL });
+                riserLines.push({ p1: BR, p2: FR });
+                wallEdges.push({ p1: FL, p2: FR, normal: { x: -dIn.x, y: -dIn.y }, side: 'front' });
+                innerDoubleLines.push({
+                    p1: { x: FL.x - dIn.x * insetP, y: FL.y - dIn.y * insetP },
+                    p2: { x: FR.x - dIn.x * insetP, y: FR.y - dIn.y * insetP },
+                    side: 'front'
+                });
+            } else {
+                // 直進踊り場 ('straight'): 左辺・右辺が外壁、前辺が出口段鼻
+                riserLines.push({ p1: FL, p2: FR });
+                wallEdges.push({ p1: BL, p2: FL, normal: nR, side: 'left' });
+                wallEdges.push({ p1: BR, p2: FR, normal: nL, side: 'right' });
+                innerDoubleLines.push({
+                    p1: { x: BL.x + nR.x * insetP, y: BL.y + nR.y * insetP },
+                    p2: { x: FL.x + nR.x * insetP, y: FL.y + nR.y * insetP },
+                    side: 'left'
+                });
+                innerDoubleLines.push({
+                    p1: { x: BR.x + nL.x * insetP, y: BR.y + nL.y * insetP },
+                    p2: { x: FR.x + nL.x * insetP, y: FR.y + nL.y * insetP },
+                    side: 'right'
+                });
+            }
+
+            // 廻り段の親柱(内角)ピボットからの放射割り線と3Dウェッジポリゴン
+            const dOut = b.dOut;
+            const isPerpTurn = (tDir === 'right' || tDir === 'left');
+            if (b.steps >= 2 && isPerpTurn) {
+                const pInner = {
+                    x: b.center.x + (-dIn.x + dOut.x) * (W * 0.5),
+                    y: b.center.y + (-dIn.y + dOut.y) * (W * 0.5)
+                };
+                const pOuter = {
+                    x: b.center.x + (dIn.x - dOut.x) * (W * 0.5),
+                    y: b.center.y + (dIn.y - dOut.y) * (W * 0.5)
+                };
+                const hitPointAtAngle = (thetaRad) => {
+                    const c = Math.cos(thetaRad);
+                    const s = Math.sin(thetaRad);
+                    const denom = Math.max(c, s, 1e-6);
+                    const rx = (-c * dOut.x + s * dIn.x) / denom;
+                    const ry = (-c * dOut.y + s * dIn.y) / denom;
+                    return {
+                        x: pInner.x + W * rx,
+                        y: pInner.y + W * ry
+                    };
+                };
+
+                for (let k = 1; k < b.steps; k++) {
+                    const theta = (k / b.steps) * (Math.PI * 0.5);
+                    const pHit = hitPointAtAngle(theta);
+                    winderRays.push({ p1: pInner, p2: pHit });
+                }
+
+                for (let k = 0; k < b.steps; k++) {
+                    const th0 = (k / b.steps) * (Math.PI * 0.5);
+                    const th1 = ((k + 1) / b.steps) * (Math.PI * 0.5);
+                    const pt0 = hitPointAtAngle(th0);
+                    const pt1 = hitPointAtAngle(th1);
+                    const mid45 = Math.PI * 0.25;
+                    const polyPts = (th0 < mid45 - 1e-4 && th1 > mid45 + 1e-4)
+                        ? [pInner, pt0, pOuter, pt1]
+                        : [pInner, pt0, pt1];
+                    stepPolygons3D.push({
+                        stepIndex: globalStepIdx++,
+                        kind: 'winder',
+                        points: polyPts
+                    });
+                }
+            } else {
+                // 1段フラット踊り場 (または直進中間踊り場)
+                if (b.steps >= 2 && !isPerpTurn) {
+                    // 直進で複数段指定された場合は均等分割
+                    for (let k = 1; k < b.steps; k++) {
+                        const t = k / b.steps;
+                        const qx = b.pIn.x + dIn.x * (W * t);
+                        const qy = b.pIn.y + dIn.y * (W * t);
+                        riserLines.push({
+                            p1: { x: qx + nL.x * (W * 0.5), y: qy + nL.y * (W * 0.5) },
+                            p2: { x: qx + nR.x * (W * 0.5), y: qy + nR.y * (W * 0.5) }
+                        });
+                    }
+                }
+                for (let k = 0; k < b.steps; k++) {
+                    stepPolygons3D.push({
+                        stepIndex: globalStepIdx++,
+                        kind: 'landing',
+                        points: [BL, BR, FR, FL]
+                    });
+                }
+            }
+        }
+    });
+
+    // 昇降センターライン & 入口・出口矢印データの構築
+    const firstBlock = rawBlocks[0];
+    const lastBlock = rawBlocks[rawBlocks.length - 1];
+    const entryPoint = { ...firstBlock.pIn };
+    const entryDir = { ...firstBlock.dIn };
+
+    const centerPath = [entryPoint];
+    rawBlocks.forEach(b => {
+        if (b.kind === 'corner') {
+            centerPath.push({ ...b.center });
+        }
+    });
+
+    const exitArrows = [];
+    if (lastBlock.kind === 'corner' && lastBlock.turnDir === 'both') {
+        // 左右両側登りきり分岐
+        const dL = turnLeft(lastBlock.dIn);
+        const dR = turnRight(lastBlock.dIn);
+        const pExitL = { x: lastBlock.center.x + dL.x * (W * 0.5), y: lastBlock.center.y + dL.y * (W * 0.5) };
+        const pExitR = { x: lastBlock.center.x + dR.x * (W * 0.5), y: lastBlock.center.y + dR.y * (W * 0.5) };
+        exitArrows.push({ from: { ...lastBlock.center }, to: pExitL, dir: dL });
+        exitArrows.push({ from: { ...lastBlock.center }, to: pExitR, dir: dR });
+    } else {
+        centerPath.push({ ...lastBlock.pOut });
+        exitArrows.push({
+            from: centerPath[centerPath.length - 2] || entryPoint,
+            to: { ...lastBlock.pOut },
+            dir: { ...lastBlock.dOut }
+        });
+    }
+
+    return {
+        config: cfg,
+        widthP: W,
+        totalW,
+        totalH,
+        totalSteps: Math.max(1, globalStepIdx),
+        blocks: rawBlocks,
+        riserLines,
+        winderRays,
+        wallEdges,
+        innerDoubleLines,
+        stepPolygons3D,
+        entryPoint,
+        entryDir,
+        centerPath,
+        exitArrows
+    };
+}
+window.computeStairModularLayout = computeStairModularLayout;
+
+function syncStairModularBounds(st) {
+    if (!st) return st;
+    const layout = computeStairModularLayout(st);
+    st.w = layout.totalW;
+    st.h = layout.totalH;
+    st.steps = layout.totalSteps;
+    st.points = [
+        { x: st.x, y: st.y },
+        { x: +(st.x + st.w).toFixed(3), y: st.y },
+        { x: +(st.x + st.w).toFixed(3), y: +(st.y + st.h).toFixed(3) },
+        { x: st.x, y: +(st.y + st.h).toFixed(3) }
+    ];
+    return layout;
+}
+window.syncStairModularBounds = syncStairModularBounds;
+
+/**
+ * 下の階で描いた「上に登る階段 (direction: UP)」を自動で上の階に表示・同期するエンジン
+ * ・上の階へ投影された連動階段は既定で「立面不出力 (no3DOutput: true)」「平面不出力: OFF (no2DOutput: false)」となり、
+ *   2階の平面図には同じ位置・形状で表示されつつ、3Dでは1階から登ってくる階段メッシュと二重にならない。
+ * ・プロパティで「平面不出力」「立面不出力」を個別にON/OFF可能。
+ */
+function syncUpperFloorStairs() {
+    if (typeof state === 'undefined' || !state.floors) return;
+    const floorOrder = [0, 1, 2, 3];
+    for (const f of floorOrder) {
+        const lowerFl = state.floors[f];
+        const upperFl = state.floors[f + 1];
+        if (!lowerFl || !upperFl) continue;
+        if (!Array.isArray(lowerFl.stairs)) lowerFl.stairs = [];
+        if (!Array.isArray(upperFl.stairs)) upperFl.stairs = [];
+
+        // 下の階の「上に登る階段 (UP)」かつ自身が連動コピーでない階段を抽出
+        const sourceUpStairs = lowerFl.stairs.filter(s =>
+            s && !s.linkedFromStairId && (s.direction || 'UP') === 'UP' && !s.suppressUpperAutoCopy
+        );
+        const validSourceIds = new Set(sourceUpStairs.map(s => s.id));
+
+        // 削除された、またはDNに変更された元階段の連動コピーを上の階から除去
+        upperFl.stairs = upperFl.stairs.filter(us => {
+            if (us && us.linkedFromFloor === f && us.linkedFromStairId) {
+                return validSourceIds.has(us.linkedFromStairId);
+            }
+            return true;
+        });
+
+        // 各UP階段を上の階へ自動同期（すでに上の階の同一座標に手動階段が存在する場合はそれを連動化または重複生成を回避）
+        sourceUpStairs.forEach(src => {
+            let linked = upperFl.stairs.find(us => us && us.linkedFromStairId === src.id);
+            if (!linked) {
+                const samePosStair = upperFl.stairs.find(us =>
+                    us && !us.linkedFromStairId &&
+                    Math.abs((us.x || 0) - (src.x || 0)) < 0.15 &&
+                    Math.abs((us.y || 0) - (src.y || 0)) < 0.15
+                );
+                if (samePosStair) {
+                    linked = samePosStair;
+                    linked.linkedFromStairId = src.id;
+                    linked.linkedFromFloor = f;
+                    if (linked.no3DOutput === undefined) linked.no3DOutput = true;
+                    if (linked.no2DOutput === undefined) linked.no2DOutput = false;
+                } else {
+                    linked = JSON.parse(JSON.stringify(src));
+                    linked.id = 'stair_upper_' + src.id;
+                    linked.linkedFromStairId = src.id;
+                    linked.linkedFromFloor = f;
+                    linked.no3DOutput = true;   // 上の階の複写階段は既定で立面不出力(3D二重描画防止)
+                    linked.no2DOutput = false;  // 平面図には既定で表示
+                    upperFl.stairs.push(linked);
+                }
+            } else {
+                const keepId = linked.id;
+                const keepNo2D = !!linked.no2DOutput;
+                const keepNo3D = linked.no3DOutput !== undefined ? !!linked.no3DOutput : true;
+                const syncedProps = [
+                    'shapeType', 'patternKey', 'isModular', 'landingTop', 'rotation',
+                    'i1Steps', 'c1Steps', 'c1Dir', 'i2Steps', 'c2Steps', 'c2Dir', 'i3Steps',
+                    'x', 'y', 'w', 'h', 'widthMm', 'direction', 'turnType',
+                    'stairStyle', 'stairHandrail', 'handrail', 'steps', 'treadMm', 'riserMm', 'label'
+                ];
+                syncedProps.forEach(k => {
+                    if (src[k] !== undefined) linked[k] = src[k];
+                });
+                if (src.points) linked.points = JSON.parse(JSON.stringify(src.points));
+                linked.id = keepId;
+                linked.linkedFromStairId = src.id;
+                linked.linkedFromFloor = f;
+                linked.no2DOutput = keepNo2D;
+                linked.no3DOutput = keepNo3D;
+            }
+        });
+    }
+}
+window.syncUpperFloorStairs = syncUpperFloorStairs;
+
+/**
+ * 上の階で連動階段の位置や段数・形状を編集した際、下の階の元階段へ逆同期するヘルパー
+ */
+function syncLinkedStairBackToSource(st) {
+    if (!st || !st.linkedFromStairId || st.linkedFromFloor === undefined) return;
+    const srcFl = state.floors && state.floors[st.linkedFromFloor];
+    if (!srcFl || !Array.isArray(srcFl.stairs)) return;
+    const src = srcFl.stairs.find(s => s && s.id === st.linkedFromStairId);
+    if (!src) return;
+    const syncedProps = [
+        'shapeType', 'patternKey', 'isModular', 'landingTop', 'rotation',
+        'i1Steps', 'c1Steps', 'c1Dir', 'i2Steps', 'c2Steps', 'c2Dir', 'i3Steps',
+        'x', 'y', 'w', 'h', 'widthMm', 'turnType',
+        'stairStyle', 'stairHandrail', 'handrail', 'steps', 'treadMm', 'riserMm'
+    ];
+    syncedProps.forEach(k => {
+        if (st[k] !== undefined) src[k] = st[k];
+    });
+    if (st.points) src.points = JSON.parse(JSON.stringify(st.points));
+}
+window.syncLinkedStairBackToSource = syncLinkedStairBackToSource;
+
 function drawStair2D(st, isLight) {
-    const p = worldPToScreen(st.x, st.y);
-    const wPx = st.w * state.cam2d.zoom;
-    const hPx = st.h * state.cam2d.zoom;
+    if (!st) return;
     const isSelected = state.selectedItem && state.selectedItem.kind === 'stair' && state.selectedItem.id === st.id;
-    const shape = st.shapeType || 'U_SHAPE';
+    // 平面不出力 (no2DOutput) がONの場合：未選択時は2D平面図に一切描画しない（選択中のみ編集用ゴースト枠を表示）
+    if ((st.no2DOutput || st.hide2D) && !isSelected) return;
+    if ((st.x === undefined || st.w === undefined) && st.points && st.points.length >= 2) {
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        st.points.forEach(pt => {
+            minX = Math.min(minX, pt.x);
+            minY = Math.min(minY, pt.y);
+            maxX = Math.max(maxX, pt.x);
+            maxY = Math.max(maxY, pt.y);
+        });
+        st.x = minX;
+        st.y = minY;
+        const widthP = (st.widthMm || 910) / (state.modulePitch || 910);
+        st.w = +(Math.max(widthP, maxX - minX)).toFixed(3) || widthP;
+        st.h = +(Math.max(widthP, maxY - minY)).toFixed(3) || (widthP * 2);
+    }
+
+    const layout = computeStairModularLayout(st);
+    if (st.isModular || st.i1Steps !== undefined || st.patternKey) {
+        st.w = layout.totalW;
+        st.h = layout.totalH;
+    }
+
+    const curX = (st.x !== undefined && !isNaN(st.x)) ? st.x : 0;
+    const curY = (st.y !== undefined && !isNaN(st.y)) ? st.y : 0;
+    const zoom = state.cam2d.zoom;
+    const p = worldPToScreen(curX, curY);
     const dir = st.direction || 'UP';
-    const steps = st.steps || 14;
     const isOpen = st.stairStyle === 'open';
-    const handrail = st.handrail || 'both';
+    const handrail = st.handrail || st.stairHandrail || 'both';
 
     ctx.save();
     ctx.translate(p.x, p.y);
+    if (st.no2DOutput || st.hide2D) {
+        ctx.globalAlpha = 0.35;
+    }
 
-    // 背景と外枠
-    ctx.fillStyle = isOpen ? 'rgba(255, 255, 255, 0.35)' : (isSelected ? '#fef3c7' : '#ffffff');
-    ctx.fillRect(0, 0, wPx, hPx);
+    // 1. 各ブロックの背景塗潰し（建築CAD木目ベージュ調）
+    ctx.fillStyle = isOpen ? 'rgba(237, 213, 180, 0.45)' : (isSelected ? '#fde68a' : '#edd5b4');
+    layout.blocks.forEach(b => {
+        if (!b.poly || b.poly.length < 3) return;
+        ctx.beginPath();
+        ctx.moveTo(b.poly[0].x * zoom, b.poly[0].y * zoom);
+        for (let i = 1; i < b.poly.length; i++) {
+            ctx.lineTo(b.poly[i].x * zoom, b.poly[i].y * zoom);
+        }
+        ctx.closePath();
+        ctx.fill();
+    });
 
-    ctx.strokeStyle = isSelected ? '#f59e0b' : '#0f172a';
-    ctx.lineWidth = isSelected ? 2.5 : 1.5;
+    // 2. 段鼻線（直進ステップ境界）および廻り段の親柱放射割り線
+    ctx.strokeStyle = '#334155';
+    ctx.lineWidth = 1.0;
     if (isOpen) ctx.setLineDash([4, 2]);
-    ctx.strokeRect(0, 0, wPx, hPx);
+    layout.riserLines.forEach(seg => {
+        ctx.beginPath();
+        ctx.moveTo(seg.p1.x * zoom, seg.p1.y * zoom);
+        ctx.lineTo(seg.p2.x * zoom, seg.p2.y * zoom);
+        ctx.stroke();
+    });
+    layout.winderRays.forEach(ray => {
+        ctx.beginPath();
+        ctx.moveTo(ray.p1.x * zoom, ray.p1.y * zoom);
+        ctx.lineTo(ray.p2.x * zoom, ray.p2.y * zoom);
+        ctx.stroke();
+    });
     ctx.setLineDash([]);
 
-    // 手すり二重線表現
-    if (handrail === 'left' || handrail === 'both') {
+    // 3. 壁・手すり内側二重線
+    if (handrail !== 'none') {
         ctx.strokeStyle = '#475569';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(2, 2, 3, hPx - 4);
-    }
-    if (handrail === 'right' || handrail === 'both') {
-        ctx.strokeStyle = '#475569';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(wPx - 5, 2, 3, hPx - 4);
+        ctx.lineWidth = 1.0;
+        layout.innerDoubleLines.forEach(seg => {
+            if (handrail === 'left' && seg.side === 'right') return;
+            if (handrail === 'right' && seg.side === 'left') return;
+            ctx.beginPath();
+            ctx.moveTo(seg.p1.x * zoom, seg.p1.y * zoom);
+            ctx.lineTo(seg.p2.x * zoom, seg.p2.y * zoom);
+            ctx.stroke();
+        });
     }
 
-    ctx.strokeStyle = '#334155';
-    ctx.lineWidth = 1;
+    // 4. 外周壁太線（登り口・登りきり開口部を除く壁面境界）
+    ctx.strokeStyle = isSelected ? '#f59e0b' : '#1e293b';
+    ctx.lineWidth = isSelected ? 2.4 : 1.5;
+    layout.wallEdges.forEach(edge => {
+        ctx.beginPath();
+        ctx.moveTo(edge.p1.x * zoom, edge.p1.y * zoom);
+        ctx.lineTo(edge.p2.x * zoom, edge.p2.y * zoom);
+        ctx.stroke();
+    });
 
-    if (shape === 'U_SHAPE') {
-        const isVert = hPx >= wPx;
-        if (isVert) {
-            const midX = wPx / 2;
-            const landingH = hPx * 0.3;
-            ctx.strokeRect(midX - 2, landingH, 4, hPx - landingH);
-            ctx.strokeRect(0, 0, wPx, landingH);
-            const flightH = hPx - landingH;
-            const stepH = flightH / 7;
-            for (let i = 1; i <= 6; i++) {
-                const y = landingH + i * stepH;
-                ctx.beginPath();
-                ctx.moveTo(0, y); ctx.lineTo(midX - 2, y);
-                ctx.moveTo(midX + 2, y); ctx.lineTo(wPx, y);
-                ctx.stroke();
-            }
-            // 昇降矢印
-            const startX = midX * 0.5, endX = midX * 1.5, bottomY = hPx * 0.88, topY = landingH * 0.5;
-            ctx.beginPath(); ctx.arc(startX, bottomY, 3, 0, Math.PI * 2); ctx.fillStyle = '#0f172a'; ctx.fill();
-            ctx.beginPath(); ctx.moveTo(startX, bottomY); ctx.lineTo(startX, topY); ctx.lineTo(endX, topY); ctx.lineTo(endX, bottomY); ctx.stroke();
-        } else {
-            const midY = hPx / 2;
-            const landingW = wPx * 0.3;
-            ctx.strokeRect(0, midY - 2, wPx - landingW, 4);
-            ctx.strokeRect(wPx - landingW, 0, landingW, hPx);
-            const flightW = wPx - landingW;
-            const stepW = flightW / 7;
-            for (let i = 1; i <= 6; i++) {
-                const x = i * stepW;
-                ctx.beginPath();
-                ctx.moveTo(x, 0); ctx.lineTo(x, midY - 2);
-                ctx.moveTo(x, midY + 2); ctx.lineTo(x, hPx);
-                ctx.stroke();
-            }
+    // 5. 昇降センターライン・始点丸印・UP/DN表記・登りきりV字矢印
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1.15;
+
+    if (layout.centerPath.length >= 2) {
+        ctx.beginPath();
+        ctx.moveTo(layout.centerPath[0].x * zoom, layout.centerPath[0].y * zoom);
+        for (let i = 1; i < layout.centerPath.length; i++) {
+            ctx.lineTo(layout.centerPath[i].x * zoom, layout.centerPath[i].y * zoom);
         }
-    } else {
-        const isVert = hPx >= wPx;
-        const stepCount = steps || 14;
-        if (isVert) {
-            const stepH = hPx / stepCount;
-            for (let i = 1; i < stepCount; i++) {
-                const y = i * stepH;
-                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(wPx, y); ctx.stroke();
-            }
-            const fromY = dir === 'UP' ? hPx * 0.85 : hPx * 0.15;
-            const toY = dir === 'UP' ? hPx * 0.15 : hPx * 0.85;
-            ctx.fillStyle = '#0f172a';
-            ctx.beginPath(); ctx.arc(wPx / 2, fromY, 3.5, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.moveTo(wPx / 2, fromY); ctx.lineTo(wPx / 2, toY); ctx.stroke();
-            const arrowDy = dir === 'UP' ? 7 : -7;
-            ctx.beginPath(); ctx.moveTo(wPx / 2 - 4, toY + arrowDy); ctx.lineTo(wPx / 2, toY); ctx.lineTo(wPx / 2 + 4, toY + arrowDy); ctx.stroke();
-        } else {
-            const stepW = wPx / stepCount;
-            for (let i = 1; i < stepCount; i++) {
-                const x = i * stepW;
-                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, hPx); ctx.stroke();
-            }
-            const fromX = dir === 'UP' ? wPx * 0.15 : wPx * 0.85;
-            const toX = dir === 'UP' ? wPx * 0.85 : wPx * 0.15;
-            ctx.fillStyle = '#0f172a';
-            ctx.beginPath(); ctx.arc(fromX, hPx / 2, 3.5, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.moveTo(fromX, hPx / 2); ctx.lineTo(toX, hPx / 2); ctx.stroke();
-        }
+        ctx.stroke();
     }
+
+    // 両側分岐などの追加矢印線とV字矢じり
+    layout.exitArrows.forEach(arr => {
+        ctx.beginPath();
+        ctx.moveTo(arr.from.x * zoom, arr.from.y * zoom);
+        ctx.lineTo(arr.to.x * zoom, arr.to.y * zoom);
+        ctx.stroke();
+
+        const tipX = arr.to.x * zoom;
+        const tipY = arr.to.y * zoom;
+        const dx = arr.dir.x;
+        const dy = arr.dir.y;
+        const nx = -dy;
+        const ny = dx;
+        const headLen = Math.max(6, Math.min(11, layout.widthP * zoom * 0.24));
+        const headHalfW = headLen * 0.48;
+
+        ctx.beginPath();
+        ctx.moveTo(tipX - dx * headLen + nx * headHalfW, tipY - dy * headLen + ny * headHalfW);
+        ctx.lineTo(tipX, tipY);
+        ctx.lineTo(tipX - dx * headLen - nx * headHalfW, tipY - dy * headLen - ny * headHalfW);
+        ctx.stroke();
+    });
+
+    // 始点白抜き丸印 'o' と 'UP' / 'DN' 文字
+    const startX = layout.entryPoint.x * zoom;
+    const startY = layout.entryPoint.y * zoom;
+    ctx.fillStyle = '#ffffff';
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1.25;
+    ctx.beginPath();
+    ctx.arc(startX, startY, 3.0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    const labelText = dir === 'DOWN' ? 'DN' : 'UP';
+    const labelOffset = 10;
+    const lx = startX - layout.entryDir.x * labelOffset;
+    const ly = startY - layout.entryDir.y * labelOffset;
+    ctx.fillStyle = '#3b1d11';
+    ctx.font = 'bold 10px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(labelText, lx, ly);
 
     ctx.restore();
 }
@@ -753,7 +1462,54 @@ function drawFixture2D(fx, isLight) {
     ctx.strokeStyle = isSelected ? '#f59e0b' : '#334155';
     ctx.lineWidth = isSelected ? 2.5 : 1.3;
 
-    if (cat === 'KITCHEN' || (cat && cat.startsWith('KITCHEN'))) {
+    if (cat === 'KITCHEN_L' || (fx.fxData && fx.fxData.kitchenType === 'L')) {
+        // L型キッチン（6頂点L字ポリゴン＋コーナー目地＋シンク＋3口コンロ）
+        const pitch = state.modulePitch || 910;
+        const depthMm = (fx.fxData && fx.fxData.lDepth) ? fx.fxData.lDepth : 650;
+        const depthP = depthMm / pitch;
+        const dPx = Math.min(Math.min(wPx, hPx) * 0.48, Math.max(12, depthP * state.cam2d.zoom));
+
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(wPx, 0);
+        ctx.lineTo(wPx, dPx);
+        ctx.lineTo(dPx, dPx);
+        ctx.lineTo(dPx, hPx);
+        ctx.lineTo(0, hPx);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // コーナー接合部ライン
+        ctx.beginPath();
+        ctx.moveTo(dPx, 0);
+        ctx.lineTo(dPx, dPx);
+        ctx.moveTo(0, dPx);
+        ctx.lineTo(dPx, dPx);
+        ctx.stroke();
+
+        // 横ウィング（上辺）にシンクを描画
+        const wingXLen = wPx - dPx;
+        if (wingXLen > 24 && dPx > 14) {
+            const sinkW = Math.min(wingXLen * 0.55, 38);
+            const sinkH = dPx * 0.64;
+            const sinkX = dPx + (wingXLen - sinkW) * 0.45;
+            const sinkY = (dPx - sinkH) / 2;
+            ctx.strokeRect(sinkX, sinkY, sinkW, sinkH);
+        }
+        // 縦ウィング（左辺）に3口コンロを描画
+        const wingYLen = hPx - dPx;
+        if (wingYLen > 20 && dPx > 14) {
+            const stoveX = dPx / 2;
+            const stoveY = dPx + wingYLen * 0.52;
+            const r = Math.min(4.0, dPx * 0.16);
+            ctx.beginPath();
+            ctx.arc(stoveX - r * 0.8, stoveY - r * 1.2, r, 0, Math.PI * 2);
+            ctx.arc(stoveX - r * 0.8, stoveY + r * 1.2, r, 0, Math.PI * 2);
+            ctx.arc(stoveX + r * 1.1, stoveY, r * 0.85, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+    } else if (cat === 'KITCHEN' || (cat && cat.startsWith('KITCHEN'))) {
         ctx.fillRect(0, 0, wPx, hPx);
         ctx.strokeRect(0, 0, wPx, hPx);
         if (wPx > 40 && hPx > 18) {
@@ -920,6 +1676,21 @@ function drawOpening2D(op, isLight) {
         ctx.moveTo(-lenPx / 2, -2); ctx.lineTo(lenPx / 2, -2);
         ctx.moveTo(-lenPx / 2, 2 * dir); ctx.lineTo(0, 2 * dir);
         ctx.stroke();
+    } else if (fit === 'kaikou') {
+        // 開口のみ（扉なし・階段登りきり通路・下がり壁開口）
+        ctx.beginPath();
+        ctx.moveTo(-lenPx / 2, -4.5); ctx.lineTo(-lenPx / 2, 4.5);
+        ctx.moveTo(lenPx / 2, -4.5); ctx.lineTo(lenPx / 2, 4.5);
+        ctx.stroke();
+        ctx.save();
+        ctx.setLineDash([3, 3]);
+        ctx.lineWidth = 0.9;
+        ctx.strokeStyle = isSelected ? '#f59e0b' : '#64748b';
+        ctx.beginPath();
+        ctx.moveTo(-lenPx / 2, -3.5); ctx.lineTo(lenPx / 2, -3.5);
+        ctx.moveTo(-lenPx / 2, 3.5); ctx.lineTo(lenPx / 2, 3.5);
+        ctx.stroke();
+        ctx.restore();
     } else {
         // 引き違い（標準サッシ・引き違い戸）
         ctx.strokeRect(-lenPx / 2, -3.5, lenPx, 7);
@@ -1772,7 +2543,7 @@ function updateBirdEyeMiniPreview() {
             window.renderer3d.render(window.scene3d, window.camera3d);
             mCtx.drawImage(glCanvas, 0, 0, W, H);
             return;
-        } catch (e) {}
+        } catch (e) { }
     }
 
     // フォールバック：アイソメ鳥瞰ワイヤー描画

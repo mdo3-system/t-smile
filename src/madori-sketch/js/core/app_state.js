@@ -3,7 +3,7 @@
  * コア状態管理＆履歴マネージャー (Single Responsibility: Core App State & History Manager)
  * 地下〜4階・下絵透過目アイコン・補助線(ものさし)・用紙範囲・壁4種・サッシ12種・メモ注釈・3Dカメラ撮影に対応
  */
-window.setFloorDisplay3D = function(mode) {
+window.setFloorDisplay3D = function (mode) {
     if (typeof state !== 'undefined') state.floorDisplay3D = mode;
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
 };
@@ -121,9 +121,9 @@ const state = {
     subCompassAngle: 0,
     customSymbols: [
         { id: 'cs_robo', label: 'ロボ掃除機', shape: 'rect' },
-        { id: 'cs_ev',   label: 'EV充電',     shape: 'circle' },
-        { id: 'cs_box',  label: '宅配BOX',    shape: 'rect' },
-        { id: 'cs_gas',  label: 'ガス栓',     shape: 'diamond' }
+        { id: 'cs_ev', label: 'EV充電', shape: 'circle' },
+        { id: 'cs_box', label: '宅配BOX', shape: 'rect' },
+        { id: 'cs_gas', label: 'ガス栓', shape: 'diamond' }
     ],
 
     // 3D画面・写真キャプチャ＆ペン書き込みリスト
@@ -139,6 +139,10 @@ const state = {
     floorDisplay3D: 'all',   // 'all', '0f', '1f', '2f', '3f', '4f'
     showRoof3D: false,
     sunHour: 14,
+    foundationHeightMm: 400, // 基礎高さ (GL〜基礎天端 mm: 標準400mm, 0=なし〜800mm)
+    showMizukiri3D: true,    // 土台水切り板金の3D表示 ON/OFF
+    mizukiriColor: '#334155',// 土台水切りカラー ('#334155' ダークグレー, '#1e293b' ブラック, '#94a3b8' シルバー, '#785c44' ブロンズ, '#e2e8f0' ホワイト)
+    seamlessExteriorWall3D: true, // 1F・2F外壁の上下階シームレス連結表示
 
     // 地下(0)〜4階までの5階層データモデル
     floors: {
@@ -165,7 +169,7 @@ try {
             state.customSymbols = parsed;
         }
     }
-} catch (e) {}
+} catch (e) { }
 
 function uid() {
     return 'id_' + Math.random().toString(36).substring(2, 9);
@@ -290,12 +294,12 @@ function loadSampleHousePlan() {
         0: { rooms: [], walls: [], pillars: [], openings: [], fixtures: [], stairs: [], strokes: [], stamps: [], memos: [], polyPillars: [], boxes3d: [] },
         1: {
             rooms: [
-                { id: uid(), type: 'DOMA',     x: 0, y: 7, w: 1, h: 2, customName: '玄関土間' },
-                { id: uid(), type: 'GENKAN',   x: 1, y: 7, w: 1, h: 2, customName: 'ホール' },
-                { id: uid(), type: 'TOILET',   x: 0, y: 5, w: 1, h: 2, customName: 'トイレ' },
-                { id: uid(), type: 'SENMEN',   x: 3, y: 0, w: 2, h: 2, customName: '洗面脱衣' },
-                { id: uid(), type: 'UB',       x: 5, y: 0, w: 2, h: 2, customName: 'UB1616' },
-                { id: uid(), type: 'LDK',      x: 0, y: 0, w: 7, h: 9, customName: 'LDK' },
+                { id: uid(), type: 'DOMA', x: 0, y: 7, w: 1, h: 2, customName: '玄関土間' },
+                { id: uid(), type: 'GENKAN', x: 1, y: 7, w: 1, h: 2, customName: 'ホール' },
+                { id: uid(), type: 'TOILET', x: 0, y: 5, w: 1, h: 2, customName: 'トイレ' },
+                { id: uid(), type: 'SENMEN', x: 3, y: 0, w: 2, h: 2, customName: '洗面脱衣' },
+                { id: uid(), type: 'UB', x: 5, y: 0, w: 2, h: 2, customName: 'UB1616' },
+                { id: uid(), type: 'LDK', x: 0, y: 0, w: 7, h: 9, customName: 'LDK' },
                 { id: uid(), type: 'WASHITSU', x: 2, y: 6, w: 3, h: 3, customName: 'タタミコーナー' }
             ],
             walls: [
@@ -331,12 +335,12 @@ function loadSampleHousePlan() {
         2: {
             rooms: [
                 { id: uid(), type: 'YOSHITSU', x: 0, y: 0, w: 4, h: 4, customName: '主寝室' },
-                { id: uid(), type: 'WIC',      x: 4, y: 0, w: 3, h: 2, customName: 'WIC' },
-                { id: uid(), type: 'ROUKA',    x: 0, y: 4, w: 4, h: 2, customName: '2Fホール' },
-                { id: uid(), type: 'VOID',     x: 4, y: 2, w: 3, h: 4, customName: '吹き抜け' },
+                { id: uid(), type: 'WIC', x: 4, y: 0, w: 3, h: 2, customName: 'WIC' },
+                { id: uid(), type: 'ROUKA', x: 0, y: 4, w: 4, h: 2, customName: '2Fホール' },
+                { id: uid(), type: 'VOID', x: 4, y: 2, w: 3, h: 4, customName: '吹き抜け' },
                 { id: uid(), type: 'YOSHITSU', x: 0, y: 6, w: 3.5, h: 3, customName: '洋室A' },
                 { id: uid(), type: 'YOSHITSU', x: 3.5, y: 6, w: 3.5, h: 3, customName: '洋室B' },
-                { id: uid(), type: 'BALCONY',  x: 0, y: 9, w: 7, h: 1.5, customName: '南バルコニー' }
+                { id: uid(), type: 'BALCONY', x: 0, y: 9, w: 7, h: 1.5, customName: '南バルコニー' }
             ],
             walls: [
                 { id: uid(), x1: 4, y1: 2, x2: 4, y2: 6, wallType: 'koshikabe' }
@@ -363,6 +367,7 @@ function loadSampleHousePlan() {
     };
     state.history = [];
     state.historyIndex = -1;
+    if (typeof window.syncUpperFloorStairs === 'function') window.syncUpperFloorStairs();
     saveHistorySnapshot();
     if (typeof reset2DCamera === 'function') reset2DCamera();
     showToast('モデルプラン「07邸 吹抜けがある」を読み込みました');

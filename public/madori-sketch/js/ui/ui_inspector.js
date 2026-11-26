@@ -1861,8 +1861,12 @@ function hydrateManualDataFromJson(jsonData) {
             const tool = stateObj.activeTool || 'wall';
             const subWall = stateObj.subWallType || 'wall';
             const subOp = stateObj.subOpeningFit || stateObj.subDoorFit || 'hikichigai';
+            const subRm = stateObj.subRoomType || 'LDK';
+            const subFx = stateObj.subFixtureCategory || 'KITCHEN';
             if (tool === 'wall' && toolMap[`wall:${subWall}`]) return toolMap[`wall:${subWall}`];
             if (tool === 'opening' && toolMap[`opening:${subOp}`]) return toolMap[`opening:${subOp}`];
+            if (tool === 'room' && toolMap[`room:${subRm}`]) return toolMap[`room:${subRm}`];
+            if (tool === 'fixture' && toolMap[`fixture:${subFx}`]) return toolMap[`fixture:${subFx}`];
             if (toolMap[tool]) return toolMap[tool];
             if (stateObj.paletteMode === 'memo') return 'ch5_memo_overview';
             if (stateObj.paletteMode === 'photo') return 'ch5_camera_sketch';

@@ -24,6 +24,8 @@
         DATSUI: { label: '脱衣室', color2d: '#e0f2fe', stroke2d: '#0284c7', floorType: 'tile', hasWall: true },
         UB: { label: '浴室(UB)', color2d: '#cffafe', stroke2d: '#0891b2', floorType: 'tile', hasWall: true },
         TOILET: { label: 'トイレ', color2d: '#fae8ff', stroke2d: '#c026d3', floorType: 'tile', hasWall: true },
+        CLOSET: { label: 'クローゼット', color2d: '#f1f5f9', stroke2d: '#64748b', floorType: 'wood', hasWall: true },
+        SHUNO: { label: '収納', color2d: '#f1f5f9', stroke2d: '#64748b', floorType: 'wood', hasWall: true },
         WIC: { label: '収納・WIC', color2d: '#f1f5f9', stroke2d: '#64748b', floorType: 'wood', hasWall: true },
         STORAGE: { label: 'パントリー・納戸', color2d: '#f1f5f9', stroke2d: '#64748b', floorType: 'wood', hasWall: true },
         BALCONY: { label: 'バルコニー', color2d: '#ecfccb', stroke2d: '#65a30d', floorType: 'balcony', hasWall: 'balcony' },
@@ -57,21 +59,23 @@
         { id: 'demado', label: '出窓', defaultWMm: 1650, defaultHMm: 1100, defaultSillMm: 900, leaves: 1, isWinDefault: true },
         { id: 'tatesuberi', label: '縦滑り出し', defaultWMm: 600, defaultHMm: 1100, defaultSillMm: 900, leaves: 1, isWinDefault: true },
         { id: 'yokosuberi', label: '横滑り出し', defaultWMm: 600, defaultHMm: 500, defaultSillMm: 1500, leaves: 1, isWinDefault: true },
-        { id: 'agesage', label: '上げ下げ窓', defaultWMm: 600, defaultHMm: 1100, defaultSillMm: 900, leaves: 1, isWinDefault: true }
+        { id: 'agesage', label: '上げ下げ窓', defaultWMm: 600, defaultHMm: 1100, defaultSillMm: 900, leaves: 1, isWinDefault: true },
+        { id: 'kaikou', label: '開口のみ(扉なし)', defaultWMm: 910, defaultHMm: 2000, defaultSillMm: 0, leaves: 1, isWinDefault: false }
     ];
 
     // --- 開口部（窓・建具）用途別ワンタッププリセット (P1-3対応) ---
     const OPENING_QUICK_PRESETS = [
         { id: 'preset_living_win', label: '🏠 居室腰窓 (1650×1300/FL+800)', fit: 'hikichigai', category: 'window', wMm: 1650, hMm: 1300, sillMm: 800, leaves: 2 },
-        { id: 'preset_sweep_win',  label: '☀️ 掃き出し窓 (1650×2000/FL+0)', fit: 'hikichigai', category: 'window', wMm: 1650, hMm: 2000, sillMm: 0,   leaves: 2 },
-        { id: 'preset_wide_sweep', label: '🌅 大開口掃出 (2560×2000/FL+0)', fit: 'hikichigai', category: 'window', wMm: 2560, hMm: 2000, sillMm: 0,   leaves: 2 },
-        { id: 'preset_wet_win',    label: '🚿 水回り小窓 (800×900/FL+1100)', fit: 'hikichigai', category: 'window', wMm: 800,  hMm: 900,  sillMm: 1100, leaves: 2 },
-        { id: 'preset_high_win',   label: '✨ 高窓FIX (1650×500/FL+1800)',  fit: 'fix',        category: 'window', wMm: 1650, hMm: 500,  sillMm: 1800, leaves: 1 },
-        { id: 'preset_ent_910',    label: '🚪 玄関ドア910 (910×2200/FL+0)', fit: 'katahiraki', category: 'door',   wMm: 910,  hMm: 2200, sillMm: 0,   leaves: 1 },
-        { id: 'preset_ent_oyako',  label: '🚪 玄関親子 (1200×2200/FL+0)',   fit: 'oyako',      category: 'door',   wMm: 1200, hMm: 2200, sillMm: 0,   leaves: 2 },
-        { id: 'preset_room_door',  label: '🚪 室内片開 (800×2000/FL+0)',    fit: 'katahiraki', category: 'door',   wMm: 800,  hMm: 2000, sillMm: 0,   leaves: 1 },
-        { id: 'preset_room_slide', label: '🚪 室内引戸 (800×2000/FL+0)',    fit: 'katabiki',   category: 'door',   wMm: 800,  hMm: 2000, sillMm: 0,   leaves: 1 },
-        { id: 'preset_wc_door',    label: '🚽 トイレ・収納 (700×2000)',     fit: 'katahiraki', category: 'door',   wMm: 700,  hMm: 2000, sillMm: 0,   leaves: 1 }
+        { id: 'preset_sweep_win', label: '☀️ 掃き出し窓 (1650×2000/FL+0)', fit: 'hikichigai', category: 'window', wMm: 1650, hMm: 2000, sillMm: 0, leaves: 2 },
+        { id: 'preset_wide_sweep', label: '🌅 大開口掃出 (2560×2000/FL+0)', fit: 'hikichigai', category: 'window', wMm: 2560, hMm: 2000, sillMm: 0, leaves: 2 },
+        { id: 'preset_wet_win', label: '🚿 水回り小窓 (800×900/FL+1100)', fit: 'hikichigai', category: 'window', wMm: 800, hMm: 900, sillMm: 1100, leaves: 2 },
+        { id: 'preset_high_win', label: '✨ 高窓FIX (1650×500/FL+1800)', fit: 'fix', category: 'window', wMm: 1650, hMm: 500, sillMm: 1800, leaves: 1 },
+        { id: 'preset_ent_910', label: '🚪 玄関ドア910 (910×2200/FL+0)', fit: 'katahiraki', category: 'door', wMm: 910, hMm: 2200, sillMm: 0, leaves: 1 },
+        { id: 'preset_ent_oyako', label: '🚪 玄関親子 (1200×2200/FL+0)', fit: 'oyako', category: 'door', wMm: 1200, hMm: 2200, sillMm: 0, leaves: 2 },
+        { id: 'preset_room_door', label: '🚪 室内片開 (800×2000/FL+0)', fit: 'katahiraki', category: 'door', wMm: 800, hMm: 2000, sillMm: 0, leaves: 1 },
+        { id: 'preset_room_slide', label: '🚪 室内引戸 (800×2000/FL+0)', fit: 'katabiki', category: 'door', wMm: 800, hMm: 2000, sillMm: 0, leaves: 1 },
+        { id: 'preset_wc_door', label: '🚽 トイレ・収納 (700×2000)', fit: 'katahiraki', category: 'door', wMm: 700, hMm: 2000, sillMm: 0, leaves: 1 },
+        { id: 'preset_stair_open', label: '🪜 階段・通路開口(扉なし910×2000)', fit: 'kaikou', category: 'door', wMm: 910, hMm: 2000, sillMm: 0, leaves: 1 }
     ];
 
     // =========================================================================
@@ -178,7 +182,8 @@
 
     // --- 設備・家具・直方体マスター定義 ---
     const FIXTURE_TYPES = {
-        KITCHEN: { label: 'システムキッチン', wP: 2.8, hP: 0.71, hMm: 850, color: '#cbd5e1', category: 'kitchen' },
+        KITCHEN: { label: 'I型キッチン', wP: 2.8, hP: 0.71, hMm: 850, color: '#cbd5e1', category: 'kitchen' },
+        KITCHEN_L: { label: 'L型キッチン', wP: 2.8, hP: 2.0, hMm: 850, color: '#cbd5e1', category: 'kitchen' },
         UB: { label: 'ユニットバス', wP: 1.76, hP: 1.76, hMm: 2150, color: '#bae6fd', category: 'ub' },
         VANITY: { label: '洗面化粧台', wP: 0.99, hP: 0.60, hMm: 800, color: '#e2e8f0', category: 'vanity' },
         TOILET_FIX: { label: 'トイレ便器', wP: 0.50, hP: 0.85, hMm: 780, color: '#f8fafc', category: 'toilet' },

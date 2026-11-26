@@ -252,7 +252,7 @@
                             style="font-size: 1.05rem; font-weight: 900; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">家づくりAIラボ</span>
                         <span
                             style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 5px; border-radius: 4px; font-weight: 800;">3D間取り工房
-                            v2.34</span>
+                            v2.35</span>
                     </a>
                     <div
                         class="hidden xl:inline-flex items-center gap-1.5 text-[11px] text-slate-300 bg-black/30 border border-white/15 px-2 py-0.5 rounded">
@@ -1125,7 +1125,7 @@
 
     <!-- ========================================================================= -->
     <!-- 📖 コンテキスト連動「3D間取り工房 操作マニュアル」ブラウザモーダル -->
-    <!-- (選択中のツールの該当ページが最初に開き、全5章・全26項目も自由に閲覧可能) -->
+    <!-- (選択中のツールの該当ページが最初に開き、全5章・全項目も自由に閲覧・検索可能) -->
     <!-- ========================================================================= -->
     <div id="madoriManualModal"
         class="fixed inset-0 z-[100020] bg-black/75 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-6">
@@ -1139,11 +1139,11 @@
                         class="w-8 h-8 rounded-lg bg-sky-500/20 border border-sky-400/40 text-sky-300 flex items-center justify-center text-base">📖</span>
                     <div>
                         <h3 class="text-sm sm:text-base font-black text-white flex items-center gap-2">
-                            <span>3D間取り工房 操作マニュアル（全5章・コンテキスト連動）</span>
+                            <span>3D間取り工房 操作マニュアル（全5章・コンテキスト連動 v2.35対応）</span>
                             <span id="manualModalCurrentToolBadge"
                                 class="text-[11px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/40 font-bold">選択中ツールの解説</span>
                         </h3>
-                        <p class="text-[11px] text-slate-400">現在選択しているツールの操作方法が最初に表示されます。左の目次から他の全機能のマニュアルも閲覧できます。</p>
+                        <p class="text-[11px] text-slate-400">現在選択しているツールの操作方法が最初に表示されます。左の目次またはキーワード検索から全5章の最新機能（L型キッチン・階段室・基礎高/水切り等）も閲覧できます。</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
@@ -1169,7 +1169,7 @@
                         <div
                             class="px-2.5 py-1.5 text-xs font-black text-amber-300 bg-slate-800/90 rounded-lg flex items-center gap-2 mb-1">
                             <i class="fa-solid fa-compass-drafting"></i>
-                            <span>第1章：作図の基本・画面操作</span>
+                            <span>第1章：作図の基本・画面操作・保存と読込</span>
                         </div>
                         <div class="space-y-0.5 pl-1">
                             <button type="button" onclick="showManualItem('ch1_undo_redo')"
@@ -1177,43 +1177,49 @@
                                 操作の取り消し（戻る）・やり直し（進む）</button>
                             <button type="button" onclick="showManualItem('ch1_grid_expand')"
                                 class="w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800">2.
-                                用紙範囲（作図グリッド）を広げる</button>
+                                用紙範囲（作図グリッド）と画面ズーム・FIT</button>
                             <button type="button" onclick="showManualItem('ch1_guide_draw')"
                                 class="w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800">3.
                                 補助線（ものさし）を引く・数値指定で追加</button>
+                            <button type="button" onclick="showManualItem('ch1_guide_lock')"
+                                class="w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800">4.
+                                この図面をピン止めする（誤編集ロック）</button>
                             <button type="button" onclick="showManualItem('ch1_grid_division')"
                                 class="w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800">5.
-                                グリッド分割数（1〜6分割）の切替</button>
+                                グリッド分割数（1〜6分割）と設計者・QA照合</button>
                             <button type="button" onclick="showManualItem('ch1_floor_onion')"
                                 class="w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800">6.
                                 階層切替（地下〜4階）と下絵透過（👁️）</button>
                             <button type="button" onclick="showManualItem('ch1_view_mode')"
                                 class="w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800">7.
-                                表示画面の切替（2D / 2D+3D / 3D）</button>
+                                2D/3D切替と3D基礎高・水切り・外壁連結</button>
                             <button type="button" onclick="showManualItem('ch1_pen_palm_pwa')"
                                 class="w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800">8.
-                                ペン入力・パームリジェクション・アプリ化</button>
+                                ペン入力・パームリジェクション・全画面化</button>
+                            <button type="button" onclick="showManualItem('ch1_save_load_export')"
+                                class="w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800">9.
+                                読込・保存（家カルテ/JSON）・新規・DXF・PDF</button>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div
                             class="px-2.5 py-1.5 text-xs font-black text-amber-300 bg-slate-800/90 rounded-lg flex items-center gap-2 mb-1">
                             <i class="fa-solid fa-border-all"></i>
-                            <span>第3章：壁・サッシ・建具</span>
+                            <span>第3章：壁・サッシ・建具（開口のみ含む）</span>
                         </div>
                         <div class="space-y-0.5 pl-1">
                             <button type="button" onclick="showManualItem('ch3_wall_draw')"
                                 class="w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 shadow">1.
-                                壁の入力と外周2段自動寸法線</button>
+                                壁を描く（直交・斜め壁・外周2段自動寸法線）</button>
                             <button type="button" onclick="showManualItem('ch3_wall_types')"
                                 class="w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800">2.
-                                たれ壁・腰壁・上り框の描き分け</button>
+                                たれ壁・腰壁の描き分けと高さ設定</button>
                             <button type="button" onclick="showManualItem('ch3_wall_delete')"
                                 class="w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800">3.
                                 壁の削除とドラッグ部分削除（切り欠き）</button>
                             <button type="button" onclick="showManualItem('ch3_sash_input')"
                                 class="w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:bg-slate-800">4.
-                                サッシ・建具（全12種類）の配置</button>
+                                サッシ・建具（全13種：開口のみ含む）の配置</button>
                         </div>
                     </div>
                 </div>
@@ -1463,7 +1469,7 @@
             <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4">
                 <h3 class="text-base font-bold text-white flex items-center gap-2">
                     <i class="fa-solid fa-folder-open text-amber-400"></i>
-                    <span>プラン管理・サンプル読込</span>
+                    <span>プランの読込・復元（家カルテ・サンプル・703プラン・JSON/FBX）</span>
                 </h3>
                 <button onclick="closePresetModal()" class="text-slate-400 hover:text-white p-1">
                     <i class="fa-solid fa-xmark text-lg"></i>
@@ -1774,20 +1780,20 @@
     </div>
 
     <!-- 単一責任の原則 (SRP) に基づく分離モジュール群 -->
-    <script>window.MADORI_APP_VERSION = '2.34.0';</script>
-    <script src="/madori-sketch/js/constants/manual_data.js?v=202611261645"></script>
-    <script src="/madori-sketch/js/constants/architectural_specs.js?v=202611261645"></script>
-    <script src="/madori-sketch/js/core/app_state.js?v=202611261645"></script>
-    <script src="/madori-sketch/js/core/metrics_calculator.js?v=202611261645"></script>
-    <script src="/madori-sketch/js/io/json_storage.js?v=202611261645"></script>
-    <script src="/madori-sketch/js/io/dxf_pdf_exporter.js?v=202611261645"></script>
-    <script src="/madori-sketch/js/integration/carte_bridge.js?v=202611261645"></script>
-    <script src="/madori-sketch/js/geometry/room_detector.js?v=202611261645"></script>
-    <script src="/madori-sketch/js/renderer/three_3d.js?v=202611261645"></script>
-    <script src="/madori-sketch/js/renderer/canvas_2d_renderer.js?v=202611261645"></script>
-    <script src="/madori-sketch/js/ui/ui_inspector.js?v=202611261645"></script>
-    <script src="/madori-sketch/js/input/input_controller.js?v=202611261645"></script>
-    <script src="/madori-sketch/js/case/case_manager.js?v=202611261645"></script>
+    <script>window.MADORI_APP_VERSION = '2.35.0';</script>
+    <script src="/madori-sketch/js/constants/manual_data.js?v=202611261829"></script>
+    <script src="/madori-sketch/js/constants/architectural_specs.js?v=202611261829"></script>
+    <script src="/madori-sketch/js/core/app_state.js?v=202611261829"></script>
+    <script src="/madori-sketch/js/core/metrics_calculator.js?v=202611261829"></script>
+    <script src="/madori-sketch/js/io/json_storage.js?v=202611261829"></script>
+    <script src="/madori-sketch/js/io/dxf_pdf_exporter.js?v=202611261829"></script>
+    <script src="/madori-sketch/js/integration/carte_bridge.js?v=202611261829"></script>
+    <script src="/madori-sketch/js/geometry/room_detector.js?v=202611261829"></script>
+    <script src="/madori-sketch/js/renderer/three_3d.js?v=202611261829"></script>
+    <script src="/madori-sketch/js/renderer/canvas_2d_renderer.js?v=202611261829"></script>
+    <script src="/madori-sketch/js/ui/ui_inspector.js?v=202611261829"></script>
+    <script src="/madori-sketch/js/input/input_controller.js?v=202611261829"></script>
+    <script src="/madori-sketch/js/case/case_manager.js?v=202611261829"></script>
     <script>
         const ROOM_TYPES = window.ROOM_TYPES;
         const OPENING_TYPES = window.OPENING_TYPES;

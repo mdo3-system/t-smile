@@ -29,7 +29,7 @@ function createNewPlan() {
     const fl1 = (state.floors && state.floors[1]) || {};
     const fl2 = (state.floors && state.floors[2]) || {};
     const hasData = (fl1.rooms && fl1.rooms.length > 0) || (fl1.walls && fl1.walls.length > 0) || (fl1.fixtures && fl1.fixtures.length > 0) ||
-                    (fl2.rooms && fl2.rooms.length > 0) || (fl2.walls && fl2.walls.length > 0) || (fl2.fixtures && fl2.fixtures.length > 0);
+        (fl2.rooms && fl2.rooms.length > 0) || (fl2.walls && fl2.walls.length > 0) || (fl2.fixtures && fl2.fixtures.length > 0);
     if (hasData) {
         const modal = document.getElementById('newPlanConfirmModal');
         if (modal) {
@@ -284,10 +284,13 @@ const ROOM_NAME_PRESETS = [
     { label: '洋室', type: 'CHILD_ROOM', color: 'rgba(243, 232, 255, 0.65)' },
     { label: '和室', type: 'JAPANESE', color: 'rgba(220, 252, 231, 0.65)' },
     { label: '玄関', type: 'ENTRANCE', color: 'rgba(254, 226, 226, 0.65)' },
+    { label: '階段室', type: 'STAIR', color: 'rgba(254, 243, 199, 0.55)' },
     { label: '洗面室', type: 'WASHROOM', color: 'rgba(207, 250, 254, 0.65)' },
     { label: '浴室', type: 'BATHROOM', color: 'rgba(224, 242, 254, 0.65)' },
     { label: 'トイレ', type: 'TOILET', color: 'rgba(254, 242, 242, 0.65)' },
-    { label: 'WIC', type: 'CLOSET', color: 'rgba(241, 245, 249, 0.65)' },
+    { label: 'クローゼット', type: 'CLOSET', color: 'rgba(241, 245, 249, 0.65)' },
+    { label: '収納', type: 'SHUNO', color: 'rgba(241, 245, 249, 0.65)' },
+    { label: 'WIC', type: 'WIC', color: 'rgba(241, 245, 249, 0.65)' },
     { label: 'パントリー', type: 'STORAGE', color: 'rgba(241, 245, 249, 0.65)' },
     { label: '納戸', type: 'STORAGE', color: 'rgba(241, 245, 249, 0.65)' },
     { label: 'ホール・廊下', type: 'HALLWAY', color: 'rgba(248, 250, 252, 0.65)' },

@@ -7,7 +7,7 @@
     'use strict';
 
 const canvas3d = document.getElementById('canvas3d');
-let scene3d, camera3d, renderer3d, buildingGroup, cadFbxGroup, sunLight, ambientLight, hemiLight;
+let scene3d, camera3d, renderer3d, buildingGroup, furnitureGroup3d, cadFbxGroup, sunLight, ambientLight, hemiLight;
 let cadRoofMeshes = [];
 let cadRoofVisible = true;
 
@@ -75,10 +75,16 @@ function init3DEngine() {
     buildingGroup = new THREE.Group();
     scene3d.add(buildingGroup);
 
+    furnitureGroup3d = new THREE.Group();
+    furnitureGroup3d.name = 'furnitureGroup3d';
+    scene3d.add(furnitureGroup3d);
+
     window.scene3d = scene3d;
     window.camera3d = camera3d;
     window.renderer3d = renderer3d;
     window.buildingGroup = buildingGroup;
+    window.furnitureGroup3d = furnitureGroup3d;
+    window.show3DFurnitureStaging = true;
     window.groundMesh3d = groundMesh;
     window.gridHelper3d = gridHelper;
     window.currentGroundMode = 'studio';
@@ -225,11 +231,75 @@ function set3DCameraPreset(preset) {
         orbit.phi = Math.PI * 0.48;
         orbit.radius = 15.0;
     } else if (preset === 'interior') {
-        const focusFloorY = state.floorDisplay3D === '2f' ? 3.8 : (state.floorDisplay3D === '3f' ? 6.4 : 1.4);
-        orbit.target.set(2.8, focusFloorY, 3.5);
-        orbit.theta = -Math.PI * 0.35;
-        orbit.phi = Math.PI * 0.46;
-        orbit.radius = 3.2;
+        const fNum = state.floorDisplay3D === '2f' ? 2 : (state.floorDisplay3D === '3f' ? 3 : 1);
+        const baseY = (fNum - 1) * (2.6 + 0.25);
+        const eyeY = baseY + 1.35;
+        const scaleP = ((typeof state !== 'undefined' && state.modulePitch) ? state.modulePitch : 910) / 1000;
+        const flData = (typeof state !== 'undefined' && state.floors) ? state.floors[fNum] : null;
+        const rooms = (flData && Array.isArray(flData.rooms)) ? flData.rooms : [];
+
+        // LDK（なければ最大面積居室）と和室を検出し、部屋内から対角に見渡すアイレベル構図を自動計算
+        let primaryRoom = null;
+        let tatamiRoom = null;
+        for (const r of rooms) {
+            if (!r || r.type === 'VOID' || r.type === 'NAKANIWA' || r.type === 'TENJO') continue;
+            const rName = String(r.name || r.label || r.type || '');
+            const area = (r.w || 0) * (r.h || 0);
+            if (/和室|畳|tatami/i.test(rName) || r.type === 'TATAMI' || r.type === 'WASHITSU') {
+                if (!tatamiRoom || area > (tatamiRoom.w * tatamiRoom.h)) tatamiRoom = r;
+            }
+            if (/ldk|リビング|ダイニング/i.test(rName)) {
+                if (!primaryRoom || area > (primaryRoom.w * primaryRoom.h)) primaryRoom = r;
+            }
+        }
+        if (!primaryRoom && rooms.length > 0) {
+            primaryRoom = rooms.reduce((best, r) => ((r.w || 0) * (r.h || 0) > ((best && best.w * best.h) || 0) ? r : best), null);
+        }
+
+        if (primaryRoom && primaryRoom.w > 0 && primaryRoom.h > 0) {
+            const rx1 = primaryRoom.x * scaleP;
+            const rz1 = primaryRoom.y * scaleP;
+            const rx2 = (primaryRoom.x + primaryRoom.w) * scaleP;
+            const rz2 = (primaryRoom.y + primaryRoom.h) * scaleP;
+            const rw = rx2 - rx1;
+            const rh = rz2 - rz1;
+            const rcx = (rx1 + rx2) / 2;
+            const rcz = (rz1 + rz2) / 2;
+
+            // 壁から確実に内側（0.7mまたは辺の20%）へカメラを配置し、対角方向を見渡す
+            const padX = Math.min(0.75, rw * 0.22);
+            const padZ = Math.min(0.75, rh * 0.22);
+            let camX = rx1 + padX;
+            let camZ = rz1 + padZ;
+            let tgtX = rx2 - padX;
+            let tgtZ = rz2 - padZ;
+
+            if (tatamiRoom && tatamiRoom !== primaryRoom) {
+                const tcx = (tatamiRoom.x + tatamiRoom.w / 2) * scaleP;
+                const tcz = (tatamiRoom.y + tatamiRoom.h / 2) * scaleP;
+                camX = (tcx >= rcx) ? (rx1 + padX) : (rx2 - padX);
+                camZ = (tcz >= rcz) ? (rz1 + padZ) : (rz2 - padZ);
+                tgtX = rcx * 0.4 + tcx * 0.6;
+                tgtZ = rcz * 0.4 + tcz * 0.6;
+            }
+
+            const dx = camX - tgtX;
+            const dz = camZ - tgtZ;
+            const horizDist = Math.max(1.6, Math.min(4.8, Math.hypot(dx, dz) * 0.65));
+            // target をカメラ前方 horizDist の点に置き、camera3d.position が確実に部屋内 (camX, eyeY, camZ) に来るよう設定
+            const dirLen = Math.max(0.001, Math.hypot(dx, dz));
+            const ux = dx / dirLen;
+            const uz = dz / dirLen;
+            orbit.target.set(camX - ux * horizDist, eyeY - 0.12, camZ - uz * horizDist);
+            orbit.theta = Math.atan2(ux, uz);
+            orbit.phi = Math.PI * 0.475;
+            orbit.radius = horizDist;
+        } else {
+            orbit.target.set(2.8, eyeY, 3.5);
+            orbit.theta = -Math.PI * 0.35;
+            orbit.phi = Math.PI * 0.47;
+            orbit.radius = 3.2;
+        }
     }
     update3DCameraTransform();
     rebuild3DScene();
@@ -295,7 +365,17 @@ function addWhiteModelMesh(geo, mat, x, y, z, addEdges = true) {
     return mesh;
 }
 
-function buildWallWithOpeningCutouts3D(orient, fixedCoordP, startP, endP, baseY, wallHeight, wallThick, floorOpenings, scaleP, matWall) {
+/**
+ * 1階・2階などの外壁・通常壁を開口部くり抜き付きで立体化する。
+ * - wallBottomY: 壁メッシュの下端Y座標（スラブ側面も覆う場合は baseY、通常は floorTopY）
+ * - wallHeight: 壁メッシュの総高さ（壁下端 wallBottomY から壁上端までの高さ）
+ * - floorTopY: その階の床仕上げ天端Y座標（サッシ・ドアの sillMm 基準高さ）
+ */
+function buildWallWithOpeningCutouts3D(orient, fixedCoordP, startP, endP, wallBottomY, wallHeight, wallThick, floorOpenings, scaleP, matWall, floorTopY = null) {
+    const refFloorTopY = (floorTopY !== null && floorTopY !== undefined) ? floorTopY : wallBottomY;
+    const slabOffset = Math.max(0, refFloorTopY - wallBottomY);
+    const wallTopY = wallBottomY + wallHeight;
+
     const relevantOps = floorOpenings.filter(op => {
         if (op.orient !== orient) return false;
         const opFixed = orient === 'h' ? op.y : op.x;
@@ -315,10 +395,12 @@ function buildWallWithOpeningCutouts3D(orient, fixedCoordP, startP, endP, baseY,
 
         if (orient === 'h') {
             const geo = new THREE.BoxGeometry(lenM + wallThick, hSeg, wallThick);
-            addWhiteModelMesh(geo, matWall, midM, yBottom + hSeg / 2, fixedM, true);
+            const m = addWhiteModelMesh(geo, matWall, midM, yBottom + hSeg / 2, fixedM, true);
+            if (m) m.userData.regionTag = 'wall';
         } else {
             const geo = new THREE.BoxGeometry(wallThick, hSeg, lenM + wallThick);
-            addWhiteModelMesh(geo, matWall, fixedM, yBottom + hSeg / 2, midM, true);
+            const m = addWhiteModelMesh(geo, matWall, fixedM, yBottom + hSeg / 2, midM, true);
+            if (m) m.userData.regionTag = 'wall';
         }
     };
 
@@ -329,26 +411,280 @@ function buildWallWithOpeningCutouts3D(orient, fixedCoordP, startP, endP, baseY,
         const opEnd = Math.min(endP, opCenter + wP / 2);
 
         if (opStart > cursorP) {
-            addSolidSegment(cursorP, opStart, baseY, wallHeight);
+            addSolidSegment(cursorP, opStart, wallBottomY, wallHeight);
         }
 
         const sillM = (op.sillMm || 0) / 1000;
         const hM = (op.heightMm || 2000) / 1000;
-        if (sillM > 0.02 && wallHeight > sillM) {
-            addSolidSegment(opStart, opEnd, baseY, Math.min(sillM, wallHeight));
+        // 窓・建具ともに床仕上げ天端（refFloorTopY + sillM）から高さ hM を正確にくり抜く
+        const cutBottomY = refFloorTopY + sillM;
+        const cutTopY = refFloorTopY + sillM + hM;
+
+        // 開口下部の壁（床スラブ側面＋窓台下の腰壁）
+        const lowerH = Math.min(wallHeight, Math.max(0, cutBottomY - wallBottomY));
+        if (lowerH > 0.02) {
+            addSolidSegment(opStart, opEnd, wallBottomY, lowerH);
         }
 
-        const topStart = sillM + hM;
-        if (wallHeight > topStart + 0.02) {
-            addSolidSegment(opStart, opEnd, baseY + topStart, wallHeight - topStart);
+        // 開口上部の下がり壁（マグサ上〜壁上端まで）
+        if (wallTopY > cutTopY + 0.02) {
+            addSolidSegment(opStart, opEnd, cutTopY, wallTopY - cutTopY);
         }
 
         cursorP = opEnd;
     });
 
     if (cursorP < endP) {
-        addSolidSegment(cursorP, endP, baseY, wallHeight);
+        addSolidSegment(cursorP, endP, wallBottomY, wallHeight);
     }
+}
+
+/**
+ * 1階外周の基礎（コンクリート立ち上がり）および土台水切り（水切り板金）を3D生成する
+ */
+function buildFoundationAndMizukiri3D(fl1Data, scaleP, wallThick, slabHeight) {
+    if (!fl1Data) return;
+    const foundHMm = (typeof state !== 'undefined' && state.foundationHeightMm !== undefined) ? Number(state.foundationHeightMm) : 400;
+    const foundH = Math.max(0, foundHMm / 1000);
+    const showMizukiri = (typeof state !== 'undefined' && state.showMizukiri3D !== undefined) ? !!state.showMizukiri3D : true;
+    const mizukiriHex = (typeof state !== 'undefined' && state.mizukiriColor) ? state.mizukiriColor : '#334155';
+
+    // 地面とグリッドをGL（基礎下端 Y = -foundH）へ同期
+    if (window.groundMesh3d) {
+        window.groundMesh3d.position.y = -foundH - 0.02;
+    }
+    if (window.gridHelper3d) {
+        window.gridHelper3d.position.y = -foundH - 0.005;
+    }
+
+    if (foundH <= 0.005 && !showMizukiri) return;
+
+    const matFoundation = new THREE.MeshLambertMaterial({ color: 0x94a3b8 });
+    const matMizukiri = new THREE.MeshLambertMaterial({ color: new THREE.Color(mizukiriHex) });
+
+    const foundThick = wallThick + 0.02; // 基礎幅 160mm (壁厚140mm + 20mm)
+    const mizuHeight = 0.036;            // 水切り板金高さ 36mm
+    const mizuThick = wallThick + 0.038; // 外壁面から外へ約19mm張り出す水切りプロファイル
+
+    // 1. 各部屋スラブ下のベタ基礎・立ち上がりベース（部屋がある場合）
+    if (foundH > 0.005 && Array.isArray(fl1Data.rooms) && fl1Data.rooms.length > 0) {
+        fl1Data.rooms.forEach(rm => {
+            if (!rm || rm.type === 'VOID' || rm.type === 'NAKANIWA' || rm.type === 'TENJO') return;
+            const wM = rm.w * scaleP;
+            const hM = rm.h * scaleP;
+            const cx = (rm.x + rm.w / 2) * scaleP;
+            const cz = (rm.y + rm.h / 2) * scaleP;
+            const fGeo = new THREE.BoxGeometry(wM + wallThick * 0.9, foundH, hM + wallThick * 0.9);
+            const fMesh = addWhiteModelMesh(fGeo, matFoundation, cx, -foundH / 2, cz, true);
+            if (fMesh) fMesh.userData.regionTag = 'foundation';
+        });
+    }
+
+    // 2. 1階の通常壁セグメント（または壁がない場合は部屋外周）から外周壁を特定して基礎立ち上がり＆土台水切りを生成
+    const wallSegments = [];
+    const normalWalls = (fl1Data.walls || []).filter(w => !w.wallType || w.wallType === 'wall');
+
+    if (normalWalls.length > 0) {
+        normalWalls.forEach(wl => {
+            const isHoriz = Math.abs(wl.y1 - wl.y2) < 0.05;
+            const isVert = Math.abs(wl.x1 - wl.x2) < 0.05;
+            if (isHoriz || isVert) {
+                const startP = isHoriz ? Math.min(wl.x1, wl.x2) : Math.min(wl.y1, wl.y2);
+                const endP = isHoriz ? Math.max(wl.x1, wl.x2) : Math.max(wl.y1, wl.y2);
+                const fixedP = isHoriz ? wl.y1 : wl.x1;
+                if (endP - startP > 0.05) {
+                    wallSegments.push({ orient: isHoriz ? 'h' : 'v', fixedP, startP, endP });
+                }
+            }
+        });
+    } else if (Array.isArray(fl1Data.rooms) && fl1Data.rooms.length > 0) {
+        fl1Data.rooms.forEach(rm => {
+            if (!rm || rm.type === 'VOID' || rm.type === 'NAKANIWA' || rm.type === 'TENJO') return;
+            wallSegments.push(
+                { orient: 'h', fixedP: rm.y, startP: rm.x, endP: rm.x + rm.w },
+                { orient: 'h', fixedP: rm.y + rm.h, startP: rm.x, endP: rm.x + rm.w },
+                { orient: 'v', fixedP: rm.x, startP: rm.y, endP: rm.y + rm.h },
+                { orient: 'v', fixedP: rm.x + rm.w, startP: rm.y, endP: rm.y + rm.h }
+            );
+        });
+    }
+
+    // 外壁判定ヘルパー：その壁セグメントの片側だけに部屋（または建物範囲端）があるか判定
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    wallSegments.forEach(s => {
+        if (s.orient === 'h') {
+            minX = Math.min(minX, s.startP); maxX = Math.max(maxX, s.endP);
+            minY = Math.min(minY, s.fixedP); maxY = Math.max(maxY, s.fixedP);
+        } else {
+            minY = Math.min(minY, s.startP); maxY = Math.max(maxY, s.endP);
+            minX = Math.min(minX, s.fixedP); maxX = Math.max(maxX, s.fixedP);
+        }
+    });
+
+    const isExteriorWallSeg = (seg) => {
+        const rooms = (fl1Data.rooms || []).filter(r => r && r.type !== 'VOID' && r.type !== 'NAKANIWA' && r.type !== 'TENJO');
+        if (rooms.length >= 1) {
+            const mid = (seg.startP + seg.endP) / 2;
+            const probeOffset = 0.25;
+            const pA = seg.orient === 'h' ? { x: mid, y: seg.fixedP - probeOffset } : { x: seg.fixedP - probeOffset, y: mid };
+            const pB = seg.orient === 'h' ? { x: mid, y: seg.fixedP + probeOffset } : { x: seg.fixedP + probeOffset, y: mid };
+            const inRoom = (pt) => rooms.some(r => pt.x >= r.x - 0.05 && pt.x <= r.x + r.w + 0.05 && pt.y >= r.y - 0.05 && pt.y <= r.y + r.h + 0.05);
+            const hasA = inRoom(pA);
+            const hasB = inRoom(pB);
+            if (hasA !== hasB) return true;
+            if (hasA && hasB) return false;
+        }
+        // 部屋が未定義（壁のみ作図中）の場合は外周バウンディングボックス上の壁を外壁とみなす
+        if (seg.orient === 'h') {
+            return Math.abs(seg.fixedP - minY) < 0.15 || Math.abs(seg.fixedP - maxY) < 0.15;
+        } else {
+            return Math.abs(seg.fixedP - minX) < 0.15 || Math.abs(seg.fixedP - maxX) < 0.15;
+        }
+    };
+
+    wallSegments.forEach(seg => {
+        const isExt = isExteriorWallSeg(seg);
+        const lenM = (seg.endP - seg.startP) * scaleP;
+        const midM = ((seg.startP + seg.endP) / 2) * scaleP;
+        const fixedM = seg.fixedP * scaleP;
+
+        // 布基礎立ち上がり（外壁および主要壁下）
+        if (foundH > 0.005 && (isExt || !(fl1Data.rooms && fl1Data.rooms.length > 0))) {
+            const fGeo = seg.orient === 'h'
+                ? new THREE.BoxGeometry(lenM + foundThick, foundH, foundThick)
+                : new THREE.BoxGeometry(foundThick, foundH, lenM + foundThick);
+            const fMesh = addWhiteModelMesh(
+                fGeo,
+                matFoundation,
+                seg.orient === 'h' ? midM : fixedM,
+                -foundH / 2,
+                seg.orient === 'h' ? fixedM : midM,
+                true
+            );
+            if (fMesh) fMesh.userData.regionTag = 'foundation';
+        }
+
+        // 土台水切り板金（外壁の下端 Y = 0.0m に連続配置）
+        if (showMizukiri && isExt) {
+            const mGeo = seg.orient === 'h'
+                ? new THREE.BoxGeometry(lenM + mizuThick, mizuHeight, mizuThick)
+                : new THREE.BoxGeometry(mizuThick, mizuHeight, lenM + mizuThick);
+            const mMesh = addWhiteModelMesh(
+                mGeo,
+                matMizukiri,
+                seg.orient === 'h' ? midM : fixedM,
+                mizuHeight * 0.35,
+                seg.orient === 'h' ? fixedM : midM,
+                false
+            );
+            if (mMesh) mMesh.userData.regionTag = 'mizukiri';
+        }
+    });
+}
+
+function updateFoundationHeight3D(heightMm) {
+    const val = Math.max(0, Math.min(1200, parseInt(heightMm, 10) || 0));
+    state.foundationHeightMm = val;
+    syncFoundationAndMizukiriUI();
+    if (typeof saveHistorySnapshot === 'function') saveHistorySnapshot();
+    rebuild3DScene();
+    if (typeof showToast === 'function') {
+        showToast(val > 0 ? `🧱 3D基礎高さを GL+${val}mm に設定しました` : '🧱 3D基礎表示を OFF (0mm) にしました');
+    }
+}
+window.updateFoundationHeight3D = updateFoundationHeight3D;
+
+function toggleMizukiri3D(forceVal) {
+    state.showMizukiri3D = (forceVal !== undefined) ? !!forceVal : !state.showMizukiri3D;
+    syncFoundationAndMizukiriUI();
+    if (typeof saveHistorySnapshot === 'function') saveHistorySnapshot();
+    rebuild3DScene();
+    if (typeof showToast === 'function') {
+        showToast(state.showMizukiri3D ? '📏 土台水切り（水切り板金）を3D表示しました' : '📏 土台水切りを非表示にしました');
+    }
+}
+window.toggleMizukiri3D = toggleMizukiri3D;
+
+function updateMizukiriColor3D(hexColor) {
+    if (!hexColor) return;
+    state.mizukiriColor = hexColor;
+    state.showMizukiri3D = true;
+    syncFoundationAndMizukiriUI();
+    if (typeof saveHistorySnapshot === 'function') saveHistorySnapshot();
+    rebuild3DScene();
+    if (typeof showToast === 'function') {
+        showToast('🎨 土台水切りのカラーを変更しました');
+    }
+}
+window.updateMizukiriColor3D = updateMizukiriColor3D;
+
+function syncFoundationAndMizukiriUI() {
+    const selFound = document.getElementById('selFoundationHeight3D');
+    if (selFound && state.foundationHeightMm !== undefined) {
+        selFound.value = String(state.foundationHeightMm);
+    }
+    const btnMizu = document.getElementById('btnMizukiriToggle3D');
+    if (btnMizu) {
+        const isOn = state.showMizukiri3D !== false;
+        btnMizu.className = isOn
+            ? 'px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-600 text-white border border-emerald-400 shadow transition'
+            : 'px-2 py-0.5 rounded text-[10px] font-bold bg-zinc-800 text-slate-400 border border-zinc-700 hover:text-white transition';
+        btnMizu.textContent = isOn ? '水切り: ON' : '水切り: OFF';
+    }
+    const selColor = document.getElementById('selMizukiriColor3D');
+    if (selColor && state.mizukiriColor) {
+        selColor.value = state.mizukiriColor;
+    }
+}
+window.syncFoundationAndMizukiriUI = syncFoundationAndMizukiriUI;
+
+let cachedTatamiTexture = null;
+function getTatamiCanvasTexture() {
+    if (cachedTatamiTexture) return cachedTatamiTexture;
+    const c = document.createElement('canvas');
+    c.width = 512;
+    c.height = 512;
+    const ctx = c.getContext('2d');
+    // 琉球畳 2x2 市松グリーン＋イ草の織り目＋くっきりした畳目地（Cannyエッジ検出対応）
+    const colors = [
+        ['#7f9e56', '#6b8b43'],
+        ['#6b8b43', '#7f9e56']
+    ];
+    for (let gy = 0; gy < 2; gy++) {
+        for (let gx = 0; gx < 2; gx++) {
+            const x0 = gx * 256;
+            const y0 = gy * 256;
+            ctx.fillStyle = colors[gy][gx];
+            ctx.fillRect(x0, y0, 256, 256);
+
+            // 交互方向の細かい畳目（イ草織りライン）
+            const isHoriz = (gx + gy) % 2 === 0;
+            ctx.strokeStyle = 'rgba(58, 79, 34, 0.24)';
+            ctx.lineWidth = 1;
+            for (let k = 4; k < 256; k += 6) {
+                ctx.beginPath();
+                if (isHoriz) {
+                    ctx.moveTo(x0, y0 + k);
+                    ctx.lineTo(x0 + 256, y0 + k);
+                } else {
+                    ctx.moveTo(x0 + k, y0);
+                    ctx.lineTo(x0 + k, y0 + 256);
+                }
+                ctx.stroke();
+            }
+
+            // 畳1枚ごとの濃い縁・目地ライン（Canny が明確に拾えるコントラスト）
+            ctx.strokeStyle = '#3f5724';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(x0 + 2, y0 + 2, 252, 252);
+        }
+    }
+    const tex = new THREE.CanvasTexture(c);
+    tex.wrapS = THREE.RepeatWrapping;
+    tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(2, 2);
+    cachedTatamiTexture = tex;
+    return tex;
 }
 
 function rebuild3DScene() {
@@ -368,7 +704,7 @@ function rebuild3DScene() {
     const matWhiteWall = new THREE.MeshLambertMaterial({ color: 0xffffff });
     const matWoodFloor = new THREE.MeshLambertMaterial({ color: 0xb88655 });
     const matDomaSlab = new THREE.MeshLambertMaterial({ color: 0x94a3b8 });
-    const matTatamiSlab = new THREE.MeshLambertMaterial({ color: 0xa3b18a });
+    const matTatamiSlab = new THREE.MeshLambertMaterial({ map: getTatamiCanvasTexture(), color: 0xffffff });
     const matKoagariSlab = new THREE.MeshLambertMaterial({ color: 0xc89d6c });
     const matWhiteFixture = new THREE.MeshLambertMaterial({ color: 0xf8fafc });
     const matGlass = new THREE.MeshLambertMaterial({ color: 0xbae6fd, transparent: true, opacity: 0.45 });
@@ -395,9 +731,10 @@ function rebuild3DScene() {
         if (!flData) return;
         const baseY = (flNum === 0 ? -1 : (flNum - 1)) * (wallHeight + slabHeight);
 
-        // 1. 空間要素・床スラブ（通常居室、玄関土間、小上り、畳、吹き抜け、中庭、天井）
+        // 1. 空間要素・床スラブ（通常居室、玄関土間、小上り、畳、吹き抜け、中庭、天井、2階以上の階段室開口）
         flData.rooms.forEach(rm => {
-            if (rm.type === 'VOID' || rm.type === 'NAKANIWA') return; // 吹き抜け・中庭は床スラブなし
+            // 吹き抜け・中庭・および2階以上の「階段室(STAIR)」は床スラブを抜いて下階階段の昇降空間を開口する（2階床面積には算入維持）
+            if (rm.type === 'VOID' || rm.type === 'NAKANIWA' || (flNum >= 2 && rm.type === 'STAIR')) return;
 
             const wM = rm.w * scaleP;
             const hM = rm.h * scaleP;
@@ -414,101 +751,137 @@ function rebuild3DScene() {
             let sHeight = slabHeight;
             let sCenterY = baseY + slabHeight / 2;
 
+            const rmLabelStr = String(rm.name || rm.label || '');
             if (rm.type === 'DOMA' || rm.type === 'PORCH') {
                 sMat = matDomaSlab;
                 sHeight = Math.max(0.06, slabHeight - 0.10);
                 sCenterY = baseY + sHeight / 2;
             } else if (rm.type === 'KOAGARI') {
-                sMat = matKoagariSlab;
+                sMat = /畳|tatami|和室/i.test(rmLabelStr) ? matTatamiSlab : matKoagariSlab;
                 sHeight = slabHeight + 0.30; // +30cm 小上り段差
                 sCenterY = baseY + sHeight / 2;
-            } else if (rm.type === 'TATAMI' || rm.type === 'WASHITSU') {
+            } else if (rm.type === 'TATAMI' || rm.type === 'WASHITSU' || /和室|畳|tatami/i.test(rmLabelStr)) {
                 sMat = matTatamiSlab;
             }
 
             const slabGeo = new THREE.BoxGeometry(wM, sHeight, hM);
-            addWhiteModelMesh(slabGeo, sMat, cx, sCenterY, cz, true);
+            const slabMesh = addWhiteModelMesh(slabGeo, sMat, cx, sCenterY, cz, true);
+            if (slabMesh && sMat === matTatamiSlab) {
+                slabMesh.userData.regionTag = 'tatami';
+            }
 
             const rt = (window.ROOM_TYPES && window.ROOM_TYPES[rm.type]) || { hasWall: true };
-            if (!rm.isAutoDetected && rt.hasWall && flData.walls.length === 0) {
+            const hasNormalWallsOnFloor = (flData.walls || []).some(w => !w.wallType || w.wallType === 'wall');
+            if (!rm.isAutoDetected && rt.hasWall && !hasNormalWallsOnFloor) {
                 const isBalcony = rm.type === 'BALCONY';
+                const wY = isBalcony ? (baseY + slabHeight) : baseY;
                 const hWall = isBalcony ? 1.10 : (wallHeight + slabHeight);
-                const wY = baseY + slabHeight;
-                buildWallWithOpeningCutouts3D('h', rm.y, rm.x, rm.x + rm.w, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall);
-                buildWallWithOpeningCutouts3D('h', rm.y + rm.h, rm.x, rm.x + rm.w, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall);
-                buildWallWithOpeningCutouts3D('v', rm.x, rm.y, rm.y + rm.h, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall);
-                buildWallWithOpeningCutouts3D('v', rm.x + rm.w, rm.y, rm.y + rm.h, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall);
+                buildWallWithOpeningCutouts3D('h', rm.y, rm.x, rm.x + rm.w, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight);
+                buildWallWithOpeningCutouts3D('h', rm.y + rm.h, rm.x, rm.x + rm.w, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight);
+                buildWallWithOpeningCutouts3D('v', rm.x, rm.y, rm.y + rm.h, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight);
+                buildWallWithOpeningCutouts3D('v', rm.x + rm.w, rm.y, rm.y + rm.h, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight);
             }
         });
 
-        // 2. 壁4種（通常壁 / たれ壁 / 腰壁 / 上り框）
+        // 2. 壁4種（通常壁 / たれ壁 / 腰壁 / 上り框 ＆ 斜め壁対応 ＆ 高さ指定連動 ＆ 1F-2Fシームレス連結）
         flData.walls.forEach(wl => {
             const isHoriz = Math.abs(wl.y1 - wl.y2) < 0.05;
+            const isVert = Math.abs(wl.x1 - wl.x2) < 0.05;
             const wType = wl.wallType || 'wall';
             const floorTopY = baseY + slabHeight;
 
-            const startP = isHoriz ? Math.min(wl.x1, wl.x2) : Math.min(wl.y1, wl.y2);
-            const endP = isHoriz ? Math.max(wl.x1, wl.x2) : Math.max(wl.y1, wl.y2);
-            const fixedP = isHoriz ? wl.y1 : wl.x1;
-            const lenP = endP - startP;
-            if (lenP <= 0.04) return;
+            // 高さ指定（ミリメートル指定があればそれを最優先）
+            const waistH = wl.heightMm ? (wl.heightMm / 1000) : 1.00;
+            const dropH = wl.heightMm ? (wl.heightMm / 1000) : 0.55;
+            const actualWallH = wl.heightMm ? (wl.heightMm / 1000) : wallHeight;
+            // 通常壁はスラブ下端(baseY)から立ち上げてスラブ側面(slabHeight)も覆い、1F壁上端(2.63m)と2F壁下端(2.63m)を隙間ゼロでシームレスに連結する
+            const seamlessWallBottomY = baseY;
+            const seamlessWallTotalH = actualWallH + slabHeight;
 
-            if (wType === 'tarekabe') {
-                // たれ壁: 天井から550mm下がる上部壁
-                const dropH = 0.55;
-                const lenM = lenP * scaleP;
-                const midM = ((startP + endP) / 2) * scaleP;
-                const fixedM = fixedP * scaleP;
-                const geo = isHoriz
-                    ? new THREE.BoxGeometry(lenM + wallThick, dropH, wallThick)
-                    : new THREE.BoxGeometry(wallThick, dropH, lenM + wallThick);
-                addWhiteModelMesh(
-                    geo, matWhiteWall,
-                    isHoriz ? midM : fixedM,
-                    floorTopY + wallHeight - dropH / 2,
-                    isHoriz ? fixedM : midM,
-                    true
-                );
-            } else if (wType === 'koshikabe') {
-                // 腰壁: 床から1,000mmの手すり壁
-                const waistH = 1.00;
-                const lenM = lenP * scaleP;
-                const midM = ((startP + endP) / 2) * scaleP;
-                const fixedM = fixedP * scaleP;
-                const geo = isHoriz
-                    ? new THREE.BoxGeometry(lenM + wallThick, waistH, wallThick)
-                    : new THREE.BoxGeometry(wallThick, waistH, lenM + wallThick);
-                addWhiteModelMesh(
-                    geo, matWhiteWall,
-                    isHoriz ? midM : fixedM,
-                    floorTopY + waistH / 2,
-                    isHoriz ? fixedM : midM,
-                    true
-                );
-            } else if (wType === 'agarikamachi') {
-                // 上り框: 玄関段差見切り材
-                const kamachiH = 0.18;
-                const lenM = lenP * scaleP;
-                const midM = ((startP + endP) / 2) * scaleP;
-                const fixedM = fixedP * scaleP;
-                const geo = isHoriz
-                    ? new THREE.BoxGeometry(lenM, kamachiH, 0.12)
-                    : new THREE.BoxGeometry(0.12, kamachiH, lenM);
-                addWhiteModelMesh(
-                    geo, matDoorPanel,
-                    isHoriz ? midM : fixedM,
-                    baseY + kamachiH / 2 + 0.03,
-                    isHoriz ? fixedM : midM,
-                    true
-                );
+            if (isHoriz || isVert) {
+                const startP = isHoriz ? Math.min(wl.x1, wl.x2) : Math.min(wl.y1, wl.y2);
+                const endP = isHoriz ? Math.max(wl.x1, wl.x2) : Math.max(wl.y1, wl.y2);
+                const fixedP = isHoriz ? wl.y1 : wl.x1;
+                const lenP = endP - startP;
+                if (lenP <= 0.04) return;
+
+                if (wType === 'tarekabe') {
+                    // たれ壁: 天井から下がる上部壁
+                    const lenM = lenP * scaleP;
+                    const midM = ((startP + endP) / 2) * scaleP;
+                    const fixedM = fixedP * scaleP;
+                    const geo = isHoriz
+                        ? new THREE.BoxGeometry(lenM + wallThick, dropH, wallThick)
+                        : new THREE.BoxGeometry(wallThick, dropH, lenM + wallThick);
+                    addWhiteModelMesh(
+                        geo, matWhiteWall,
+                        isHoriz ? midM : fixedM,
+                        floorTopY + wallHeight - dropH / 2,
+                        isHoriz ? fixedM : midM,
+                        true
+                    );
+                } else if (wType === 'koshikabe') {
+                    // 腰壁: 床から立ち上がる手すり壁
+                    const lenM = lenP * scaleP;
+                    const midM = ((startP + endP) / 2) * scaleP;
+                    const fixedM = fixedP * scaleP;
+                    const geo = isHoriz
+                        ? new THREE.BoxGeometry(lenM + wallThick, waistH, wallThick)
+                        : new THREE.BoxGeometry(wallThick, waistH, lenM + wallThick);
+                    addWhiteModelMesh(
+                        geo, matWhiteWall,
+                        isHoriz ? midM : fixedM,
+                        floorTopY + waistH / 2,
+                        isHoriz ? fixedM : midM,
+                        true
+                    );
+                } else if (wType === 'agarikamachi') {
+                    // 上り框: 玄関段差見切り材
+                    const kamachiH = wl.heightMm ? (wl.heightMm / 1000) : 0.18;
+                    const lenM = lenP * scaleP;
+                    const midM = ((startP + endP) / 2) * scaleP;
+                    const fixedM = fixedP * scaleP;
+                    const geo = isHoriz
+                        ? new THREE.BoxGeometry(lenM, kamachiH, 0.12)
+                        : new THREE.BoxGeometry(0.12, kamachiH, lenM);
+                    const kamMesh = addWhiteModelMesh(
+                        geo, matDoorPanel,
+                        isHoriz ? midM : fixedM,
+                        baseY + kamachiH / 2 + 0.03,
+                        isHoriz ? fixedM : midM,
+                        true
+                    );
+                    if (kamMesh) kamMesh.userData.regionTag = 'agarikamachi';
+                } else {
+                    // 通常壁（開口部くり抜き付き・床スラブ側面カバー＆上下階シームレス連結）
+                    buildWallWithOpeningCutouts3D(
+                        isHoriz ? 'h' : 'v',
+                        fixedP, startP, endP,
+                        seamlessWallBottomY, seamlessWallTotalH, wallThick,
+                        flData.openings, scaleP, matWhiteWall,
+                        floorTopY
+                    );
+                }
             } else {
-                // 通常壁（開口部くり抜き付き）
-                buildWallWithOpeningCutouts3D(
-                    isHoriz ? 'h' : 'v',
-                    fixedP, startP, endP,
-                    floorTopY, wallHeight, wallThick,
-                    flData.openings, scaleP, matWhiteWall
-                );
+                // 斜め壁（自由角・45度斜め壁の3Dレンダリング）
+                const lenP = Math.hypot(wl.x2 - wl.x1, wl.y2 - wl.y1);
+                if (lenP <= 0.04) return;
+                const lenM = lenP * scaleP;
+                const midX = ((wl.x1 + wl.x2) / 2) * scaleP;
+                const midZ = ((wl.y1 + wl.y2) / 2) * scaleP;
+                const angle = Math.atan2(wl.y2 - wl.y1, wl.x2 - wl.x1);
+                let wH = seamlessWallTotalH;
+                let wPosY = seamlessWallBottomY + wH / 2;
+                if (wType === 'koshikabe') {
+                    wH = waistH;
+                    wPosY = floorTopY + waistH / 2;
+                } else if (wType === 'tarekabe') {
+                    wH = dropH;
+                    wPosY = floorTopY + wallHeight - dropH / 2;
+                }
+                const diagGeo = new THREE.BoxGeometry(lenM + wallThick, wH, wallThick);
+                const mesh = addWhiteModelMesh(diagGeo, matWhiteWall, midX, wPosY, midZ, true);
+                if (mesh) mesh.rotation.y = -angle;
             }
         });
 
@@ -538,6 +911,8 @@ function rebuild3DScene() {
 
         // 4. サッシ・建具12種の3Dフレーム
         flData.openings.forEach(op => {
+            // 「開口のみ(扉なし: kaikou)」は壁のくり抜きのみで建具パネルを生成しない（階段室登りきりやウォークスルー開口用）
+            if (op.doorFit === 'kaikou' || op.sashType === 'kaikou') return;
             const ot = (window.OPENING_TYPES && window.OPENING_TYPES[op.type]) ? window.OPENING_TYPES[op.type] : { widthP: 1.0, heightMm: 2000, isWin: false };
             const wM = (op.widthP || ot.widthP) * scaleP;
             const hM = (op.heightMm || ot.heightMm) / 1000;
@@ -561,16 +936,33 @@ function rebuild3DScene() {
             );
         });
 
-        // 5. 設備・家具 & 3D直方体
+        // 5. 設備・家具 & 3D直方体（L型キッチンの2ウィング立体造形対応）
         const floorTopY = baseY + slabHeight;
         flData.fixtures.forEach(fx => {
             const wM = fx.w * scaleP;
             const dM = fx.h * scaleP;
-            const cx = (fx.x + fx.w / 2) * scaleP;
-            const cz = (fx.y + fx.h / 2) * scaleP;
             const kH = (fx.kHeight || fx.hMm || 850) / 1000;
-            const tGeo = new THREE.BoxGeometry(wM * 0.94, kH, dM * 0.94);
-            addWhiteModelMesh(tGeo, matWhiteFixture, cx, floorTopY + kH / 2, cz, true);
+            const isKitchenL = fx.type === 'KITCHEN_L' || fx.category === 'KITCHEN_L' || (fx.fxData && fx.fxData.kitchenType === 'L');
+            if (isKitchenL) {
+                const cDepthM = Math.min(Math.min(wM, dM) * 0.48, ((fx.fxData && fx.fxData.lDepth) ? fx.fxData.lDepth : 650) / 1000);
+                const x0 = fx.x * scaleP;
+                const z0 = fx.y * scaleP;
+                // 横ウィング (幅 wM × 奥行 cDepthM)
+                const wingHZ = fx.flipY ? (z0 + dM - cDepthM / 2) : (z0 + cDepthM / 2);
+                const geoH = new THREE.BoxGeometry(wM * 0.96, kH, cDepthM * 0.96);
+                addWhiteModelMesh(geoH, matWhiteFixture, x0 + wM / 2, floorTopY + kH / 2, wingHZ, true);
+                // 縦ウィング (幅 cDepthM × 残り奥行 dM - cDepthM)
+                const remDM = Math.max(0.1, dM - cDepthM);
+                const wingVX = fx.flipX ? (x0 + wM - cDepthM / 2) : (x0 + cDepthM / 2);
+                const wingVZ = fx.flipY ? (z0 + remDM / 2) : (z0 + cDepthM + remDM / 2);
+                const geoV = new THREE.BoxGeometry(cDepthM * 0.96, kH, remDM * 0.96);
+                addWhiteModelMesh(geoV, matWhiteFixture, wingVX, floorTopY + kH / 2, wingVZ, true);
+            } else {
+                const cx = (fx.x + fx.w / 2) * scaleP;
+                const cz = (fx.y + fx.h / 2) * scaleP;
+                const tGeo = new THREE.BoxGeometry(wM * 0.94, kH, dM * 0.94);
+                addWhiteModelMesh(tGeo, matWhiteFixture, cx, floorTopY + kH / 2, cz, true);
+            }
         });
 
         (flData.boxes3d || []).forEach(bx => {
@@ -591,66 +983,225 @@ function rebuild3DScene() {
         });
     });
 
+    // 6.5. 1階の基礎（基礎高さ設定連動）および土台水切り（水切り板金ON/OFF・カラー連動）を3D生成
+    if (floorsToBuild.includes(1) && state.floors[1]) {
+        buildFoundationAndMizukiri3D(state.floors[1], scaleP, wallThick, slabHeight);
+    }
+
+    // 7. 簡易3D家具ステージング（独立グループ・state.floors/面積集計には一切非干渉）
+    buildFurnitureStaging3D(floorsToBuild, scaleP, slabHeight, wallHeight);
+
     syncBirdEyePreview();
 }
 
+function buildFurnitureStaging3D(floorsToBuild, scaleP, slabHeight, wallHeight) {
+    if (!furnitureGroup3d) return;
+    while (furnitureGroup3d.children.length > 0) {
+        const ch = furnitureGroup3d.children[0];
+        furnitureGroup3d.remove(ch);
+        if (ch.geometry) ch.geometry.dispose();
+    }
+    if (!window.show3DFurnitureStaging) {
+        furnitureGroup3d.visible = false;
+        return;
+    }
+    furnitureGroup3d.visible = true;
+
+    const targetFl = (floorsToBuild && floorsToBuild.length > 0) ? floorsToBuild[0] : 1;
+    const flData = (typeof state !== 'undefined' && state.floors) ? state.floors[targetFl] : null;
+    if (!flData || !Array.isArray(flData.rooms)) return;
+
+    // LDK または最大面積の洋室/居室（和室・水回り・収納は除外）を選定
+    let hostRoom = null;
+    for (const r of flData.rooms) {
+        if (!r || r.type === 'VOID' || r.type === 'NAKANIWA' || r.type === 'TENJO') continue;
+        if (r.type === 'BATH' || r.type === 'TOILET' || r.type === 'STORAGE' || r.type === 'DOMA' || r.type === 'PORCH' || r.type === 'HALL') continue;
+        const rName = String(r.name || r.label || '');
+        if (r.type === 'TATAMI' || r.type === 'WASHITSU' || /和室|畳|tatami|便所|浴室|収納|押入|洗面|玄関|ホール/i.test(rName)) continue;
+        const area = (r.w || 0) * (r.h || 0);
+        if (/ldk|リビング|ダイニング/i.test(rName)) {
+            if (!hostRoom || !/ldk|リビング|ダイニング/i.test(String(hostRoom.name || '')) || area > hostRoom.w * hostRoom.h) {
+                hostRoom = r;
+            }
+        } else if (!hostRoom || (!/ldk|リビング|ダイニング/i.test(String(hostRoom.name || '')) && area > hostRoom.w * hostRoom.h)) {
+            hostRoom = r;
+        }
+    }
+    if (!hostRoom) return;
+
+    const rw = hostRoom.w * scaleP;
+    const rh = hostRoom.h * scaleP;
+    if (rw < 2.6 || rh < 2.4) return;
+
+    const baseY = (targetFl === 0 ? -1 : (targetFl - 1)) * (wallHeight + slabHeight);
+    const floorY = baseY + slabHeight;
+    const rcx = (hostRoom.x + hostRoom.w / 2) * scaleP;
+    const rcz = (hostRoom.y + hostRoom.h / 2) * scaleP;
+
+    const matOak = new THREE.MeshLambertMaterial({ color: 0xa67444 });
+    const matOakDark = new THREE.MeshLambertMaterial({ color: 0x855830 });
+    const matLinen = new THREE.MeshLambertMaterial({ color: 0xded7cb });
+    const matRug = new THREE.MeshLambertMaterial({ color: 0xe6e0d4 });
+
+    const addFurnPart = (w, h, d, mat, x, y, z) => {
+        const geo = new THREE.BoxGeometry(w, h, d);
+        const m = new THREE.Mesh(geo, mat);
+        m.position.set(x, y, z);
+        m.castShadow = true;
+        m.receiveShadow = true;
+        m.userData.regionTag = 'furniture';
+        furnitureGroup3d.add(m);
+        return m;
+    };
+
+    // 1. ダイニングテーブル＋椅子4脚（部屋中央やや奥寄りに配置）
+    const tblW = Math.min(1.55, rw * 0.34);
+    const tblD = Math.min(0.85, rh * 0.24);
+    const tblH = 0.72;
+    const tblX = rcx + (rw >= 4.2 ? rw * 0.12 : 0);
+    const tblZ = rcz + (rh >= 3.6 ? rh * 0.08 : 0);
+
+    addFurnPart(tblW, 0.045, tblD, matOak, tblX, floorY + tblH - 0.022, tblZ);
+    const legOffX = tblW / 2 - 0.08;
+    const legOffZ = tblD / 2 - 0.08;
+    for (const sx of [-1, 1]) {
+        for (const sz of [-1, 1]) {
+            addFurnPart(0.055, tblH - 0.045, 0.055, matOakDark, tblX + sx * legOffX, floorY + (tblH - 0.045) / 2, tblZ + sz * legOffZ);
+        }
+    }
+
+    // 椅子4脚（テーブル長辺の前後2脚ずつ）
+    for (const sz of [-1, 1]) {
+        for (const sx of [-0.32, 0.32]) {
+            const cx = tblX + sx * tblW;
+            const cz = tblZ + sz * (tblD / 2 + 0.26);
+            addFurnPart(0.42, 0.04, 0.42, matOakDark, cx, floorY + 0.44, cz);
+            addFurnPart(0.42, 0.38, 0.04, matOak, cx, floorY + 0.65, cz + sz * 0.19);
+            for (const lx of [-0.17, 0.17]) {
+                for (const lz of [-0.17, 0.17]) {
+                    addFurnPart(0.035, 0.42, 0.035, matOakDark, cx + lx, floorY + 0.21, cz + lz);
+                }
+            }
+        }
+    }
+
+    // 2. 広い居室（幅4.0m以上）ではラグ＋ミニマルソファ＋ローテーブルも配置
+    if (rw >= 4.0 && rh >= 3.4) {
+        const sofX = rcx - rw * 0.16;
+        const sofZ = rcz + rh * 0.16;
+        // ラグ
+        addFurnPart(1.8, 0.015, 1.3, matRug, sofX, floorY + 0.008, sofZ - 0.35);
+        // ローテーブル
+        addFurnPart(0.95, 0.04, 0.50, matOak, sofX, floorY + 0.36, sofZ - 0.55);
+        addFurnPart(0.82, 0.34, 0.04, matOakDark, sofX, floorY + 0.17, sofZ - 0.72);
+        addFurnPart(0.82, 0.34, 0.04, matOakDark, sofX, floorY + 0.17, sofZ - 0.38);
+        // 2人掛けミニマルソファ
+        addFurnPart(1.65, 0.38, 0.78, matLinen, sofX, floorY + 0.19, sofZ + 0.15);
+        addFurnPart(1.65, 0.40, 0.18, matLinen, sofX, floorY + 0.56, sofZ + 0.45);
+        addFurnPart(0.14, 0.24, 0.78, matLinen, sofX - 0.76, floorY + 0.48, sofZ + 0.15);
+        addFurnPart(0.14, 0.24, 0.78, matLinen, sofX + 0.76, floorY + 0.48, sofZ + 0.15);
+    }
+}
+
+function toggle3DFurnitureStaging() {
+    window.show3DFurnitureStaging = !window.show3DFurnitureStaging;
+    const btn = document.getElementById('btn3DFurnitureToggle');
+    if (btn) {
+        btn.innerHTML = window.show3DFurnitureStaging ? '<span>🛋️ 3D家具: ON</span>' : '<span>🛋️ 3D家具: OFF</span>';
+    }
+    rebuild3DScene();
+    if (typeof showToast === 'function') {
+        showToast(window.show3DFurnitureStaging ? '🛋️ 3D家具ステージングを表示しました' : '🛋️ 3D家具ステージングを非表示にしました');
+    }
+}
+window.toggle3DFurnitureStaging = toggle3DFurnitureStaging;
+
 function renderStair3D(fx, floorTopY, wallHeight, slabHeight, scaleP) {
-    const wM = fx.w * scaleP;
-    const dM = fx.h * scaleP;
-    const cx = (fx.x + fx.w / 2) * scaleP;
-    const cz = (fx.y + fx.h / 2) * scaleP;
-    const totalSteps = fx.steps || 14;
-    const totalRise = wallHeight + slabHeight;
-    const stepH = totalRise / totalSteps;
+    if (!fx) return;
+    // 立面不出力 (no3DOutput) がONの階段（上の階に自動投影された複写階段など）は3Dメッシュを出力しない
+    if (fx.no3DOutput || fx.hide3D) return;
+    if ((fx.x === undefined || fx.w === undefined) && fx.points && fx.points.length >= 2) {
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        fx.points.forEach(pt => {
+            minX = Math.min(minX, pt.x);
+            minY = Math.min(minY, pt.y);
+            maxX = Math.max(maxX, pt.x);
+            maxY = Math.max(maxY, pt.y);
+        });
+        fx.x = minX;
+        fx.y = minY;
+        const widthP = (fx.widthMm || 910) / (state.modulePitch || 910);
+        fx.w = +(Math.max(widthP, maxX - minX)).toFixed(3) || widthP;
+        fx.h = +(Math.max(widthP, maxY - minY)).toFixed(3) || (widthP * 2);
+    }
+
+    const curX = (fx.x !== undefined && !isNaN(fx.x)) ? fx.x : 0;
+    const curY = (fx.y !== undefined && !isNaN(fx.y)) ? fx.y : 0;
     const isDown = fx.direction === 'DOWN';
     const isOpenStair = (fx.stairStyle || state.stairStyle) === 'open';
-    const handrail = fx.stairHandrail || state.stairHandrail || 'both';
+    const stepMat = new THREE.MeshLambertMaterial({ color: isOpenStair ? 0x9a6b3e : 0xd4a373, side: THREE.DoubleSide });
+    const totalRise = wallHeight + slabHeight;
 
-    const stepMat = new THREE.MeshLambertMaterial({ color: isOpenStair ? 0x9a6b3e : 0xd4a373 });
-    const stringerMat = new THREE.MeshLambertMaterial({ color: 0x334155 });
-    const handrailMat = new THREE.MeshLambertMaterial({ color: 0xcbd5e1 });
+    if (typeof window.computeStairModularLayout === 'function') {
+        const layout = window.computeStairModularLayout(fx);
+        const totalSteps = Math.max(1, layout.totalSteps);
+        const riserM = (fx.riserMm || 200) / 1000;
+        const effectiveTotalRise = (totalSteps <= 9)
+            ? Math.min(totalRise, riserM * totalSteps)
+            : totalRise;
+        const stepH = effectiveTotalRise / totalSteps;
+        const treadThick = isOpenStair ? 0.045 : Math.max(0.05, stepH * 0.96);
 
-    // ボックス階段は踏み板の下までソリッド、オープン階段は厚さ4.5cmのスケルトン踏板
+        (layout.stepPolygons3D || []).forEach(sp => {
+            if (!sp.points || sp.points.length < 3) return;
+            const sIdx = isDown ? (totalSteps - 1 - sp.stepIndex) : sp.stepIndex;
+            const curRiseY = floorTopY + (sIdx + 0.5) * stepH;
+
+            let cxLocal = 0, cyLocal = 0;
+            sp.points.forEach(pt => { cxLocal += pt.x; cyLocal += pt.y; });
+            cxLocal /= sp.points.length;
+            cyLocal /= sp.points.length;
+
+            const shape = new THREE.Shape();
+            sp.points.forEach((pt, idx) => {
+                const sx = (pt.x - cxLocal) * scaleP * 0.97;
+                const sy = -(pt.y - cyLocal) * scaleP * 0.97;
+                if (idx === 0) shape.moveTo(sx, sy);
+                else shape.lineTo(sx, sy);
+            });
+            shape.closePath();
+
+            const sGeo = new THREE.ExtrudeGeometry(shape, { depth: treadThick, bevelEnabled: false });
+            const m = addWhiteModelMesh(
+                sGeo,
+                stepMat,
+                (curX + cxLocal) * scaleP,
+                curRiseY - treadThick * 0.5,
+                (curY + cyLocal) * scaleP,
+                true
+            );
+            if (m) m.rotation.x = -Math.PI * 0.5;
+        });
+        return;
+    }
+
+    // フォールバック (万一 computeStairModularLayout が未ロードの場合)
+    const curW = (fx.w !== undefined && !isNaN(fx.w)) ? fx.w : 1;
+    const curH = (fx.h !== undefined && !isNaN(fx.h)) ? fx.h : 2;
+    const wM = curW * scaleP;
+    const dM = curH * scaleP;
+    const cx = (curX + curW / 2) * scaleP;
+    const cz = (curY + curH / 2) * scaleP;
+    const totalSteps = fx.steps || 14;
+    const stepH = totalRise / totalSteps;
     const treadThick = isOpenStair ? 0.045 : Math.max(0.05, stepH * 0.95);
-
-    if (fx.w <= fx.h) {
-        const stepDepth = dM / totalSteps;
-        for (let i = 0; i < totalSteps; i++) {
-            const sIdx = isDown ? (totalSteps - 1 - i) : i;
-            const curY = floorTopY + (sIdx + 0.5) * stepH;
-            const curZ = fx.y * scaleP + (i + 0.5) * stepDepth;
-            const sGeo = new THREE.BoxGeometry(wM * 0.96, treadThick, stepDepth * 0.95);
-            addWhiteModelMesh(sGeo, stepMat, cx, curY, curZ, true);
-        }
-        if (isOpenStair) {
-            const strGeo = new THREE.BoxGeometry(0.06, 0.14, dM);
-            addWhiteModelMesh(strGeo, stringerMat, cx, floorTopY + totalRise * 0.48, cz, false);
-        }
-        if (handrail === 'left' || handrail === 'both') {
-            const rGeo = new THREE.BoxGeometry(0.04, 0.85, dM);
-            addWhiteModelMesh(rGeo, handrailMat, fx.x * scaleP + 0.03, floorTopY + totalRise * 0.5 + 0.42, cz, true);
-        }
-        if (handrail === 'right' || handrail === 'both') {
-            const rGeo = new THREE.BoxGeometry(0.04, 0.85, dM);
-            addWhiteModelMesh(rGeo, handrailMat, (fx.x + fx.w) * scaleP - 0.03, floorTopY + totalRise * 0.5 + 0.42, cz, true);
-        }
-    } else {
-        const stepWidth = wM / totalSteps;
-        for (let i = 0; i < totalSteps; i++) {
-            const sIdx = isDown ? (totalSteps - 1 - i) : i;
-            const curY = floorTopY + (sIdx + 0.5) * stepH;
-            const curX = fx.x * scaleP + (i + 0.5) * stepWidth;
-            const sGeo = new THREE.BoxGeometry(stepWidth * 0.95, treadThick, dM * 0.96);
-            addWhiteModelMesh(sGeo, stepMat, curX, curY, cz, true);
-        }
-        if (handrail === 'left' || handrail === 'both') {
-            const rGeo = new THREE.BoxGeometry(wM, 0.85, 0.04);
-            addWhiteModelMesh(rGeo, handrailMat, cx, floorTopY + totalRise * 0.5 + 0.42, fx.y * scaleP + 0.03, true);
-        }
-        if (handrail === 'right' || handrail === 'both') {
-            const rGeo = new THREE.BoxGeometry(wM, 0.85, 0.04);
-            addWhiteModelMesh(rGeo, handrailMat, cx, floorTopY + totalRise * 0.5 + 0.42, (fx.y + fx.h) * scaleP - 0.03, true);
-        }
+    const stepDepth = dM / totalSteps;
+    for (let i = 0; i < totalSteps; i++) {
+        const sIdx = isDown ? (totalSteps - 1 - i) : i;
+        const curYPos = floorTopY + (sIdx + 0.5) * stepH;
+        const curZPos = curY * scaleP + (i + 0.5) * stepDepth;
+        const sGeo = new THREE.BoxGeometry(wM * 0.96, treadThick, stepDepth * 0.95);
+        addWhiteModelMesh(sGeo, stepMat, cx, curYPos, curZPos, true);
     }
 }
 
@@ -762,37 +1313,467 @@ async function approveAndPublishPlan(customPersUrl) {
     }
 }
 
-function export3DToPersStudio(specifiedPreset) {
+// ============================================================================
+// パース工房（SmileStudio）連携: カラー素図＋深度マップ（近＝白・遠＝黒）取得＆容量ガード保存
+// ============================================================================
+function resizeCanvasToDataUrl(srcCanvas, maxDim, mimeType, quality) {
+    const sw = srcCanvas.width || 1024;
+    const sh = srcCanvas.height || 768;
+    const scale = Math.min(1, maxDim / Math.max(sw, sh));
+    const tw = Math.max(64, Math.round(sw * scale));
+    const th = Math.max(64, Math.round(sh * scale));
+    const tmp = document.createElement('canvas');
+    tmp.width = tw;
+    tmp.height = th;
+    const ctx = tmp.getContext('2d');
+    if (mimeType === 'image/jpeg') {
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(0, 0, tw, th);
+    }
+    ctx.drawImage(srcCanvas, 0, 0, tw, th);
+    return { dataUrl: tmp.toDataURL(mimeType, quality), width: tw, height: th, canvas: tmp };
+}
+
+/**
+ * ビュー空間の線形距離（-mvPosition.z）を ControlNet Depth 規約（近＝白 255、遠＝黒 0）の
+ * 256階調フルレンジで出力する。8bit 非線形 Z バッファ由来の等高線バンディングを完全に防止する。
+ */
+function captureNormalizedDepthDataUrl(maxDim) {
+    const prevOverride = scene3d.overrideMaterial;
+    const prevBg = scene3d.background;
+    const prevClearColor = new THREE.Color();
+    const prevClearAlpha = renderer3d.getClearAlpha();
+    renderer3d.getClearColor(prevClearColor);
+
+    const prevGridVis = window.gridHelper3d ? window.gridHelper3d.visible : null;
+    const prevGroundVis = window.groundMesh3d ? window.groundMesh3d.visible : null;
+    const prevNear = camera3d.near;
+    const prevFar = camera3d.far;
+
+    // 建物グループのカメラ距離レンジを算出し、256階調を建物全体（室内視点時は室内前方レンジ）へ最適配分
+    let uNear = 0.5;
+    let uFar = 32.0;
+    let depthViewMode = 'exterior';
+    try {
+        if (buildingGroup && buildingGroup.children.length > 0) {
+            const box = new THREE.Box3().setFromObject(buildingGroup);
+            const expandedBox = box.clone().expandByScalar(0.8);
+            const isInsideBuilding = expandedBox.containsPoint(camera3d.position);
+            const corners = [
+                new THREE.Vector3(box.min.x, box.min.y, box.min.z),
+                new THREE.Vector3(box.min.x, box.min.y, box.max.z),
+                new THREE.Vector3(box.min.x, box.max.y, box.min.z),
+                new THREE.Vector3(box.min.x, box.max.y, box.max.z),
+                new THREE.Vector3(box.max.x, box.min.y, box.min.z),
+                new THREE.Vector3(box.max.x, box.min.y, box.max.z),
+                new THREE.Vector3(box.max.x, box.max.y, box.min.z),
+                new THREE.Vector3(box.max.x, box.max.y, box.max.z)
+            ];
+            let minD = Infinity, maxD = 0, maxFrontD = 0;
+            camera3d.updateMatrixWorld(true);
+            const invCam = camera3d.matrixWorldInverse;
+            for (const c of corners) {
+                const v = c.clone().applyMatrix4(invCam);
+                const z = -v.z;
+                if (z < minD) minD = z;
+                if (z > maxD) maxD = z;
+                if (z > 0.1 && z > maxFrontD) maxFrontD = z;
+            }
+            if (isInsideBuilding || minD < 1.2) {
+                // アイレベル室内視点: カメラ直前から室内最遠壁までを256階調へ最適配分
+                depthViewMode = 'interior';
+                uNear = 0.25;
+                uFar = Math.max(4.5, Math.min(11.5, maxFrontD > 0 ? maxFrontD * 0.95 : 9.0));
+            } else if (isFinite(minD) && maxD > minD) {
+                const pad = Math.max(0.5, (maxD - minD) * 0.12);
+                uNear = Math.max(0.2, minD - pad);
+                uFar = Math.max(uNear + 2.0, maxD + pad * 2.5);
+            }
+        } else {
+            const dist = camera3d.position.distanceTo(orbit.target);
+            uNear = Math.max(0.2, dist * 0.35);
+            uFar = Math.max(uNear + 4.0, dist * 1.9);
+        }
+    } catch (_) {}
+
+    const depthMat = new THREE.ShaderMaterial({
+        uniforms: {
+            uNear: { value: uNear },
+            uFar: { value: uFar }
+        },
+        vertexShader: [
+            'varying float vViewDepth;',
+            'void main() {',
+            '  vec4 mvPos = modelViewMatrix * vec4(position, 1.0);',
+            '  vViewDepth = -mvPos.z;',
+            '  gl_Position = projectionMatrix * mvPos;',
+            '}'
+        ].join('\n'),
+        fragmentShader: [
+            'uniform float uNear;',
+            'uniform float uFar;',
+            'varying float vViewDepth;',
+            'void main() {',
+            '  float d = 1.0 - clamp((vViewDepth - uNear) / max(0.001, (uFar - uNear)), 0.0, 1.0);',
+            '  gl_FragColor = vec4(vec3(d), 1.0);',
+            '}'
+        ].join('\n'),
+        side: THREE.DoubleSide
+    });
+
+    try {
+        if (window.gridHelper3d) window.gridHelper3d.visible = false;
+        if (window.groundMesh3d) window.groundMesh3d.visible = false;
+        scene3d.overrideMaterial = depthMat;
+        scene3d.background = new THREE.Color(0x000000);
+        renderer3d.setClearColor(0x000000, 1);
+        renderer3d.render(scene3d, camera3d);
+
+        const resized = resizeCanvasToDataUrl(renderer3d.domElement, maxDim, 'image/png', 1.0);
+        const ctx = resized.canvas.getContext('2d');
+        const imgData = ctx.getImageData(0, 0, resized.width, resized.height);
+        const d = imgData.data;
+        let minV = 255, maxV = 0;
+        const levelSet = new Set();
+        for (let i = 0; i < d.length; i += 4) {
+            const v = d[i];
+            if (v > 0) {
+                if (v < minV) minV = v;
+                if (v > maxV) maxV = v;
+                levelSet.add(v);
+            }
+        }
+        return {
+            dataUrl: resized.canvas.toDataURL('image/png'),
+            width: resized.width,
+            height: resized.height,
+            convention: 'near_white_far_black',
+            depthRange: {
+                mode: depthViewMode,
+                minRaw: minV,
+                maxRaw: maxV,
+                uniqueLevels: levelSet.size,
+                linearNearM: Number(uNear.toFixed(2)),
+                linearFarM: Number(uFar.toFixed(2))
+            }
+        };
+    } finally {
+        camera3d.near = prevNear;
+        camera3d.far = prevFar;
+        camera3d.updateProjectionMatrix();
+        scene3d.overrideMaterial = prevOverride;
+        scene3d.background = prevBg;
+        renderer3d.setClearColor(prevClearColor, prevClearAlpha);
+        if (window.gridHelper3d && prevGridVis !== null) window.gridHelper3d.visible = prevGridVis;
+        if (window.groundMesh3d && prevGroundVis !== null) window.groundMesh3d.visible = prevGroundVis;
+        depthMat.dispose();
+        renderer3d.render(scene3d, camera3d);
+    }
+}
+
+function extractRoomMaterialHints() {
+    const hints = { hasTatami: false, hasLdk: false, hasEntrance: false, roomNames: [] };
+    try {
+        if (typeof state !== 'undefined' && state.floors) {
+            const floorKeys = Object.keys(state.floors);
+            for (const fk of floorKeys) {
+                const fl = state.floors[fk];
+                const rooms = (fl && Array.isArray(fl.rooms)) ? fl.rooms : [];
+                for (const r of rooms) {
+                    const name = String(r.name || r.label || r.type || '').trim();
+                    if (!name) continue;
+                    if (hints.roomNames.indexOf(name) === -1) hints.roomNames.push(name);
+                    if (/和室|畳|tatami|ヌック|小上がり/i.test(name)) hints.hasTatami = true;
+                    if (/ldk|リビング|ダイニング|キッチン/i.test(name)) hints.hasLdk = true;
+                    if (/玄関|土間|ポーチ/i.test(name)) hints.hasEntrance = true;
+                }
+            }
+        }
+    } catch (_) {}
+    return hints;
+}
+
+function saveHandoffToIndexedDB(key, payloadObj) {
+    return new Promise((resolve, reject) => {
+        if (!window.indexedDB) {
+            reject(new Error('IndexedDB is not supported'));
+            return;
+        }
+        const req = window.indexedDB.open('smile_studio_handoff_db', 1);
+        req.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains('handoffs')) {
+                db.createObjectStore('handoffs');
+            }
+        };
+        req.onsuccess = (e) => {
+            try {
+                const db = e.target.result;
+                const tx = db.transaction('handoffs', 'readwrite');
+                tx.objectStore('handoffs').put(payloadObj, key);
+                tx.oncomplete = () => { db.close(); resolve(true); };
+                tx.onerror = () => { db.close(); reject(tx.error || new Error('IndexedDB write failed')); };
+            } catch (err) {
+                reject(err);
+            }
+        };
+        req.onerror = () => reject(req.error || new Error('IndexedDB open failed'));
+    });
+}
+
+/**
+ * 汎用リージョンマスク描画（項目 B: 'tatami'、項目 C: 'furniture' 共通）。
+ * 指定 regionTag のメッシュを純白(#ffffff)、それ以外を純黒(#000000)で描画し、
+ * finally 句で全メッシュのマテリアル・可視状態・背景を完全に復元する。
+ */
+function captureRegionMaskDataUrl(regionTag, maxDim = 512) {
+    if (!renderer3d || !scene3d || !camera3d || !buildingGroup) {
+        return { dataUrl: null, coverageRatio: 0, width: 0, height: 0 };
+    }
+    const prevBg = scene3d.background;
+    const prevClearColor = new THREE.Color();
+    const prevClearAlpha = renderer3d.getClearAlpha();
+    renderer3d.getClearColor(prevClearColor);
+    const prevGridVis = window.gridHelper3d ? window.gridHelper3d.visible : null;
+    const prevGroundVis = window.groundMesh3d ? window.groundMesh3d.visible : null;
+
+    const whiteMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+    const blackMat = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide });
+    const savedStates = [];
+
+    try {
+        if (window.gridHelper3d) window.gridHelper3d.visible = false;
+        if (window.groundMesh3d) window.groundMesh3d.visible = false;
+        scene3d.background = new THREE.Color(0x000000);
+        renderer3d.setClearColor(0x000000, 1);
+
+        scene3d.traverse((obj) => {
+            if (obj === window.gridHelper3d || obj === window.groundMesh3d) return;
+            if (obj.isLineSegments || obj.isLine) {
+                savedStates.push({ obj, kind: 'vis', visible: obj.visible });
+                obj.visible = false;
+            } else if (obj.isMesh) {
+                savedStates.push({ obj, kind: 'mat', material: obj.material });
+                const isTarget = !!(obj.userData && obj.userData.regionTag === regionTag);
+                obj.material = isTarget ? whiteMat : blackMat;
+            }
+        });
+
+        renderer3d.render(scene3d, camera3d);
+        const resized = resizeCanvasToDataUrl(renderer3d.domElement, maxDim, 'image/png', 1.0);
+        const ctx = resized.canvas.getContext('2d');
+        const imgData = ctx.getImageData(0, 0, resized.width, resized.height);
+        const d = imgData.data;
+        let whitePx = 0;
+        const totalPx = resized.width * resized.height;
+        for (let i = 0; i < d.length; i += 4) {
+            const isW = d[i] > 127;
+            const v = isW ? 255 : 0;
+            d[i] = v; d[i + 1] = v; d[i + 2] = v; d[i + 3] = 255;
+            if (isW) whitePx++;
+        }
+        ctx.putImageData(imgData, 0, 0);
+        const ratio = totalPx > 0 ? Number((whitePx / totalPx).toFixed(4)) : 0;
+        return {
+            dataUrl: ratio >= 0.002 ? resized.canvas.toDataURL('image/png') : null,
+            coverageRatio: ratio,
+            width: resized.width,
+            height: resized.height
+        };
+    } finally {
+        for (const st of savedStates) {
+            if (st.kind === 'vis') st.obj.visible = st.visible;
+            else if (st.kind === 'mat') st.obj.material = st.material;
+        }
+        scene3d.background = prevBg;
+        renderer3d.setClearColor(prevClearColor, prevClearAlpha);
+        if (window.gridHelper3d && prevGridVis !== null) window.gridHelper3d.visible = prevGridVis;
+        if (window.groundMesh3d && prevGroundVis !== null) window.groundMesh3d.visible = prevGroundVis;
+        whiteMat.dispose();
+        blackMat.dispose();
+        renderer3d.render(scene3d, camera3d);
+    }
+}
+
+function capture3DColorAndDepth(maxDim = 1024, jpegQuality = 0.88) {
+    if (!renderer3d || !scene3d || !camera3d) {
+        throw new Error('3Dエンジンが初期化されていません');
+    }
+    // カラー素図（＝Cannyエッジ源兼用）でも地面メッシュと方眼グリッドを一時非表示＋クリーン背景化
+    const prevGridVis = window.gridHelper3d ? window.gridHelper3d.visible : null;
+    const prevGroundVis = window.groundMesh3d ? window.groundMesh3d.visible : null;
+    const prevBg = scene3d.background;
+    const prevClearColor = new THREE.Color();
+    const prevClearAlpha = renderer3d.getClearAlpha();
+    renderer3d.getClearColor(prevClearColor);
+
+    let colorCap;
+    try {
+        if (window.gridHelper3d) window.gridHelper3d.visible = false;
+        if (window.groundMesh3d) window.groundMesh3d.visible = false;
+        scene3d.background = new THREE.Color(0xf8fafc);
+        renderer3d.setClearColor(0xf8fafc, 1);
+        renderer3d.render(scene3d, camera3d);
+        colorCap = resizeCanvasToDataUrl(renderer3d.domElement, maxDim, 'image/jpeg', jpegQuality);
+    } finally {
+        scene3d.background = prevBg;
+        renderer3d.setClearColor(prevClearColor, prevClearAlpha);
+        if (window.gridHelper3d && prevGridVis !== null) window.gridHelper3d.visible = prevGridVis;
+        if (window.groundMesh3d && prevGroundVis !== null) window.groundMesh3d.visible = prevGroundVis;
+        renderer3d.render(scene3d, camera3d);
+    }
+
+    const depthCap = captureNormalizedDepthDataUrl(maxDim);
+    const regionMasks = [];
+    const tatamiMask = captureRegionMaskDataUrl('tatami', 512);
+    if (tatamiMask.dataUrl) {
+        regionMasks.push({
+            id: 'tatami',
+            prompt: 'vivid natural green woven Japanese ryukyu tatami mat flooring, traditional square tatami grid seams, green tatami texture',
+            strength: 1.35,
+            coverageRatio: tatamiMask.coverageRatio,
+            maskDataUrl: tatamiMask.dataUrl
+        });
+    }
+    const furnMask = captureRegionMaskDataUrl('furniture', 512);
+    if (furnMask.dataUrl) {
+        regionMasks.push({
+            id: 'furniture',
+            prompt: 'crafted solid oak wooden dining table with chairs, comfortable minimalist linen sofa, warm interior styling, natural wood furniture',
+            strength: 1.0,
+            coverageRatio: furnMask.coverageRatio,
+            maskDataUrl: furnMask.dataUrl
+        });
+    }
+    return {
+        colorDataUrl: colorCap.dataUrl,
+        depthDataUrl: depthCap.dataUrl,
+        regionMasks: regionMasks,
+        width: colorCap.width,
+        height: colorCap.height,
+        depthConvention: depthCap.convention,
+        depthRange: depthCap.depthRange,
+        cleanBackground: true,
+        roomHints: extractRoomMaterialHints()
+    };
+}
+
+async function persistSmileStudioHandoff(payload) {
+    const MAX_LS_CHARS = 2400000; // 約2.4MB安全上限（5MB制限・他データ圧迫防止）
+    let serialized = JSON.stringify(payload);
+
+    // 1. サイズ超過時はカラー画像の解像度・品質を段階縮小して再試行
+    const fallbackSteps = [
+        { maxDim: 896, quality: 0.78 },
+        { maxDim: 768, quality: 0.68 }
+    ];
+    if (serialized.length > MAX_LS_CHARS && renderer3d && scene3d && camera3d) {
+        for (const step of fallbackSteps) {
+            const cap = capture3DColorAndDepth(step.maxDim, step.quality);
+            payload.colorDataUrl = cap.colorDataUrl;
+            payload.depthDataUrl = cap.depthDataUrl;
+            payload.width = cap.width;
+            payload.height = cap.height;
+            serialized = JSON.stringify(payload);
+            if (serialized.length <= MAX_LS_CHARS) break;
+        }
+    }
+
+    // 2. localStorage へ保存試行
+    if (serialized.length <= MAX_LS_CHARS) {
+        try {
+            localStorage.setItem('smile_studio_handoff', serialized);
+            return { ok: true, storage: 'localStorage', bytes: serialized.length };
+        } catch (lsErr) {
+            console.warn('[SmileStudio Handoff] localStorage quota exceeded, falling back to IndexedDB:', lsErr);
+        }
+    }
+
+    // 3. IndexedDB フォールバック保存
+    try {
+        const idbKey = 'handoff_' + Date.now();
+        await saveHandoffToIndexedDB(idbKey, payload);
+        localStorage.setItem('smile_studio_handoff', JSON.stringify({
+            version: 1,
+            storage: 'indexeddb',
+            key: idbKey,
+            timestamp: payload.timestamp,
+            planId: payload.planId,
+            returnUrl: payload.returnUrl
+        }));
+        return { ok: true, storage: 'indexeddb', bytes: serialized.length };
+    } catch (idbErr) {
+        console.error('[SmileStudio Handoff] Storage failed:', idbErr);
+        return { ok: false, error: 'ブラウザの保存容量上限により3Dデータの引き継ぎに失敗しました。不要なタブや履歴を整理してから再度お試しください。' };
+    }
+}
+
+async function export3DToPersStudio(specifiedPreset) {
     if (!renderer3d || !scene3d || !camera3d) {
         if (typeof showToast === 'function') showToast('3Dエンジンが初期化されていません', true);
         return;
     }
-    const preset = specifiedPreset || state.active3DPreset || 'bird';
-    renderer3d.render(scene3d, camera3d);
-    const rgbDataUrl = renderer3d.domElement.toDataURL('image/png');
+    const preset = specifiedPreset || (typeof state !== 'undefined' && state.active3DPreset) || 'bird';
+    let cap;
+    try {
+        cap = capture3DColorAndDepth(1024, 0.88);
+    } catch (err) {
+        if (typeof showToast === 'function') showToast('3Dキャプチャに失敗しました: ' + err.message, true);
+        return;
+    }
 
-    const persTransferData = {
-        source: 'madori3d',
+    const planId = (typeof state !== 'undefined' && state.currentPlanId) ? state.currentPlanId : '';
+    const projectTitle = (typeof state !== 'undefined' && state.projectTitle) ? state.projectTitle : '間取り工房3Dモデル';
+    const roomHints = cap.roomHints || extractRoomMaterialHints();
+    const hasTatamiMask = Array.isArray(cap.regionMasks) && cap.regionMasks.some(m => m.id === 'tatami');
+    const floorPhrase = (roomHints.hasTatami && !hasTatamiMask)
+        ? ', green woven ryukyu tatami mat flooring in the Japanese washitsu room, warm solid yoshino cedar wood flooring in the LDK'
+        : ', warm solid yoshino cedar wood flooring';
+
+    const handoffPayload = {
+        version: 1,
+        source: 'madori_handoff',
         timestamp: Date.now(),
-        imageBefore: rgbDataUrl,
-        controlNetMode: 'depth',
-        cameraPreset: preset,
+        planId: planId,
+        projectTitle: projectTitle,
+        returnUrl: window.location.pathname + window.location.search,
+        colorDataUrl: cap.colorDataUrl,
+        depthDataUrl: cap.depthDataUrl,
+        regionMasks: cap.regionMasks || [],
+        width: cap.width,
+        height: cap.height,
+        depthConvention: cap.depthConvention,
+        roomHints: roomHints,
+        camera: {
+            position: [Number(camera3d.position.x.toFixed(3)), Number(camera3d.position.y.toFixed(3)), Number(camera3d.position.z.toFixed(3))],
+            target: [Number(orbit.target.x.toFixed(3)), Number(orbit.target.y.toFixed(3)), Number(orbit.target.z.toFixed(3))],
+            fov: camera3d.fov,
+            preset: preset
+        },
         targetMode: preset === 'topdown' ? 'dollhouse' : 'photoreal',
-        engine: preset === 'topdown' ? 'gemini' : 'sdxl_controlnet',
-        prompt: 'realistic modern japanese wooden house architectural rendering, warm natural cedar wood flooring, white plaster walls, natural daylight',
-        negativePrompt: 'blurry, low quality, distorted',
-        autoRun: true
+        engine: 'sdxl_controlnet',
+        prompt: `masterpiece, architectural interior photograph, modern Japanese custom home${floorPhrase}, pristine white diatomaceous earth plaster walls, clear wooden interior doors and windows, bright natural daylight, ultra realistic, 8k`
     };
 
-    try {
-        localStorage.setItem('smile_pers_transfer_3d', JSON.stringify(persTransferData));
-    } catch (e) {}
+    const saved = await persistSmileStudioHandoff(handoffPayload);
+    if (!saved.ok) {
+        if (typeof showToast === 'function') showToast(saved.error, true);
+        else alert(saved.error);
+        return;
+    }
 
-    syncPlanToCommunityLibrary(rgbDataUrl);
+    if (typeof showToast === 'function') {
+        showToast('🎨 カラー素図＋深度マップをパース工房へ引き継ぎます...');
+    }
+    syncPlanToCommunityLibrary(cap.colorDataUrl);
     setTimeout(() => {
-        window.location.href = `/smilestudio.html?source=madori3d&auto=1&v=${Date.now()}`;
-    }, 300);
+        window.location.href = `/smilestudio.html?source=madori_handoff&v=${Date.now()}`;
+    }, 250);
 }
+
+window.capture3DColorAndDepth = capture3DColorAndDepth;
+window.captureRegionMaskDataUrl = captureRegionMaskDataUrl;
+window.persistSmileStudioHandoff = persistSmileStudioHandoff;
 
 window.init3DEngine = init3DEngine;
 window.rebuild3DScene = rebuild3DScene;

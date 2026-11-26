@@ -45,8 +45,100 @@ window.isFloorAreaExcludedRoom = isFloorAreaExcludedRoom;
 
 /**
  * 指定階の床面積（㎡）を計算
- * P3-1: L字型部屋を「部屋作成」ブロック2枚で重ねて作った場合や、自動認識部屋と手動部屋が重なった場合に
- * 二重計上されないよう、矩形同士の重なり（インターセクション）面積を自動控除して実面積を算出する。
+ */
+function getRoomPolygonPoints(rm) {
+    if (!rm) return null;
+    if (Array.isArray(rm.points) && rm.points.length >= 3) return rm.points;
+    if (rm.w > 0 && rm.h > 0) {
+        return [
+            { x: rm.x, y: rm.y },
+            { x: rm.x + rm.w, y: rm.y },
+            { x: rm.x + rm.w, y: rm.y + rm.h },
+            { x: rm.x, y: rm.y + rm.h }
+        ];
+    }
+    return null;
+}
+
+function calcPolygonsUnionAreaP2(polys) {
+    if (!polys || polys.length === 0) return 0;
+    const ys = [];
+    const segs = [];
+    polys.forEach(pts => {
+        for (let i = 0; i < pts.length; i++) {
+            const p1 = pts[i];
+            const p2 = pts[(i + 1) % pts.length];
+            ys.push(p1.y);
+            if (Math.abs(p1.y - p2.y) > 1e-7) {
+                segs.push([p1.x, p1.y, p2.x, p2.y]);
+            }
+        }
+    });
+    // 辺同士の交点Y座標もスキャンライン分割点に追加（斜め辺交差も厳密化）
+    for (let i = 0; i < segs.length; i++) {
+        const [ax, ay, bx, by] = segs[i];
+        for (let j = i + 1; j < segs.length; j++) {
+            const [cx, cy, dx, dy] = segs[j];
+            const den = (bx - ax) * (dy - cy) - (by - ay) * (dx - cx);
+            if (Math.abs(den) < 1e-9) continue;
+            const t = ((cx - ax) * (dy - cy) - (cy - ay) * (dx - cx)) / den;
+            const u = ((cx - ax) * (by - ay) - (cy - ay) * (bx - ax)) / den;
+            if (t > 1e-6 && t < 1 - 1e-6 && u > 1e-6 && u < 1 - 1e-6) {
+                ys.push(ay + t * (by - ay));
+            }
+        }
+    }
+    ys.sort((a, b) => a - b);
+    const uniqY = [];
+    for (const y of ys) {
+        if (uniqY.length === 0 || y - uniqY[uniqY.length - 1] > 1e-6) uniqY.push(y);
+    }
+
+    let totalArea = 0;
+    for (let k = 0; k < uniqY.length - 1; k++) {
+        const y0 = uniqY[k];
+        const y1 = uniqY[k + 1];
+        const dy = y1 - y0;
+        if (dy <= 1e-6) continue;
+        const ym = (y0 + y1) * 0.5;
+        const intervals = [];
+        for (const pts of polys) {
+            const xs = [];
+            for (let i = 0; i < pts.length; i++) {
+                const p1 = pts[i];
+                const p2 = pts[(i + 1) % pts.length];
+                if ((p1.y <= ym && p2.y > ym) || (p2.y <= ym && p1.y > ym)) {
+                    xs.push(p1.x + (ym - p1.y) * (p2.x - p1.x) / (p2.y - p1.y));
+                }
+            }
+            xs.sort((a, b) => a - b);
+            for (let i = 0; i + 1 < xs.length; i += 2) {
+                if (xs[i + 1] > xs[i] + 1e-7) intervals.push([xs[i], xs[i + 1]]);
+            }
+        }
+        if (intervals.length === 0) continue;
+        intervals.sort((a, b) => a[0] - b[0]);
+        let curS = intervals[0][0], curE = intervals[0][1];
+        let xCover = 0;
+        for (let i = 1; i < intervals.length; i++) {
+            if (intervals[i][0] <= curE) {
+                if (intervals[i][1] > curE) curE = intervals[i][1];
+            } else {
+                xCover += (curE - curS);
+                curS = intervals[i][0];
+                curE = intervals[i][1];
+            }
+        }
+        xCover += (curE - curS);
+        totalArea += xCover * dy;
+    }
+    return totalArea;
+}
+
+/**
+ * 指定階の床面積（㎡）を計算
+ * 多角形部屋（自動認識）・矩形部屋（手動ブロック）をすべて統一ポリゴンとして和集合面積を算出し、
+ * 多角形同士・多角形×矩形・矩形同士の重なり二重計上を完全に控除する。
  */
 function calcFloorAreaM2(flNum) {
     ensureFloorsStructure();
@@ -54,30 +146,17 @@ function calcFloorAreaM2(flNum) {
     if (!fl) return 0;
     const pitchM = (state.modulePitch || 910) / 1000;
     const validRooms = (fl.rooms || []).filter(rm => !isFloorAreaExcludedRoom(rm));
-    let sum = 0;
+    const polys = [];
+    let fallbackSum = 0;
 
-    // 1. まず各部屋の面積を加算
     validRooms.forEach(rm => {
-        sum += getRoomAreaM2(rm);
+        const pts = getRoomPolygonPoints(rm);
+        if (pts) polys.push(pts);
+        else fallbackSum += getRoomAreaM2(rm);
     });
 
-    // 2. 矩形部屋同士が重なっている場合、重なり領域（intersection）を控除して二重計上を防止
-    const rectRooms = validRooms.filter(rm => !(Array.isArray(rm.points) && rm.points.length >= 3) && rm.w > 0 && rm.h > 0);
-    let overlapM2 = 0;
-    for (let i = 0; i < rectRooms.length; i++) {
-        for (let j = i + 1; j < rectRooms.length; j++) {
-            const a = rectRooms[i];
-            const b = rectRooms[j];
-            const ix1 = Math.max(a.x, b.x);
-            const iy1 = Math.max(a.y, b.y);
-            const ix2 = Math.min(a.x + a.w, b.x + b.w);
-            const iy2 = Math.min(a.y + a.h, b.y + b.h);
-            if (ix2 > ix1 + 0.02 && iy2 > iy1 + 0.02) {
-                overlapM2 += (ix2 - ix1) * pitchM * (iy2 - iy1) * pitchM;
-            }
-        }
-    }
-    return Math.max(0, sum - overlapM2);
+    const unionM2 = calcPolygonsUnionAreaP2(polys) * pitchM * pitchM;
+    return Math.max(0, unionM2 + fallbackSum);
 }
 
 /**
@@ -182,6 +261,7 @@ function updateAllMetricsAnd3D() {
     request2DRedraw();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
     if (typeof updateBirdEyeMiniPreview === 'function') updateBirdEyeMiniPreview();
+    if (typeof renderQaTargetComparison === 'function') renderQaTargetComparison();
 }
 
 function extractUnitWallSegments(flNum) {
@@ -225,4 +305,150 @@ if (typeof window !== 'undefined') {
     window.updateAllMetricsAnd3D = updateAllMetricsAnd3D;
     window.extractUnitWallSegments = extractUnitWallSegments;
     window.computeWallAlignmentRatio = computeWallAlignmentRatio;
+}
+
+// ============================================================================
+// 目標面積との照合パネル (QA Target Comparison)
+// ============================================================================
+const QA_STORAGE_KEY = 'smile_madori_qa_targets_v1';
+
+function loadQaTargetConfig() {
+    try {
+        const raw = localStorage.getItem(QA_STORAGE_KEY);
+        return raw ? JSON.parse(raw) : { f1: '', f2: '', f3: '', total: '', rooms: '' };
+    } catch (e) {
+        return { f1: '', f2: '', f3: '', total: '', rooms: '' };
+    }
+}
+
+function saveQaTargetConfig() {
+    const cfg = {
+        f1: document.getElementById('qaTarget1F')?.value ?? '',
+        f2: document.getElementById('qaTarget2F')?.value ?? '',
+        f3: document.getElementById('qaTarget3F')?.value ?? '',
+        total: document.getElementById('qaTargetTotal')?.value ?? '',
+        rooms: document.getElementById('qaTargetRooms')?.value ?? ''
+    };
+    try { localStorage.setItem(QA_STORAGE_KEY, JSON.stringify(cfg)); } catch (e) {}
+    renderQaTargetComparison();
+}
+
+function resetQaTargetConfig() {
+    ['qaTarget1F', 'qaTarget2F', 'qaTarget3F', 'qaTargetTotal', 'qaTargetRooms'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
+    saveQaTargetConfig();
+}
+
+function openQaTargetModal() {
+    const modal = document.getElementById('qaTargetModal');
+    if (!modal) return;
+    const cfg = loadQaTargetConfig();
+    const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v || ''; };
+    setVal('qaTarget1F', cfg.f1);
+    setVal('qaTarget2F', cfg.f2);
+    setVal('qaTarget3F', cfg.f3);
+    setVal('qaTargetTotal', cfg.total);
+    setVal('qaTargetRooms', cfg.rooms);
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    renderQaTargetComparison();
+}
+
+function closeQaTargetModal() {
+    const modal = document.getElementById('qaTargetModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+}
+
+function renderQaTargetComparison() {
+    const box = document.getElementById('qaComparisonResult');
+    if (!box) return;
+    const cfg = loadQaTargetConfig();
+    const f1 = calcFloorAreaM2(1);
+    const f2 = calcFloorAreaM2(2);
+    const f3 = calcFloorAreaM2(3);
+    const tot = calcFloorAreaM2(0) + f1 + f2 + f3 + calcFloorAreaM2(4);
+
+    const floorRows = [
+        { label: '1階 床面積', actual: f1, targetStr: cfg.f1 },
+        { label: '2階 床面積', actual: f2, targetStr: cfg.f2 },
+        { label: '3階 床面積', actual: f3, targetStr: cfg.f3 },
+        { label: '延床面積合計', actual: tot, targetStr: cfg.total }
+    ];
+
+    let html = '<div class="font-bold text-slate-200 mb-1">📐 階別・延床面積 照合</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">';
+    floorRows.forEach(r => {
+        const hasT = r.targetStr !== '' && !isNaN(parseFloat(r.targetStr));
+        const t = hasT ? parseFloat(r.targetStr) : null;
+        const diff = hasT ? (r.actual - t) : null;
+        const isOk = hasT && Math.abs(diff) <= 0.30;
+        const badge = !hasT
+            ? '<span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 text-[10px]">目標未設定</span>'
+            : (isOk
+                ? '<span class="px-1.5 py-0.5 rounded bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold">OK</span>'
+                : '<span class="px-1.5 py-0.5 rounded bg-rose-600/30 text-rose-300 border border-rose-500/40 text-[10px] font-bold">要確認</span>');
+        const diffTxt = hasT ? `${diff >= 0 ? '+' : ''}${diff.toFixed(2)}㎡` : '-';
+        html += `<div class="p-2 rounded-lg bg-slate-900/90 border border-slate-700 flex items-center justify-between">
+            <div>
+                <div class="text-[11px] font-bold text-white">${r.label}</div>
+                <div class="text-[10px] text-slate-400 mono-num">実測: ${r.actual.toFixed(2)}㎡ ${hasT ? `/ 目標: ${t.toFixed(2)}㎡` : ''}</div>
+            </div>
+            <div class="text-right">
+                ${badge}
+                <div class="text-[10px] mono-num ${hasT ? (isOk ? 'text-emerald-300' : 'text-rose-300') : 'text-slate-500'} mt-0.5">差: ${diffTxt}</div>
+            </div>
+        </div>`;
+    });
+    html += '</div>';
+
+    // 部屋別帖数照合
+    const roomSpecs = (cfg.rooms || '').split(/[,、\n]+/).map(s => s.trim()).filter(Boolean);
+    if (roomSpecs.length > 0) {
+        const pitchM = (state.modulePitch || 910) / 1000;
+        const allRooms = [];
+        [0, 1, 2, 3, 4].forEach(fn => {
+            ((state.floors[fn] && state.floors[fn].rooms) || []).forEach(rm => {
+                const name = (rm.customName || rm.name || '').trim();
+                const jyo = getRoomAreaM2(rm) / (pitchM * pitchM * 2);
+                allRooms.push({ floor: fn, name, jyo });
+            });
+        });
+
+        html += '<div class="font-bold text-slate-200 mt-2 mb-1">🚪 部屋別 帖数照合</div><div class="space-y-1">';
+        roomSpecs.forEach(spec => {
+            const m = spec.match(/^(.+?)[:：=]\s*([0-9]+(?:\.[0-9]+)?)/);
+            if (!m) return;
+            const targetName = m[1].trim();
+            const targetJyo = parseFloat(m[2]);
+            const matched = allRooms.find(r => r.name && (r.name === targetName || r.name.includes(targetName)));
+            if (!matched) {
+                html += `<div class="p-1.5 rounded bg-slate-900/80 border border-rose-500/40 flex items-center justify-between text-[11px]">
+                    <span class="text-white font-bold">${targetName} (目標 ${targetJyo.toFixed(1)}帖)</span>
+                    <span class="text-rose-300 font-bold">未検出</span>
+                </div>`;
+            } else {
+                const diffJ = matched.jyo - targetJyo;
+                const ok = Math.abs(diffJ) <= 0.25;
+                html += `<div class="p-1.5 rounded bg-slate-900/80 border ${ok ? 'border-emerald-500/40' : 'border-rose-500/40'} flex items-center justify-between text-[11px] mono-num">
+                    <span class="text-white font-bold">${matched.name} (${matched.floor}F)</span>
+                    <span class="${ok ? 'text-emerald-300' : 'text-rose-300'} font-bold">実測 ${matched.jyo.toFixed(1)}帖 / 目標 ${targetJyo.toFixed(1)}帖 (${diffJ >= 0 ? '+' : ''}${diffJ.toFixed(1)}) ${ok ? 'OK' : '要確認'}</span>
+                </div>`;
+            }
+        });
+        html += '</div>';
+    }
+
+    box.innerHTML = html;
+}
+
+if (typeof window !== 'undefined') {
+    window.openQaTargetModal = openQaTargetModal;
+    window.closeQaTargetModal = closeQaTargetModal;
+    window.saveQaTargetConfig = saveQaTargetConfig;
+    window.resetQaTargetConfig = resetQaTargetConfig;
+    window.renderQaTargetComparison = renderQaTargetComparison;
 }
