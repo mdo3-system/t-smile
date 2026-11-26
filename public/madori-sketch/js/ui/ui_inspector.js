@@ -267,15 +267,16 @@ function renderSubToolbar() {
         `;
     } else if (tool === 'stair') {
         const isFree = state.stairDrawMode === 'free';
+        const curPreset = state.stairPresetType || 'U_6TURN';
         container.innerHTML = `
             <div class="flex items-center gap-1.5 flex-wrap">
-                <!-- モード切替タブ: 定型ポン置き / 一辺ずつ描く（マニュアル完全同期） -->
+                <!-- モード切替タブ: 定型ポン置き / 一辺ずつ描く -->
                 <div class="flex items-center rounded-lg bg-slate-950 p-0.5 border border-slate-700 mr-1 shadow-inner">
                     <button type="button" onclick="setStairDrawMode('preset')" class="px-2 py-0.5 rounded text-[11px] font-bold transition ${!isFree ? 'bg-cyan-600 text-white shadow' : 'text-slate-400 hover:text-white'}">定型ポン置き</button>
                     <button type="button" onclick="setStairDrawMode('free')" class="px-2 py-0.5 rounded text-[11px] font-bold transition ${isFree ? 'bg-cyan-600 text-white shadow' : 'text-slate-400 hover:text-white'}">一辺ずつ描く</button>
                 </div>
                 ${isFree ? `
-                    <span class="text-xs text-amber-300 font-bold flex items-center gap-1"><i class="fa-solid fa-pen"></i>図面上をタップして角を指定（2点以上で作成）</span>
+                    <span class="text-xs text-amber-300 font-bold flex items-center gap-1"><i class="fa-solid fa-pen"></i>図面上をタップして角を指定（2〜4点でI・L・コの字・クランク階段を作成）</span>
                     ${(state.stairDrawingPoints && state.stairDrawingPoints.length >= 2) ? `
                         <button type="button" onclick="openStairModal()" class="px-2.5 py-1 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow flex items-center gap-1"><i class="fa-solid fa-check"></i>階段作成 (${state.stairDrawingPoints.length}点)</button>
                     ` : ''}
@@ -283,31 +284,19 @@ function renderSubToolbar() {
                         <button type="button" onclick="cancelStairDrawing()" class="px-2 py-0.5 rounded bg-slate-800 text-slate-400 hover:text-white text-xs border border-slate-700">リセット</button>
                     ` : ''}
                 ` : `
-                    <button type="button" onclick="setStairPresetType('STRAIGHT')" class="sub-chip px-2 py-1 rounded text-xs font-bold border ${(state.stairPresetType || 'STRAIGHT') === 'STRAIGHT' ? 'active' : 'bg-slate-900 border-slate-700 text-slate-300'}">直階段</button>
-                    <button type="button" onclick="setStairPresetType('U_SHAPE')" class="sub-chip px-2 py-1 rounded text-xs font-bold border ${state.stairPresetType === 'U_SHAPE' ? 'active' : 'bg-slate-900 border-slate-700 text-slate-300'}">折り返し(コの字)</button>
-                    <button type="button" onclick="setStairPresetType('L_SHAPE')" class="sub-chip px-2 py-1 rounded text-xs font-bold border ${state.stairPresetType === 'L_SHAPE' ? 'active' : 'bg-slate-900 border-slate-700 text-slate-300'}">かね折れ(L字)</button>
+                    <button type="button" onclick="setStairPresetType('U_6TURN')" class="sub-chip px-2 py-1 rounded text-[11px] font-bold border ${(curPreset === 'U_6TURN' || curPreset === 'U_SHAPE') ? 'active' : 'bg-slate-900 border-slate-700 text-slate-300'}" title="① コの字 6段廻り (I1:4段 + 3段廻り + 3段廻り + I3:3段)">①コの字(6段廻り)</button>
+                    <button type="button" onclick="setStairPresetType('STRAIGHT')" class="sub-chip px-2 py-1 rounded text-[11px] font-bold border ${curPreset === 'STRAIGHT' ? 'active' : 'bg-slate-900 border-slate-700 text-slate-300'}" title="② 直階段 I型 (13段)">②直階段(I型)</button>
+                    <button type="button" onclick="setStairPresetType('L_TOP_TURN')" class="sub-chip px-2 py-1 rounded text-[11px] font-bold border ${curPreset === 'L_TOP_TURN' ? 'active' : 'bg-slate-900 border-slate-700 text-slate-300'}" title="③ 直進10段 + 上部3段廻り登りきり">③上廻りL型(10+3)</button>
+                    <button type="button" onclick="setStairPresetType('CRANK_BOTH_TURN')" class="sub-chip px-2 py-1 rounded text-[11px] font-bold border ${curPreset === 'CRANK_BOTH_TURN' ? 'active' : 'bg-slate-900 border-slate-700 text-slate-300'}" title="④ 下部3段廻り + 直進7段 + 上部3段廻り">④上下廻り(3+7+3)</button>
+                    <button type="button" onclick="setStairPresetType('L_PLUS_TOP_TURN')" class="sub-chip px-2 py-1 rounded text-[11px] font-bold border ${curPreset === 'L_PLUS_TOP_TURN' ? 'active' : 'bg-slate-900 border-slate-700 text-slate-300'}" title="⑤ 直進4段 + 3段廻り + 直進4段 + 上部3段廻り">⑤L+上廻り(4+3+4+3)</button>
+                    <button type="button" onclick="setStairPresetType('L_LANDING_TOP')" class="sub-chip px-2 py-1 rounded text-[11px] font-bold border ${curPreset === 'L_LANDING_TOP' ? 'active' : 'bg-slate-900 border-slate-700 text-slate-300'}" title="⑥ 直進5段 + 1段踊り場登りきり">⑥1段踊り場登りきり</button>
+                    <button type="button" onclick="setStairPresetType('L_STANDARD')" class="sub-chip px-2 py-1 rounded text-[11px] font-bold border ${(curPreset === 'L_STANDARD' || curPreset === 'L_SHAPE') ? 'active' : 'bg-slate-900 border-slate-700 text-slate-300'}" title="⑦ 標準かね折れL型 (5+3+5)">⑦標準L型</button>
                     <button type="button" onclick="rotateStairPreset()" class="px-2 py-1 rounded bg-slate-800 border border-slate-600 text-amber-300 text-xs font-bold"><i class="fa-solid fa-rotate-right"></i> 90°回転(${state.subStairRot || 0}°)</button>
                     <button type="button" onclick="toggleStairDirection()" class="px-2 py-1 rounded bg-slate-800 border border-slate-600 text-cyan-300 text-xs font-bold">${state.subStairDirection === 'DOWN' ? '⬇ 降りる' : '⬆ 上る'}</button>
                     <select onchange="state.stairWidthMm=parseInt(this.value,10);if(typeof renderSubToolbar==='function')renderSubToolbar();" class="bg-slate-900 text-cyan-300 border border-slate-700 rounded px-2 py-1 text-xs font-bold" title="階段幅">
                         <option value="910" ${(state.stairWidthMm || 910) === 910 ? 'selected' : ''}>幅: 910mm</option>
                         <option value="1000" ${state.stairWidthMm === 1000 ? 'selected' : ''}>幅: 1000mm</option>
                         <option value="780" ${state.stairWidthMm === 780 ? 'selected' : ''}>幅: 780mm</option>
-                    </select>
-                    <select onchange="state.stairTurnSpec=this.value;" class="bg-slate-900 text-amber-300 border border-slate-700 rounded px-2 py-1 text-xs font-bold" title="廻り部仕様">
-                        <option value="turn_3" ${(state.stairTurnSpec || 'turn_3') === 'turn_3' ? 'selected' : ''}>3段廻り</option>
-                        <option value="turn_2" ${state.stairTurnSpec === 'turn_2' ? 'selected' : ''}>2段廻り</option>
-                        <option value="turn_4" ${state.stairTurnSpec === 'turn_4' ? 'selected' : ''}>4段廻り</option>
-                        <option value="landing" ${state.stairTurnSpec === 'landing' ? 'selected' : ''}>踊り場</option>
-                    </select>
-                    <select onchange="state.stairStyle=this.value;" class="bg-slate-900 text-emerald-300 border border-slate-700 rounded px-2 py-1 text-xs font-bold" title="階段仕様">
-                        <option value="box" ${state.stairStyle === 'box' ? 'selected' : ''}>ボックス階段</option>
-                        <option value="open" ${state.stairStyle === 'open' ? 'selected' : ''}>オープン階段</option>
-                    </select>
-                    <select onchange="state.stairHandrail=this.value;state.handrail=this.value;" class="bg-slate-900 text-amber-200 border border-slate-700 rounded px-2 py-1 text-xs font-bold" title="手すり">
-                        <option value="both" ${(state.stairHandrail || 'both') === 'both' ? 'selected' : ''}>手すり: 両方</option>
-                        <option value="left" ${state.stairHandrail === 'left' ? 'selected' : ''}>手すり: 左</option>
-                        <option value="right" ${state.stairHandrail === 'right' ? 'selected' : ''}>手すり: 右</option>
-                        <option value="none" ${state.stairHandrail === 'none' ? 'selected' : ''}>手すり: なし</option>
                     </select>
                 `}
             </div>
@@ -604,30 +593,107 @@ function renderPropertyInspector() {
         `;
     } else if (kind === 'stair') {
         const curType = obj.shapeType || 'STRAIGHT';
+        const curPattern = obj.patternKey || (curType === 'U_SHAPE' ? 'U_6TURN' : (curType === 'L_SHAPE' ? (obj.landingTop ? 'L_LANDING_TOP' : 'L_STANDARD') : 'STRAIGHT'));
         const curDir = obj.direction || 'UP';
         const curStyle = obj.stairStyle || 'box';
         const curRail = obj.stairHandrail || obj.handrail || 'both';
         const curWidth = obj.widthMm || 910;
-        const curTurn = obj.turnType || 'turn_3';
+        const cfg = (typeof window.getStairModularConfig === 'function')
+            ? window.getStairModularConfig(obj)
+            : { i1Steps: obj.steps || 13, c1Steps: 0, c1Dir: 'right', i2Steps: 0, c2Steps: 0, c2Dir: 'right', i3Steps: 0, totalSteps: obj.steps || 13 };
+
+        const stepOptions = (maxN, selectedVal, zeroLabel) => {
+            let html = '';
+            for (let n = 0; n <= maxN; n++) {
+                const lbl = (n === 0 && zeroLabel) ? zeroLabel : `${n}段`;
+                html += `<option value="${n}" ${selectedVal === n ? 'selected' : ''}>${lbl}</option>`;
+            }
+            return html;
+        };
 
         panel.innerHTML = `
             <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-2">
-                <span class="text-xs font-bold text-amber-300"><i class="fa-solid fa-stairs mr-1.5"></i>階段の仕様・寸法・手すり編集</span>
+                <span class="text-xs font-bold text-amber-300"><i class="fa-solid fa-stairs mr-1.5"></i>階段の仕様・I部/踊り場段数・向き編集</span>
                 <div class="flex items-center gap-1">
+                    <span class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold">計${cfg.totalSteps}段</span>
                     <button type="button" onclick="deleteSelectedItem()" class="px-2 py-1 rounded bg-rose-600/30 text-[11px] text-rose-200 font-bold hover:bg-rose-600/50"><i class="fa-solid fa-trash mr-1"></i>削除</button>
                     <button type="button" onclick="state.selectedItem=null;renderPropertyInspector();request2DRedraw();" class="text-slate-400 hover:text-white px-1.5"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
             <div class="space-y-2 text-xs">
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="text-[10px] text-slate-400 block font-bold">階段タイプ</label>
-                        <select onchange="updateSelectedStairShape(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white font-bold">
-                            <option value="STRAIGHT" ${curType === 'STRAIGHT' ? 'selected' : ''}>直階段 (I型)</option>
-                            <option value="U_SHAPE" ${curType === 'U_SHAPE' ? 'selected' : ''}>折り返し (コの字)</option>
-                            <option value="L_SHAPE" ${curType === 'L_SHAPE' ? 'selected' : ''}>かね折れ (L型)</option>
+                <div>
+                    <label class="text-[10px] text-amber-300 block font-bold mb-0.5">定型形状プリセット (ワンタップ切替)</label>
+                    <select onchange="updateSelectedStairShape(this.value)" class="w-full bg-slate-900 border border-amber-500/50 rounded px-2 py-1 text-white font-bold text-xs">
+                        <option value="U_6TURN" ${curPattern === 'U_6TURN' ? 'selected' : ''}>① コの字 6段廻り (I1:4 + 廻3 + 廻3 + I3:3)</option>
+                        <option value="STRAIGHT" ${curPattern === 'STRAIGHT' ? 'selected' : ''}>② 直階段 I型 (13段)</option>
+                        <option value="L_TOP_TURN" ${curPattern === 'L_TOP_TURN' ? 'selected' : ''}>③ 上部廻りL型 (I1:10 + 上3段廻り登りきり)</option>
+                        <option value="CRANK_BOTH_TURN" ${curPattern === 'CRANK_BOTH_TURN' ? 'selected' : ''}>④ 上下両端廻り (下3段廻り + I2:7 + 上3段廻り)</option>
+                        <option value="L_PLUS_TOP_TURN" ${curPattern === 'L_PLUS_TOP_TURN' ? 'selected' : ''}>⑤ L型＋上部廻り (I1:4 + 廻3 + I2:4 + 上3段廻り)</option>
+                        <option value="L_LANDING_TOP" ${curPattern === 'L_LANDING_TOP' ? 'selected' : ''}>⑥ 1段踊り場登りきり (I1:5 + 1段踊り場[両側/右/左])</option>
+                        <option value="L_STANDARD" ${curPattern === 'L_STANDARD' ? 'selected' : ''}>⑦ 標準かね折れL型 (I1:5 + 3段廻り + I2:5)</option>
+                        <option value="U_LANDING" ${curPattern === 'U_LANDING' ? 'selected' : ''}>⑧ 大踊り場コの字 (I1:6 + 踊1 + 踊1 + I3:6)</option>
+                    </select>
+                </div>
+
+                <!-- I部分と踊り場の個別段数・向き構成パネル -->
+                <div class="bg-slate-950/80 border border-slate-700/80 rounded-xl p-2 space-y-1.5">
+                    <div class="text-[10px] font-bold text-cyan-300 flex items-center justify-between">
+                        <span>📐 I部分・踊り場の段数＆向き構成</span>
+                        <span class="text-amber-300">I1 → C1 → I2 → C2 → I3</span>
+                    </div>
+                    <div class="grid grid-cols-12 gap-1 items-center">
+                        <span class="col-span-4 text-[10px] text-slate-300 font-bold">① 始端直進 I1</span>
+                        <select onchange="updateSelectedStairSpec('i1Steps', parseInt(this.value,10))" class="col-span-8 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-cyan-300 font-bold text-[11px]">
+                            ${stepOptions(16, cfg.i1Steps, '0段 (C1から開始)')}
                         </select>
                     </div>
+                    <div class="grid grid-cols-12 gap-1 items-center">
+                        <span class="col-span-4 text-[10px] text-amber-300 font-bold">② 第1踊り場 C1</span>
+                        <select onchange="updateSelectedStairSpec('c1Steps', parseInt(this.value,10))" class="col-span-4 bg-slate-900 border border-slate-700 rounded px-1 py-0.5 text-amber-300 font-bold text-[11px]">
+                            <option value="0" ${cfg.c1Steps === 0 ? 'selected' : ''}>なし(0)</option>
+                            <option value="1" ${cfg.c1Steps === 1 ? 'selected' : ''}>1段(踊り場)</option>
+                            <option value="2" ${cfg.c1Steps === 2 ? 'selected' : ''}>2段廻り</option>
+                            <option value="3" ${cfg.c1Steps === 3 ? 'selected' : ''}>3段廻り</option>
+                            <option value="4" ${cfg.c1Steps === 4 ? 'selected' : ''}>4段廻り</option>
+                        </select>
+                        <select onchange="updateSelectedStairSpec('c1Dir', this.value)" class="col-span-4 bg-slate-900 border border-slate-700 rounded px-1 py-0.5 text-emerald-300 font-bold text-[11px]" title="第1踊り場の折れ向き・登りきり向き">
+                            <option value="right" ${cfg.c1Dir === 'right' ? 'selected' : ''}>右折 ↱</option>
+                            <option value="left" ${cfg.c1Dir === 'left' ? 'selected' : ''}>左折 ↰</option>
+                            <option value="both" ${cfg.c1Dir === 'both' ? 'selected' : ''}>両側 ⇔</option>
+                            <option value="straight" ${cfg.c1Dir === 'straight' ? 'selected' : ''}>直進 ↑</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-12 gap-1 items-center">
+                        <span class="col-span-4 text-[10px] text-slate-300 font-bold">③ 中間直進 I2</span>
+                        <select onchange="updateSelectedStairSpec('i2Steps', parseInt(this.value,10))" class="col-span-8 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-cyan-300 font-bold text-[11px]">
+                            ${stepOptions(16, cfg.i2Steps, '0段 (C1登りきり / C2直結)')}
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-12 gap-1 items-center">
+                        <span class="col-span-4 text-[10px] text-amber-300 font-bold">④ 第2踊り場 C2</span>
+                        <select onchange="updateSelectedStairSpec('c2Steps', parseInt(this.value,10))" class="col-span-4 bg-slate-900 border border-slate-700 rounded px-1 py-0.5 text-amber-300 font-bold text-[11px]">
+                            <option value="0" ${cfg.c2Steps === 0 ? 'selected' : ''}>なし(0)</option>
+                            <option value="1" ${cfg.c2Steps === 1 ? 'selected' : ''}>1段(踊り場)</option>
+                            <option value="2" ${cfg.c2Steps === 2 ? 'selected' : ''}>2段廻り</option>
+                            <option value="3" ${cfg.c2Steps === 3 ? 'selected' : ''}>3段廻り</option>
+                            <option value="4" ${cfg.c2Steps === 4 ? 'selected' : ''}>4段廻り</option>
+                        </select>
+                        <select onchange="updateSelectedStairSpec('c2Dir', this.value)" class="col-span-4 bg-slate-900 border border-slate-700 rounded px-1 py-0.5 text-emerald-300 font-bold text-[11px]" title="第2踊り場の折れ向き・登りきり向き">
+                            <option value="right" ${cfg.c2Dir === 'right' ? 'selected' : ''}>右折 ↱</option>
+                            <option value="left" ${cfg.c2Dir === 'left' ? 'selected' : ''}>左折 ↰</option>
+                            <option value="both" ${cfg.c2Dir === 'both' ? 'selected' : ''}>両側 ⇔</option>
+                            <option value="straight" ${cfg.c2Dir === 'straight' ? 'selected' : ''}>直進 ↑</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-12 gap-1 items-center">
+                        <span class="col-span-4 text-[10px] text-slate-300 font-bold">⑤ 終端直進 I3</span>
+                        <select onchange="updateSelectedStairSpec('i3Steps', parseInt(this.value,10))" class="col-span-8 bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 text-cyan-300 font-bold text-[11px]">
+                            ${stepOptions(16, cfg.i3Steps, '0段 (C2で登りきり)')}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="text-[10px] text-slate-400 block font-bold">昇降方向</label>
                         <select onchange="updateSelectedStairDir(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-amber-300 font-bold">
@@ -636,20 +702,11 @@ function renderPropertyInspector() {
                         </select>
                     </div>
                     <div>
-                        <label class="text-[10px] text-slate-400 block font-bold">階段幅 (マニュアル準拠)</label>
+                        <label class="text-[10px] text-slate-400 block font-bold">階段幅</label>
                         <select onchange="updateSelectedStairSpec('widthMm', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-cyan-300 font-bold">
                             <option value="910" ${curWidth === 910 ? 'selected' : ''}>910 mm (標準)</option>
                             <option value="1000" ${curWidth === 1000 ? 'selected' : ''}>1000 mm (広幅)</option>
                             <option value="780" ${curWidth === 780 ? 'selected' : ''}>780 mm (コンパクト)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-[10px] text-slate-400 block font-bold">廻り部仕様 (マニュアル準拠)</label>
-                        <select onchange="updateSelectedStairSpec('turnType', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-amber-300 font-bold">
-                            <option value="turn_3" ${curTurn === 'turn_3' ? 'selected' : ''}>3段廻り (標準30°)</option>
-                            <option value="turn_2" ${curTurn === 'turn_2' ? 'selected' : ''}>2段廻り (45°)</option>
-                            <option value="turn_4" ${curTurn === 'turn_4' ? 'selected' : ''}>4段廻り (22.5°)</option>
-                            <option value="landing" ${curTurn === 'landing' ? 'selected' : ''}>フラット踊り場</option>
                         </select>
                     </div>
                     <div>
@@ -660,7 +717,7 @@ function renderPropertyInspector() {
                         </select>
                     </div>
                     <div>
-                        <label class="text-[10px] text-slate-400 block font-bold">手すり配置</label>
+                        <label class="text-[10px] text-slate-400 block font-bold">手すり・壁二重線</label>
                         <select onchange="updateSelectedStairSpec('handrail', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-sky-300 font-bold">
                             <option value="both" ${curRail === 'both' ? 'selected' : ''}>両方あり</option>
                             <option value="left" ${curRail === 'left' ? 'selected' : ''}>左のみ</option>
@@ -671,7 +728,7 @@ function renderPropertyInspector() {
                 </div>
                 <button type="button" onclick="rotateSelectedStair()" class="w-full py-1.5 rounded-lg bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 font-bold text-xs flex items-center justify-center gap-1.5 transition">
                     <i class="fa-solid fa-rotate-right"></i>
-                    <span>階段の向きを90°回転</span>
+                    <span>階段全体の向きを90°回転 (${obj.rotation || 0}°)</span>
                 </button>
             </div>
         `;
@@ -1227,13 +1284,88 @@ window.updateSelectedBox3D = updateSelectedBox3D;
 function updateSelectedStairSpec(prop, val) {
     const obj = findSelectedObject();
     if (!obj || !state.selectedItem || state.selectedItem.kind !== 'stair') return;
+
+    const ensureModularInitialized = () => {
+        if (obj.i1Steps === undefined && typeof window.getStairModularConfig === 'function') {
+            const cfg = window.getStairModularConfig(obj);
+            obj.i1Steps = cfg.i1Steps;
+            obj.c1Steps = cfg.c1Steps;
+            obj.c1Dir = cfg.c1Dir;
+            obj.i2Steps = cfg.i2Steps;
+            obj.c2Steps = cfg.c2Steps;
+            obj.c2Dir = cfg.c2Dir;
+            obj.i3Steps = cfg.i3Steps;
+        }
+        obj.isModular = true;
+    };
+
     if (prop === 'widthMm') {
         const wMm = parseInt(val, 10) || 910;
         obj.widthMm = wMm;
-        // 注意：obj.w / obj.h は階段全体の外接矩形（フライト全体の幅・奥行き）を表すため、
-        // 単一フライト有効幅 widthMm の変更で obj.w や obj.h を破壊的に上書きしてはならない。
+        if (obj.isModular && typeof window.syncStairModularBounds === 'function') {
+            window.syncStairModularBounds(obj);
+        }
+    } else if (prop === 'i1Steps' || prop === 'c1Steps' || prop === 'i2Steps' || prop === 'c2Steps' || prop === 'i3Steps') {
+        ensureModularInitialized();
+        obj[prop] = Math.max(0, parseInt(val, 10) || 0);
+        if (obj.c1Steps > 0) {
+            obj.turnType = obj.c1Steps === 1 ? 'landing' : (obj.c1Steps === 2 ? 'turn_2' : (obj.c1Steps === 4 ? 'turn_4' : 'turn_3'));
+        }
+        obj.landingTop = (obj.c1Steps > 0 && obj.i2Steps === 0 && obj.c2Steps === 0 && obj.i3Steps === 0);
+        if (obj.c1Steps === 0 && obj.c2Steps === 0) obj.shapeType = 'STRAIGHT';
+        else if (obj.c2Steps > 0 && obj.c1Dir === obj.c2Dir) obj.shapeType = 'U_SHAPE';
+        else obj.shapeType = 'L_SHAPE';
+        if (typeof window.syncStairModularBounds === 'function') {
+            window.syncStairModularBounds(obj);
+        }
+    } else if (prop === 'c1Dir' || prop === 'c2Dir') {
+        ensureModularInitialized();
+        obj[prop] = val;
+        if (obj.c1Steps === 0 && obj.c2Steps === 0) obj.shapeType = 'STRAIGHT';
+        else if (obj.c2Steps > 0 && obj.c1Dir === obj.c2Dir) obj.shapeType = 'U_SHAPE';
+        else obj.shapeType = 'L_SHAPE';
+        if (typeof window.syncStairModularBounds === 'function') {
+            window.syncStairModularBounds(obj);
+        }
     } else if (prop === 'turnType') {
         obj.turnType = val;
+        const tSteps = (typeof window.stairTurnStepsFromSpec === 'function') ? window.stairTurnStepsFromSpec(val) : 3;
+        if (obj.isModular || obj.c1Steps !== undefined) {
+            if (obj.c1Steps > 0) obj.c1Steps = tSteps;
+            if (obj.c2Steps > 0) obj.c2Steps = tSteps;
+            if (typeof window.syncStairModularBounds === 'function') {
+                const keepSteps = obj.steps;
+                window.syncStairModularBounds(obj);
+                if (obj.landingTop) obj.steps = keepSteps;
+            }
+        }
+    } else if (prop === 'landingTop') {
+        obj.landingTop = !!val;
+        if (obj.landingTop && (!obj.steps || obj.steps >= 13)) obj.steps = 5;
+        if (obj.isModular || obj.i1Steps !== undefined) {
+            if (obj.landingTop) {
+                obj.i1Steps = obj.steps || 5;
+                if (!obj.c1Steps) obj.c1Steps = 1;
+                obj.i2Steps = 0; obj.c2Steps = 0; obj.i3Steps = 0;
+            }
+            if (typeof window.syncStairModularBounds === 'function') {
+                const keepSteps = obj.steps;
+                window.syncStairModularBounds(obj);
+                if (obj.landingTop) obj.steps = keepSteps;
+            }
+        }
+    } else if (prop === 'steps') {
+        const sVal = parseInt(val, 10) || 14;
+        obj.steps = sVal;
+        if (obj.isModular || obj.i1Steps !== undefined) {
+            if (obj.landingTop || (!obj.i2Steps && !obj.c2Steps && !obj.i3Steps)) {
+                obj.i1Steps = sVal;
+            }
+            if (typeof window.syncStairModularBounds === 'function') {
+                window.syncStairModularBounds(obj);
+                obj.steps = sVal;
+            }
+        }
     } else if (prop === 'stairStyle') {
         obj.stairStyle = val;
     } else if (prop === 'handrail') {

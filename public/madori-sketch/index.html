@@ -252,7 +252,7 @@
                             style="font-size: 1.05rem; font-weight: 900; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">家づくりAIラボ</span>
                         <span
                             style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 5px; border-radius: 4px; font-weight: 800;">3D間取り工房
-                            v2.32</span>
+                            v2.33</span>
                     </a>
                     <div
                         class="hidden xl:inline-flex items-center gap-1.5 text-[11px] text-slate-300 bg-black/30 border border-white/15 px-2 py-0.5 rounded">
@@ -1256,51 +1256,142 @@
     <div id="stairCreateModal"
         class="fixed inset-0 z-[100030] bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
         <div
-            class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-w-sm w-full p-6 text-slate-100 flex flex-col gap-4">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-w-md w-full p-5 text-slate-100 flex flex-col gap-3">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
                 <h3 class="text-base font-bold text-white flex items-center gap-2">
                     <span class="p-1.5 rounded-lg bg-amber-500/20 text-amber-400"><i
                             class="fa-solid fa-stairs"></i></span>
-                    階段作成
+                    <span>階段作成 (I部・踊り場モジュール設定)</span>
                 </h3>
-                <button onclick="closeStairModal()" class="text-slate-400 hover:text-white text-lg"><i
-                        class="fa-solid fa-xmark"></i></button>
+                <div class="flex items-center gap-2">
+                    <span id="modalStairTotalBadge"
+                        class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-xs font-bold">合計:
+                        13段</span>
+                    <button onclick="closeStairModal()" class="text-slate-400 hover:text-white text-lg"><i
+                            class="fa-solid fa-xmark"></i></button>
+                </div>
             </div>
-            <div class="flex flex-col gap-3">
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-xs font-bold text-slate-400">昇降方向</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button type="button" id="btnStairDirUp" onclick="setStairModalDir('UP')"
-                            class="py-2 rounded-xl border font-bold text-sm flex items-center justify-center gap-1.5 transition bg-cyan-600 text-white border-cyan-400">
-                            <span>上る ↗</span>
-                        </button>
-                        <button type="button" id="btnStairDirDown" onclick="setStairModalDir('DOWN')"
-                            class="py-2 rounded-xl border font-bold text-sm flex items-center justify-center gap-1.5 transition bg-slate-800 text-slate-300 border-slate-700">
-                            <span>降りる ↘</span>
-                        </button>
+            <div class="flex flex-col gap-2.5 text-xs">
+                <div class="flex flex-col gap-1">
+                    <label class="text-[11px] font-bold text-amber-300">定型パターン選択 (ワンタップ設定)</label>
+                    <select id="modalStairPattern" onchange="applyModalStairPreset(this.value)"
+                        class="bg-slate-950 text-white border border-amber-500/50 rounded-lg px-2.5 py-1.5 text-xs font-bold">
+                        <option value="U_6TURN">① コの字 6段廻り (I1:4 + 廻3 + 廻3 + I3:3)</option>
+                        <option value="STRAIGHT">② 直階段 I型 (13段)</option>
+                        <option value="L_TOP_TURN">③ 上部廻りL型 (I1:10 + 上3段廻り登りきり)</option>
+                        <option value="CRANK_BOTH_TURN">④ 上下両端廻り (下3段廻り + I2:7 + 上3段廻り)</option>
+                        <option value="L_PLUS_TOP_TURN">⑤ L型＋上部廻り (I1:4 + 廻3 + I2:4 + 上3段廻り)</option>
+                        <option value="L_LANDING_TOP">⑥ 1段踊り場登りきり (I1:5 + 1段踊り場[両側/右/左])</option>
+                        <option value="L_STANDARD">⑦ 標準かね折れL型 (I1:5 + 3段廻り + I2:5)</option>
+                        <option value="U_LANDING">⑧ 大踊り場コの字 (I1:6 + 踊1 + 踊1 + I3:6)</option>
+                    </select>
+                </div>
+
+                <!-- I1 -> C1 -> I2 -> C2 -> I3 個別段数・向き設定 -->
+                <div class="bg-slate-950/90 border border-slate-700/80 rounded-xl p-2.5 space-y-1.5">
+                    <div class="text-[10px] font-bold text-cyan-300 flex items-center justify-between">
+                        <span>📐 各部（I部分・踊り場）の段数＆向き</span>
+                        <span class="text-slate-400">I1 → C1 → I2 → C2 → I3</span>
+                    </div>
+                    <div class="grid grid-cols-12 gap-1.5 items-center">
+                        <span class="col-span-4 text-[11px] font-bold text-slate-300">① 始端直進 I1</span>
+                        <input id="modalStairI1" type="number" min="0" max="16" value="4"
+                            onchange="updateModalStairTotalBadge()"
+                            class="col-span-8 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-cyan-300 font-bold text-xs">
+                    </div>
+                    <div class="grid grid-cols-12 gap-1.5 items-center">
+                        <span class="col-span-4 text-[11px] font-bold text-amber-300">② 第1踊り場 C1</span>
+                        <select id="modalStairC1" onchange="updateModalStairTotalBadge()"
+                            class="col-span-4 bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-amber-300 font-bold text-xs">
+                            <option value="0">なし(0)</option>
+                            <option value="1">1段(踊り場)</option>
+                            <option value="2">2段廻り</option>
+                            <option value="3" selected>3段廻り</option>
+                            <option value="4">4段廻り</option>
+                        </select>
+                        <select id="modalStairC1Dir"
+                            class="col-span-4 bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-emerald-300 font-bold text-xs">
+                            <option value="right" selected>右折 ↱</option>
+                            <option value="left">左折 ↰</option>
+                            <option value="both">両側 ⇔</option>
+                            <option value="straight">直進 ↑</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-12 gap-1.5 items-center">
+                        <span class="col-span-4 text-[11px] font-bold text-slate-300">③ 中間直進 I2</span>
+                        <input id="modalStairI2" type="number" min="0" max="16" value="0"
+                            onchange="updateModalStairTotalBadge()"
+                            class="col-span-8 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-cyan-300 font-bold text-xs">
+                    </div>
+                    <div class="grid grid-cols-12 gap-1.5 items-center">
+                        <span class="col-span-4 text-[11px] font-bold text-amber-300">④ 第2踊り場 C2</span>
+                        <select id="modalStairC2" onchange="updateModalStairTotalBadge()"
+                            class="col-span-4 bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-amber-300 font-bold text-xs">
+                            <option value="0">なし(0)</option>
+                            <option value="1">1段(踊り場)</option>
+                            <option value="2">2段廻り</option>
+                            <option value="3" selected>3段廻り</option>
+                            <option value="4">4段廻り</option>
+                        </select>
+                        <select id="modalStairC2Dir"
+                            class="col-span-4 bg-slate-900 border border-slate-700 rounded px-1.5 py-1 text-emerald-300 font-bold text-xs">
+                            <option value="right" selected>右折 ↱</option>
+                            <option value="left">左折 ↰</option>
+                            <option value="both">両側 ⇔</option>
+                            <option value="straight">直進 ↑</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-12 gap-1.5 items-center">
+                        <span class="col-span-4 text-[11px] font-bold text-slate-300">⑤ 終端直進 I3</span>
+                        <input id="modalStairI3" type="number" min="0" max="16" value="3"
+                            onchange="updateModalStairTotalBadge()"
+                            class="col-span-8 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-cyan-300 font-bold text-xs">
                     </div>
                 </div>
-                <div
-                    class="flex items-center justify-between gap-3 bg-slate-800/60 p-2.5 rounded-xl border border-slate-700/60">
-                    <label class="text-xs font-bold text-slate-300">階段幅</label>
-                    <select id="modalStairWidth"
-                        class="bg-slate-900 text-cyan-300 border border-slate-600 rounded-lg px-2.5 py-1 text-xs font-bold">
-                        <option value="910" selected>910 mm (標準)</option>
-                        <option value="1000">1000 mm (広幅)</option>
-                        <option value="780">780 mm (コンパクト)</option>
-                    </select>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[11px] font-bold text-slate-400">昇降方向</label>
+                        <div class="grid grid-cols-2 gap-1.5">
+                            <button type="button" id="btnStairDirUp" onclick="setStairModalDir('UP')"
+                                class="py-1.5 rounded-xl border font-bold text-xs flex items-center justify-center gap-1 transition bg-cyan-600 text-white border-cyan-400">
+                                <span>上る ↗</span>
+                            </button>
+                            <button type="button" id="btnStairDirDown" onclick="setStairModalDir('DOWN')"
+                                class="py-1.5 rounded-xl border font-bold text-xs flex items-center justify-center gap-1 transition bg-slate-800 text-slate-300 border-slate-700">
+                                <span>降りる ↘</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[11px] font-bold text-slate-400">階段幅</label>
+                        <select id="modalStairWidth"
+                            class="bg-slate-900 text-cyan-300 border border-slate-600 rounded-xl px-2 py-1.5 text-xs font-bold">
+                            <option value="910" selected>910 mm (標準)</option>
+                            <option value="1000">1000 mm (広幅)</option>
+                            <option value="780">780 mm (コンパクト)</option>
+                        </select>
+                    </div>
                 </div>
-                <div
-                    class="flex items-center justify-between gap-3 bg-slate-800/60 p-2.5 rounded-xl border border-slate-700/60">
-                    <label class="text-xs font-bold text-slate-300">廻り部仕様</label>
-                    <select id="modalStairTurn"
-                        class="bg-slate-900 text-amber-300 border border-slate-600 rounded-lg px-2.5 py-1 text-xs font-bold">
-                        <option value="turn_2">2段廻り (45°)</option>
-                        <option value="turn_3" selected>3段廻り (標準30°)</option>
-                        <option value="turn_4">4段廻り (22.5°)</option>
-                        <option value="landing">フラット踊り場</option>
-                    </select>
-                </div>
+                <!-- 後方互換用隠しフィールド -->
+                <select id="modalStairTurn" class="hidden">
+                    <option value="landing">1段</option>
+                    <option value="turn_2">2段</option>
+                    <option value="turn_3" selected>3段</option>
+                    <option value="turn_4">4段</option>
+                </select>
+                <select id="modalStairLandingTop" class="hidden">
+                    <option value="auto" selected>auto</option>
+                    <option value="landing_top">landing_top</option>
+                    <option value="through">through</option>
+                </select>
+                <select id="modalStairSteps" class="hidden">
+                    <option value="0" selected>0</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="14">14</option>
+                </select>
             </div>
             <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
                 <button type="button" onclick="closeStairModal()"
@@ -1632,20 +1723,20 @@
     </div>
 
     <!-- 単一責任の原則 (SRP) に基づく分離モジュール群 -->
-    <script>window.MADORI_APP_VERSION = '2.32.0';</script>
-    <script src="/madori-sketch/js/constants/manual_data.js?v=202611251736"></script>
-    <script src="/madori-sketch/js/constants/architectural_specs.js?v=202611251736"></script>
-    <script src="/madori-sketch/js/core/app_state.js?v=202611251736"></script>
-    <script src="/madori-sketch/js/core/metrics_calculator.js?v=202611251736"></script>
-    <script src="/madori-sketch/js/io/json_storage.js?v=202611251736"></script>
-    <script src="/madori-sketch/js/io/dxf_pdf_exporter.js?v=202611251736"></script>
-    <script src="/madori-sketch/js/integration/carte_bridge.js?v=202611251736"></script>
-    <script src="/madori-sketch/js/geometry/room_detector.js?v=202611251736"></script>
-    <script src="/madori-sketch/js/renderer/three_3d.js?v=202611251736"></script>
-    <script src="/madori-sketch/js/renderer/canvas_2d_renderer.js?v=202611251736"></script>
-    <script src="/madori-sketch/js/ui/ui_inspector.js?v=202611251736"></script>
-    <script src="/madori-sketch/js/input/input_controller.js?v=202611251736"></script>
-    <script src="/madori-sketch/js/case/case_manager.js?v=202611251736"></script>
+    <script>window.MADORI_APP_VERSION = '2.33.0';</script>
+    <script src="/madori-sketch/js/constants/manual_data.js?v=202611260951"></script>
+    <script src="/madori-sketch/js/constants/architectural_specs.js?v=202611260951"></script>
+    <script src="/madori-sketch/js/core/app_state.js?v=202611260951"></script>
+    <script src="/madori-sketch/js/core/metrics_calculator.js?v=202611260951"></script>
+    <script src="/madori-sketch/js/io/json_storage.js?v=202611260951"></script>
+    <script src="/madori-sketch/js/io/dxf_pdf_exporter.js?v=202611260951"></script>
+    <script src="/madori-sketch/js/integration/carte_bridge.js?v=202611260951"></script>
+    <script src="/madori-sketch/js/geometry/room_detector.js?v=202611260951"></script>
+    <script src="/madori-sketch/js/renderer/three_3d.js?v=202611260951"></script>
+    <script src="/madori-sketch/js/renderer/canvas_2d_renderer.js?v=202611260951"></script>
+    <script src="/madori-sketch/js/ui/ui_inspector.js?v=202611260951"></script>
+    <script src="/madori-sketch/js/input/input_controller.js?v=202611260951"></script>
+    <script src="/madori-sketch/js/case/case_manager.js?v=202611260951"></script>
     <script>
         const ROOM_TYPES = window.ROOM_TYPES;
         const OPENING_TYPES = window.OPENING_TYPES;

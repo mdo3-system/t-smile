@@ -871,7 +871,6 @@ window.toggle3DFurnitureStaging = toggle3DFurnitureStaging;
 
 function renderStair3D(fx, floorTopY, wallHeight, slabHeight, scaleP) {
     if (!fx) return;
-    // points から x, y, w, h の自動補完フォールバック
     if ((fx.x === undefined || fx.w === undefined) && fx.points && fx.points.length >= 2) {
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
         fx.points.forEach(pt => {
@@ -886,110 +885,74 @@ function renderStair3D(fx, floorTopY, wallHeight, slabHeight, scaleP) {
         fx.w = +(Math.max(widthP, maxX - minX)).toFixed(3) || widthP;
         fx.h = +(Math.max(widthP, maxY - minY)).toFixed(3) || (widthP * 2);
     }
-    const curW = (fx.w !== undefined && !isNaN(fx.w)) ? fx.w : 1;
-    const curH = (fx.h !== undefined && !isNaN(fx.h)) ? fx.h : 2;
+
     const curX = (fx.x !== undefined && !isNaN(fx.x)) ? fx.x : 0;
     const curY = (fx.y !== undefined && !isNaN(fx.y)) ? fx.y : 0;
+    const isDown = fx.direction === 'DOWN';
+    const isOpenStair = (fx.stairStyle || state.stairStyle) === 'open';
+    const stepMat = new THREE.MeshLambertMaterial({ color: isOpenStair ? 0x9a6b3e : 0xd4a373, side: THREE.DoubleSide });
+    const totalRise = wallHeight + slabHeight;
 
+    if (typeof window.computeStairModularLayout === 'function') {
+        const layout = window.computeStairModularLayout(fx);
+        const totalSteps = Math.max(1, layout.totalSteps);
+        const riserM = (fx.riserMm || 200) / 1000;
+        const effectiveTotalRise = (totalSteps <= 9)
+            ? Math.min(totalRise, riserM * totalSteps)
+            : totalRise;
+        const stepH = effectiveTotalRise / totalSteps;
+        const treadThick = isOpenStair ? 0.045 : Math.max(0.05, stepH * 0.96);
+
+        (layout.stepPolygons3D || []).forEach(sp => {
+            if (!sp.points || sp.points.length < 3) return;
+            const sIdx = isDown ? (totalSteps - 1 - sp.stepIndex) : sp.stepIndex;
+            const curRiseY = floorTopY + (sIdx + 0.5) * stepH;
+
+            let cxLocal = 0, cyLocal = 0;
+            sp.points.forEach(pt => { cxLocal += pt.x; cyLocal += pt.y; });
+            cxLocal /= sp.points.length;
+            cyLocal /= sp.points.length;
+
+            const shape = new THREE.Shape();
+            sp.points.forEach((pt, idx) => {
+                const sx = (pt.x - cxLocal) * scaleP * 0.97;
+                const sy = -(pt.y - cyLocal) * scaleP * 0.97;
+                if (idx === 0) shape.moveTo(sx, sy);
+                else shape.lineTo(sx, sy);
+            });
+            shape.closePath();
+
+            const sGeo = new THREE.ExtrudeGeometry(shape, { depth: treadThick, bevelEnabled: false });
+            const m = addWhiteModelMesh(
+                sGeo,
+                stepMat,
+                (curX + cxLocal) * scaleP,
+                curRiseY - treadThick * 0.5,
+                (curY + cyLocal) * scaleP,
+                true
+            );
+            if (m) m.rotation.x = -Math.PI * 0.5;
+        });
+        return;
+    }
+
+    // フォールバック (万一 computeStairModularLayout が未ロードの場合)
+    const curW = (fx.w !== undefined && !isNaN(fx.w)) ? fx.w : 1;
+    const curH = (fx.h !== undefined && !isNaN(fx.h)) ? fx.h : 2;
     const wM = curW * scaleP;
     const dM = curH * scaleP;
     const cx = (curX + curW / 2) * scaleP;
     const cz = (curY + curH / 2) * scaleP;
     const totalSteps = fx.steps || 14;
-    const totalRise = wallHeight + slabHeight;
     const stepH = totalRise / totalSteps;
-    const isDown = fx.direction === 'DOWN';
-    const isOpenStair = (fx.stairStyle || state.stairStyle) === 'open';
-    const handrail = fx.stairHandrail || state.stairHandrail || 'both';
-
-    const stepMat = new THREE.MeshLambertMaterial({ color: isOpenStair ? 0x9a6b3e : 0xd4a373 });
-    const stringerMat = new THREE.MeshLambertMaterial({ color: 0x334155 });
-    const handrailMat = new THREE.MeshLambertMaterial({ color: 0xcbd5e1 });
-
-    // ボックス階段は踏み板の下までソリッド、オープン階段は厚さ4.5cmのスケルトン踏板
     const treadThick = isOpenStair ? 0.045 : Math.max(0.05, stepH * 0.95);
-
-    if (fx.shapeType === 'L_SHAPE' && fx.points && fx.points.length === 3) {
-        // L型階段（フリーハンド3点入力: p0=始点, p1=折れ角, p2=終点）
-        const p0 = fx.points[0], p1 = fx.points[1], p2 = fx.points[2];
-        const flightWidthM = (fx.widthMm || 910) / 1000;
-        const halfSteps = Math.floor(totalSteps / 2);
-
-        // 第1フライト (p0 -> p1)
-        const dx1 = p1.x - p0.x, dy1 = p1.y - p0.y;
-        const len1M = Math.hypot(dx1, dy1) * scaleP;
-        const angle1 = Math.atan2(dy1, dx1);
-        const stepLen1 = len1M / (halfSteps || 7);
-        for (let i = 0; i < halfSteps; i++) {
-            const sIdx = isDown ? (totalSteps - 1 - i) : i;
-            const curRiseY = floorTopY + (sIdx + 0.5) * stepH;
-            const dist = (i + 0.5) * stepLen1;
-            const stepX = (p0.x * scaleP) + Math.cos(angle1) * dist;
-            const stepZ = (p0.y * scaleP) + Math.sin(angle1) * dist;
-            const sGeo = new THREE.BoxGeometry(stepLen1 * 0.95, treadThick, flightWidthM * 0.96);
-            const m = addWhiteModelMesh(sGeo, stepMat, stepX, curRiseY, stepZ, true);
-            if (m) m.rotation.y = -angle1;
-        }
-
-        // 角の踊り場 / 廻り部 (p1)
-        const landingY = floorTopY + (halfSteps + 0.5) * stepH;
-        const landGeo = new THREE.BoxGeometry(flightWidthM, treadThick, flightWidthM);
-        addWhiteModelMesh(landGeo, stepMat, p1.x * scaleP, landingY, p1.y * scaleP, true);
-
-        // 第2フライト (p1 -> p2)
-        const dx2 = p2.x - p1.x, dy2 = p2.y - p1.y;
-        const len2M = Math.hypot(dx2, dy2) * scaleP;
-        const angle2 = Math.atan2(dy2, dx2);
-        const remSteps = totalSteps - halfSteps;
-        const stepLen2 = len2M / (remSteps || 7);
-        for (let j = 0; j < remSteps; j++) {
-            const sIdx = isDown ? (remSteps - 1 - j) : (halfSteps + j);
-            const curRiseY = floorTopY + (sIdx + 0.5) * stepH;
-            const dist = (j + 0.5) * stepLen2;
-            const stepX = (p1.x * scaleP) + Math.cos(angle2) * dist;
-            const stepZ = (p1.y * scaleP) + Math.sin(angle2) * dist;
-            const sGeo = new THREE.BoxGeometry(stepLen2 * 0.95, treadThick, flightWidthM * 0.96);
-            const m = addWhiteModelMesh(sGeo, stepMat, stepX, curRiseY, stepZ, true);
-            if (m) m.rotation.y = -angle2;
-        }
-    } else if (fx.w <= fx.h) {
-        const stepDepth = dM / totalSteps;
-        for (let i = 0; i < totalSteps; i++) {
-            const sIdx = isDown ? (totalSteps - 1 - i) : i;
-            const curY = floorTopY + (sIdx + 0.5) * stepH;
-            const curZ = fx.y * scaleP + (i + 0.5) * stepDepth;
-            const sGeo = new THREE.BoxGeometry(wM * 0.96, treadThick, stepDepth * 0.95);
-            addWhiteModelMesh(sGeo, stepMat, cx, curY, curZ, true);
-        }
-        if (isOpenStair) {
-            const strGeo = new THREE.BoxGeometry(0.06, 0.14, dM);
-            addWhiteModelMesh(strGeo, stringerMat, cx, floorTopY + totalRise * 0.48, cz, false);
-        }
-        if (handrail === 'left' || handrail === 'both') {
-            const rGeo = new THREE.BoxGeometry(0.04, 0.85, dM);
-            addWhiteModelMesh(rGeo, handrailMat, fx.x * scaleP + 0.03, floorTopY + totalRise * 0.5 + 0.42, cz, true);
-        }
-        if (handrail === 'right' || handrail === 'both') {
-            const rGeo = new THREE.BoxGeometry(0.04, 0.85, dM);
-            addWhiteModelMesh(rGeo, handrailMat, (fx.x + fx.w) * scaleP - 0.03, floorTopY + totalRise * 0.5 + 0.42, cz, true);
-        }
-    } else {
-        const stepWidth = wM / totalSteps;
-        for (let i = 0; i < totalSteps; i++) {
-            const sIdx = isDown ? (totalSteps - 1 - i) : i;
-            const curY = floorTopY + (sIdx + 0.5) * stepH;
-            const curX = fx.x * scaleP + (i + 0.5) * stepWidth;
-            const sGeo = new THREE.BoxGeometry(stepWidth * 0.95, treadThick, dM * 0.96);
-            addWhiteModelMesh(sGeo, stepMat, curX, curY, cz, true);
-        }
-        if (handrail === 'left' || handrail === 'both') {
-            const rGeo = new THREE.BoxGeometry(wM, 0.85, 0.04);
-            addWhiteModelMesh(rGeo, handrailMat, cx, floorTopY + totalRise * 0.5 + 0.42, fx.y * scaleP + 0.03, true);
-        }
-        if (handrail === 'right' || handrail === 'both') {
-            const rGeo = new THREE.BoxGeometry(wM, 0.85, 0.04);
-            addWhiteModelMesh(rGeo, handrailMat, cx, floorTopY + totalRise * 0.5 + 0.42, (fx.y + fx.h) * scaleP - 0.03, true);
-        }
+    const stepDepth = dM / totalSteps;
+    for (let i = 0; i < totalSteps; i++) {
+        const sIdx = isDown ? (totalSteps - 1 - i) : i;
+        const curYPos = floorTopY + (sIdx + 0.5) * stepH;
+        const curZPos = curY * scaleP + (i + 0.5) * stepDepth;
+        const sGeo = new THREE.BoxGeometry(wM * 0.96, treadThick, stepDepth * 0.95);
+        addWhiteModelMesh(sGeo, stepMat, cx, curYPos, curZPos, true);
     }
 }
 

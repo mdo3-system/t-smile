@@ -468,7 +468,7 @@ function distPointToSegment(px, py, x1, y1, x2, y2) {
 function segmentsIntersect(ax, ay, bx, by, cx, cy, dx, dy) {
     const ccw = (p1x, p1y, p2x, p2y, p3x, p3y) => (p3y - p1y) * (p2x - p1x) > (p2y - p1y) * (p3x - p1x);
     return (ccw(ax, ay, cx, cy, dx, dy) !== ccw(bx, by, cx, cy, dx, dy)) &&
-           (ccw(ax, ay, bx, by, cx, cy) !== ccw(ax, ay, bx, by, dx, dy));
+        (ccw(ax, ay, bx, by, cx, cy) !== ccw(ax, ay, bx, by, dx, dy));
 }
 
 function splitOrEraseWallSegment(fl, ptA, ptB) {
@@ -1750,20 +1750,41 @@ canvas2d.addEventListener('wheel', (e) => {
 function updateSelectedStairShape(shapeType) {
     const obj = findSelectedObject();
     if (!obj || state.selectedItem.kind !== 'stair') return;
-    obj.shapeType = shapeType;
-    if (shapeType === 'STRAIGHT') {
-        obj.w = 1.0; obj.h = 2.0;
-    } else if (shapeType === 'L_SHAPE') {
-        obj.w = 1.5; obj.h = 1.5;
+
+    const presets = window.STAIR_PATTERN_PRESETS || {};
+    let pKey = shapeType;
+    if (shapeType === 'U_SHAPE' && !presets[pKey]) pKey = 'U_6TURN';
+    if (shapeType === 'L_SHAPE' && !presets[pKey]) pKey = 'L_STANDARD';
+
+    if (presets[pKey]) {
+        const pr = presets[pKey];
+        obj.patternKey = pr.key;
+        obj.shapeType = pr.shapeType;
+        obj.isModular = true;
+        obj.i1Steps = pr.i1Steps;
+        obj.c1Steps = pr.c1Steps;
+        obj.c1Dir = pr.c1Dir;
+        obj.i2Steps = pr.i2Steps;
+        obj.c2Steps = pr.c2Steps;
+        obj.c2Dir = pr.c2Dir;
+        obj.i3Steps = pr.i3Steps;
+        obj.landingTop = (pr.c1Steps > 0 && pr.i2Steps === 0 && pr.c2Steps === 0 && pr.i3Steps === 0);
+        obj.turnType = pr.c1Steps === 1 ? 'landing' : (pr.c1Steps === 2 ? 'turn_2' : (pr.c1Steps === 4 ? 'turn_4' : 'turn_3'));
+        if (typeof window.syncStairModularBounds === 'function') {
+            window.syncStairModularBounds(obj);
+        }
+        obj.label = `階段 (${pr.shortLabel}・${obj.direction === 'UP' ? '上る' : '降りる'})`;
     } else {
-        obj.w = 1.0; obj.h = 2.0;
+        obj.shapeType = shapeType;
+        if (typeof window.syncStairModularBounds === 'function') {
+            window.syncStairModularBounds(obj);
+        }
     }
-    obj.label = `階段 (${shapeType === 'STRAIGHT' ? '直階段' : (shapeType === 'L_SHAPE' ? 'かね折れL型' : '折り返しU型')}・${obj.direction === 'UP' ? '上る' : '降りる'})`;
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
     if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
-    showToast(`階段タイプを変更しました`);
+    showToast(`階段パターンを変更しました`);
 }
 
 function updateSelectedStairDir(dir) {
@@ -2355,6 +2376,35 @@ function cancelStairDrawing() {
     request2DRedraw();
 }
 
+function updateModalStairTotalBadge() {
+    const i1 = parseInt(document.getElementById('modalStairI1')?.value ?? '0', 10) || 0;
+    const c1 = parseInt(document.getElementById('modalStairC1')?.value ?? '0', 10) || 0;
+    const i2 = parseInt(document.getElementById('modalStairI2')?.value ?? '0', 10) || 0;
+    const c2 = parseInt(document.getElementById('modalStairC2')?.value ?? '0', 10) || 0;
+    const i3 = parseInt(document.getElementById('modalStairI3')?.value ?? '0', 10) || 0;
+    const total = Math.max(1, i1 + c1 + i2 + c2 + i3);
+    const badge = document.getElementById('modalStairTotalBadge');
+    if (badge) badge.textContent = `合計: ${total}段 (蹴上${total + 1}段)`;
+}
+window.updateModalStairTotalBadge = updateModalStairTotalBadge;
+
+function applyModalStairPreset(presetKey) {
+    const presets = window.STAIR_PATTERN_PRESETS || {};
+    const pr = presets[presetKey];
+    if (!pr) return;
+    const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = String(v); };
+    setVal('modalStairPattern', pr.key);
+    setVal('modalStairI1', pr.i1Steps);
+    setVal('modalStairC1', pr.c1Steps);
+    setVal('modalStairC1Dir', pr.c1Dir);
+    setVal('modalStairI2', pr.i2Steps);
+    setVal('modalStairC2', pr.c2Steps);
+    setVal('modalStairC2Dir', pr.c2Dir);
+    setVal('modalStairI3', pr.i3Steps);
+    updateModalStairTotalBadge();
+}
+window.applyModalStairPreset = applyModalStairPreset;
+
 function openStairModal() {
     const modal = document.getElementById('stairCreateModal');
     if (!modal) return;
@@ -2363,6 +2413,71 @@ function openStairModal() {
     if (wEl) wEl.value = state.stairWidthMm || 910;
     const tEl = document.getElementById('modalStairTurn');
     if (tEl) tEl.value = state.stairTurnType || 'turn_3';
+
+    const ltEl = document.getElementById('modalStairLandingTop');
+    const stEl = document.getElementById('modalStairSteps');
+    const pts = state.stairDrawingPoints || [];
+    const tSteps = (typeof window.stairTurnStepsFromSpec === 'function')
+        ? window.stairTurnStepsFromSpec(state.stairTurnSpec || state.stairTurnType || 'turn_3')
+        : 3;
+
+    if (pts.length === 2) {
+        const len1 = Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y);
+        const est1 = Math.max(1, Math.min(16, Math.round(len1 / 0.25) || 13));
+        applyModalStairPreset('STRAIGHT');
+        const elI1 = document.getElementById('modalStairI1');
+        if (elI1) elI1.value = String(est1);
+    } else if (pts.length === 3) {
+        const seg1Len = Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y);
+        const seg2Len = Math.hypot(pts[2].x - pts[1].x, pts[2].y - pts[1].y);
+        const cross = (pts[1].x - pts[0].x) * (pts[2].y - pts[1].y) - (pts[1].y - pts[0].y) * (pts[2].x - pts[1].x);
+        const turnDir = cross < -0.01 ? 'left' : 'right';
+
+        if (seg2Len <= 1.25) {
+            if (ltEl) ltEl.value = 'landing_top';
+            if (stEl) stEl.value = '5';
+            if (tEl) tEl.value = 'landing';
+            if (seg1Len >= 2.25) {
+                applyModalStairPreset('L_TOP_TURN');
+            } else {
+                applyModalStairPreset('L_LANDING_TOP');
+            }
+            const c1DirEl = document.getElementById('modalStairC1Dir');
+            if (c1DirEl) c1DirEl.value = turnDir;
+        } else {
+            if (ltEl) ltEl.value = 'auto';
+            if (stEl) stEl.value = '0';
+            applyModalStairPreset('L_STANDARD');
+            const c1DirEl = document.getElementById('modalStairC1Dir');
+            if (c1DirEl) c1DirEl.value = turnDir;
+            const c1El = document.getElementById('modalStairC1');
+            if (c1El) c1El.value = String(tSteps);
+        }
+    } else if (pts.length >= 4) {
+        const seg1Len = Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y);
+        const seg2Len = Math.hypot(pts[2].x - pts[1].x, pts[2].y - pts[1].y);
+        const seg3Len = Math.hypot(pts[3].x - pts[2].x, pts[3].y - pts[2].y);
+        const cross1 = (pts[1].x - pts[0].x) * (pts[2].y - pts[1].y) - (pts[1].y - pts[0].y) * (pts[2].x - pts[1].x);
+        const cross2 = (pts[2].x - pts[1].x) * (pts[3].y - pts[2].y) - (pts[2].y - pts[1].y) * (pts[3].x - pts[2].x);
+        const dir1 = cross1 < -0.01 ? 'left' : 'right';
+        const dir2 = cross2 < -0.01 ? 'left' : 'right';
+
+        if (seg1Len <= 1.25 && seg3Len <= 1.25) {
+            applyModalStairPreset('CRANK_BOTH_TURN');
+        } else if (seg3Len <= 1.25 && seg2Len > 1.25) {
+            applyModalStairPreset('L_PLUS_TOP_TURN');
+        } else {
+            applyModalStairPreset('U_6TURN');
+        }
+        const c1DirEl = document.getElementById('modalStairC1Dir');
+        const c2DirEl = document.getElementById('modalStairC2Dir');
+        if (c1DirEl) c1DirEl.value = dir1;
+        if (c2DirEl) c2DirEl.value = dir2;
+    } else {
+        applyModalStairPreset(state.stairPresetType || 'U_6TURN');
+    }
+
+    updateModalStairTotalBadge();
     modal.classList.remove('hidden');
     modal.classList.add('flex');
 }
@@ -2381,11 +2496,11 @@ function setStairModalDir(dir) {
     const btnDown = document.getElementById('btnStairDirDown');
     if (!btnUp || !btnDown) return;
     if (dir === 'UP') {
-        btnUp.className = 'py-2.5 rounded-xl border font-bold text-sm flex items-center justify-center gap-1.5 transition bg-cyan-600 text-white border-cyan-400 shadow-lg shadow-cyan-900/40';
-        btnDown.className = 'py-2.5 rounded-xl border font-bold text-sm flex items-center justify-center gap-1.5 transition bg-slate-800 text-slate-300 border-slate-700 hover:text-white';
+        btnUp.className = 'py-2 rounded-xl border font-bold text-sm flex items-center justify-center gap-1.5 transition bg-cyan-600 text-white border-cyan-400 shadow-lg shadow-cyan-900/40';
+        btnDown.className = 'py-2 rounded-xl border font-bold text-sm flex items-center justify-center gap-1.5 transition bg-slate-800 text-slate-300 border-slate-700 hover:text-white';
     } else {
-        btnDown.className = 'py-2.5 rounded-xl border font-bold text-sm flex items-center justify-center gap-1.5 transition bg-cyan-600 text-white border-cyan-400 shadow-lg shadow-cyan-900/40';
-        btnUp.className = 'py-2.5 rounded-xl border font-bold text-sm flex items-center justify-center gap-1.5 transition bg-slate-800 text-slate-300 border-slate-700 hover:text-white';
+        btnDown.className = 'py-2 rounded-xl border font-bold text-sm flex items-center justify-center gap-1.5 transition bg-cyan-600 text-white border-cyan-400 shadow-lg shadow-cyan-900/40';
+        btnUp.className = 'py-2 rounded-xl border font-bold text-sm flex items-center justify-center gap-1.5 transition bg-slate-800 text-slate-300 border-slate-700 hover:text-white';
     }
 }
 
@@ -2393,27 +2508,133 @@ function confirmCreateStairFromModal() {
     const widthMm = parseInt(document.getElementById('modalStairWidth')?.value || '910', 10) || 910;
     const turnType = document.getElementById('modalStairTurn')?.value || 'turn_3';
     const dir = state.stairDirection || 'UP';
+    const stepsVal = parseInt(document.getElementById('modalStairSteps')?.value || '0', 10) || 0;
+    const landingTopMode = document.getElementById('modalStairLandingTop')?.value || 'auto';
 
-    createStairFromPoints(state.stairDrawingPoints, widthMm, dir, turnType);
+    let modularOverrides = null;
+    const elI1 = document.getElementById('modalStairI1');
+    if (elI1) {
+        modularOverrides = {
+            patternKey: document.getElementById('modalStairPattern')?.value || '',
+            i1Steps: parseInt(elI1.value || '0', 10) || 0,
+            c1Steps: parseInt(document.getElementById('modalStairC1')?.value || '0', 10) || 0,
+            c1Dir: document.getElementById('modalStairC1Dir')?.value || 'right',
+            i2Steps: parseInt(document.getElementById('modalStairI2')?.value || '0', 10) || 0,
+            c2Steps: parseInt(document.getElementById('modalStairC2')?.value || '0', 10) || 0,
+            c2Dir: document.getElementById('modalStairC2Dir')?.value || 'right',
+            i3Steps: parseInt(document.getElementById('modalStairI3')?.value || '0', 10) || 0
+        };
+    }
+
+    createStairFromPoints(state.stairDrawingPoints, widthMm, dir, turnType, stepsVal, landingTopMode, modularOverrides);
     closeStairModal();
     state.stairDrawingPoints = [];
     state.stairTempCurPoint = null;
     if (typeof renderSubToolbar === 'function') renderSubToolbar();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
     showToast('階段を作成しました');
 }
 
-function createStairFromPoints(pts, widthMm, dir, turnType) {
+function createStairFromPoints(pts, widthMm, dir, turnType, customSteps, landingTopMode, modularOverrides) {
     if (!pts || pts.length < 2) return;
     const fl = state.floors[state.currentFloor];
     const pitch = state.modulePitch || 910;
     const widthP = +(widthMm / pitch).toFixed(3);
+    const tSteps = (typeof window.stairTurnStepsFromSpec === 'function') ? window.stairTurnStepsFromSpec(turnType) : 3;
 
     const segCount = pts.length - 1;
     let shapeType = 'STRAIGHT';
-    if (segCount === 2) shapeType = 'L_SHAPE';
-    else if (segCount >= 3) shapeType = 'U_SHAPE';
+    let isLandingTop = false;
+    let finalSteps = customSteps || 14;
+
+    let i1Steps = finalSteps;
+    let c1Steps = 0, c1Dir = 'right';
+    let i2Steps = 0;
+    let c2Steps = 0, c2Dir = 'right';
+    let i3Steps = 0;
+    let patternKey = '';
+
+    // 初期進行方向から回転角を算出
+    let rot = 0;
+    const dx0 = pts[1].x - pts[0].x, dy0 = pts[1].y - pts[0].y;
+    if (Math.abs(dy0) >= Math.abs(dx0)) {
+        rot = dy0 <= 0 ? 0 : 180;
+    } else {
+        rot = dx0 >= 0 ? 90 : 270;
+    }
+
+    if (segCount === 2) {
+        shapeType = 'L_SHAPE';
+        const p0 = pts[0], p1 = pts[1], p2 = pts[2];
+        const seg2Len = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+        const cross = (p1.x - p0.x) * (p2.y - p1.y) - (p1.y - p0.y) * (p2.x - p1.x);
+        c1Dir = cross < -0.01 ? 'left' : 'right';
+        c1Steps = tSteps;
+
+        if (landingTopMode === 'landing_top') {
+            isLandingTop = true;
+            if (!customSteps) finalSteps = 5;
+        } else if (landingTopMode === 'through') {
+            isLandingTop = false;
+            if (!customSteps) finalSteps = 13;
+        } else {
+            if (seg2Len <= 1.25) {
+                isLandingTop = true;
+                if (!customSteps) finalSteps = 5;
+            }
+        }
+
+        if (isLandingTop) {
+            i1Steps = finalSteps;
+            i2Steps = 0;
+        } else {
+            const rem = Math.max(2, finalSteps - c1Steps);
+            i1Steps = Math.ceil(rem / 2);
+            i2Steps = Math.floor(rem / 2);
+        }
+    } else if (segCount >= 3) {
+        shapeType = 'U_SHAPE';
+        const p0 = pts[0], p1 = pts[1], p2 = pts[2], p3 = pts[3];
+        const seg1Len = Math.hypot(p1.x - p0.x, p1.y - p0.y);
+        const seg2Len = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+        const seg3Len = Math.hypot(p3.x - p2.x, p3.y - p2.y);
+        const cross1 = (p1.x - p0.x) * (p2.y - p1.y) - (p1.y - p0.y) * (p2.x - p1.x);
+        const cross2 = (p2.x - p1.x) * (p3.y - p2.y) - (p2.y - p1.y) * (p3.x - p2.x);
+        c1Dir = cross1 < -0.01 ? 'left' : 'right';
+        c2Dir = cross2 < -0.01 ? 'left' : 'right';
+        c1Steps = tSteps;
+        c2Steps = tSteps;
+
+        if (seg1Len <= 1.25 && seg3Len <= 1.25) {
+            i1Steps = 0; i2Steps = 7; i3Steps = 0;
+            const dxMid = p2.x - p1.x, dyMid = p2.y - p1.y;
+            if (Math.abs(dyMid) >= Math.abs(dxMid)) rot = dyMid <= 0 ? 0 : 180;
+            else rot = dxMid >= 0 ? 90 : 270;
+        } else if (seg3Len <= 1.25) {
+            i1Steps = 4; i2Steps = 4; i3Steps = 0;
+        } else {
+            i1Steps = 4; i2Steps = 0; i3Steps = 3;
+        }
+    }
+
+    if (modularOverrides) {
+        i1Steps = modularOverrides.i1Steps;
+        c1Steps = modularOverrides.c1Steps;
+        c1Dir = modularOverrides.c1Dir || c1Dir;
+        i2Steps = modularOverrides.i2Steps;
+        c2Steps = modularOverrides.c2Steps;
+        c2Dir = modularOverrides.c2Dir || c2Dir;
+        i3Steps = modularOverrides.i3Steps;
+        patternKey = modularOverrides.patternKey || '';
+        isLandingTop = (c1Steps > 0 && i2Steps === 0 && c2Steps === 0 && i3Steps === 0);
+        if (c1Steps === 0 && c2Steps === 0) shapeType = 'STRAIGHT';
+        else if (c2Steps > 0 && c1Dir === c2Dir) shapeType = 'U_SHAPE';
+        else shapeType = 'L_SHAPE';
+        turnType = c1Steps === 1 ? 'landing' : (c1Steps === 2 ? 'turn_2' : (c1Steps === 4 ? 'turn_4' : 'turn_3'));
+        finalSteps = isLandingTop ? i1Steps : Math.max(1, i1Steps + c1Steps + i2Steps + c2Steps + i3Steps);
+    }
 
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     pts.forEach(p => {
@@ -2432,6 +2653,17 @@ function createStairFromPoints(pts, widthMm, dir, turnType) {
         type: 'STAIR',
         category: 'STAIR',
         shapeType: shapeType,
+        patternKey: patternKey,
+        isModular: true,
+        landingTop: isLandingTop,
+        rotation: rot,
+        i1Steps: i1Steps,
+        c1Steps: c1Steps,
+        c1Dir: c1Dir,
+        i2Steps: i2Steps,
+        c2Steps: c2Steps,
+        c2Dir: c2Dir,
+        i3Steps: i3Steps,
         points: JSON.parse(JSON.stringify(pts)),
         x: minX,
         y: minY,
@@ -2442,11 +2674,18 @@ function createStairFromPoints(pts, widthMm, dir, turnType) {
         turnType: turnType,
         stairStyle: state.stairStyle || 'box',
         stairHandrail: state.stairHandrail || 'both',
-        steps: 14,
-        treadMm: 220,
+        handrail: state.stairHandrail || 'both',
+        steps: finalSteps,
+        treadMm: 227.5,
         riserMm: 200,
-        label: `階段 (${shapeType === 'STRAIGHT' ? '直階段' : (shapeType === 'L_SHAPE' ? 'かね折れL型' : '折り返しU型')}・${dir === 'UP' ? '上る' : '降りる'})`
+        label: `階段 (${shapeType === 'STRAIGHT' ? '直階段' : (isLandingTop ? 'L型踊り場登りきり' : (shapeType === 'L_SHAPE' ? 'かね折れL型' : '折り返しU型'))}・${dir === 'UP' ? '上る' : '降りる'})`
     };
+
+    if (typeof window.computeStairModularLayout === 'function') {
+        const layout = window.computeStairModularLayout(newStair);
+        newStair.w = layout.totalW;
+        newStair.h = layout.totalH;
+    }
 
     fl.stairs = fl.stairs || [];
     fl.stairs.push(newStair);
@@ -2500,38 +2739,25 @@ function normalizeStairObject(st) {
 window.normalizeStairObject = normalizeStairObject;
 
 function placeStairPresetAt(presetType, x, y, turnSpecParam) {
-    const type = state.stairPresetType || presetType || 'STRAIGHT';
+    const rawType = presetType || state.stairPresetType || 'U_6TURN';
     const rot = state.subStairRot || 0;
     const dir = state.subStairDirection || 'UP';
     const turnSpec = turnSpecParam || state.stairTurnSpec || 'turn_3';
     const widthMm = state.stairWidthMm || 910;
-    const pitch = state.modulePitch || 910;
-    const widthP = +(widthMm / pitch).toFixed(3);
+    const tSteps = (typeof window.stairTurnStepsFromSpec === 'function') ? window.stairTurnStepsFromSpec(turnSpec) : 3;
 
-    // 階段種別に応じた幅・奥行きの設計
-    let w = widthP;
-    let h = +(widthP * 2).toFixed(3);
-    if (type === 'STRAIGHT') {
-        w = widthP;
-        h = +(widthP * 2).toFixed(3);
-    } else if (type === 'L_SHAPE') {
-        w = +(widthP * 1.5).toFixed(3);
-        h = +(widthP * 1.5).toFixed(3);
-    } else if (type === 'U_SHAPE') {
-        w = +(widthP * 2).toFixed(3);
-        h = +(widthP * 1.5).toFixed(3);
-    }
+    const presets = window.STAIR_PATTERN_PRESETS || {};
+    let pKey = rawType;
+    if (rawType === 'U_SHAPE' && !presets[pKey]) pKey = 'U_6TURN';
+    if (rawType === 'L_SHAPE' && !presets[pKey]) pKey = 'L_STANDARD';
 
-    if (rot === 90 || rot === 270) {
-        const tmp = w; w = h; h = tmp;
-    }
+    const pr = presets[pKey] || presets['STRAIGHT'] || {
+        key: 'STRAIGHT', shortLabel: '直階段', shapeType: 'STRAIGHT',
+        i1Steps: 13, c1Steps: 0, c1Dir: 'right', i2Steps: 0, c2Steps: 0, c2Dir: 'right', i3Steps: 0
+    };
 
-    const pts = [
-        { x: x, y: y },
-        { x: x + w, y: y },
-        { x: x + w, y: y + h },
-        { x: x, y: y + h }
-    ];
+    const c1Val = pr.c1Steps > 0 ? (pr.key === 'L_LANDING_TOP' || pr.key === 'U_LANDING' ? 1 : tSteps) : 0;
+    const c2Val = pr.c2Steps > 0 ? (pr.key === 'U_LANDING' ? 1 : tSteps) : 0;
 
     const fl = state.floors[state.currentFloor];
     const newStair = {
@@ -2539,23 +2765,37 @@ function placeStairPresetAt(presetType, x, y, turnSpecParam) {
         kind: 'stair',
         type: 'STAIR',
         category: 'STAIR',
-        shapeType: type,
-        points: pts,
+        shapeType: pr.shapeType,
+        patternKey: pr.key,
+        isModular: true,
+        rotation: rot,
+        i1Steps: pr.i1Steps,
+        c1Steps: c1Val,
+        c1Dir: pr.c1Dir,
+        i2Steps: pr.i2Steps,
+        c2Steps: c2Val,
+        c2Dir: pr.c2Dir,
+        i3Steps: pr.i3Steps,
+        landingTop: (c1Val > 0 && pr.i2Steps === 0 && c2Val === 0 && pr.i3Steps === 0),
         x: x,
         y: y,
-        w: w,
-        h: h,
+        w: 1,
+        h: 2,
         widthMm: widthMm,
         direction: dir,
-        turnType: turnSpec,
+        turnType: c1Val === 1 ? 'landing' : (c1Val === 2 ? 'turn_2' : (c1Val === 4 ? 'turn_4' : 'turn_3')),
         stairStyle: state.stairStyle || 'box',
         stairHandrail: state.stairHandrail || 'both',
         handrail: state.stairHandrail || 'both',
-        steps: 14,
-        treadMm: 220,
+        steps: Math.max(1, pr.i1Steps + c1Val + pr.i2Steps + c2Val + pr.i3Steps),
+        treadMm: 227.5,
         riserMm: 200,
-        label: `階段 (${type === 'STRAIGHT' ? '直階段' : (type === 'L_SHAPE' ? 'かね折れL型' : '折り返しU型')}・${dir === 'UP' ? '上る' : '降りる'})`
+        label: `階段 (${pr.shortLabel}・${dir === 'UP' ? '上る' : '降りる'})`
     };
+
+    if (typeof window.syncStairModularBounds === 'function') {
+        window.syncStairModularBounds(newStair);
+    }
 
     if (!fl.stairs) fl.stairs = [];
     fl.stairs.push(newStair);
@@ -2565,7 +2805,7 @@ function placeStairPresetAt(presetType, x, y, turnSpecParam) {
     if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    showToast(`階段（${type === 'STRAIGHT' ? '直階段' : (type === 'L_SHAPE' ? 'かね折れ' : '折り返し')}・W${widthMm}mm）を配置しました`);
+    showToast(`階段（${pr.shortLabel}・計${newStair.steps}段）を配置しました`);
 }
 
 function updateStairProp(id, prop, val) {
