@@ -351,7 +351,13 @@ function drawFloorOnionSkin(floorData, floorNum, isLight) {
     }
 
     if (floorData.stairs && floorData.stairs.length > 0) {
+        const curFlObj = (typeof state !== 'undefined' && state.floors) ? state.floors[state.currentFloor] : null;
+        const curStairs = (curFlObj && Array.isArray(curFlObj.stairs)) ? curFlObj.stairs : [];
         floorData.stairs.forEach(st => {
+            // 上の階（現在階）に既に連動階段として表示されている場合は、2階床マスク箇所に1階下絵階段枠が透けて重ならないよう省略
+            if (curStairs.some(us => us && (us.linkedFromStairId === st.id || (Math.abs((us.x || 0) - (st.x || 0)) < 0.1 && Math.abs((us.y || 0) - (st.y || 0)) < 0.1)))) {
+                return;
+            }
             const p = worldPToScreen(st.x, st.y);
             const wPx = st.w * state.cam2d.zoom;
             const hPx = st.h * state.cam2d.zoom;
@@ -1484,18 +1490,23 @@ window.isStairOpenRoom = isStairOpenRoom;
 
 /**
  * 部屋 rm（多角形 points または矩形）が階段矩形 (sx0..sx1, sy0..sy1) と実際に重なっている面積 (P²) と、
- * 重なっている矩形ピース群（0.125P グリッド分解または精密交差矩形）を算出するヘルパー。
- * ※L字型の2階ホール（例: 2493-P17 の room_mzducixo4）のように外接矩形は階段全体を包んでいても、
- *   実ポリゴンは階段の登りはじめ1〜2段目（0.5P²）だけに張られているケースを100%正確に検出する！
+ * 2（3）階床として階段を覆い隠す矩形ピース群を算出する単一情報源ヘルパー。
+ * - L字型の2階ホール（例: 2493-P17 の room_mzducixo4）のように階段の登りはじめ1〜2段目（0.5P²）に床が張られているケースだけでなく、
+ * - 階段上りきり口に壁がなく2階ホールへ開放されているために RoomDetector が階段室と2階ホールを1つの大ポリゴンに統合したケースでも、
+ *   ①同階の「階段室(STAIR) / 吹抜(VOID)」部屋領域の控除、および
+ *   ②階段登り口（1〜5段目、1.45P以内）を横切る2階壁・腰壁（例: y=2.0 の腰壁）や階段脇壁の終端位置を自動検出し、
+ *   2（3）階床が張られている登り口側（1〜2段目等）のみを正確にマスク領域として抽出する！
  */
-function computeRoomStairOverlapInfo(rm, st) {
+function computeRoomStairOverlapInfo(rm, st, fl = null) {
     if (!rm || !st) return { overlapArea: 0, pieces: [] };
+    const floorObj = fl || ((typeof state !== 'undefined' && state.floors) ? state.floors[state.currentFloor] : null);
     const sx0 = (st.x !== undefined && !isNaN(st.x)) ? st.x : 0;
     const sy0 = (st.y !== undefined && !isNaN(st.y)) ? st.y : 0;
     const sw = (st.w !== undefined && !isNaN(st.w)) ? st.w : 1;
     const sh = (st.h !== undefined && !isNaN(st.h)) ? st.h : 2;
     const sx1 = sx0 + sw;
     const sy1 = sy0 + sh;
+    const stairArea = Math.max(0.01, sw * sh);
 
     const ix0 = Math.max(sx0, rm.x);
     const iy0 = Math.max(sy0, rm.y);
@@ -1505,18 +1516,138 @@ function computeRoomStairOverlapInfo(rm, st) {
         return { overlapArea: 0, pieces: [] };
     }
 
-    const hasPoly = Array.isArray(rm.points) && rm.points.length >= 3;
-    if (!hasPoly || !(window.RoomDetector && typeof window.RoomDetector.isPointInsidePolygon === 'function')) {
-        const area = (ix1 - ix0) * (iy1 - iy0);
-        return {
-            overlapArea: area,
-            pieces: [{ x: ix0, y: iy0, w: ix1 - ix0, h: iy1 - iy0 }]
-        };
+    const rName = String(rm.customName || rm.name || '').trim();
+    const isRaisedStorage = (typeof rm.levelMm === 'number' && rm.levelMm > 0) || /階段上収納|階段上物入|階段上CL/.test(rName);
+    const hasPoly = Array.isArray(rm.points) && rm.points.length >= 3 && (window.RoomDetector && typeof window.RoomDetector.isPointInsidePolygon === 'function');
+
+    const isInsideRm = (cx, cy) => {
+        if (hasPoly) {
+            return window.RoomDetector.isPointInsidePolygon({ x: cx, y: cy }, rm.points);
+        }
+        return (cx >= rm.x && cx <= rm.x + rm.w && cy >= rm.y && cy <= rm.y + rm.h);
+    };
+
+    // 階段の登り口（1F入口）ワールド座標と進行方向ベクトル dIn を取得（0°/90°/180°/270°全回転対応）
+    const layout = computeStairModularLayout(st);
+    const entryWX = sx0 + (layout.entryPoint ? layout.entryPoint.x : (sw * 0.5));
+    const entryWY = sy0 + (layout.entryPoint ? layout.entryPoint.y : sh);
+    const dIn = (layout.entryDir && (Math.abs(layout.entryDir.x) + Math.abs(layout.entryDir.y) > 0.1))
+        ? layout.entryDir
+        : { x: 0, y: -1 };
+
+    // 登り口を横切る2（3）階の壁・腰壁、または階段両脇の壁・腰壁の登り口側終端から、2（3）階床の見切り位置 sCut (登り口からの距離P) を検出
+    let sCutFromWalls = null;
+    if (!isRaisedStorage && floorObj && Array.isArray(floorObj.walls)) {
+        const isVerticalClimb = Math.abs(dIn.y) >= Math.abs(dIn.x);
+        const maxMaskStepsDist = Math.min(1.45, Math.max(sw, sh) * 0.52); // 登り口から最大5段目(約1.25P〜1.45P)まで
+        floorObj.walls.forEach(wl => {
+            if (!wl || wl.wallType === 'agarikamachi') return;
+            const wHoriz = Math.abs(wl.y1 - wl.y2) < 0.05;
+            const wVert = Math.abs(wl.x1 - wl.x2) < 0.05;
+            if (isVerticalClimb) {
+                if (wHoriz) {
+                    // 階段を横切る水平壁・腰壁（例: 2493-P17 の y=2.0 腰壁 (3,2)-(4,2)）
+                    const wxMin = Math.min(wl.x1, wl.x2);
+                    const wxMax = Math.max(wl.x1, wl.x2);
+                    const overlapW = Math.min(sx1, wxMax) - Math.max(sx0, wxMin);
+                    if (overlapW >= sw * 0.65) {
+                        const s = (wl.y1 - entryWY) * dIn.y;
+                        if (s >= 0.18 && s <= maxMaskStepsDist) {
+                            if (sCutFromWalls === null || s < sCutFromWalls) sCutFromWalls = s;
+                        }
+                    }
+                } else if (wVert) {
+                    // 階段の左右辺に沿った垂直壁・腰壁（例: x=3, y=0..2）の登り口側端点が階段途中で止まっている場合
+                    if (Math.abs(wl.x1 - sx0) < 0.12 || Math.abs(wl.x1 - sx1) < 0.12) {
+                        const wyMin = Math.min(wl.y1, wl.y2);
+                        const wyMax = Math.max(wl.y1, wl.y2);
+                        const overlapH = Math.min(sy1, wyMax) - Math.max(sy0, wyMin);
+                        if (overlapH >= 0.75) {
+                            const s1 = (wl.y1 - entryWY) * dIn.y;
+                            const s2 = (wl.y2 - entryWY) * dIn.y;
+                            const sNearEntry = Math.min(s1, s2);
+                            if (sNearEntry >= 0.18 && sNearEntry <= maxMaskStepsDist) {
+                                if (sCutFromWalls === null || sNearEntry < sCutFromWalls) sCutFromWalls = sNearEntry;
+                            }
+                        }
+                    }
+                }
+            } else {
+                // 左右方向（90° / 270°回転）に登る階段
+                if (wVert) {
+                    const wyMin = Math.min(wl.y1, wl.y2);
+                    const wyMax = Math.max(wl.y1, wl.y2);
+                    const overlapH = Math.min(sy1, wyMax) - Math.max(sy0, wyMin);
+                    if (overlapH >= sh * 0.65) {
+                        const s = (wl.x1 - entryWX) * dIn.x;
+                        if (s >= 0.18 && s <= maxMaskStepsDist) {
+                            if (sCutFromWalls === null || s < sCutFromWalls) sCutFromWalls = s;
+                        }
+                    }
+                } else if (wHoriz) {
+                    if (Math.abs(wl.y1 - sy0) < 0.12 || Math.abs(wl.y1 - sy1) < 0.12) {
+                        const wxMin = Math.min(wl.x1, wl.x2);
+                        const wxMax = Math.max(wl.x1, wl.x2);
+                        const overlapW = Math.min(sx1, wxMax) - Math.max(sx0, wxMin);
+                        if (overlapW >= 0.75) {
+                            const s1 = (wl.x1 - entryWX) * dIn.x;
+                            const s2 = (wl.x2 - entryWX) * dIn.x;
+                            const sNearEntry = Math.min(s1, s2);
+                            if (sNearEntry >= 0.18 && sNearEntry <= maxMaskStepsDist) {
+                                if (sCutFromWalls === null || sNearEntry < sCutFromWalls) sCutFromWalls = sNearEntry;
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
-    // 多角形部屋の場合は、階段交差バウンディングボックスを細かくサンプリング走査してポリゴン内部の矩形ストリップを抽出
+    // 同階に明示的な「階段室(STAIR) / 吹抜(VOID)」部屋（面積0.5P²以上）が存在するかチェック
+    const explicitOpenRooms = (!isRaisedStorage && floorObj && Array.isArray(floorObj.rooms))
+        ? floorObj.rooms.filter(or => or && or !== rm && isStairOpenRoom(or) && ((or.w || 0) * (or.h || 0) >= 0.5))
+        : [];
+
+    const isInsideExplicitOpenRoom = (cx, cy) => {
+        if (explicitOpenRooms.length === 0) return false;
+        return explicitOpenRooms.some(or => {
+            if (Array.isArray(or.points) && or.points.length >= 3 && window.RoomDetector && typeof window.RoomDetector.isPointInsidePolygon === 'function') {
+                return window.RoomDetector.isPointInsidePolygon({ x: cx, y: cy }, or.points);
+            }
+            return (cx >= or.x + 1e-4 && cx <= or.x + or.w - 1e-4 && cy >= or.y + 1e-4 && cy <= or.y + or.h - 1e-4);
+        });
+    };
+
+    // まず部屋 rm と階段 st の生のポリゴン交差面積を計算
     const stepX = Math.min(0.25, (ix1 - ix0) / 4);
     const stepY = Math.min(0.125, (iy1 - iy0) / 14);
+    let rawOverlapArea = 0;
+    for (let y = iy0; y < iy1 - 1e-5; y += stepY) {
+        const yEnd = Math.min(iy1, y + stepY);
+        const hCell = yEnd - y;
+        const cy = (y + yEnd) * 0.5;
+        for (let x = ix0; x < ix1 - 1e-5; x += stepX) {
+            const xEnd = Math.min(ix1, x + stepX);
+            const cx = (x + xEnd) * 0.5;
+            if (isInsideRm(cx, cy)) {
+                rawOverlapArea += (xEnd - x) * hCell;
+            }
+        }
+    }
+
+    if (rawOverlapArea <= 0.01) {
+        return { overlapArea: 0, pieces: [] };
+    }
+
+    // 生の交差面積が階段全体の58%以上を占める場合（上りきり開放でホールと階段室が1つのポリゴンになっている場合等）：
+    // sCutFromWalls（腰壁・壁の見切り位置）または explicitOpenRooms（階段室領域の控除）を適用して、
+    // 2（3）階床が実際に張られている登り口側（1〜2段目等）のみを抽出する
+    const applyStairwellSubtraction = !isRaisedStorage && (rawOverlapArea >= stairArea * 0.58 || sCutFromWalls !== null || explicitOpenRooms.length > 0);
+    if (!isRaisedStorage && rawOverlapArea >= stairArea * 0.58 && sCutFromWalls === null && explicitOpenRooms.length === 0) {
+        // 見切り壁も階段室定義もなく単に階段全体を包含しているだけの大部屋は階段が消えるのを防ぐためマスクしない
+        return { overlapArea: rawOverlapArea, pieces: [] };
+    }
+
     let insideArea = 0;
     const pieces = [];
 
@@ -1528,7 +1659,15 @@ function computeRoomStairOverlapInfo(rm, st) {
         for (let x = ix0; x < ix1 - 1e-5; x += stepX) {
             const xEnd = Math.min(ix1, x + stepX);
             const cx = (x + xEnd) * 0.5;
-            const inside = window.RoomDetector.isPointInsidePolygon({ x: cx, y: cy }, rm.points);
+            let inside = isInsideRm(cx, cy);
+            if (inside && applyStairwellSubtraction) {
+                const sFromEntry = (cx - entryWX) * dIn.x + (cy - entryWY) * dIn.y;
+                if (sCutFromWalls !== null) {
+                    if (sFromEntry > sCutFromWalls + 1e-4) inside = false;
+                } else if (explicitOpenRooms.length > 0) {
+                    if (isInsideExplicitOpenRoom(cx, cy)) inside = false;
+                }
+            }
             if (inside) {
                 insideArea += (xEnd - x) * hCell;
                 if (runStartX === null) runStartX = x;
@@ -1575,102 +1714,147 @@ function getRoomsMaskingUpperStair(fl, st) {
     return fl.rooms.filter(rm => {
         if (!rm || isStairOpenRoom(rm)) return false;
 
-        const rType = String(rm.type || '').toUpperCase();
         const rName = String(rm.customName || rm.name || '').trim();
         const isRaisedStorage = (typeof rm.levelMm === 'number' && rm.levelMm > 0) || /階段上収納|階段上物入|階段上CL/.test(rName);
 
-        // 階段自身の周囲の壁から自動検出された未命名の「OTHER（空間）」部屋は階段そのものの外枠であるため除外（ただし床高設定がある場合はマスク対象）
-        if (!isRaisedStorage && rm.isAutoDetected && (rType === 'OTHER' || rType === '') && (!rName || rName === '空間')) {
-            return false;
-        }
-
-        const info = computeRoomStairOverlapInfo(rm, st);
-        if (info.overlapArea <= 0.01) return false;
+        const info = computeRoomStairOverlapInfo(rm, st, fl);
+        if (info.overlapArea <= 0.01 || !info.pieces || info.pieces.length === 0) return false;
 
         // 床高が設定された高床部屋（階段上収納 FL+1000mm 等）は常に階段の上に優先表示（マスク）する
         if (isRaisedStorage && info.overlapArea < stairArea * 0.85) {
             return true;
         }
 
-        // 階段全体の60%以上を実ポリゴンで覆う大部屋（階段室未 분리時の2Fホール全体など）は階段が消えるのを防ぐため除外
-        if (info.overlapArea >= stairArea * 0.60) {
+        // 階段全体の58%以上を覆う場合は階段開口そのもの（または未分離の大部屋）のため除外
+        if (info.overlapArea >= stairArea * 0.58) {
             return false;
         }
 
-        // 2（3）階の床が階段の登りはじめ1〜3段目など（階段面積の60%未満）に張られている箇所は、2（3）階床で階段が隠れる！
+        // 2（3）階の床が階段の登りはじめ1〜3段目など（階段面積の58%未満）に張られている箇所は、2（3）階床で階段が隠れる！
         return true;
     });
 }
 window.getRoomsMaskingUpperStair = getRoomsMaskingUpperStair;
 
 function drawUpperFloorRoomMaskOverStairs2D(fl, W, H, isLight) {
-    const maskedRoomSet = new Set();
-    const maskedRooms = [];
-    (fl.stairs || []).forEach(st => {
-        const rooms = getRoomsMaskingUpperStair(fl, st);
-        rooms.forEach(rm => {
-            if (!maskedRoomSet.has(rm.id)) {
-                maskedRoomSet.add(rm.id);
-                maskedRooms.push(rm);
-            }
-        });
-    });
-    if (maskedRooms.length === 0) return;
+    const maskEntries = [];
+    const maskedRoomsMap = new Map();
 
-    // 1. まず各マスク部屋の実ポリゴン（または矩形）領域で階段の隠れる部分（1〜2段目や階段上収納の範囲）を白紙＋方眼グリッドで消去し、部屋の床を再描画
-    maskedRooms.forEach(rm => {
-        const p1 = worldPToScreen(rm.x, rm.y);
-        const wPx = rm.w * state.cam2d.zoom;
-        const hPx = rm.h * state.cam2d.zoom;
-        const hasPoly = Array.isArray(rm.points) && rm.points.length >= 3;
-
-        ctx.save();
-        ctx.beginPath();
-        if (hasPoly) {
-            rm.points.forEach((pt, idx) => {
-                const sp = worldPToScreen(pt.x, pt.y);
-                if (idx === 0) ctx.moveTo(sp.x, sp.y);
-                else ctx.lineTo(sp.x, sp.y);
-            });
-            ctx.closePath();
-        } else {
-            ctx.rect(p1.x, p1.y, wPx, hPx);
-        }
-        ctx.clip();
-
-        // クリップ領域内の階段描画をキャンバス背景色で消去し、方眼グリッドを復元
-        ctx.fillStyle = isLight ? '#ffffff' : '#0b1120';
-        ctx.fillRect(p1.x - 4, p1.y - 4, wPx + 8, hPx + 8);
-        drawGrid2D(W, H, isLight);
-        ctx.restore();
-
-        // 部屋（床色・枠・部屋名・帖数・床高FL+1.0mラベル）を最優先で再描画
-        drawRoom2D(rm, isLight);
-    });
-
-    // 2. 階段の「隠れていない開口部分（3段目〜登りきり等）」の周囲壁・段鼻線・UP/DN矢印が、
-    //    隣接する床部屋の境界塗りで見切れないよう、マスク部屋以外の領域にクリップして階段を鮮明に再描画する
     (fl.stairs || []).forEach(st => {
         const rooms = getRoomsMaskingUpperStair(fl, st);
         if (rooms.length === 0) return;
+        const layout = computeStairModularLayout(st);
+        const sx0 = (st.x !== undefined && !isNaN(st.x)) ? st.x : 0;
+        const sy0 = (st.y !== undefined && !isNaN(st.y)) ? st.y : 0;
+        const sw = (st.w !== undefined && !isNaN(st.w)) ? st.w : 1;
+        const sh = (st.h !== undefined && !isNaN(st.h)) ? st.h : 2;
+        const entryWX = sx0 + (layout.entryPoint ? layout.entryPoint.x : sw * 0.5);
+        const entryWY = sy0 + (layout.entryPoint ? layout.entryPoint.y : sh);
+        const dIn = (layout.entryDir && (Math.abs(layout.entryDir.x) + Math.abs(layout.entryDir.y) > 0.1))
+            ? layout.entryDir
+            : { x: 0, y: -1 };
 
-        // 階段矩形 (st.x, st.y, st.w, st.h) から、マスク部屋の重なりピースを差し引いた「見える階段領域」にもし登り口丸印('o')が隠れた場合は、
-        // 見える側の境界からしっかり階段段鼻と昇降線が見えるようにする
-        const overlapPieces = [];
         rooms.forEach(rm => {
-            const info = computeRoomStairOverlapInfo(rm, st);
-            info.pieces.forEach(pc => overlapPieces.push(pc));
+            const info = computeRoomStairOverlapInfo(rm, st, fl);
+            if (info.overlapArea > 0.01 && info.pieces && info.pieces.length > 0) {
+                maskEntries.push({ st, rm, pieces: info.pieces, entryWX, entryWY, dIn, sx0, sy0, sw, sh });
+                maskedRoomsMap.set(rm.id, rm);
+            }
+        });
+    });
+
+    if (maskEntries.length === 0) return;
+
+    // 1. 各マスクピース（2階床が階段の1〜2段目等を覆っている領域）で階段の段板および登り口外の「o UP」文字を完全消去し、2階床を描画
+    maskEntries.forEach(entry => {
+        const { rm, pieces, entryWX, entryWY, dIn } = entry;
+        const rName = String(rm.customName || rm.name || '').trim();
+        const customLevelMm = (typeof rm.levelMm === 'number' && !isNaN(rm.levelMm)) ? rm.levelMm : (rm.type === 'KOAGARI' ? 300 : 0);
+        const isRaisedStorage = customLevelMm > 0 || /階段上収納|階段上物入|階段上CL/.test(rName);
+
+        pieces.forEach(pc => {
+            // ピースが階段の登り口端（entryWX, entryWY）に接している場合、登り口の外側へ 0.38P 飛び出して描画される「o UP」ラベルも一緒に消去する
+            let clipX = pc.x;
+            let clipY = pc.y;
+            let clipW = pc.w;
+            let clipH = pc.h;
+            const padOut = 0.38;
+            if (dIn.y < -0.5 && Math.abs((pc.y + pc.h) - entryWY) < 0.08) {
+                clipH += padOut; // 下側(南側)の登り口外へ拡張
+            } else if (dIn.y > 0.5 && Math.abs(pc.y - entryWY) < 0.08) {
+                clipY -= padOut;
+                clipH += padOut; // 上側(北側)の登り口外へ拡張
+            } else if (dIn.x < -0.5 && Math.abs((pc.x + pc.w) - entryWX) < 0.08) {
+                clipW += padOut; // 右側(東側)の登り口外へ拡張
+            } else if (dIn.x > 0.5 && Math.abs(pc.x - entryWX) < 0.08) {
+                clipX -= padOut;
+                clipW += padOut; // 左側(西側)の登り口外へ拡張
+            }
+
+            const sp = worldPToScreen(clipX, clipY);
+            const wPx = clipW * state.cam2d.zoom;
+            const hPx = clipH * state.cam2d.zoom;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(sp.x - 1, sp.y - 1, wPx + 2, hPx + 2);
+            ctx.clip();
+
+            // クリップ領域内の階段描画をキャンバス背景色で消去し、方眼グリッドと部屋の床塗りを復元
+            ctx.fillStyle = isLight ? '#ffffff' : '#0b1120';
+            ctx.fillRect(sp.x - 4, sp.y - 4, wPx + 8, hPx + 8);
+            drawGrid2D(W, H, isLight);
+
+            const rt = ROOM_TYPES[rm.type] || ROOM_TYPES.OTHER || ROOM_TYPES.LDK;
+            if (isRaisedStorage) {
+                ctx.fillStyle = customLevelMm >= 500 ? 'rgba(253, 230, 138, 0.72)' : 'rgba(254, 240, 138, 0.55)';
+            } else if (rm.type === 'TATAMI' || rm.type === 'WASHITSU') {
+                ctx.fillStyle = isLight ? 'rgba(220, 252, 231, 0.45)' : rt.color2d;
+            } else {
+                ctx.fillStyle = isLight ? 'rgba(255, 255, 255, 0.65)' : rt.color2d;
+            }
+            ctx.fillRect(sp.x - 1, sp.y - 1, wPx + 2, hPx + 2);
+            ctx.restore();
+
+            // 階段上収納（高床）の場合は収納の枠線を描画。標準床（2階ホール等）の場合は床上に余計な四角枠(strokeRect)を出さず、階段開口との見切り線1本のみを描画！
+            ctx.save();
+            if (isRaisedStorage) {
+                const rsp = worldPToScreen(pc.x, pc.y);
+                ctx.strokeStyle = '#d97706';
+                ctx.lineWidth = 2.0;
+                ctx.strokeRect(rsp.x, rsp.y, pc.w * state.cam2d.zoom, pc.h * state.cam2d.zoom);
+            } else {
+                // 標準床と階段吹抜開口の境界辺（階段の進行方向 dIn 側の見切りエッジ）のみ実線を描画
+                ctx.strokeStyle = '#1e293b';
+                ctx.lineWidth = 1.6;
+                ctx.beginPath();
+                if (dIn.y < -0.5) {
+                    const pA = worldPToScreen(pc.x, pc.y);
+                    const pB = worldPToScreen(pc.x + pc.w, pc.y);
+                    ctx.moveTo(pA.x, pA.y); ctx.lineTo(pB.x, pB.y);
+                } else if (dIn.y > 0.5) {
+                    const pA = worldPToScreen(pc.x, pc.y + pc.h);
+                    const pB = worldPToScreen(pc.x + pc.w, pc.y + pc.h);
+                    ctx.moveTo(pA.x, pA.y); ctx.lineTo(pB.x, pB.y);
+                } else if (dIn.x < -0.5) {
+                    const pA = worldPToScreen(pc.x, pc.y);
+                    const pB = worldPToScreen(pc.x, pc.y + pc.h);
+                    ctx.moveTo(pA.x, pA.y); ctx.lineTo(pB.x, pB.y);
+                } else if (dIn.x > 0.5) {
+                    const pA = worldPToScreen(pc.x + pc.w, pc.y);
+                    const pB = worldPToScreen(pc.x + pc.w, pc.y + pc.h);
+                    ctx.moveTo(pA.x, pA.y); ctx.lineTo(pB.x, pB.y);
+                }
+                ctx.stroke();
+            }
+            ctx.restore();
         });
 
-        // 2（3）階床と階段開口の境界線（床見切りライン）を明瞭な実線で描画
-        ctx.save();
-        ctx.strokeStyle = '#1e293b';
-        ctx.lineWidth = 2.0;
-        overlapPieces.forEach(pc => {
-            const sp = worldPToScreen(pc.x, pc.y);
-            ctx.strokeRect(sp.x, sp.y, pc.w * state.cam2d.zoom, pc.h * state.cam2d.zoom);
-        });
-        ctx.restore();
+        // 階段上収納などの独立小部屋（階段全体を包含していない部屋）は部屋ラベル（FL+1.0m 等）が階段の上に鮮明に出るよう drawRoom2D を再実行
+        const rmArea = (rm.w || 1) * (rm.h || 1);
+        if (isRaisedStorage || rmArea <= entry.sw * entry.sh * 1.2) {
+            drawRoom2D(rm, isLight);
+        }
     });
 }
 

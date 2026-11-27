@@ -565,7 +565,7 @@
                 const maskingRooms = window.getRoomsMaskingUpperStair(flData, st);
                 maskingRooms.forEach(mr => {
                     if (typeof window.computeRoomStairOverlapInfo === 'function') {
-                        const info = window.computeRoomStairOverlapInfo(mr, st);
+                        const info = window.computeRoomStairOverlapInfo(mr, st, flData);
                         info.pieces.forEach(pc => maskingPieces.push(pc));
                     } else {
                         maskingPieces.push({ x: mr.x, y: mr.y, w: mr.w, h: mr.h });

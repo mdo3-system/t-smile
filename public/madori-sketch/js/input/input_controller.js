@@ -779,23 +779,31 @@ let activeTouchCount = 0;
 const activeTouchPointers2D = new Map();
 let activePenPointerId = null;
 let lastPenActivityTime = 0;
-const PEN_COOLDOWN_MS = 420; // Apple Pencil離脱直後の手のひら遅延タッチ誤作動を防ぐ保護時間
+const PEN_COOLDOWN_MS = 380; // Apple Pencil接地解除直後の手のひら遅延タッチ誤作動を防ぐ保護時間
 
 function isPenCurrentlyActiveOrCoolingDown() {
+    const now = Date.now();
+    // 万が一 pointerup を取りこぼした場合でも 600ms 以上ペン通信がなければ安全にロック解除
+    if (activePenPointerId !== null && (now - lastPenActivityTime) > 600) {
+        activePenPointerId = null;
+    }
     if (activePenPointerId !== null) return true;
-    return (Date.now() - lastPenActivityTime) < PEN_COOLDOWN_MS;
+    return (now - lastPenActivityTime) < PEN_COOLDOWN_MS;
 }
 
 canvas2d.addEventListener('pointerdown', (e) => {
     e.preventDefault();
-    try { canvas2d.setPointerCapture(e.pointerId); } catch (_) { }
+    // ※ iPad Safari でマルチタッチ（2本指ピンチ・2本指移動）を阻害しないよう、touch ポインターには setPointerCapture を行わない
+    if (e.pointerType !== 'touch') {
+        try { canvas2d.setPointerCapture(e.pointerId); } catch (_) { }
+    }
     updatePointerStatusBadge(e);
 
     const rect = canvas2d.getBoundingClientRect();
     const sx = e.clientX - rect.left;
     const sy = e.clientY - rect.top;
 
-    // 🖊️ Apple Pencil最優先ガード：ペンが触れたら即座にペンIDを記録し、進行中の指タッチ/ピンチ/パンを強制解除
+    // 🖊️ Apple Pencil最優先ガード：ペンが実際に画面に接地したら即座にペンIDを記録し、進行中の指タッチ/ピンチ/パンを強制解除
     if (e.pointerType === 'pen') {
         activePenPointerId = e.pointerId;
         lastPenActivityTime = Date.now();
@@ -805,39 +813,31 @@ canvas2d.addEventListener('pointerdown', (e) => {
             state.dragAction = null;
         }
     } else if (e.pointerType === 'touch') {
-        // ペン筆記中またはペンを離してから420ms以内の指・手のひら接触は100%無視（誤作動防止を最優先）
+        // ペン筆記中またはペンを離してから380ms以内の指・手のひら接触は無視（ペン誤作動防止を最優先）
         if (isPenCurrentlyActiveOrCoolingDown()) {
             return;
         }
-        // 手のひら等の大面積接触（width/height > 30px）はピンチ用ポインターに登録しない
-        const isLargePalmContact = ((e.width && e.width > 30) || (e.height && e.height > 30));
-        if (!isLargePalmContact) {
-            activeTouchPointers2D.set(e.pointerId, { sx, sy });
-        }
+        // ※ iPad Safari の指タッチは e.width / e.height が約40〜45pxとなるため、width > 30 による遮断は行わず全指タッチを登録
+        activeTouchPointers2D.set(e.pointerId, { sx, sy });
         activeTouchCount = activeTouchPointers2D.size;
 
-        // 🤏 2本指ピンチイン・ピンチアウト開始判定（ペン非使用時かつ2本の指が28px以上離れている場合）
-        if (activeTouchPointers2D.size === 2) {
+        // 🤏 2本指ピンチイン・ピンチアウト＆2本指画面移動（パン）開始判定
+        if (activeTouchPointers2D.size >= 2) {
             const pts = Array.from(activeTouchPointers2D.values());
-            const dist = Math.hypot(pts[0].sx - pts[1].sx, pts[0].sy - pts[1].sy);
-            if (dist >= 28) {
-                const midSX = (pts[0].sx + pts[1].sx) / 2;
-                const midSY = (pts[0].sy + pts[1].sy) / 2;
-                const anchorWorld = screenToWorldP(midSX, midSY);
-                // 1本指目で開始しかけていた壁クリック等があれば安全にキャンセル
-                state.wallClickStart = null;
-                state.dragAction = {
-                    type: 'pinch',
-                    startDist: dist,
-                    startZoom: state.cam2d.zoom,
-                    anchorWorldX: anchorWorld.x,
-                    anchorWorldY: anchorWorld.y
-                };
-                request2DRedraw();
-                return;
-            }
-        }
-        if (isLargePalmContact) {
+            const dist = Math.max(12, Math.hypot(pts[0].sx - pts[1].sx, pts[0].sy - pts[1].sy));
+            const midSX = (pts[0].sx + pts[1].sx) / 2;
+            const midSY = (pts[0].sy + pts[1].sy) / 2;
+            const anchorWorld = screenToWorldP(midSX, midSY);
+            // 1本指目で開始しかけていた壁クリックやドラッグ作図があれば安全にキャンセルしてピンチ＆移動へ移行
+            state.wallClickStart = null;
+            state.dragAction = {
+                type: 'pinch',
+                startDist: dist,
+                startZoom: state.cam2d.zoom,
+                anchorWorldX: anchorWorld.x,
+                anchorWorldY: anchorWorld.y
+            };
+            request2DRedraw();
             return;
         }
     }
@@ -1709,45 +1709,45 @@ canvas2d.addEventListener('pointermove', (e) => {
     const sy = e.clientY - rect.top;
 
     if (e.pointerType === 'pen') {
-        activePenPointerId = e.pointerId;
-        lastPenActivityTime = Date.now();
+        // ホバー移動（buttons === 0 かつ pressure === 0）では activePenPointerId をロックしない（接地中のみ更新）
+        if (e.buttons > 0 || (typeof e.pressure === 'number' && e.pressure > 0)) {
+            activePenPointerId = e.pointerId;
+            lastPenActivityTime = Date.now();
+        }
     } else if (e.pointerType === 'touch') {
         // ペン使用中またはクールダウン中のタッチ移動は完全無視
         if (isPenCurrentlyActiveOrCoolingDown()) {
             return;
         }
-        if (activeTouchPointers2D.has(e.pointerId)) {
-            activeTouchPointers2D.set(e.pointerId, { sx, sy });
-        }
-        // 2本指ピンチイン・ピンチアウトによる2D拡大縮小＋中点パン追従
-        if (activeTouchPointers2D.size === 2) {
+        activeTouchPointers2D.set(e.pointerId, { sx, sy });
+        activeTouchCount = activeTouchPointers2D.size;
+        // 2本指ピンチイン・ピンチアウトによる2D拡大縮小＋中点ドラッグによる図面パン移動
+        if (activeTouchPointers2D.size >= 2) {
             e.preventDefault();
             const pts = Array.from(activeTouchPointers2D.values());
-            const dist = Math.hypot(pts[0].sx - pts[1].sx, pts[0].sy - pts[1].sy);
+            const dist = Math.max(12, Math.hypot(pts[0].sx - pts[1].sx, pts[0].sy - pts[1].sy));
             const midSX = (pts[0].sx + pts[1].sx) / 2;
             const midSY = (pts[0].sy + pts[1].sy) / 2;
 
             if (!state.dragAction || state.dragAction.type !== 'pinch') {
-                if (dist >= 28) {
-                    const anchorWorld = screenToWorldP(midSX, midSY);
-                    state.wallClickStart = null;
-                    state.dragAction = {
-                        type: 'pinch',
-                        startDist: dist,
-                        startZoom: state.cam2d.zoom,
-                        anchorWorldX: anchorWorld.x,
-                        anchorWorldY: anchorWorld.y
-                    };
-                }
+                const anchorWorld = screenToWorldP(midSX, midSY);
+                state.wallClickStart = null;
+                state.dragAction = {
+                    type: 'pinch',
+                    startDist: dist,
+                    startZoom: state.cam2d.zoom,
+                    anchorWorldX: anchorWorld.x,
+                    anchorWorldY: anchorWorld.y
+                };
                 return;
             }
 
             const pDrag = state.dragAction;
-            if (pDrag.startDist > 10 && dist > 10) {
+            if (pDrag.startDist > 8 && dist > 8) {
                 const scaleFactor = dist / pDrag.startDist;
                 const nextZoom = Math.max(16, Math.min(150, pDrag.startZoom * scaleFactor));
                 state.cam2d.zoom = nextZoom;
-                // ピンチ開始時の2指中点ワールド座標が常に現在の2指中点スクリーン座標の下に来るようカメラ中心を補正
+                // ピンチ開始時の2指中点ワールド座標が常に現在の2指中点スクリーン座標の下に来るようカメラ中心を補正（拡大縮小と2本指パン移動を同時実行）
                 const cx = rect.width / 2;
                 const cy = rect.height / 2;
                 state.cam2d.x = pDrag.anchorWorldX - (midSX - cx) / nextZoom;
@@ -2133,15 +2133,87 @@ canvas2d.addEventListener('lostpointercapture', (e) => {
     if (e && e.pointerType === 'pen' && activePenPointerId === e.pointerId) {
         activePenPointerId = null;
         lastPenActivityTime = Date.now();
-    } else if (e && e.pointerType === 'touch') {
-        activeTouchPointers2D.delete(e.pointerId);
-        activeTouchCount = activeTouchPointers2D.size;
     }
-    if (state.dragAction && state.dragAction.type !== 'pinch') {
+    // ※ touch ポインターは lostpointercapture で削除しない（iPad Safari マルチタッチ維持）
+    if (e && e.pointerType !== 'touch' && state.dragAction && state.dragAction.type !== 'pinch') {
         state.dragAction = null;
         request2DRedraw();
     }
 });
+
+// iPad / iOS Safari 用ネイティブ TouchEvent 2本指ピンチ拡大縮小＆2本指画面移動フォールバック
+// （PointerEvent 側で 2本指が捕捉されていない環境・タイミングでのみ排他的に動作し、二重適用を防止）
+canvas2d.addEventListener('touchstart', (e) => {
+    if (isPenCurrentlyActiveOrCoolingDown()) return;
+    if (e.touches && e.touches.length >= 2 && activeTouchPointers2D.size < 2) {
+        e.preventDefault();
+        const rect = canvas2d.getBoundingClientRect();
+        const t0 = e.touches[0], t1 = e.touches[1];
+        const sx0 = t0.clientX - rect.left, sy0 = t0.clientY - rect.top;
+        const sx1 = t1.clientX - rect.left, sy1 = t1.clientY - rect.top;
+        const dist = Math.max(12, Math.hypot(sx0 - sx1, sy0 - sy1));
+        const midSX = (sx0 + sx1) / 2;
+        const midSY = (sy0 + sy1) / 2;
+        const anchorWorld = screenToWorldP(midSX, midSY);
+        state.wallClickStart = null;
+        state.dragAction = {
+            type: 'pinch',
+            isNativeTouchFallback: true,
+            startDist: dist,
+            startZoom: state.cam2d.zoom,
+            anchorWorldX: anchorWorld.x,
+            anchorWorldY: anchorWorld.y
+        };
+        request2DRedraw();
+    }
+}, { passive: false });
+
+canvas2d.addEventListener('touchmove', (e) => {
+    if (isPenCurrentlyActiveOrCoolingDown()) return;
+    if (e.touches && e.touches.length >= 2 && activeTouchPointers2D.size < 2) {
+        e.preventDefault();
+        const rect = canvas2d.getBoundingClientRect();
+        const t0 = e.touches[0], t1 = e.touches[1];
+        const sx0 = t0.clientX - rect.left, sy0 = t0.clientY - rect.top;
+        const sx1 = t1.clientX - rect.left, sy1 = t1.clientY - rect.top;
+        const dist = Math.max(12, Math.hypot(sx0 - sx1, sy0 - sy1));
+        const midSX = (sx0 + sx1) / 2;
+        const midSY = (sy0 + sy1) / 2;
+        if (!state.dragAction || state.dragAction.type !== 'pinch') {
+            const anchorWorld = screenToWorldP(midSX, midSY);
+            state.wallClickStart = null;
+            state.dragAction = {
+                type: 'pinch',
+                isNativeTouchFallback: true,
+                startDist: dist,
+                startZoom: state.cam2d.zoom,
+                anchorWorldX: anchorWorld.x,
+                anchorWorldY: anchorWorld.y
+            };
+            return;
+        }
+        const pDrag = state.dragAction;
+        const scaleFactor = dist / Math.max(8, pDrag.startDist);
+        const nextZoom = Math.max(16, Math.min(150, pDrag.startZoom * scaleFactor));
+        state.cam2d.zoom = nextZoom;
+        const cx = rect.width / 2;
+        const cy = rect.height / 2;
+        state.cam2d.x = pDrag.anchorWorldX - (midSX - cx) / nextZoom;
+        state.cam2d.y = pDrag.anchorWorldY - (midSY - cy) / nextZoom;
+        request2DRedraw();
+    }
+}, { passive: false });
+
+canvas2d.addEventListener('touchend', (e) => {
+    if (e.touches && e.touches.length === 0) {
+        activeTouchPointers2D.clear();
+        activeTouchCount = 0;
+        if (state.dragAction && state.dragAction.type === 'pinch') {
+            state.dragAction = null;
+            request2DRedraw();
+        }
+    }
+}, { passive: true });
 
 canvas2d.addEventListener('contextmenu', (e) => {
     e.preventDefault();
