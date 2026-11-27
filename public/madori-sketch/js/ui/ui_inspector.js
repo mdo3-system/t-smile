@@ -199,14 +199,61 @@ function renderSubToolbar() {
 
     if (tool === 'wall') {
         const wSub = state.subWallType || 'wall';
-        const names = { wall: '通常壁（外壁/内壁自動）', tarekabe: 'たれ壁（上部下がり壁・点線）', koshikabe: '腰壁（高さ1,000mm手すり壁）', agarikamachi: '上り框（玄関段差）' };
+        const names = { wall: '通常壁（外壁/内壁自動）', tarekabe: 'たれ壁（上部下がり壁・点線）', koshikabe: '腰壁（手すり壁・対面カウンター壁）', agarikamachi: '上り框（玄関段差）' };
         const diagActive = !!state.diagonalWallMode;
+        const defHeights = state.subWallHeights || { wall: 2450, koshikabe: 1000, tarekabe: 550, agarikamachi: 180 };
+        const curH = defHeights[wSub] || (wSub === 'koshikabe' ? 1000 : (wSub === 'tarekabe' ? 550 : (wSub === 'agarikamachi' ? 180 : 2450)));
+
+        let heightControlsHtml = '';
+        if (wSub === 'koshikabe') {
+            const presets = [700, 800, 900, 1000, 1100, 1200];
+            const btns = presets.map(h => {
+                const isAct = curH === h;
+                return `<button type="button" onpointerdown="event.preventDefault(); setSubWallDefaultHeightMm(${h})" onclick="setSubWallDefaultHeightMm(${h})" class="px-1.5 py-0.5 rounded text-[10px] font-bold border transition shrink-0 ${isAct ? 'bg-amber-500 text-slate-950 border-amber-300 shadow' : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-600'}">${h}${h === 1000 ? '(標準)' : ''}</button>`;
+            }).join('');
+            heightControlsHtml = `
+                <div class="inline-flex items-center gap-1 bg-amber-950/40 border border-amber-500/40 rounded-lg px-2 py-0.5 shrink-0">
+                    <span class="text-[11px] font-bold text-amber-300">腰壁高:</span>
+                    ${btns}
+                    <input type="number" step="50" min="400" max="1800" value="${curH}" onchange="setSubWallDefaultHeightMm(parseInt(this.value, 10), true)" class="w-16 bg-slate-950 border border-amber-500/50 rounded px-1.5 py-0.5 text-[11px] text-amber-200 font-bold mono-num text-right" title="腰壁の高さ(mm)">
+                    <span class="text-[10px] text-amber-300">mm</span>
+                </div>
+            `;
+        } else if (wSub === 'tarekabe') {
+            const presets = [300, 450, 550, 600];
+            const btns = presets.map(h => {
+                const isAct = curH === h;
+                return `<button type="button" onpointerdown="event.preventDefault(); setSubWallDefaultHeightMm(${h})" onclick="setSubWallDefaultHeightMm(${h})" class="px-1.5 py-0.5 rounded text-[10px] font-bold border transition shrink-0 ${isAct ? 'bg-sky-500 text-slate-950 border-sky-300 shadow' : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-600'}">${h}${h === 550 ? '(標準)' : ''}</button>`;
+            }).join('');
+            heightControlsHtml = `
+                <div class="inline-flex items-center gap-1 bg-sky-950/40 border border-sky-500/40 rounded-lg px-2 py-0.5 shrink-0">
+                    <span class="text-[11px] font-bold text-sky-300">垂れ下がり:</span>
+                    ${btns}
+                    <input type="number" step="50" min="200" max="1500" value="${curH}" onchange="setSubWallDefaultHeightMm(parseInt(this.value, 10), true)" class="w-16 bg-slate-950 border border-sky-500/50 rounded px-1.5 py-0.5 text-[11px] text-sky-200 font-bold mono-num text-right" title="たれ壁の下がり寸法(mm)">
+                    <span class="text-[10px] text-sky-300">mm</span>
+                </div>
+            `;
+        } else if (wSub === 'wall') {
+            const presets = [2400, 2450, 2500, 2700];
+            const btns = presets.map(h => {
+                const isAct = curH === h;
+                return `<button type="button" onpointerdown="event.preventDefault(); setSubWallDefaultHeightMm(${h})" onclick="setSubWallDefaultHeightMm(${h})" class="px-1.5 py-0.5 rounded text-[10px] font-bold border transition shrink-0 ${isAct ? 'bg-amber-500 text-slate-950 border-amber-300 shadow' : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-600'}">${h}${h === 2450 ? '(標準)' : ''}</button>`;
+            }).join('');
+            heightControlsHtml = `
+                <div class="inline-flex items-center gap-1 bg-slate-900/90 border border-slate-700 rounded-lg px-2 py-0.5 shrink-0">
+                    <span class="text-[11px] font-bold text-slate-300">壁高:</span>
+                    ${btns}
+                </div>
+            `;
+        }
+
         container.innerHTML = `
             <span class="text-xs font-black text-amber-400 mr-1 shrink-0"><i class="fa-solid fa-pen-nib mr-1"></i>${names[wSub] || '壁'}:</span>
             <button type="button" onclick="toggleDiagonalWallMode()" class="px-2 py-0.5 rounded text-[11px] font-bold border transition shrink-0 ${diagActive ? 'bg-amber-500 text-slate-950 border-amber-300 shadow' : 'bg-slate-800 text-slate-300 border-slate-600 hover:text-white'}" title="水平・垂直の直交スナップと、斜め壁（45°・自由角）作図を切り替えます">
                 <i class="fa-solid fa-slash mr-1"></i>${diagActive ? '📐 斜め壁ON' : '┼ 直交(水平/垂直)'}
             </button>
-            <span class="text-xs text-slate-200 shrink-0 hidden sm:inline">始点〜終点ドラッグ（または2点クリック）で作図 ／ 既存壁は「編集」で数値移動・端点追随</span>
+            ${heightControlsHtml}
+            <span class="text-xs text-slate-200 shrink-0 hidden xl:inline">上書き作図で前の壁を自動更新 ／ 既存壁は「編集」で数値移動</span>
             <button onclick="openManualModal()" class="ml-auto px-2 py-0.5 rounded bg-amber-500/20 border border-amber-400/50 text-amber-300 text-[11px] font-bold shrink-0">📖 使い方</button>
         `;
     } else if (tool === 'pillar') {
@@ -958,49 +1005,58 @@ function renderPropertyInspector() {
         if (curType === 'koshikabe') {
             const curH = obj.heightMm || 1000;
             heightUiHtml = `
-                <div class="space-y-1 bg-amber-950/20 p-2 rounded border border-amber-500/30">
-                    <div class="flex items-center justify-between gap-2">
-                        <span class="text-amber-300 font-bold">腰壁高さ(mm):</span>
-                        <input type="number" step="50" min="400" max="1800" value="${curH}" onchange="updateSelectedWallHeightMm(parseInt(this.value))" class="w-24 bg-slate-900 border border-amber-500/50 rounded px-2 py-1 text-white font-bold mono-num">
+                <div class="space-y-1.5 bg-amber-950/20 p-2 rounded border border-amber-500/30">
+                    <div class="flex items-center justify-between gap-1.5">
+                        <span class="text-amber-300 font-bold shrink-0">腰壁高さ(mm):</span>
+                        <div class="flex items-center gap-1">
+                            <button type="button" onpointerdown="event.preventDefault(); updateSelectedWallHeightMm(Math.max(400, (findSelectedObject()?.heightMm || 1000) - 50))" onclick="updateSelectedWallHeightMm(Math.max(400, (findSelectedObject()?.heightMm || 1000) - 50))" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[11px] font-bold text-amber-200">-50</button>
+                            <input id="inpInspectorWallHeightMm" type="number" step="50" min="400" max="1800" value="${curH}" onchange="updateSelectedWallHeightMm(parseInt(this.value, 10), true)" class="w-20 bg-slate-900 border border-amber-500/50 rounded px-2 py-1 text-white font-bold mono-num text-right">
+                            <button type="button" onpointerdown="event.preventDefault(); updateSelectedWallHeightMm(Math.min(1800, (findSelectedObject()?.heightMm || 1000) + 50))" onclick="updateSelectedWallHeightMm(Math.min(1800, (findSelectedObject()?.heightMm || 1000) + 50))" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[11px] font-bold text-amber-200">+50</button>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-1 justify-end pt-0.5">
-                        <button type="button" onclick="updateSelectedWallHeightMm(800)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curH===800?'border border-amber-400 text-amber-300 font-bold':''}">800</button>
-                        <button type="button" onclick="updateSelectedWallHeightMm(900)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curH===900?'border border-amber-400 text-amber-300 font-bold':''}">900</button>
-                        <button type="button" onclick="updateSelectedWallHeightMm(1000)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curH===1000?'border border-amber-400 text-amber-300 font-bold':''}">1000(標準)</button>
-                        <button type="button" onclick="updateSelectedWallHeightMm(1100)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curH===1100?'border border-amber-400 text-amber-300 font-bold':''}">1100</button>
-                        <button type="button" onclick="updateSelectedWallHeightMm(1200)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curH===1200?'border border-amber-400 text-amber-300 font-bold':''}">1200</button>
+                    <div class="flex flex-wrap items-center gap-1 justify-end pt-0.5">
+                        <button type="button" onpointerdown="event.preventDefault(); updateSelectedWallHeightMm(700)" onclick="updateSelectedWallHeightMm(700)" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-200 ${curH===700?'border border-amber-400 text-amber-300 font-bold bg-amber-500/20':'border border-slate-700'}">700</button>
+                        <button type="button" onpointerdown="event.preventDefault(); updateSelectedWallHeightMm(800)" onclick="updateSelectedWallHeightMm(800)" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-200 ${curH===800?'border border-amber-400 text-amber-300 font-bold bg-amber-500/20':'border border-slate-700'}">800</button>
+                        <button type="button" onpointerdown="event.preventDefault(); updateSelectedWallHeightMm(900)" onclick="updateSelectedWallHeightMm(900)" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-200 ${curH===900?'border border-amber-400 text-amber-300 font-bold bg-amber-500/20':'border border-slate-700'}">900</button>
+                        <button type="button" onpointerdown="event.preventDefault(); updateSelectedWallHeightMm(1000)" onclick="updateSelectedWallHeightMm(1000)" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-200 ${curH===1000?'border border-amber-400 text-amber-300 font-bold bg-amber-500/20':'border border-slate-700'}">1000(標準)</button>
+                        <button type="button" onpointerdown="event.preventDefault(); updateSelectedWallHeightMm(1100)" onclick="updateSelectedWallHeightMm(1100)" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-200 ${curH===1100?'border border-amber-400 text-amber-300 font-bold bg-amber-500/20':'border border-slate-700'}">1100</button>
+                        <button type="button" onpointerdown="event.preventDefault(); updateSelectedWallHeightMm(1200)" onclick="updateSelectedWallHeightMm(1200)" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-200 ${curH===1200?'border border-amber-400 text-amber-300 font-bold bg-amber-500/20':'border border-slate-700'}">1200</button>
                     </div>
                 </div>
             `;
         } else if (curType === 'tarekabe') {
             const curDrop = obj.heightMm || 550;
             heightUiHtml = `
-                <div class="space-y-1 bg-sky-950/20 p-2 rounded border border-sky-500/30">
-                    <div class="flex items-center justify-between gap-2">
-                        <span class="text-sky-300 font-bold">たれ下がり寸法(mm):</span>
-                        <input type="number" step="50" min="200" max="1500" value="${curDrop}" onchange="updateSelectedWallHeightMm(parseInt(this.value))" class="w-24 bg-slate-900 border border-sky-500/50 rounded px-2 py-1 text-white font-bold mono-num">
+                <div class="space-y-1.5 bg-sky-950/20 p-2 rounded border border-sky-500/30">
+                    <div class="flex items-center justify-between gap-1.5">
+                        <span class="text-sky-300 font-bold shrink-0">たれ下がり寸法(mm):</span>
+                        <div class="flex items-center gap-1">
+                            <button type="button" onpointerdown="event.preventDefault(); updateSelectedWallHeightMm(Math.max(200, (findSelectedObject()?.heightMm || 550) - 50))" onclick="updateSelectedWallHeightMm(Math.max(200, (findSelectedObject()?.heightMm || 550) - 50))" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[11px] font-bold text-sky-200">-50</button>
+                            <input id="inpInspectorWallHeightMm" type="number" step="50" min="200" max="1500" value="${curDrop}" onchange="updateSelectedWallHeightMm(parseInt(this.value, 10), true)" class="w-20 bg-slate-900 border border-sky-500/50 rounded px-2 py-1 text-white font-bold mono-num text-right">
+                            <button type="button" onpointerdown="event.preventDefault(); updateSelectedWallHeightMm(Math.min(1500, (findSelectedObject()?.heightMm || 550) + 50))" onclick="updateSelectedWallHeightMm(Math.min(1500, (findSelectedObject()?.heightMm || 550) + 50))" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[11px] font-bold text-sky-200">+50</button>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-1 justify-end pt-0.5">
-                        <button type="button" onclick="updateSelectedWallHeightMm(300)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curDrop===300?'border border-sky-400 text-sky-300 font-bold':''}">300</button>
-                        <button type="button" onclick="updateSelectedWallHeightMm(450)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curDrop===450?'border border-sky-400 text-sky-300 font-bold':''}">450</button>
-                        <button type="button" onclick="updateSelectedWallHeightMm(550)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curDrop===550?'border border-sky-400 text-sky-300 font-bold':''}">550(標準)</button>
-                        <button type="button" onclick="updateSelectedWallHeightMm(600)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curDrop===600?'border border-sky-400 text-sky-300 font-bold':''}">600</button>
+                    <div class="flex flex-wrap items-center gap-1 justify-end pt-0.5">
+                        <button type="button" onpointerdown="event.preventDefault(); updateSelectedWallHeightMm(300)" onclick="updateSelectedWallHeightMm(300)" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-200 ${curDrop===300?'border border-sky-400 text-sky-300 font-bold bg-sky-500/20':'border border-slate-700'}">300</button>
+                        <button type="button" onpointerdown="event.preventDefault(); updateSelectedWallHeightMm(450)" onclick="updateSelectedWallHeightMm(450)" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-200 ${curDrop===450?'border border-sky-400 text-sky-300 font-bold bg-sky-500/20':'border border-slate-700'}">450</button>
+                        <button type="button" onpointerdown="event.preventDefault(); updateSelectedWallHeightMm(550)" onclick="updateSelectedWallHeightMm(550)" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-200 ${curDrop===550?'border border-sky-400 text-sky-300 font-bold bg-sky-500/20':'border border-slate-700'}">550(標準)</button>
+                        <button type="button" onpointerdown="event.preventDefault(); updateSelectedWallHeightMm(600)" onclick="updateSelectedWallHeightMm(600)" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-200 ${curDrop===600?'border border-sky-400 text-sky-300 font-bold bg-sky-500/20':'border border-slate-700'}">600</button>
                     </div>
                 </div>
             `;
         } else if (curType === 'wall') {
             const curH = obj.heightMm || 2450;
             heightUiHtml = `
-                <div class="space-y-1 bg-slate-800/50 p-2 rounded border border-slate-700">
+                <div class="space-y-1.5 bg-slate-800/50 p-2 rounded border border-slate-700">
                     <div class="flex items-center justify-between gap-2">
                         <span class="text-slate-300 font-bold">壁高さ(mm):</span>
-                        <input type="number" step="50" min="1500" max="4000" value="${curH}" onchange="updateSelectedWallHeightMm(parseInt(this.value))" class="w-24 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white font-bold mono-num">
+                        <input id="inpInspectorWallHeightMm" type="number" step="50" min="1500" max="4000" value="${curH}" onchange="updateSelectedWallHeightMm(parseInt(this.value, 10), true)" class="w-24 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white font-bold mono-num text-right">
                     </div>
-                    <div class="flex items-center gap-1 justify-end pt-0.5">
-                        <button type="button" onclick="updateSelectedWallHeightMm(2400)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curH===2400?'border border-amber-400 text-amber-300 font-bold':''}">2400</button>
-                        <button type="button" onclick="updateSelectedWallHeightMm(2450)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curH===2450?'border border-amber-400 text-amber-300 font-bold':''}">2450(標準)</button>
-                        <button type="button" onclick="updateSelectedWallHeightMm(2500)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curH===2500?'border border-amber-400 text-amber-300 font-bold':''}">2500</button>
-                        <button type="button" onclick="updateSelectedWallHeightMm(2700)" class="px-1.5 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 ${curH===2700?'border border-amber-400 text-amber-300 font-bold':''}">2700(高天井)</button>
+                    <div class="flex flex-wrap items-center gap-1 justify-end pt-0.5">
+                        <button type="button" onpointerdown="event.preventDefault(); updateSelectedWallHeightMm(2400)" onclick="updateSelectedWallHeightMm(2400)" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-200 ${curH===2400?'border border-amber-400 text-amber-300 font-bold bg-amber-500/20':'border border-slate-700'}">2400</button>
+                        <button type="button" onpointerdown="event.preventDefault(); updateSelectedWallHeightMm(2450)" onclick="updateSelectedWallHeightMm(2450)" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-200 ${curH===2450?'border border-amber-400 text-amber-300 font-bold bg-amber-500/20':'border border-slate-700'}">2450(標準)</button>
+                        <button type="button" onpointerdown="event.preventDefault(); updateSelectedWallHeightMm(2500)" onclick="updateSelectedWallHeightMm(2500)" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-200 ${curH===2500?'border border-amber-400 text-amber-300 font-bold bg-amber-500/20':'border border-slate-700'}">2500</button>
+                        <button type="button" onpointerdown="event.preventDefault(); updateSelectedWallHeightMm(2700)" onclick="updateSelectedWallHeightMm(2700)" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-200 ${curH===2700?'border border-amber-400 text-amber-300 font-bold bg-amber-500/20':'border border-slate-700'}">2700(高天井)</button>
                     </div>
                 </div>
             `;
@@ -1195,12 +1251,9 @@ function initInspectorDraggable(panel) {
     if (!panel || panel.__draggableInited) return;
     panel.__draggableInited = true;
 
-    // input, select, textarea にフォーカスが入った際のキーボード回避
-    panel.addEventListener('focusin', (e) => {
-        if (['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) {
-            liftInspectorAboveKeyboard();
-        }
-    });
+    // ※focusin時の自動ジャンプ（liftInspectorAboveKeyboard）は、
+    // タップした瞬間に入力欄やプリセットボタンが指・ペン先から逃げて操作不能・フリーズ感を引き起こすため廃止。
+    // 移動は上部の「ドラッグで移動」バーまたは「上部へ／下部へ」ボタンで行う。
 
     const onPointerDown = (e) => {
         const handle = e.target.closest('#inspectorDragHandle');
@@ -1290,33 +1343,96 @@ function changeSelectedWallType(newWallType) {
     const obj = findSelectedObject();
     if (!obj || !state.selectedItem || state.selectedItem.kind !== 'wall') return;
     obj.wallType = newWallType;
+    const defH = (state.subWallHeights && state.subWallHeights[newWallType]) || null;
     // 壁種別を切り替えた際は、新しい種別の標準高さを必ず再初期化
-    if (newWallType === 'koshikabe') obj.heightMm = 1000;
-    else if (newWallType === 'tarekabe') obj.heightMm = 550;
-    else if (newWallType === 'wall') obj.heightMm = 2450;
-    else if (newWallType === 'agarikamachi') obj.heightMm = 180;
+    if (newWallType === 'koshikabe') obj.heightMm = defH || 1000;
+    else if (newWallType === 'tarekabe') obj.heightMm = defH || 550;
+    else if (newWallType === 'wall') obj.heightMm = defH || 2450;
+    else if (newWallType === 'agarikamachi') obj.heightMm = defH || 180;
+    const fl = state.floors[state.selectedItem.floor];
+    if (fl && typeof window.addWallWithOverwritePriority === 'function') {
+        const synced = window.addWallWithOverwritePriority(fl, obj);
+        if (synced && synced.id) {
+            state.selectedItem = { kind: 'wall', id: synced.id, floor: state.selectedItem.floor };
+        }
+    }
     saveHistorySnapshot();
-    if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
-    request2DRedraw();
-    if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
-    showToast('壁種別を変更しました');
+    if (typeof renderSubToolbar === 'function') renderSubToolbar();
+    showToast('壁種別を変更しました（重なる旧壁は上書き整理しました）');
 }
 window.changeSelectedWallType = changeSelectedWallType;
 
-function updateSelectedWallHeightMm(heightMm) {
+function updateSelectedWallHeightMm(heightMm, fromInput) {
     const obj = findSelectedObject();
     if (!obj || !state.selectedItem || state.selectedItem.kind !== 'wall') return;
-    if (isNaN(heightMm) || heightMm <= 0) return;
-    obj.heightMm = heightMm;
-    saveHistorySnapshot();
-    if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
-    request2DRedraw();
-    if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
-    showToast(`高さを${heightMm}mmに設定しました`);
+    const parsedH = Math.round(Number(heightMm));
+    if (isNaN(parsedH) || parsedH <= 0) return;
+    obj.heightMm = parsedH;
+    const wType = obj.wallType || 'wall';
+    if (!state.subWallHeights) {
+        state.subWallHeights = { wall: 2450, koshikabe: 1000, tarekabe: 550, agarikamachi: 180 };
+    }
+    state.subWallHeights[wType] = parsedH;
+
+    // 同一線上に古い二重壁が残っていた場合、選択中の壁を優先して古い重なり部分を削除
+    const fl = state.floors[state.selectedItem.floor];
+    if (fl && typeof window.addWallWithOverwritePriority === 'function') {
+        const synced = window.addWallWithOverwritePriority(fl, obj);
+        if (synced && synced.id) {
+            state.selectedItem = { kind: 'wall', id: synced.id, floor: state.selectedItem.floor };
+        }
+    }
+
+    // saveHistorySnapshot 内で updateAllMetricsAnd3D()（= rebuild3DScene + request2DRedraw）を実行
+    // input入力中の場合はフォーカス破壊を防ぐため innerHTML 全置換をスキップ可能にする
+    const activeEl = document.activeElement;
+    const isInputFocused = fromInput && activeEl && activeEl.tagName === 'INPUT' && activeEl.closest('#propertyInspector');
+    saveHistorySnapshot({ skipInspectorRender: !!isInputFocused });
+    if (typeof renderSubToolbar === 'function' && ! (activeEl && activeEl.tagName === 'INPUT' && activeEl.closest('#subToolbarContent'))) {
+        renderSubToolbar();
+    }
+    showToast(`高さを${parsedH}mmに設定しました`);
 }
 window.updateSelectedWallHeightMm = updateSelectedWallHeightMm;
+
+function setSubWallDefaultHeightMm(heightMm, fromInput) {
+    const parsedH = Math.round(Number(heightMm));
+    if (isNaN(parsedH) || parsedH <= 0) return;
+    const wSub = state.subWallType || 'wall';
+    if (!state.subWallHeights) {
+        state.subWallHeights = { wall: 2450, koshikabe: 1000, tarekabe: 550, agarikamachi: 180 };
+    }
+    state.subWallHeights[wSub] = parsedH;
+
+    // 現在選択中の壁、または直前に描いた同じ種別の壁があれば即座にその高さも連動更新
+    let targetWall = null;
+    const selObj = (typeof findSelectedObject === 'function') ? findSelectedObject() : null;
+    if (selObj && state.selectedItem && state.selectedItem.kind === 'wall' && (selObj.wallType || 'wall') === wSub) {
+        targetWall = selObj;
+    } else if (state.lastDrawnWallId) {
+        const fl = state.floors[state.currentFloor];
+        const lastW = fl && Array.isArray(fl.walls) ? fl.walls.find(w => w.id === state.lastDrawnWallId) : null;
+        if (lastW && (lastW.wallType || 'wall') === wSub) {
+            targetWall = lastW;
+        }
+    }
+
+    if (targetWall) {
+        targetWall.heightMm = parsedH;
+        const fl = state.floors[state.currentFloor];
+        if (fl && typeof window.addWallWithOverwritePriority === 'function') {
+            window.addWallWithOverwritePriority(fl, targetWall);
+        }
+        saveHistorySnapshot({ skipInspectorRender: !!fromInput });
+    }
+
+    if (!fromInput && typeof renderSubToolbar === 'function') {
+        renderSubToolbar();
+    }
+    const labelMap = { koshikabe: '腰壁高さ', tarekabe: 'たれ壁下がり', wall: '壁高さ', agarikamachi: '上り框高さ' };
+    showToast(`${labelMap[wSub] || '高さ'}を ${parsedH}mm に設定しました`);
+}
+window.setSubWallDefaultHeightMm = setSubWallDefaultHeightMm;
 
 // --- Inspector Update Helpers ---
 function updateSelectedOpeningFit12(fitId) {
@@ -2449,3 +2565,54 @@ function savePhotoSketchImage(downloadFile = true) {
     showToast('💾 ペン書き込み済みの3D/図面画像を保存しました');
 }
 window.savePhotoSketchImage = savePhotoSketchImage;
+
+// =========================================================================
+// 左パネル（aside）の1タップ即時反応（iPad Apple Pencil / 指タッチの2回タップ問題根治）
+// =========================================================================
+(function initFastLeftPaletteTap() {
+    let lastFastTapBtn = null;
+    let lastFastTapTime = 0;
+
+    function attachFastTapToAside() {
+        const asideEl = document.querySelector('aside');
+        if (!asideEl || asideEl.__fastTapInited) return;
+        asideEl.__fastTapInited = true;
+
+        asideEl.addEventListener('pointerdown', (e) => {
+            if (e.button !== undefined && e.button !== 0) return;
+            const btn = e.target && e.target.closest ? e.target.closest('button') : null;
+            if (!btn || !asideEl.contains(btn) || btn.disabled) return;
+
+            // 現在フォーカス中のinput等があれば先にblurして1回目のタップがblurに吸われるのを防ぐ
+            const activeEl = document.activeElement;
+            if (activeEl && activeEl !== btn && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'SELECT' || activeEl.tagName === 'TEXTAREA')) {
+                try { activeEl.blur(); } catch (_) { }
+            }
+
+            lastFastTapBtn = btn;
+            lastFastTapTime = Date.now();
+
+            // pointerdown時点で即座にボタンのonclickを発火（ペン先や指の微小ブレでclickがキャンセルされても1タップで確実に選択）
+            btn.click();
+        }, { passive: true });
+
+        // pointerdown内のbtn.click()（isTrusted===false）の直後にブラウザが発火するネイティブclick（isTrusted===true）の二重実行を防止
+        asideEl.addEventListener('click', (e) => {
+            if (!e.isTrusted) return;
+            const btn = e.target && e.target.closest ? e.target.closest('button') : null;
+            if (btn && btn === lastFastTapBtn && (Date.now() - lastFastTapTime) < 550) {
+                e.stopImmediatePropagation();
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        }, true);
+    }
+
+    if (typeof document !== 'undefined') {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', attachFastTapToAside);
+        } else {
+            attachFastTapToAside();
+        }
+    }
+})();

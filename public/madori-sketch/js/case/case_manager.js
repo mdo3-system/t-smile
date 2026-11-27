@@ -272,7 +272,6 @@ function triggerAutoRoomDetection() {
 
     updateAllMetricsAnd3D();
     request2DRedraw();
-    if (typeof rebuild3DScene === 'function') rebuild3DScene();
 }
 
 // 部屋名パレット定義

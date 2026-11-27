@@ -1023,11 +1023,13 @@ canvas2d.addEventListener('pointerdown', (e) => {
             }
 
             if (x1 !== x2 || y1 !== y2) {
-                let initH = 2450;
-                if (wType === 'koshikabe') initH = 1000;
-                else if (wType === 'tarekabe') initH = 550;
-                else if (wType === 'agarikamachi') initH = 180;
-                fl.walls.push({
+                let initH = (state.subWallHeights && state.subWallHeights[wType]) || 2450;
+                if (!state.subWallHeights || !state.subWallHeights[wType]) {
+                    if (wType === 'koshikabe') initH = 1000;
+                    else if (wType === 'tarekabe') initH = 550;
+                    else if (wType === 'agarikamachi') initH = 180;
+                }
+                const newWall = {
                     id: uid(),
                     x1: x1,
                     y1: y1,
@@ -1035,16 +1037,17 @@ canvas2d.addEventListener('pointerdown', (e) => {
                     y2: y2,
                     wallType: wType,
                     heightMm: initH
-                });
-                saveHistorySnapshot();
+                };
+                const addedWall = addWallWithOverwritePriority(fl, newWall);
+                state.lastDrawnWallId = addedWall ? addedWall.id : newWall.id;
                 if (typeof triggerAutoRoomDetection === 'function') triggerAutoRoomDetection();
+                saveHistorySnapshot();
                 const wLabel = (Array.isArray(window.WALL_SUBTYPES) ? window.WALL_SUBTYPES.find(w => w.id === wType)?.label : null) || '壁';
                 showToast(`${wLabel}を作成しました`);
             }
             state.wallClickStart = null;
             state.dragAction = null;
             request2DRedraw();
-            if (typeof rebuild3DScene === 'function') rebuild3DScene();
             return;
         } else {
             state.wallClickStart = { x: snappedX, y: snappedY };
@@ -1641,13 +1644,14 @@ function tryStartSelectOrModifyInteraction(wx, wy, onlyHitExistingOfSameToolType
     }
 
     // 4b. Hit-test Walls（点と線分の最短距離で壁を選択し、そのままドラッグで平行移動＆接続壁自動追随）
+    // ※逆順走査時は d < bestDist - 1e-4 とすることで、同距離の場合は配列末尾（後から描かれた新しい壁）を最優先で選択
     if (fl.walls && fl.walls.length > 0) {
         let bestWall = null;
         let bestDist = 0.28;
         for (let i = fl.walls.length - 1; i >= 0; i--) {
             const wl = fl.walls[i];
             const d = distPointToSegment(wx, wy, wl.x1, wl.y1, wl.x2, wl.y2);
-            if (d <= bestDist) {
+            if (d < bestDist - 1e-4) {
                 bestDist = d;
                 bestWall = wl;
             }
@@ -2065,11 +2069,13 @@ canvas2d.addEventListener('pointerup', (e) => {
     } else if (drag.type === 'wall') {
         if (drag.startX !== drag.curX || drag.startY !== drag.curY) {
             const wType = drag.wallType || state.subWallType || 'wall';
-            let initH = 2450;
-            if (wType === 'koshikabe') initH = 1000;
-            else if (wType === 'tarekabe') initH = 550;
-            else if (wType === 'agarikamachi') initH = 180;
-            fl.walls.push({
+            let initH = (state.subWallHeights && state.subWallHeights[wType]) || 2450;
+            if (!state.subWallHeights || !state.subWallHeights[wType]) {
+                if (wType === 'koshikabe') initH = 1000;
+                else if (wType === 'tarekabe') initH = 550;
+                else if (wType === 'agarikamachi') initH = 180;
+            }
+            const newWall = {
                 id: uid(),
                 x1: drag.startX,
                 y1: drag.startY,
@@ -2077,20 +2083,26 @@ canvas2d.addEventListener('pointerup', (e) => {
                 y2: drag.curY,
                 wallType: wType,
                 heightMm: initH
-            });
+            };
+            const addedWall = addWallWithOverwritePriority(fl, newWall);
+            state.lastDrawnWallId = addedWall ? addedWall.id : newWall.id;
             state.wallClickStart = null;
-            saveHistorySnapshot();
             if (typeof triggerAutoRoomDetection === 'function') triggerAutoRoomDetection();
-            if (typeof rebuild3DScene === 'function') rebuild3DScene();
+            saveHistorySnapshot();
             const wLabel = (Array.isArray(window.WALL_SUBTYPES) ? window.WALL_SUBTYPES.find(w => w.id === wType)?.label : null) || '壁';
             showToast(`${wLabel}を作成しました`);
             request2DRedraw();
         }
     } else if (drag.type === 'move_wall') {
         if (drag.moved) {
-            saveHistorySnapshot();
+            if (drag.wall) {
+                const synced = addWallWithOverwritePriority(fl, drag.wall);
+                if (synced && state.selectedItem && state.selectedItem.kind === 'wall') {
+                    state.selectedItem = { kind: 'wall', id: synced.id, floor: state.currentFloor };
+                }
+            }
             if (typeof triggerAutoRoomDetection === 'function') triggerAutoRoomDetection();
-            if (typeof rebuild3DScene === 'function') rebuild3DScene();
+            saveHistorySnapshot();
             showToast('壁を平行移動し、接続する壁と建具を追随させました');
         }
     } else if (drag.type !== 'pan') {
@@ -3672,8 +3684,205 @@ if (typeof window !== 'undefined' && !window._madoriKeyShortcutsBound) {
     });
 }
 
+// =========================================================================
+// 壁作図時の「上書き優先・前の壁の自動削除／切り詰め」エンジン
+// =========================================================================
+function getWallStandardHeightMm(wType) {
+    if (wType === 'koshikabe') return 1000;
+    if (wType === 'tarekabe') return 550;
+    if (wType === 'agarikamachi') return 180;
+    return 2450;
+}
+
+function addWallWithOverwritePriority(fl, newWall) {
+    if (!fl) return newWall;
+    if (!Array.isArray(fl.walls)) fl.walls = [];
+    if (!newWall) return null;
+
+    const EPS = 0.05;
+    const nDx = newWall.x2 - newWall.x1;
+    const nDy = newWall.y2 - newWall.y1;
+    const nLen = Math.hypot(nDx, nDy);
+    if (nLen < EPS) return null;
+
+    // すでに fl.walls 内に同じ ID の壁が存在する場合は一旦取り除いてから上書き処理
+    const baseWalls = fl.walls.filter(w => w && w.id !== newWall.id);
+    const nType = newWall.wallType || 'wall';
+    const nHeight = newWall.heightMm || getWallStandardHeightMm(nType);
+    newWall.wallType = nType;
+    newWall.heightMm = nHeight;
+
+    const isNHoriz = Math.abs(nDy) < EPS;
+    const isNVert = Math.abs(nDx) < EPS;
+
+    if (isNHoriz || isNVert) {
+        let nCoord = isNHoriz ? +((newWall.y1 + newWall.y2) * 0.5).toFixed(4) : +((newWall.x1 + newWall.x2) * 0.5).toFixed(4);
+        let nStart = isNHoriz ? Math.min(newWall.x1, newWall.x2) : Math.min(newWall.y1, newWall.y2);
+        let nEnd = isNHoriz ? Math.max(newWall.x1, newWall.x2) : Math.max(newWall.y1, newWall.y2);
+
+        const nextWalls = [];
+        for (let i = 0; i < baseWalls.length; i++) {
+            const wl = baseWalls[i];
+            const wDx = wl.x2 - wl.x1;
+            const wDy = wl.y2 - wl.y1;
+            const isWHoriz = Math.abs(wDy) < EPS;
+            const isWVert = Math.abs(wDx) < EPS;
+
+            if ((isNHoriz && !isWHoriz) || (isNVert && !isWVert)) {
+                nextWalls.push(wl);
+                continue;
+            }
+
+            const wCoord = isNHoriz ? (wl.y1 + wl.y2) * 0.5 : (wl.x1 + wl.x2) * 0.5;
+            if (Math.abs(wCoord - nCoord) > 0.08) {
+                nextWalls.push(wl);
+                continue;
+            }
+
+            const wStart = isNHoriz ? Math.min(wl.x1, wl.x2) : Math.min(wl.y1, wl.y2);
+            const wEnd = isNHoriz ? Math.max(wl.x1, wl.x2) : Math.max(wl.y1, wl.y2);
+            const wType = wl.wallType || 'wall';
+            const wHeight = wl.heightMm || getWallStandardHeightMm(wType);
+
+            // 同一種別・同一高さで接触または重なる場合は1本の壁に統合
+            if (wType === nType && wHeight === nHeight && wEnd >= nStart - 0.02 && wStart <= nEnd + 0.02) {
+                nStart = Math.min(nStart, wStart);
+                nEnd = Math.max(nEnd, wEnd);
+                continue;
+            }
+
+            // 重なり区間を計算
+            const overlapStart = Math.max(wStart, nStart);
+            const overlapEnd = Math.min(wEnd, nEnd);
+            if (overlapEnd <= overlapStart + 0.02) {
+                // 重なっていない（端点接触のみ）場合はそのまま残す
+                nextWalls.push(wl);
+                continue;
+            }
+
+            // 重なっている場合は新しい壁（上書き）を優先し、古い壁の重なり部分を削除（前後にはみ出る部分のみ残す）
+            if (wStart < nStart - EPS) {
+                const seg1 = Object.assign({}, wl, isNHoriz
+                    ? { x1: +wStart.toFixed(4), y1: +wCoord.toFixed(4), x2: +nStart.toFixed(4), y2: +wCoord.toFixed(4) }
+                    : { x1: +wCoord.toFixed(4), y1: +wStart.toFixed(4), x2: +wCoord.toFixed(4), y2: +nStart.toFixed(4) }
+                );
+                nextWalls.push(seg1);
+            }
+            if (wEnd > nEnd + EPS) {
+                const seg2Id = (wStart < nStart - EPS) ? uid() : wl.id;
+                const seg2 = Object.assign({}, wl, { id: seg2Id }, isNHoriz
+                    ? { x1: +nEnd.toFixed(4), y1: +wCoord.toFixed(4), x2: +wEnd.toFixed(4), y2: +wCoord.toFixed(4) }
+                    : { x1: +wCoord.toFixed(4), y1: +nEnd.toFixed(4), x2: +wCoord.toFixed(4), y2: +wEnd.toFixed(4) }
+                );
+                nextWalls.push(seg2);
+            }
+        }
+
+        if (isNHoriz) {
+            newWall.x1 = +nStart.toFixed(4);
+            newWall.y1 = nCoord;
+            newWall.x2 = +nEnd.toFixed(4);
+            newWall.y2 = nCoord;
+        } else {
+            newWall.x1 = nCoord;
+            newWall.y1 = +nStart.toFixed(4);
+            newWall.x2 = nCoord;
+            newWall.y2 = +nEnd.toFixed(4);
+        }
+        nextWalls.push(newWall);
+        fl.walls = nextWalls;
+        return newWall;
+    }
+
+    // 斜め壁同士の同一直線・重なり上書き処理
+    const ux = nDx / nLen;
+    const uy = nDy / nLen;
+    let tMinNew = 0;
+    let tMaxNew = nLen;
+    const originX = newWall.x1;
+    const originY = newWall.y1;
+
+    const nextWalls = [];
+    for (let i = 0; i < baseWalls.length; i++) {
+        const wl = baseWalls[i];
+        const wDx = wl.x2 - wl.x1;
+        const wDy = wl.y2 - wl.y1;
+        const wLen = Math.hypot(wDx, wDy);
+        if (wLen < EPS) continue;
+
+        // 平行判定（外積）と直線距離（法線成分）
+        const cross = Math.abs(ux * (wDy / wLen) - uy * (wDx / wLen));
+        const perpDist1 = Math.abs((wl.x1 - originX) * (-uy) + (wl.y1 - originY) * ux);
+        if (cross > 0.05 || perpDist1 > 0.08) {
+            nextWalls.push(wl);
+            continue;
+        }
+
+        const t1 = (wl.x1 - originX) * ux + (wl.y1 - originY) * uy;
+        const t2 = (wl.x2 - originX) * ux + (wl.y2 - originY) * uy;
+        const wStart = Math.min(t1, t2);
+        const wEnd = Math.max(t1, t2);
+        const wType = wl.wallType || 'wall';
+        const wHeight = wl.heightMm || getWallStandardHeightMm(wType);
+
+        if (wType === nType && wHeight === nHeight && wEnd >= tMinNew - 0.02 && wStart <= tMaxNew + 0.02) {
+            tMinNew = Math.min(tMinNew, wStart);
+            tMaxNew = Math.max(tMaxNew, wEnd);
+            continue;
+        }
+
+        const overlapStart = Math.max(wStart, tMinNew);
+        const overlapEnd = Math.min(wEnd, tMaxNew);
+        if (overlapEnd <= overlapStart + 0.02) {
+            nextWalls.push(wl);
+            continue;
+        }
+
+        if (wStart < tMinNew - EPS) {
+            nextWalls.push(Object.assign({}, wl, {
+                x1: +(originX + ux * wStart).toFixed(4),
+                y1: +(originY + uy * wStart).toFixed(4),
+                x2: +(originX + ux * tMinNew).toFixed(4),
+                y2: +(originY + uy * tMinNew).toFixed(4)
+            }));
+        }
+        if (wEnd > tMaxNew + EPS) {
+            const seg2Id = (wStart < tMinNew - EPS) ? uid() : wl.id;
+            nextWalls.push(Object.assign({}, wl, {
+                id: seg2Id,
+                x1: +(originX + ux * tMaxNew).toFixed(4),
+                y1: +(originY + uy * tMaxNew).toFixed(4),
+                x2: +(originX + ux * wEnd).toFixed(4),
+                y2: +(originY + uy * wEnd).toFixed(4)
+            }));
+        }
+    }
+
+    newWall.x1 = +(originX + ux * tMinNew).toFixed(4);
+    newWall.y1 = +(originY + uy * tMinNew).toFixed(4);
+    newWall.x2 = +(originX + ux * tMaxNew).toFixed(4);
+    newWall.y2 = +(originY + uy * tMaxNew).toFixed(4);
+    nextWalls.push(newWall);
+    fl.walls = nextWalls;
+    return newWall;
+}
+
+function deduplicateFloorWalls(fl) {
+    if (!fl || !Array.isArray(fl.walls) || fl.walls.length <= 1) return;
+    const originalWalls = fl.walls.slice();
+    const tempFl = { walls: [] };
+    for (let i = 0; i < originalWalls.length; i++) {
+        const wl = originalWalls[i];
+        if (!wl) continue;
+        addWallWithOverwritePriority(tempFl, Object.assign({}, wl));
+    }
+    fl.walls = tempFl.walls;
+}
+
 // Global Window Exports
 if (typeof window !== 'undefined') {
+    window.addWallWithOverwritePriority = addWallWithOverwritePriority;
+    window.deduplicateFloorWalls = deduplicateFloorWalls;
     window.checkOpeningOverlap = checkOpeningOverlap;
     window.snapPointToNearestWallEdge = snapPointToNearestWallEdge;
     window.setSubDoorFit = setSubDoorFit;

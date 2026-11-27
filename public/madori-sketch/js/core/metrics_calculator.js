@@ -259,8 +259,11 @@ function updateAllMetricsAnd3D() {
     }
 
     request2DRedraw();
-    if (typeof rebuild3DScene === 'function') rebuild3DScene();
-    if (typeof updateBirdEyeMiniPreview === 'function') updateBirdEyeMiniPreview();
+    if (typeof rebuild3DScene === 'function') {
+        rebuild3DScene();
+    } else if (typeof updateBirdEyeMiniPreview === 'function') {
+        updateBirdEyeMiniPreview();
+    }
     if (typeof renderQaTargetComparison === 'function') renderQaTargetComparison();
 }
 

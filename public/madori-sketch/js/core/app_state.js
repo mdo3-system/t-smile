@@ -48,6 +48,13 @@ const state = {
     activeTool: 'wall',
     subRoomType: 'LDK',
     subWallType: 'wall',         // 'wall', 'tarekabe', 'koshikabe', 'agarikamachi'
+    subWallHeights: {            // 壁種別ごとのデフォルト高さ(mm)
+        wall: 2450,
+        koshikabe: 1000,
+        tarekabe: 550,
+        agarikamachi: 180
+    },
+    lastDrawnWallId: null,       // 直前に作図した壁ID（上部ツールバーからの即時高さ変更連動用）
     subPillarSize: 150,          // 105, 120, 150, 200 mm
     subPillarShape: 'square',    // 'square', 'round'
     wallClickStart: null,
@@ -229,11 +236,17 @@ function ensureFloorsStructure() {
             if (typeof op.heightMm !== 'number') op.heightMm = def.heightMm;
             if (typeof op.sillMm !== 'number') op.sillMm = def.sillMm;
         });
+
+        // 同一線上の二重壁・重なり壁を「後から描かれた壁（上書き）優先」で自動整理
+        if (typeof window.deduplicateFloorWalls === 'function' && Array.isArray(fl.walls) && fl.walls.length > 1) {
+            window.deduplicateFloorWalls(fl);
+        }
     });
 }
 
 // --- History Management (Undo / Redo via Top Bar Buttons) ---
-function saveHistorySnapshot() {
+function saveHistorySnapshot(options) {
+    const opts = options || {};
     ensureFloorsStructure();
     const payload = {
         floors: state.floors,
@@ -241,16 +254,16 @@ function saveHistorySnapshot() {
     };
     const snapshot = JSON.stringify(payload);
     if (state.historyIndex >= 0 && state.history[state.historyIndex] === snapshot) {
-        if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
-        if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+        if (!opts.skipMetricsAnd3D && typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
+        if (!opts.skipInspectorRender && typeof renderPropertyInspector === 'function') renderPropertyInspector();
         return;
     }
     state.history = state.history.slice(0, state.historyIndex + 1);
     state.history.push(snapshot);
     if (state.history.length > 40) state.history.shift();
     state.historyIndex = state.history.length - 1;
-    if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
-    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+    if (!opts.skipMetricsAnd3D && typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
+    if (!opts.skipInspectorRender && typeof renderPropertyInspector === 'function') renderPropertyInspector();
     if (typeof window.notifyLiveShareStateChanged === 'function') {
         window.notifyLiveShareStateChanged('plan');
     }

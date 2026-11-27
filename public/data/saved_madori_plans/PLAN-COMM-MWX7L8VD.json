@@ -1,2487 +1,2311 @@
 {
-  "planId": "PLAN-COMM-MWX7L8VD",
-  "projectTitle": "2493-P17",
-  "title": "2493-P17",
-  "modulePitch": 910,
-  "gridDivisions": 4,
-  "foundationHeightMm": 400,
-  "showMizukiri3D": true,
-  "mizukiriColor": "#334155",
-  "floors": {
-    "0": {
-      "rooms": [],
-      "walls": [],
-      "pillars": [],
-      "openings": [],
-      "fixtures": [],
-      "stairs": [],
-      "strokes": [],
-      "stamps": [],
-      "memos": [],
-      "polyPillars": [],
-      "boxes3d": []
-    },
-    "1": {
-      "rooms": [
+    "planId": "PLAN-COMM-MWX7L8VD",
+    "projectTitle": "2493-P17",
+    "title": "2493-P17",
+    "totalTsubo": "36.1坪",
+    "totalM2": "119.25㎡",
+    "modulePitch": 910,
+    "gridDivisions": 4,
+    "foundationHeightMm": 400,
+    "showMizukiri3D": true,
+    "mizukiriColor": "#334155",
+    "floors": [
         {
-          "id": "room_ylt7dpabo",
-          "kind": "room",
-          "type": "UB",
-          "name": "浴室",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": -2,
-              "y": -2
-            },
-            {
-              "x": -2,
-              "y": 0
-            },
-            {
-              "x": 0,
-              "y": 0
-            },
-            {
-              "x": 0,
-              "y": -2
-            }
-          ],
-          "x": -2,
-          "y": -2,
-          "w": 2,
-          "h": 2,
-          "centroid": {
-            "x": -1,
-            "y": -1
-          },
-          "areaM2": 3.3,
-          "tsubo": 1,
-          "jo": 2,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9",
-          "customName": "浴室"
+            "rooms": [],
+            "walls": [],
+            "pillars": [],
+            "openings": [],
+            "fixtures": [],
+            "stairs": [],
+            "strokes": [],
+            "stamps": [],
+            "memos": [],
+            "polyPillars": [],
+            "boxes3d": []
         },
         {
-          "id": "room_x2puzrj4z",
-          "kind": "room",
-          "type": "OTHER",
-          "name": "押入",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": -2,
-              "y": 0
-            },
-            {
-              "x": -2,
-              "y": 1
-            },
-            {
-              "x": 0,
-              "y": 1
-            },
-            {
-              "x": 0,
-              "y": 0.5
-            },
-            {
-              "x": 0,
-              "y": 0
-            }
-          ],
-          "x": -2,
-          "y": 0,
-          "w": 2,
-          "h": 1,
-          "centroid": {
-            "x": -1,
-            "y": 0.5
-          },
-          "areaM2": 1.7,
-          "tsubo": 0.51,
-          "jo": 1,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9",
-          "customName": "押入"
+            "rooms": [
+                {
+                    "id": "room_ylt7dpabo",
+                    "kind": "room",
+                    "type": "UB",
+                    "name": "浴室",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": -2,
+                            "y": -2
+                        },
+                        {
+                            "x": -2,
+                            "y": 0
+                        },
+                        {
+                            "x": 0,
+                            "y": 0
+                        },
+                        {
+                            "x": 0,
+                            "y": -2
+                        }
+                    ],
+                    "x": -2,
+                    "y": -2,
+                    "w": 2,
+                    "h": 2,
+                    "centroid": {
+                        "x": -1,
+                        "y": -1
+                    },
+                    "areaM2": 3.3,
+                    "tsubo": 1,
+                    "jo": 2,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9",
+                    "customName": "浴室"
+                },
+                {
+                    "id": "room_x2puzrj4z",
+                    "kind": "room",
+                    "type": "OTHER",
+                    "name": "押入",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": -2,
+                            "y": 0
+                        },
+                        {
+                            "x": -2,
+                            "y": 1
+                        },
+                        {
+                            "x": 0,
+                            "y": 1
+                        },
+                        {
+                            "x": 0,
+                            "y": 0.5
+                        },
+                        {
+                            "x": 0,
+                            "y": 0
+                        }
+                    ],
+                    "x": -2,
+                    "y": 0,
+                    "w": 2,
+                    "h": 1,
+                    "centroid": {
+                        "x": -1,
+                        "y": 0.5
+                    },
+                    "areaM2": 1.7,
+                    "tsubo": 0.51,
+                    "jo": 1,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9",
+                    "customName": "押入"
+                },
+                {
+                    "id": "room_lgzqlzra2",
+                    "kind": "room",
+                    "type": "SENMEN",
+                    "name": "洗面室",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": 0,
+                            "y": -2
+                        },
+                        {
+                            "x": 0,
+                            "y": 0
+                        },
+                        {
+                            "x": 2,
+                            "y": 0
+                        },
+                        {
+                            "x": 2,
+                            "y": -1
+                        },
+                        {
+                            "x": 2,
+                            "y": -2
+                        }
+                    ],
+                    "x": 0,
+                    "y": -2,
+                    "w": 2,
+                    "h": 2,
+                    "centroid": {
+                        "x": 1,
+                        "y": -1
+                    },
+                    "areaM2": 3.3,
+                    "tsubo": 1,
+                    "jo": 2,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9",
+                    "customName": "洗面室"
+                },
+                {
+                    "id": "room_mlupk479d",
+                    "kind": "room",
+                    "type": "OTHER",
+                    "name": "",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": 0,
+                            "y": 0
+                        },
+                        {
+                            "x": 0,
+                            "y": 0.5
+                        },
+                        {
+                            "x": 2,
+                            "y": 0.5
+                        },
+                        {
+                            "x": 2,
+                            "y": 0.25
+                        },
+                        {
+                            "x": 2,
+                            "y": 0
+                        }
+                    ],
+                    "x": 0,
+                    "y": 0,
+                    "w": 2,
+                    "h": 0.5,
+                    "centroid": {
+                        "x": 1,
+                        "y": 0.25
+                    },
+                    "areaM2": 0.8,
+                    "tsubo": 0.24,
+                    "jo": 0.5,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9"
+                },
+                {
+                    "id": "room_j8cm0jla7",
+                    "kind": "room",
+                    "type": "OTHER",
+                    "name": "",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": 2,
+                            "y": -2
+                        },
+                        {
+                            "x": 2,
+                            "y": -1
+                        },
+                        {
+                            "x": 3.75,
+                            "y": -1
+                        },
+                        {
+                            "x": 3.75,
+                            "y": -2
+                        },
+                        {
+                            "x": 3.5,
+                            "y": -2
+                        }
+                    ],
+                    "x": 2,
+                    "y": -2,
+                    "w": 1.75,
+                    "h": 1,
+                    "centroid": {
+                        "x": 2.88,
+                        "y": -1.5
+                    },
+                    "areaM2": 1.4,
+                    "tsubo": 0.42,
+                    "jo": 0.9,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9"
+                },
+                {
+                    "id": "room_79z2gcnxy",
+                    "kind": "room",
+                    "type": "ROUKA",
+                    "name": "ホール",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": 2,
+                            "y": -1
+                        },
+                        {
+                            "x": 2,
+                            "y": 0
+                        },
+                        {
+                            "x": 2,
+                            "y": 0.25
+                        },
+                        {
+                            "x": 2,
+                            "y": 0.5
+                        },
+                        {
+                            "x": 2,
+                            "y": 1
+                        },
+                        {
+                            "x": 2,
+                            "y": 1.25
+                        },
+                        {
+                            "x": 2,
+                            "y": 4
+                        },
+                        {
+                            "x": 4,
+                            "y": 4
+                        },
+                        {
+                            "x": 4,
+                            "y": 0
+                        },
+                        {
+                            "x": 3,
+                            "y": 0
+                        },
+                        {
+                            "x": 3,
+                            "y": 1.5
+                        },
+                        {
+                            "x": 3,
+                            "y": 2.5
+                        },
+                        {
+                            "x": 3,
+                            "y": 1.5
+                        },
+                        {
+                            "x": 3,
+                            "y": 0
+                        },
+                        {
+                            "x": 4,
+                            "y": 0
+                        },
+                        {
+                            "x": 4.5,
+                            "y": 0
+                        },
+                        {
+                            "x": 4.5,
+                            "y": -1
+                        },
+                        {
+                            "x": 3.75,
+                            "y": -1
+                        }
+                    ],
+                    "x": 2,
+                    "y": -1,
+                    "w": 2.5,
+                    "h": 5,
+                    "centroid": {
+                        "x": 3.06,
+                        "y": 1.4
+                    },
+                    "areaM2": 8.7,
+                    "tsubo": 2.63,
+                    "jo": 5.4,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9",
+                    "customName": "ホール"
+                },
+                {
+                    "id": "room_byeybhtym",
+                    "kind": "room",
+                    "type": "OTHER",
+                    "name": "LDK",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": 3.75,
+                            "y": -2
+                        },
+                        {
+                            "x": 3.75,
+                            "y": -1
+                        },
+                        {
+                            "x": 4.5,
+                            "y": -1
+                        },
+                        {
+                            "x": 4.5,
+                            "y": 0
+                        },
+                        {
+                            "x": 4,
+                            "y": 0
+                        },
+                        {
+                            "x": 4,
+                            "y": 4
+                        },
+                        {
+                            "x": 4,
+                            "y": 6
+                        },
+                        {
+                            "x": 8,
+                            "y": 6
+                        },
+                        {
+                            "x": 8,
+                            "y": 0
+                        },
+                        {
+                            "x": 7,
+                            "y": 0
+                        },
+                        {
+                            "x": 5.5,
+                            "y": 0
+                        },
+                        {
+                            "x": 7,
+                            "y": 0
+                        },
+                        {
+                            "x": 8,
+                            "y": 0
+                        },
+                        {
+                            "x": 8,
+                            "y": -2
+                        },
+                        {
+                            "x": 4.5,
+                            "y": -2
+                        }
+                    ],
+                    "x": 3.75,
+                    "y": -2,
+                    "w": 4.25,
+                    "h": 8,
+                    "centroid": {
+                        "x": 6.01,
+                        "y": 2.01
+                    },
+                    "areaM2": 26.3,
+                    "tsubo": 7.96,
+                    "jo": 16.2,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9",
+                    "customName": "LDK"
+                },
+                {
+                    "id": "room_s314ghyk1",
+                    "kind": "room",
+                    "type": "GENKAN",
+                    "name": "玄関",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": 4,
+                            "y": 4
+                        },
+                        {
+                            "x": 2,
+                            "y": 4
+                        },
+                        {
+                            "x": 2,
+                            "y": 5
+                        },
+                        {
+                            "x": 2,
+                            "y": 6
+                        },
+                        {
+                            "x": 4,
+                            "y": 6
+                        }
+                    ],
+                    "x": 2,
+                    "y": 4,
+                    "w": 2,
+                    "h": 2,
+                    "centroid": {
+                        "x": 3,
+                        "y": 5
+                    },
+                    "areaM2": 3.3,
+                    "tsubo": 1,
+                    "jo": 2,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9",
+                    "customName": "玄関"
+                },
+                {
+                    "id": "room_82ctb9osh",
+                    "kind": "room",
+                    "type": "WASHITSU",
+                    "name": "和室",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": -2,
+                            "y": 1
+                        },
+                        {
+                            "x": -2,
+                            "y": 1.25
+                        },
+                        {
+                            "x": -2,
+                            "y": 5
+                        },
+                        {
+                            "x": 2,
+                            "y": 5
+                        },
+                        {
+                            "x": 2,
+                            "y": 4
+                        },
+                        {
+                            "x": 2,
+                            "y": 1.25
+                        },
+                        {
+                            "x": 2,
+                            "y": 1
+                        },
+                        {
+                            "x": 0,
+                            "y": 1
+                        }
+                    ],
+                    "x": -2,
+                    "y": 1,
+                    "w": 4,
+                    "h": 4,
+                    "centroid": {
+                        "x": 0,
+                        "y": 3
+                    },
+                    "areaM2": 13.2,
+                    "tsubo": 3.99,
+                    "jo": 8.1,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9",
+                    "customName": "和室"
+                },
+                {
+                    "id": "room_g97kv87rp",
+                    "kind": "room",
+                    "type": "OTHER",
+                    "name": "",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": 0,
+                            "y": 1
+                        },
+                        {
+                            "x": 2,
+                            "y": 1
+                        },
+                        {
+                            "x": 2,
+                            "y": 0.5
+                        },
+                        {
+                            "x": 0,
+                            "y": 0.5
+                        }
+                    ],
+                    "x": 0,
+                    "y": 0.5,
+                    "w": 2,
+                    "h": 0.5,
+                    "centroid": {
+                        "x": 1,
+                        "y": 0.75
+                    },
+                    "areaM2": 0.8,
+                    "tsubo": 0.24,
+                    "jo": 0.5,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9"
+                },
+                {
+                    "id": "room_2vlcp07hg",
+                    "kind": "room",
+                    "type": "OTHER",
+                    "name": "縁側",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": -2,
+                            "y": 5
+                        },
+                        {
+                            "x": -2,
+                            "y": 6
+                        },
+                        {
+                            "x": 2,
+                            "y": 6
+                        },
+                        {
+                            "x": 2,
+                            "y": 5
+                        }
+                    ],
+                    "x": -2,
+                    "y": 5,
+                    "w": 4,
+                    "h": 1,
+                    "centroid": {
+                        "x": 0,
+                        "y": 5.5
+                    },
+                    "areaM2": 3.3,
+                    "tsubo": 1,
+                    "jo": 2,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9",
+                    "customName": "縁側"
+                }
+            ],
+            "walls": [
+                {
+                    "id": "id_qrxqfdx",
+                    "x1": 0,
+                    "y1": -2,
+                    "x2": 0,
+                    "y2": 0,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_te6znm8",
+                    "x1": -2,
+                    "y1": 0,
+                    "x2": 2,
+                    "y2": 0,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_e3o2iuu",
+                    "x1": 3.75,
+                    "y1": -2,
+                    "x2": 3.75,
+                    "y2": -1,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_pfhoxdq",
+                    "x1": 2,
+                    "y1": -1,
+                    "x2": 4.5,
+                    "y2": -1,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_aaj0auw",
+                    "x1": 4.5,
+                    "y1": -1,
+                    "x2": 4.5,
+                    "y2": 0,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_qqilo1p",
+                    "x1": 3,
+                    "y1": 0,
+                    "x2": 4.5,
+                    "y2": 0,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_w53gma6",
+                    "x1": 3,
+                    "y1": 0,
+                    "x2": 3,
+                    "y2": 1.5,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_g23wavu",
+                    "x1": 3,
+                    "y1": 1.5,
+                    "x2": 3,
+                    "y2": 2.5,
+                    "wallType": "koshikabe",
+                    "heightMm": 1000
+                },
+                {
+                    "id": "id_oxqhl8c",
+                    "x1": 4,
+                    "y1": 0,
+                    "x2": 4,
+                    "y2": 6,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_qce0wbi",
+                    "x1": -2,
+                    "y1": 1,
+                    "x2": 0,
+                    "y2": 1,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_zby3lva",
+                    "x1": 0,
+                    "y1": 0,
+                    "x2": 0,
+                    "y2": 1,
+                    "wallType": "koshikabe",
+                    "heightMm": 1000
+                },
+                {
+                    "id": "id_dhx9ty1",
+                    "x1": 0,
+                    "y1": 1,
+                    "x2": 2,
+                    "y2": 1,
+                    "wallType": "agarikamachi",
+                    "heightMm": 180
+                },
+                {
+                    "id": "id_th2ijm9",
+                    "x1": -2,
+                    "y1": 5,
+                    "x2": 2,
+                    "y2": 5,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_7tstbzs",
+                    "x1": -2,
+                    "y1": -2,
+                    "x2": -2,
+                    "y2": 6,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_7bpotrg",
+                    "x1": -2,
+                    "y1": 6,
+                    "x2": 8,
+                    "y2": 6,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_n33xueg",
+                    "x1": 2,
+                    "y1": 4,
+                    "x2": 4,
+                    "y2": 4,
+                    "wallType": "agarikamachi",
+                    "heightMm": 180
+                },
+                {
+                    "id": "id_9gniebo",
+                    "x1": 2,
+                    "y1": -2,
+                    "x2": 2,
+                    "y2": 6,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_7tkofao",
+                    "x1": 7,
+                    "y1": 0,
+                    "x2": 8,
+                    "y2": 0,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_6hw7014",
+                    "x1": -2,
+                    "y1": -2,
+                    "x2": 8,
+                    "y2": -2,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_tnyealz",
+                    "x1": 8,
+                    "y1": -2,
+                    "x2": 8,
+                    "y2": 6,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_3v7wg5j",
+                    "x1": 0,
+                    "y1": 0.5,
+                    "x2": 2,
+                    "y2": 0.5,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_yfj7648",
+                    "x1": 5.5,
+                    "y1": 0,
+                    "x2": 7,
+                    "y2": 0,
+                    "wallType": "koshikabe",
+                    "heightMm": 1000
+                }
+            ],
+            "pillars": [],
+            "openings": [
+                {
+                    "id": "id_tncc1t2",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 0.5,
+                    "y": 6,
+                    "orient": "h",
+                    "flip": false,
+                    "widthMm": 2530,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 2.78,
+                    "label": "引き違い窓 (W1650×H1300)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_k8az7gm",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 6,
+                    "y": 6,
+                    "orient": "h",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 1.813,
+                    "label": "引き違い窓 (W1650×H1300)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_vw9uvcc",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "demado",
+                    "doorFit": "demado",
+                    "leafCount": 1,
+                    "leafWidthMm": 1650,
+                    "x": 8,
+                    "y": 4,
+                    "orient": "v",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 1100,
+                    "sillMm": 900,
+                    "widthP": 1.813,
+                    "label": "出窓窓 (W1650×H1100)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_7b1and7",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "demado",
+                    "doorFit": "demado",
+                    "leafCount": 1,
+                    "leafWidthMm": 1650,
+                    "x": 8,
+                    "y": 1,
+                    "orient": "v",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 1100,
+                    "sillMm": 900,
+                    "widthP": 1.813,
+                    "label": "出窓窓 (W1650×H1100)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_79lls7x",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "demado",
+                    "doorFit": "demado",
+                    "leafCount": 1,
+                    "leafWidthMm": 1650,
+                    "x": 6,
+                    "y": -2,
+                    "orient": "h",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 500,
+                    "sillMm": 1100,
+                    "widthP": 1.813,
+                    "label": "出窓窓 (W1650×H1100)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_5vefvkh",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": -2,
+                    "y": 3,
+                    "orient": "v",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 1300,
+                    "sillMm": 800,
+                    "widthP": 1.813,
+                    "label": "引き違い窓 (W1650×H1300)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_v7xvw1u",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": -2,
+                    "y": -1,
+                    "orient": "v",
+                    "flip": false,
+                    "widthMm": 1190,
+                    "heightMm": 900,
+                    "sillMm": 800,
+                    "widthP": 1.308,
+                    "label": "引き違い窓 (W1650×H1300)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_l0dq5pv",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 0.5,
+                    "y": -2,
+                    "orient": "h",
+                    "flip": false,
+                    "widthMm": 740,
+                    "heightMm": 500,
+                    "sillMm": 1200,
+                    "widthP": 0.813,
+                    "label": "引き違い窓 (W1650×H1300)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_b4oupi7",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 2.5,
+                    "y": -2,
+                    "orient": "h",
+                    "flip": false,
+                    "widthMm": 600,
+                    "heightMm": 500,
+                    "sillMm": 1500,
+                    "widthP": 0.659,
+                    "label": "引き違い窓 (W1650×H1300)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_qvdjf5n",
+                    "category": "door",
+                    "type": "SLIDING_DOOR",
+                    "sashType": "katabiki",
+                    "doorFit": "katabiki",
+                    "leafCount": 1,
+                    "leafWidthMm": 800,
+                    "x": 0,
+                    "y": -1,
+                    "orient": "v",
+                    "flip": false,
+                    "widthMm": 1500,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 1.648,
+                    "label": "引き戸建具 (W800×H2000)",
+                    "isWin": false
+                },
+                {
+                    "id": "id_7q02pyg",
+                    "category": "door",
+                    "type": "SLIDING_DOOR",
+                    "sashType": "katabiki",
+                    "doorFit": "katabiki",
+                    "leafCount": 1,
+                    "leafWidthMm": 800,
+                    "x": 2,
+                    "y": -1,
+                    "orient": "v",
+                    "flip": true,
+                    "widthMm": 1500,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 1.648,
+                    "label": "引き戸建具 (W800×H2000)",
+                    "isWin": false
+                },
+                {
+                    "id": "id_2psrik0",
+                    "category": "door",
+                    "type": "SLIDING_DOOR",
+                    "sashType": "katabiki",
+                    "doorFit": "katabiki",
+                    "leafCount": 1,
+                    "leafWidthMm": 800,
+                    "x": 3,
+                    "y": -1,
+                    "orient": "h",
+                    "flip": true,
+                    "widthMm": 1500,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 1.648,
+                    "label": "引き戸建具 (W800×H2000)",
+                    "isWin": false
+                },
+                {
+                    "id": "id_zk9w627",
+                    "category": "door",
+                    "type": "SLIDING_DOOR",
+                    "sashType": "katabiki",
+                    "doorFit": "katabiki",
+                    "leafCount": 1,
+                    "leafWidthMm": 800,
+                    "x": 4,
+                    "y": 2.5,
+                    "orient": "v",
+                    "flip": false,
+                    "widthMm": 2000,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 2.198,
+                    "label": "引き戸建具 (W800×H2000)",
+                    "isWin": false
+                },
+                {
+                    "id": "id_o6x83jr",
+                    "category": "door",
+                    "type": "SLIDING_DOOR",
+                    "sashType": "katahiraki",
+                    "doorFit": "katahiraki",
+                    "leafCount": 1,
+                    "leafWidthMm": 800,
+                    "x": 4.5,
+                    "y": -0.5,
+                    "orient": "v",
+                    "flip": false,
+                    "widthMm": 800,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 0.879,
+                    "label": "片開き建具 (W800×H2000)",
+                    "isWin": false
+                },
+                {
+                    "id": "id_0eww6ty",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 2,
+                    "y": 3,
+                    "orient": "v",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 1.813,
+                    "label": "引き違い窓 (W1650×H1300)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_kyncbqz",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 0.5,
+                    "y": 5,
+                    "orient": "h",
+                    "flip": false,
+                    "widthMm": 2530,
+                    "heightMm": 1300,
+                    "sillMm": 800,
+                    "widthP": 2.78,
+                    "label": "引き違い窓 (W1650×H1300)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_9bf8b9f",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": -1,
+                    "y": 1,
+                    "orient": "h",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 1.813,
+                    "label": "引き違い窓 (W1650×H1300)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_2xinhg1",
+                    "category": "door",
+                    "type": "SLIDING_DOOR",
+                    "sashType": "closet",
+                    "doorFit": "closet",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 1,
+                    "y": 0,
+                    "orient": "h",
+                    "flip": true,
+                    "widthMm": 1650,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 1.813,
+                    "label": "クローゼット建具 (W1650×H2200)",
+                    "isWin": false
+                },
+                {
+                    "id": "id_pynmbpl",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 3,
+                    "y": 6,
+                    "orient": "h",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 1.813,
+                    "label": "引き違い窓 (W1650×H1300)",
+                    "isWin": true
+                }
+            ],
+            "fixtures": [
+                {
+                    "id": "id_84gqv43",
+                    "type": "KITCHEN_L",
+                    "category": "KITCHEN_L",
+                    "x": 6,
+                    "y": -1.75,
+                    "w": 1.758,
+                    "h": 1.758,
+                    "wMm": 1600,
+                    "dMm": 1600,
+                    "hMm": 850,
+                    "rot": 180,
+                    "label": "L型キッチン (160×160cm)",
+                    "kHeight": 850,
+                    "vHeight": 800,
+                    "ubPattern": "patternA",
+                    "fxData": {
+                        "lWidthX": 1600,
+                        "lWidthY": 1600,
+                        "lDepth": 650,
+                        "kitchenType": "L",
+                        "kHeight": 850
+                    },
+                    "flipY": true
+                },
+                {
+                    "id": "id_qbk3jc4",
+                    "type": "UB",
+                    "category": "UB",
+                    "x": -2,
+                    "y": -2,
+                    "w": 1.758,
+                    "h": 1.758,
+                    "wMm": 1600,
+                    "dMm": 1600,
+                    "hMm": 2150,
+                    "rot": 0,
+                    "label": "ユニットバス 1616 (1坪標準)",
+                    "kHeight": 850,
+                    "vHeight": 800,
+                    "ubPattern": "patternA",
+                    "fxData": {
+                        "ubSize": "1616",
+                        "ubPattern": "patternA"
+                    }
+                },
+                {
+                    "id": "id_vjgz91q",
+                    "type": "VANITY",
+                    "category": "VANITY",
+                    "x": 0.75,
+                    "y": -2,
+                    "w": 0.989,
+                    "h": 0.604,
+                    "wMm": 900,
+                    "dMm": 550,
+                    "hMm": 800,
+                    "rot": 0,
+                    "label": "洗面化粧台 (W900mm)",
+                    "kHeight": 850,
+                    "vHeight": 800,
+                    "ubPattern": "patternA",
+                    "fxData": {
+                        "vanityWidth": 900,
+                        "vHeight": 800
+                    }
+                },
+                {
+                    "id": "id_npg4lic",
+                    "type": "TOILET_FIX",
+                    "category": "TOILET_FIX",
+                    "x": 3.25,
+                    "y": -2,
+                    "w": 0.85,
+                    "h": 0.5,
+                    "wMm": 774,
+                    "dMm": 455,
+                    "hMm": 780,
+                    "rot": 270,
+                    "label": "トイレ便器",
+                    "kHeight": 850,
+                    "vHeight": 800,
+                    "ubPattern": "patternA",
+                    "fxData": [],
+                    "flipX": true
+                }
+            ],
+            "stairs": [
+                {
+                    "id": "id_o8e7uav",
+                    "kind": "stair",
+                    "type": "STAIR",
+                    "category": "STAIR",
+                    "shapeType": "L_SHAPE",
+                    "patternKey": "L_LANDING_TOP",
+                    "isModular": true,
+                    "landingTop": true,
+                    "rotation": 0,
+                    "i1Steps": 10,
+                    "c1Steps": 1,
+                    "c1Dir": "both",
+                    "i2Steps": 0,
+                    "c2Steps": 0,
+                    "c2Dir": "right",
+                    "i3Steps": 0,
+                    "points": [
+                        {
+                            "x": 3,
+                            "y": -1
+                        },
+                        {
+                            "x": 4,
+                            "y": -1
+                        },
+                        {
+                            "x": 4,
+                            "y": 2.5
+                        },
+                        {
+                            "x": 3,
+                            "y": 2.5
+                        }
+                    ],
+                    "x": 3,
+                    "y": -1,
+                    "w": 1,
+                    "h": 3.5,
+                    "widthMm": 910,
+                    "direction": "UP",
+                    "turnType": "landing",
+                    "stairStyle": "box",
+                    "stairHandrail": "both",
+                    "handrail": "both",
+                    "steps": 11,
+                    "treadMm": 227.5,
+                    "riserMm": 200,
+                    "label": "階段 (L型踊り場登りきり・上る)"
+                }
+            ],
+            "strokes": [],
+            "stamps": [],
+            "memos": [],
+            "polyPillars": [],
+            "boxes3d": []
         },
         {
-          "id": "room_lgzqlzra2",
-          "kind": "room",
-          "type": "SENMEN",
-          "name": "洗面室",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": 0,
-              "y": -2
-            },
-            {
-              "x": 0,
-              "y": 0
-            },
-            {
-              "x": 2,
-              "y": 0
-            },
-            {
-              "x": 2,
-              "y": -1
-            },
-            {
-              "x": 2,
-              "y": -2
-            }
-          ],
-          "x": 0,
-          "y": -2,
-          "w": 2,
-          "h": 2,
-          "centroid": {
-            "x": 1,
-            "y": -1
-          },
-          "areaM2": 3.3,
-          "tsubo": 1,
-          "jo": 2,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9",
-          "customName": "洗面室"
+            "rooms": [
+                {
+                    "id": "room_5nmo6rkud",
+                    "kind": "room",
+                    "type": "STORAGE",
+                    "name": "納戸",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": -2,
+                            "y": -2
+                        },
+                        {
+                            "x": -2,
+                            "y": 0
+                        },
+                        {
+                            "x": 0,
+                            "y": 0
+                        },
+                        {
+                            "x": 2,
+                            "y": 0
+                        },
+                        {
+                            "x": 2,
+                            "y": -1
+                        },
+                        {
+                            "x": 2,
+                            "y": -2
+                        }
+                    ],
+                    "x": -2,
+                    "y": -2,
+                    "w": 4,
+                    "h": 2,
+                    "centroid": {
+                        "x": 0,
+                        "y": -1
+                    },
+                    "areaM2": 6.6,
+                    "tsubo": 2,
+                    "jo": 4.1,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9",
+                    "customName": "納戸"
+                },
+                {
+                    "id": "room_9pbda347c",
+                    "kind": "room",
+                    "type": "OTHER",
+                    "name": "クローゼット",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": -2,
+                            "y": 0
+                        },
+                        {
+                            "x": -2,
+                            "y": 1
+                        },
+                        {
+                            "x": 0,
+                            "y": 1
+                        },
+                        {
+                            "x": 0,
+                            "y": 0
+                        }
+                    ],
+                    "x": -2,
+                    "y": 0,
+                    "w": 2,
+                    "h": 1,
+                    "centroid": {
+                        "x": -1,
+                        "y": 0.5
+                    },
+                    "areaM2": 1.7,
+                    "tsubo": 0.51,
+                    "jo": 1,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9",
+                    "customName": "クローゼット"
+                },
+                {
+                    "id": "room_lfnqq8ldb",
+                    "kind": "room",
+                    "type": "TOILET",
+                    "name": "トイレ",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": 2,
+                            "y": -2
+                        },
+                        {
+                            "x": 2,
+                            "y": -1
+                        },
+                        {
+                            "x": 3,
+                            "y": -1
+                        },
+                        {
+                            "x": 4,
+                            "y": -1
+                        },
+                        {
+                            "x": 4,
+                            "y": -2
+                        }
+                    ],
+                    "x": 2,
+                    "y": -2,
+                    "w": 2,
+                    "h": 1,
+                    "centroid": {
+                        "x": 3,
+                        "y": -1.5
+                    },
+                    "areaM2": 1.7,
+                    "tsubo": 0.51,
+                    "jo": 1,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9",
+                    "customName": "トイレ"
+                },
+                {
+                    "id": "room_idncx9cbi",
+                    "kind": "room",
+                    "type": "YOSHITSU",
+                    "name": "洋室",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": 4,
+                            "y": -2
+                        },
+                        {
+                            "x": 4,
+                            "y": -1
+                        },
+                        {
+                            "x": 4,
+                            "y": 2
+                        },
+                        {
+                            "x": 4,
+                            "y": 4
+                        },
+                        {
+                            "x": 8,
+                            "y": 4
+                        },
+                        {
+                            "x": 8,
+                            "y": -2
+                        }
+                    ],
+                    "x": 4,
+                    "y": -2,
+                    "w": 4,
+                    "h": 6,
+                    "centroid": {
+                        "x": 6,
+                        "y": 1
+                    },
+                    "areaM2": 19.9,
+                    "tsubo": 6.02,
+                    "jo": 12.3,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9",
+                    "customName": "洋室"
+                },
+                {
+                    "id": "room_d4csbox09",
+                    "kind": "room",
+                    "type": "OTHER",
+                    "name": "クローゼット",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": 0,
+                            "y": 0
+                        },
+                        {
+                            "x": 0,
+                            "y": 1
+                        },
+                        {
+                            "x": 2,
+                            "y": 1
+                        },
+                        {
+                            "x": 2,
+                            "y": 0
+                        }
+                    ],
+                    "x": 0,
+                    "y": 0,
+                    "w": 2,
+                    "h": 1,
+                    "centroid": {
+                        "x": 1,
+                        "y": 0.5
+                    },
+                    "areaM2": 1.7,
+                    "tsubo": 0.51,
+                    "jo": 1,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9",
+                    "customName": "クローゼット"
+                },
+                {
+                    "id": "room_mzducixo4",
+                    "kind": "room",
+                    "type": "ROUKA",
+                    "name": "ホール",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": 2,
+                            "y": 0
+                        },
+                        {
+                            "x": 2,
+                            "y": 1
+                        },
+                        {
+                            "x": 2,
+                            "y": 4
+                        },
+                        {
+                            "x": 4,
+                            "y": 4
+                        },
+                        {
+                            "x": 4,
+                            "y": 2
+                        },
+                        {
+                            "x": 3,
+                            "y": 2
+                        },
+                        {
+                            "x": 3,
+                            "y": 0
+                        },
+                        {
+                            "x": 3,
+                            "y": -1
+                        },
+                        {
+                            "x": 2,
+                            "y": -1
+                        }
+                    ],
+                    "x": 2,
+                    "y": -1,
+                    "w": 2,
+                    "h": 5,
+                    "centroid": {
+                        "x": 2.79,
+                        "y": 1.93
+                    },
+                    "areaM2": 5.8,
+                    "tsubo": 1.75,
+                    "jo": 3.6,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9",
+                    "customName": "ホール"
+                },
+                {
+                    "id": "room_th8ogk3uq",
+                    "kind": "room",
+                    "type": "YOSHITSU",
+                    "name": "洋室",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": -2,
+                            "y": 1
+                        },
+                        {
+                            "x": -2,
+                            "y": 5
+                        },
+                        {
+                            "x": 2,
+                            "y": 5
+                        },
+                        {
+                            "x": 2,
+                            "y": 4
+                        },
+                        {
+                            "x": 2,
+                            "y": 1
+                        },
+                        {
+                            "x": 0,
+                            "y": 1
+                        }
+                    ],
+                    "x": -2,
+                    "y": 1,
+                    "w": 4,
+                    "h": 4,
+                    "centroid": {
+                        "x": 0,
+                        "y": 3
+                    },
+                    "areaM2": 13.2,
+                    "tsubo": 3.99,
+                    "jo": 8.1,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9",
+                    "customName": "洋室"
+                },
+                {
+                    "id": "room_s28mn2o79",
+                    "kind": "room",
+                    "type": "BALCONY",
+                    "name": "バルコニー",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": -2,
+                            "y": 5
+                        },
+                        {
+                            "x": -2,
+                            "y": 6.5
+                        },
+                        {
+                            "x": 8,
+                            "y": 6.5
+                        },
+                        {
+                            "x": 8,
+                            "y": 4
+                        },
+                        {
+                            "x": 4,
+                            "y": 4
+                        },
+                        {
+                            "x": 2,
+                            "y": 4
+                        },
+                        {
+                            "x": 2,
+                            "y": 5
+                        }
+                    ],
+                    "x": -2,
+                    "y": 4,
+                    "w": 10,
+                    "h": 2.5,
+                    "centroid": {
+                        "x": 3.57,
+                        "y": 5.39
+                    },
+                    "areaM2": 17.4,
+                    "tsubo": 5.26,
+                    "jo": 10.7,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9",
+                    "customName": "バルコニー"
+                },
+                {
+                    "id": "room_acefivkef",
+                    "kind": "room",
+                    "type": "OTHER",
+                    "name": "",
+                    "isAutoDetected": true,
+                    "points": [
+                        {
+                            "x": 4,
+                            "y": -1
+                        },
+                        {
+                            "x": 3,
+                            "y": -1
+                        },
+                        {
+                            "x": 3,
+                            "y": 0
+                        },
+                        {
+                            "x": 3,
+                            "y": 2
+                        },
+                        {
+                            "x": 4,
+                            "y": 2
+                        }
+                    ],
+                    "x": 3,
+                    "y": -1,
+                    "w": 1,
+                    "h": 3,
+                    "centroid": {
+                        "x": 3.5,
+                        "y": 0.5
+                    },
+                    "areaM2": 2.5,
+                    "tsubo": 0.76,
+                    "jo": 1.5,
+                    "color2d": "rgba(226, 232, 240, 0.65)",
+                    "color3d": "#f1f5f9"
+                },
+                {
+                    "id": "id_6dwm24r",
+                    "type": "STAIR",
+                    "x": 3,
+                    "y": -1,
+                    "w": 0.25,
+                    "h": 0.25,
+                    "customName": "階段室"
+                },
+                {
+                    "id": "id_nsolwch",
+                    "type": "STAIR",
+                    "x": 3,
+                    "y": -1,
+                    "w": 1,
+                    "h": 3,
+                    "customName": "階段室"
+                }
+            ],
+            "walls": [
+                {
+                    "id": "id_mvhprqj",
+                    "x1": -2,
+                    "y1": -2,
+                    "x2": 8,
+                    "y2": -2,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_ro63h6y",
+                    "x1": -2,
+                    "y1": 0,
+                    "x2": 2,
+                    "y2": 0,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_aiub6vw",
+                    "x1": -2,
+                    "y1": 1,
+                    "x2": 2,
+                    "y2": 1,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_5y9h1wg",
+                    "x1": 0,
+                    "y1": 0,
+                    "x2": 0,
+                    "y2": 1,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_8bpw64y",
+                    "x1": -2,
+                    "y1": 5,
+                    "x2": 2,
+                    "y2": 5,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_xg7nliu",
+                    "x1": 2,
+                    "y1": -2,
+                    "x2": 2,
+                    "y2": 5,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_1xw5uhb",
+                    "x1": 2,
+                    "y1": 4,
+                    "x2": 8,
+                    "y2": 4,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_h2rr38g",
+                    "x1": 4,
+                    "y1": -2,
+                    "x2": 4,
+                    "y2": 4,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_sjxylm9",
+                    "x1": 2,
+                    "y1": -1,
+                    "x2": 4,
+                    "y2": -1,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_tqzd8kn",
+                    "x1": 8,
+                    "y1": -2,
+                    "x2": 8,
+                    "y2": 4,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_zrlyt1j",
+                    "x1": 3,
+                    "y1": 2,
+                    "x2": 4,
+                    "y2": 2,
+                    "wallType": "koshikabe",
+                    "heightMm": 1000
+                },
+                {
+                    "id": "id_xcrqdyp",
+                    "x1": 3,
+                    "y1": -1,
+                    "x2": 3,
+                    "y2": 0,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_7l2vd09",
+                    "x1": 3,
+                    "y1": 0,
+                    "x2": 3,
+                    "y2": 2,
+                    "wallType": "koshikabe",
+                    "heightMm": 1000
+                },
+                {
+                    "id": "id_wjlnshy",
+                    "x1": -2,
+                    "y1": -2,
+                    "x2": -2,
+                    "y2": 5,
+                    "wallType": "wall",
+                    "heightMm": 2450
+                },
+                {
+                    "id": "id_q078qj4",
+                    "x1": -2,
+                    "y1": 5,
+                    "x2": -2,
+                    "y2": 6.5,
+                    "wallType": "koshikabe",
+                    "heightMm": 1000
+                },
+                {
+                    "id": "id_01ovw7h",
+                    "x1": 8,
+                    "y1": 4,
+                    "x2": 8,
+                    "y2": 6.5,
+                    "wallType": "koshikabe",
+                    "heightMm": 1000
+                },
+                {
+                    "id": "id_pkmv9f2",
+                    "x1": -2,
+                    "y1": 6.5,
+                    "x2": 8,
+                    "y2": 6.5,
+                    "wallType": "koshikabe",
+                    "heightMm": 1000
+                }
+            ],
+            "pillars": [],
+            "openings": [
+                {
+                    "id": "id_wwzdrwb",
+                    "category": "window",
+                    "type": "SLIDING_DOOR",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 3,
+                    "y": -1,
+                    "orient": "h",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 1.813,
+                    "label": "☀️ 掃き出し窓 (1650×2000\/FL+0)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_hnza8vd",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 0,
+                    "y": 5,
+                    "orient": "h",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 1.813,
+                    "label": "引き違い窓 (W1650×H1300)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_c4xgv49",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 6,
+                    "y": 4,
+                    "orient": "h",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 1.813,
+                    "label": "引き違い窓 (W1650×H1300)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_my9uihy",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 3,
+                    "y": 4,
+                    "orient": "h",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 1.813,
+                    "label": "☀️ 掃き出し窓 (1650×2000\/FL+0)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_pcv4qvt",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "demado",
+                    "doorFit": "demado",
+                    "leafCount": 1,
+                    "leafWidthMm": 1650,
+                    "x": 8,
+                    "y": 2,
+                    "orient": "v",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 900,
+                    "sillMm": 1100,
+                    "widthP": 1.813,
+                    "label": "出窓窓 (W1650×H1100)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_l4nnawm",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "demado",
+                    "doorFit": "demado",
+                    "leafCount": 1,
+                    "leafWidthMm": 1650,
+                    "x": 8,
+                    "y": 0,
+                    "orient": "v",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 900,
+                    "sillMm": 1100,
+                    "widthP": 1.813,
+                    "label": "出窓窓 (W1650×H1100)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_ps9zcy4",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "demado",
+                    "doorFit": "demado",
+                    "leafCount": 1,
+                    "leafWidthMm": 1650,
+                    "x": 5.5,
+                    "y": -2,
+                    "orient": "h",
+                    "flip": false,
+                    "widthMm": 2530,
+                    "heightMm": 900,
+                    "sillMm": 1100,
+                    "widthP": 2.78,
+                    "label": "出窓窓 (W1650×H1100)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_hlvnm2h",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 2.5,
+                    "y": -2,
+                    "orient": "h",
+                    "flip": false,
+                    "widthMm": 740,
+                    "heightMm": 500,
+                    "sillMm": 1500,
+                    "widthP": 0.813,
+                    "label": "引き違い窓 (W1650×H1300)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_gvk9kqy",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 0,
+                    "y": -2,
+                    "orient": "h",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 900,
+                    "sillMm": 1100,
+                    "widthP": 1.813,
+                    "label": "引き違い窓 (W1650×H1300)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_drpx1hq",
+                    "category": "window",
+                    "type": "WINDOW",
+                    "sashType": "demado",
+                    "doorFit": "demado",
+                    "leafCount": 1,
+                    "leafWidthMm": 1650,
+                    "x": -2,
+                    "y": 3,
+                    "orient": "v",
+                    "flip": true,
+                    "widthMm": 1650,
+                    "heightMm": 900,
+                    "sillMm": 1100,
+                    "widthP": 1.813,
+                    "label": "出窓窓 (W1650×H1100)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_liubiqy",
+                    "category": "door",
+                    "type": "SLIDING_DOOR",
+                    "sashType": "closet",
+                    "doorFit": "closet",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": -1,
+                    "y": 1,
+                    "orient": "h",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 2200,
+                    "sillMm": 0,
+                    "widthP": 1.813,
+                    "label": "クローゼット建具 (W1650×H2200)",
+                    "isWin": false
+                },
+                {
+                    "id": "id_2tp64ku",
+                    "category": "door",
+                    "type": "SLIDING_DOOR",
+                    "sashType": "closet",
+                    "doorFit": "closet",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 1,
+                    "y": 1,
+                    "orient": "h",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 2200,
+                    "sillMm": 0,
+                    "widthP": 1.813,
+                    "label": "クローゼット建具 (W1650×H2200)",
+                    "isWin": false
+                },
+                {
+                    "id": "id_tsbin2g",
+                    "category": "window",
+                    "type": "SLIDING_DOOR",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 2,
+                    "y": -1,
+                    "orient": "v",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 1.813,
+                    "label": "☀️ 掃き出し窓 (1650×2000\/FL+0)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_8cbgvwz",
+                    "category": "window",
+                    "type": "SLIDING_DOOR",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 2,
+                    "y": 3,
+                    "orient": "v",
+                    "flip": true,
+                    "widthMm": 1650,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 1.813,
+                    "label": "☀️ 掃き出し窓 (1650×2000\/FL+0)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_wzza9yq",
+                    "category": "window",
+                    "type": "SLIDING_DOOR",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 4,
+                    "y": 3,
+                    "orient": "v",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 1.813,
+                    "label": "☀️ 掃き出し窓 (1650×2000\/FL+0)",
+                    "isWin": true
+                },
+                {
+                    "id": "id_avzbzdl",
+                    "category": "window",
+                    "type": "SLIDING_DOOR",
+                    "sashType": "hikichigai",
+                    "doorFit": "hikichigai",
+                    "leafCount": 2,
+                    "leafWidthMm": 825,
+                    "x": 4,
+                    "y": 0,
+                    "orient": "v",
+                    "flip": false,
+                    "widthMm": 1650,
+                    "heightMm": 2000,
+                    "sillMm": 0,
+                    "widthP": 1.813,
+                    "label": "☀️ 掃き出し窓 (1650×2000\/FL+0)",
+                    "isWin": true
+                }
+            ],
+            "fixtures": [
+                {
+                    "id": "id_ruu31u9",
+                    "type": "TOILET_FIX",
+                    "category": "TOILET_FIX",
+                    "x": 3.429,
+                    "y": -1.5,
+                    "w": 0.5,
+                    "h": 0.85,
+                    "wMm": 455,
+                    "dMm": 774,
+                    "hMm": 780,
+                    "rot": 0,
+                    "label": "トイレ便器",
+                    "kHeight": 850,
+                    "vHeight": 800,
+                    "ubPattern": "patternA",
+                    "fxData": []
+                }
+            ],
+            "stairs": [
+                {
+                    "id": "stair_upper_id_o8e7uav",
+                    "kind": "stair",
+                    "type": "STAIR",
+                    "category": "STAIR",
+                    "shapeType": "L_SHAPE",
+                    "patternKey": "L_LANDING_TOP",
+                    "isModular": true,
+                    "landingTop": true,
+                    "rotation": 0,
+                    "i1Steps": 10,
+                    "c1Steps": 1,
+                    "c1Dir": "both",
+                    "i2Steps": 0,
+                    "c2Steps": 0,
+                    "c2Dir": "right",
+                    "i3Steps": 0,
+                    "points": [
+                        {
+                            "x": 3,
+                            "y": -1
+                        },
+                        {
+                            "x": 4,
+                            "y": -1
+                        },
+                        {
+                            "x": 4,
+                            "y": 2.5
+                        },
+                        {
+                            "x": 3,
+                            "y": 2.5
+                        }
+                    ],
+                    "x": 3,
+                    "y": -1,
+                    "w": 1,
+                    "h": 3.5,
+                    "widthMm": 910,
+                    "direction": "UP",
+                    "turnType": "landing",
+                    "stairStyle": "box",
+                    "stairHandrail": "both",
+                    "handrail": "both",
+                    "steps": 11,
+                    "treadMm": 227.5,
+                    "riserMm": 200,
+                    "label": "階段 (L型踊り場登りきり・上る)",
+                    "linkedFromStairId": "id_o8e7uav",
+                    "linkedFromFloor": 1,
+                    "no3DOutput": true,
+                    "no2DOutput": false
+                }
+            ],
+            "strokes": [],
+            "stamps": [],
+            "memos": [],
+            "polyPillars": [],
+            "boxes3d": []
         },
         {
-          "id": "room_mlupk479d",
-          "kind": "room",
-          "type": "OTHER",
-          "name": "",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": 0,
-              "y": 0
-            },
-            {
-              "x": 0,
-              "y": 0.5
-            },
-            {
-              "x": 2,
-              "y": 0.5
-            },
-            {
-              "x": 2,
-              "y": 0.25
-            },
-            {
-              "x": 2,
-              "y": 0
-            }
-          ],
-          "x": 0,
-          "y": 0,
-          "w": 2,
-          "h": 0.5,
-          "centroid": {
-            "x": 1,
-            "y": 0.25
-          },
-          "areaM2": 0.8,
-          "tsubo": 0.24,
-          "jo": 0.5,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9"
+            "rooms": [],
+            "walls": [],
+            "pillars": [],
+            "openings": [],
+            "fixtures": [],
+            "stairs": [],
+            "strokes": [],
+            "stamps": [],
+            "memos": [],
+            "polyPillars": [],
+            "boxes3d": []
         },
         {
-          "id": "room_j8cm0jla7",
-          "kind": "room",
-          "type": "OTHER",
-          "name": "",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": 2,
-              "y": -2
-            },
-            {
-              "x": 2,
-              "y": -1
-            },
-            {
-              "x": 3.75,
-              "y": -1
-            },
-            {
-              "x": 3.75,
-              "y": -2
-            },
-            {
-              "x": 3.5,
-              "y": -2
-            }
-          ],
-          "x": 2,
-          "y": -2,
-          "w": 1.75,
-          "h": 1,
-          "centroid": {
-            "x": 2.88,
-            "y": -1.5
-          },
-          "areaM2": 1.4,
-          "tsubo": 0.42,
-          "jo": 0.9,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9"
-        },
-        {
-          "id": "room_79z2gcnxy",
-          "kind": "room",
-          "type": "ROUKA",
-          "name": "ホール",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": 2,
-              "y": -1
-            },
-            {
-              "x": 2,
-              "y": 0
-            },
-            {
-              "x": 2,
-              "y": 0.25
-            },
-            {
-              "x": 2,
-              "y": 0.5
-            },
-            {
-              "x": 2,
-              "y": 1
-            },
-            {
-              "x": 2,
-              "y": 1.25
-            },
-            {
-              "x": 2,
-              "y": 4
-            },
-            {
-              "x": 4,
-              "y": 4
-            },
-            {
-              "x": 4,
-              "y": 0
-            },
-            {
-              "x": 3,
-              "y": 0
-            },
-            {
-              "x": 3,
-              "y": 1.5
-            },
-            {
-              "x": 3,
-              "y": 2.5
-            },
-            {
-              "x": 3,
-              "y": 1.5
-            },
-            {
-              "x": 3,
-              "y": 0
-            },
-            {
-              "x": 4,
-              "y": 0
-            },
-            {
-              "x": 4.5,
-              "y": 0
-            },
-            {
-              "x": 4.5,
-              "y": -1
-            },
-            {
-              "x": 3.75,
-              "y": -1
-            }
-          ],
-          "x": 2,
-          "y": -1,
-          "w": 2.5,
-          "h": 5,
-          "centroid": {
-            "x": 3.06,
-            "y": 1.4
-          },
-          "areaM2": 8.7,
-          "tsubo": 2.63,
-          "jo": 5.4,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9",
-          "customName": "ホール"
-        },
-        {
-          "id": "room_byeybhtym",
-          "kind": "room",
-          "type": "OTHER",
-          "name": "LDK",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": 3.75,
-              "y": -2
-            },
-            {
-              "x": 3.75,
-              "y": -1
-            },
-            {
-              "x": 4.5,
-              "y": -1
-            },
-            {
-              "x": 4.5,
-              "y": 0
-            },
-            {
-              "x": 4,
-              "y": 0
-            },
-            {
-              "x": 4,
-              "y": 4
-            },
-            {
-              "x": 4,
-              "y": 6
-            },
-            {
-              "x": 8,
-              "y": 6
-            },
-            {
-              "x": 8,
-              "y": 0
-            },
-            {
-              "x": 7,
-              "y": 0
-            },
-            {
-              "x": 5.5,
-              "y": 0
-            },
-            {
-              "x": 7,
-              "y": 0
-            },
-            {
-              "x": 8,
-              "y": 0
-            },
-            {
-              "x": 8,
-              "y": -2
-            },
-            {
-              "x": 4.5,
-              "y": -2
-            }
-          ],
-          "x": 3.75,
-          "y": -2,
-          "w": 4.25,
-          "h": 8,
-          "centroid": {
-            "x": 6.01,
-            "y": 2.01
-          },
-          "areaM2": 26.3,
-          "tsubo": 7.96,
-          "jo": 16.2,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9",
-          "customName": "LDK"
-        },
-        {
-          "id": "room_s314ghyk1",
-          "kind": "room",
-          "type": "GENKAN",
-          "name": "玄関",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": 4,
-              "y": 4
-            },
-            {
-              "x": 2,
-              "y": 4
-            },
-            {
-              "x": 2,
-              "y": 5
-            },
-            {
-              "x": 2,
-              "y": 6
-            },
-            {
-              "x": 4,
-              "y": 6
-            }
-          ],
-          "x": 2,
-          "y": 4,
-          "w": 2,
-          "h": 2,
-          "centroid": {
-            "x": 3,
-            "y": 5
-          },
-          "areaM2": 3.3,
-          "tsubo": 1,
-          "jo": 2,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9",
-          "customName": "玄関"
-        },
-        {
-          "id": "room_82ctb9osh",
-          "kind": "room",
-          "type": "WASHITSU",
-          "name": "和室",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": -2,
-              "y": 1
-            },
-            {
-              "x": -2,
-              "y": 1.25
-            },
-            {
-              "x": -2,
-              "y": 5
-            },
-            {
-              "x": 2,
-              "y": 5
-            },
-            {
-              "x": 2,
-              "y": 4
-            },
-            {
-              "x": 2,
-              "y": 1.25
-            },
-            {
-              "x": 2,
-              "y": 1
-            },
-            {
-              "x": 0,
-              "y": 1
-            }
-          ],
-          "x": -2,
-          "y": 1,
-          "w": 4,
-          "h": 4,
-          "centroid": {
-            "x": 0,
-            "y": 3
-          },
-          "areaM2": 13.2,
-          "tsubo": 3.99,
-          "jo": 8.1,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9",
-          "customName": "和室"
-        },
-        {
-          "id": "room_g97kv87rp",
-          "kind": "room",
-          "type": "OTHER",
-          "name": "",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": 0,
-              "y": 1
-            },
-            {
-              "x": 2,
-              "y": 1
-            },
-            {
-              "x": 2,
-              "y": 0.5
-            },
-            {
-              "x": 0,
-              "y": 0.5
-            }
-          ],
-          "x": 0,
-          "y": 0.5,
-          "w": 2,
-          "h": 0.5,
-          "centroid": {
-            "x": 1,
-            "y": 0.75
-          },
-          "areaM2": 0.8,
-          "tsubo": 0.24,
-          "jo": 0.5,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9"
-        },
-        {
-          "id": "room_2vlcp07hg",
-          "kind": "room",
-          "type": "OTHER",
-          "name": "縁側",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": -2,
-              "y": 5
-            },
-            {
-              "x": -2,
-              "y": 6
-            },
-            {
-              "x": 2,
-              "y": 6
-            },
-            {
-              "x": 2,
-              "y": 5
-            }
-          ],
-          "x": -2,
-          "y": 5,
-          "w": 4,
-          "h": 1,
-          "centroid": {
-            "x": 0,
-            "y": 5.5
-          },
-          "areaM2": 3.3,
-          "tsubo": 1,
-          "jo": 2,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9",
-          "customName": "縁側"
+            "rooms": [],
+            "walls": [],
+            "pillars": [],
+            "openings": [],
+            "fixtures": [],
+            "stairs": [],
+            "strokes": [],
+            "stamps": [],
+            "memos": [],
+            "polyPillars": [],
+            "boxes3d": []
         }
-      ],
-      "walls": [
-        {
-          "id": "id_zsar5vj",
-          "x1": -2,
-          "y1": -2,
-          "x2": -2,
-          "y2": 0,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_ismlzme",
-          "x1": -2,
-          "y1": -2,
-          "x2": 0,
-          "y2": -2,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_qrxqfdx",
-          "x1": 0,
-          "y1": -2,
-          "x2": 0,
-          "y2": 0,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_33pq62z",
-          "x1": -2,
-          "y1": 0,
-          "x2": 0,
-          "y2": 0,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_4xqjtpq",
-          "x1": 0,
-          "y1": -2,
-          "x2": 2,
-          "y2": -2,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_1hlmq4e",
-          "x1": 2,
-          "y1": -2,
-          "x2": 2,
-          "y2": 0,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_te6znm8",
-          "x1": 0,
-          "y1": 0,
-          "x2": 2,
-          "y2": 0,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_sgdcz75",
-          "x1": 3.75,
-          "y1": -2,
-          "x2": 2,
-          "y2": -2,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_e3o2iuu",
-          "x1": 3.75,
-          "y1": -2,
-          "x2": 3.75,
-          "y2": -1,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_w5cpkji",
-          "x1": 4.5,
-          "y1": -2,
-          "x2": 3.5,
-          "y2": -2,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_01w1yt7",
-          "x1": 4.5,
-          "y1": -1,
-          "x2": 3.75,
-          "y2": -1,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_zauam6y",
-          "x1": 3.75,
-          "y1": -2,
-          "x2": 2,
-          "y2": -2,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_pfhoxdq",
-          "x1": 3.75,
-          "y1": -1,
-          "x2": 2,
-          "y2": -1,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_aaj0auw",
-          "x1": 4.5,
-          "y1": -1,
-          "x2": 4.5,
-          "y2": 0,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_qqilo1p",
-          "x1": 3,
-          "y1": 0,
-          "x2": 4.5,
-          "y2": 0,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_w53gma6",
-          "x1": 3,
-          "y1": 0,
-          "x2": 3,
-          "y2": 1.5,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_g23wavu",
-          "x1": 3,
-          "y1": 1.5,
-          "x2": 3,
-          "y2": 2.5,
-          "wallType": "koshikabe",
-          "heightMm": 1000
-        },
-        {
-          "id": "id_oxqhl8c",
-          "x1": 4,
-          "y1": 0,
-          "x2": 4,
-          "y2": 6,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_d5pc5yg",
-          "x1": 4,
-          "y1": 6,
-          "x2": 8,
-          "y2": 6,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_qce0wbi",
-          "x1": -2,
-          "y1": 1,
-          "x2": 0,
-          "y2": 1,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_zby3lva",
-          "x1": 0,
-          "y1": 0,
-          "x2": 0,
-          "y2": 1,
-          "wallType": "koshikabe",
-          "heightMm": 1000
-        },
-        {
-          "id": "id_h1qsfua",
-          "x1": 2,
-          "y1": 0.25,
-          "x2": 2,
-          "y2": 1,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_o2f5uss",
-          "x1": 2,
-          "y1": 0,
-          "x2": 2,
-          "y2": 1,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_a41nvow",
-          "x1": -2,
-          "y1": 0,
-          "x2": -2,
-          "y2": 1,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_dhx9ty1",
-          "x1": 0,
-          "y1": 1,
-          "x2": 2,
-          "y2": 1,
-          "wallType": "agarikamachi",
-          "heightMm": 180
-        },
-        {
-          "id": "id_yc61skl",
-          "x1": -2,
-          "y1": 1.25,
-          "x2": -2,
-          "y2": 5,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_eh0vkay",
-          "x1": -2,
-          "y1": 1,
-          "x2": -2,
-          "y2": 5,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_th2ijm9",
-          "x1": -2,
-          "y1": 5,
-          "x2": 2,
-          "y2": 5,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_0vftkqh",
-          "x1": 2,
-          "y1": 1.25,
-          "x2": 2,
-          "y2": 5,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_7tstbzs",
-          "x1": -2,
-          "y1": 5,
-          "x2": -2,
-          "y2": 6,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_c587fpy",
-          "x1": -2,
-          "y1": 6,
-          "x2": 2,
-          "y2": 6,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_ly7g814",
-          "x1": 2,
-          "y1": 5,
-          "x2": 2,
-          "y2": 6,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_7bpotrg",
-          "x1": 2,
-          "y1": 6,
-          "x2": 4,
-          "y2": 6,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_n33xueg",
-          "x1": 2,
-          "y1": 4,
-          "x2": 4,
-          "y2": 4,
-          "wallType": "agarikamachi",
-          "heightMm": 180
-        },
-        {
-          "id": "id_9gniebo",
-          "x1": 2,
-          "y1": 1,
-          "x2": 2,
-          "y2": 5,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_7tkofao",
-          "x1": 7,
-          "y1": 0,
-          "x2": 8,
-          "y2": 0,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_6hw7014",
-          "x1": 4.5,
-          "y1": -2,
-          "x2": 8,
-          "y2": -2,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_tnyealz",
-          "x1": 8,
-          "y1": -2,
-          "x2": 8,
-          "y2": 6,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_3v7wg5j",
-          "x1": 0,
-          "y1": 0.5,
-          "x2": 2,
-          "y2": 0.5,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_yfj7648",
-          "x1": 5.5,
-          "y1": 0,
-          "x2": 7,
-          "y2": 0,
-          "wallType": "koshikabe",
-          "heightMm": 1000
-        }
-      ],
-      "pillars": [],
-      "openings": [
-        {
-          "id": "id_tncc1t2",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 0.5,
-          "y": 6,
-          "orient": "h",
-          "flip": false,
-          "widthMm": 2530,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 2.78,
-          "label": "引き違い窓 (W1650×H1300)",
-          "isWin": true
-        },
-        {
-          "id": "id_k8az7gm",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 6,
-          "y": 6,
-          "orient": "h",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 1.813,
-          "label": "引き違い窓 (W1650×H1300)",
-          "isWin": true
-        },
-        {
-          "id": "id_vw9uvcc",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "demado",
-          "doorFit": "demado",
-          "leafCount": 1,
-          "leafWidthMm": 1650,
-          "x": 8,
-          "y": 4,
-          "orient": "v",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 1100,
-          "sillMm": 900,
-          "widthP": 1.813,
-          "label": "出窓窓 (W1650×H1100)",
-          "isWin": true
-        },
-        {
-          "id": "id_7b1and7",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "demado",
-          "doorFit": "demado",
-          "leafCount": 1,
-          "leafWidthMm": 1650,
-          "x": 8,
-          "y": 1,
-          "orient": "v",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 1100,
-          "sillMm": 900,
-          "widthP": 1.813,
-          "label": "出窓窓 (W1650×H1100)",
-          "isWin": true
-        },
-        {
-          "id": "id_79lls7x",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "demado",
-          "doorFit": "demado",
-          "leafCount": 1,
-          "leafWidthMm": 1650,
-          "x": 6,
-          "y": -2,
-          "orient": "h",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 500,
-          "sillMm": 1100,
-          "widthP": 1.813,
-          "label": "出窓窓 (W1650×H1100)",
-          "isWin": true
-        },
-        {
-          "id": "id_5vefvkh",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": -2,
-          "y": 3,
-          "orient": "v",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 1300,
-          "sillMm": 800,
-          "widthP": 1.813,
-          "label": "引き違い窓 (W1650×H1300)",
-          "isWin": true
-        },
-        {
-          "id": "id_v7xvw1u",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": -2,
-          "y": -1,
-          "orient": "v",
-          "flip": false,
-          "widthMm": 1190,
-          "heightMm": 900,
-          "sillMm": 800,
-          "widthP": 1.308,
-          "label": "引き違い窓 (W1650×H1300)",
-          "isWin": true
-        },
-        {
-          "id": "id_l0dq5pv",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 0.5,
-          "y": -2,
-          "orient": "h",
-          "flip": false,
-          "widthMm": 740,
-          "heightMm": 500,
-          "sillMm": 1200,
-          "widthP": 0.813,
-          "label": "引き違い窓 (W1650×H1300)",
-          "isWin": true
-        },
-        {
-          "id": "id_b4oupi7",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 2.5,
-          "y": -2,
-          "orient": "h",
-          "flip": false,
-          "widthMm": 600,
-          "heightMm": 500,
-          "sillMm": 1500,
-          "widthP": 0.659,
-          "label": "引き違い窓 (W1650×H1300)",
-          "isWin": true
-        },
-        {
-          "id": "id_qvdjf5n",
-          "category": "door",
-          "type": "SLIDING_DOOR",
-          "sashType": "katabiki",
-          "doorFit": "katabiki",
-          "leafCount": 1,
-          "leafWidthMm": 800,
-          "x": 0,
-          "y": -1,
-          "orient": "v",
-          "flip": false,
-          "widthMm": 1500,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 1.648,
-          "label": "引き戸建具 (W800×H2000)",
-          "isWin": false
-        },
-        {
-          "id": "id_7q02pyg",
-          "category": "door",
-          "type": "SLIDING_DOOR",
-          "sashType": "katabiki",
-          "doorFit": "katabiki",
-          "leafCount": 1,
-          "leafWidthMm": 800,
-          "x": 2,
-          "y": -1,
-          "orient": "v",
-          "flip": true,
-          "widthMm": 1500,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 1.648,
-          "label": "引き戸建具 (W800×H2000)",
-          "isWin": false
-        },
-        {
-          "id": "id_2psrik0",
-          "category": "door",
-          "type": "SLIDING_DOOR",
-          "sashType": "katabiki",
-          "doorFit": "katabiki",
-          "leafCount": 1,
-          "leafWidthMm": 800,
-          "x": 3,
-          "y": -1,
-          "orient": "h",
-          "flip": true,
-          "widthMm": 1500,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 1.648,
-          "label": "引き戸建具 (W800×H2000)",
-          "isWin": false
-        },
-        {
-          "id": "id_zk9w627",
-          "category": "door",
-          "type": "SLIDING_DOOR",
-          "sashType": "katabiki",
-          "doorFit": "katabiki",
-          "leafCount": 1,
-          "leafWidthMm": 800,
-          "x": 4,
-          "y": 2.5,
-          "orient": "v",
-          "flip": false,
-          "widthMm": 2000,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 2.198,
-          "label": "引き戸建具 (W800×H2000)",
-          "isWin": false
-        },
-        {
-          "id": "id_o6x83jr",
-          "category": "door",
-          "type": "SLIDING_DOOR",
-          "sashType": "katahiraki",
-          "doorFit": "katahiraki",
-          "leafCount": 1,
-          "leafWidthMm": 800,
-          "x": 4.5,
-          "y": -0.5,
-          "orient": "v",
-          "flip": false,
-          "widthMm": 800,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 0.879,
-          "label": "片開き建具 (W800×H2000)",
-          "isWin": false
-        },
-        {
-          "id": "id_0eww6ty",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 2,
-          "y": 3,
-          "orient": "v",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 1.813,
-          "label": "引き違い窓 (W1650×H1300)",
-          "isWin": true
-        },
-        {
-          "id": "id_kyncbqz",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 0.5,
-          "y": 5,
-          "orient": "h",
-          "flip": false,
-          "widthMm": 2530,
-          "heightMm": 1300,
-          "sillMm": 800,
-          "widthP": 2.78,
-          "label": "引き違い窓 (W1650×H1300)",
-          "isWin": true
-        },
-        {
-          "id": "id_9bf8b9f",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": -1,
-          "y": 1,
-          "orient": "h",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 1.813,
-          "label": "引き違い窓 (W1650×H1300)",
-          "isWin": true
-        },
-        {
-          "id": "id_2xinhg1",
-          "category": "door",
-          "type": "SLIDING_DOOR",
-          "sashType": "closet",
-          "doorFit": "closet",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 1,
-          "y": 0,
-          "orient": "h",
-          "flip": true,
-          "widthMm": 1650,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 1.813,
-          "label": "クローゼット建具 (W1650×H2200)",
-          "isWin": false
-        },
-        {
-          "id": "id_pynmbpl",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 3,
-          "y": 6,
-          "orient": "h",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 1.813,
-          "label": "引き違い窓 (W1650×H1300)",
-          "isWin": true
-        }
-      ],
-      "fixtures": [
-        {
-          "id": "id_84gqv43",
-          "type": "KITCHEN_L",
-          "category": "KITCHEN_L",
-          "x": 6,
-          "y": -1.75,
-          "w": 1.758,
-          "h": 1.758,
-          "wMm": 1600,
-          "dMm": 1600,
-          "hMm": 850,
-          "rot": 180,
-          "label": "L型キッチン (160×160cm)",
-          "kHeight": 850,
-          "vHeight": 800,
-          "ubPattern": "patternA",
-          "fxData": {
-            "lWidthX": 1600,
-            "lWidthY": 1600,
-            "lDepth": 650,
-            "kitchenType": "L",
-            "kHeight": 850
-          },
-          "flipY": true
-        },
-        {
-          "id": "id_qbk3jc4",
-          "type": "UB",
-          "category": "UB",
-          "x": -2,
-          "y": -2,
-          "w": 1.758,
-          "h": 1.758,
-          "wMm": 1600,
-          "dMm": 1600,
-          "hMm": 2150,
-          "rot": 0,
-          "label": "ユニットバス 1616 (1坪標準)",
-          "kHeight": 850,
-          "vHeight": 800,
-          "ubPattern": "patternA",
-          "fxData": {
-            "ubSize": "1616",
-            "ubPattern": "patternA"
-          }
-        },
-        {
-          "id": "id_vjgz91q",
-          "type": "VANITY",
-          "category": "VANITY",
-          "x": 0.75,
-          "y": -2,
-          "w": 0.989,
-          "h": 0.604,
-          "wMm": 900,
-          "dMm": 550,
-          "hMm": 800,
-          "rot": 0,
-          "label": "洗面化粧台 (W900mm)",
-          "kHeight": 850,
-          "vHeight": 800,
-          "ubPattern": "patternA",
-          "fxData": {
-            "vanityWidth": 900,
-            "vHeight": 800
-          }
-        },
-        {
-          "id": "id_npg4lic",
-          "type": "TOILET_FIX",
-          "category": "TOILET_FIX",
-          "x": 3.25,
-          "y": -2,
-          "w": 0.85,
-          "h": 0.5,
-          "wMm": 774,
-          "dMm": 455,
-          "hMm": 780,
-          "rot": 270,
-          "label": "トイレ便器",
-          "kHeight": 850,
-          "vHeight": 800,
-          "ubPattern": "patternA",
-          "fxData": {},
-          "flipX": true
-        }
-      ],
-      "stairs": [
-        {
-          "id": "id_o8e7uav",
-          "kind": "stair",
-          "type": "STAIR",
-          "category": "STAIR",
-          "shapeType": "L_SHAPE",
-          "patternKey": "L_LANDING_TOP",
-          "isModular": true,
-          "landingTop": true,
-          "rotation": 0,
-          "i1Steps": 10,
-          "c1Steps": 1,
-          "c1Dir": "both",
-          "i2Steps": 0,
-          "c2Steps": 0,
-          "c2Dir": "right",
-          "i3Steps": 0,
-          "points": [
-            {
-              "x": 3,
-              "y": -1
-            },
-            {
-              "x": 4,
-              "y": -1
-            },
-            {
-              "x": 4,
-              "y": 2.5
-            },
-            {
-              "x": 3,
-              "y": 2.5
-            }
-          ],
-          "x": 3,
-          "y": -1,
-          "w": 1,
-          "h": 3.5,
-          "widthMm": 910,
-          "direction": "UP",
-          "turnType": "landing",
-          "stairStyle": "box",
-          "stairHandrail": "both",
-          "handrail": "both",
-          "steps": 11,
-          "treadMm": 227.5,
-          "riserMm": 200,
-          "label": "階段 (L型踊り場登りきり・上る)"
-        }
-      ],
-      "strokes": [],
-      "stamps": [],
-      "memos": [],
-      "polyPillars": [],
-      "boxes3d": []
-    },
-    "2": {
-      "rooms": [
-        {
-          "id": "room_5nmo6rkud",
-          "kind": "room",
-          "type": "STORAGE",
-          "name": "納戸",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": -2,
-              "y": -2
-            },
-            {
-              "x": -2,
-              "y": 0
-            },
-            {
-              "x": 0,
-              "y": 0
-            },
-            {
-              "x": 2,
-              "y": 0
-            },
-            {
-              "x": 2,
-              "y": -1
-            },
-            {
-              "x": 2,
-              "y": -2
-            }
-          ],
-          "x": -2,
-          "y": -2,
-          "w": 4,
-          "h": 2,
-          "centroid": {
-            "x": 0,
-            "y": -1
-          },
-          "areaM2": 6.6,
-          "tsubo": 2,
-          "jo": 4.1,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9",
-          "customName": "納戸"
-        },
-        {
-          "id": "room_9pbda347c",
-          "kind": "room",
-          "type": "OTHER",
-          "name": "クローゼット",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": -2,
-              "y": 0
-            },
-            {
-              "x": -2,
-              "y": 1
-            },
-            {
-              "x": 0,
-              "y": 1
-            },
-            {
-              "x": 0,
-              "y": 0
-            }
-          ],
-          "x": -2,
-          "y": 0,
-          "w": 2,
-          "h": 1,
-          "centroid": {
-            "x": -1,
-            "y": 0.5
-          },
-          "areaM2": 1.7,
-          "tsubo": 0.51,
-          "jo": 1,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9",
-          "customName": "クローゼット"
-        },
-        {
-          "id": "room_lfnqq8ldb",
-          "kind": "room",
-          "type": "TOILET",
-          "name": "トイレ",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": 2,
-              "y": -2
-            },
-            {
-              "x": 2,
-              "y": -1
-            },
-            {
-              "x": 3,
-              "y": -1
-            },
-            {
-              "x": 4,
-              "y": -1
-            },
-            {
-              "x": 4,
-              "y": -2
-            }
-          ],
-          "x": 2,
-          "y": -2,
-          "w": 2,
-          "h": 1,
-          "centroid": {
-            "x": 3,
-            "y": -1.5
-          },
-          "areaM2": 1.7,
-          "tsubo": 0.51,
-          "jo": 1,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9",
-          "customName": "トイレ"
-        },
-        {
-          "id": "room_idncx9cbi",
-          "kind": "room",
-          "type": "YOSHITSU",
-          "name": "洋室",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": 4,
-              "y": -2
-            },
-            {
-              "x": 4,
-              "y": -1
-            },
-            {
-              "x": 4,
-              "y": 2
-            },
-            {
-              "x": 4,
-              "y": 4
-            },
-            {
-              "x": 8,
-              "y": 4
-            },
-            {
-              "x": 8,
-              "y": -2
-            }
-          ],
-          "x": 4,
-          "y": -2,
-          "w": 4,
-          "h": 6,
-          "centroid": {
-            "x": 6,
-            "y": 1
-          },
-          "areaM2": 19.9,
-          "tsubo": 6.02,
-          "jo": 12.3,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9",
-          "customName": "洋室"
-        },
-        {
-          "id": "room_d4csbox09",
-          "kind": "room",
-          "type": "OTHER",
-          "name": "クローゼット",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": 0,
-              "y": 0
-            },
-            {
-              "x": 0,
-              "y": 1
-            },
-            {
-              "x": 2,
-              "y": 1
-            },
-            {
-              "x": 2,
-              "y": 0
-            }
-          ],
-          "x": 0,
-          "y": 0,
-          "w": 2,
-          "h": 1,
-          "centroid": {
-            "x": 1,
-            "y": 0.5
-          },
-          "areaM2": 1.7,
-          "tsubo": 0.51,
-          "jo": 1,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9",
-          "customName": "クローゼット"
-        },
-        {
-          "id": "room_mzducixo4",
-          "kind": "room",
-          "type": "ROUKA",
-          "name": "ホール",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": 2,
-              "y": 0
-            },
-            {
-              "x": 2,
-              "y": 1
-            },
-            {
-              "x": 2,
-              "y": 4
-            },
-            {
-              "x": 4,
-              "y": 4
-            },
-            {
-              "x": 4,
-              "y": 2
-            },
-            {
-              "x": 3,
-              "y": 2
-            },
-            {
-              "x": 3,
-              "y": 0
-            },
-            {
-              "x": 3,
-              "y": -1
-            },
-            {
-              "x": 2,
-              "y": -1
-            }
-          ],
-          "x": 2,
-          "y": -1,
-          "w": 2,
-          "h": 5,
-          "centroid": {
-            "x": 2.79,
-            "y": 1.93
-          },
-          "areaM2": 5.8,
-          "tsubo": 1.75,
-          "jo": 3.6,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9",
-          "customName": "ホール"
-        },
-        {
-          "id": "room_th8ogk3uq",
-          "kind": "room",
-          "type": "YOSHITSU",
-          "name": "洋室",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": -2,
-              "y": 1
-            },
-            {
-              "x": -2,
-              "y": 5
-            },
-            {
-              "x": 2,
-              "y": 5
-            },
-            {
-              "x": 2,
-              "y": 4
-            },
-            {
-              "x": 2,
-              "y": 1
-            },
-            {
-              "x": 0,
-              "y": 1
-            }
-          ],
-          "x": -2,
-          "y": 1,
-          "w": 4,
-          "h": 4,
-          "centroid": {
-            "x": 0,
-            "y": 3
-          },
-          "areaM2": 13.2,
-          "tsubo": 3.99,
-          "jo": 8.1,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9",
-          "customName": "洋室"
-        },
-        {
-          "id": "room_s28mn2o79",
-          "kind": "room",
-          "type": "BALCONY",
-          "name": "バルコニー",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": -2,
-              "y": 5
-            },
-            {
-              "x": -2,
-              "y": 6.5
-            },
-            {
-              "x": 8,
-              "y": 6.5
-            },
-            {
-              "x": 8,
-              "y": 4
-            },
-            {
-              "x": 4,
-              "y": 4
-            },
-            {
-              "x": 2,
-              "y": 4
-            },
-            {
-              "x": 2,
-              "y": 5
-            }
-          ],
-          "x": -2,
-          "y": 4,
-          "w": 10,
-          "h": 2.5,
-          "centroid": {
-            "x": 3.57,
-            "y": 5.39
-          },
-          "areaM2": 17.4,
-          "tsubo": 5.26,
-          "jo": 10.7,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9",
-          "customName": "バルコニー"
-        },
-        {
-          "id": "room_acefivkef",
-          "kind": "room",
-          "type": "OTHER",
-          "name": "",
-          "isAutoDetected": true,
-          "points": [
-            {
-              "x": 4,
-              "y": -1
-            },
-            {
-              "x": 3,
-              "y": -1
-            },
-            {
-              "x": 3,
-              "y": 0
-            },
-            {
-              "x": 3,
-              "y": 2
-            },
-            {
-              "x": 4,
-              "y": 2
-            }
-          ],
-          "x": 3,
-          "y": -1,
-          "w": 1,
-          "h": 3,
-          "centroid": {
-            "x": 3.5,
-            "y": 0.5
-          },
-          "areaM2": 2.5,
-          "tsubo": 0.76,
-          "jo": 1.5,
-          "color2d": "rgba(226, 232, 240, 0.65)",
-          "color3d": "#f1f5f9"
-        },
-        {
-          "id": "id_6dwm24r",
-          "type": "STAIR",
-          "x": 3,
-          "y": -1,
-          "w": 0.25,
-          "h": 0.25,
-          "customName": "階段室"
-        },
-        {
-          "id": "id_nsolwch",
-          "type": "STAIR",
-          "x": 3,
-          "y": -1,
-          "w": 1,
-          "h": 3,
-          "customName": "階段室"
-        }
-      ],
-      "walls": [
-        {
-          "id": "id_60lkjth",
-          "x1": -2,
-          "y1": -2,
-          "x2": -2,
-          "y2": 0,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_ix1sy7x",
-          "x1": -2,
-          "y1": -2,
-          "x2": 2,
-          "y2": -2,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_mvhprqj",
-          "x1": -2,
-          "y1": -2,
-          "x2": 8,
-          "y2": -2,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_ro63h6y",
-          "x1": -2,
-          "y1": 0,
-          "x2": 2,
-          "y2": 0,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_aiub6vw",
-          "x1": -2,
-          "y1": 1,
-          "x2": 2,
-          "y2": 1,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_5y9h1wg",
-          "x1": 0,
-          "y1": 0,
-          "x2": 0,
-          "y2": 1,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_8bpw64y",
-          "x1": -2,
-          "y1": 5,
-          "x2": 2,
-          "y2": 5,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_xg7nliu",
-          "x1": 2,
-          "y1": -2,
-          "x2": 2,
-          "y2": 5,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_1xw5uhb",
-          "x1": 2,
-          "y1": 4,
-          "x2": 8,
-          "y2": 4,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_h2rr38g",
-          "x1": 4,
-          "y1": -2,
-          "x2": 4,
-          "y2": 4,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_sjxylm9",
-          "x1": 2,
-          "y1": -1,
-          "x2": 4,
-          "y2": -1,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_tqzd8kn",
-          "x1": 8,
-          "y1": -2,
-          "x2": 8,
-          "y2": 4,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_zrlyt1j",
-          "x1": 3,
-          "y1": 2,
-          "x2": 4,
-          "y2": 2,
-          "wallType": "koshikabe",
-          "heightMm": 1000
-        },
-        {
-          "id": "id_7l2vd09",
-          "x1": 3,
-          "y1": 0,
-          "x2": 3,
-          "y2": 2,
-          "wallType": "koshikabe",
-          "heightMm": 1000
-        },
-        {
-          "id": "id_wjlnshy",
-          "x1": -2,
-          "y1": 0,
-          "x2": -2,
-          "y2": 5,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_xcrqdyp",
-          "x1": 3,
-          "y1": -1,
-          "x2": 3,
-          "y2": 2,
-          "wallType": "wall",
-          "heightMm": 2450
-        },
-        {
-          "id": "id_q078qj4",
-          "x1": -2,
-          "y1": 5,
-          "x2": -2,
-          "y2": 6.5,
-          "wallType": "koshikabe",
-          "heightMm": 1000
-        },
-        {
-          "id": "id_01ovw7h",
-          "x1": 8,
-          "y1": 4,
-          "x2": 8,
-          "y2": 6.5,
-          "wallType": "koshikabe",
-          "heightMm": 1000
-        },
-        {
-          "id": "id_pkmv9f2",
-          "x1": -2,
-          "y1": 6.5,
-          "x2": 8,
-          "y2": 6.5,
-          "wallType": "koshikabe",
-          "heightMm": 1000
-        }
-      ],
-      "pillars": [],
-      "openings": [
-        {
-          "id": "id_wwzdrwb",
-          "category": "window",
-          "type": "SLIDING_DOOR",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 3,
-          "y": -1,
-          "orient": "h",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 1.813,
-          "label": "☀️ 掃き出し窓 (1650×2000/FL+0)",
-          "isWin": true
-        },
-        {
-          "id": "id_hnza8vd",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 0,
-          "y": 5,
-          "orient": "h",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 1.813,
-          "label": "引き違い窓 (W1650×H1300)",
-          "isWin": true
-        },
-        {
-          "id": "id_c4xgv49",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 6,
-          "y": 4,
-          "orient": "h",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 1.813,
-          "label": "引き違い窓 (W1650×H1300)",
-          "isWin": true
-        },
-        {
-          "id": "id_my9uihy",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 3,
-          "y": 4,
-          "orient": "h",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 1.813,
-          "label": "☀️ 掃き出し窓 (1650×2000/FL+0)",
-          "isWin": true
-        },
-        {
-          "id": "id_pcv4qvt",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "demado",
-          "doorFit": "demado",
-          "leafCount": 1,
-          "leafWidthMm": 1650,
-          "x": 8,
-          "y": 2,
-          "orient": "v",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 900,
-          "sillMm": 1100,
-          "widthP": 1.813,
-          "label": "出窓窓 (W1650×H1100)",
-          "isWin": true
-        },
-        {
-          "id": "id_l4nnawm",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "demado",
-          "doorFit": "demado",
-          "leafCount": 1,
-          "leafWidthMm": 1650,
-          "x": 8,
-          "y": 0,
-          "orient": "v",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 900,
-          "sillMm": 1100,
-          "widthP": 1.813,
-          "label": "出窓窓 (W1650×H1100)",
-          "isWin": true
-        },
-        {
-          "id": "id_ps9zcy4",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "demado",
-          "doorFit": "demado",
-          "leafCount": 1,
-          "leafWidthMm": 1650,
-          "x": 5.5,
-          "y": -2,
-          "orient": "h",
-          "flip": false,
-          "widthMm": 2530,
-          "heightMm": 900,
-          "sillMm": 1100,
-          "widthP": 2.78,
-          "label": "出窓窓 (W1650×H1100)",
-          "isWin": true
-        },
-        {
-          "id": "id_hlvnm2h",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 2.5,
-          "y": -2,
-          "orient": "h",
-          "flip": false,
-          "widthMm": 740,
-          "heightMm": 500,
-          "sillMm": 1500,
-          "widthP": 0.813,
-          "label": "引き違い窓 (W1650×H1300)",
-          "isWin": true
-        },
-        {
-          "id": "id_gvk9kqy",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 0,
-          "y": -2,
-          "orient": "h",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 900,
-          "sillMm": 1100,
-          "widthP": 1.813,
-          "label": "引き違い窓 (W1650×H1300)",
-          "isWin": true
-        },
-        {
-          "id": "id_drpx1hq",
-          "category": "window",
-          "type": "WINDOW",
-          "sashType": "demado",
-          "doorFit": "demado",
-          "leafCount": 1,
-          "leafWidthMm": 1650,
-          "x": -2,
-          "y": 3,
-          "orient": "v",
-          "flip": true,
-          "widthMm": 1650,
-          "heightMm": 900,
-          "sillMm": 1100,
-          "widthP": 1.813,
-          "label": "出窓窓 (W1650×H1100)",
-          "isWin": true
-        },
-        {
-          "id": "id_liubiqy",
-          "category": "door",
-          "type": "SLIDING_DOOR",
-          "sashType": "closet",
-          "doorFit": "closet",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": -1,
-          "y": 1,
-          "orient": "h",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 2200,
-          "sillMm": 0,
-          "widthP": 1.813,
-          "label": "クローゼット建具 (W1650×H2200)",
-          "isWin": false
-        },
-        {
-          "id": "id_2tp64ku",
-          "category": "door",
-          "type": "SLIDING_DOOR",
-          "sashType": "closet",
-          "doorFit": "closet",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 1,
-          "y": 1,
-          "orient": "h",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 2200,
-          "sillMm": 0,
-          "widthP": 1.813,
-          "label": "クローゼット建具 (W1650×H2200)",
-          "isWin": false
-        },
-        {
-          "id": "id_tsbin2g",
-          "category": "window",
-          "type": "SLIDING_DOOR",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 2,
-          "y": -1,
-          "orient": "v",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 1.813,
-          "label": "☀️ 掃き出し窓 (1650×2000/FL+0)",
-          "isWin": true
-        },
-        {
-          "id": "id_8cbgvwz",
-          "category": "window",
-          "type": "SLIDING_DOOR",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 2,
-          "y": 3,
-          "orient": "v",
-          "flip": true,
-          "widthMm": 1650,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 1.813,
-          "label": "☀️ 掃き出し窓 (1650×2000/FL+0)",
-          "isWin": true
-        },
-        {
-          "id": "id_wzza9yq",
-          "category": "window",
-          "type": "SLIDING_DOOR",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 4,
-          "y": 3,
-          "orient": "v",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 1.813,
-          "label": "☀️ 掃き出し窓 (1650×2000/FL+0)",
-          "isWin": true
-        },
-        {
-          "id": "id_avzbzdl",
-          "category": "window",
-          "type": "SLIDING_DOOR",
-          "sashType": "hikichigai",
-          "doorFit": "hikichigai",
-          "leafCount": 2,
-          "leafWidthMm": 825,
-          "x": 4,
-          "y": 0,
-          "orient": "v",
-          "flip": false,
-          "widthMm": 1650,
-          "heightMm": 2000,
-          "sillMm": 0,
-          "widthP": 1.813,
-          "label": "☀️ 掃き出し窓 (1650×2000/FL+0)",
-          "isWin": true
-        }
-      ],
-      "fixtures": [
-        {
-          "id": "id_ruu31u9",
-          "type": "TOILET_FIX",
-          "category": "TOILET_FIX",
-          "x": 3.429,
-          "y": -1.5,
-          "w": 0.5,
-          "h": 0.85,
-          "wMm": 455,
-          "dMm": 774,
-          "hMm": 780,
-          "rot": 0,
-          "label": "トイレ便器",
-          "kHeight": 850,
-          "vHeight": 800,
-          "ubPattern": "patternA",
-          "fxData": {}
-        }
-      ],
-      "stairs": [
-        {
-          "id": "stair_upper_id_o8e7uav",
-          "kind": "stair",
-          "type": "STAIR",
-          "category": "STAIR",
-          "shapeType": "L_SHAPE",
-          "patternKey": "L_LANDING_TOP",
-          "isModular": true,
-          "landingTop": true,
-          "rotation": 0,
-          "i1Steps": 10,
-          "c1Steps": 1,
-          "c1Dir": "both",
-          "i2Steps": 0,
-          "c2Steps": 0,
-          "c2Dir": "right",
-          "i3Steps": 0,
-          "points": [
-            {
-              "x": 3,
-              "y": -1
-            },
-            {
-              "x": 4,
-              "y": -1
-            },
-            {
-              "x": 4,
-              "y": 2.5
-            },
-            {
-              "x": 3,
-              "y": 2.5
-            }
-          ],
-          "x": 3,
-          "y": -1,
-          "w": 1,
-          "h": 3.5,
-          "widthMm": 910,
-          "direction": "UP",
-          "turnType": "landing",
-          "stairStyle": "box",
-          "stairHandrail": "both",
-          "handrail": "both",
-          "steps": 11,
-          "treadMm": 227.5,
-          "riserMm": 200,
-          "label": "階段 (L型踊り場登りきり・上る)",
-          "linkedFromStairId": "id_o8e7uav",
-          "linkedFromFloor": 1,
-          "no3DOutput": true,
-          "no2DOutput": false
-        }
-      ],
-      "strokes": [],
-      "stamps": [],
-      "memos": [],
-      "polyPillars": [],
-      "boxes3d": []
-    },
-    "3": {
-      "rooms": [],
-      "walls": [],
-      "pillars": [],
-      "openings": [],
-      "fixtures": [],
-      "stairs": [],
-      "strokes": [],
-      "stamps": [],
-      "memos": [],
-      "polyPillars": [],
-      "boxes3d": []
-    },
-    "4": {
-      "rooms": [],
-      "walls": [],
-      "pillars": [],
-      "openings": [],
-      "fixtures": [],
-      "stairs": [],
-      "strokes": [],
-      "stamps": [],
-      "memos": [],
-      "polyPillars": [],
-      "boxes3d": []
-    }
-  },
-  "guides": [],
-  "savedAt": "2026-11-26T09:57:19.181Z"
+    ],
+    "guides": [],
+    "savedAt": "2026-11-28T00:02:32+01:00",
+    "isRegisteredCarte": false,
+    "agreedToShareAndPublish": true
 }
