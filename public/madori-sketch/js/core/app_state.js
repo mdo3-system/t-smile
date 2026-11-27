@@ -251,6 +251,9 @@ function saveHistorySnapshot() {
     state.historyIndex = state.history.length - 1;
     if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
     if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+    if (typeof window.notifyLiveShareStateChanged === 'function') {
+        window.notifyLiveShareStateChanged('plan');
+    }
 }
 
 function undo() {
@@ -263,6 +266,9 @@ function undo() {
         state.selectedItem = null;
         if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
         if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+        if (typeof window.notifyLiveShareStateChanged === 'function') {
+            window.notifyLiveShareStateChanged('undo');
+        }
         showToast('↩ 元に戻しました (Undo)');
     } else {
         showToast('これ以上戻れません', true);
@@ -279,6 +285,9 @@ function redo() {
         state.selectedItem = null;
         if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
         if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+        if (typeof window.notifyLiveShareStateChanged === 'function') {
+            window.notifyLiveShareStateChanged('redo');
+        }
         showToast('↪ やり直しました (Redo)');
     } else {
         showToast('これ以上進めません', true);

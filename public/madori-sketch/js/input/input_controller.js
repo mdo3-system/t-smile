@@ -166,6 +166,153 @@ function setSubDoorFit(fitId) {
     if (typeof renderSubToolbar === 'function') renderSubToolbar();
 }
 
+/**
+ * 指定された開口部座標 (x, y, orient) が「玄関（GENKAN）」「玄関土間（DOMA）」「ポーチ（PORCH）」の
+ * 建物外周壁（またはポーチとの境界壁）にあるかを判定する共通ヘルパー。
+ * ※玄関土間と室内（ホール・LDK・トイレ等）の間仕切り内壁は false とし、外部玄関口のみを正確に判定する。
+ */
+function isOpeningAtEntranceWall(fl, x, y, orient, op = null) {
+    if (op && op.isGenkanExplicit === false) return false;
+    if (op && (op.isGenkan === true || op.type === 'ENTRANCE_DOOR' || op.doorFit === 'oyako' || op.doorFit === 'genkan_slide')) {
+        return true;
+    }
+    const floorObj = fl || ((typeof state !== 'undefined' && state.floors) ? state.floors[state.currentFloor] : null);
+    if (!floorObj || !Array.isArray(floorObj.rooms) || floorObj.rooms.length === 0) return false;
+
+    const isEntranceRoom = (rm) => {
+        if (!rm) return false;
+        const rt = String(rm.type || '').toUpperCase();
+        const rn = String(rm.customName || rm.name || rm.label || '');
+        return rt === 'DOMA' || rt === 'GENKAN' || /玄関|土間/.test(rn);
+    };
+    const isPorchOrOutsideRoom = (rm) => {
+        if (!rm) return false;
+        const rt = String(rm.type || '').toUpperCase();
+        const rn = String(rm.customName || rm.name || rm.label || '');
+        return rt === 'PORCH' || /ポーチ/.test(rn);
+    };
+
+    const eps = 0.28;
+    const roomsSideA = []; // hなら上側(y - eps), vなら左側(x - eps)
+    const roomsSideB = []; // hなら下側(y + eps), vなら右側(x + eps)
+
+    for (const rm of floorObj.rooms) {
+        if (!rm || rm.type === 'VOID' || rm.type === 'NAKANIWA' || rm.type === 'TENJO') continue;
+        const rw = rm.w || 1;
+        const rh = rm.h || 1;
+        if (orient === 'h') {
+            if (x >= rm.x - 0.15 && x <= rm.x + rw + 0.15) {
+                if (Math.abs(y - (rm.y + rh)) <= eps) roomsSideA.push(rm);
+                else if (Math.abs(y - rm.y) <= eps) roomsSideB.push(rm);
+                else if (y > rm.y + 0.05 && y < rm.y + rh - 0.05) {
+                    roomsSideA.push(rm);
+                    roomsSideB.push(rm);
+                }
+            }
+        } else {
+            if (y >= rm.y - 0.15 && y <= rm.y + rh + 0.15) {
+                if (Math.abs(x - (rm.x + rw)) <= eps) roomsSideA.push(rm);
+                else if (Math.abs(x - rm.x) <= eps) roomsSideB.push(rm);
+                else if (x > rm.x + 0.05 && x < rm.x + rw - 0.05) {
+                    roomsSideA.push(rm);
+                    roomsSideB.push(rm);
+                }
+            }
+        }
+    }
+
+    const hasEntA = roomsSideA.some(isEntranceRoom);
+    const hasEntB = roomsSideB.some(isEntranceRoom);
+    if (!hasEntA && !hasEntB) return false;
+
+    const otherSideA = roomsSideB;
+    const otherSideB = roomsSideA;
+
+    // 片側が玄関/玄関土間で、反対側が「部屋なし（建物外部）」または「ポーチ」であれば玄関開口部と判定
+    if (hasEntA && (otherSideA.length === 0 || otherSideA.every(isPorchOrOutsideRoom))) {
+        return true;
+    }
+    if (hasEntB && (otherSideB.length === 0 || otherSideB.every(isPorchOrOutsideRoom))) {
+        return true;
+    }
+    return false;
+}
+window.isOpeningAtEntranceWall = isOpeningAtEntranceWall;
+
+/**
+ * 玄関開口部（玄関引違戸・玄関ドア・玄関片引戸・玄関親子ドア・玄関両開ドア）の属性とラベルを正規化する
+ */
+function applyEntranceOpeningAttributes(op, fl, isNewPlacement = false) {
+    if (!op) return false;
+    const fitId = op.doorFit || op.sashType || 'hikichigai';
+    const windowOnlyFits = ['fix', 'demado', 'tatesuberi', 'yokosuberi', 'agesage', 'oredo', 'closet', 'kaikou'];
+    if (windowOnlyFits.includes(fitId)) return false;
+
+    const atEntrance = isOpeningAtEntranceWall(fl, op.x, op.y, op.orient, op);
+    if (!atEntrance) {
+        if (op.isGenkan && op.isGenkanAuto) {
+            op.isGenkan = false;
+            op.isGenkanAuto = false;
+        }
+        return false;
+    }
+
+    const pitch = (typeof state !== 'undefined' && state.modulePitch) ? state.modulePitch : 910;
+    op.isGenkan = true;
+    op.isGenkanAuto = true;
+    op.isWin = false;
+    op.category = 'door';
+    op.sillMm = 0;
+    if (isNewPlacement || !op.heightMm || op.heightMm < 2000) {
+        op.heightMm = 2200;
+    }
+
+    let genkanName = '玄関ドア';
+    if (fitId === 'hikichigai') {
+        genkanName = '玄関引違戸';
+        op.type = 'ENTRANCE_DOOR';
+        op.leafCount = 2;
+        if (isNewPlacement && (!op.widthMm || op.widthMm < 1200)) {
+            op.widthMm = 1650;
+        }
+    } else if (fitId === 'katabiki' || fitId === 'hikido' || fitId === 'genkan_slide') {
+        genkanName = '玄関片引戸';
+        op.type = 'ENTRANCE_DOOR';
+        op.leafCount = 1;
+        if (isNewPlacement && (!op.widthMm || op.widthMm === 800 || op.widthMm === 1650)) {
+            op.widthMm = 1200;
+        }
+    } else if (fitId === 'oyako') {
+        genkanName = '玄関親子ドア';
+        op.type = 'ENTRANCE_DOOR';
+        op.leafCount = 2;
+        if (isNewPlacement && (!op.widthMm || op.widthMm < 1100)) {
+            op.widthMm = 1200;
+        }
+    } else if (fitId === 'ryouhiraki') {
+        genkanName = '玄関両開ドア';
+        op.type = 'ENTRANCE_DOOR';
+        op.leafCount = 2;
+        if (isNewPlacement && (!op.widthMm || op.widthMm < 1300)) {
+            op.widthMm = 1600;
+        }
+    } else {
+        // katahiraki / hiraki
+        genkanName = '玄関ドア';
+        op.type = 'ENTRANCE_DOOR';
+        op.leafCount = 1;
+        if (isNewPlacement && (!op.widthMm || op.widthMm === 800 || op.widthMm === 1650)) {
+            op.widthMm = 910;
+        }
+    }
+
+    op.widthP = +((op.widthMm || 910) / pitch).toFixed(3);
+    op.leafWidthMm = Math.round((op.widthMm || 910) / (op.leafCount || 1));
+    op.label = `${genkanName} (W${op.widthMm}×H${op.heightMm})`;
+    return true;
+}
+window.applyEntranceOpeningAttributes = applyEntranceOpeningAttributes;
+
 function placeOpeningAt(wx, wy) {
     const fl = state.floors[state.currentFloor];
     const pitch = state.modulePitch || 910;
@@ -191,6 +338,7 @@ function placeOpeningAt(wx, wy) {
             y: target.y,
             orient: target.orient,
             flip: !!cp.flip,
+            flipX: !!cp.flipX,
             widthMm: cp.widthMm,
             heightMm: cp.heightMm,
             sillMm: cp.sillMm || 0,
@@ -276,7 +424,7 @@ function placeOpeningAt(wx, wy) {
     const newOp = {
         id: uid(),
         category: isWin ? 'window' : 'door',
-        type: isWin ? 'WINDOW' : (doorFit === 'katabiraki' || doorFit === 'hiraki' ? 'SWING_DOOR' : 'SLIDING_DOOR'),
+        type: isWin ? 'WINDOW' : (doorFit === 'katabiraki' || doorFit === 'hiraki' || doorFit === 'katahiraki' ? 'SWING_DOOR' : 'SLIDING_DOOR'),
         sashType: fitId,
         doorFit: doorFit,
         leafCount: leafCount,
@@ -285,6 +433,7 @@ function placeOpeningAt(wx, wy) {
         y: target.y,
         orient: target.orient,
         flip: false,
+        flipX: false,
         widthMm: widthMm,
         heightMm: heightMm,
         sillMm: sillMm,
@@ -292,6 +441,18 @@ function placeOpeningAt(wx, wy) {
         label: label,
         isWin: isWin
     };
+
+    // 玄関・玄関土間の外壁に引違い・片開き・片引き等を設置した場合は「玄関引違戸」「玄関ドア」「玄関片引戸」へ自動設定
+    if (applyEntranceOpeningAttributes(newOp, fl, true)) {
+        // 幅が玄関標準幅に変わった場合の重なり再チェック（重なる場合は元の幅を維持）
+        if (checkOpeningOverlap(state.currentFloor, newOp.x, newOp.y, newOp.orient, newOp.widthP, null)) {
+            newOp.widthMm = widthMm;
+            newOp.widthP = widthP;
+            newOp.leafWidthMm = Math.round(widthMm / (newOp.leafCount || 1));
+            newOp.label = newOp.label.replace(/\(W\d+×/, `(W${widthMm}×`);
+        }
+        label = newOp.label;
+    }
 
     fl.openings.push(newOp);
     state.selectedItem = { kind: 'opening', id: newOp.id, floor: state.currentFloor };
@@ -311,13 +472,60 @@ function flipLastOrSelectedOpening() {
         op = fl.openings[fl.openings.length - 1];
     }
     if (op) {
-        op.flip = !op.flip;
+        // 4方向順送り：(flip:false, flipX:false) -> (flip:false, flipX:true) -> (flip:true, flipX:false) -> (flip:true, flipX:true)
+        const curState = (op.flip ? 2 : 0) + (op.flipX ? 1 : 0);
+        const nextState = (curState + 1) % 4;
+        op.flip = (nextState & 2) !== 0;
+        op.flipX = (nextState & 1) !== 0;
         saveHistorySnapshot();
+        if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
         request2DRedraw();
         if (typeof rebuild3DScene === 'function') rebuild3DScene();
-        showToast('建具の開閉方向（左右・内外）を反転しました');
+        showToast(`建具の向きを4方向順送り切替しました（上下/内外:${op.flip ? '反転' : '標準'}・左右/引込:${op.flipX ? '反転' : '標準'}）`);
     }
 }
+
+/**
+ * 片引き戸・片開き戸・建具の個別軸反転（'x': 画面の左右反転、'y': 画面の上下反転）
+ * ※垂直壁 (orient === 'v') に配置されている建具は90°回転しているため、
+ *   画面上の「↔ 左右反転」ボタンを押した時は壁の表裏(op.flip)を反転し、
+ *   画面上の「↕ 上下反転」ボタンを押した時は壁に沿った引き込み向き(op.flipX)を反転することで、
+ *   水平壁でも垂直壁でも常に画面の見た目の「上下」「左右」と100%一致して反転する！
+ */
+function flipSelectedOpeningAxis(axis) {
+    const fl = state.floors[state.currentFloor];
+    let op = null;
+    if (state.selectedItem && state.selectedItem.kind === 'opening') {
+        op = fl.openings.find(o => o.id === state.selectedItem.id);
+    } else if (fl.openings.length > 0) {
+        op = fl.openings[fl.openings.length - 1];
+    }
+    if (!op) return;
+
+    const isVertWall = (op.orient === 'v');
+    if (axis === 'x') {
+        // 画面の左右方向を反転
+        if (isVertWall) {
+            op.flip = !op.flip;
+        } else {
+            op.flipX = !op.flipX;
+        }
+    } else {
+        // 画面の上下方向を反転
+        if (isVertWall) {
+            op.flipX = !op.flipX;
+        } else {
+            op.flip = !op.flip;
+        }
+    }
+
+    saveHistorySnapshot();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+    request2DRedraw();
+    if (typeof rebuild3DScene === 'function') rebuild3DScene();
+    showToast(`建具を${axis === 'x' ? '左右反転' : '上下反転'}しました`);
+}
+window.flipSelectedOpeningAxis = flipSelectedOpeningAxis;
 
 /**
  * P1-3: 開口部が乗っている壁（または部屋外周辺）の始点・終点と、壁端からの距離(mm)を算出
@@ -568,30 +776,81 @@ function updatePointerStatusBadge(e) {
 }
 
 let activeTouchCount = 0;
+const activeTouchPointers2D = new Map();
+let activePenPointerId = null;
+let lastPenActivityTime = 0;
+const PEN_COOLDOWN_MS = 420; // Apple Pencil離脱直後の手のひら遅延タッチ誤作動を防ぐ保護時間
+
+function isPenCurrentlyActiveOrCoolingDown() {
+    if (activePenPointerId !== null) return true;
+    return (Date.now() - lastPenActivityTime) < PEN_COOLDOWN_MS;
+}
 
 canvas2d.addEventListener('pointerdown', (e) => {
     e.preventDefault();
     try { canvas2d.setPointerCapture(e.pointerId); } catch (_) { }
     updatePointerStatusBadge(e);
 
-    if (e.pointerType === 'touch') {
-        activeTouchCount++;
-    }
-
     const rect = canvas2d.getBoundingClientRect();
     const sx = e.clientX - rect.left;
     const sy = e.clientY - rect.top;
+
+    // 🖊️ Apple Pencil最優先ガード：ペンが触れたら即座にペンIDを記録し、進行中の指タッチ/ピンチ/パンを強制解除
+    if (e.pointerType === 'pen') {
+        activePenPointerId = e.pointerId;
+        lastPenActivityTime = Date.now();
+        activeTouchPointers2D.clear();
+        activeTouchCount = 0;
+        if (state.dragAction && (state.dragAction.type === 'pinch' || state.dragAction.type === 'pan')) {
+            state.dragAction = null;
+        }
+    } else if (e.pointerType === 'touch') {
+        // ペン筆記中またはペンを離してから420ms以内の指・手のひら接触は100%無視（誤作動防止を最優先）
+        if (isPenCurrentlyActiveOrCoolingDown()) {
+            return;
+        }
+        // 手のひら等の大面積接触（width/height > 30px）はピンチ用ポインターに登録しない
+        const isLargePalmContact = ((e.width && e.width > 30) || (e.height && e.height > 30));
+        if (!isLargePalmContact) {
+            activeTouchPointers2D.set(e.pointerId, { sx, sy });
+        }
+        activeTouchCount = activeTouchPointers2D.size;
+
+        // 🤏 2本指ピンチイン・ピンチアウト開始判定（ペン非使用時かつ2本の指が28px以上離れている場合）
+        if (activeTouchPointers2D.size === 2) {
+            const pts = Array.from(activeTouchPointers2D.values());
+            const dist = Math.hypot(pts[0].sx - pts[1].sx, pts[0].sy - pts[1].sy);
+            if (dist >= 28) {
+                const midSX = (pts[0].sx + pts[1].sx) / 2;
+                const midSY = (pts[0].sy + pts[1].sy) / 2;
+                const anchorWorld = screenToWorldP(midSX, midSY);
+                // 1本指目で開始しかけていた壁クリック等があれば安全にキャンセル
+                state.wallClickStart = null;
+                state.dragAction = {
+                    type: 'pinch',
+                    startDist: dist,
+                    startZoom: state.cam2d.zoom,
+                    anchorWorldX: anchorWorld.x,
+                    anchorWorldY: anchorWorld.y
+                };
+                request2DRedraw();
+                return;
+            }
+        }
+        if (isLargePalmContact) {
+            return;
+        }
+    }
+
     const worldPos = screenToWorldP(sx, sy);
     const snappedX = snapP(worldPos.x);
     const snappedY = snapP(worldPos.y);
     state.lastHoverWorld = { x: snappedX, y: snappedY };
 
     // 🖐️ パームリジェクション判定：
-    // 1. ペン専用モード時の指タッチ (e.pointerType === 'touch')
-    // 2. タブレットで手のひら（接触面積 width/height が 28px 超の大きな接触面）が触れた場合
-    // 3. 2本指以上のマルチタッチ
-    const isLargePalmTouch = (e.pointerType === 'touch' && ((e.width && e.width > 28) || (e.height && e.height > 28)));
-    if ((state.stylusOnlyMode && e.pointerType === 'touch') || isLargePalmTouch || activeTouchCount >= 2) {
+    // 1. ペン専用モード時の1本指タッチ (e.pointerType === 'touch') ➔ 画面パン移動（2本指になれば上のpinchへ自動昇格）
+    // 2. 2本指以上のマルチタッチ
+    if ((state.stylusOnlyMode && e.pointerType === 'touch') || activeTouchCount >= 2) {
         state.dragAction = {
             type: 'pan',
             startSX: sx,
@@ -1448,6 +1707,57 @@ canvas2d.addEventListener('pointermove', (e) => {
     const rect = canvas2d.getBoundingClientRect();
     const sx = e.clientX - rect.left;
     const sy = e.clientY - rect.top;
+
+    if (e.pointerType === 'pen') {
+        activePenPointerId = e.pointerId;
+        lastPenActivityTime = Date.now();
+    } else if (e.pointerType === 'touch') {
+        // ペン使用中またはクールダウン中のタッチ移動は完全無視
+        if (isPenCurrentlyActiveOrCoolingDown()) {
+            return;
+        }
+        if (activeTouchPointers2D.has(e.pointerId)) {
+            activeTouchPointers2D.set(e.pointerId, { sx, sy });
+        }
+        // 2本指ピンチイン・ピンチアウトによる2D拡大縮小＋中点パン追従
+        if (activeTouchPointers2D.size === 2) {
+            e.preventDefault();
+            const pts = Array.from(activeTouchPointers2D.values());
+            const dist = Math.hypot(pts[0].sx - pts[1].sx, pts[0].sy - pts[1].sy);
+            const midSX = (pts[0].sx + pts[1].sx) / 2;
+            const midSY = (pts[0].sy + pts[1].sy) / 2;
+
+            if (!state.dragAction || state.dragAction.type !== 'pinch') {
+                if (dist >= 28) {
+                    const anchorWorld = screenToWorldP(midSX, midSY);
+                    state.wallClickStart = null;
+                    state.dragAction = {
+                        type: 'pinch',
+                        startDist: dist,
+                        startZoom: state.cam2d.zoom,
+                        anchorWorldX: anchorWorld.x,
+                        anchorWorldY: anchorWorld.y
+                    };
+                }
+                return;
+            }
+
+            const pDrag = state.dragAction;
+            if (pDrag.startDist > 10 && dist > 10) {
+                const scaleFactor = dist / pDrag.startDist;
+                const nextZoom = Math.max(16, Math.min(150, pDrag.startZoom * scaleFactor));
+                state.cam2d.zoom = nextZoom;
+                // ピンチ開始時の2指中点ワールド座標が常に現在の2指中点スクリーン座標の下に来るようカメラ中心を補正
+                const cx = rect.width / 2;
+                const cy = rect.height / 2;
+                state.cam2d.x = pDrag.anchorWorldX - (midSX - cx) / nextZoom;
+                state.cam2d.y = pDrag.anchorWorldY - (midSY - cy) / nextZoom;
+                request2DRedraw();
+            }
+            return;
+        }
+    }
+
     const worldPos = screenToWorldP(sx, sy);
     const snappedX = snapP(worldPos.x);
     const snappedY = snapP(worldPos.y);
@@ -1457,6 +1767,9 @@ canvas2d.addEventListener('pointermove', (e) => {
         if (state.wallClickStart || (state.polyPoints && state.polyPoints.length > 0) || state.activeTool === 'fixture' || state.activeTool === 'pillar' || state.activeTool === 'stair') {
             request2DRedraw();
         }
+        return;
+    }
+    if (state.dragAction.type === 'pinch') {
         return;
     }
     e.preventDefault();
@@ -1634,6 +1947,7 @@ canvas2d.addEventListener('pointermove', (e) => {
             op.x = candidate.x;
             op.y = candidate.y;
             op.orient = candidate.orient;
+            applyEntranceOpeningAttributes(op, state.floors[state.currentFloor], false);
             request2DRedraw();
             if (typeof rebuild3DScene === 'function') rebuild3DScene();
         }
@@ -1659,8 +1973,31 @@ canvas2d.addEventListener('pointermove', (e) => {
 });
 
 canvas2d.addEventListener('pointerup', (e) => {
-    if (e && e.pointerType === 'touch') {
-        activeTouchCount = Math.max(0, activeTouchCount - 1);
+    if (e && e.pointerType === 'pen') {
+        if (activePenPointerId === e.pointerId) {
+            activePenPointerId = null;
+        }
+        lastPenActivityTime = Date.now();
+    } else if (e && e.pointerType === 'touch') {
+        activeTouchPointers2D.delete(e.pointerId);
+        activeTouchCount = activeTouchPointers2D.size;
+        if (state.dragAction && state.dragAction.type === 'pinch') {
+            if (activeTouchPointers2D.size === 1) {
+                // 2本指のうち1本を離した後は残りの1本指での滑らかなパンへ移行
+                const rem = Array.from(activeTouchPointers2D.values())[0];
+                state.dragAction = {
+                    type: 'pan',
+                    startSX: rem.sx,
+                    startSY: rem.sy,
+                    origCamX: state.cam2d.x,
+                    origCamY: state.cam2d.y
+                };
+            } else if (activeTouchPointers2D.size === 0) {
+                state.dragAction = null;
+            }
+            request2DRedraw();
+            return;
+        }
     }
     if (!state.dragAction) return;
     const drag = state.dragAction;
@@ -1778,16 +2115,29 @@ canvas2d.addEventListener('pointerleave', () => {
 });
 
 canvas2d.addEventListener('pointercancel', (e) => {
-    if (e && e.pointerType === 'touch') {
-        activeTouchCount = Math.max(0, activeTouchCount - 1);
+    if (e && e.pointerType === 'pen') {
+        if (activePenPointerId === e.pointerId) {
+            activePenPointerId = null;
+        }
+        lastPenActivityTime = Date.now();
+    } else if (e && e.pointerType === 'touch') {
+        activeTouchPointers2D.delete(e.pointerId);
+        activeTouchCount = activeTouchPointers2D.size;
     }
     state.lastHoverWorld = null;
     state.dragAction = null;
     request2DRedraw();
 });
 
-canvas2d.addEventListener('lostpointercapture', () => {
-    if (state.dragAction) {
+canvas2d.addEventListener('lostpointercapture', (e) => {
+    if (e && e.pointerType === 'pen' && activePenPointerId === e.pointerId) {
+        activePenPointerId = null;
+        lastPenActivityTime = Date.now();
+    } else if (e && e.pointerType === 'touch') {
+        activeTouchPointers2D.delete(e.pointerId);
+        activeTouchCount = activeTouchPointers2D.size;
+    }
+    if (state.dragAction && state.dragAction.type !== 'pinch') {
         state.dragAction = null;
         request2DRedraw();
     }
@@ -1798,7 +2148,9 @@ canvas2d.addEventListener('contextmenu', (e) => {
 });
 
 window.addEventListener('blur', () => {
+    activeTouchPointers2D.clear();
     activeTouchCount = 0;
+    activePenPointerId = null;
     if (state.dragAction) {
         state.dragAction = null;
         request2DRedraw();
@@ -1955,12 +2307,15 @@ function updateSelectedRoomName(val, commit) {
     }
 }
 
-function applyRoomNameChip(label, type) {
+function applyRoomNameChip(label, type, levelMm) {
     const rm = findSelectedObject();
     if (!rm || !state.selectedItem || state.selectedItem.kind !== 'room') return;
     rm.customName = label;
     rm.name = label;
     if (type) rm.type = type;
+    if (typeof levelMm === 'number' && !isNaN(levelMm)) {
+        rm.levelMm = levelMm;
+    }
     const excludedTypes = ['VOID', 'BALCONY', 'PORCH', 'NAKANIWA', 'TENJO', 'TATAMI', 'KOAGARI'];
     if (!excludedTypes.includes(rm.type) && rm.excludeFloorArea === true) {
         rm.excludeFloorArea = false;
@@ -1971,8 +2326,28 @@ function applyRoomNameChip(label, type) {
     if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
     if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
     request2DRedraw();
-    showToast(`部屋名を「${label}」に設定しました`);
+    showToast(`部屋名を「${label}」${rm.levelMm > 0 ? `（床高 FL+${rm.levelMm}mm）` : ''}に設定しました`);
 }
+
+function updateSelectedRoomLevelMm(newLevelMm) {
+    const rm = findSelectedObject();
+    if (!rm || !state.selectedItem || state.selectedItem.kind !== 'room') return;
+    const val = Math.max(0, Math.min(2000, parseInt(newLevelMm, 10) || 0));
+    rm.levelMm = val;
+    // 床高+700mm以上で未命名の「空間」だった場合はわかりやすいよう「階段上収納」に自動補完
+    if (val >= 500 && (!rm.customName || rm.customName === '空間') && (!rm.name || rm.name === '空間')) {
+        rm.customName = '階段上収納';
+        rm.name = '階段上収納';
+        if (!rm.type || rm.type === 'OTHER') rm.type = 'SHUNO';
+    }
+    saveHistorySnapshot();
+    if (typeof updateAllMetricsAnd3D === 'function') updateAllMetricsAnd3D();
+    if (typeof rebuild3DScene === 'function') rebuild3DScene();
+    if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
+    request2DRedraw();
+    showToast(val > 0 ? `🪜 部屋の床高さを FL+${val}mm（+${(val / 1000).toFixed(2)}m）に設定しました` : '部屋の床高さを標準床（FL+0mm）に戻しました');
+}
+window.updateSelectedRoomLevelMm = updateSelectedRoomLevelMm;
 
 function changeSelectedRoomType(newType) {
     const rm = findSelectedObject();
@@ -2036,8 +2411,8 @@ window.rotateFixturePreset = rotateFixturePreset;
 
 function setSelectedFixtureRotation(targetDeg) {
     const fl = state.floors[state.currentFloor];
-    if (!state.selectedItem || state.selectedItem.kind !== 'fixture') return;
-    const fx = fl.fixtures.find(f => f.id === state.selectedItem.id);
+    if (!fl || !state.selectedItem || state.selectedItem.kind !== 'fixture') return;
+    const fx = (fl.fixtures || []).find(f => f.id === state.selectedItem.id);
     if (!fx) return;
 
     const pitch = state.modulePitch || 910;
@@ -2046,32 +2421,23 @@ function setSelectedFixtureRotation(targetDeg) {
     const wasVert = (oldRot === 90 || oldRot === 270);
     const isVert = (newRot === 90 || newRot === 270);
 
-    if (!fx.wMm) fx.wMm = Math.round(fx.w * pitch);
-    if (!fx.dMm) fx.dMm = Math.round(fx.h * pitch);
+    if (!fx.w || isNaN(fx.w) || fx.w <= 0) fx.w = 1.0;
+    if (!fx.h || isNaN(fx.h) || fx.h <= 0) fx.h = 1.0;
+    if (!fx.wMm || isNaN(fx.wMm)) fx.wMm = Math.round(fx.w * pitch);
+    if (!fx.dMm || isNaN(fx.dMm)) fx.dMm = Math.round(fx.h * pitch);
 
     if (wasVert !== isVert) {
-        const cx = fx.x + fx.w / 2;
-        const cy = fx.y + fx.h / 2;
+        // 設備の中心座標 (cx, cy) を厳密に保持したまま W×D (横幅と縦奥行) を入れ替える（勝手に他の壁へジャンプさせない）
+        const cx = (Number(fx.x) || 0) + fx.w / 2;
+        const cy = (Number(fx.y) || 0) + fx.h / 2;
         const tmp = fx.w; fx.w = fx.h; fx.h = tmp;
         const tmpMm = fx.wMm; fx.wMm = fx.dMm; fx.dMm = tmpMm;
         fx.x = +(cx - fx.w / 2).toFixed(3);
         fx.y = +(cy - fx.h / 2).toFixed(3);
     }
     fx.rot = newRot;
-    fx.flipX = false;
-    fx.flipY = false;
 
-    // 回転後に近くの壁・コーナーがあれば吸着位置を微調整（壁自動吸着ON時）
     const isKL = fx.type === 'KITCHEN_L' || fx.category === 'KITCHEN_L' || (fx.fxData && fx.fxData.kitchenType === 'L');
-    if (state.subFixtureWallSnap !== false) {
-        const wallSnap = findNearestWallForFixture(fx.x, fx.y, fx.w, fx.h, isKL, fx.rot, fx.category || fx.type);
-        if (wallSnap) {
-            const maxSnap = isKL ? 0.65 : 0.42;
-            if (Math.abs(wallSnap.x - fx.x) <= maxSnap) fx.x = wallSnap.x;
-            if (Math.abs(wallSnap.y - fx.y) <= maxSnap) fx.y = wallSnap.y;
-        }
-    }
-
     saveHistorySnapshot();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
     if (typeof renderPropertyInspector === 'function') renderPropertyInspector();

@@ -538,9 +538,17 @@ function renderPropertyInspector() {
                     </div>
                 </div>
                 ` : ''}
-                <button type="button" onclick="flipLastOrSelectedOpening()" class="w-full py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs">
-                    <i class="fa-solid fa-repeat mr-1"></i>開閉向き反転（室内外・左右吊元切替）
-                </button>
+                <div class="grid grid-cols-3 gap-1.5 pt-0.5">
+                    <button type="button" onclick="flipSelectedOpeningAxis('x')" class="py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/35 text-amber-200 border border-amber-500/40 font-bold text-[11px]" title="画面の左右方向に引き込み・吊元を反転します">
+                        ↔ 左右反転
+                    </button>
+                    <button type="button" onclick="flipSelectedOpeningAxis('y')" class="py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/35 text-amber-200 border border-amber-500/40 font-bold text-[11px]" title="画面の上下方向に開閉面・レール側を反転します">
+                        ↕ 上下反転
+                    </button>
+                    <button type="button" onclick="flipLastOrSelectedOpening()" class="py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/35 text-cyan-200 border border-cyan-500/40 font-bold text-[11px]" title="上下左右の全4パターンを順送りで切り替えます">
+                        🔄 4方向順送り
+                    </button>
+                </div>
             </div>
         `;
     } else if (kind === 'fixture') {
@@ -582,10 +590,10 @@ function renderPropertyInspector() {
                 <div class="p-2 rounded-lg bg-slate-900/90 border border-cyan-500/30 space-y-1">
                     <div class="text-[10px] font-bold text-cyan-300">📐 向き・配置基準 (赤い●印の位置・90°回転でW×D自動切替)</div>
                     <div class="grid grid-cols-4 gap-1">
-                        <button type="button" onclick="setSelectedFixtureRotation(0)" class="py-1 rounded border text-[10px] font-bold ${(((obj.rot || 0) % 360) === 0 && !obj.flipX && !obj.flipY) ? 'bg-cyan-500 text-slate-950 border-cyan-300' : 'bg-slate-800 text-slate-300 border-slate-700'}">${curKType === 'L' ? '↖北西(0°)' : '↑北背(0°)'}</button>
-                        <button type="button" onclick="setSelectedFixtureRotation(90)" class="py-1 rounded border text-[10px] font-bold ${(((obj.rot || 0) % 360) === 90 && !obj.flipX && !obj.flipY) ? 'bg-cyan-500 text-slate-950 border-cyan-300' : 'bg-slate-800 text-slate-300 border-slate-700'}">${curKType === 'L' ? '↗北東(90°)' : '→東背(90°)'}</button>
-                        <button type="button" onclick="setSelectedFixtureRotation(180)" class="py-1 rounded border text-[10px] font-bold ${(((obj.rot || 0) % 360) === 180 && !obj.flipX && !obj.flipY) ? 'bg-cyan-500 text-slate-950 border-cyan-300' : 'bg-slate-800 text-slate-300 border-slate-700'}">${curKType === 'L' ? '↘南東(180°)' : '↓南背(180°)'}</button>
-                        <button type="button" onclick="setSelectedFixtureRotation(270)" class="py-1 rounded border text-[10px] font-bold ${(((obj.rot || 0) % 360) === 270 && !obj.flipX && !obj.flipY) ? 'bg-cyan-500 text-slate-950 border-cyan-300' : 'bg-slate-800 text-slate-300 border-slate-700'}">${curKType === 'L' ? '↙南西(270°)' : '←西背(270°)'}</button>
+                        <button type="button" onclick="setSelectedFixtureRotation(0)" class="py-1 rounded border text-[10px] font-bold ${(((obj.rot || 0) % 360 + 360) % 360 === 0) ? 'bg-cyan-500 text-slate-950 border-cyan-300' : 'bg-slate-800 text-slate-300 border-slate-700'}">${curKType === 'L' ? '↖北西(0°)' : '↑北背(0°)'}</button>
+                        <button type="button" onclick="setSelectedFixtureRotation(90)" class="py-1 rounded border text-[10px] font-bold ${(((obj.rot || 0) % 360 + 360) % 360 === 90) ? 'bg-cyan-500 text-slate-950 border-cyan-300' : 'bg-slate-800 text-slate-300 border-slate-700'}">${curKType === 'L' ? '↗北東(90°)' : '→東背(90°)'}</button>
+                        <button type="button" onclick="setSelectedFixtureRotation(180)" class="py-1 rounded border text-[10px] font-bold ${(((obj.rot || 0) % 360 + 360) % 360 === 180) ? 'bg-cyan-500 text-slate-950 border-cyan-300' : 'bg-slate-800 text-slate-300 border-slate-700'}">${curKType === 'L' ? '↘南東(180°)' : '↓南背(180°)'}</button>
+                        <button type="button" onclick="setSelectedFixtureRotation(270)" class="py-1 rounded border text-[10px] font-bold ${(((obj.rot || 0) % 360 + 360) % 360 === 270) ? 'bg-cyan-500 text-slate-950 border-cyan-300' : 'bg-slate-800 text-slate-300 border-slate-700'}">${curKType === 'L' ? '↙南西(270°)' : '←西背(270°)'}</button>
                     </div>
                 </div>
                 <div class="grid grid-cols-3 gap-1.5">
@@ -603,9 +611,9 @@ function renderPropertyInspector() {
                     </div>
                 </div>
                 <div class="grid grid-cols-3 gap-1.5 pt-1">
-                    <button onclick="rotateSelectedFixture()" class="py-1.5 rounded bg-cyan-600/25 hover:bg-cyan-600/40 text-cyan-200 border border-cyan-500/40 font-bold text-[11px]">🔄 90°回転</button>
-                    <button onclick="flipSelectedFixture('x')" class="py-1.5 rounded bg-amber-600/25 hover:bg-amber-600/40 text-amber-200 border border-amber-500/40 font-bold text-[11px]">↔ 左右反転</button>
-                    <button onclick="flipSelectedFixture('y')" class="py-1.5 rounded bg-amber-600/25 hover:bg-amber-600/40 text-amber-200 border border-amber-500/40 font-bold text-[11px]">↕ 上下反転</button>
+                    <button type="button" onclick="rotateSelectedFixture()" class="py-1.5 rounded bg-cyan-600/25 hover:bg-cyan-600/40 text-cyan-200 border border-cyan-500/40 font-bold text-[11px]">🔄 90°回転</button>
+                    <button type="button" onclick="flipSelectedFixture('x')" class="py-1.5 rounded border font-bold text-[11px] ${obj.flipX ? 'bg-amber-500 text-slate-950 border-amber-300 shadow' : 'bg-amber-600/25 hover:bg-amber-600/40 text-amber-200 border-amber-500/40'}">↔ 左右反転${obj.flipX ? '(ON)' : ''}</button>
+                    <button type="button" onclick="flipSelectedFixture('y')" class="py-1.5 rounded border font-bold text-[11px] ${obj.flipY ? 'bg-amber-500 text-slate-950 border-amber-300 shadow' : 'bg-amber-600/25 hover:bg-amber-600/40 text-amber-200 border-amber-500/40'}">↕ 上下反転${obj.flipY ? '(ON)' : ''}</button>
                 </div>
             </div>
         `;
@@ -864,6 +872,7 @@ function renderPropertyInspector() {
             { label: 'トイレ', type: 'TOILET' },
             { label: 'クローゼット', type: 'CLOSET' },
             { label: '収納', type: 'SHUNO' },
+            { label: '階段上収納', type: 'SHUNO', levelMm: 1000 },
             { label: 'WIC', type: 'WIC' },
             { label: 'パントリー', type: 'STORAGE' },
             { label: '納戸', type: 'STORAGE' },
@@ -873,12 +882,15 @@ function renderPropertyInspector() {
         ];
         const chipHtml = quickChips.map(c => {
             const active = curName === c.label ? 'bg-amber-500 text-slate-950 border-amber-400 font-bold' : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-600';
-            return `<button type="button" onclick="applyRoomNameChip('${c.label}', '${c.type}')" class="px-1.5 py-0.5 rounded border text-[10px] ${active}">${c.label}</button>`;
+            const lvlArg = c.levelMm !== undefined ? `, ${c.levelMm}` : '';
+            return `<button type="button" onclick="applyRoomNameChip('${c.label}', '${c.type}'${lvlArg})" class="px-1.5 py-0.5 rounded border text-[10px] ${active}">${c.label}</button>`;
         }).join('');
+
+        const curLevelMm = (typeof obj.levelMm === 'number' && !isNaN(obj.levelMm)) ? obj.levelMm : (obj.type === 'KOAGARI' ? 300 : 0);
 
         panel.innerHTML = `
             <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-2">
-                <span class="text-xs font-bold text-white"><i class="fa-solid fa-vector-square text-amber-400 mr-1"></i>${safeName || rt.label} (${jyo}帖 / ${areaM2.toFixed(1)}㎡)</span>
+                <span class="text-xs font-bold text-white"><i class="fa-solid fa-vector-square text-amber-400 mr-1"></i>${safeName || rt.label} (${jyo}帖 / ${areaM2.toFixed(1)}㎡${curLevelMm > 0 ? ` / FL+${curLevelMm}mm` : ''})</span>
                 <div class="flex items-center gap-1">
                     <button onclick="deleteSelectedItem()" class="px-2 py-1 rounded bg-rose-600/30 text-[11px] text-rose-200 font-bold">削除</button>
                     <button onclick="state.selectedItem=null;renderPropertyInspector();request2DRedraw();" class="text-slate-400 hover:text-white px-1.5"><i class="fa-solid fa-xmark"></i></button>
@@ -888,7 +900,7 @@ function renderPropertyInspector() {
                 <div>
                     <label class="block text-[10px] text-slate-400 mb-1">部屋名（自由入力）</label>
                     <div class="flex items-center gap-1.5">
-                        <input id="inpRoomCustomName" type="text" value="${safeName}" placeholder="例: 洗面室、階段、書斎..." oninput="updateSelectedRoomName(this.value, false)" onchange="updateSelectedRoomName(this.value, true)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold">
+                        <input id="inpRoomCustomName" type="text" value="${safeName}" placeholder="例: 階段上収納、洗面室、書斎..." oninput="updateSelectedRoomName(this.value, false)" onchange="updateSelectedRoomName(this.value, true)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold">
                         <button type="button" onclick="renameSelectedRoom()" title="定型名を順送り" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 text-[11px]">順送り</button>
                     </div>
                 </div>
@@ -899,6 +911,20 @@ function renderPropertyInspector() {
                 <div class="flex items-center justify-between gap-2 pt-1">
                     <span class="text-[10px] text-slate-400 shrink-0">種別:</span>
                     <select onchange="changeSelectedRoomType(this.value)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-white font-bold">${rmOptions}</select>
+                </div>
+                <div class="p-2 rounded-lg bg-amber-950/25 border border-amber-500/40 space-y-1.5">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-[10px] font-bold text-amber-300">🪜 床高さ・階段上収納設定 (FL+mm):</span>
+                        <input type="number" step="50" min="0" max="1800" value="${curLevelMm}" onchange="updateSelectedRoomLevelMm(parseInt(this.value, 10))" class="w-24 bg-slate-950 border border-amber-500/50 rounded px-2 py-0.5 text-amber-200 font-bold mono-num text-right">
+                    </div>
+                    <div class="flex flex-wrap gap-1">
+                        <button type="button" onclick="updateSelectedRoomLevelMm(0)" class="px-1.5 py-0.5 rounded border text-[10px] ${curLevelMm === 0 ? 'bg-amber-500 text-slate-950 border-amber-300 font-bold' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-600'}">標準床(FL+0)</button>
+                        <button type="button" onclick="updateSelectedRoomLevelMm(300)" class="px-1.5 py-0.5 rounded border text-[10px] ${curLevelMm === 300 ? 'bg-amber-500 text-slate-950 border-amber-300 font-bold' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-600'}">小上り(+300)</button>
+                        <button type="button" onclick="updateSelectedRoomLevelMm(700)" class="px-1.5 py-0.5 rounded border text-[10px] ${curLevelMm === 700 ? 'bg-amber-500 text-slate-950 border-amber-300 font-bold' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-600'}">階段上(+700)</button>
+                        <button type="button" onclick="updateSelectedRoomLevelMm(1000)" class="px-1.5 py-0.5 rounded border text-[10px] ${curLevelMm === 1000 ? 'bg-amber-500 text-slate-950 border-amber-300 font-bold' : 'bg-slate-800 hover:bg-slate-700 text-amber-200 border-amber-500/50'}">階段上収納(+1000/1m)</button>
+                        <button type="button" onclick="updateSelectedRoomLevelMm(1200)" class="px-1.5 py-0.5 rounded border text-[10px] ${curLevelMm === 1200 ? 'bg-amber-500 text-slate-950 border-amber-300 font-bold' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-600'}">階段上(+1200)</button>
+                    </div>
+                    <div class="text-[9px] text-slate-300 leading-tight">※2(3)階の階段1〜4段目上に床高1m程度(+1000mm)で収納を配すと、下階階段の頭上高さを確保したまま階段を隠して収納を配置できます。</div>
                 </div>
                 <div class="flex items-center justify-between gap-2 pt-0.5">
                     <span class="text-[10px] text-slate-400">延床面積の計算:</span>
@@ -1304,11 +1330,15 @@ function updateSelectedOpeningFit12(fitId) {
         obj.category = spec.isWinDefault ? 'window' : 'door';
         obj.leafCount = spec.leaves;
     }
+    const fl = state.floors[state.currentFloor];
+    if (typeof window.applyEntranceOpeningAttributes === 'function') {
+        window.applyEntranceOpeningAttributes(obj, fl, false);
+    }
     saveHistorySnapshot();
     request2DRedraw();
     if (typeof rebuild3DScene === 'function') rebuild3DScene();
     if (typeof renderPropertyInspector === 'function') renderPropertyInspector();
-    showToast(`建具種類を「${spec ? spec.label : fitId}」に変更しました`);
+    showToast(`建具種類を「${obj.isGenkan ? obj.label : (spec ? spec.label : fitId)}」に変更しました`);
 }
 window.updateSelectedOpeningFit12 = updateSelectedOpeningFit12;
 
@@ -1575,6 +1605,9 @@ function setFloor(fl) {
     });
     updateAllMetricsAnd3D();
     renderPropertyInspector();
+    if (typeof window.notifyLiveShareStateChanged === 'function') {
+        window.notifyLiveShareStateChanged('floor');
+    }
     const flName = fl === 0 ? '地下' : `${fl}階`;
     showToast(`${flName} の作図画面に切り替えました`);
 }
@@ -1773,6 +1806,7 @@ function copySelectedOpeningForPaste() {
         leafCount: obj.leafCount || 1,
         leafWidthMm: obj.leafWidthMm || obj.widthMm || 800,
         flip: !!obj.flip,
+        flipX: !!obj.flipX,
         label: `${typeName} W${obj.widthMm}×H${obj.heightMm}(FL+${obj.sillMm || 0})`
     };
     state.activeTool = 'opening';
@@ -1848,6 +1882,9 @@ function setViewMode(mode) {
     const closePopupBtn = document.getElementById('btnClose3DPopup');
     if (closePopupBtn) closePopupBtn.classList.toggle('hidden', !(mode === '2d' && state.birdEyePopupOpen));
     if (typeof handleResize === 'function') handleResize();
+    if (typeof window.notifyLiveShareStateChanged === 'function') {
+        window.notifyLiveShareStateChanged('viewMode');
+    }
 }
 window.setViewMode = setViewMode;
 

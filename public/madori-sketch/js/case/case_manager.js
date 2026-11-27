@@ -251,6 +251,7 @@ function triggerAutoRoomDetection() {
     const detected = window.RoomDetector.detectRoomsFromWalls(fl.walls, existingAutoRooms, state.modulePitch || 910);
 
     // 既存の手動部屋（オーバーレイ系を除く）と同一位置・同規模の自動検出部屋が重複生成されないよう除外
+    // ※手動の「階段室(STAIR)」と重なる位置に未命名の自動検出部屋(OTHER)が重複生成されると、階段表示を阻害するためSTAIRも重複除外対象に含める
     const overlayTypes = new Set(['VOID', 'TENJO', 'KOAGARI', 'TATAMI']);
     const nonOverlayManuals = manualRooms.filter(mr => !overlayTypes.has((mr.type || '').toUpperCase()));
     const dedupedDetected = detected.filter(ar => {

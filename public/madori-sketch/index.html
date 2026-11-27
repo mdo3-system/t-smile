@@ -6,10 +6,10 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="間取り工房">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#27272a">
+    <meta name="theme-color" content="#090d16">
     <link rel="manifest" href="/madori-sketch/manifest.json">
     <link rel="apple-touch-icon" href="/favicon.svg">
     <title>3D間取り工房｜完全無料・登録不要｜株式会社住ま居る</title>
@@ -203,15 +203,33 @@
             overflow: hidden !important;
         }
 
-        /* PWA / ホーム画面アプリ（スタンドアロン）時のステータスバー余白確保 */
+        /* PWA / ホーム画面アプリ（スタンドアロン）・iPad上部システムステータスバーブラー完全回避 */
         @media (display-mode: standalone) {
             body:not(.is-fullscreen) #madori-site-header {
-                padding-top: max(env(safe-area-inset-top, 0px), 30px) !important;
+                padding-top: max(calc(env(safe-area-inset-top, 0px) + 18px), 36px) !important;
             }
         }
 
         body.is-standalone:not(.is-fullscreen) #madori-site-header {
-            padding-top: max(env(safe-area-inset-top, 0px), 30px) !important;
+            padding-top: max(calc(env(safe-area-inset-top, 0px) + 18px), 36px) !important;
+        }
+
+        /* 全画面表示時（iPad PWA / 全画面モード）の上部ステータスバー退避専用バー */
+        #ipadTopSafeBar {
+            display: none;
+            width: 100%;
+            min-height: max(calc(env(safe-area-inset-top, 0px) + 22px), 36px);
+            background: #090d16;
+            border-bottom: 1.5px solid #f59e0b;
+            padding: max(env(safe-area-inset-top, 0px), 10px) 12px 4px;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 45;
+            flex-shrink: 0;
+        }
+
+        body.is-fullscreen #ipadTopSafeBar {
+            display: flex !important;
         }
 
         body.is-fullscreen .common-site-header,
@@ -230,7 +248,7 @@
             width: 100vw !important;
             height: 100vh !important;
             height: 100dvh !important;
-            padding-top: max(env(safe-area-inset-top, 0px), 30px) !important;
+            padding-top: 0 !important;
             padding-bottom: max(env(safe-area-inset-bottom, 0px), 8px) !important;
             z-index: 99999 !important;
         }
@@ -252,7 +270,7 @@
                             style="font-size: 1.05rem; font-weight: 900; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">家づくりAIラボ</span>
                         <span
                             style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 5px; border-radius: 4px; font-weight: 800;">3D間取り工房
-                            v2.38</span>
+                            v2.39</span>
                     </a>
                     <div
                         class="hidden xl:inline-flex items-center gap-1.5 text-[11px] text-slate-300 bg-black/30 border border-white/15 px-2 py-0.5 rounded">
@@ -288,13 +306,29 @@
     </header>
 
     <div id="madori-app-container">
+        <!-- iPad PWA / 全画面モード専用：上部システムステータスバー（時計・日付・バッテリー）重なり＆ぼやけ完全回避バー -->
+        <div id="ipadTopSafeBar">
+            <div class="flex items-center gap-2">
+                <span class="text-[11px] font-black text-sky-400">🏡 家づくりAIラボ</span>
+                <span id="safeBarVersionBadge"
+                    class="px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-black text-[11px] shadow">3D間取り工房 v2.39</span>
+                <span class="text-[10px] text-slate-300 hidden sm:inline">iPad Apple Pencil・2本指ピンチ拡大縮小・画面共有対応</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-[10px] text-emerald-300 font-bold hidden md:inline">株式会社住ま居る（家づくりサポート係）</span>
+            </div>
+        </div>
+
         <!-- ========================================================================= -->
         <!-- TOP APPLICATION BAR (お手本画像準拠：案件名・ロック・地下〜4階＋目・2D/3D切替・保存・戻る進む・ものさし・グリッド1〜6・マニュアル) -->
         <!-- ========================================================================= -->
         <header id="madori-app-header"
             class="h-11 bg-zinc-700 border-b border-zinc-800 px-2 flex items-center justify-between z-30 shrink-0 gap-1.5 overflow-x-auto">
-            <!-- Left: File / Save / New / Export Unified Group + Plan Title / Pin Lock -->
+            <!-- Left: Version Badge + File / Save / New / Export Unified Group + Plan Title / Pin Lock -->
             <div class="flex items-center gap-1 shrink-0">
+                <span id="appHeaderVersionBadge"
+                    class="px-1.5 py-0.5 rounded bg-sky-500/20 border border-sky-400 text-sky-300 font-black text-[11px] mono-num shrink-0 shadow-sm"
+                    title="3D間取り工房 バージョン v2.39">v2.39</span>
                 <div class="flex items-center gap-1 bg-zinc-800 p-0.5 rounded border border-zinc-600">
                     <button onclick="openPresetModal()" title="プラン一覧・家カルテ復元・JSON/FBX読込"
                         class="h-7 px-2 rounded bg-zinc-700 hover:bg-zinc-600 border border-amber-500/50 flex items-center justify-center gap-1 text-amber-300 text-[11px] font-bold shadow-inner whitespace-nowrap">
@@ -468,6 +502,14 @@
                     title="ペン専用モード（手のひら誤タッチ防止＝パームリジェクション）と、指・マウス併用モードを切り替えます">
                     <i class="fa-solid fa-pen-nib text-amber-300"></i>
                     <span class="hidden lg:inline">ペン/指/マウス</span>
+                </button>
+
+                <!-- 📡 同一Wi-Fi・別タブレット/PC画面 リアルタイム画面共有ボタン -->
+                <button id="btnLiveShareHeader" onclick="openLiveShareModal()"
+                    class="px-2 py-1 rounded bg-zinc-700 hover:bg-zinc-600 text-cyan-300 text-xs font-bold border border-cyan-500/50 flex items-center gap-1 transition"
+                    title="この画面を同じWi-Fi内の別のiPad・タブレットやPC画面にリアルタイム共有（ミラーリング同期）します">
+                    <i class="fa-solid fa-tower-broadcast"></i>
+                    <span id="lblLiveShareHeader">画面共有</span>
                 </button>
 
                 <!-- 📖 コンテキスト連動 操作マニュアルボタン -->
@@ -1744,7 +1786,14 @@
     <!-- 全画面表示中の右上フローティング解除・クイックバー -->
     <div id="floatingFullscreenBar" style="display: none;"
         class="fixed bottom-3 right-3 z-[100010] items-center gap-1.5 bg-zinc-900/95 border border-amber-500/60 px-3 py-1.5 rounded-full shadow-2xl">
+        <span class="text-[10px] font-black text-sky-300 bg-sky-500/20 border border-sky-400/60 px-2 py-0.5 rounded-full">v2.39</span>
         <span class="text-[10px] font-bold text-amber-300 mr-1"><i class="fa-solid fa-expand mr-1"></i>全画面中</span>
+        <button onclick="openLiveShareModal()"
+            class="px-2.5 py-1 rounded-full bg-zinc-800 hover:bg-zinc-700 text-cyan-300 border border-cyan-500/50 font-bold text-[11px] flex items-center gap-1 shadow"
+            title="別タブレット・PCと画面共有">
+            <i class="fa-solid fa-tower-broadcast"></i>
+            <span>画面共有</span>
+        </button>
         <button onclick="forceUpdateMadoriApp()"
             class="px-2.5 py-1 rounded-full bg-zinc-800 hover:bg-zinc-700 text-emerald-300 border border-zinc-600 font-bold text-[11px] flex items-center gap-1 shadow"
             title="最新版へ更新">
@@ -1758,6 +1807,128 @@
         </button>
     </div>
 
+    <!-- ========================================================================= -->
+    <!-- 📡 同一Wi-Fi内・別タブレット(iPad) / PC画面 リアルタイム画面共有モーダル -->
+    <!-- ========================================================================= -->
+    <div id="liveShareModal"
+        class="hidden fixed inset-0 z-[100045] bg-slate-950/80 backdrop-blur-sm items-center justify-center p-4"
+        onclick="if(event.target===this) closeLiveShareModal()">
+        <div class="bg-slate-900 border-2 border-cyan-500/70 rounded-2xl shadow-2xl max-w-lg w-full p-5 text-slate-100 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-9 h-9 rounded-xl bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300">
+                        <i class="fa-solid fa-tower-broadcast text-base"></i>
+                    </span>
+                    <div>
+                        <h3 class="text-base font-black text-white">別タブレット・PC画面とリアルタイム画面共有</h3>
+                        <p class="text-[11px] text-cyan-300 font-bold">同じWi-Fi内のiPad・タブレット・PCモニターへ2D図面＆3Dモデルを即時同期</p>
+                    </div>
+                </div>
+                <button onclick="closeLiveShareModal()" class="text-slate-400 hover:text-white px-2 py-1 rounded">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- ① 発信側（ホスト）：この端末の画面を他の端末へ共有 -->
+            <div class="p-3.5 rounded-xl bg-slate-800/90 border border-slate-700 space-y-2.5">
+                <div class="flex items-center justify-between gap-2">
+                    <div>
+                        <div class="text-xs font-extrabold text-emerald-300 flex items-center gap-1.5">
+                            <i class="fa-solid fa-satellite-dish"></i>
+                            <span>① この画面を発信する（操作するiPad / PC）</span>
+                        </div>
+                        <p class="text-[11px] text-slate-300 mt-0.5">作図中の壁・部屋・階切替・3D視点アングルを別の大画面モニターやタブレットへリアルタイム配信します。</p>
+                    </div>
+                    <button id="btnStartLiveShareHost" onclick="startLiveShareAsHost()"
+                        class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs shadow-lg shrink-0 flex items-center gap-1.5">
+                        <i class="fa-solid fa-play"></i>
+                        <span>この画面を共有開始</span>
+                    </button>
+                </div>
+
+                <!-- 配信中に表示される4桁番号＆共有URLボックス -->
+                <div id="liveShareActiveHostBox" class="hidden p-3 rounded-xl bg-emerald-950/70 border border-emerald-500/50 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-[10px] font-bold text-emerald-300">🟢 現在リアルタイム配信中（別の端末で下のボタンからワンタップ同期できます）</div>
+                            <div class="flex items-baseline gap-2 mt-1">
+                                <span class="text-xs text-slate-300">共有番号:</span>
+                                <span id="liveShareRoomCodeDisplay" class="text-2xl font-black text-amber-300 mono-num tracking-widest">----</span>
+                            </div>
+                        </div>
+                        <button onclick="stopLiveShareSession()"
+                            class="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow">
+                            配信停止
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <input id="liveShareUrlDisplay" type="text" readonly
+                            class="flex-1 bg-slate-950/90 border border-slate-700 rounded-lg px-2.5 py-1 text-[11px] text-sky-200 mono-num"
+                            value="" />
+                        <button onclick="copyLiveShareUrl()"
+                            class="px-2.5 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-[11px] font-bold shrink-0">
+                            <i class="fa-regular fa-copy mr-1"></i>URLコピー
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ② 受信側（ビューア）：現在配信中の画面にワンタップで同期参加 -->
+            <div class="p-3.5 rounded-xl bg-slate-800/90 border border-slate-700 space-y-2.5">
+                <div class="flex items-center justify-between">
+                    <div class="text-xs font-extrabold text-amber-300 flex items-center gap-1.5">
+                        <i class="fa-solid fa-tv"></i>
+                        <span>② 別のタブレット・PC画面で受信して同期表示する</span>
+                    </div>
+                    <button onclick="refreshActiveLiveShareRoomsList()"
+                        class="px-2 py-0.5 rounded bg-slate-700 hover:bg-slate-600 text-[10px] font-bold text-cyan-300">
+                        <i class="fa-solid fa-arrows-rotate mr-1"></i>一覧更新
+                    </button>
+                </div>
+
+                <!-- 同じWi-Fi / サーバー上で現在アクティブなルーム一覧（番号入力不要でワンタップ同期） -->
+                <div id="liveShareActiveRoomsList" class="space-y-1.5 max-h-40 overflow-y-auto">
+                    <div class="text-[11px] text-slate-400 py-2 text-center">配信中のルームを確認中...</div>
+                </div>
+
+                <!-- 4桁番号を直接入力して接続 -->
+                <div class="flex items-center gap-2 pt-1 border-t border-slate-700/80">
+                    <span class="text-[11px] text-slate-300 shrink-0">番号で接続:</span>
+                    <input id="inpLiveShareJoinCode" type="text" maxlength="10" placeholder="4桁の共有番号 (例: 1234)"
+                        class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-white mono-num focus:outline-none focus:border-cyan-400" />
+                    <button onclick="joinLiveShareAsViewer()"
+                        class="px-3.5 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs shrink-0 shadow">
+                        📺 同期接続
+                    </button>
+                </div>
+
+                <!-- 受信同期中に表示されるステータスバー -->
+                <div id="liveShareActiveViewerBox" class="hidden p-2.5 rounded-xl bg-amber-500/15 border border-amber-400/50 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <div class="text-xs font-bold text-amber-200">
+                            📺 同期受信中: <span id="liveShareViewerCodeDisplay" class="font-black text-white mono-num">----</span>
+                        </div>
+                        <button onclick="stopLiveShareSession()"
+                            class="px-2.5 py-1 rounded bg-rose-600 hover:bg-rose-500 text-white text-[11px] font-bold">
+                            同期解除
+                        </button>
+                    </div>
+                    <label class="flex items-center gap-2 text-[11px] text-slate-200 cursor-pointer">
+                        <input id="chkLiveShareFollowCamera" type="checkbox" checked
+                            onchange="toggleLiveShareFollowCamera(this.checked)"
+                            class="rounded border-amber-400 bg-slate-950 text-amber-500" />
+                        <span>発信側の3Dカメラ回転・2D表示位置もリアルタイム追従する（OFFにすると受信側で自由に別角度から3D確認可能）</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex justify-end">
+                <button onclick="closeLiveShareModal()"
+                    class="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 border border-slate-700">閉じる</button>
+            </div>
+        </div>
+    </div>
+
     <!-- TOAST NOTIFICATION -->
     <div id="toastBox"
         class="fixed bottom-12 left-1/2 -translate-x-1/2 z-[100040] pointer-events-none opacity-0 transition-opacity duration-300">
@@ -1769,20 +1940,20 @@
     </div>
 
     <!-- 単一責任の原則 (SRP) に基づく分離モジュール群 -->
-    <script>window.MADORI_APP_VERSION = '2.38.0';</script>
-    <script src="/madori-sketch/js/constants/manual_data.js?v=202611270913"></script>
-    <script src="/madori-sketch/js/constants/architectural_specs.js?v=202611270913"></script>
-    <script src="/madori-sketch/js/core/app_state.js?v=202611270913"></script>
-    <script src="/madori-sketch/js/core/metrics_calculator.js?v=202611270913"></script>
-    <script src="/madori-sketch/js/io/json_storage.js?v=202611270913"></script>
-    <script src="/madori-sketch/js/io/dxf_pdf_exporter.js?v=202611270913"></script>
-    <script src="/madori-sketch/js/integration/carte_bridge.js?v=202611270913"></script>
-    <script src="/madori-sketch/js/geometry/room_detector.js?v=202611270913"></script>
-    <script src="/madori-sketch/js/renderer/three_3d.js?v=202611270913"></script>
-    <script src="/madori-sketch/js/renderer/canvas_2d_renderer.js?v=202611270913"></script>
-    <script src="/madori-sketch/js/ui/ui_inspector.js?v=202611270913"></script>
-    <script src="/madori-sketch/js/input/input_controller.js?v=202611270913"></script>
-    <script src="/madori-sketch/js/case/case_manager.js?v=202611270913"></script>
+    <script>window.MADORI_APP_VERSION = '2.39.0'; window.MADORI_APP_DISPLAY_VERSION = 'v2.39';</script>
+    <script src="/madori-sketch/js/constants/manual_data.js?v=202611271215"></script>
+    <script src="/madori-sketch/js/constants/architectural_specs.js?v=202611271215"></script>
+    <script src="/madori-sketch/js/core/app_state.js?v=202611271215"></script>
+    <script src="/madori-sketch/js/core/metrics_calculator.js?v=202611271215"></script>
+    <script src="/madori-sketch/js/io/json_storage.js?v=202611271215"></script>
+    <script src="/madori-sketch/js/io/dxf_pdf_exporter.js?v=202611271215"></script>
+    <script src="/madori-sketch/js/integration/carte_bridge.js?v=202611271215"></script>
+    <script src="/madori-sketch/js/geometry/room_detector.js?v=202611271215"></script>
+    <script src="/madori-sketch/js/renderer/three_3d.js?v=202611271215"></script>
+    <script src="/madori-sketch/js/renderer/canvas_2d_renderer.js?v=202611271215"></script>
+    <script src="/madori-sketch/js/ui/ui_inspector.js?v=202611271215"></script>
+    <script src="/madori-sketch/js/input/input_controller.js?v=202611271215"></script>
+    <script src="/madori-sketch/js/case/case_manager.js?v=202611271215"></script>
     <script>
         const ROOM_TYPES = window.ROOM_TYPES;
         const OPENING_TYPES = window.OPENING_TYPES;

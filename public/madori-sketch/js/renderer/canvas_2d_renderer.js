@@ -408,6 +408,7 @@ function drawRoom2D(rm, isLight) {
     ctx.fill();
 
     // 空間パターン描画
+    const customLevelMm = (typeof rm.levelMm === 'number' && !isNaN(rm.levelMm)) ? rm.levelMm : (rm.type === 'KOAGARI' ? 300 : 0);
     if (rm.type === 'VOID') {
         // 吹き抜け：枠内に点線の「×」
         ctx.strokeStyle = isLight ? '#334155' : '#38bdf8';
@@ -436,8 +437,11 @@ function drawRoom2D(rm, isLight) {
             ctx.lineTo(p1.x + wPx / 2, p1.y + hPx);
             ctx.stroke();
         }
-    } else if (rm.type === 'KOAGARI') {
-        ctx.strokeStyle = '#ca8a04';
+    } else if (rm.type === 'KOAGARI' || customLevelMm > 0) {
+        ctx.fillStyle = customLevelMm >= 500 ? 'rgba(253, 230, 138, 0.72)' : 'rgba(254, 240, 138, 0.55)';
+        traceRoomShape();
+        ctx.fill();
+        ctx.strokeStyle = '#d97706';
         ctx.lineWidth = 2;
         traceRoomShape();
         ctx.stroke();
@@ -496,15 +500,20 @@ function drawRoom2D(rm, isLight) {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     const title = rm.customName || rm.name || rt.label;
-    if (title && wPx > 32 && hPx > 24) {
+    if (title && wPx > 26 && hPx > 20) {
         ctx.fillStyle = isLight ? '#0f172a' : '#f8fafc';
         ctx.font = `bold ${Math.max(9, Math.min(13, state.cam2d.zoom * 0.26))}px "Noto Sans JP", sans-serif`;
-        ctx.fillText(title, centerX, centerY - (hPx > 42 ? 6 : 0));
+        ctx.fillText(title, centerX, centerY - (hPx > 34 ? 6 : 0));
 
-        if (wPx > 48 && hPx > 42 && rm.type !== 'VOID' && rm.type !== 'TENJO') {
-            ctx.fillStyle = isLight ? '#475569' : '#cbd5e1';
-            ctx.font = `600 ${Math.max(8, Math.min(10, state.cam2d.zoom * 0.20))}px "JetBrains Mono", monospace`;
-            const subTxt = rm.type === 'KOAGARI' ? `+30cm (${tatamiJyo.toFixed(1)}帖)` : `${tatamiJyo.toFixed(1)}帖 (${areaM2.toFixed(1)}㎡)`;
+        if (wPx > 36 && hPx > 32 && rm.type !== 'VOID' && rm.type !== 'TENJO') {
+            ctx.fillStyle = customLevelMm > 0 ? '#b45309' : (isLight ? '#475569' : '#cbd5e1');
+            ctx.font = `${customLevelMm > 0 ? 'bold' : '600'} ${Math.max(8, Math.min(10, state.cam2d.zoom * 0.20))}px "JetBrains Mono", monospace`;
+            const levelBadge = customLevelMm > 0
+                ? (customLevelMm >= 1000 ? `FL+${(customLevelMm / 1000).toFixed(customLevelMm % 1000 === 0 ? 1 : 2)}m` : `FL+${customLevelMm}mm`)
+                : '';
+            const subTxt = levelBadge
+                ? `${levelBadge} (${tatamiJyo.toFixed(1)}帖)`
+                : `${tatamiJyo.toFixed(1)}帖 (${areaM2.toFixed(1)}㎡)`;
             ctx.fillText(subTxt, centerX, centerY + 8);
         }
     }
@@ -1462,18 +1471,96 @@ function drawStair2D(st, isLight) {
  */
 function isStairOpenRoom(rm) {
     if (!rm) return false;
+    // 床高が設定された高床部屋（階段上収納 FL+1000mm 等）は「階段上収納」という名前であっても床貼り部屋として階段を隠す
+    if (typeof rm.levelMm === 'number' && rm.levelMm > 0) return false;
     const rType = String(rm.type || '').toUpperCase();
-    if (rType === 'STAIR' || rType === 'VOID' || rType === 'NAKANIWA' || rType === 'TENJO') return true;
+    if (rType === 'VOID' || rType === 'NAKANIWA' || rType === 'TENJO') return true;
     const rName = String(rm.customName || rm.name || '');
-    if (/階段|吹抜|吹き抜け|中庭/.test(rName)) return true;
+    if (/階段上収納|階段上物入|階段上CL|階段上クローゼット/.test(rName)) return false;
+    if (rType === 'STAIR' || /階段|吹抜|吹き抜け|中庭/.test(rName)) return true;
     return false;
 }
 window.isStairOpenRoom = isStairOpenRoom;
 
+/**
+ * 部屋 rm（多角形 points または矩形）が階段矩形 (sx0..sx1, sy0..sy1) と実際に重なっている面積 (P²) と、
+ * 重なっている矩形ピース群（0.125P グリッド分解または精密交差矩形）を算出するヘルパー。
+ * ※L字型の2階ホール（例: 2493-P17 の room_mzducixo4）のように外接矩形は階段全体を包んでいても、
+ *   実ポリゴンは階段の登りはじめ1〜2段目（0.5P²）だけに張られているケースを100%正確に検出する！
+ */
+function computeRoomStairOverlapInfo(rm, st) {
+    if (!rm || !st) return { overlapArea: 0, pieces: [] };
+    const sx0 = (st.x !== undefined && !isNaN(st.x)) ? st.x : 0;
+    const sy0 = (st.y !== undefined && !isNaN(st.y)) ? st.y : 0;
+    const sw = (st.w !== undefined && !isNaN(st.w)) ? st.w : 1;
+    const sh = (st.h !== undefined && !isNaN(st.h)) ? st.h : 2;
+    const sx1 = sx0 + sw;
+    const sy1 = sy0 + sh;
+
+    const ix0 = Math.max(sx0, rm.x);
+    const iy0 = Math.max(sy0, rm.y);
+    const ix1 = Math.min(sx1, rm.x + rm.w);
+    const iy1 = Math.min(sy1, rm.y + rm.h);
+    if (ix1 - ix0 <= 0.01 || iy1 - iy0 <= 0.01) {
+        return { overlapArea: 0, pieces: [] };
+    }
+
+    const hasPoly = Array.isArray(rm.points) && rm.points.length >= 3;
+    if (!hasPoly || !(window.RoomDetector && typeof window.RoomDetector.isPointInsidePolygon === 'function')) {
+        const area = (ix1 - ix0) * (iy1 - iy0);
+        return {
+            overlapArea: area,
+            pieces: [{ x: ix0, y: iy0, w: ix1 - ix0, h: iy1 - iy0 }]
+        };
+    }
+
+    // 多角形部屋の場合は、階段交差バウンディングボックスを細かくサンプリング走査してポリゴン内部の矩形ストリップを抽出
+    const stepX = Math.min(0.25, (ix1 - ix0) / 4);
+    const stepY = Math.min(0.125, (iy1 - iy0) / 14);
+    let insideArea = 0;
+    const pieces = [];
+
+    for (let y = iy0; y < iy1 - 1e-5; y += stepY) {
+        const yEnd = Math.min(iy1, y + stepY);
+        const hCell = yEnd - y;
+        const cy = (y + yEnd) * 0.5;
+        let runStartX = null;
+        for (let x = ix0; x < ix1 - 1e-5; x += stepX) {
+            const xEnd = Math.min(ix1, x + stepX);
+            const cx = (x + xEnd) * 0.5;
+            const inside = window.RoomDetector.isPointInsidePolygon({ x: cx, y: cy }, rm.points);
+            if (inside) {
+                insideArea += (xEnd - x) * hCell;
+                if (runStartX === null) runStartX = x;
+            } else if (runStartX !== null) {
+                pieces.push({ x: runStartX, y: y, w: x - runStartX, h: hCell });
+                runStartX = null;
+            }
+        }
+        if (runStartX !== null) {
+            pieces.push({ x: runStartX, y: y, w: ix1 - runStartX, h: hCell });
+        }
+    }
+
+    // 縦方向に同じ (x, w) で連続するストリップを結合してクリーンな矩形リストに圧縮
+    const mergedPieces = [];
+    pieces.forEach(p => {
+        const prev = mergedPieces[mergedPieces.length - 1];
+        if (prev && Math.abs(prev.x - p.x) < 1e-4 && Math.abs(prev.w - p.w) < 1e-4 && Math.abs((prev.y + prev.h) - p.y) < 1e-4) {
+            prev.h = +(prev.h + p.h).toFixed(4);
+        } else {
+            mergedPieces.push({ x: +p.x.toFixed(4), y: +p.y.toFixed(4), w: +p.w.toFixed(4), h: +p.h.toFixed(4) });
+        }
+    });
+
+    return { overlapArea: insideArea, pieces: mergedPieces };
+}
+window.computeRoomStairOverlapInfo = computeRoomStairOverlapInfo;
+
 function getRoomsMaskingUpperStair(fl, st) {
     if (!fl || !Array.isArray(fl.rooms) || !st) return [];
     const isUpperOrLinked = (st.linkedFromStairId !== undefined && st.linkedFromStairId !== null)
-        || (state.currentFloor >= 2 && st.direction === 'DOWN');
+        || (state.currentFloor >= 2 && (st.direction === 'DOWN' || st.direction === 'UP'));
     if (!isUpperOrLinked) return [];
 
     // 階段が現在選択中でかつ階段ツール使用中の場合は全体を確認できるようマスクしない
@@ -1481,42 +1568,37 @@ function getRoomsMaskingUpperStair(fl, st) {
         && state.selectedItem && state.selectedItem.kind === 'stair' && state.selectedItem.id === st.id;
     if (isStairActivelyEdited) return [];
 
-    const sx0 = (st.x !== undefined && !isNaN(st.x)) ? st.x : 0;
-    const sy0 = (st.y !== undefined && !isNaN(st.y)) ? st.y : 0;
     const sw = (st.w !== undefined && !isNaN(st.w)) ? st.w : 1;
     const sh = (st.h !== undefined && !isNaN(st.h)) ? st.h : 2;
-    const sx1 = sx0 + sw;
-    const sy1 = sy0 + sh;
     const stairArea = Math.max(0.01, sw * sh);
-
-    const hasExplicitStairOpenRoomOnFloor = fl.rooms.some(r => {
-        if (!isStairOpenRoom(r)) return false;
-        const ox = Math.max(0, Math.min(sx1, r.x + r.w) - Math.max(sx0, r.x));
-        const oy = Math.max(0, Math.min(sy1, r.y + r.h) - Math.max(sy0, r.y));
-        return (ox * oy) > 0.02;
-    });
 
     return fl.rooms.filter(rm => {
         if (!rm || isStairOpenRoom(rm)) return false;
-        const rx0 = rm.x, ry0 = rm.y, rx1 = rm.x + rm.w, ry1 = rm.y + rm.h;
-        const ox = Math.max(0, Math.min(sx1, rx1) - Math.max(sx0, rx0));
-        const oy = Math.max(0, Math.min(sy1, ry1) - Math.max(sy0, ry0));
-        const overlapArea = ox * oy;
-        if (overlapArea <= 0.01) return false;
 
-        // もしこの階に「階段室」や「吹抜」が明示的に定義されている場合は、それ以外の全ての床貼り部屋を優先して階段をマスクする
-        if (hasExplicitStairOpenRoomOnFloor) return true;
-
-        // 階段室が未定義でも、階段の一部分（例：登りはじめ1〜3段目など、重なり面積が階段全体の85%未満）に重なる部屋（収納・クローゼット・廊下等）は優先してマスクする
-        if (overlapArea < stairArea * 0.85) return true;
-
-        // 部屋自体が収納・クローゼット・トイレ・洗面等の小部屋（4.5帖以下）で階段の上に配置された場合も部屋を優先
-        const rmAreaP = rm.w * rm.h;
         const rType = String(rm.type || '').toUpperCase();
-        if (['CLOSET', 'SHUNO', 'STORAGE', 'WIC', 'TOILET', 'SENMEN', 'DATSUI'].includes(rType) && rmAreaP <= 4.5) {
+        const rName = String(rm.customName || rm.name || '').trim();
+        const isRaisedStorage = (typeof rm.levelMm === 'number' && rm.levelMm > 0) || /階段上収納|階段上物入|階段上CL/.test(rName);
+
+        // 階段自身の周囲の壁から自動検出された未命名の「OTHER（空間）」部屋は階段そのものの外枠であるため除外（ただし床高設定がある場合はマスク対象）
+        if (!isRaisedStorage && rm.isAutoDetected && (rType === 'OTHER' || rType === '') && (!rName || rName === '空間')) {
+            return false;
+        }
+
+        const info = computeRoomStairOverlapInfo(rm, st);
+        if (info.overlapArea <= 0.01) return false;
+
+        // 床高が設定された高床部屋（階段上収納 FL+1000mm 等）は常に階段の上に優先表示（マスク）する
+        if (isRaisedStorage && info.overlapArea < stairArea * 0.85) {
             return true;
         }
-        return false;
+
+        // 階段全体の60%以上を実ポリゴンで覆う大部屋（階段室未 분리時の2Fホール全体など）は階段が消えるのを防ぐため除外
+        if (info.overlapArea >= stairArea * 0.60) {
+            return false;
+        }
+
+        // 2（3）階の床が階段の登りはじめ1〜3段目など（階段面積の60%未満）に張られている箇所は、2（3）階床で階段が隠れる！
+        return true;
     });
 }
 window.getRoomsMaskingUpperStair = getRoomsMaskingUpperStair;
@@ -1535,6 +1617,7 @@ function drawUpperFloorRoomMaskOverStairs2D(fl, W, H, isLight) {
     });
     if (maskedRooms.length === 0) return;
 
+    // 1. まず各マスク部屋の実ポリゴン（または矩形）領域で階段の隠れる部分（1〜2段目や階段上収納の範囲）を白紙＋方眼グリッドで消去し、部屋の床を再描画
     maskedRooms.forEach(rm => {
         const p1 = worldPToScreen(rm.x, rm.y);
         const wPx = rm.w * state.cam2d.zoom;
@@ -1555,14 +1638,39 @@ function drawUpperFloorRoomMaskOverStairs2D(fl, W, H, isLight) {
         }
         ctx.clip();
 
-        // 1. クリップ領域内の階段描画をキャンパス背景色で完全に消去し、方眼グリッドを復元
+        // クリップ領域内の階段描画をキャンバス背景色で消去し、方眼グリッドを復元
         ctx.fillStyle = isLight ? '#ffffff' : '#0b1120';
         ctx.fillRect(p1.x - 4, p1.y - 4, wPx + 8, hPx + 8);
         drawGrid2D(W, H, isLight);
         ctx.restore();
 
-        // 2. 部屋（床色・枠・部屋名・帖数ラベル）を最優先で再描画
+        // 部屋（床色・枠・部屋名・帖数・床高FL+1.0mラベル）を最優先で再描画
         drawRoom2D(rm, isLight);
+    });
+
+    // 2. 階段の「隠れていない開口部分（3段目〜登りきり等）」の周囲壁・段鼻線・UP/DN矢印が、
+    //    隣接する床部屋の境界塗りで見切れないよう、マスク部屋以外の領域にクリップして階段を鮮明に再描画する
+    (fl.stairs || []).forEach(st => {
+        const rooms = getRoomsMaskingUpperStair(fl, st);
+        if (rooms.length === 0) return;
+
+        // 階段矩形 (st.x, st.y, st.w, st.h) から、マスク部屋の重なりピースを差し引いた「見える階段領域」にもし登り口丸印('o')が隠れた場合は、
+        // 見える側の境界からしっかり階段段鼻と昇降線が見えるようにする
+        const overlapPieces = [];
+        rooms.forEach(rm => {
+            const info = computeRoomStairOverlapInfo(rm, st);
+            info.pieces.forEach(pc => overlapPieces.push(pc));
+        });
+
+        // 2（3）階床と階段開口の境界線（床見切りライン）を明瞭な実線で描画
+        ctx.save();
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 2.0;
+        overlapPieces.forEach(pc => {
+            const sp = worldPToScreen(pc.x, pc.y);
+            ctx.strokeRect(sp.x, sp.y, pc.w * state.cam2d.zoom, pc.h * state.cam2d.zoom);
+        });
+        ctx.restore();
     });
 }
 
@@ -1592,8 +1700,8 @@ function resolveKitchenLCornerState(fxOrRot, flipX = false, flipY = false) {
     if (fxFlipY) cornerBottom = !cornerBottom;
     const cornerLabel = (!cornerRight && !cornerBottom) ? '↖北西角(0°)'
         : (cornerRight && !cornerBottom) ? '↗北東角(90°)'
-        : (cornerRight && cornerBottom) ? '↘南東角(180°)'
-        : '↙南西角(270°)';
+            : (cornerRight && cornerBottom) ? '↘南東角(180°)'
+                : '↙南西角(270°)';
     return { rot, cornerRight, cornerBottom, cornerLabel };
 }
 window.resolveKitchenLCornerState = resolveKitchenLCornerState;
@@ -1620,12 +1728,14 @@ function drawFixture2D(fx, isLight) {
         ctx.scale(cState.cornerRight ? -1 : 1, cState.cornerBottom ? -1 : 1);
         ctx.translate(-wPx / 2, -hPx / 2);
     } else {
+        // 画面座標基準で flipX (画面の左右反転) と flipY (画面の上下反転) を先に適用してから rot 回転することで、
+        // 90°/270°回転時でも「↔ 左右反転」は常に画面の左右、「↕ 上下反転」は常に画面の上下に100%一致して反転する！
         ctx.translate(p.x + wPx / 2, p.y + hPx / 2);
+        if (fx.flipX) ctx.scale(-1, 1);
+        if (fx.flipY) ctx.scale(1, -1);
         if (rot !== 0) {
             ctx.rotate((rot * Math.PI) / 180);
         }
-        if (fx.flipX) ctx.scale(-1, 1);
-        if (fx.flipY) ctx.scale(1, -1);
         ctx.translate(-localW / 2, -localH / 2);
     }
 
@@ -1742,21 +1852,23 @@ function drawFixture2D(fx, isLight) {
     } else {
         ctx.fillRect(0, 0, localW, localH);
         ctx.strokeRect(0, 0, localW, localH);
-        // ソファやベッド等は背面（y=0側）に背もたれ・ヘッドボード二重線を描画して向きを一目でわかるようにする
-        if (cat === 'SOFA' || cat === 'BED_DOUBLE' || cat === 'BED_SINGLE' || cat === 'CUPBOARD' || cat === 'CLOSET_UNIT') {
-            ctx.beginPath();
-            const backBand = Math.max(3, Math.min(8, localH * 0.16));
-            ctx.moveTo(0, backBand);
-            ctx.lineTo(localW, backBand);
-            ctx.stroke();
-        }
+        // ソファやベッド・冷蔵庫・洗濯機・収納等は背面（y=0側）および片側アクセントを描画して回転・上下左右反転が一目でわかるようにする
+        const backBand = Math.max(3, Math.min(8, localH * 0.16));
+        ctx.beginPath();
+        ctx.moveTo(0, backBand);
+        ctx.lineTo(localW, backBand);
+        // 左右非対称アクセント（扉蝶番・肘掛け側マーク）を左端に入れて左右反転も視覚的に確認可能にする
+        ctx.moveTo(Math.min(6, localW * 0.15), backBand);
+        ctx.lineTo(Math.min(6, localW * 0.15), localH);
+        ctx.stroke();
+
         if (localW > 20 && localH > 14) {
             ctx.save();
-            // 文字は回転・反転を打ち消して常に水平正立で読みやすく描画
+            // 文字は回転・反転を逆順（逆回転 -> 逆スケール）で打ち消して常に水平正立で読みやすく描画
             ctx.translate(localW / 2, localH / 2);
+            if (rot !== 0) ctx.rotate((-rot * Math.PI) / 180);
             if (fx.flipY) ctx.scale(1, -1);
             if (fx.flipX) ctx.scale(-1, 1);
-            if (rot !== 0) ctx.rotate((-rot * Math.PI) / 180);
             ctx.fillStyle = '#1e293b';
             ctx.font = 'bold 9px "Noto Sans JP", sans-serif';
             ctx.textAlign = 'center';
@@ -1786,9 +1898,21 @@ function drawOpening2D(op, isLight) {
     const p = worldPToScreen(op.x, op.y);
     const wP = op.widthP || (op.widthMm ? op.widthMm / pitch : 1.0);
     const lenPx = wP * state.cam2d.zoom;
-    const fit = op.doorFit || (op.type === 'SWING_DOOR' ? 'katahiraki' : 'hikichigai');
-    const dir = op.flip ? -1 : 1;
+    const fit = op.doorFit || op.sashType || (op.type === 'SWING_DOOR' ? 'katahiraki' : 'hikichigai');
+    const dir = op.flip ? -1 : 1;      // 壁の表裏・上下（室内外）方向
+    const dirX = op.flipX ? -1 : 1;    // 壁に沿った左右（引き込み・吊元）方向
     const isSelected = state.selectedItem && state.selectedItem.kind === 'opening' && state.selectedItem.id === op.id;
+
+    // 玄関開口部（玄関引違戸・玄関ドア・玄関片引戸・玄関親子・玄関両開）の自動判定
+    const curFl = (typeof state !== 'undefined' && state.floors) ? state.floors[state.currentFloor] : null;
+    const windowOnlyFits = ['fix', 'demado', 'tatesuberi', 'yokosuberi', 'agesage', 'oredo', 'closet', 'kaikou'];
+    const isGenkan = !windowOnlyFits.includes(fit) && (
+        op.isGenkan === true ||
+        op.type === 'ENTRANCE_DOOR' ||
+        fit === 'oyako' ||
+        fit === 'genkan_slide' ||
+        (typeof window.isOpeningAtEntranceWall === 'function' && window.isOpeningAtEntranceWall(curFl, op.x, op.y, op.orient, op))
+    );
 
     ctx.save();
     ctx.translate(p.x, p.y);
@@ -1798,13 +1922,166 @@ function drawOpening2D(op, isLight) {
 
     // 壁の開口くり抜き
     ctx.fillStyle = isLight ? '#ffffff' : '#0f172a';
-    ctx.fillRect(-lenPx / 2, -5, lenPx, 10);
+    ctx.fillRect(-lenPx / 2, -5.5, lenPx, 11);
+
+    // 玄関建具（玄関引違戸・玄関ドア・玄関片引戸・玄関親子・玄関両開）の場合は沓摺り（ポーチ段差枠）と重厚な木目フレームを描画
+    if (isGenkan) {
+        const genkanStroke = isSelected ? '#f59e0b' : '#451a03';
+        const genkanFill = isSelected ? '#fbbf24' : '#b45309';
+        const genkanFrameFill = '#fef3c7';
+
+        // 玄関外周沓摺り・枠ベース
+        ctx.fillStyle = genkanFrameFill;
+        ctx.fillRect(-lenPx / 2, -4.5, lenPx, 9);
+        ctx.strokeStyle = genkanStroke;
+        ctx.lineWidth = isSelected ? 2.2 : 1.6;
+        ctx.strokeRect(-lenPx / 2, -4.5, lenPx, 9);
+
+        // 左右の玄関太枠（縦枠柱チリ）
+        const jambW = Math.min(4.5, Math.max(2.5, lenPx * 0.06));
+        ctx.fillStyle = genkanStroke;
+        ctx.fillRect(-lenPx / 2, -4.8, jambW, 9.6);
+        ctx.fillRect(lenPx / 2 - jambW, -4.8, jambW, 9.6);
+
+        if (fit === 'katahiraki' || fit === 'hiraki') {
+            // 【玄関ドア（片開き：上下dir×左右dirXの4方向対応）】
+            const leafLen = lenPx * 0.90;
+            const leafThick = 4.2;
+            ctx.save();
+            if (dirX < 0) ctx.scale(-1, 1);
+            ctx.fillStyle = genkanFill;
+            ctx.strokeStyle = genkanStroke;
+            ctx.lineWidth = isSelected ? 2.2 : 1.6;
+            const yStart = dir > 0 ? 0 : -leafLen;
+            ctx.fillRect(-lenPx / 2, yStart, leafThick, leafLen);
+            ctx.strokeRect(-lenPx / 2, yStart, leafThick, leafLen);
+            ctx.fillStyle = '#f59e0b';
+            const handleY = dir > 0 ? leafLen * 0.78 : -leafLen * 0.85;
+            ctx.fillRect(-lenPx / 2 + leafThick, handleY, 2.5, Math.max(3, leafLen * 0.12));
+
+            ctx.strokeStyle = genkanStroke;
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.arc(-lenPx / 2, 0, leafLen, 0, (Math.PI / 2) * dir, dir < 0);
+            ctx.stroke();
+            ctx.restore();
+        } else if (fit === 'oyako') {
+            // 【玄関親子ドア：上下dir×左右dirXの4方向対応】
+            const wMain = lenPx * 0.68;
+            const wSub = lenPx * 0.28;
+            const leafThick = 4.0;
+            ctx.save();
+            if (dirX < 0) ctx.scale(-1, 1);
+            ctx.fillStyle = genkanFill;
+            ctx.strokeStyle = genkanStroke;
+            ctx.lineWidth = isSelected ? 2.2 : 1.5;
+            ctx.fillRect(-lenPx / 2, dir > 0 ? 0 : -wMain, leafThick, wMain);
+            ctx.strokeRect(-lenPx / 2, dir > 0 ? 0 : -wMain, leafThick, wMain);
+            ctx.fillRect(lenPx / 2 - leafThick, dir > 0 ? 0 : -wSub, leafThick, wSub);
+            ctx.strokeRect(lenPx / 2 - leafThick, dir > 0 ? 0 : -wSub, leafThick, wSub);
+
+            ctx.lineWidth = 1.1;
+            ctx.beginPath();
+            ctx.arc(-lenPx / 2, 0, wMain, 0, (Math.PI / 2) * dir, dir < 0);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(lenPx / 2, 0, wSub, Math.PI, Math.PI - (Math.PI / 2) * dir, dir > 0);
+            ctx.stroke();
+            ctx.restore();
+        } else if (fit === 'ryouhiraki') {
+            // 【玄関両開ドア】
+            const half = lenPx * 0.48;
+            const leafThick = 4.0;
+            ctx.fillStyle = genkanFill;
+            ctx.strokeStyle = genkanStroke;
+            ctx.lineWidth = isSelected ? 2.2 : 1.5;
+            ctx.fillRect(-lenPx / 2, dir > 0 ? 0 : -half, leafThick, half);
+            ctx.strokeRect(-lenPx / 2, dir > 0 ? 0 : -half, leafThick, half);
+            ctx.fillRect(lenPx / 2 - leafThick, dir > 0 ? 0 : -half, leafThick, half);
+            ctx.strokeRect(lenPx / 2 - leafThick, dir > 0 ? 0 : -half, leafThick, half);
+
+            ctx.lineWidth = 1.1;
+            ctx.beginPath();
+            ctx.arc(-lenPx / 2, 0, half, 0, (Math.PI / 2) * dir, dir < 0);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(lenPx / 2, 0, half, Math.PI, Math.PI - (Math.PI / 2) * dir, dir > 0);
+            ctx.stroke();
+        } else if (fit === 'katabiki' || fit === 'hikido' || fit === 'genkan_slide') {
+            // 【玄関片引戸：上下(レール側 dir)×左右(引き込み側 dirX)の4方向完全対応】
+            ctx.save();
+            ctx.setLineDash([2.5, 2.5]);
+            ctx.lineWidth = 1.1;
+            ctx.strokeStyle = '#78350f';
+            ctx.beginPath();
+            ctx.moveTo(-lenPx / 2 + jambW, -2.2 * dir);
+            ctx.lineTo(lenPx / 2 - jambW, -2.2 * dir);
+            ctx.stroke();
+            ctx.restore();
+
+            const panelW = lenPx * 0.54;
+            const panelStart = dirX > 0 ? (-lenPx / 2 + jambW) : (lenPx / 2 - jambW - panelW);
+            const panelY = (1.6 * dir) - 1.9;
+            ctx.fillStyle = genkanFill;
+            ctx.fillRect(panelStart, panelY, panelW, 3.8);
+            ctx.strokeStyle = genkanStroke;
+            ctx.lineWidth = isSelected ? 2.2 : 1.6;
+            ctx.strokeRect(panelStart, panelY, panelW, 3.8);
+
+            if (lenPx >= 18) {
+                const arrowY = -6.8 * dir;
+                const arrowX1 = dirX > 0 ? (-lenPx * 0.16) : (lenPx * 0.16);
+                const arrowX2 = dirX > 0 ? (lenPx * 0.28) : (-lenPx * 0.28);
+                const headSign = dirX > 0 ? 1 : -1;
+                ctx.beginPath();
+                ctx.strokeStyle = genkanStroke;
+                ctx.lineWidth = 1.3;
+                ctx.moveTo(arrowX1, arrowY);
+                ctx.lineTo(arrowX2, arrowY);
+                ctx.lineTo(arrowX2 - 3.8 * headSign, arrowY - 2.4);
+                ctx.moveTo(arrowX2, arrowY);
+                ctx.lineTo(arrowX2 - 3.8 * headSign, arrowY + 2.4);
+                ctx.stroke();
+            }
+        } else {
+            // 【玄関引違戸（hikichigai）】
+            const paneW = (lenPx - jambW * 2) * 0.54;
+            const leftX = -lenPx / 2 + jambW;
+            const rightX = lenPx / 2 - jambW - paneW;
+            ctx.fillStyle = genkanFill;
+            ctx.strokeStyle = genkanStroke;
+            ctx.lineWidth = isSelected ? 2.0 : 1.4;
+
+            ctx.fillRect(leftX, -3.4 * dir, paneW, 3.0 * dir);
+            ctx.strokeRect(leftX, -3.4 * dir, paneW, 3.0 * dir);
+
+            ctx.fillRect(rightX, 0.4 * dir, paneW, 3.0 * dir);
+            ctx.strokeRect(rightX, 0.4 * dir, paneW, 3.0 * dir);
+
+            if (paneW >= 14) {
+                ctx.beginPath();
+                ctx.lineWidth = 1.0;
+                for (let k = 1; k <= 2; k++) {
+                    const lx = leftX + (paneW * k) / 3;
+                    const rx = rightX + (paneW * k) / 3;
+                    ctx.moveTo(lx, -3.4 * dir); ctx.lineTo(lx, -0.4 * dir);
+                    ctx.moveTo(rx, 0.4 * dir); ctx.lineTo(rx, 3.4 * dir);
+                }
+                ctx.stroke();
+            }
+        }
+
+        ctx.restore();
+        return;
+    }
 
     ctx.strokeStyle = isSelected ? '#f59e0b' : '#0f172a';
     ctx.lineWidth = isSelected ? 2.5 : 1.6;
 
     if (fit === 'katahiraki' || fit === 'hiraki') {
-        // 片開き：扉線＋90度円弧
+        // 片開き：上下(dir)×左右(dirX)の4方向対応（扉線＋90度円弧）
+        ctx.save();
+        if (dirX < 0) ctx.scale(-1, 1);
         ctx.beginPath();
         ctx.moveTo(-lenPx / 2, 0);
         ctx.lineTo(-lenPx / 2, lenPx * 0.9 * dir);
@@ -1813,6 +2090,7 @@ function drawOpening2D(op, isLight) {
         ctx.beginPath();
         ctx.arc(-lenPx / 2, 0, lenPx * 0.9, 0, (Math.PI / 2) * dir, dir < 0);
         ctx.stroke();
+        ctx.restore();
     } else if (fit === 'ryouhiraki') {
         // 両開き：左右から双円弧
         const half = lenPx / 2;
@@ -1828,9 +2106,11 @@ function drawOpening2D(op, isLight) {
         ctx.arc(half, 0, half * 0.9, Math.PI, Math.PI - (Math.PI / 2) * dir, dir > 0);
         ctx.stroke();
     } else if (fit === 'oyako') {
-        // 親子ドア：親扉(70%)＋子扉(30%)
+        // 親子ドア：親扉(70%)＋子扉(30%)（上下dir×左右dirX対応）
         const wMain = lenPx * 0.7;
         const wSub = lenPx * 0.3;
+        ctx.save();
+        if (dirX < 0) ctx.scale(-1, 1);
         ctx.beginPath();
         ctx.moveTo(-lenPx / 2, 0); ctx.lineTo(-lenPx / 2, wMain * 0.9 * dir);
         ctx.moveTo(lenPx / 2, 0); ctx.lineTo(lenPx / 2, wSub * 0.9 * dir);
@@ -1842,6 +2122,7 @@ function drawOpening2D(op, isLight) {
         ctx.beginPath();
         ctx.arc(lenPx / 2, 0, wSub * 0.9, Math.PI, Math.PI - (Math.PI / 2) * dir, dir > 0);
         ctx.stroke();
+        ctx.restore();
     } else if (fit === 'oredo' || fit === 'closet') {
         // 折れ戸 / クローゼット：V字折れ線
         const half = lenPx / 2;
@@ -1881,7 +2162,8 @@ function drawOpening2D(op, isLight) {
         ctx.lineTo(lenPx / 2, 0);
         ctx.stroke();
     } else if (fit === 'katabiki' || fit === 'hikido' || fit === 'genkan_slide') {
-        // 片引き戸（1枚扉パネル＋破線引き込みレール＋引手＋スライド方向矢印）：引違い（2枚障子）と一目で識別可能にする
+        // 片引き戸（上下レール側 dir × 左右引き込み側 dirX の4方向完全対応）：
+        // 1枚扉パネル＋破線引き込みレール＋引手＋スライド方向矢印
         const mainStroke = isSelected ? '#f59e0b' : '#0f172a';
         // 1. 枠の両端縦枠（柱チリ受け枠）
         ctx.beginPath();
@@ -1889,33 +2171,33 @@ function drawOpening2D(op, isLight) {
         ctx.moveTo(lenPx / 2, -4.5); ctx.lineTo(lenPx / 2, 4.5);
         ctx.stroke();
 
-        // 2. 引き込みレール側（全幅のガイドレール破線）
+        // 2. 引き込みレール側（全幅のガイドレール破線：dir で上下/表裏が切り替わる）
         ctx.save();
         ctx.setLineDash([2.5, 2.5]);
         ctx.lineWidth = 1.0;
         ctx.strokeStyle = isSelected ? '#f59e0b' : '#64748b';
         ctx.beginPath();
-        ctx.moveTo(-lenPx / 2, -2.2 * dir);
-        ctx.lineTo(lenPx / 2, -2.2 * dir);
+        ctx.moveTo(-lenPx / 2, -2.4 * dir);
+        ctx.lineTo(lenPx / 2, -2.4 * dir);
         ctx.stroke();
         ctx.restore();
 
-        // 3. 1枚の扉パネル本体（片側54%を占める厚み付き実線ボックス＋引手）
-        const panelStart = dir > 0 ? (-lenPx / 2) : (-lenPx * 0.04);
+        // 3. 1枚の扉パネル本体（dirX で左寄せ/右寄せが切り替わり、dir で壁の上側/下側が切り替わる）
         const panelW = lenPx * 0.54;
-        const panelY = (1.6 * dir) - 1.6;
+        const panelStart = dirX > 0 ? (-lenPx / 2) : (lenPx / 2 - panelW);
+        const panelY = (1.8 * dir) - 1.6;
         ctx.fillStyle = isSelected ? '#fef3c7' : '#bae6fd';
         ctx.fillRect(panelStart, panelY, panelW, 3.2);
         ctx.strokeStyle = mainStroke;
         ctx.lineWidth = isSelected ? 2.2 : 1.5;
         ctx.strokeRect(panelStart, panelY, panelW, 3.2);
 
-        // 4. スライド開閉方向を示す小矢印（扉から開放側へ向かう矢印）
+        // 4. スライド開閉方向を示す小矢印（dirX に応じて右向き／左向きに切り替わる）
         if (lenPx >= 18) {
-            const arrowY = -3.8 * dir;
-            const arrowX1 = dir > 0 ? (-lenPx * 0.15) : (lenPx * 0.15);
-            const arrowX2 = dir > 0 ? (lenPx * 0.28) : (-lenPx * 0.28);
-            const headSign = dir > 0 ? 1 : -1;
+            const arrowY = -4.2 * dir;
+            const arrowX1 = dirX > 0 ? (-lenPx * 0.15) : (lenPx * 0.15);
+            const arrowX2 = dirX > 0 ? (lenPx * 0.28) : (-lenPx * 0.28);
+            const headSign = dirX > 0 ? 1 : -1;
             ctx.beginPath();
             ctx.lineWidth = 1.1;
             ctx.moveTo(arrowX1, arrowY);
@@ -2588,9 +2870,9 @@ function drawFixtureHoverPreview2D() {
     } else {
         ctx.save();
         ctx.translate(p.x + wPx / 2, p.y + hPx / 2);
-        if (rot !== 0) ctx.rotate((rot * Math.PI) / 180);
         if (state.subFixtureFlipX) ctx.scale(-1, 1);
         if (state.subFixtureFlipY) ctx.scale(1, -1);
+        if (rot !== 0) ctx.rotate((rot * Math.PI) / 180);
         ctx.translate(-localW / 2, -localH / 2);
 
         if (cat === 'TOILET_FIX') {
