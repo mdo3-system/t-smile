@@ -237,7 +237,7 @@
 
     function parseAndApplyJSONText(rawText, fileName, onLoadCallback, toastFn) {
         if (!rawText || typeof rawText !== 'string') {
-            notifyToast(toastFn, `ファイル「${fileName || ''}」が空です（Dropboxのファイル選択ではなく、上の「保存済みプラン一覧」または「プラン番号入力」からワンタップで読み込めます）`, true);
+            notifyToast(toastFn, `ファイル「${fileName || ''}」が空です（「読込・復元」画面上部の『保存済み間取りをワンタップ復元』一覧から読み込めます）`, true);
             return false;
         }
         const cleaned = rawText.replace(/^\uFEFF/, '').trim();
@@ -272,7 +272,7 @@
                 };
                 reader.onerror = () => {
                     doneReset();
-                    notifyToast(toastFn, `Dropboxからの読込がOS側でブロックされました。「読込・復元」画面上部の『保存済み一覧』または『プラン番号・JSON直接貼付』をご利用ください`, true);
+                    notifyToast(toastFn, `Dropboxからの読込がOS側でブロックされました。「読込・復元」画面上部の『保存済み間取りをワンタップ復元』一覧または画面へのドラッグ＆ドロップをご利用ください`, true);
                 };
                 reader.readAsText(file, 'UTF-8');
             });
@@ -286,7 +286,7 @@
         };
         reader.onerror = () => {
             doneReset();
-            notifyToast(toastFn, `Dropboxからの読込がOS側でブロックされました。「読込・復元」画面上部の『保存済み一覧』または『プラン番号・JSON直接貼付』をご利用ください`, true);
+            notifyToast(toastFn, `Dropboxからの読込がOS側でブロックされました。「読込・復元」画面上部の『保存済み間取りをワンタップ復元』一覧または画面へのドラッグ＆ドロップをご利用ください`, true);
         };
         reader.readAsText(file, 'UTF-8');
     }

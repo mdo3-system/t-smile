@@ -445,27 +445,51 @@
                     const rx = toSX(rm.x), ry = toSY(rm.y);
                     const rw = rm.w * zoomSheet, rh = rm.h * zoomSheet;
                     sCtx.fillRect(rx, ry, rw, rh);
-                    if (rt.hasWall) {
-                        sCtx.strokeStyle = '#0f172a';
-                        sCtx.lineWidth = Math.max(4, zoomSheet * 0.14);
+                    if (rt.hasWall && !rm.isAutoDetected) {
+                        const rWallPx = Math.max(6, zoomSheet * 0.14);
+                        const isBalconyRoom = rm.type === 'BALCONY' || /バルコニー|ベランダ/.test(String(rm.customName || rm.name || ''));
+                        sCtx.strokeStyle = isBalconyRoom ? '#451a03' : '#1e293b';
+                        sCtx.lineWidth = rWallPx;
+                        sCtx.strokeRect(rx, ry, rw, rh);
+                        sCtx.strokeStyle = isBalconyRoom ? '#8b5a2b' : '#94a3b8';
+                        sCtx.lineWidth = Math.max(2.4, rWallPx - 2.4);
                         sCtx.strokeRect(rx, ry, rw, rh);
                     }
                 }
             });
 
-            // 3. 壁線分（黒複線）
-            const wallThickPx = Math.max(5, zoomSheet * 0.14);
+            // 3. 壁線分（通常壁＝グレー塗りつぶし、腰壁＝ブラウン塗りつぶし、垂れ壁＝破線）
+            const wallThickPx = Math.max(6, zoomSheet * 0.14);
             (fl.walls || []).forEach(wl => {
                 const p1x = toSX(wl.x1), p1y = toSY(wl.y1);
                 const p2x = toSX(wl.x2), p2y = toSY(wl.y2);
-                sCtx.strokeStyle = '#0f172a';
-                sCtx.lineWidth = wl.wallType === 'agarikamachi' ? 3 : wallThickPx;
-                if (wl.wallType === 'tarekabe') sCtx.setLineDash([8, 6]);
-                else sCtx.setLineDash([]);
-                sCtx.beginPath(); sCtx.moveTo(p1x, p1y); sCtx.lineTo(p2x, p2y); sCtx.stroke();
-                if (!wl.wallType || wl.wallType === 'wall' || wl.wallType === 'koshikabe') {
-                    sCtx.strokeStyle = '#ffffff';
-                    sCtx.lineWidth = Math.max(1.5, wallThickPx * 0.34);
+                const wType = wl.wallType || 'wall';
+                if (wType === 'tarekabe') {
+                    sCtx.strokeStyle = '#1e293b';
+                    sCtx.lineWidth = 2.5;
+                    sCtx.setLineDash([8, 6]);
+                    sCtx.beginPath(); sCtx.moveTo(p1x, p1y); sCtx.lineTo(p2x, p2y); sCtx.stroke();
+                    sCtx.setLineDash([]);
+                } else if (wType === 'agarikamachi') {
+                    sCtx.strokeStyle = '#78350f';
+                    sCtx.lineWidth = 3.5;
+                    sCtx.setLineDash([]);
+                    sCtx.beginPath(); sCtx.moveTo(p1x, p1y); sCtx.lineTo(p2x, p2y); sCtx.stroke();
+                } else if (wType === 'koshikabe') {
+                    sCtx.setLineDash([]);
+                    sCtx.strokeStyle = '#451a03';
+                    sCtx.lineWidth = wallThickPx;
+                    sCtx.beginPath(); sCtx.moveTo(p1x, p1y); sCtx.lineTo(p2x, p2y); sCtx.stroke();
+                    sCtx.strokeStyle = '#8b5a2b';
+                    sCtx.lineWidth = Math.max(2.4, wallThickPx - 2.4);
+                    sCtx.beginPath(); sCtx.moveTo(p1x, p1y); sCtx.lineTo(p2x, p2y); sCtx.stroke();
+                } else {
+                    sCtx.setLineDash([]);
+                    sCtx.strokeStyle = '#1e293b';
+                    sCtx.lineWidth = wallThickPx;
+                    sCtx.beginPath(); sCtx.moveTo(p1x, p1y); sCtx.lineTo(p2x, p2y); sCtx.stroke();
+                    sCtx.strokeStyle = '#94a3b8';
+                    sCtx.lineWidth = Math.max(2.4, wallThickPx - 2.4);
                     sCtx.beginPath(); sCtx.moveTo(p1x, p1y); sCtx.lineTo(p2x, p2y); sCtx.stroke();
                 }
             });

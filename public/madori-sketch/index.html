@@ -252,7 +252,7 @@
                             style="font-size: 1.05rem; font-weight: 900; background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">家づくりAIラボ</span>
                         <span
                             style="font-size: 0.65rem; background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; padding: 1px 5px; border-radius: 4px; font-weight: 800;">3D間取り工房
-                            v2.37</span>
+                            v2.38</span>
                     </a>
                     <div
                         class="hidden xl:inline-flex items-center gap-1.5 text-[11px] text-slate-300 bg-black/30 border border-white/15 px-2 py-0.5 rounded">
@@ -1469,7 +1469,7 @@
             <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4">
                 <h3 class="text-base font-bold text-white flex items-center gap-2">
                     <i class="fa-solid fa-folder-open text-amber-400"></i>
-                    <span>プランの読込・復元（家カルテ・サンプル・703プラン・JSON/FBX）</span>
+                    <span>プランの読込・復元（保存済み一覧・サンプル・JSON/FBX）</span>
                 </h3>
                 <button onclick="closePresetModal()" class="text-slate-400 hover:text-white p-1">
                     <i class="fa-solid fa-xmark text-lg"></i>
@@ -1487,7 +1487,7 @@
                             <i class="fa-solid fa-arrows-rotate mr-0.5"></i>一覧更新
                         </button>
                     </div>
-                    <div id="carteSavedList" class="space-y-1.5 max-h-44 overflow-y-auto pr-1"></div>
+                    <div id="carteSavedList" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
                 </div>
 
                 <div class="text-[11px] font-bold text-slate-400">🏛️ 標準サンプルプランから開始</div>
@@ -1515,27 +1515,6 @@
                             class="rounded border-slate-600 bg-slate-800 text-emerald-500">
                         <span>JSON読込時に部屋が空の階は壁から部屋を自動認識する（壁のみJSON対応）</span>
                     </label>
-                    <!-- iPad等でDropboxフォルダを開かずに703プラン番号・保存プランID・JSON文字列から即座に読み込めるダイレクト入力バー -->
-                    <div class="bg-slate-900/90 border border-emerald-500/40 rounded-xl p-2 mb-2.5">
-                        <div class="text-[10px] font-bold text-emerald-300 mb-1 flex items-center gap-1">
-                            <i class="fa-solid fa-bolt"></i>
-                            <span>プラン番号（703プラン・保存ID）またはJSON貼付で即読込（Dropbox画面を開かずに復元）</span>
-                        </div>
-                        <div class="flex items-center gap-1.5">
-                            <input id="directPlanIdInput" type="text" placeholder="例: 2387-P01 / PLAN-COMM-... / JSON貼付"
-                                onkeydown="if(event.key==='Enter'){event.preventDefault();loadServerPlanById(this.value);}"
-                                class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-bold placeholder-slate-500">
-                            <button type="button" onclick="loadServerPlanById(document.getElementById('directPlanIdInput').value)"
-                                class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shrink-0 shadow">
-                                読込
-                            </button>
-                            <button type="button" onclick="pasteAndRestoreJSONFromClipboard()"
-                                class="px-2.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold shrink-0 shadow"
-                                title="コピーしたJSONやプランIDをワンタップで貼り付けて即座に復元します">
-                                📋 貼付復元
-                            </button>
-                        </div>
-                    </div>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div
@@ -1553,7 +1532,7 @@
                     </label>
                 </div>
                 <div class="text-[10px] text-amber-200/90 bg-amber-950/40 border border-amber-500/30 rounded-lg px-2.5 py-1.5 leading-snug">
-                    💡 <b>Dropboxのファイル場所が「読み込み中」で止まる場合</b>：間取り工房で「保存」したデータは全て一番上の<b>「保存済み間取りをワンタップ復元」一覧</b>に自動登録されていますので、Dropboxフォルダを開かずにワンタップで復元できます（またはDropboxアプリからJSONファイルをこの画面へ直接ドラッグ＆ドロップしても即復元できます）。
+                    💡 <b>保存データの復元について</b>：間取り工房で「保存」したデータは全て一番上の<b>「保存済み間取りをワンタップ復元」一覧</b>に自動登録されていますので、Dropboxのファイル選択画面を開かずにワンタップで復元できます（またはJSONファイルを画面へ直接ドラッグ＆ドロップしても即復元できます）。
                 </div>
             </div>
         </div>
@@ -1790,20 +1769,20 @@
     </div>
 
     <!-- 単一責任の原則 (SRP) に基づく分離モジュール群 -->
-    <script>window.MADORI_APP_VERSION = '2.37.0';</script>
-    <script src="/madori-sketch/js/constants/manual_data.js?v=202611270517"></script>
-    <script src="/madori-sketch/js/constants/architectural_specs.js?v=202611270517"></script>
-    <script src="/madori-sketch/js/core/app_state.js?v=202611270517"></script>
-    <script src="/madori-sketch/js/core/metrics_calculator.js?v=202611270517"></script>
-    <script src="/madori-sketch/js/io/json_storage.js?v=202611270517"></script>
-    <script src="/madori-sketch/js/io/dxf_pdf_exporter.js?v=202611270517"></script>
-    <script src="/madori-sketch/js/integration/carte_bridge.js?v=202611270517"></script>
-    <script src="/madori-sketch/js/geometry/room_detector.js?v=202611270517"></script>
-    <script src="/madori-sketch/js/renderer/three_3d.js?v=202611270517"></script>
-    <script src="/madori-sketch/js/renderer/canvas_2d_renderer.js?v=202611270517"></script>
-    <script src="/madori-sketch/js/ui/ui_inspector.js?v=202611270517"></script>
-    <script src="/madori-sketch/js/input/input_controller.js?v=202611270517"></script>
-    <script src="/madori-sketch/js/case/case_manager.js?v=202611270517"></script>
+    <script>window.MADORI_APP_VERSION = '2.38.0';</script>
+    <script src="/madori-sketch/js/constants/manual_data.js?v=202611270913"></script>
+    <script src="/madori-sketch/js/constants/architectural_specs.js?v=202611270913"></script>
+    <script src="/madori-sketch/js/core/app_state.js?v=202611270913"></script>
+    <script src="/madori-sketch/js/core/metrics_calculator.js?v=202611270913"></script>
+    <script src="/madori-sketch/js/io/json_storage.js?v=202611270913"></script>
+    <script src="/madori-sketch/js/io/dxf_pdf_exporter.js?v=202611270913"></script>
+    <script src="/madori-sketch/js/integration/carte_bridge.js?v=202611270913"></script>
+    <script src="/madori-sketch/js/geometry/room_detector.js?v=202611270913"></script>
+    <script src="/madori-sketch/js/renderer/three_3d.js?v=202611270913"></script>
+    <script src="/madori-sketch/js/renderer/canvas_2d_renderer.js?v=202611270913"></script>
+    <script src="/madori-sketch/js/ui/ui_inspector.js?v=202611270913"></script>
+    <script src="/madori-sketch/js/input/input_controller.js?v=202611270913"></script>
+    <script src="/madori-sketch/js/case/case_manager.js?v=202611270913"></script>
     <script>
         const ROOM_TYPES = window.ROOM_TYPES;
         const OPENING_TYPES = window.OPENING_TYPES;

@@ -459,15 +459,17 @@ function drawRoom2D(rm, isLight) {
 
     // 壁枠描画（手動矩形部屋のみ外枠を描画。自動検出部屋は既存の壁線分があるため二重線にしない）
     if (rt.hasWall && !rm.isAutoDetected) {
-        const wallThickPx = Math.max(5, state.cam2d.zoom * 0.14);
-        ctx.strokeStyle = '#0f172a';
+        const wallThickPx = Math.max(6, state.cam2d.zoom * 0.14);
+        ctx.strokeStyle = '#1e293b';
         ctx.lineWidth = wallThickPx;
         ctx.lineJoin = 'miter';
         traceRoomShape();
         ctx.stroke();
 
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = Math.max(1.2, wallThickPx * 0.32);
+        // 壁厚の塗りつぶし（通常壁＝グレー #94a3b8、バルコニー腰壁部屋＝ブラウン #8b5a2b）
+        const isBalconyRoom = rm.type === 'BALCONY' || /バルコニー|ベランダ/.test(String(rm.customName || rm.name || ''));
+        ctx.strokeStyle = isBalconyRoom ? '#8b5a2b' : '#94a3b8';
+        ctx.lineWidth = Math.max(2.4, wallThickPx - 2.4);
         traceRoomShape();
         ctx.stroke();
     } else if (rm.type === 'DOMA' || rm.type === 'PORCH') {
@@ -514,13 +516,13 @@ function drawWallSegment2D(wl, isLight) {
     const p1 = worldPToScreen(wl.x1, wl.y1);
     const p2 = worldPToScreen(wl.x2, wl.y2);
     const wType = wl.wallType || 'wall';
-    const wallThickPx = Math.max(5, state.cam2d.zoom * 0.14);
+    const wallThickPx = Math.max(6, state.cam2d.zoom * 0.14);
 
     ctx.save();
     ctx.lineCap = 'square';
 
     if (wType === 'tarekabe') {
-        // たれ壁：平行な破線（第3章準拠）
+        // たれ壁：平行な破線（現状のまま維持）
         ctx.strokeStyle = isLight ? '#1e293b' : '#38bdf8';
         ctx.lineWidth = 2;
         ctx.setLineDash([5, 4]);
@@ -530,16 +532,16 @@ function drawWallSegment2D(wl, isLight) {
         ctx.stroke();
         ctx.setLineDash([]);
     } else if (wType === 'koshikabe') {
-        // 腰壁：中白の二重線（高さ1000mm手すり壁・カウンター腰壁）
-        ctx.strokeStyle = isLight ? '#1e293b' : '#cbd5e1';
+        // 腰壁：壁厚をブラウン（#8b5a2b）で塗りつぶし（外縁は濃茶 #451a03 で輪郭を引き締め）
+        ctx.strokeStyle = isLight ? '#451a03' : '#d97706';
         ctx.lineWidth = wallThickPx;
         ctx.beginPath();
         ctx.moveTo(p1.x, p1.y);
         ctx.lineTo(p2.x, p2.y);
         ctx.stroke();
 
-        ctx.strokeStyle = isLight ? '#e2e8f0' : '#334155';
-        ctx.lineWidth = Math.max(2, wallThickPx - 3);
+        ctx.strokeStyle = '#8b5a2b';
+        ctx.lineWidth = Math.max(2.4, wallThickPx - 2.4);
         ctx.beginPath();
         ctx.moveTo(p1.x, p1.y);
         ctx.lineTo(p2.x, p2.y);
@@ -553,16 +555,16 @@ function drawWallSegment2D(wl, isLight) {
         ctx.lineTo(p2.x, p2.y);
         ctx.stroke();
     } else {
-        // 通常壁：黒枠＋白芯の建築壁表現
-        ctx.strokeStyle = isLight ? '#0f172a' : '#f8fafc';
+        // 通常壁：壁厚をグレー（#94a3b8）で塗りつぶし（外縁は濃紺黒 #1e293b で輪郭を引き締め）
+        ctx.strokeStyle = isLight ? '#1e293b' : '#f8fafc';
         ctx.lineWidth = wallThickPx;
         ctx.beginPath();
         ctx.moveTo(p1.x, p1.y);
         ctx.lineTo(p2.x, p2.y);
         ctx.stroke();
 
-        ctx.strokeStyle = isLight ? '#ffffff' : '#334155';
-        ctx.lineWidth = Math.max(1.2, wallThickPx * 0.32);
+        ctx.strokeStyle = isLight ? '#94a3b8' : '#64748b';
+        ctx.lineWidth = Math.max(2.4, wallThickPx - 2.4);
         ctx.beginPath();
         ctx.moveTo(p1.x, p1.y);
         ctx.lineTo(p2.x, p2.y);
