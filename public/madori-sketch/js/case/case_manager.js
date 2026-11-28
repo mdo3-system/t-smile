@@ -6,19 +6,23 @@
 function updateCurrentPlanBadge() {
     const txt = document.getElementById('txtCaseId');
     const badge = document.getElementById('badgeCurrentCase');
-    if (!txt || !badge) return;
+    if (!txt) return;
 
     if (state.currentPlanId) {
         txt.textContent = `案件: ${state.currentPlanId}`;
-        badge.title = `現在編集中の案件ID【${state.currentPlanId}】。何度保存してもこの案件の最新版として上書き更新されます。別案件を作る場合は「新規案件」を押してください。`;
-        badge.classList.remove('text-slate-400');
-        badge.classList.add('text-amber-300');
+        if (badge) {
+            badge.title = `現在編集中の案件ID【${state.currentPlanId}】。何度保存してもこの案件の最新版として上書き更新されます。別案件を作る場合は「新規案件」を押してください。`;
+            badge.classList.remove('text-slate-400');
+            badge.classList.add('text-amber-300');
+        }
         try { localStorage.setItem('smile_active_project_id', state.currentPlanId); } catch (e) { }
     } else {
-        txt.textContent = `案件: 新規案件 (未保存)`;
-        badge.title = `まだ未保存の新規案件です。保存またはパース生成時に新しい案件IDが発行され、別案件として登録されます。`;
-        badge.classList.remove('text-amber-300');
-        badge.classList.add('text-slate-400');
+        txt.textContent = state.projectTitle && state.projectTitle !== '新規プラン' ? `編集: ${state.projectTitle}` : `新規プラン`;
+        if (badge) {
+            badge.title = `まだ未保存の新規案件です。保存またはパース生成時に新しい案件IDが発行され、別案件として登録されます。`;
+            badge.classList.remove('text-amber-300');
+            badge.classList.add('text-slate-400');
+        }
         try { localStorage.removeItem('smile_active_project_id'); } catch (e) { }
     }
 }

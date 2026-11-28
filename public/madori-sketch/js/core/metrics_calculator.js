@@ -160,8 +160,50 @@ function calcFloorAreaM2(flNum) {
 }
 
 /**
- * 指定階の「内壁面積（㎡）」を計算（お手本画像の「内壁 ○○○.○○㎡」に完全対応）
- * 部屋の外周壁長 × 階高(2.4m標準) ＋ 個別壁セグメント から開口面積を控除して算出
+ * 指定階の「施工床面積（㎡）」（バルコニー・ポーチ等も含む総床面積）を計算
+ */
+function calcTotalConstructionAreaM2(flNum) {
+    ensureFloorsStructure();
+    const fl = state.floors[flNum];
+    if (!fl) return 0;
+    const pitchM = (state.modulePitch || 910) / 1000;
+    const overlaySkip = new Set(['VOID', 'NAKANIWA', 'TENJO', 'TATAMI', 'KOAGARI']);
+    const validRooms = (fl.rooms || []).filter(rm => rm && !overlaySkip.has(String(rm.type || '').toUpperCase()));
+    const polys = [];
+    let fallbackSum = 0;
+
+    validRooms.forEach(rm => {
+        const pts = getRoomPolygonPoints(rm);
+        if (pts) polys.push(pts);
+        else fallbackSum += getRoomAreaM2(rm);
+    });
+
+    const unionM2 = calcPolygonsUnionAreaP2(polys) * pitchM * pitchM;
+    return Math.max(0, unionM2 + fallbackSum);
+}
+
+/**
+ * 全部屋の areaM2 / jyo を単一の算出ロジック（910mm基準: 1帖 = 2 * pitchM^2）で最新値へ同期する
+ */
+function syncAllRoomAreasAndJyo() {
+    if (typeof state === 'undefined' || !state.floors) return;
+    const pitchM = (state.modulePitch || 910) / 1000;
+    const oneJyoM2 = pitchM * pitchM * 2;
+    [0, 1, 2, 3, 4].forEach(f => {
+        const fl = state.floors[f];
+        if (!fl || !Array.isArray(fl.rooms)) return;
+        fl.rooms.forEach(rm => {
+            const areaM2 = getRoomAreaM2(rm);
+            if (areaM2 > 0) {
+                rm.areaM2 = +areaM2.toFixed(2);
+                rm.jyo = +(areaM2 / oneJyoM2).toFixed(1);
+            }
+        });
+    });
+}
+
+/**
+ * 指定階の「内壁面積（㎡）」を計算（二重加算を解消：部屋がある階は部屋周長ベースから開口面積を控除、部屋がない階のみ壁セグメントベース）
  */
 function calcInteriorWallAreaM2(flNum) {
     ensureFloorsStructure();
@@ -171,53 +213,64 @@ function calcInteriorWallAreaM2(flNum) {
     const stdWallH = 2.40; // 室内有効天井高 2,400mm
     let wallArea = 0;
 
-    // 1. 部屋の四周内壁面積（多角形頂点がある場合は実周長を使用）
-    fl.rooms.forEach(rm => {
-        if (isFloorAreaExcludedRoom(rm)) return;
-        let perimM = 0;
-        if (Array.isArray(rm.points) && rm.points.length >= 3) {
-            for (let i = 0; i < rm.points.length; i++) {
-                const p1 = rm.points[i];
-                const p2 = rm.points[(i + 1) % rm.points.length];
-                perimM += Math.hypot((p2.x - p1.x) * pitchM, (p2.y - p1.y) * pitchM);
+    const validRooms = (fl.rooms || []).filter(rm => !isFloorAreaExcludedRoom(rm));
+    if (validRooms.length > 0) {
+        // 1. 部屋の四周内壁面積（多角形頂点がある場合は実周長を使用）
+        validRooms.forEach(rm => {
+            let perimM = 0;
+            if (Array.isArray(rm.points) && rm.points.length >= 3) {
+                for (let i = 0; i < rm.points.length; i++) {
+                    const p1 = rm.points[i];
+                    const p2 = rm.points[(i + 1) % rm.points.length];
+                    perimM += Math.hypot((p2.x - p1.x) * pitchM, (p2.y - p1.y) * pitchM);
+                }
+            } else {
+                const wM = (rm.w || 0) * pitchM;
+                const hM = (rm.h || 0) * pitchM;
+                perimM = 2 * (wM + hM);
             }
-        } else {
-            const wM = (rm.w || 0) * pitchM;
-            const hM = (rm.h || 0) * pitchM;
-            perimM = 2 * (wM + hM);
-        }
-        wallArea += perimM * stdWallH;
-    });
-
-    // 2. 個別壁セグメント（腰壁・たれ壁・通常壁）
-    fl.walls.forEach(wl => {
-        if (wl.wallType === 'agarikamachi') return;
-        const lenM = Math.hypot((wl.x2 - wl.x1) * pitchM, (wl.y2 - wl.y1) * pitchM);
-        let hM = stdWallH;
-        if (wl.wallType === 'koshikabe') hM = 1.0;
-        else if (wl.wallType === 'tarekabe') hM = 0.55;
-        // 両面分のクロス面積として加算（部屋がない場合の壁にも対応）
-        wallArea += lenM * hM * 1.2;
-    });
+            wallArea += perimM * stdWallH;
+        });
+        // 開口部（窓・ドア）の面積を控除
+        (fl.openings || []).forEach(op => {
+            const wM = (op.widthMm ? op.widthMm / 1000 : ((op.widthP || 1.0) * pitchM));
+            const hM = (op.heightMm || 2000) / 1000;
+            wallArea -= wM * hM;
+        });
+    } else {
+        // 2. 部屋が未定義（壁のみ作図中）の場合のみ壁セグメントベースで算出
+        (fl.walls || []).forEach(wl => {
+            if (wl.wallType === 'agarikamachi') return;
+            const lenM = Math.hypot((wl.x2 - wl.x1) * pitchM, (wl.y2 - wl.y1) * pitchM);
+            let hM = stdWallH;
+            if (wl.wallType === 'koshikabe') hM = (wl.heightMm ? wl.heightMm / 1000 : 1.0);
+            else if (wl.wallType === 'tarekabe') hM = (wl.heightMm ? wl.heightMm / 1000 : 0.55);
+            wallArea += lenM * hM * 1.5;
+        });
+    }
 
     return Math.max(0, wallArea);
 }
 
 function updateAllMetricsAnd3D() {
     ensureFloorsStructure();
+    syncAllRoomAreasAndJyo();
     const toTsubo = (m2) => m2 / 3.305785;
 
     const floorAreas = {};
     const wallAreas = {};
     let totalFloorM2 = 0;
+    let totalConstructionM2 = 0;
     let totalWallM2 = 0;
 
     [0, 1, 2, 3, 4].forEach(f => {
         const fa = calcFloorAreaM2(f);
+        const ca = calcTotalConstructionAreaM2(f);
         const wa = calcInteriorWallAreaM2(f);
         floorAreas[f] = fa;
         wallAreas[f] = wa;
         totalFloorM2 += fa;
+        totalConstructionM2 += ca;
         totalWallM2 += wa;
     });
 
@@ -229,12 +282,22 @@ function updateAllMetricsAnd3D() {
     const elCurWallM2 = document.getElementById('valCurWallArea') || document.getElementById('paletteCurWallM2');
     const elTotFloorM2 = document.getElementById('valTotalFloorArea') || document.getElementById('paletteTotalFloorM2');
     const elTotWallM2 = document.getElementById('valTotalWallArea') || document.getElementById('paletteTotalWallM2');
+    const elConstRow = document.getElementById('rowTotalConstructionArea');
+    const elConstM2 = document.getElementById('valTotalConstructionArea');
 
     if (elCurLabel) elCurLabel.textContent = curFloorLabel;
     if (elCurFloorM2) elCurFloorM2.textContent = `${floorAreas[curFl].toFixed(2)}㎡`;
     if (elCurWallM2) elCurWallM2.textContent = `${wallAreas[curFl].toFixed(2)}㎡`;
     if (elTotFloorM2) elTotFloorM2.textContent = `${totalFloorM2.toFixed(2)}㎡`;
     if (elTotWallM2) elTotWallM2.textContent = `${totalWallM2.toFixed(2)}㎡`;
+    if (elConstRow && elConstM2) {
+        if (totalConstructionM2 > totalFloorM2 + 0.1) {
+            elConstRow.classList.remove('hidden');
+            elConstM2.textContent = `${totalConstructionM2.toFixed(2)}㎡`;
+        } else {
+            elConstRow.classList.add('hidden');
+        }
+    }
 
     // 2. 3D画面右下の面積パネル更新
     const setTxt = (id, val) => {
@@ -304,6 +367,8 @@ if (typeof window !== 'undefined') {
     window.getRoomAreaM2 = getRoomAreaM2;
     window.isFloorAreaExcludedRoom = isFloorAreaExcludedRoom;
     window.calcFloorAreaM2 = calcFloorAreaM2;
+    window.calcTotalConstructionAreaM2 = calcTotalConstructionAreaM2;
+    window.syncAllRoomAreasAndJyo = syncAllRoomAreasAndJyo;
     window.calcInteriorWallAreaM2 = calcInteriorWallAreaM2;
     window.updateAllMetricsAnd3D = updateAllMetricsAnd3D;
     window.extractUnitWallSegments = extractUnitWallSegments;

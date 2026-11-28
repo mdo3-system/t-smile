@@ -241,6 +241,96 @@ function ensureFloorsStructure() {
         if (typeof window.deduplicateFloorWalls === 'function' && Array.isArray(fl.walls) && fl.walls.length > 1) {
             window.deduplicateFloorWalls(fl);
         }
+
+        // E: 他の命名済み部屋と85%以上重なる未命名 OTHER 部屋（自動検出の重複残骸）を安全に自動排除
+        if (Array.isArray(fl.rooms) && fl.rooms.length > 1) {
+            const overlaySet = new Set(['VOID', 'TENJO', 'KOAGARI', 'TATAMI', 'BALCONY', 'NAKANIWA', 'PORCH']);
+            const isUnnamedOther = (r) => {
+                if (!r) return false;
+                const rt = String(r.type || 'OTHER').toUpperCase();
+                if (rt !== 'OTHER' || overlaySet.has(rt)) return false;
+                const rn = String(r.customName || r.name || '').trim();
+                return (!rn || rn === '空間' || rn === '部屋');
+            };
+            const namedRooms = fl.rooms.filter(r => r && !isUnnamedOther(r) && !overlaySet.has(String(r.type || '').toUpperCase()));
+            if (namedRooms.length > 0) {
+                fl.rooms = fl.rooms.filter(rm => {
+                    if (!isUnnamedOther(rm)) return true;
+                    const rArea = (rm.w || 0) * (rm.h || 0);
+                    if (rArea <= 0.01) return false;
+                    const isDup = namedRooms.some(nr => {
+                        const ox = Math.max(0, Math.min(rm.x + rm.w, nr.x + nr.w) - Math.max(rm.x, nr.x));
+                        const oy = Math.max(0, Math.min(rm.y + rm.h, nr.y + nr.h) - Math.max(rm.y, nr.y));
+                        const inter = ox * oy;
+                        return (inter / rArea) >= 0.85;
+                    });
+                    return !isDup;
+                });
+            }
+        }
+    });
+
+    // B/D: 2階以上の未命名 OTHER 部屋のうち、外周が腰壁(koshikabe)で囲まれ1階から張り出している領域を自動で BALCONY へ正規化（旧版JSON読込対応）
+    [2, 3, 4].forEach(f => {
+        const fl = state.floors[f];
+        const lowerFl = state.floors[f - 1];
+        if (!fl || !Array.isArray(fl.rooms) || !Array.isArray(fl.walls)) return;
+        const koshiWalls = fl.walls.filter(w => w && w.wallType === 'koshikabe');
+        if (koshiWalls.length < 2) return;
+        const lowerRooms = (lowerFl && Array.isArray(lowerFl.rooms))
+            ? lowerFl.rooms.filter(r => r && !['VOID', 'NAKANIWA', 'TENJO'].includes(String(r.type || '').toUpperCase()))
+            : [];
+
+        fl.rooms.forEach(rm => {
+            if (!rm) return;
+            const rt = String(rm.type || 'OTHER').toUpperCase();
+            const rn = String(rm.customName || rm.name || '').trim();
+            if (rt !== 'OTHER' || (rn && rn !== '空間' && rn !== '部屋')) return;
+            if (!rm.w || !rm.h) return;
+
+            // 外周4辺のうち何辺に腰壁が接しているか判定
+            const edges = [
+                { orient: 'h', fixed: rm.y, s: rm.x, e: rm.x + rm.w },
+                { orient: 'h', fixed: rm.y + rm.h, s: rm.x, e: rm.x + rm.w },
+                { orient: 'v', fixed: rm.x, s: rm.y, e: rm.y + rm.h },
+                { orient: 'v', fixed: rm.x + rm.w, s: rm.y, e: rm.y + rm.h }
+            ];
+            let koshiEdgeCount = 0;
+            edges.forEach(ed => {
+                const hit = koshiWalls.some(kw => {
+                    const kh = Math.abs(kw.y1 - kw.y2) < 0.05;
+                    const kv = Math.abs(kw.x1 - kw.x2) < 0.05;
+                    if (ed.orient === 'h' && kh && Math.abs(kw.y1 - ed.fixed) < 0.12) {
+                        const ov = Math.min(ed.e, Math.max(kw.x1, kw.x2)) - Math.max(ed.s, Math.min(kw.x1, kw.x2));
+                        return ov >= (ed.e - ed.s) * 0.5;
+                    }
+                    if (ed.orient === 'v' && kv && Math.abs(kw.x1 - ed.fixed) < 0.12) {
+                        const ov = Math.min(ed.e, Math.max(kw.y1, kw.y2)) - Math.max(ed.s, Math.min(kw.y1, kw.y2));
+                        return ov >= (ed.e - ed.s) * 0.5;
+                    }
+                    return false;
+                });
+                if (hit) koshiEdgeCount++;
+            });
+
+            // 1階部屋範囲から一部でも張り出しているか（または3辺以上が腰壁）
+            let overhangsLower = false;
+            if (lowerRooms.length > 0) {
+                let lMinX = Infinity, lMaxX = -Infinity, lMinY = Infinity, lMaxY = -Infinity;
+                lowerRooms.forEach(lr => {
+                    lMinX = Math.min(lMinX, lr.x); lMaxX = Math.max(lMaxX, lr.x + lr.w);
+                    lMinY = Math.min(lMinY, lr.y); lMaxY = Math.max(lMaxY, lr.y + lr.h);
+                });
+                overhangsLower = (rm.x < lMinX - 0.1) || (rm.x + rm.w > lMaxX + 0.1) || (rm.y < lMinY - 0.1) || (rm.y + rm.h > lMaxY + 0.1);
+            }
+
+            if (koshiEdgeCount >= 3 || (koshiEdgeCount >= 2 && overhangsLower)) {
+                rm.type = 'BALCONY';
+                rm.name = 'バルコニー';
+                rm.customName = 'バルコニー';
+                rm.excludeFloorArea = true;
+            }
+        });
     });
 }
 

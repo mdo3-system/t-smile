@@ -707,6 +707,11 @@ function renderPropertyInspector() {
         const cfg = (typeof window.getStairModularConfig === 'function')
             ? window.getStairModularConfig(obj)
             : { i1Steps: obj.steps || 13, c1Steps: 0, c1Dir: 'right', i2Steps: 0, c2Steps: 0, c2Dir: 'right', i3Steps: 0, totalSteps: obj.steps || 13 };
+        const floorHeightMm = obj.floorHeightMm || 2630;
+        const safeTotalSteps = Math.max(1, cfg.totalSteps || obj.steps || 14);
+        const calcRiserMm = Math.round(floorHeightMm / safeTotalSteps);
+        const isRiserWarn = (calcRiserMm > 225 || calcRiserMm < 155);
+        const isStepMismatch = (typeof obj.steps === 'number' && obj.steps > 0 && obj.steps !== safeTotalSteps);
 
         const stepOptions = (maxN, selectedVal, zeroLabel) => {
             let html = '';
@@ -721,12 +726,28 @@ function renderPropertyInspector() {
             <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-2">
                 <span class="text-xs font-bold text-amber-300"><i class="fa-solid fa-stairs mr-1.5"></i>階段の仕様・I部/踊り場段数・向き編集</span>
                 <div class="flex items-center gap-1">
-                    <span class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold">計${cfg.totalSteps}段</span>
+                    <span class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold">計${safeTotalSteps}段</span>
                     <button type="button" onclick="deleteSelectedItem()" class="px-2 py-1 rounded bg-rose-600/30 text-[11px] text-rose-200 font-bold hover:bg-rose-600/50"><i class="fa-solid fa-trash mr-1"></i>削除</button>
                     <button type="button" onclick="state.selectedItem=null;renderPropertyInspector();request2DRedraw();" class="text-slate-400 hover:text-white px-1.5"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
             <div class="space-y-2 text-xs">
+                <div class="p-2 rounded-xl border ${isRiserWarn || isStepMismatch ? 'bg-rose-950/40 border-rose-500/60' : 'bg-slate-900/90 border-slate-700/80'} space-y-1">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-[10px] font-bold text-slate-300">階高と蹴上の自動整合:</span>
+                        <select onchange="updateSelectedStairSpec('floorHeightMm', parseInt(this.value, 10))" class="bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 text-[10px] text-cyan-300 font-bold mono-num">
+                            <option value="2630" ${floorHeightMm === 2630 ? 'selected' : ''}>階高 2,630mm (標準)</option>
+                            <option value="2750" ${floorHeightMm === 2750 ? 'selected' : ''}>階高 2,750mm</option>
+                            <option value="2850" ${floorHeightMm === 2850 ? 'selected' : ''}>階高 2,850mm (高天井)</option>
+                            <option value="3000" ${floorHeightMm === 3000 ? 'selected' : ''}>階高 3,000mm</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between text-[10px] mono-num">
+                        <span class="text-slate-300">自動計算蹴上: <strong class="${isRiserWarn ? 'text-rose-300' : 'text-emerald-300'}">${calcRiserMm}mm</strong> × ${safeTotalSteps}段 = ${calcRiserMm * safeTotalSteps}mm</span>
+                        ${isRiserWarn ? '<span class="px-1.5 py-0.5 rounded bg-rose-600/40 text-rose-200 font-bold">⚠ 蹴上過大/過小</span>' : '<span class="text-emerald-400 font-bold">✓ 適正</span>'}
+                    </div>
+                    ${isStepMismatch ? `<div class="text-[10px] text-amber-300 font-bold">⚠ 保存段数(${obj.steps}段)と構成合計(${safeTotalSteps}段)が不一致のため自動同期します</div>` : ''}
+                </div>
                 <div>
                     <label class="text-[10px] text-amber-300 block font-bold mb-0.5">定型形状プリセット (ワンタップ切替)</label>
                     <select onchange="updateSelectedStairShape(this.value)" class="w-full bg-slate-900 border border-amber-500/50 rounded px-2 py-1 text-white font-bold text-xs">
@@ -1541,7 +1562,10 @@ function updateSelectedStairSpec(prop, val) {
         obj.isModular = true;
     };
 
-    if (prop === 'widthMm') {
+    if (prop === 'floorHeightMm') {
+        const fh = Math.max(2000, Math.min(4000, parseInt(val, 10) || 2630));
+        obj.floorHeightMm = fh;
+    } else if (prop === 'widthMm') {
         const wMm = parseInt(val, 10) || 910;
         obj.widthMm = wMm;
         if (obj.isModular && typeof window.syncStairModularBounds === 'function') {
@@ -1617,6 +1641,14 @@ function updateSelectedStairSpec(prop, val) {
         obj[prop] = !!val;
     } else {
         obj[prop] = val;
+    }
+    // G: 段数合計と蹴上寸法（階高÷段数）を常に自動同期
+    if (typeof window.getStairModularConfig === 'function') {
+        const syncedCfg = window.getStairModularConfig(obj);
+        if (syncedCfg && syncedCfg.totalSteps > 0) {
+            obj.steps = syncedCfg.totalSteps;
+            obj.riserMm = Math.round((obj.floorHeightMm || 2630) / syncedCfg.totalSteps);
+        }
     }
     if (prop !== 'no2DOutput' && prop !== 'no3DOutput') {
         if (obj.linkedFromStairId && typeof window.syncLinkedStairBackToSource === 'function') {

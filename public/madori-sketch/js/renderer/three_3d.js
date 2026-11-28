@@ -672,7 +672,7 @@
                 if (rType !== 'BALCONY' && !/バルコニー|ベランダ/.test(rName)) return false;
                 return wx >= r.x - 0.35 && wx <= r.x + r.w + 0.35 && wy >= r.y - 0.35 && wy <= r.y + r.h + 0.35;
             });
-            const cantDropM = isCant ? 0.40 : ((flNum >= 2 && touchesBalcony) ? slabHeight : 0.0);
+            const cantDropM = isCant ? 0.24 : ((flNum >= 2 && touchesBalcony) ? slabHeight : 0.0);
             return { sP, eP, isCantilever: isCant, touchesBalconyRoom: touchesBalcony, cantDropM };
         };
 
@@ -1049,16 +1049,25 @@
             const slabHeight = 0.18;
             const wallThick = 0.14;
 
-            // お手本画像の鳥瞰図に近い温かみのある木目フローリング＆白壁マテリアル（壁厚の上端面は2D同様グレー塗りつぶし）
+            // お手本画像の鳥瞰図に近い温かみのある木目フローリング＆白壁マテリアル（壁厚の上端面は照明飽和による白飛びを防ぐためMeshBasicMaterialで正確に#9ca3af描画）
             const matWhiteWall = new THREE.MeshLambertMaterial({ color: 0xffffff });
-            const matWallTopGray = new THREE.MeshLambertMaterial({ color: 0x9ca3af });
+            const matWallTopGray = new THREE.MeshBasicMaterial({ color: 0x9ca3af });
+            const matSoffitShadow = new THREE.MeshBasicMaterial({ color: 0x94a3b8 });
             const matWallBoxGrayTop = [
                 matWhiteWall,    // +X (右側面)
                 matWhiteWall,    // -X (左側面)
-                matWallTopGray,  // +Y (上面＝壁厚断面グレー塗りつぶし)
+                matWallTopGray,  // +Y (上面＝壁厚断面グレー塗りつぶし #9ca3af)
                 matWhiteWall,    // -Y (底面)
                 matWhiteWall,    // +Z (前面)
                 matWhiteWall     // -Z (背面)
+            ];
+            const matSoffitBox = [
+                matWhiteWall,    // +X
+                matWhiteWall,    // -X
+                matWhiteWall,    // +Y (上面)
+                matSoffitShadow, // -Y (軒裏下面＝影色グレー #94a3b8)
+                matWhiteWall,    // +Z
+                matWhiteWall     // -Z
             ];
             const matCylinderGrayTop = [
                 matWhiteWall,    // 側面
@@ -1171,7 +1180,7 @@
                         }
                     });
 
-                    // バルコニー部屋で下の階からキャンチ（跳ね出し）している範囲のみ、床下400mm位置の軒天・底面スラブも白壁色で生成
+                    // バルコニー部屋で下の階からキャンチ（跳ね出し）している範囲のみ、床下240mm位置の軒天・底面スラブ（下面は影色グレー）を生成
                     const isBalcony = rm.type === 'BALCONY' || /バルコニー|ベランダ/.test(rmLabelStr);
                     if (isBalcony && flNum >= 2) {
                         const lowerFl = (typeof state !== 'undefined' && state.floors) ? state.floors[flNum - 1] : null;
@@ -1186,7 +1195,7 @@
                             const cpCx = (cp.x + cp.w / 2) * scaleP;
                             const cpCz = (cp.y + cp.h / 2) * scaleP;
                             const soffitGeo = new THREE.BoxGeometry(cpWM + wallThick, 0.06, cpHM + wallThick);
-                            const soffitMesh = addWhiteModelMesh(soffitGeo, matWhiteWall, cpCx, baseY + slabHeight - 0.40 + 0.03, cpCz, true);
+                            const soffitMesh = addWhiteModelMesh(soffitGeo, matSoffitBox, cpCx, baseY + slabHeight - 0.24 + 0.03, cpCz, true);
                             if (soffitMesh) soffitMesh.userData.regionTag = 'balcony_cantilever_soffit';
                         });
                     }
@@ -1217,7 +1226,7 @@
                                 if (hasExplicitWallOnEdge) return;
                                 const subParts = splitWallByCantilever3D(flNum, flData, ed.orient, ed.fixedP, ed.sP, ed.eP, slabHeight);
                                 subParts.forEach(sp => {
-                                    const dropDown = (flNum >= 2) ? (sp.isCantilever ? 0.40 : slabHeight) : 0.0;
+                                    const dropDown = (flNum >= 2) ? (sp.isCantilever ? 0.24 : slabHeight) : 0.0;
                                     const wY = baseY + slabHeight - dropDown;
                                     const hWall = 1.10 + dropDown;
                                     buildWallWithOpeningCutouts3D(ed.orient, ed.fixedP, sp.sP, sp.eP, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight, matWallBoxGrayTop);

@@ -938,7 +938,7 @@ canvas2d.addEventListener('pointerdown', (e) => {
         }
     }
 
-    // 4. 空間ツール（部屋、吹き抜け、玄関土間、小上り、畳、中庭、天井）
+    // 4. 空間ツール（部屋、吹き抜け、玄関土間、小上り、畳、中庭、バルコニー、天井）
     const spaceToolMap = {
         'room': state.subRoomType || 'LDK',
         'fukinuke': 'VOID',
@@ -946,6 +946,7 @@ canvas2d.addEventListener('pointerdown', (e) => {
         'koagari': 'KOAGARI',
         'tatami': 'TATAMI',
         'nakaniwa': 'NAKANIWA',
+        'balcony': 'BALCONY',
         'tenjo': 'TENJO'
     };
     if (spaceToolMap[state.activeTool]) {

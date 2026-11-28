@@ -11,8 +11,31 @@
         else if (typeof showToast === 'function') showToast(msg, isError);
     }
 
+    function countUnnamedOtherRooms() {
+        if (typeof state === 'undefined' || !state.floors) return { count: 0, details: [] };
+        const details = [];
+        [0, 1, 2, 3, 4].forEach(f => {
+            const fl = state.floors[f];
+            if (!fl || !Array.isArray(fl.rooms)) return;
+            fl.rooms.forEach(rm => {
+                if (!rm) return;
+                const rt = String(rm.type || 'OTHER').toUpperCase();
+                const rn = String(rm.customName || rm.name || '').trim();
+                if (rt === 'OTHER' && (!rn || rn === '空間' || rn === '部屋')) {
+                    const fLbl = f === 0 ? '地下' : `${f}F`;
+                    const jyo = typeof rm.jyo === 'number' ? rm.jyo.toFixed(1) : ((typeof getRoomAreaM2 === 'function') ? (getRoomAreaM2(rm) / 1.6562).toFixed(1) : '?');
+                    details.push(`${fLbl} 未命名空間(${jyo}帖)`);
+                }
+            });
+        });
+        return { count: details.length, details };
+    }
+
     function buildProjectData(projectData) {
         if (!projectData && typeof state !== 'undefined') {
+            if (typeof window.syncAllRoomAreasAndJyo === 'function') {
+                window.syncAllRoomAreasAndJyo();
+            }
             if (!state.currentPlanId) {
                 state.currentPlanId = 'PLAN-COMM-' + Date.now().toString(36).toUpperCase();
             }
@@ -186,8 +209,8 @@
             }
             if (detectedPlanId) {
                 state.currentPlanId = detectedPlanId;
-                try { if (typeof window.updateCurrentPlanBadge === 'function') window.updateCurrentPlanBadge(); } catch (_) {}
             }
+            try { if (typeof window.updateCurrentPlanBadge === 'function') window.updateCurrentPlanBadge(); } catch (_) {}
             try { if (typeof ensureFloorsStructure === 'function') ensureFloorsStructure(); } catch (e) { console.warn(e); }
             try { if (parsed.modulePitch && typeof setModulePitch === 'function') setModulePitch(parsed.modulePitch); } catch (e) { console.warn(e); }
             try { if (parsed.gridDivisions && typeof setGridDivision === 'function') setGridDivision(parsed.gridDivisions); } catch (e) { console.warn(e); }
@@ -409,6 +432,7 @@
     window.savePlanToOtherLocation = savePlanToOtherLocation;
     window.exportJSON = exportJSON;
     window.importJSON = importJSON;
+    window.countUnnamedOtherRooms = countUnnamedOtherRooms;
     window.loadServerPlanById = loadServerPlanById;
     window.pasteAndRestoreJSONFromClipboard = pasteAndRestoreJSONFromClipboard;
     window.applyLoadedProjectData = applyLoadedProjectData;
