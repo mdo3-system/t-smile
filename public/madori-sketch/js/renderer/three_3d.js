@@ -400,7 +400,7 @@
      * - wallHeight: 壁メッシュの総高さ（壁下端 wallBottomY から壁上端までの高さ）
      * - floorTopY: その階の床仕上げ天端Y座標（サッシ・ドアの sillMm 基準高さ）
      */
-    function buildWallWithOpeningCutouts3D(orient, fixedCoordP, startP, endP, wallBottomY, wallHeight, wallThick, floorOpenings, scaleP, matWall, floorTopY = null) {
+    function buildWallWithOpeningCutouts3D(orient, fixedCoordP, startP, endP, wallBottomY, wallHeight, wallThick, floorOpenings, scaleP, matWall, floorTopY = null, matWallTop = null) {
         const refFloorTopY = (floorTopY !== null && floorTopY !== undefined) ? floorTopY : wallBottomY;
         const slabOffset = Math.max(0, refFloorTopY - wallBottomY);
         const wallTopY = wallBottomY + wallHeight;
@@ -421,14 +421,16 @@
             const lenM = lenP * scaleP;
             const midM = ((pA + pB) / 2) * scaleP;
             const fixedM = fixedCoordP * scaleP;
+            const isTopSegment = (yBottom + hSeg >= wallTopY - 0.03);
+            const segMat = (isTopSegment && matWallTop) ? matWallTop : matWall;
 
             if (orient === 'h') {
                 const geo = new THREE.BoxGeometry(lenM + wallThick, hSeg, wallThick);
-                const m = addWhiteModelMesh(geo, matWall, midM, yBottom + hSeg / 2, fixedM, true);
+                const m = addWhiteModelMesh(geo, segMat, midM, yBottom + hSeg / 2, fixedM, true);
                 if (m) m.userData.regionTag = 'wall';
             } else {
                 const geo = new THREE.BoxGeometry(wallThick, hSeg, lenM + wallThick);
-                const m = addWhiteModelMesh(geo, matWall, fixedM, yBottom + hSeg / 2, midM, true);
+                const m = addWhiteModelMesh(geo, segMat, fixedM, yBottom + hSeg / 2, midM, true);
                 if (m) m.userData.regionTag = 'wall';
             }
         };
@@ -649,6 +651,109 @@
         );
         if (touchesBalcony && !supportedByAnyLowerRoom) return true;
         return !supportedByAnyLowerRoom;
+    }
+
+    /**
+     * 1本に自動結合された腰壁・バルコニー壁（[startP, endP]）について、
+     * 下階（flNum - 1）の部屋・外壁の境界および当階バルコニー境界で自動分割し、
+     * 「1Fがある支持区間（cantDropM = slabHeight）」と「1Fがないキャンチ跳ね出し区間（cantDropM = 0.40m）」
+     * をそれぞれ正確な高さで3D描画できるサブ区間配列へ分割・マージして返す。
+     */
+    function splitWallByCantilever3D(flNum, flData, orient, fixedP, startP, endP, slabHeight) {
+        const evalSubSegment = (sP, eP) => {
+            const isCant = isBalconyCantileverWall3D(flNum, flData, orient, fixedP, sP, eP);
+            const midP = (sP + eP) / 2;
+            const wx = orient === 'h' ? midP : fixedP;
+            const wy = orient === 'h' ? fixedP : midP;
+            const touchesBalcony = (flNum >= 2 && flData && Array.isArray(flData.rooms)) && flData.rooms.some(r => {
+                if (!r) return false;
+                const rType = String(r.type || '').toUpperCase();
+                const rName = String(r.customName || r.name || '');
+                if (rType !== 'BALCONY' && !/バルコニー|ベランダ/.test(rName)) return false;
+                return wx >= r.x - 0.35 && wx <= r.x + r.w + 0.35 && wy >= r.y - 0.35 && wy <= r.y + r.h + 0.35;
+            });
+            const cantDropM = isCant ? 0.40 : ((flNum >= 2 && touchesBalcony) ? slabHeight : 0.0);
+            return { sP, eP, isCantilever: isCant, touchesBalconyRoom: touchesBalcony, cantDropM };
+        };
+
+        if (flNum < 2 || !flData || endP - startP <= 0.08) {
+            return [evalSubSegment(startP, endP)];
+        }
+
+        const cutSet = [startP, endP];
+        const pushCut = (v) => {
+            if (typeof v === 'number' && !isNaN(v) && v > startP + 0.02 && v < endP - 0.02) {
+                cutSet.push(v);
+            }
+        };
+
+        // 下階（flNum - 1）の部屋境界および通常壁端点を分割候補に収集
+        const lowerFl = (typeof state !== 'undefined' && state.floors) ? state.floors[flNum - 1] : null;
+        if (lowerFl) {
+            (lowerFl.rooms || []).forEach(lr => {
+                if (!lr || lr.type === 'VOID' || lr.type === 'NAKANIWA' || lr.type === 'TENJO') return;
+                if (orient === 'h') {
+                    pushCut(lr.x);
+                    pushCut(lr.x + lr.w);
+                } else {
+                    pushCut(lr.y);
+                    pushCut(lr.y + lr.h);
+                }
+            });
+            (lowerFl.walls || []).forEach(lw => {
+                if (!lw || (lw.wallType && lw.wallType !== 'wall')) return;
+                if (orient === 'h') {
+                    pushCut(lw.x1);
+                    pushCut(lw.x2);
+                } else {
+                    pushCut(lw.y1);
+                    pushCut(lw.y2);
+                }
+            });
+        }
+
+        // 当階のバルコニー部屋境界も分割候補に収集
+        (flData.rooms || []).forEach(r => {
+            if (!r) return;
+            const rType = String(r.type || '').toUpperCase();
+            const rName = String(r.customName || r.name || '');
+            if (rType !== 'BALCONY' && !/バルコニー|ベランダ/.test(rName)) return;
+            if (orient === 'h') {
+                pushCut(r.x);
+                pushCut(r.x + r.w);
+            } else {
+                pushCut(r.y);
+                pushCut(r.y + r.h);
+            }
+        });
+
+        cutSet.sort((a, b) => a - b);
+        const uniqueCuts = [];
+        for (let i = 0; i < cutSet.length; i++) {
+            if (uniqueCuts.length === 0 || cutSet[i] - uniqueCuts[uniqueCuts.length - 1] > 0.02) {
+                uniqueCuts.push(cutSet[i]);
+            }
+        }
+        if (uniqueCuts[uniqueCuts.length - 1] < endP - 0.01) {
+            uniqueCuts.push(endP);
+        } else {
+            uniqueCuts[uniqueCuts.length - 1] = endP;
+        }
+
+        const merged = [];
+        for (let i = 0; i < uniqueCuts.length - 1; i++) {
+            const a = uniqueCuts[i];
+            const b = uniqueCuts[i + 1];
+            if (b - a <= 0.02) continue;
+            const seg = evalSubSegment(a, b);
+            const prev = merged.length > 0 ? merged[merged.length - 1] : null;
+            if (prev && prev.isCantilever === seg.isCantilever && Math.abs(prev.cantDropM - seg.cantDropM) < 0.001) {
+                prev.eP = seg.eP;
+            } else {
+                merged.push(seg);
+            }
+        }
+        return merged.length > 0 ? merged : [evalSubSegment(startP, endP)];
     }
 
     /**
@@ -944,8 +1049,22 @@
             const slabHeight = 0.18;
             const wallThick = 0.14;
 
-            // お手本画像の鳥瞰図に近い温かみのある木目フローリング＆白壁マテリアル
+            // お手本画像の鳥瞰図に近い温かみのある木目フローリング＆白壁マテリアル（壁厚の上端面は2D同様グレー塗りつぶし）
             const matWhiteWall = new THREE.MeshLambertMaterial({ color: 0xffffff });
+            const matWallTopGray = new THREE.MeshLambertMaterial({ color: 0x9ca3af });
+            const matWallBoxGrayTop = [
+                matWhiteWall,    // +X (右側面)
+                matWhiteWall,    // -X (左側面)
+                matWallTopGray,  // +Y (上面＝壁厚断面グレー塗りつぶし)
+                matWhiteWall,    // -Y (底面)
+                matWhiteWall,    // +Z (前面)
+                matWhiteWall     // -Z (背面)
+            ];
+            const matCylinderGrayTop = [
+                matWhiteWall,    // 側面
+                matWallTopGray,  // 上端(+Y)
+                matWhiteWall     // 下端(-Y)
+            ];
             const matWoodFloor = new THREE.MeshLambertMaterial({ color: 0xb88655 });
             const matDomaSlab = new THREE.MeshLambertMaterial({ color: 0x94a3b8 });
             const matTatamiSlab = new THREE.MeshLambertMaterial({ map: getTatamiCanvasTexture(), color: 0xffffff });
@@ -1096,20 +1215,21 @@
                                     return false;
                                 });
                                 if (hasExplicitWallOnEdge) return;
-                                const isCant = isBalconyCantileverWall3D(flNum, flData, ed.orient, ed.fixedP, ed.sP, ed.eP);
-                                // キャンチ箇所は床下400mm(0.40m)、1F壁直上箇所もスラブ厚(slabHeight=0.18m)分を下へ伸ばして1F壁上端(baseY)まで隙間ゼロで連結
-                                const dropDown = (flNum >= 2) ? (isCant ? 0.40 : slabHeight) : 0.0;
-                                const wY = baseY + slabHeight - dropDown;
-                                const hWall = 1.10 + dropDown;
-                                buildWallWithOpeningCutouts3D(ed.orient, ed.fixedP, ed.sP, ed.eP, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight);
+                                const subParts = splitWallByCantilever3D(flNum, flData, ed.orient, ed.fixedP, ed.sP, ed.eP, slabHeight);
+                                subParts.forEach(sp => {
+                                    const dropDown = (flNum >= 2) ? (sp.isCantilever ? 0.40 : slabHeight) : 0.0;
+                                    const wY = baseY + slabHeight - dropDown;
+                                    const hWall = 1.10 + dropDown;
+                                    buildWallWithOpeningCutouts3D(ed.orient, ed.fixedP, sp.sP, sp.eP, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight, matWallBoxGrayTop);
+                                });
                             });
                         } else if (!hasNormalWallsOnFloor) {
                             const wY = baseY;
                             const hWall = wallHeight + slabHeight;
-                            buildWallWithOpeningCutouts3D('h', rm.y, rm.x, rm.x + rm.w, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight);
-                            buildWallWithOpeningCutouts3D('h', rm.y + rm.h, rm.x, rm.x + rm.w, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight);
-                            buildWallWithOpeningCutouts3D('v', rm.x, rm.y, rm.y + rm.h, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight);
-                            buildWallWithOpeningCutouts3D('v', rm.x + rm.w, rm.y, rm.y + rm.h, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight);
+                            buildWallWithOpeningCutouts3D('h', rm.y, rm.x, rm.x + rm.w, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight, matWallBoxGrayTop);
+                            buildWallWithOpeningCutouts3D('h', rm.y + rm.h, rm.x, rm.x + rm.w, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight, matWallBoxGrayTop);
+                            buildWallWithOpeningCutouts3D('v', rm.x, rm.y, rm.y + rm.h, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight, matWallBoxGrayTop);
+                            buildWallWithOpeningCutouts3D('v', rm.x + rm.w, rm.y, rm.y + rm.h, wY, hWall, wallThick, flData.openings, scaleP, matWhiteWall, baseY + slabHeight, matWallBoxGrayTop);
                         }
                     }
                 });
@@ -1137,7 +1257,7 @@
                         if (lenP <= 0.04) return;
 
                         if (wType === 'tarekabe') {
-                            // たれ壁: 天井から下がる上部壁
+                            // たれ壁: 天井から下がる上部壁（上端壁厚グレー塗りつぶし）
                             const lenM = lenP * scaleP;
                             const midM = ((startP + endP) / 2) * scaleP;
                             const fixedM = fixedP * scaleP;
@@ -1145,7 +1265,7 @@
                                 ? new THREE.BoxGeometry(lenM + wallThick, dropH, wallThick)
                                 : new THREE.BoxGeometry(wallThick, dropH, lenM + wallThick);
                             addWhiteModelMesh(
-                                geo, matWhiteWall,
+                                geo, matWallBoxGrayTop,
                                 isHoriz ? midM : fixedM,
                                 floorTopY + wallHeight - dropH / 2,
                                 isHoriz ? fixedM : midM,
@@ -1153,37 +1273,34 @@
                             );
                         } else if (wType === 'koshikabe') {
                             // 腰壁: 床から立ち上がる手すり壁
-                            // 2階以上のバルコニー・外周の腰壁は、1Fの壁位置（baseY＝1F壁上端、さらにキャンチ跳ね出し箇所は床下400mm位置）まで下端を伸ばして1F壁と隙間なく連結する
-                            const isCantilever = isBalconyCantileverWall3D(flNum, flData, isHoriz ? 'h' : 'v', fixedP, startP, endP);
-                            const touchesBalconyRoom = (flNum >= 2 && Array.isArray(flData.rooms)) && flData.rooms.some(r => {
-                                if (!r) return false;
-                                const rType = String(r.type || '').toUpperCase();
-                                const rName = String(r.customName || r.name || '');
-                                if (rType !== 'BALCONY' && !/バルコニー|ベランダ/.test(rName)) return false;
-                                const midP = (startP + endP) / 2;
-                                const wx = isHoriz ? midP : fixedP;
-                                const wy = isHoriz ? fixedP : midP;
-                                return wx >= r.x - 0.35 && wx <= r.x + r.w + 0.35 && wy >= r.y - 0.35 && wy <= r.y + r.h + 0.35;
-                            });
-                            const cantDropM = isCantilever ? 0.40 : ((flNum >= 2 && touchesBalconyRoom) ? slabHeight : 0.0);
-                            const totalWaistH = waistH + cantDropM;
-                            const waistBottomY = floorTopY - cantDropM;
-                            const lenM = lenP * scaleP;
-                            const midM = ((startP + endP) / 2) * scaleP;
+                            // 2Dで1本に自動結合された腰壁でも、下階の支持区間（cantDropM = slabHeight）とキャンチ跳ね出し区間（cantDropM = 0.40m）を自動分割して正確に描画する
+                            const subParts = splitWallByCantilever3D(flNum, flData, isHoriz ? 'h' : 'v', fixedP, startP, endP, slabHeight);
                             const fixedM = fixedP * scaleP;
-                            const geo = isHoriz
-                                ? new THREE.BoxGeometry(lenM + wallThick, totalWaistH, wallThick)
-                                : new THREE.BoxGeometry(wallThick, totalWaistH, lenM + wallThick);
-                            const kMesh = addWhiteModelMesh(
-                                geo, matWhiteWall,
-                                isHoriz ? midM : fixedM,
-                                waistBottomY + totalWaistH / 2,
-                                isHoriz ? fixedM : midM,
-                                true
-                            );
-                            if (kMesh) {
-                                kMesh.userData.regionTag = isCantilever ? 'koshikabe_cantilever' : (touchesBalconyRoom ? 'koshikabe_balcony' : 'koshikabe');
-                            }
+                            subParts.forEach((sp, spIdx) => {
+                                const segLenP = sp.eP - sp.sP;
+                                if (segLenP <= 0.02) return;
+                                const segLenM = segLenP * scaleP;
+                                // 分割境界での上端面Zファイティングを防ぐため、外側端点のみ wallThick/2 伸ばし、内部境界は突き合わせにする
+                                const extStart = (spIdx === 0) ? (wallThick * 0.5) : 0;
+                                const extEnd = (spIdx === subParts.length - 1) ? (wallThick * 0.5) : 0;
+                                const boxLen = segLenM + extStart + extEnd;
+                                const midM = ((sp.sP + sp.eP) / 2) * scaleP + (extEnd - extStart) * 0.5;
+                                const totalWaistH = waistH + sp.cantDropM;
+                                const waistBottomY = floorTopY - sp.cantDropM;
+                                const geo = isHoriz
+                                    ? new THREE.BoxGeometry(boxLen, totalWaistH, wallThick)
+                                    : new THREE.BoxGeometry(wallThick, totalWaistH, boxLen);
+                                const kMesh = addWhiteModelMesh(
+                                    geo, matWallBoxGrayTop,
+                                    isHoriz ? midM : fixedM,
+                                    waistBottomY + totalWaistH / 2,
+                                    isHoriz ? fixedM : midM,
+                                    true
+                                );
+                                if (kMesh) {
+                                    kMesh.userData.regionTag = sp.isCantilever ? 'koshikabe_cantilever' : (sp.touchesBalconyRoom ? 'koshikabe_balcony' : 'koshikabe');
+                                }
+                            });
                         } else if (wType === 'agarikamachi') {
                             // 上り框: 玄関段差見切り材
                             const kamachiH = wl.heightMm ? (wl.heightMm / 1000) : 0.18;
@@ -1202,17 +1319,18 @@
                             );
                             if (kamMesh) kamMesh.userData.regionTag = 'agarikamachi';
                         } else {
-                            // 通常壁（開口部くり抜き付き・床スラブ側面カバー＆上下階シームレス連結）
+                            // 通常壁（開口部くり抜き付き・床スラブ側面カバー＆上下階シームレス連結・上端壁厚グレー塗りつぶし）
                             buildWallWithOpeningCutouts3D(
                                 isHoriz ? 'h' : 'v',
                                 fixedP, startP, endP,
                                 seamlessWallBottomY, seamlessWallTotalH, wallThick,
                                 flData.openings, scaleP, matWhiteWall,
-                                floorTopY
+                                floorTopY,
+                                matWallBoxGrayTop
                             );
                         }
                     } else {
-                        // 斜め壁（自由角・45度斜め壁の3Dレンダリング）
+                        // 斜め壁（自由角・45度斜め壁の3Dレンダリング・上端壁厚グレー塗りつぶし）
                         const lenP = Math.hypot(wl.x2 - wl.x1, wl.y2 - wl.y1);
                         if (lenP <= 0.04) return;
                         const lenM = lenP * scaleP;
@@ -1230,18 +1348,19 @@
                             wPosY = floorTopY + wallHeight - dropH / 2;
                         }
                         const diagGeo = new THREE.BoxGeometry(lenM + wallThick, wH, wallThick);
-                        const mesh = addWhiteModelMesh(diagGeo, matWhiteWall, midX, wPosY, midZ, true);
+                        const mesh = addWhiteModelMesh(diagGeo, matWallBoxGrayTop, midX, wPosY, midZ, true);
                         if (mesh) mesh.rotation.y = -angle;
                     }
                 });
 
-                // 3. 独立柱（角柱・円柱）および多角形柱
+                // 3. 独立柱（角柱・円柱）および多角形柱（上端面も壁厚と同じグレーで統一）
                 flData.pillars.forEach(pl => {
                     const colSize = (pl.sizeMm || 150) / 1000;
-                    const colGeo = pl.shape === 'round'
+                    const isRound = pl.shape === 'round';
+                    const colGeo = isRound
                         ? new THREE.CylinderGeometry(colSize / 2, colSize / 2, wallHeight, 16)
                         : new THREE.BoxGeometry(colSize, wallHeight, colSize);
-                    addWhiteModelMesh(colGeo, matWhiteWall, pl.x * scaleP, baseY + slabHeight + wallHeight / 2, pl.y * scaleP, true);
+                    addWhiteModelMesh(colGeo, isRound ? matCylinderGrayTop : matWallBoxGrayTop, pl.x * scaleP, baseY + slabHeight + wallHeight / 2, pl.y * scaleP, true);
                 });
 
                 (flData.polyPillars || []).forEach(pp => {
